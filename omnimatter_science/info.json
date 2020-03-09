@@ -1,0 +1,9 @@
+{
+"name":"omnimatter_science",
+"version":"3.0.4",
+"title":"Omniscience",
+"author":"EmperorZelos",
+"description":"Adds difficulty by changing science costs.",
+"factorio_version":"0.17",
+"dependencies":["base","?omnimatter >= 3.0.0","omnilib >= 3.0.0","?omnimatter_crystal >= 3.0.0","?omnimatter_wood >= 3.0.0","?OmniSea"]
+}
