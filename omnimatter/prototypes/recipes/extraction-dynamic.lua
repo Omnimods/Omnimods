@@ -130,16 +130,20 @@ end
 
 local get_omnimatter_split = function(tier,focus,level)
 	local source = table.deepcopy(omnisource[tostring(tier)])
+	-- How many ores we try to assign per group
 	local prime_splits={4,3,5}
 	if not level then prime_splits[#prime_splits+1]=6 end
 	local aligned_ores = {}
 	local source_count = 0
 	for _,i in pairs(source) do
-		if not level or (level and i.name ~= focus) then
+		-- Counts all ores if doing basic omnitraction, or all ores without the focus one if focused omnitraction
+		-- Change: Not handling the focused here
+		--if not level or (level and i.name ~= focus) then
 			source_count = source_count+1
 			aligned_ores[#aligned_ores+1] = i.name
-		end
+		--end
 	end
+	-- If very little ores per tier, break out early
 	if source_count == 0 or (source_count == 1 and not focus) then
 		return {{
 			result_round({name="stone-crushed",amount = 10-4/(omni.impure_levels_per_tier-(level or 0)+1),type="item"}),
@@ -147,6 +151,7 @@ local get_omnimatter_split = function(tier,focus,level)
 	end
 	local d = 1
 	local div = 0
+	-- Checking which split among the prime_splits gives us the smallest number of extra ores
 	for _,p in pairs(prime_splits) do
 		if (source_count%p)/p < d then
 			div = p
@@ -155,6 +160,7 @@ local get_omnimatter_split = function(tier,focus,level)
 	end
 	local count = source_count
 	local splits = {}
+	-- If we end up with extra ores, we put them to the last group
 	while count ~= 0 do
 		if count >= div then
 			splits[#splits+1]=div
@@ -175,16 +181,22 @@ local get_omnimatter_split = function(tier,focus,level)
 	local ores = {}
 	local rel_count = source_count+(level or 0)
 		
+	-- splits is a table of integers that shows how ores are divided, e.g. {5,5} or {3,3,4}
+	if source_count == 10 then
+		splits = {3,3,4}
+	end
 	for _,s in pairs(splits) do
 		local n_ore = {}
 		local t_quant = 0
 		if focus then
-			n_ore = {{name=focus,amount=level+1,type="item"}}
-			t_quant=level+1
+			-- Not changing the focus amount here
+			--n_ore = {{name=focus,amount=level+1,type="item"}}
+			t_quant=level
 		end
 		for i=1,s do
-			math.randomseed(#omnisource[tostring(tier)]*i+omni.pure_levels_per_tier*omni.fluid_levels_per_tier+math.pow(level or 1,3))
-			local pick_ore = math.random(1,#aligned_ores)
+			--math.randomseed(#omnisource+omni.pure_levels_per_tier*omni.fluid_levels_per_tier)
+			--local pick_ore = math.random(1,#aligned_ores)
+			local pick_ore = 1
 			t_quant=t_quant+1
 			n_ore[#n_ore+1]={name=aligned_ores[pick_ore],amount=1,type="item"}
 			table.remove(aligned_ores,pick_ore)
@@ -198,6 +210,25 @@ local get_omnimatter_split = function(tier,focus,level)
 			n_ore[q] = table.deepcopy(result_round(no))
 		end
 		ores[#ores+1]=table.deepcopy(n_ore)
+	end
+	if focus then
+		-- If focused, find the group with the focused ore, change the amount to +1, make it first in the group, and return only this group
+		local focus_ores = {}
+		for _,ore_mix in pairs(ores) do
+			for i,ore in pairs(ore_mix) do
+				if ore["name"] == focus then
+					-- ToDo: Need to fix the amount so the total is 10 units! Same problem with pure extractions...
+					ore["amount"] = (level+1)*ore["amount"]
+					table.insert(focus_ores, ore)
+					for j = 1,#ore_mix do
+						if j ~= i then
+							table.insert(focus_ores, ore_mix[j])
+						end
+					end
+					return {focus_ores}
+				end
+			end
+		end
 	end
 	return ores
 end

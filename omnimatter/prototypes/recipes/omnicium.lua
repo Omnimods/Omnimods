@@ -202,6 +202,7 @@ if mods["bobplates"] then
 end
 
 data.raw.item["iron-gear-wheel"].icon="__omnimatter__/graphics/icons/iron-gear-wheel.png"
+data.raw.item["iron-gear-wheel"].icon_size=32
 ItemGen:import("ingot-iron"):
 	setName("ingot-omnicium","omnimatter"):
 	setSubgroup("angels-omnicium"):
