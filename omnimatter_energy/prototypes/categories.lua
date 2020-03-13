@@ -3,6 +3,10 @@ data:extend({
         type = "fuel-category",
         name = "omni-electro"
     },
+    {
+        type = "fuel-category",
+        name = "omnite"
+    },
 	{
     type = "item-group",
     name = "omnienergy",

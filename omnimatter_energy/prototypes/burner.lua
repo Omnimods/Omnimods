@@ -128,6 +128,8 @@ RecGen:create("omnimatter_energy","heat"):
 	setTechPacks(1):	
 	setResults({type="fluid",name="heat",amount=2*60+1,temperature=250}):
 	extend()
+
+data.raw.fluid.heat.auto_barrel = false
 	
 RecGen:create("omnimatter_energy","anbaric-omnitor"):
 	setStacksize(50):
@@ -137,6 +139,12 @@ RecGen:create("omnimatter_energy","anbaric-omnitor"):
 	setTechName("anbaricity"):
 	setIngredients({type="item", name="omnicium-plate", amount=2},{type="item", name="copper-cable", amount=2},{type="item", name="omnitor", amount=1}):
 	addProductivity():extend()
+
+if data.raw.item["anbaric-omnitor"] then 
+    log("anbaric omnitor exists gtfo error") 
+else 
+    log("wtf") 
+end
 	
 RecGen:create("omnimatter_energy","cokomni"):
 	setSubgroup("omni-basic"):

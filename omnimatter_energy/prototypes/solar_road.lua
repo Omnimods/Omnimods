@@ -28,6 +28,7 @@ data:extend({
 	  collision_box = {{-0.5, -0.5}, {0.5, 0.5}},
 	  walking_speed_modifier = 1.45,
 	  layer = 62,
+	  pollution_absorption_per_second=0,
 	  decorative_removal_probability = 1,
 	  variants =
 	  {
