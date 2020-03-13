@@ -1,0 +1,12 @@
+{
+"name":"omnimatter_chemistry",
+"version":"0.2.14",
+"title":"Omnichem",
+"author":"EmperorZelos",
+"description":"Petrochem a la omni",
+"factorio_version":"0.17",
+"dependencies":["base",
+	"omnimatter",
+	"omnilib >= 2.0.10",
+	"?omnimatter_water"]
+}

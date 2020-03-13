@@ -1,0 +1,9 @@
+{
+"name":"omnilib",
+"version":"3.0.10",
+"title":"Omnilibrary",
+"author":"EmperorZelos",
+"description":"A collection of functions that omni-series of mods are using.",
+"factorio_version":"0.18",
+"dependencies":["base","?bobmodules","!GDIW","!fluid_permutations","!asphalt"]
+}
