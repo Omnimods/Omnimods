@@ -8,7 +8,7 @@ local shard_icons = function(metal)
     --Build the icons table
     local icons = {}
 	for i=1,nr do
-		icons[#icons+1] = {icon = "__omnimatter_crystal__/graphics/icons/"..metal.."-crystal.png",scale=0.2,shift={5*math.cos(((i-1)/nr+0.5)*2*math.pi),5*math.sin(((i-1)/nr+0.5)*2*math.pi)}}
+		icons[#icons+1] = {icon = "__omnimatter_crystal__/graphics/icons/"..metal.."-crystal.png",icon_size=32,scale=0.2,shift={5*math.cos(((i-1)/nr+0.5)*2*math.pi),5*math.sin(((i-1)/nr+0.5)*2*math.pi)}}
 	end
     return icons
 end
@@ -18,7 +18,7 @@ local metal_omnide_icon = function(metal)
     --Build the icons table
     local icons = {}
 	icons[#icons+1] = {icon = "__omnimatter_crystal__/graphics/icons/omnide-solution.png"}
-	icons[#icons+1] = {icon = data.raw.item[metal].icon,scale=0.4,shift={-10,10}}
+	icons[#icons+1] = {icon = data.raw.item[metal].icon,icon_size=32,scale=0.4,shift={-10,10}}
     return icons
 end
 
@@ -27,7 +27,7 @@ local salt_omnide_icon = function(metal)
     --Build the icons table
     local icons = {}
 	icons[#icons+1] = {icon = "__omnimatter_crystal__/graphics/icons/omnide-salt.png"}
-	icons[#icons+1] = {icon = data.raw.item[metal].icon,scale=0.4,shift={-10,10}}
+	icons[#icons+1] = {icon = data.raw.item[metal].icon,icon_size=32,scale=0.4,shift={-10,10}}
     return icons
 end
 
@@ -37,7 +37,7 @@ omni.crystal.add_crystal=function(metal,name,recipe)
 	if data.raw.item[metal] then
 		--log(metal)
 		omni.crystal.metals[#omni.crystal.metals+1]=data.raw.item[metal]
-		
+
 		RecGen:create("omnimatter_crystal",metal.."-crystal"):
 			setLocName("item-name.crystal",name):
 			setFuelValue(35):
@@ -53,15 +53,15 @@ omni.crystal.add_crystal=function(metal,name,recipe)
 				}):
 			setResults({type = "item", name = metal.."-crystal", amount=10}):
 			setEnergy(2.5):extend()
-						
+
 		ItemGen:create("omnimatter_crystal",metal.."-omnide-salt"):
 			setLocName("item-name.omnide-salt",name):
 			setIcons("omnide-salt"):
 			addSmallIcon(metal,3):
 			setSubgroup("crystallization"):
 			setStacksize(200):extend()
-		
-		
+
+
 		RecGen:create("omnimatter_crystal",metal.."-omnide-solution"):
 			setLocName("ore-solvation",name):
 			fluid():
@@ -77,7 +77,7 @@ omni.crystal.add_crystal=function(metal,name,recipe)
 				}):
 			setResults({type = "fluid", name = metal.."-omnide-solution", amount=120}):
 			setEnergy(2.5):extend()
-			
+
 		RecGen:create("omnimatter_crystal",metal.."-crystal-omnitraction"):
 			setLocName("crystal-omnitraction","item-name."..metal):
 			setSubgroup("traction"):
@@ -88,7 +88,7 @@ omni.crystal.add_crystal=function(metal,name,recipe)
 			setIngredients({type = "item", name = metal.."-crystal", amount=3}):
 			setResults({type = "item", name = metal, amount=4}):
 			setEnergy(1.5):extend()
-					
+
 		--[[local ic = shard_icons(metal)
 		local shard =   {
 		type = "item",
@@ -100,7 +100,7 @@ omni.crystal.add_crystal=function(metal,name,recipe)
 		stack_size = 200
 		}]]
 	end
-end 
+end
 
 local ingrediences_solvation=function(recipe)
 	local ing = {}
@@ -141,7 +141,7 @@ omni.crystal.add_recipe=function(recipe,name)
 		crystalines[#crystalines+1]=cat
 	end
 	----log(recipe..":"..metal..","..data.raw.recipe[recipe].subgroup.."-omnide")
-	
+
 	local solution = {
 		type = "recipe",
 		name = metal.."-salting",
