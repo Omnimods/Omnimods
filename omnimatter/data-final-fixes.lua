@@ -162,6 +162,7 @@ for _,tier in pairs(omnifluid) do
 					pre.basic_settings.autoplace_controls[fluid.name] = nil
 					pre.basic_settings.autoplace_controls["crude-oil"] = nil
 					pre.basic_settings.autoplace_controls["angels-fissure"] = nil
+					pre.basic_settings.autoplace_controls["angels-natural-gas"] = nil
 				end
 			end
 		end
