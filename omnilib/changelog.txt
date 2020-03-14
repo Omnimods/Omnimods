@@ -1,0 +1,8 @@
+---------------------------------------------------------------------------------------------------
+Version: 3.0.10
+Date: 2020.02.24
+  Bugfixes:
+    - Fixed recipe standardization not getting main_product out of expensive.
+  Info:
+    - Added changelog.
+    

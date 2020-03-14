@@ -4,7 +4,7 @@
 "title":"Omnipermute",
 "author":"EmperorZelos",
 "description":"Let's you shift the outputs of fluids on recipes and buildings to make better designs. This involves ALL premutations of ANY recipe and output/input.",
-"factorio_version":"0.17",
+"factorio_version":"0.18",
 "dependencies":["base",
 	"omnilib >= 3.0.0",
 	"?omnimatter_fluid",

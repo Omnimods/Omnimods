@@ -7,7 +7,7 @@ if mods["angelsbioprocessing"] then
 	setTechIcon("angelsbioprocessing","algae-farm-tech"):
 	setTechCost(250):
 	setTechTime(15):
-	setCategory("bio-processing"):
+	setCategory("bio-processing-nauvis"):
 	setSubgroup("bio-processing-purple"):
 	setIngredients({
 	{type="fluid",name="omnic-acid",amount=144},
@@ -18,7 +18,7 @@ if mods["angelsbioprocessing"] then
 data:extend({{
     type = "item-subgroup",
     name = "bio-processing-purple",
-	group = "bio-processing",
+	group = "bio-processing-nauvis",
 	order = "a",
   }})
 end

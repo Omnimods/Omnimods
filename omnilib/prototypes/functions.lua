@@ -123,7 +123,7 @@ function omni.lib.prime.gcd(...)
 				if inter[p]>arg[i][p] then
 					inter[p]=arg[i][p]
 				end
-			else
+			else 
 				inter[p] = 0
 			end
 		end
@@ -221,7 +221,7 @@ end
 
 function omni.lib.recipe_change_category(recipe, category)
 	if data.raw.recipe[recipe] and data.raw["recipe-category"][item] then
-		data.raw.recipe[recipe].category = category
+		data.raw.recipe[recipe].category = category	
 	end
 end
 
@@ -252,13 +252,13 @@ end
 function omni.lib.omni_recipe_fluid_change_category(fluid, category)
 	if data.raw.recipe["omnirec-"..fluid.."-a"] then
 		for i=1,omni.matter.get_constant("fluid level") do
-			data.raw.recipe["omnirec-"..fluid.."-"..ord[i]].category = category
+			data.raw.recipe["omnirec-"..fluid.."-"..ord[i]].category = category	
 		end
 	end
 end
 function omni.lib.lowest_omnite_cost(item)
 	for _,recipe in pairs(data.raw.recipe) do
-
+	
 	end
 end
 
@@ -275,7 +275,7 @@ end
 local sort_dependency = function(list)
 	local l = {}
 	l[1] = list[1]
-
+	
 end
 
 local fix_content_list = function(list)
@@ -302,7 +302,7 @@ function omni.lib.achain_omnite_cost(item,chain)
 			break
 		end
 	end
-
+	
 	required_ingredients=data.raw.recipe[chain[1]].ingredients
 	required_ingredients=fit_ingredients(required_ingredients,target_amount)
 	local list = chain--sort_dependency(chain)
@@ -313,11 +313,11 @@ function omni.lib.achain_omnite_cost(item,chain)
 		local intersect = omni.lib.table_intersection(sorted_results.name,required_ingredients.name)
 		if intersect then
 			for j,res in pairs(sorted_results.name) do
-
+				
 			end
 		end
-	end
-
+	end	
+	
 	return cost
 end
 
@@ -335,7 +335,7 @@ function omni.lib.chain_omnite_cost(item,chain)
 			break
 		end
 	end
-
+	
 	required_ingredients=data.raw.recipe[chain[1]].ingredients
 	required_ingredients=fit_ingredients(required_ingredients,target_amount)
 	local list = chain--sort_dependency(chain)
@@ -346,11 +346,11 @@ function omni.lib.chain_omnite_cost(item,chain)
 		local intersect = omni.lib.table_intersection(sorted_results.name,required_ingredients.name)
 		if intersect then
 			for j,res in pairs(sorted_results.name) do
-
+				
 			end
 		end
-	end
-
+	end	
+	
 	return cost
 end
 
@@ -433,7 +433,7 @@ end
 function omni.lib.replace_recipe_ingredient(recipe, ingredient,replacement)
 	if not data.raw.recipe[recipe] then
 		log("could not find "..recipe)
-
+	
 	end
 	omni.marathon.standardise(data.raw.recipe[recipe])
 	for _,dif in pairs({"normal","expensive"}) do
@@ -478,21 +478,21 @@ function omni.lib.add_recipe_ingredient(recipe, ingredient)
 		omni.marathon.standardise(data.raw.recipe[recipe])
 		if not ingredient.name then
 			if type(ingredient)=="string" then
-					table.insert(data.raw.recipe[recipe].normal.ingredients,table.deepcopy({type="item",name=ingredient,amount=1}))
+					table.insert(data.raw.recipe[recipe].normal.ingredients,table.deepcopy({type="item",name=ingredient,amount=1}))	
 					table.insert(data.raw.recipe[recipe].expensive.ingredients,table.deepcopy({type="item",name=ingredient,amount=1}))
 			elseif ingredient.normal then
-				table.insert(data.raw.recipe[recipe].normal.ingredients,table.deepcopy(ingredient.normal))
-				table.insert(data.raw.recipe[recipe].expensive.ingredients,table.deepcopy(ingredient.expensive))
+				table.insert(data.raw.recipe[recipe].normal.ingredients,table.deepcopy(ingredient.normal))	
+				table.insert(data.raw.recipe[recipe].expensive.ingredients,table.deepcopy(ingredient.expensive))	
 			elseif ingredient[1].name then
-				table.insert(data.raw.recipe[recipe].normal.ingredients,table.deepcopy(ingredient[1]))
-				table.insert(data.raw.recipe[recipe].expensive.ingredients,table.deepcopy(ingredient[2]))
+				table.insert(data.raw.recipe[recipe].normal.ingredients,table.deepcopy(ingredient[1]))	
+				table.insert(data.raw.recipe[recipe].expensive.ingredients,table.deepcopy(ingredient[2]))				
 			elseif type(ingredient[1])=="string" then
-				table.insert(data.raw.recipe[recipe].normal.ingredients,table.deepcopy({type="item",name=ingredient[1],amount=ingredient[2]}))
+				table.insert(data.raw.recipe[recipe].normal.ingredients,table.deepcopy({type="item",name=ingredient[1],amount=ingredient[2]}))	
 				table.insert(data.raw.recipe[recipe].expensive.ingredients,table.deepcopy({type="item",name=ingredient[1],amount=ingredient[2]}))
 			end
 		else
 			table.insert(data.raw.recipe[recipe].normal.ingredients,table.deepcopy(ingredient))
-			table.insert(data.raw.recipe[recipe].expensive.ingredients,table.deepcopy(ingredient))
+			table.insert(data.raw.recipe[recipe].expensive.ingredients,table.deepcopy(ingredient))		
 		end
 	else
 		log(recipe.." does not exist.")
@@ -508,8 +508,8 @@ function omni.lib.add_recipe_result(recipe, result)
 		elseif data.raw.recipe[recipe].results then
 			table.insert(data.raw.recipe[recipe].results,result)
 		elseif data.raw.recipe[recipe].normal.results then
-			table.insert(data.raw.recipe[recipe].normal.results,result)
-			table.insert(data.raw.recipe[recipe].expensive.results,result)
+			table.insert(data.raw.recipe[recipe].normal.results,result)	
+			table.insert(data.raw.recipe[recipe].expensive.results,result)	
 		end
 	else
 		log(recipe.." does not exist.")
@@ -556,7 +556,7 @@ function omni.lib.remove_recipe_result(recipe, result)
 				if ing.name == ingredient then
 					table.remove(data.raw.recipe[recipe].expensive.results,i)
 				end
-			end
+			end	
 		end
 	else
 		log("Attempted to remove the only result that recipe "..recipe.." has. Cannot be done")
@@ -587,7 +587,7 @@ end
 function omni.lib.add_unlock_recipe(tech, recipe,force)
 	local found = false
 	if data.raw.technology[tech] then
-		if data.raw.technology[tech].effects then
+		if data.raw.technology[tech].effects then 
 			for _,eff in pairs(data.raw.technology[tech].effects) do
 				if eff.type == "unlock-recipe" and eff.recipe == recipe then
 					found = true
@@ -651,7 +651,7 @@ function omni.lib.add_science_pack(tech,pack)
 		elseif type(pack)=="number" then
 			table.insert(data.raw.technology[tech].unit.ingredients,{"omni-pack",pack})
 		else
-			table.insert(data.raw.technology[tech].unit.ingredients,{"omni-pack",1})
+			table.insert(data.raw.technology[tech].unit.ingredients,{"omni-pack",1})		
 		end
 	else
 		log("Cannot find "..tech..", ignoring it.")
@@ -741,11 +741,11 @@ end
 function omni.lib.lcm(...)
 	local arg = {...}
 	local val = arg[1]
-
+	
 	for i=2,#arg do
 		val = val*arg[i]/omni.lib.gcd(val,arg[i])
 	end
-
+	
 	return val
 end
 
@@ -783,7 +783,7 @@ function omni.lib.recipe_result_contains(recipe, item)
 				if omni.lib.is_in_table(r.name,item) then return true end
 			else
 				if r.name==item then return true end
-			end
+			end		
 		end
 		return false
 	else
@@ -906,31 +906,12 @@ end
 --[[
 Add barrels for fluid that are late.
 ]]
---[[ADDED A FUNCTION TO GET icon_size]]
-function omni.lib.get_icon_size(tab) -- should work for items, fluids, recipes, techs
-	local icSize=32 --set default before Checks
-	local icScale=1
-	if tab.icon_size ~= "" or nil then
-		icSize=tab.icon_size
-	else
-		local maxsize = 32
-		for _,icon in pairs(tab.icons) do -- thanks to Narra Avlan on discord for helping Pez work through this
-			local size = icon.icon_size * icon.scale
-			if size>maxsize then maxsize = size
-			end
-		end
-		icSize = maxsize
-	end
-	return icSize
-end
 
 function omni.lib.create_barrel(fluid)
 	if type(fluid)=="string" then fluid = data.raw.fluid[fluid] end
-
+	
 	local icons = {}
-	local ic_Size= omni.lib.get_icon_size(fluid)
-	local ic_Scale= 32/ic_Size
-
+	
 	  local side_tint = util.table.deepcopy(fluid.base_color)
 	  side_tint.a = 0.75
 	  local top_hoop_tint = util.table.deepcopy(fluid.flow_color)
@@ -940,20 +921,18 @@ function omni.lib.create_barrel(fluid)
 		  icon = data.raw.item["empty-barrel"].icon,
 		},{
 		  icon = "__base__/graphics/icons/fluid/barreling/barrel-side-mask.png",
-		  tint = side_tint,
-			icon_size=32
+		  tint = side_tint
 		},{
 		  icon = "__base__/graphics/icons/fluid/barreling/barrel-hoop-top-mask.png",
-		  tint = top_hoop_tint,
-			icon_size=32
+		  tint = top_hoop_tint
 		} }
-
+	
 	local reg = {}
 	reg[#reg+1] =   {
     type = "item",
     name = fluid.name.."-barrel",
     localised_name = {"item-name.filled-barrel", {"fluid-name." .. fluid.name}},
-    icon_size = ic_Size,
+    icon_size = 32,
     icons = icons,
     flags = {},
     subgroup = "fill-barrel",
@@ -961,42 +940,41 @@ function omni.lib.create_barrel(fluid)
     stack_size = 20
   }
   if mods["angelsrefining"] then reg[#reg].subgroup = "angels-fluid-control" end
-
+  
     side_tint = util.table.deepcopy(fluid.base_color)
 	  side_tint.a = 0.75
 	  top_hoop_tint = util.table.deepcopy(fluid.flow_color)
 	  top_hoop_tint.a = 0.75
 
-
+	  
 	  icons= {
 		{
 		  icon = "__base__/graphics/icons/fluid/barreling/barrel-fill.png"
 		},
 		{
 		  icon = "__base__/graphics/icons/fluid/barreling/barrel-fill-side-mask.png",
-		  tint = side_tint,
+		  tint = side_tint
 		},
 		{
 		  icon = "__base__/graphics/icons/fluid/barreling/barrel-fill-top-mask.png",
-		  tint = top_hoop_tint,
+		  tint = top_hoop_tint
 		},
 	  }
 	if fluid.icon then
 		icons[#icons+1]=
 		{
 		  icon = fluid.icon,
-			icon_size=ic_Size,
-		  scale = 0.5*ic_Scale,
+		  scale = 0.5,
 		  shift = {4, -8}
 		}
 	else
 		for _, ic in pairs(fluid.icons) do
+			local scale = ic.scale or 1
 			local pos = ic.shift or {0,0}
 			icons[#icons+1]=
 			{
 			  icon = ic.icon,
-				icon_size=ic_Size,
-			  scale = 0.5*ic_Scale,
+			  scale = 0.5*scale,
 			  shift = {4-pos[1], -8-pos[2]}
 			}
 		end
@@ -1011,7 +989,7 @@ function omni.lib.create_barrel(fluid)
     order = "b",
     enabled = false,
     icons = icons,
-    icon_size = ic_Size,
+    icon_size = 32,
     ingredients =
     {
       {type = "fluid", name = fluid.name, amount = 250},
@@ -1024,53 +1002,50 @@ function omni.lib.create_barrel(fluid)
     hide_from_stats = true,
     allow_decomposition = false
   }
-
+  
   if mods["angelsrefining"] then reg[#reg].subgroup = "angels-fluid-control" end
   if angelsmods and angelsmods.trigger and angelsmods.trigger.enable_auto_barreling then reg[#reg].hidden = true end
   omni.lib.add_unlock_recipe("fluid-handling","fill-" .. fluid.name.."-barrel")
-
+  
   side_tint = util.table.deepcopy(fluid.base_color)
   side_tint.a = side_alpha
   top_hoop_tint = util.table.deepcopy(fluid.flow_color)
   top_hoop_tint.a = top_hoop_alpha
 
-
+  
   icons={
     {
       icon = "__base__/graphics/icons/fluid/barreling/barrel-empty.png"
     },
     {
       icon = "__base__/graphics/icons/fluid/barreling/barrel-empty-side-mask.png",
-      tint = side_tint,
-			icon_size=32
+      tint = side_tint
     },
     {
       icon = "__base__/graphics/icons/fluid/barreling/barrel-empty-top-mask.png",
-      tint = top_hoop_tint,
-			icon_size=32
+      tint = top_hoop_tint
     },
   }
   	if fluid.icon then
 		icons[#icons+1]=
 		{
 		  icon = fluid.icon,
-			icon_size=ic_Size,
-		  scale = 0.5*ic_Scale,
+		  scale = 0.5,
 		  shift = {4, -8}
 		}
 	else
 		for _, ic in pairs(fluid.icons) do
+			local scale = ic.scale or 1
 			local pos = ic.shift or {0,0}
 			icons[#icons+1]=
 			{
 			  icon = ic.icon,
-				icon_size=ic_Size,
-			  scale = 0.5*ic_Scale,
+			  scale = 0.5*scale,
 			  shift = {4-pos[1], -8-pos[2]}
 			}
 		end
 	end
-
+  
 	reg[#reg+1]=  {
     type = "recipe",
     name = "empty-" .. fluid.name.."-barrel",
@@ -1081,7 +1056,7 @@ function omni.lib.create_barrel(fluid)
     order = "c",
     enabled = false,
     icons = icons,
-    icon_size = icSize,
+    icon_size = 32,
     ingredients =
     {
       {type = "item", name = fluid.name.."-barrel", amount = 1}
@@ -1186,9 +1161,9 @@ function omni.lib.replaceValue(tab,name,val,flags)
 	if n then
 		local sb,sbnum = string.sub(name,1,n-1),tonumber(string.sub(name,1,n-1))
 		local sb2,sb2num = string.sub(name,2,n-2),tonumber(string.sub(name,2,n-2))
-
+		
 		local newname = string.sub(name,n+1,-1)
-
+				
 		if string.sub(sb,1,1)=="(" and string.sub(sb,-1,-1)==")" then
 			if type(t[sb2num or sb2])=="table" then
 				t[sb2num or sb2]=omni.lib.replaceValue(tab[sb2num or sb2],newname,val)
@@ -1233,7 +1208,7 @@ end
       filter = "steam",
       minimum_temperature = 100.0
     }
-
+	
 { ASsembling machine
       {
         production_type = "input",
@@ -1299,7 +1274,7 @@ end
 function omni.lib.fluid_box_conversion(kind,str,hide,tmp)
 	if str==nil then return nil end
 	local box = {}
-	if kind == "assembling-machine" or kind=="furnace" then
+	if kind == "assembling-machine" or kind=="furnace" then 
 		if type(hide)=="boolean" then
 			box = omni.lib.assemblingFluidBox(str,hide)
 		else
@@ -1309,7 +1284,7 @@ function omni.lib.fluid_box_conversion(kind,str,hide,tmp)
 		if hide then
 			box = omni.lib.generatorFluidBox(str,hide,tmp)
 		else
-			box = omni.lib.generatorFluidBox(str)
+			box = omni.lib.generatorFluidBox(str)		
 		end
 	end
 	return box

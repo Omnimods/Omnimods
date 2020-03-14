@@ -7,7 +7,7 @@ function omni.marathon.standardise(recipe)
 	if recipe == nil then return nil end
 	if standardized_recipes[recipe.name] then return recipe end
 	--local new = table.deepcopy(recipe)
-
+	
 	if not recipe.expensive then recipe.expensive={} end
 	if not recipe.normal then recipe.normal={} end
 	local ingredients = {}
@@ -17,12 +17,12 @@ function omni.marathon.standardise(recipe)
 		ingredients.expensive = table.deepcopy(recipe.expensive.ingredients)
 	elseif recipe.normal and recipe.normal.ingredients and not (recipe.expensive and recipe.expensive.ingredients) then
 		ingredients.normal = table.deepcopy(recipe.normal.ingredients)
-		ingredients.expensive = table.deepcopy(recipe.normal.ingredients)
+		ingredients.expensive = table.deepcopy(recipe.normal.ingredients)		
 	else
 		ingredients = {expensive=table.deepcopy(recipe.ingredients),normal=table.deepcopy(recipe.ingredients)}
 	end
 	local std_ingredients = {normal = {}, expensive = {}}
-
+	
 	if recipe.localized_name == nil and recipe.main_product and recipe.main_product~="" then
 		local it = omni.lib.find_prototype(recipe.main_product)
 		if it then
@@ -53,7 +53,7 @@ function omni.marathon.standardise(recipe)
 			end
 		end
 	end
-
+	
 	recipe.normal.ingredients={}
 	recipe.expensive.ingredients={}
 	for _, diff in pairs({"normal","expensive"}) do
@@ -65,7 +65,7 @@ function omni.marathon.standardise(recipe)
 					if not temp.type then temp.type ="item" end
 				else
 					temp = {type = "item", name=ing[1],amount=ing[2]}
-				end
+				end	
 				recipe[diff].ingredients[i]=table.deepcopy(temp)
 			end
 		end
@@ -111,7 +111,7 @@ function omni.marathon.standardise(recipe)
 					if not temp.type then temp.type ="item" end
 				else
 					temp = {type = "item", name=res[1],amount=res[2]}
-				end
+				end	
 				recipe[diff].results[j] = table.deepcopy(temp)
 			end
 		end
@@ -120,7 +120,7 @@ function omni.marathon.standardise(recipe)
 	recipe.result_count = nil
 	recipe.results = nil
 	recipe.ingredients = nil
-
+	
 	if recipe.localised_name == nil and #recipe.normal.results==1 then
 		local it = omni.lib.find_prototype(recipe.normal.results[1].name)
 		if it then
@@ -135,20 +135,20 @@ function omni.marathon.standardise(recipe)
 			end
 		end
 	end
-
+	
 	--new.normal.ingredients=std_ingredients.normal
 	--new.normal.results=std_results.normal
 	--new.expensive.ingredients=std_ingredients.expensive
 	--new.expensive.results=std_results.expensive
-
+	
 	--if #recipe.normal.results==1 then recipe.normal.main_product = recipe.normal.results[1].name end
 	--if #recipe.expensive.results==1 then recipe.expensive.main_product = recipe.expensive.results[1].name end
-
+	
 	if recipe.normal.hidden == nil then recipe.normal.hidden = recipe.hidden end
 	if recipe.expensive.hidden == nil then recipe.expensive.hidden = recipe.hidden end
 	if recipe.normal.enabled == nil then recipe.normal.enabled = recipe.enabled end
 	if recipe.expensive.enabled == nil then recipe.expensive.enabled = recipe.enabled end
-
+	
 	if not recipe.subgroup and recipe.main_product and recipe.main_product ~="" then
 		local it = omni.lib.find_prototype(recipe.main_product)
 		if it then
@@ -168,14 +168,14 @@ function omni.marathon.standardise(recipe)
 			end
 		end
 	end
-
+	
 	--[[
 	if recipe.normal.subgroup == nil then
 		if recipe.subgroup then
 			recipe.normal.subgroup = recipe.subgroup
 		elseif #recipe.normal.results == 1 then
 			local proto = omni.lib.find_prototype(recipe.normal.results[1].name)
-			if proto then
+			if proto then 
 				recipe.normal.subgroup = proto.subgroup
 			end
 		end
@@ -188,36 +188,38 @@ function omni.marathon.standardise(recipe)
 			recipe.expensive.subgroup = proto.subgroup
 		end
 	end]]
-
+	
 	--recipe.main_product = recipe.main_product or recipe.normal.main_product or recipe.expensive.main_product
 	--recipe.normal.main_product=recipe.main_product or recipe.normal.main_product or recipe.expensive.main_product
 	--recipe.expensive.main_product=recipe.main_product or recipe.normal.main_product or recipe.expensive.main_product
-
-
+	
+	
 	if recipe.normal.category == nil then recipe.normal.category = recipe.category end
 	if recipe.expensive.category == nil then recipe.expensive.category = recipe.category end
-
+	
 	--recipe.normal.main_product = recipe.normal.main_product or recipe.main_product
 	--recipe.expensive.main_product = recipe.expensive.main_product or recipe.main_product
-
+	
 	if recipe.normal.energy_required == nil then recipe.normal.energy_required = recipe.energy_required or 0.5 end
 	if recipe.expensive.energy_required == nil then recipe.expensive.energy_required = recipe.energy_required or 0.5 end
 	recipe.hidden = nil
 	recipe.enabled = nil
-
+	
 	if recipe.normal == false then recipe.normal = table.deepcopy(recipe.expensive) end
-	recipe.icon_size=omni.lib.get_icon_size(recipe)
+	
 	recipe.energy_required = nil
-	if (recipe.main_product and recipe.main_product ~= "") or (recipe.normal.main_product and recipe.normal.main_product ~= "") or (recipe.normal.main_product and recipe.normal.main_product ~= "") then
+	if (recipe.main_product and recipe.main_product ~= "") or (recipe.normal.main_product and recipe.normal.main_product ~= "") or (recipe.expensive.main_product and recipe.expensive.main_product ~= "") then
+        log("recipe with main product: "..recipe.name)
 		local item = omni.lib.find_prototype(recipe.main_product or recipe.normal.main_product or recipe.expensive.main_product)
 		if item then
+            log("item found: "..item.name)
 			if item.icon then recipe.icon = item.icon end
 			if item.icons then recipe.icons = item.icons end
-			if item.icon_size then recipe.icon_size= item.icon_size end
+            if item.icon_size then recipe.icon_size = item.icon_size end
 		end
 	end
 	if recipe.icon and recipe.icon ~= "" then
-		recipe.icons = {{icon=recipe.icon,icon_size=recipe.icon_size or 32, scale=32/recipe.icon_size or 1}}
+		recipe.icons = {{icon=recipe.icon}}
 		recipe.icon=nil
 	end
 	recipe.main_product=nil

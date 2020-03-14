@@ -1,0 +1,8 @@
+---------------------------------------------------------------------------------------------------
+Version: 3.0.8
+Date: 2020.02.24
+  Bugfixes:
+    - Added edge case handling for removing Angel's natural gas autoplace on map presets.
+  Info:
+    - Added changelog.
+    

@@ -69,23 +69,20 @@ function roundUpHcn(nr)
 end
 
 local get_icons = function(item)
-    --Build the icons table
-    local icons = {{icon = "__omnimatter_compression__/graphics/compress-"..item.icon_size..".png"}}
-    if item.icons then
-        for _ , icon in pairs(item.icons) do
-            local shrink = icon
+	--Build the icons table
+	local icons = {{icon = "__omnimatter_compression__/graphics/compress-"..(item.icon_size or 32)..".png"}}
+	if item.icons then
+		for _ , icon in pairs(item.icons) do
+			local shrink = icon
 			--local scale = icon.scale or 1
-            --shrink.scale = scale*0.65
-            icons[#icons+1] = shrink
-        end
-    else
-        icons[#icons+1] = {icon = item.icon}
-    end
-	log(serpent.block(item.icon_size))
-	log(serpent.block(icons))
-	log(serpent.block(item))
+			--shrink.scale = scale*0.65
+			icons[#icons+1] = shrink
+		end
+	else
+		icons[#icons+1] = {icon = item.icon}
+	end
 	if item.name=="plate-aluminium" then error("derp") end
-    return icons
+	return icons
 end
 
 local find_icon = function(item)
@@ -102,16 +99,16 @@ end
 
 
 local get_icons_rec = function(rec)
-    --Build the icons table
-    local icons = {{icon = "__omnimatter_compression__/graphics/compress-"..rec.icon_size..".png"}}
-    if rec.icons then
-        for _ , icon in pairs(rec.icons) do
-            local shrink = icon
-			--local scale = icon.scale or 1
-            --shrink.scale = 0.65*scale
-            icons[#icons+1] = shrink
-        end
-    else
+	--Build the icons table
+	local icons = {{icon = "__omnimatter_compression__/graphics/compress-"..(rec.icon_size or 32)..".png"}}
+	if rec.icons then
+		for _ , icon in pairs(rec.icons) do
+			local shrink = icon
+			local scale = shrink.scale or 1
+			shrink.scale = scale
+			icons[#icons+1] = shrink
+		end
+	else
 		if rec.icon then
 			icons[#icons+1] = {icon=rec.icon}
 		else
@@ -120,40 +117,40 @@ local get_icons_rec = function(rec)
 				if rec.result then
 					process = find_icon(rec.result)
 				else
-					process = find_icon(rec.normal.result)	
+					process = find_icon(rec.normal.result)
 				end
 			else
 				if rec.results then
 					process = find_icon(rec.results[1].name)
 				else
 					process = find_icon(rec.normal.results[1].name)
-				end			
+				end
 			end
 			for _,p in pairs(process) do
 				--local scale = p.scale or 1
 				icons[#icons+1]=p
 				--icons[#icons].scale=0.65*scale
 			end
-			--icons[#icons+1] = {icon = find_icon(rec.normal.results[1].name), scale = .65}	
+			--icons[#icons+1] = {icon = find_icon(rec.normal.results[1].name), scale = .65}
 		end
-    end
-	icons[#icons+1]={icon = "__omnimatter_compression__/graphics/compress-"..rec.icon_size..".png"}
-    return icons
+	end
+	icons[#icons+1]={icon = "__omnimatter_compression__/graphics/compress-"..(rec.icon_size or 32)..".png"}
+	return icons
 end
 
 local uncompress_icons = function(item)
-    local icons = {{icon = "__omnimatter_compression__/graphics/compress-out-arrow-"..item.icon_size..".png"}}
-	icons[#icons+1] = {icon = "__omnimatter_compression__/graphics/compress-"..item.icon_size..".png"}
-    if item.icons then
-        for _ , icon in pairs(item.icons) do
-            local shrink = icon
-            --shrink.scale = .65
-            icons[#icons+1] = shrink
-        end
-    else
-        icons[#icons+1] = {icon = item.icon}
-    end
-    return icons
+	local icons = {{icon = "__omnimatter_compression__/graphics/compress-out-arrow-"..(item.icon_size or 32)..".png"}}
+	icons[#icons+1] = {icon = "__omnimatter_compression__/graphics/compress-"..(item.icon_size or 32)..".png"}
+	if item.icons then
+		for _ , icon in pairs(item.icons) do
+			local shrink = icon
+			--shrink.scale = .65
+			icons[#icons+1] = shrink
+		end
+	else
+		icons[#icons+1] = {icon = item.icon}
+	end
+	return icons
 end
 
 local new_fuel_value = function(effect,stack)
@@ -183,118 +180,128 @@ end
 
 --Create concentrated
 for _, group in pairs({"fluid"}) do
-    --Loop through all of the items in the category
-    for _, item in pairs(data.raw[group]) do
-        --Check for hidden flag to skip later
-        local hidden = false
-        for _, flag in ipairs(item.flags or {}) do
-            if flag == "hidden" then hidden = true end
-        end
-        if not (hidden or item.name:find("creative-mode")) and item.icon_size%32 == 0 and math.log(item.icon_size)/math.log(2) > 4 then
-		
+	--Loop through all of the items in the category
+	for _, item in pairs(data.raw[group]) do
+		--Check for hidden flag to skip later
+		local hidden = false
+		for _, flag in ipairs(item.flags or {}) do
+			if flag == "hidden" then hidden = true end
+		end
+		if not (hidden or item.name:find("creative-mode")) then
+			if not item.icon_size and item.icons[1].icon_size then
+				item.icon_size=item.icons[1].icon_size
+			elseif not item.icon_size and not item.icons[1].icon_size then
+				item.icon_size=32
+			end
+			if item.icon_size%32 == 0 then
+				if math.log(item.icon_size)/math.log(2) > 4 then
 
-            --Variables to use on each iteration
-            local sub_group = "fluids"
-            local order = "concentrated-"..item.name
-            local icons = get_icons(item)
+					--Variables to use on each iteration
+					local sub_group = "fluids"
+					local order = "concentrated-"..item.name
+					local icons = get_icons(item)
 
-            --Try the best option to get a valid localised name
-            local loc_key = {"fluid-name."..item.name}
-            if item.localised_name then
-                loc_key = item.localised_name
-            end
-	
-            local new_item = {
-                type = "fluid",
-                name = "concentrated-"..item.name,
-                localised_name = {"fluid-name.concentrated-fluid", table.deepcopy(loc_key)},
-                localised_description = {"fluid-description.concentrated-fluid", table.deepcopy(loc_key)},
-                icons = icons,
-				icon_size = item.icon_size,
-                order = order,
-                default_temperature = item.default_temperature,
-                max_temperature = item.max_temperature,
-				pressure_to_speed_ratio = item.pressure_to_speed_ratio,
-				flow_to_energy_ratio = item.flow_to_energy_ratio,
-				heat_capacity = new_fuel_value(item.heat_capacity,concentrationRatio),
-				base_color = item.base_color,
-				flow_color = item.flow_color,
-				fuel_value = new_fuel_value(item.fuel_value,concentrationRatio),
-				fuel_category = item.fuel_category,
-            }
+					--Try the best option to get a valid localised name
+					local loc_key = {"fluid-name."..item.name}
+					if item.localised_name then
+						loc_key = item.localised_name
+					end
 
-            --The compress recipe
-            local compress = {
-                type = "recipe",
-                name = "compress-"..item.name,
-                localised_name = {"recipe-name.concentrate-fluid", loc_key},
-                localised_description = {"recipe-description.concentrate-fluid", loc_key},
-                category = "fluid-concentration",
-                enabled = true,
-				hidden=true,
-                ingredients = {
-                    {name=item.name,type="fluid", amount=sluid_contain_fluid*concentrationRatio}
-                },
-                subgroup = "concentrator-"..sub_group,
-				icons=icons,
-                order = order,
-				results={
-					{name="concentrated-"..item.name,type="fluid", amount=sluid_contain_fluid}
-				},
-                energy_required = sluid_contain_fluid / speed_div,
-            }
-			
-			icons = uncompress_icons(item)
-            --The uncompress recipe
-            local uncompress = {
-                type = "recipe",
-                name = "uncompress-"..item.name,
-                localised_name = {"recipe-name.deconcentrate-fluid", loc_key},
-                localised_description = {"recipe-description.deconcentrate-fluid", loc_key},
-                icons = icons,
-                category = "compression",
-                enabled = true,
-				hidden = true,
-                ingredients = {
-                    {name="concentrated-"..item.name,type="fluid", amount=sluid_contain_fluid}
-                },
-                subgroup = "compressor-out-"..sub_group,
-                order = order,
-				results={
-					{name=item.name,type="fluid", amount=sluid_contain_fluid*concentrationRatio}
-				},
-                energy_required = concentrationRatio / speed_div,
-            }
+					local new_item = {
+						type = "fluid",
+						name = "concentrated-"..item.name,
+						localised_name = {"fluid-name.concentrated-fluid", table.deepcopy(loc_key)},
+						localised_description = {"fluid-description.concentrated-fluid", table.deepcopy(loc_key)},
+						icons = icons,
+						icon_size = item.icon_size,
+						order = order,
+						default_temperature = item.default_temperature,
+						max_temperature = item.max_temperature,
+						pressure_to_speed_ratio = item.pressure_to_speed_ratio,
+						flow_to_energy_ratio = item.flow_to_energy_ratio,
+						heat_capacity = new_fuel_value(item.heat_capacity,concentrationRatio),
+						base_color = item.base_color,
+						flow_color = item.flow_color,
+						fuel_value = new_fuel_value(item.fuel_value,concentrationRatio),
+						fuel_category = item.fuel_category,
+					}
 
-            --The compressed item
-			
-            --Insert the recipes and item into tables that we will extend into the game later.
-			compressed_item_names[#compressed_item_names+1]="compressed-"..item.name
-            compress_recipes[#compress_recipes+1] = compress
-            uncompress_recipes[#uncompress_recipes+1] = uncompress
-            compress_items[#compress_items+1] = new_item
-			--add_compression_tech(item.name)
-            --Get the technology we want to use and add our recipes as unlocks
-        end
-    end
+					--The compress recipe
+					local compress = {
+						type = "recipe",
+						name = "compress-"..item.name,
+						localised_name = {"recipe-name.concentrate-fluid", loc_key},
+						localised_description = {"recipe-description.concentrate-fluid", loc_key},
+						category = "fluid-concentration",
+						enabled = true,
+						hidden = true,
+						ingredients = {
+							{name=item.name,type="fluid", amount=sluid_contain_fluid*concentrationRatio}
+						},
+						subgroup = "concentrator-"..sub_group,
+						icons=icons,
+						icon_size=item.icon_size,
+						order = order,
+						results={
+							{name="concentrated-"..item.name,type="fluid", amount=sluid_contain_fluid}
+						},
+						energy_required = sluid_contain_fluid / speed_div,
+					}
+
+					icons = uncompress_icons(item)
+					--The uncompress recipe
+					local uncompress = {
+						type = "recipe",
+						name = "uncompress-"..item.name,
+						localised_name = {"recipe-name.deconcentrate-fluid", loc_key},
+						localised_description = {"recipe-description.deconcentrate-fluid", loc_key},
+						icons = icons,
+						icon_size=item.icon_size,
+						category = "compression",
+						enabled = true,
+						hidden = true,
+						ingredients = {
+							{name="concentrated-"..item.name,type="fluid", amount=sluid_contain_fluid}
+						},
+						subgroup = "compressor-out-"..sub_group,
+						order = order,
+						results={
+							{name=item.name,type="fluid", amount=sluid_contain_fluid*concentrationRatio}
+						},
+						energy_required = concentrationRatio / speed_div,
+					}
+
+					--The compressed item
+
+					--Insert the recipes and item into tables that we will extend into the game later.
+					compressed_item_names[#compressed_item_names+1]="compressed-"..item.name
+					compress_recipes[#compress_recipes+1] = compress
+					uncompress_recipes[#uncompress_recipes+1] = uncompress
+					compress_items[#compress_items+1] = new_item
+					--add_compression_tech(item.name)
+					--Get the technology we want to use and add our recipes as unlocks
+				end
+			end
+		end
+	end
 end
 --Loop through all of these item categories
 
 for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", "capsule", "mining-tool", "tool","gun","armor"}) do
-    --Loop through all of the items in the category
-    for _, item in pairs(data.raw[group]) do
-        --Check for hidden flag to skip later
-        local hidden = false
-        for _, flag in ipairs(item.flags or {}) do
-            if flag == "hidden" then hidden = true end
-        end
+	--Loop through all of the items in the category
+	for _, item in pairs(data.raw[group]) do
+		--Check for hidden flag to skip later
+		local hidden = false
+		for _, flag in ipairs(item.flags or {}) do
+			if flag == "hidden" then hidden = true end
+		end
 		--log("compressing item: "..item.name..":"..item.stack_size)
-        --Don't compress items that only stack to 1
-        --Skip items with a super high stack size, Why compress something already this compressed!!!! (also avoids errors)
-        --Skip hidden items and creative mode mod items
-        if item.stack_size > 1 and item.stack_size <= max_stack_size_to_compress and not (hidden or item.name:find("creative-mode")) and item.icon_size%32 == 0 and math.log(item.icon_size)/math.log(2) > 4 then
-            --Not really needed but we will save into the item in case we want to use it before we extend the items/recipes
-            item_count = item_count + 1
+		--Don't compress items that only stack to 1
+		--Skip items with a super high stack size, Why compress something already this compressed!!!! (also avoids errors)
+		--Skip hidden items and creative mode mod items
+		if item.stack_size > 1 and item.stack_size <= max_stack_size_to_compress and not (hidden or item.name:find("creative-mode")) and (item.icon_size or 0)%32 == 0 and math.log(item.icon_size or 32)/math.log(2) > 4 then
+			--Not really needed but we will save into the item in case we want to use it before we extend the items/recipes
+			item_count = item_count + 1
 			if settings.startup["omnicompression_compensate_stacksizes"].value then
 				if not item.place_result or omni.lib.find_entity_prototype(item.place_result) == nil then
 					item.stack_size=omni.lib.round_up(item.stack_size/60)*60
@@ -302,99 +309,99 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 					item.stack_size=omni.lib.round_up(item.stack_size/6)*6
 				end
 			end
-			
-            --Variables to use on each iteration
-            local sub_group = "items"
-            local order = "compressed-"..item.name
-            local icons = get_icons(item)
 
-            --Try the best option to get a valid localised name
-            local loc_key = {"item-name."..item.name}
-            if item.localised_name then
-                loc_key = table.deepcopy(item.localised_name)
-            elseif item.place_result then
-                loc_key = {"entity-name."..item.place_result}
-            elseif item.placed_as_equipment_result then
-                loc_key = {"equipment-name."..item.placed_as_equipment_result}
-            end
-            --Get the techname to assign this too
+			--Variables to use on each iteration
+			local sub_group = "items"
+			local order = "compressed-"..item.name
+			local icons = get_icons(item)
+
+			--Try the best option to get a valid localised name
+			local loc_key = {"item-name."..item.name}
+			if item.localised_name then
+				loc_key = table.deepcopy(item.localised_name)
+			elseif item.place_result then
+				loc_key = {"entity-name."..item.place_result}
+			elseif item.placed_as_equipment_result then
+				loc_key = {"equipment-name."..item.placed_as_equipment_result}
+			end
+			--Get the techname to assign this too
 			local it_type = "item"
 			if is_science(item) then it_type = "tool" end
-            local new_item = {
-                type = it_type,
-                name = "compressed-"..item.name,
-                localised_name = {"item-name.compressed-item", loc_key},
-                localised_description = {"item-description.compressed-item", loc_key},
-                flags = item.flags,
-                icons = icons,
-				icon_size = 32,
-                subgroup = item.subgroup,
-                order = order,
-                stack_size = compressed_item_stack_size,
-                inter_item_count = item_count,
+			local new_item = {
+				type = it_type,
+				name = "compressed-"..item.name,
+				localised_name = {"item-name.compressed-item", loc_key},
+				localised_description = {"item-description.compressed-item", loc_key},
+				flags = item.flags,
+				icons = icons,
+				icon_size = item.icon_size or 32,
+				subgroup = item.subgroup,
+				order = order,
+				stack_size = compressed_item_stack_size,
+				inter_item_count = item_count,
 				fuel_value = new_fuel_value(item.fuel_value,item.stack_size),
 				fuel_category = item.fuel_category,
 				fuel_acceleration_multiplier = item.fuel_acceleration_multiplier,
 				fuel_top_speed_multiplier = item.fuel_top_speed_multiplier,
 				durability=item.durability
-            }
+			}
 
-            --The compress recipe
-            local compress = {
-                type = "recipe",
-                name = "compress-"..item.name,
-                localised_name = {"recipe-name.compress-item", loc_key},
-                localised_description = {"recipe-description.compress-item", loc_key},
-                category = "compression",
-                enabled = true,
+			--The compress recipe
+			local compress = {
+				type = "recipe",
+				name = "compress-"..item.name,
+				localised_name = {"recipe-name.compress-item", loc_key},
+				localised_description = {"recipe-description.compress-item", loc_key},
+				category = "compression",
+				enabled = true,
 				hidden=true,
-                ingredients = {
-                    {item.name, item.stack_size}
-                },
-                subgroup = "compressor-"..sub_group,
+				ingredients = {
+					{item.name, item.stack_size}
+				},
+				subgroup = "compressor-"..sub_group,
 				icons=icons,
-				icon_size = 32,
-                order = order,
-                inter_item_count = item_count,
-                result = "compressed-"..item.name,
-                energy_required = item.stack_size / speed_div,
-            }
-			
+				icon_size = item.icon_size or 32,
+				order = order,
+				inter_item_count = item_count,
+				result = "compressed-"..item.name,
+				energy_required = item.stack_size / speed_div,
+			}
+
 			icons = uncompress_icons(item)
-            --The uncompress recipe
-            local uncompress = {
-                type = "recipe",
-                name = "uncompress-"..item.name,
-                localised_name = {"recipe-name.uncompress-item", loc_key},
-                localised_description = {"recipe-description.uncompress-item", loc_key},
-                icons = icons,
-				icon_size = 32,
-                category = "compression",
-                enabled = true,
+			--The uncompress recipe
+			local uncompress = {
+				type = "recipe",
+				name = "uncompress-"..item.name,
+				localised_name = {"recipe-name.uncompress-item", loc_key},
+				localised_description = {"recipe-description.uncompress-item", loc_key},
+				icons = icons,
+				icon_size = item.icon_size or 32,
+				category = "compression",
+				enabled = true,
 				hidden = true,
-                ingredients = {
-                    {"compressed-"..item.name, 1}
-                },
-                subgroup = "compressor-out-"..sub_group,
-                order = order,
-                result = item.name,
-                result_count = item.stack_size,
-                inter_item_count = item_count,
-                energy_required = item.stack_size / speed_div,
-            }
+				ingredients = {
+					{"compressed-"..item.name, 1}
+				},
+				subgroup = "compressor-out-"..sub_group,
+				order = order,
+				result = item.name,
+				result_count = item.stack_size,
+				inter_item_count = item_count,
+				energy_required = item.stack_size / speed_div,
+			}
 			omni.marathon.standardise(compress)
 			omni.marathon.standardise(uncompress)
-            --The compressed item
-			
-            --Insert the recipes and item into tables that we will extend into the game later.
+			--The compressed item
+
+			--Insert the recipes and item into tables that we will extend into the game later.
 			compressed_item_names[#compressed_item_names+1]="compressed-"..item.name
-            compress_recipes[#compress_recipes+1] = compress
-            uncompress_recipes[#uncompress_recipes+1] = uncompress
-            compress_items[#compress_items+1] = new_item
+			compress_recipes[#compress_recipes+1] = compress
+			uncompress_recipes[#uncompress_recipes+1] = uncompress
+			compress_items[#compress_items+1] = new_item
 			--add_compression_tech(item.name)
-            --Get the technology we want to use and add our recipes as unlocks
-        end
-    end
+			--Get the technology we want to use and add our recipes as unlocks
+		end
+	end
 end
 data:extend(compress_items)
 
@@ -486,17 +493,17 @@ end
 function get_recipe_values(ingredients,results)
 	local parts={}
 	local lng = {0,0}
-	
+
 	local all_ing = seperate_fluid_solid(ingredients)
 	local all_res = seperate_fluid_solid(results)
-	
-	
+
+
 	for _,comp in pairs({all_ing.solid,all_res.solid}) do
 		for _,  resing in pairs(comp) do
 			parts[#parts+1]={name=resing.name,amount=resing.amount}
 		end
 	end
-	
+
 	local lcm_rec = 1
 	local gcd_rec = 0
 	local mult_rec = 1
@@ -544,7 +551,7 @@ function get_recipe_values(ingredients,results)
 	for i,p in pairs(new_parts) do
 		new[i]=new[i]/new_gcd
 	end
-	
+
 	local total_mult = new[1]*omni.lib.find_stacksize(parts[1].name)/parts[1].amount
 	local newing = {}
 	for i=1,#all_ing.solid do
@@ -693,7 +700,7 @@ function adjustOutput(recipe)
 						add.probability = res.amount-math.floor(res.amount)
 						res.amount = math.floor(res.amount)
 						add.amount = 1
-						table.insert(recipe[dif].results,add)			
+						table.insert(recipe[dif].results,add)
 					end
 				end
 			end
@@ -724,7 +731,7 @@ for _, gen in pairs(data.raw.generator) do
 end
 
 function create_compression_recipe(recipe)
-	if recipe.icon_size == 32 and recipe.normal.results and #recipe.normal.results > 0 and not_only_fluids(recipe) and not_random(recipe) and not omni.lib.is_in_table(recipe.name,excluded_recipes) and (more_than_one(recipe) or omni.lib.is_in_table(recipe.name,include_recipes)) and not string.find(recipe.name,"creative") then
+	if (recipe.icon_size or 0)%32 == 0 and math.log(recipe.icon_size or 32)/math.log(2) > 4 and recipe.normal.results and #recipe.normal.results > 0 and not_only_fluids(recipe) and not_random(recipe) and not omni.lib.is_in_table(recipe.name,excluded_recipes) and (more_than_one(recipe) or omni.lib.is_in_table(recipe.name,include_recipes)) and not string.find(recipe.name,"creative") then
 		local parts = {}
 		--log("creating compressed recipe for "..recipe.name)
 		--get list of ingredients and results
@@ -771,9 +778,9 @@ function create_compression_recipe(recipe)
 			end
 		else
 			subgr.normal = subgr.regular
-			subgr.expensive = subgr.regular		
+			subgr.expensive = subgr.regular
 		end
-		
+
 		local check = {{seperate_fluid_solid(ing.normal),seperate_fluid_solid(res.normal)},{seperate_fluid_solid(ing.expensive),seperate_fluid_solid(res.expensive)}}
 		if compressed_ingredients_exist(check[1][1].solid,check[1][2].solid) and compressed_ingredients_exist(check[2][1].solid,check[2][2].solid) then
 			----log(serpent.block(recipe))
@@ -782,10 +789,10 @@ function create_compression_recipe(recipe)
 			local mult = {}
 			if check[1][1].solid[1] then
 				mult = {normal=new_val_norm.ingredients[1].amount/check[1][1].solid[1].amount*omni.lib.find_stacksize(check[1][1].solid[1].name),
-						expensive=new_val_exp.ingredients[1].amount/check[2][1].solid[1].amount*omni.lib.find_stacksize(check[2][1].solid[1].name)}
+				expensive=new_val_exp.ingredients[1].amount/check[2][1].solid[1].amount*omni.lib.find_stacksize(check[2][1].solid[1].name)}
 			else
 				mult = {normal=new_val_norm.results[1].amount/check[1][2].solid[1].amount*omni.lib.find_stacksize(check[1][2].solid[1].name),
-						expensive = new_val_exp.results[1].amount/check[2][2].solid[1].amount*omni.lib.find_stacksize(check[2][2].solid[1].name)}
+				expensive = new_val_exp.results[1].amount/check[2][2].solid[1].amount*omni.lib.find_stacksize(check[2][2].solid[1].name)}
 			end
 			local tid = {}
 			if recipe.normal and recipe.normal.energy_required then
@@ -796,39 +803,39 @@ function create_compression_recipe(recipe)
 			tid.normal = tid.normal/gcd.normal
 			tid.expensive = tid.expensive/gcd.expensive
 			local icons = get_icons_rec(recipe)
-			
+
 			if recipe.normal.category and not data.raw["recipe-category"][recipe.normal.category.."-compressed"] then
 				data:extend({{type = "recipe-category",name = recipe.normal.category.."-compressed"}})
 			elseif not data.raw["recipe-category"]["general-compressed"] then
 				data:extend({{type = "recipe-category",name = "general-compressed"}})
 			end
-			
+
 			local new_cat = "crafting-compressed"
 			if recipe.normal.category then new_cat = recipe.normal.category.."-compressed" end
-			
+
 			local loc = {"recipe-name."..recipe.name}
 			local r = {
-			type = "recipe",
-			icons = icons,
-			icon_size = 32,
-			name = recipe.name.."-compression",
-			enabled = false,
-			hidden = recipe.hidden,
-			normal = {
-				ingredients = new_val_norm.ingredients,
-				results = new_val_norm.results,	
-				energy_required = tid.normal,
-				subgroup = subgr.normal				
-			},
-			expensive = {
-				ingredients = new_val_exp.ingredients,
-				results = new_val_exp.results,	
-				energy_required = tid.expensive,
-				subgroup = subgr.expensive
-			},
-			category = new_cat,
-			subgroup = subgr.regular,
-			order = recipe.order,
+				type = "recipe",
+				icons = icons,
+				icon_size = recipe.icon_size or 32,
+				name = recipe.name.."-compression",
+				enabled = false,
+				hidden = recipe.hidden,
+				normal = {
+					ingredients = new_val_norm.ingredients,
+					results = new_val_norm.results,
+					energy_required = tid.normal,
+					subgroup = subgr.normal
+				},
+				expensive = {
+					ingredients = new_val_exp.ingredients,
+					results = new_val_exp.results,
+					energy_required = tid.expensive,
+					subgroup = subgr.expensive
+				},
+				category = new_cat,
+				subgroup = subgr.regular,
+				order = recipe.order,
 			}
 			if settings.startup["omnicompression_normalize_stacked_buildings"].value then
 				for _,dif in pairs({"normal","expensive"}) do
@@ -841,7 +848,7 @@ function create_compression_recipe(recipe)
 					end
 				end
 			end
-			--if not r.subgroup then 
+			--if not r.subgroup then
 			if recipe.localised_name then
 				loc = recipe.localised_name
 			end
@@ -851,7 +858,7 @@ function create_compression_recipe(recipe)
 				r.normal.subgroup = "compressor-".."items"
 				r.expensive.subgroup = "compressor-".."items"
 			end
-			
+
 			r.normal.hidden = recipe.normal.hidden
 			r.normal.enabled = false
 			r.normal.category= new_cat
@@ -888,7 +895,7 @@ function create_compression_recipe(recipe)
 			end
 			return adjustOutput(r)
 		end
-	elseif recipe.icon_size == 32 and recipe.normal.results and #recipe.normal.results > 0 and not_random(recipe) and not omni.lib.is_in_table(recipe.name,excluded_recipes) and (more_than_one(recipe) or omni.lib.is_in_table(recipe.name,include_recipes)) and not string.find(recipe.name,"creative") then
+	elseif (recipe.icon_size or 0)%32 == 0 and math.log(recipe.icon_size or 32)/math.log(2) > 4 and recipe.normal.results and #recipe.normal.results > 0 and not_random(recipe) and not omni.lib.is_in_table(recipe.name,excluded_recipes) and (more_than_one(recipe) or omni.lib.is_in_table(recipe.name,include_recipes)) and not string.find(recipe.name,"creative") then
 		local new_cat = "crafting-compressed"
 		if recipe.normal.category then new_cat = recipe.normal.category.."-compressed" end
 		if recipe.normal.category and not data.raw["recipe-category"][recipe.normal.category.."-compressed"] then
@@ -900,7 +907,7 @@ function create_compression_recipe(recipe)
 		r.enabled=false
 		r.name = r.name.."-compression"
 		if r.icon or r.icons then
-			local icons = {{icon = "__omnimatter_compression__/graphics/compress-"..recipe.icon_size..".png"}}
+			local icons = {{icon = "__omnimatter_compression__/graphics/compress-"..(recipe.icon_size or 32)..".png"}}
 			if r.icons then
 				for _ , icon in pairs(r.icons) do
 					local shrink = icon
@@ -952,7 +959,7 @@ local create_void = function(recipe)
 		new_rc.category = new_cat
 		new_rc.normal.ingredients[1].name="compressed-"..new_rc.normal.ingredients[1].name
 		new_rc.expensive.ingredients[1].name="compressed-"..new_rc.expensive.ingredients[1].name
-		
+
 		return table.deepcopy(new_rc)
 	end
 	return nil
@@ -966,7 +973,7 @@ for _,recipe in pairs(data.raw.recipe) do
 	--Start with the ingredients
 	log("calc compressed recipe of "..recipe.name)
 	if not mods["omnimatter_marathon"] then omni.marathon.standardise(recipe) end
-	if recipe.subgroup ~= "y_personal_equip" and recipe.icon_size == 32 then
+	if recipe.subgroup ~= "y_personal_equip" and (recipe.icon_size or 0)%32 == 0 and math.log(recipe.icon_size or 32)/math.log(2) > 4 then
 		local rc = create_compression_recipe(recipe)
 		if not rc and string.find(recipe.name,"void") then rc=create_void(recipe) end
 		if rc then
@@ -991,7 +998,7 @@ for name,fluid in pairs(generatorFluidRecipes) do
 			new.name = new.name.."-grade-"..i
 			local newFluid={}
 			for _,dif in pairs({"normal","expensive"}) do
-				for j,res in pairs(new[dif].results) do 
+				for j,res in pairs(new[dif].results) do
 					if res.name == name then
 						new[dif].results[j].amount = new[dif].results[j].amount/ math.pow(multiplier,i)
 						newFluid=table.deepcopy(data.raw.fluid[res.name])
@@ -1003,11 +1010,11 @@ for name,fluid in pairs(generatorFluidRecipes) do
 					end
 				end
 			end
-			
+
 			newFluid.localised_name={"fluid-name.compressed-fluid",{"fluid-name."..newFluid.name},i}
 			newFluid.name = newFluid.name.."-concentrated-grade-"..i
 			newFluid.heat_capacity = tonumber(string.sub(newFluid.heat_capacity,1,string.len(newFluid.heat_capacity)-2))*math.pow(multiplier,i)..string.sub(newFluid.heat_capacity,string.len(newFluid.heat_capacity)-1,string.len(newFluid.heat_capacity))
-			if newFluid.fuel_value then 
+			if newFluid.fuel_value then
 				newFluid.fuel_value=tonumber(string.sub(newFluid.fuel_value,1,string.len(newFluid.fuel_value)-2))*math.pow(multiplier,i)..string.sub(newFluid.fuel_value,string.len(newFluid.fuel_value)-2,string.len(newFluid.fuel_value))
 			end
 			if newFluid.icon then

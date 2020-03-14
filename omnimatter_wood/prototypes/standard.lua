@@ -60,8 +60,8 @@ RecGen:create("omnimatter_wood","wood-omnitraction"):
 	setSubgroup("omnimutator-items"):
 	setCategory("omnite-extraction-both"):
 	marathon():
-	setIngredients({type = "item", name = "omniwood", amount = 5}):
-	setResults({type = "item", name = "wood", amount=1}):extend()
+	setIngredients({type = "item", name = "omniwood", amount = 3}):
+	setResults({type = "item", name = "wood", amount=10}):extend()
 	
 	
 RecGen:create("omnimatter_wood","basic-wood-mutation"):

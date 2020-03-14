@@ -55,7 +55,10 @@ if not mods["angelsrefining"] then
 			elseif ore == "uranium-ore" then
 				plate = "uranium-235"
 				metal="uranium"
-			else				
+			elseif ore== "thorium-ore" then
+				plate= "thorium-232"
+				metal="thorium"
+			else
 				plate = string.sub(ore,1,string.len(ore)-string.len("-ore")).."-plate"
 				metal=string.sub(ore,1,string.len(ore)-string.len("-ore"))
 			end
@@ -92,13 +95,13 @@ if not mods["angelsrefining"] then
 				},
 				energy_required = 5,
 			}
-			
+
 			crystalines[#crystalines+1]=solution
 			omni.lib.add_unlock_recipe("crystallology-"..tier, ore.."-salting")
 			omni.lib.add_unlock_recipe("crystallology-"..tier, ore.."-omnide-solution")
 			omni.lib.add_unlock_recipe("crystallology-"..tier, ore.."-crystal-omnitraction")
 			omni.lib.add_unlock_recipe("crystallology-"..tier, ore.."-crystal")
-			
+
 
 		end
 	end

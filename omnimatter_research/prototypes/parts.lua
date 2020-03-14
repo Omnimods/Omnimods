@@ -33,7 +33,7 @@ RecGen:create("omnimatter_research","plate-smelting-omnicium"):
 	setIngredients({"omnicium-plate", 5}):
 	setCategory("omnifurnace"):
 	marathon():
-	setNormalResults({name="liquid-molten-omnicium",amount=50,type="fluid"}):
+	setNormalResults({name="liquid-molten-omnicium",amount=100,type="fluid"}):
 	setExpensiveResults({name="liquid-molten-omnicium",amount=50,type="fluid"}):extend()
 	
 BuildGen:import("omni-furnace"):setFluidBox("XI.XX"):extend()
