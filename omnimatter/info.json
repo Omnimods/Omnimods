@@ -5,5 +5,5 @@
 "author":"EmperorZelos",
 "description":"This mod condenses all ores into a single ore from which everything is extracted.",
 "factorio_version":"0.18",
-"dependencies":["base","? bobores","?angelspetrochem","?only-smelting","?angelsrefining","?Flare Stack","omnilib >= 3.0.0","?angelssmelting"]
+"dependencies":["base","? bobores","?angelspetrochem","?only-smelting","?angelsrefining","?Flare Stack","?bobtech","omnilib >= 3.0.0","?angelssmelting"]
 }

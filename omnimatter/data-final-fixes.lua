@@ -221,6 +221,15 @@ end
 
 RecGen:import("coal-liquefaction"):replaceIngredients("heavy-oil","omniston"):replaceIngredients("liquid-naphtha","omniston"):extend()
 
+if mods["bobtech"] and settings.startup["bobmods-burnerphase"] then
+	new_ingredients =
+    {
+      {"omnite", 1},
+      {"stone", 1},
+    }
+	data.raw.recipe["steam-science-pack"].ingredients = new_ingredients
+end
+
 --log("zombiee why more ideas?")
 
 --data.raw.technology["coal-liquefaction"]=nil
