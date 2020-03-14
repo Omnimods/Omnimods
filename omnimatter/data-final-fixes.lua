@@ -122,12 +122,11 @@ for _,tier in pairs(omnisource) do
 			if gen.minable.result == ore.name then
 				data.raw.resource[gen.name] = nil
 				data.raw["autoplace-control"][gen.name] = nil
-				--return
 			elseif gen.minable.results  then
 				for _,res in pairs(gen.minable.results) do
 					if res.name == ore.name then
 						data.raw.resource[gen.name] = nil
-						data.raw["autoplace-control"][gen.name] = nil			
+						data.raw["autoplace-control"][gen.name] = nil
 					end
 				end
 			end
@@ -137,6 +136,7 @@ for _,tier in pairs(omnisource) do
 				if pre.basic_settings.autoplace_controls then
 					pre.basic_settings.autoplace_controls[ore.name] = nil
 					pre.basic_settings.autoplace_controls["sulfur"] = nil
+					pre.basic_settings.autoplace_controls["infinite-"..ore.name] = nil
 				end
 			end
 		end
