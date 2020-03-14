@@ -7,7 +7,7 @@ if mods["angelsbioprocessing"] then
 	setTechIcon("angelsbioprocessing","algae-farm-tech"):
 	setTechCost(250):
 	setTechTime(15):
-	setCategory("bio-processing-nauvis"):
+	setCategory("bio-processing"):
 	setSubgroup("bio-processing-purple"):
 	setIngredients({
 	{type="fluid",name="omnic-acid",amount=144},
