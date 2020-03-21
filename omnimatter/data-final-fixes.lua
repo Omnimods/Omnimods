@@ -221,7 +221,8 @@ end
 
 RecGen:import("coal-liquefaction"):replaceIngredients("heavy-oil","omniston"):replaceIngredients("liquid-naphtha","omniston"):extend()
 
-if mods["bobtech"] and settings.startup["bobmods-burnerphase"] then
+-- Fix for Steam SP Bob's Tech introduces sometimes
+if data.raw.recipe["steam-science-pack"] then
 	new_ingredients =
     {
       {"omnite", 1},
