@@ -472,18 +472,68 @@ for _,pump in pairs(data.raw["offshore-pump"]) do
 				dying_explosion = "medium-explosion",
 				collision_box = {{-0.9, -0.9}, {0.9, 0.9}},
 				selection_box = {{-1, -1}, {1, 1}},
-				
-				animation = make_4way_animation_from_spritesheet({ layers =
-				{
-				  {
-					filename = "__base__/graphics/entity/offshore-pump/offshore-pump.png",
-					width = 160,
-					height = 102,
-					frame_count = 1,
-					--shift = util.by_pixel(-5, -4.5),
-				  },
-				}}),
-					
+				picture = {
+					north = {
+						filename = "__base__/graphics/entity/offshore-pump/offshore-pump-north.png",
+   						priority = "high",
+  						shift = util.by_pixel(5, -18),
+  						width = 89,
+  						height = 69,
+  						hr_version = {
+ 						    filename = "__base__/graphics/entity/offshore-pump/hr-offshore-pump-north.png",
+							priority = "high",
+  						    shift = util.by_pixel(5, -18),
+							width = 178,
+							height = 137,
+  						    scale = 0.5
+ 						}
+ 					},
+ 					east = {
+						filename = "__base__/graphics/entity/offshore-pump/offshore-pump-east.png",
+						priority = "high",
+						shift = util.by_pixel(31, -5),
+						width = 94,
+						height = 78,
+						hr_version = {
+							filename = "__base__/graphics/entity/offshore-pump/hr-offshore-pump-east.png",
+							priority = "high",
+							shift = util.by_pixel(31, -5),
+							width = 188,
+							height = 156,
+							scale = 0.5
+						}
+					},
+ 					south = {
+  						filename = "__base__/graphics/entity/offshore-pump/offshore-pump-south.png",
+   						priority = "high",
+   						shift = util.by_pixel(5, 22),
+  						width = 90,
+   						height = 76,
+   						hr_version = {
+    						filename = "__base__/graphics/entity/offshore-pump/hr-offshore-pump-south.png",
+    						priority = "high",
+							shift = util.by_pixel(5, 22),
+							width = 180,
+							height = 152,
+							scale = 0.5
+  						}
+ 					},
+  					west = {
+  						filename = "__base__/graphics/entity/offshore-pump/offshore-pump-west.png",
+  						priority = "high",
+   						shift = util.by_pixel(-17, -7),
+  						width = 66,
+  						height = 75,
+  						hr_version = {
+							filename = "__base__/graphics/entity/offshore-pump/hr-offshore-pump-west.png",
+							priority = "high",
+							shift = util.by_pixel(-17, -7),
+  						    width = 132,
+  						    height = 149,
+							scale = 0.5
+  						}
+ 					}
+				},					
 				vehicle_impact_sound =  { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 },
 				working_sound =
 				{
