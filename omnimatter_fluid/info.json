@@ -1,0 +1,19 @@
+{
+"name":"omnimatter_fluid",
+"version":"3.0.0",
+"title":"Omnifluid",
+"author":"EmperorZelos",
+"description":"Replaces all fluids by items that are used instead.",
+"factorio_version":"0.17",
+"dependencies":["base",
+	"?omnimatter",
+	"omnilib >= 3.0.0",
+	"?aai-industry",
+	"?omnimatter_crystal",
+	"?omnimatter_science",
+	"?angelssmelting",
+	"?Thaumaturgic-Machinations",
+	"?omnimatter_research",
+	"?ScienceCostTweakerM",
+	"?angelsindustries"]
+}
