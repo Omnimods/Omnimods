@@ -55,7 +55,7 @@ RecGen:create("omnimatter","pulverized-omnite"):
 	setCategory(c):
 	marathon():
 	setIngredients({"crushed-omnite", 10}):
-	setResults({type="item", name="pulverized-omnite", amount=15}):
+	setResults({type="item", name="pulverized-omnite", amount=10}):
 	setEnergy(0.5):extend()
 
 RecGen:create("omnimatter","pulverized-stone"):
@@ -66,8 +66,8 @@ RecGen:create("omnimatter","pulverized-stone"):
 	setCategory(c):
 	--setEnabled():
 	marathon():
-	setIngredients({"stone-crushed", 15}):
-	setResults({type="item", name="pulverized-stone", amount=15}):extend()
+	setIngredients({"stone-crushed", 10}):
+	setResults({type="item", name="pulverized-stone", amount=10}):extend()
 
 
 
