@@ -49,9 +49,9 @@ RecGen:create("omnimatter_wood","wasteMutation"):
 	setEnergy(2):
 	setIngredients({
       {type = "item", name = "wood", amount = 2},
-      {type = "fluid", name = "omnic-waste", amount = 200},
+      {type = "fluid", name = "omnic-waste", amount = 600},
     }):
-	setResults({type = "item", name = "omniwood", amount=11}):
+	setResults({type = "item", name = "omniwood", amount=5}):
 	setEnabled():extend()
 
 RecGen:create("omnimatter_wood","wood-omnitraction"):
@@ -60,8 +60,8 @@ RecGen:create("omnimatter_wood","wood-omnitraction"):
 	setSubgroup("omnimutator-items"):
 	setCategory("omnite-extraction-both"):
 	marathon():
-	setIngredients({type = "item", name = "omniwood", amount = 3}):
-	setResults({type = "item", name = "wood", amount=10}):extend()
+	setIngredients({type = "item", name = "omniwood", amount = 6}):
+	setResults({type = "item", name = "wood", amount=8}):extend()
 	
 	
 RecGen:create("omnimatter_wood","basic-wood-mutation"):
