@@ -1,24 +1,3 @@
-
---[[
-if mods["SpaceMod"] and mods["angelssmelting"] and mods["bobplates"]then
-	omni.lib.replace_recipe_ingredient("drydock-assembly","processing-unit",omni.crystal.find_crystallonic({"manganese","rutile","cobalt","chrome"},2))
-	omni.lib.replace_recipe_ingredient("space-thruster","processing-unit",omni.crystal.find_crystallonic({"manganese","rutile","cobalt","chrome"},2))
-	omni.lib.replace_recipe_ingredient("fuel-cell","processing-unit",omni.crystal.find_crystallonic({"manganese","rutile","cobalt","chrome"},2))
-	omni.lib.replace_recipe_ingredient("habitation","processing-unit",omni.crystal.find_crystallonic({"manganese","rutile","cobalt","chrome"},2))
-	omni.lib.replace_recipe_ingredient("life-support","processing-unit",omni.crystal.find_crystallonic({"manganese","rutile","cobalt","chrome"},2))
-	omni.lib.replace_recipe_ingredient("command","processing-unit",omni.crystal.find_crystallonic({"manganese","rutile","cobalt","chrome"},2))
-	omni.lib.replace_recipe_ingredient("astrometrics","processing-unit",omni.crystal.find_crystallonic({"manganese","rutile","cobalt","chrome"},2))
-	omni.lib.replace_recipe_ingredient("ftl-drive","processing-unit",omni.crystal.find_crystallonic({"manganese","rutile","cobalt","chrome"},2))
-end
-
-if mods["bobplates"] then
-	omni.crystal.generate_hybrid_circuit({"copper","lead","tin",1},"advanced-circuit","Logic")
-	omni.crystal.generate_hybrid_circuit({"bauxite","lead","zinc","copper",2},"processing-unit","Processing")
-	if mods["angelssmelting"] then
-		omni.crystal.generate_hybrid_circuit({"manganese","rutile","cobalt","chrome",2},"processing-unit","Processing")
-	end
-end]]
-
 if angelsmods and angelsmods.refining then
 	----log("test: "..settings.startup["omnicrystal-sloth"].value)
 	--"angelsore7-crystallization-"
@@ -50,3 +29,40 @@ for i=2,4 do
 		--data.raw.technology["crystallonics-"..i].enabled = false
 	end
 end
+
+BuildGen:create("omnimatter_crystal","omniplant"):
+	setSubgroup("crystallization"):
+	setLocName("omniplant-burner"):
+	setIcons("omniplant","omnimatter_crystal"):
+	setIngredients({"copper-pipe",15},{"omnicium-plate",5},{"basic-circuit-board",5},{"omnite-brick",10},{"iron-gear-wheel",10}):
+	setBurner(0.75,2):
+	setEnergy(25):
+	setUsage(function(level,grade) return "750kW" end):
+	setTechName("omnitractor-electric-1"):
+	setReplace("omniplant"):
+	setStacksize(20):
+	setSize(5):
+	setCrafting({"omniplant"}):
+	setSpeed(1):
+	setSoundWorking("oil-refinery",1,"base"):
+	setSoundVolume(2):
+	setAnimation({
+	layers={
+	{
+        filename = "__omnimatter_crystal__/graphics/buildings/omni-plant.png",
+		priority = "extra-high",
+        width = 224,
+        height = 224,
+        frame_count = 36,
+		line_length = 6,
+        shift = {0.00, -0.05},
+		scale = 1,
+		animation_speed = 0.5
+	},
+	}
+	}):
+	setOverlay("omni-plant-overlay"):
+	setFluidBox("XWXWX.XXXXX.XXXXX.XXXXX.XKXKX"):
+	extend()
+	
+RecGen:import("omniplant-1"):addIngredients({"burner-omniplant",1}):extend()
