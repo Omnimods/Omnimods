@@ -70,7 +70,7 @@ end
 
 local get_icons = function(item)
 	--Build the icons table
-	local icons = {{icon = "__omnimatter_compression__/graphics/compress-"..(item.icon_size or 32)..".png"}}
+	local icons = {{icon = "__omnimatter_compression__/graphics/compress-"..(item.icon_size or 32)..".png", icon_size = item.icon_size or 32}}
 	if item.icons then
 		for _ , icon in pairs(item.icons) do
 			local shrink = icon
@@ -79,9 +79,9 @@ local get_icons = function(item)
 			icons[#icons+1] = shrink
 		end
 	else
-		icons[#icons+1] = {icon = item.icon}
+		icons[#icons+1] = {icon = item.icon, icon_size = item.icon_size or 32}
 	end
-	if item.name=="plate-aluminium" then error("derp") end
+	-- if item.name=="crude-oil" then log(serpent.block(icons)) end
 	return icons
 end
 
@@ -138,19 +138,14 @@ local get_icons_rec = function(rec)
 	return icons
 end
 
-local uncompress_icons = function(item)
-	local icons = {{icon = "__omnimatter_compression__/graphics/compress-out-arrow-"..(item.icon_size or 32)..".png"}}
-	icons[#icons+1] = {icon = "__omnimatter_compression__/graphics/compress-"..(item.icon_size or 32)..".png"}
-	if item.icons then
-		for _ , icon in pairs(item.icons) do
-			local shrink = icon
-			--shrink.scale = .65
-			icons[#icons+1] = shrink
-		end
-	else
-		icons[#icons+1] = {icon = item.icon}
+local uncompress_icons = function(icons)
+	local u_icons = {{icon = "__omnimatter_compression__/graphics/compress-out-arrow-"..(icons[1].icon_size)..".png", icon_size = icons[1].icon_size}}
+	for _ , icon in pairs(icons) do
+		local shrink = icon
+		--shrink.scale = .65
+		u_icons[#u_icons+1] = shrink
 	end
-	return icons
+	return u_icons
 end
 
 local new_fuel_value = function(effect,stack)
@@ -188,99 +183,102 @@ for _, group in pairs({"fluid"}) do
 			if flag == "hidden" then hidden = true end
 		end
 		if not (hidden or item.name:find("creative-mode")) then
-			if not item.icon_size and item.icons[1].icon_size then
-				item.icon_size=item.icons[1].icon_size
-			elseif not item.icon_size and not item.icons[1].icon_size then
-				item.icon_size=32
+			local icon = {icon = item.icon, icon_size = item.icon_size or 32}
+			if not icon.icon then
+				icon = item.icons[1]
 			end
-			if item.icon_size%32 == 0 then
-				if math.log(item.icon_size)/math.log(2) > 4 then
+			local oldsize = icon.icon_size or item.icon_size or 32
+			local oldscale = icon.scale or oldsize/32
+			local iconsize = oldsize * oldscale
 
-					--Variables to use on each iteration
-					local sub_group = "fluids"
-					local order = "concentrated-"..item.name
-					local icons = get_icons(item)
+			if math.log(iconsize)/math.log(2) > 4 then
 
-					--Try the best option to get a valid localised name
-					local loc_key = {"fluid-name."..item.name}
-					if item.localised_name then
-						loc_key = item.localised_name
-					end
+				--Variables to use on each iteration
+				local sub_group = "fluids"
+				local order = "concentrated-"..item.name
+				local icons = get_icons(item)
 
-					local new_item = {
-						type = "fluid",
-						name = "concentrated-"..item.name,
-						localised_name = {"fluid-name.concentrated-fluid", table.deepcopy(loc_key)},
-						localised_description = {"fluid-description.concentrated-fluid", table.deepcopy(loc_key)},
-						icons = icons,
-						icon_size = item.icon_size,
-						order = order,
-						default_temperature = item.default_temperature,
-						max_temperature = item.max_temperature,
-						pressure_to_speed_ratio = item.pressure_to_speed_ratio,
-						flow_to_energy_ratio = item.flow_to_energy_ratio,
-						heat_capacity = new_fuel_value(item.heat_capacity,concentrationRatio),
-						base_color = item.base_color,
-						flow_color = item.flow_color,
-						fuel_value = new_fuel_value(item.fuel_value,concentrationRatio),
-						fuel_category = item.fuel_category,
-					}
-
-					--The compress recipe
-					local compress = {
-						type = "recipe",
-						name = "compress-"..item.name,
-						localised_name = {"recipe-name.concentrate-fluid", loc_key},
-						localised_description = {"recipe-description.concentrate-fluid", loc_key},
-						category = "fluid-concentration",
-						enabled = true,
-						hidden = true,
-						ingredients = {
-							{name=item.name,type="fluid", amount=sluid_contain_fluid*concentrationRatio}
-						},
-						subgroup = "concentrator-"..sub_group,
-						icons=icons,
-						icon_size=item.icon_size,
-						order = order,
-						results={
-							{name="concentrated-"..item.name,type="fluid", amount=sluid_contain_fluid}
-						},
-						energy_required = sluid_contain_fluid / speed_div,
-					}
-
-					icons = uncompress_icons(item)
-					--The uncompress recipe
-					local uncompress = {
-						type = "recipe",
-						name = "uncompress-"..item.name,
-						localised_name = {"recipe-name.deconcentrate-fluid", loc_key},
-						localised_description = {"recipe-description.deconcentrate-fluid", loc_key},
-						icons = icons,
-						icon_size=item.icon_size,
-						category = "compression",
-						enabled = true,
-						hidden = true,
-						ingredients = {
-							{name="concentrated-"..item.name,type="fluid", amount=sluid_contain_fluid}
-						},
-						subgroup = "compressor-out-"..sub_group,
-						order = order,
-						results={
-							{name=item.name,type="fluid", amount=sluid_contain_fluid*concentrationRatio}
-						},
-						energy_required = concentrationRatio / speed_div,
-					}
-
-					--The compressed item
-
-					--Insert the recipes and item into tables that we will extend into the game later.
-					compressed_item_names[#compressed_item_names+1]="compressed-"..item.name
-					compress_recipes[#compress_recipes+1] = compress
-					uncompress_recipes[#uncompress_recipes+1] = uncompress
-					compress_items[#compress_items+1] = new_item
-					--add_compression_tech(item.name)
-					--Get the technology we want to use and add our recipes as unlocks
+				--Try the best option to get a valid localised name
+				local loc_key = {"fluid-name."..item.name}
+				if item.localised_name then
+					loc_key = item.localised_name
 				end
+
+				local new_item = {
+					type = "fluid",
+					name = "concentrated-"..item.name,
+					localised_name = {"fluid-name.concentrated-fluid", table.deepcopy(loc_key)},
+					localised_description = {"fluid-description.concentrated-fluid", table.deepcopy(loc_key)},
+					icons = icons,
+					icon_size = item.icon_size,
+					order = order,
+					default_temperature = item.default_temperature,
+					max_temperature = item.max_temperature,
+					pressure_to_speed_ratio = item.pressure_to_speed_ratio,
+					flow_to_energy_ratio = item.flow_to_energy_ratio,
+					heat_capacity = new_fuel_value(item.heat_capacity,concentrationRatio),
+					base_color = item.base_color,
+					flow_color = item.flow_color,
+					fuel_value = new_fuel_value(item.fuel_value,concentrationRatio),
+					fuel_category = item.fuel_category,
+				}
+
+				--The compress recipe
+				local compress = {
+					type = "recipe",
+					name = "compress-"..item.name,
+					localised_name = {"recipe-name.concentrate-fluid", loc_key},
+					localised_description = {"recipe-description.concentrate-fluid", loc_key},
+					category = "fluid-concentration",
+					enabled = true,
+					hidden = true,
+					ingredients = {
+						{name=item.name,type="fluid", amount=sluid_contain_fluid*concentrationRatio}
+					},
+					subgroup = "concentrator-"..sub_group,
+					icons=icons,
+					icon_size=item.icon_size,
+					order = order,
+					results={
+						{name="concentrated-"..item.name,type="fluid", amount=sluid_contain_fluid}
+					},
+					energy_required = sluid_contain_fluid / speed_div,
+				}
+
+				icons = uncompress_icons(icons)
+				--The uncompress recipe
+				local uncompress = {
+					type = "recipe",
+					name = "uncompress-"..item.name,
+					localised_name = {"recipe-name.deconcentrate-fluid", loc_key},
+					localised_description = {"recipe-description.deconcentrate-fluid", loc_key},
+					icons = icons,
+					icon_size=item.icon_size,
+					category = "compression",
+					enabled = true,
+					hidden = true,
+					ingredients = {
+						{name="concentrated-"..item.name,type="fluid", amount=sluid_contain_fluid}
+					},
+					subgroup = "compressor-out-"..sub_group,
+					order = order,
+					results={
+						{name=item.name,type="fluid", amount=sluid_contain_fluid*concentrationRatio}
+					},
+					energy_required = concentrationRatio / speed_div,
+				}
+
+				-- if item.name == "crude-oil" then log(serpent.block(uncompress)) end
+
+				--The compressed item
+
+				--Insert the recipes and item into tables that we will extend into the game later.
+				compressed_item_names[#compressed_item_names+1]="compressed-"..item.name
+				compress_recipes[#compress_recipes+1] = compress
+				uncompress_recipes[#uncompress_recipes+1] = uncompress
+				compress_items[#compress_items+1] = new_item
+				--add_compression_tech(item.name)
+				--Get the technology we want to use and add our recipes as unlocks
 			end
 		end
 	end
@@ -334,7 +332,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 				localised_description = {"item-description.compressed-item", loc_key},
 				flags = item.flags,
 				icons = icons,
-				icon_size = item.icon_size or 32,
+				icon_size = item.icon_size,
 				subgroup = item.subgroup,
 				order = order,
 				stack_size = compressed_item_stack_size,
@@ -367,7 +365,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 				energy_required = item.stack_size / speed_div,
 			}
 
-			icons = uncompress_icons(item)
+			icons = uncompress_icons(icons)
 			--The uncompress recipe
 			local uncompress = {
 				type = "recipe",
@@ -375,7 +373,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 				localised_name = {"recipe-name.uncompress-item", loc_key},
 				localised_description = {"recipe-description.uncompress-item", loc_key},
 				icons = icons,
-				icon_size = item.icon_size or 32,
+				icon_size = item.icon_size,
 				category = "compression",
 				enabled = true,
 				hidden = true,

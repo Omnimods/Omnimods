@@ -5,4 +5,3 @@ Date: 2020.02.24
     - Added edge case handling for removing Angel's natural gas autoplace on map presets.
   Info:
     - Added changelog.
-    
