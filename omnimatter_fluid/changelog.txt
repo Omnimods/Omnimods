@@ -1,0 +1,8 @@
+---------------------------------------------------------------------------------------------------
+Version: 3.0.1
+Date: 2020.03.24
+  Bugfixes:
+    - Update to Factorio version 0.18.15
+  Info:
+    - Added changelog.
+	- Added Thumbnail.
