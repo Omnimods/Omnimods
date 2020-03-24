@@ -143,11 +143,17 @@ function omni.marathon.standardise(recipe)
 	
 	--if #recipe.normal.results==1 then recipe.normal.main_product = recipe.normal.results[1].name end
 	--if #recipe.expensive.results==1 then recipe.expensive.main_product = recipe.expensive.results[1].name end
+
+	for _, flag in pairs({"hidden", "enabled", "allow_decomposition", "hide_from_player_crafting", "allow_as_intermediate", "allow_intermediates"}) do
+		for _, difficulty in pairs({"normal", "expensive"}) do
+			if recipe[difficulty][flag] == nil then recipe[difficulty][flag] = recipe[flag] end
+		end
+	end
 	
-	if recipe.normal.hidden == nil then recipe.normal.hidden = recipe.hidden end
-	if recipe.expensive.hidden == nil then recipe.expensive.hidden = recipe.hidden end
-	if recipe.normal.enabled == nil then recipe.normal.enabled = recipe.enabled end
-	if recipe.expensive.enabled == nil then recipe.expensive.enabled = recipe.enabled end
+	-- if recipe.normal.hidden == nil then recipe.normal.hidden = recipe.hidden end
+	-- if recipe.expensive.hidden == nil then recipe.expensive.hidden = recipe.hidden end
+	-- if recipe.normal.enabled == nil then recipe.normal.enabled = recipe.enabled end
+	-- if recipe.expensive.enabled == nil then recipe.expensive.enabled = recipe.enabled end
 	
 	if not recipe.subgroup and recipe.main_product and recipe.main_product ~="" then
 		local it = omni.lib.find_prototype(recipe.main_product)
