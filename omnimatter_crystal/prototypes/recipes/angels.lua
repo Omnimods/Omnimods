@@ -61,8 +61,14 @@ local salt_omnide_icon = function(metal)
 	local nr = 5
 	--Build the icons table
 	local icons = {}
-	icons[#icons+1] = {icon = "__omnimatter_crystal__/graphics/icons/omnide-salt.png"}
-	icons[#icons+1] = {icon = data.raw.item[metal].icon or data.raw.item[metal].icons[1].icon ,scale=0.4,shift={-10,10}}
+	local icon_size=data.raw.item[metal].icon_size or data.raw.item[metal].icons[1].icon_size or 32
+	icons[#icons+1] = {icon = "__omnimatter_crystal__/graphics/icons/omnide-salt.png",icon_size=32}
+	icons[#icons+1] = {
+		icon = data.raw.item[metal].icon or data.raw.item[metal].icons[1].icon,
+		icon_size=icon_size,
+		scale=0.4*32/icon_size,
+		shift={-10,10}
+	}
 	return icons
 end
 
