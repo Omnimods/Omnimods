@@ -1,7 +1,232 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.0.8
+Date: ##.##.##
+  Bugfixes:
+    - Partial fix of icon size integration
+  Features:
+    - Integrated changelog from mod portal
+---------------------------------------------------------------------------------------------------
+Version: 3.0.8
 Date: 2020.02.24
   Bugfixes:
     - Added edge case handling for removing Angel's natural gas autoplace on map presets.
-  Info:
+  Features:
     - Added changelog.
+---------------------------------------------------------------------------------------------------
+Version: 3.0.0
+  Features:
+    - Updated to 0.17
+    - Removed RSO dependency.
+---------------------------------------------------------------------------------------------------
+Version: 2.0.0
+  Features:
+    - Updated it to the new API
+    - Updated the system so it can handle any amount of ores
+    - Updated so it can have up to 6 tiers of ores now.
+---------------------------------------------------------------------------------------------------
+Version: 1.4.0
+  Features:
+    - Huge structural overhaul. WARNING! RECIPE DISAPPEARENCE IS EXPECTED! UPDATE AT YOUR OWN RISK!
+---------------------------------------------------------------------------------------------------
+Version: 1.3.15
+  Features:
+    - Added new alloys to reduce ingredient costs for omnibuildings.
+---------------------------------------------------------------------------------------------------
+Version: 1.3.12
+  Features:
+    - Fixed costs to be more automatable to make omnitractors, with it came added gear boxes to not lower the price of it.
+---------------------------------------------------------------------------------------------------
+Version: 1.3.10
+  Bugfixes:
+    - Fixed minor bug that when new mods came about midgame recipes started showing that shouldn't.
+---------------------------------------------------------------------------------------------------
+Version: 1.3.4
+  Features:
+    - Introduces a new metal which is made from copper iron and omnite to use in all omni-related devices.
+---------------------------------------------------------------------------------------------------
+Version: 1.2.0
+  Features:
+    - 0.16 Compatibility and other stuff
+    - Angel supplied custom sprite
+---------------------------------------------------------------------------------------------------
+Version: 1.2.11
+  Features:
+    - Omnimarathon Compatibility.
+---------------------------------------------------------------------------------------------------
+Version: 1.2.9
+  Features:
+    - Added special compatibility with omniwatter, when omniwater is present sulfur cannot be gotten through omnitractor tech. Has to use wastewater from omniwater
+    - Made fluid speed static.
+---------------------------------------------------------------------------------------------------
+Version: 1.2.8
+  Features:
+    - Added colouration on omnitractors to show levels. Thanks to Zombiee
+---------------------------------------------------------------------------------------------------
+Version: 1.2.7
+  Bugfixes:
+    - Fixed compatibility with Omnicrystal
+---------------------------------------------------------------------------------------------------
+Version: 1.2.6
+  Features:
+    - Due to difficulty of sulfur acquisition in petrochem, I have added it as an extraction
+    - Added support for fluorine ore in Sigmas
+---------------------------------------------------------------------------------------------------
+Version: 1.2.5
+  Bugfixes:
+    - Fixed issue where throughput decreased with higher efficiency
+---------------------------------------------------------------------------------------------------
+Version: 1.2.4
+  Bugfixes:
+    - Fixed so the system of adding ores works properly.
+---------------------------------------------------------------------------------------------------
+Version: 1.2.3
+  Bugfixes:
+    - Fixed where the omnitractor technologies didn't adhere to the constants of science packs like the extraction technologies.
+---------------------------------------------------------------------------------------------------
+Version: 1.2.2
+  Features:
+    - Rebalancing a bit
+---------------------------------------------------------------------------------------------------
+Version: 1.2.1
+  Features:
+    - General fixes to fit the other mods.
+---------------------------------------------------------------------------------------------------
+Version: 1.2.0
+  Bugfixes:
+    - General bugfixes
+    - Fixed so it is not dependent on omnicrystal to work
+    - Brought back omnite recipe.
+---------------------------------------------------------------------------------------------------
+Version: 1.1.9
+  Bugfixes:
+    - Stuff I cannot remember.
+    - Returned omni-sludge usage if omnicrystal is not present.
+  Features:
+    - Increased compatibility and stability
+---------------------------------------------------------------------------------------------------
+Version: 1.1.8
+  Bugfixes:
+    - Migration issues solved, CURSE THEM!
+---------------------------------------------------------------------------------------------------
+Version: 1.1.7
+  Features:
+    - Added so stone can be extracted like any other material
+    - Made so the omnitractors automaticly upgrade to the latest recipe
+    - Made it so inferior recipes are hidden once better is researched
+    - Made it fit with the new additions.
+---------------------------------------------------------------------------------------------------
+Version: 1.1.6
+  features:
+    - -Fixed AAI Industry incompatibility
+---------------------------------------------------------------------------------------------------
+Version: 1.1.5
+  Features:
+    - Added compatibility for Darkmatter Replicators and Yuoki Industries.
+---------------------------------------------------------------------------------------------------
+Version: 1.1.4
+  Bugfixes:
+    - Fixed issue when you play vanilla where recipes remained the same for impure extractions due to no other ores being present.
+---------------------------------------------------------------------------------------------------
+Version: 1.1.3
+  Bugfixes:
+    - Fixed some bugs
+    - Fixed MP issue.
+---------------------------------------------------------------------------------------------------
+Version: 1.1.2
+  Features:
+    - Nerfed impure recipes, they always give a total of 4 ore on average
+    - All fluids starts at 50% capacity at lowest level
+  Bugfixes:
+    - Hopefully finally fixed the wretches migration issue.
+---------------------------------------------------------------------------------------------------
+Version: 1.1.1
+  Bugfixes:
+    - Think I finally resolved the migration issue, still advise against updating in general though.
+---------------------------------------------------------------------------------------------------
+Version: 1.1.0
+  Bugfixes:
+    - Fixed a few things
+    - Migration is still an issue, if you got a save do not update, working on this.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.10
+  Bugfixes:
+    - Minor compatibility issues with pumpjacks resolved.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.9
+  Features:
+    - Added a setting such that the rocket silo tech can get locked behind all extraction technologies.
+  Bugfixes:
+    - Fixed the migration so it does it properly
+---------------------------------------------------------------------------------------------------
+Version: 1.0.8
+  Features:
+    - Added options to affect the science pack cost.
+    - Changed so stones gives omnite instead of whatever they did before.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.7
+  Bugfixes:
+    - Fixed Stone reproessing, it is no longer progressive but a steady one that at half way through Omnic acid tech gives a net gain in omnite.
+    - Fixed Icon bug.
+    - Fixed so last tech is more expensive than the second to last.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.5
+  Features:
+    - Update to work on future addon to be released.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.4
+  Bugfixes:
+    - Minor additions that doesn't effect much.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.3
+  Bugfixes:
+    - Fixed the angels dependence, can bugs never stop comming?
+---------------------------------------------------------------------------------------------------
+Version: 1.0.2
+  Bugfixes:
+    - Fixed a crash issue and made thermal water easier to get.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.1
+  Bugfixes:
+    - Made it compatible with angels smelting patch so it is a playable combination now.
+    - Added that electric omnitractors requires the burner one.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.0
+  Features:
+    - Big release!
+    - Added configuration options that makes you able to change the appearence of the tech tree and difficulty!
+    - Changed the manner which omniston is made and made a way to turn all that excess stone into omnite again, at a loss over all but better than nothing right?
+  Bugfixes:
+    - Fixed a few mishaps of forgetting things
+      - bobs alone not getting lithia water
+      - Sulfur still appearing
+      - Fixed the gem stones of bobs to not clutter it and make more sense.
+---------------------------------------------------------------------------------------------------
+Version: 0.1.7
+  Bugfixes:
+    - Fixed recipe that made Mk3 Omnitractor ridiculously expensive, now it's more reasonable!
+---------------------------------------------------------------------------------------------------
+Version: 0.1.6
+  Bugfixes:
+    - Migration fix! Now old ores of saves are converted to omnite so you can continue the game!
+---------------------------------------------------------------------------------------------------
+Version: 0.1.5
+  Bugfixes:
+    - Finally fixed the audio issue.
+    - Corrected some mod pack combo issues that arose and added the infinite ore choice for settings!
+---------------------------------------------------------------------------------------------------
+Version: 0.1.4
+  Bugfixes:
+    - Fixed the audio this time (hopefully)
+    - Fixed bearing price being wrong and crashing without angels refining when angels ores was used
+---------------------------------------------------------------------------------------------------
+Version: 0.1.3
+  Bugfixes:
+    - Fixed audio issue with angels, should work vanilla again
+---------------------------------------------------------------------------------------------------
+Version: 0.1.2
+  Bugfixes:
+    - Minor bugs with vanilla corrected
+---------------------------------------------------------------------------------------------------
+Version: 0.1.1
+  Bugfixes:
+    - Minor bug of the electric omnitractor being non-constructable in hands is fixed to make it more bearable.
