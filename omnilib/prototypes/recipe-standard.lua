@@ -146,7 +146,7 @@ function omni.marathon.standardise(recipe)
 
 	for _, flag in pairs({"hidden", "enabled", "allow_decomposition", "hide_from_player_crafting", "allow_as_intermediate", "allow_intermediates"}) do
 		for _, difficulty in pairs({"normal", "expensive"}) do
-			if recipe[difficulty][flag] == nil then recipe[difficulty][flag] = recipe[flag]
+			if recipe[difficulty][flag] == nil then recipe[difficulty][flag] = recipe[flag] end
 		end
 	end
 	
