@@ -127,27 +127,3 @@ if mods["omnimatter_marathon"] then
 	omni.marathon.exclude_recipe("omnicium-plate-pure")
 	omni.marathon.exclude_recipe("crushing-omnite-by-hand")
 end
---data:extend(set)
-ItemGen:create("omnimatter","omniline-water"):
-	setSubgroup("water-treatment"):
-	fluid():
-	setReqAllMods("angelsrefining"):extend()
-	
-ItemGen:create("omnimatter","purified-omnic-water"):
-	setSubgroup("water-treatment"):
-	fluid():
-	setReqAllMods("angelsrefining"):extend()
-	
-RecGen:create("omnimatter","omnic-water-purificiation"):
-	setCategory("water-treatment"):
-	setEnergy(1):
-	setIcons("omnic-water-purification","omnimatter"):
-	setSubgroup("water-treatment"):
-	setTechName("water-treatment"):
-	setIngredients({name="omnic-water",amount = 150, type = "fluid"}):
-	setResults(
-			{type="fluid", name="omniline-water", amount=50},
-			{type="fluid", name="purified-omnic-water", amount=100}):
-	marathon():
-	setReqAllMods("angelsrefining"):extend()
-	
