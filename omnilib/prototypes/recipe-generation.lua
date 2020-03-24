@@ -114,23 +114,23 @@ function cache_mt:__index(key)
 end
 function createClass (...)
 	local c = {}        -- new class
-    
+
       -- class will search for each method in the list of its
       -- parents (`arg' is the list of parents)
 	setmetatable(c, {__index = function (t, k)
 		return search(k, arg)
 	end})
-    
+
       -- prepare `c' to be the metatable of its instances
 	c.__index = c
-    
+
       -- define a new constructor for this new class
 	function c:new (o)
 		o = o or {}
 		setmetatable(o, c)
 		return o
 	end
-    
+
       -- return new class
 	return c
 end
@@ -167,7 +167,7 @@ local ord={"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","
 	if the input is a table, checks if it has a subtable
 	that is of the type or have variable name of those
 	added in, if so it spits out the subtable, otherwise the entire table.
-	
+
 	This is to prevent endless subtabling of main tables
 	as the inheritance goes on.
 ]]
@@ -274,7 +274,7 @@ function OmniGen:setIngredients(array,...)
 			if type(v[1])=="string" then c = {name=v[1],amount=v[2],type="item"} end
 			array = omni.lib.union(array,{c})
 		end
-	end	
+	end
 	if type(array)=="table" then
 		if array.name then
 			self.input.items = {array}
@@ -343,7 +343,7 @@ function OmniGen:setWaste(array,...)
 		end
 	elseif type(array)=="string" then
 		self.output.waste.items = {{name = array}}
-	else 
+	else
 		self.output.waste.items = nil
 	end
 	return self
@@ -383,11 +383,11 @@ end
 
 function OmniGen:chainIngredients()
 	local f = function(levels,grade,dif)
-	
+
 		local usable = self.input.items
 		local sum = clone_function(self.input.sum)(levels,grade)
 		local total = 0
-		
+
 		local ingredients = {}
 		for j,ing in pairs(usable) do
 			local t = "item"
@@ -442,7 +442,7 @@ function OmniGen:wasteYieldResults()
 				if self.roundResult or t == "fluid" then
 					results[#results+1]={type=t,name = yield.name,amount = omni.lib.round(amount)}
 				else
-					results[#results+1]=result_round({type=t,name = yield.name,amount = amount}) 
+					results[#results+1]=result_round({type=t,name = yield.name,amount = amount})
 				end
 			end
 		end
@@ -465,7 +465,7 @@ function OmniGen:wasteYieldResults()
 					if self.roundResult or t == "fluid" then
 						results[#results+1]={type=t,name = waste.name,amount = omni.lib.round(amount)}
 					else
-						results[#results+1]=result_round({type=t,name = waste.name,amount = amount}) 
+						results[#results+1]=result_round({type=t,name = waste.name,amount = amount})
 					end
 				end
 			end
@@ -531,12 +531,14 @@ function FluidGen:create(mod,name)
 end
 
 function ItemGen:import(item)
+	log("ItemGen:import(item)")
+	log(serpent.block(item))
 	local proto = omni.lib.find_prototype(item) or item
 	if proto then
 		local it = ItemGen:create():
-		setName(proto.name):
-		setStacksize(proto.stack_size):
-		setFlags(proto.flags):
+		setName(proto.name or item):
+		setStacksize(proto.stack_size or 100):
+		setFlags(proto.flags or {hidden}):
 		setPlace(proto.place_result):
 		setSubgroup(proto.subgroup):
 		setFuelCategory(proto.fuel_category):
@@ -585,6 +587,8 @@ end
 
 function ItemGen:setIcons(icons,mod)
 	local proto = nil
+	log("ItemGen:setIcons(icons,mod)")
+	log(serpent.block(icons))
 	if type(icons)=="string" then proto = omni.lib.find_prototype(icons) end
 	if type(icons)~= "function" and mod and (type(icons)~= "string" or not string.match(icons, "%_%_(.-)%_%_")) then
 		if type(icons)=="table" then
@@ -592,17 +596,23 @@ function ItemGen:setIcons(icons,mod)
 			for _, c in pairs(icons) do
 				if type(icons)=="table" then
 					ic[#ic+1]={icon = "__"..(mod or self.mod).."__/graphics/icons/"..c.name..".png",
-						scale=c.scale,
+						icon_size=c.icon_size,
+						scale=c.scale*32/c.icon_size,
 						shift=c.shift}
 				else
-					ic[#ic+1]={icon = "__"..(mod or self.mod).."__/graphics/icons/"..c..".png"}
+					ic[#ic+1]={icon = "__"..(mod or self.mod).."__/graphics/icons/"..c..".png",icon_size=c.icon_size}
 				end
 			end
 			self.icons = function(levels,grade) return ic end
 		else
-			self.icons = function(levels,grade) return {{icon = "__"..(mod or self.mod).."__/graphics/icons/"..icons..".png"}} end
+			local ic_size=32
+			if data.raw.item[icons] then
+				check=data.raw.item[icons]
+				if check.icon_size then ic_size=check.icon_size end
+			end
+			self.icons = function(levels,grade) return {{icon = "__"..(mod or self.mod).."__/graphics/icons/"..icons..".png",icon_size=ic_size}} end
 		end
-	elseif type(icons)~= "function" then		
+	elseif type(icons)~= "function" then
 		if type(icons)=="string" and string.match(icons, "%_%_(.-)%_%_") then
 			self.icons = function(levels,grade) return {{icon = icons}} end
 		elseif type(icons) == "string" and not proto and (mod or self.mod) then
@@ -611,7 +621,7 @@ function ItemGen:setIcons(icons,mod)
 			if proto.icons then
 				self.icons=function(levels,grade) return proto.icons end
 			else
-				self.icons=function(levels,grade) return {{icon=proto.icon}} end
+				self.icons=function(levels,grade) return {{icon=proto.icon, icon_size=proto.icon_size}} end
 			end
 		else
 			self.icons = function(levels,grade) return icons end
@@ -623,6 +633,8 @@ function ItemGen:setIcons(icons,mod)
 	return self
 end
 function ItemGen:addIcon(icon)
+	log("ItemGen:addIcon(icon)")
+	log(serpent.block(icon))
 	local a = nil
 	if type(icon) == "table" and icon.icon then
 		local f = string.match(icon.icon, "%_%_(.-)%_%_")
@@ -631,12 +643,13 @@ function ItemGen:addIcon(icon)
 		else
 			local proto = omni.lib.find_prototype(icon.icon)
 			if proto and proto.icon then
-				a = function(levels,grade) return {{icon=proto.icon,scale=icon.scale,shift=icon.shift}} end
+				a = function(levels,grade) return {{icon=proto.icon,icon_size=proto.icon_size,scale=icon.scale,shift=icon.shift}} end
 			elseif proto then
 				local ic = {}
 				for _, c in pairs(proto.icons) do
 					ic[#ic+1] = {icon=c.icon,
-						scale = (c.scale or 1)*(icon.scale or 1),
+						icon_size=c.icon_size,
+						scale = (c.scale or 32/c.icon_size)*(icon.scale or 32/c.icon_size),
 						shift = {(c.shift or {0,0})[1]+(icon.shift or {0,0})[1],(c.shift or {0,0})[2]+(icon.shift or {0,0})[2]}}
 				end
 				a = function(levels,grade) return ic end
@@ -648,7 +661,7 @@ function ItemGen:addIcon(icon)
 	elseif type(icon)=="table" then
 		a = function(levels,grade) return {{icon=icon[1]}} end
 	else
-		a = function(levels,grade) return {{icon=icon}} end
+		a = function(levels,grade) return {{icon=icon,icon_size=icon_size or 32}} end
 	end
 	local f = clone_function(self.icons)
 	self.icons = function(levels,grade) return omni.lib.union(f(levels,grade),a(levels,grade)) end
@@ -666,7 +679,7 @@ function ItemGen:addMask(...)
 	return self
 end
 function ItemGen:addIconLevel(lvl)
-	self:addIcon({icon = "__omnilib__/graphics/lvl"..lvl..".png"})
+	self:addIcon({icon = "__omnilib__/graphics/lvl"..lvl..".png",icon_size=32})
 	return self
 end
 function ItemGen:setName(lvl,mod)
@@ -677,28 +690,39 @@ end
 function ItemGen:addBurnerIcon()
 	self:addIcon({icon = "__omnilib__/graphics/burner.png",
 		scale = 0.4375,
+		icon_size=32,
 		shift = {-10, 10}})
 	return self
 end
 function ItemGen:addElectricIcon()
 	self:addIcon({icon = "__omnilib__/graphics/electric.png",
 		scale = 0.4375,
+		icon_size=32,
 		shift = {-10, 10}})
 	return self
 end
 function ItemGen:addSmallIcon(icon,nr)
 	local quad = {{10, -10},{-10, -10},{-10, 10},{10, 10}}
 	local icons = prototype_icon(icon)
+	local ic_size= 32
+	if data.raw.item[icon] and data.raw.item[icon].icon_size then
+		ic_size=data.raw.item[icon].icon_size
+	end
 	if icons then
 		for _,ic in pairs(icons) do
+			if ic.icon_size then
+				ic_size=ic.icon_size
+			end
 			self:addIcon({icon = ic.icon,
-				scale = 0.4375*(ic.scale or 1),
+				icon_size=ic_size,
+				scale = 0.4375*(ic.scale or 32/ic_size),
 				shift = quad[nr or 1]})
 		end
 	else
 		local ic = icon
 		self:addIcon({icon = icon,
-			scale = 0.4375,
+			icon_size=ic_size,
+			scale = 0.4375*32/ic_size,
 			shift = quad[nr or 1]})
 	end
 	return self
@@ -847,7 +871,7 @@ function ItemGen:setPlace(place)
 	else
 		self.place_result = function(levels,grade) return place end
 	end
-	
+
 	return self
 end
 function ItemGen:setLocName(inname,...)
@@ -872,7 +896,7 @@ function ItemGen:setLocName(inname,...)
 				--rtn[#rtn+1] = function(levels,grade) return {part} end
 			else
 				rtn[#rtn+1]=function(levels,grade) return part end
-			end	
+			end
 		end
 	else
 		rtn[1]=function(levels,grade) return inname end
@@ -886,7 +910,7 @@ function ItemGen:setLocName(inname,...)
 			rtn[#rtn+1] = function(levels,grade) return {part} end
 		else
 			rtn[#rtn+1]=function(levels,grade) return part end
-		end		
+		end
 	end
 	self.loc_name = function(levels,grade)
 		local out = {}
@@ -908,7 +932,7 @@ function ItemGen:addLocName(key)
 		b = function(levels,grade) return {key} end
 	else
 		b=function(levels,grade) return key end
-	end	
+	end
 	self.loc_name = clone_function(function(levels,grade) return omni.lib.union(a(levels,grade),{b(levels,grade)}) end)
 	return self
 end
@@ -1149,7 +1173,7 @@ function RecGen:import(recipe)
 		setIcons(r.icons(0,0) or recipe.icons):
 		setHidden(recipe.hidden or false):
 		setName(recipe.name)
-		
+
 		for _, module in pairs(data.raw.module) do
 			if module.effect.productivity and module.limitation then
 				for _,lim in pairs(module.limitation) do
@@ -1159,9 +1183,9 @@ function RecGen:import(recipe)
 				end
 			end
 		end
-				
+
 		if recipe.enabled==nil and recipe.normal.enabled==nil then r:setEnabled(true) end
-		
+
 		if not recipe.enabled then
 			local tech = nil
 			local found = false
@@ -1390,10 +1414,10 @@ function RecGen:setIngredients(array,...)
 					elseif type(ing)=="table" and type(ing[1])=="string" and not ing[2] then
 						array[i]={type="item",amount=1,name=ing[1]}
 					elseif type(ing)=="table" and type(ing[1])=="string" and type(ing[2])=="number" then
-						array[i]={type="item",amount=ing[2],name=ing[1]}					
-					end					
+						array[i]={type="item",amount=ing[2],name=ing[1]}
+					end
 				end
-				self.ingredients = function(levels,grade, dif) return array end		
+				self.ingredients = function(levels,grade, dif) return array end
 			end
 		elseif array.name and not array.amount then
 			self.ingredients = function(levels,grade, dif) return {{name=array,amount=1,type="item"}} end
@@ -1485,7 +1509,7 @@ function RecGen:ifModsReplaceIngredients(modis,...)
 	return self
 end
 function RecGen:ifAddIngredients(bool,...)
-	if bool then 
+	if bool then
 		self:addIngredients(argTable({...},"string"))
 	end
 	return self
@@ -1509,7 +1533,7 @@ end
 function RecGen:removeIngredients(...)
 	local args = {...}
 	local ingredients = clone_function(self.ingredients)
-	self.ingredients=function(levels,grade,dif) 
+	self.ingredients=function(levels,grade,dif)
 		local ings = ingredients(levels,grade,dif)
 		local finalIngs = {}
 		for c,i in pairs(ings) do
@@ -1540,7 +1564,7 @@ end
 function RecGen:removeResults(...)
 	local args = {...}
 	local results = clone_function(self.results)
-	self.results=function(levels,grade,dif) 
+	self.results=function(levels,grade,dif)
 		local ings = results(levels,grade,dif)
 		local finalIngs = {}
 		for c,i in pairs(ings) do
@@ -1748,11 +1772,11 @@ function RecGen:setMain(main)
 	else
 		self.main_product = main
 	end
-	
+
 	return self
 end
 function ItemGen:setBuildProto(proto)
-	self.proto = proto	
+	self.proto = proto
 	return self
 end
 function RecGen:generate_recipe()
@@ -1788,7 +1812,7 @@ function RecGen:generate_recipe()
 		end
 		it:extend()
 	end
-	
+
 	local lname = self.loc_name(0,0)
 	if not self.unique_loc_name then
 		if not lname and ((res and #res == 1) or self.main_product(0,0)) then
@@ -1805,7 +1829,7 @@ function RecGen:generate_recipe()
 				if it.type == "fluid" then
 					lname={"fluid-name."..it.name}
 				else
-					lname={"item-name."..it.name}			
+					lname={"item-name."..it.name}
 				end
 			end
 		elseif not lname then
@@ -1822,7 +1846,7 @@ function RecGen:generate_recipe()
 			end
 		end
 	end
-	
+
 	if self.main_product then
 		if data.raw.item[self.main_product(0,0)] then
 			local item = data.raw.item[self.main_product(0,0)]
@@ -1992,7 +2016,7 @@ function RecGen:setTechLocName(inname,...)
 				rtn[#rtn+1] = function(levels,grade) return {part} end
 			else
 				rtn[#rtn+1]=function(levels,grade) return part end
-			end	
+			end
 		end
 	else
 		rtn[1]=function(levels,grade) return inname end
@@ -2006,7 +2030,7 @@ function RecGen:setTechLocName(inname,...)
 			rtn[#rtn+1] = function(levels,grade) return {part} end
 		else
 			rtn[#rtn+1]=function(levels,grade) return part end
-		end		
+		end
 	end
 	self.tech.loc_name = function(levels,grade)
 		local out = {}
@@ -2028,7 +2052,7 @@ function RecGen:addTechLocName(key)
 		b = function(levels,grade) return {key} end
 	else
 		b=function(levels,grade) return key end
-	end	
+	end
 	self.tech.loc_name = clone_function(function(levels,grade) return omni.lib.union(a(levels,grade),{b(levels,grade)}) end)
 	return self
 end
@@ -2181,7 +2205,7 @@ function RecGen:addCondPrereq(cond,...)
 			self.tech.prerequisites = function(levels,grade) return omni.lib.union(a(levels,grade),b(levels,grade)) end
 		else
 			local a = clone_function(tmpelse.tech.prerequisites)
-			self.tech.prerequisites = function(levels,grade) return omni.lib.union(a(levels,grade),b(levels,grade)) end		
+			self.tech.prerequisites = function(levels,grade) return omni.lib.union(a(levels,grade),b(levels,grade)) end
 		end
 	elseif type(cond)=="boolean" then
 		if cond then
@@ -2189,7 +2213,7 @@ function RecGen:addCondPrereq(cond,...)
 			self.tech.prerequisites = function(levels,grade) return omni.lib.union(a(levels,grade),b(levels,grade)) end
 		else
 			local a = clone_function(tmpelse.tech.prerequisites)
-			self.tech.prerequisites = function(levels,grade) return omni.lib.union(a(levels,grade),b(levels,grade)) end		
+			self.tech.prerequisites = function(levels,grade) return omni.lib.union(a(levels,grade),b(levels,grade)) end
 		end
 	end
 	return self
@@ -2243,17 +2267,17 @@ function RecChain:generate_chain()
 		elseif self.type=="tool" then
 			it:tool():
 			setDurability(self.durability):
-			setDurabilityDesc(self.durability_description_key)		
+			setDurabilityDesc(self.durability_description_key)
 		end
 		it:extend()
 	end
-	for i = 1, self.levels do		
+	for i = 1, self.levels do
 		local techname = self.tech.name(m,i) or self.name
 		if self.tech.prefix ~= "" and self.tech.prefix ~= nil then techname=self.tech.prefix.."-"..techname end
 		if self.tech.suffix ~= "" and self.tech.suffix ~= nil then techname=techname.."-"..self.tech.suffix end
-		
+
 		local techDifEnabled = 1
-		
+
 		while self.enabled(m,techDifEnabled) do
 			techDifEnabled=techDifEnabled+1
 		end
@@ -2293,9 +2317,9 @@ function RecChain:generate_chain()
 		if self.isTile then r:tile() end
 		if self.loc_name(m,i)~= nil then r:addLocName(i) end
 		if self.tech.loc_name(levels,grade) ~= nil then r:addTechLocName(i) end
-		
+
 		local prq = self.tech.prerequisites(m,i)
-		if (not prq or #prq == 0) and i-techDifEnabled > 1 then 
+		if (not prq or #prq == 0) and i-techDifEnabled > 1 then
 			prq={"omnitech-"..techname.."-"..i-1-techDifEnabled}
 		elseif i>1 and prq and #prq >= 2 and omni.lib.is_in_table("omnitech-"..techname.."-"..i-1,prq) then
 			for i,req in pairs(prq) do
@@ -2313,14 +2337,14 @@ function RecChain:generate_chain()
 			end
 		end
 		--r:setIcons(self.icons(m,i))
-		
+
 		if mods["omnimatter_marathon"] then omni.marathon.exclude_recipe(r.name) end
 		r:setIngredients(self.ingredients(self.levels,i))
 		r:setResults(self.results(self.levels,i))
 		--if #self.chain.output.yield.items == 1 then self:setMain(self.chain.output.yield.items[1]) end
 		r:return_array()
 		array = table.deepcopy(omni.lib.union(array,r.rtn))
-		
+
 		--Tech generation
 		--[[
 		local techname = self.tech.name
@@ -2358,7 +2382,7 @@ function TechGen:create(mod,name)
 		time = 20,
 		type="technology",
 		allowed = true
-		
+
 	}
 	if mod then
 		local m = "__omnimatter_"..mod.."__"
@@ -2378,14 +2402,14 @@ function TechGen:import(name)
 		setPrereq(tech.prerequisites):
 		setUpgrade(tech.upgrade):
 		setEnabled(tech.enabled)
-		
+
 		local uns = {}
 		for _,unlock in pairs(tech.effects) do
 			if unlock.type=="unlock-recipe" then
 				uns[#uns+1]=unlock.recipe
 			end
 		end
-		
+
 		t:addUnlocks(uns)
 		return t
 	else
@@ -2539,7 +2563,7 @@ function TechGen:generate_tech()
 		}
 		if data.raw.recipe[rec] then data.raw.recipe[rec].enabled=false end
 	end
-	local tech = { 
+	local tech = {
 	name = self.name,
     --localised_name = self.locname(0,0),
 	--localised_description = self.locdesc(0,0),
@@ -2696,7 +2720,7 @@ function BuildGen:import(name)
 		setInputs(build.inputs):
 		setOffAnimation(build.off_animation):
 		setOnAnimation(build.on_animation)
-		
+
 		--if build.resource_searching_radius then b:setMiningRadius(build.resource_searching_radius*2+0.02) end
 		if build.working_sound then
 			b:setSoundWorking(build.working_sound.sound):
@@ -2708,9 +2732,9 @@ function BuildGen:import(name)
 		else
 			b:setModSlots(0)
 		end
-		
+
 		--if build.energy_source and build.energy_source.fuel_category then b:setFuelCategory(build.energy_source.fuel_category) end
-		
+
 	local rec = name
 	for _,r in pairs(data.raw.recipe) do
 		omni.marathon.standardise(r)
@@ -2721,9 +2745,9 @@ function BuildGen:import(name)
 			end
 		end
 	end
-	
+
 	local r = RecGen:import(rec)
-	
+
 	local notFields = {}
 	for name,data in pairs(r) do
 		b[name]=table.deepcopy(data)
@@ -2773,7 +2797,7 @@ function BuildGen:setInputs(...)
 	if #eff==1 and type(eff[1])=="function" then
 		self.inputs = eff[1]
 	elseif #eff==1 and type(eff[1])=="table" then
-		self.inputs = function(levels,grade) return eff[1] end	
+		self.inputs = function(levels,grade) return eff[1] end
 	elseif #eff == 1 and type(eff[1])=="string" then
 		local build = omni.lib.find_entity_prototype(eff[1])
 		if not build or not build.inputs then
@@ -2782,7 +2806,7 @@ function BuildGen:setInputs(...)
 			self.inputs = function(levels,grade) return build.inputs end
 		end
 	else
-		self.inputs = function(levels,grade) return eff end	
+		self.inputs = function(levels,grade) return eff end
 	end
 	return self
 end
@@ -2790,7 +2814,7 @@ function BuildGen:setEffects(eff)
 	if type(eff)=="function" then
 		self.module.effects = eff
 	elseif type(eff)=="table" then
-		self.module.effects = function(levels,grade) return eff end	
+		self.module.effects = function(levels,grade) return eff end
 	end
 	return self
 end
@@ -2860,7 +2884,7 @@ function BuildGen:setEffectivity(eff)
 	if type(eff)=="function" then
 		self.effectivity = eff
 	elseif type(eff)=="number" then
-		self.effectivity = function(levels,grade) return eff end	
+		self.effectivity = function(levels,grade) return eff end
 	end
 	return self
 end
@@ -2868,7 +2892,7 @@ function BuildGen:setFluidConsumption(eff)
 	if type(eff)=="function" then
 		self.fluid_usage_per_tick = eff
 	elseif type(eff)=="table" then
-		self.fluid_usage_per_tick = function(levels,grade) return eff end	
+		self.fluid_usage_per_tick = function(levels,grade) return eff end
 	end
 	return self
 end
@@ -3023,7 +3047,7 @@ function BuildGen:setAnimation(e)
 		self.animation = function(levels,grade) return e end
 	end
 	return self
-end	
+end
 function BuildGen:setOffAnimation(e)
 	if type(e)=="function" then
 		self.off_animation = e
@@ -3031,7 +3055,7 @@ function BuildGen:setOffAnimation(e)
 		self.off_animation = function(levels,grade) return e end
 	end
 	return self
-end	
+end
 function BuildGen:setOnAnimation(e)
 	if type(e)=="function" then
 		self.on_animation = e
@@ -3039,7 +3063,7 @@ function BuildGen:setOnAnimation(e)
 		self.on_animation = function(levels,grade) return e end
 	end
 	return self
-end	
+end
 function BuildGen:setAnimations(e)
 	if type(e)=="function" then
 		self.animations = e
@@ -3047,7 +3071,7 @@ function BuildGen:setAnimations(e)
 		self.animations = function(levels,grade) return e end
 	end
 	return self
-end	
+end
 function BuildGen:setPictures(e)
 	if type(e)=="function" then
 		self.pictures = e
@@ -3055,7 +3079,7 @@ function BuildGen:setPictures(e)
 		self.pictures = function(levels,grade) return e end
 	end
 	return self
-end	
+end
 function BuildGen:setDirectionAnimation(a,b)
 	if type(a)=="function" then
 		self.horizontal_animation = a
@@ -3068,7 +3092,7 @@ function BuildGen:setDirectionAnimation(a,b)
 		self.vertical_animation = function(levels,grade) return b end
 	end
 	return self
-end	
+end
 function BuildGen:setVerticalAnimation(b)
 	if type(b)=="function" then
 		self.vertical_animation = b
@@ -3076,7 +3100,7 @@ function BuildGen:setVerticalAnimation(b)
 		self.vertical_animation = function(levels,grade) return b end
 	end
 	return self
-end	
+end
 function BuildGen:setHorizontalAnimation(a)
 	if type(a)=="function" then
 		self.horizontal_animation = a
@@ -3084,7 +3108,7 @@ function BuildGen:setHorizontalAnimation(a)
 		self.horizontal_animation = function(levels,grade) return a end
 	end
 	return self
-end	
+end
 function BuildGen:setWorkVis(e)
 	if type(e)=="function" then
 		self.working_visualisations = e
@@ -3092,7 +3116,7 @@ function BuildGen:setWorkVis(e)
 		self.working_visualisations = function(levels,grade) return e end
 	end
 	return self
-end	
+end
 function BuildGen:setSoundImpact(e)
 	if type(e)=="string" then
 		self.vehicle_impact_sound = { filename = e, volume = 0.65 }
@@ -3100,7 +3124,7 @@ function BuildGen:setSoundImpact(e)
 		self.vehicle_impact_sound = e
 	end
 	return self
-end	
+end
 function BuildGen:setSoundWorking(e,i,mod)
 	if type(e)=="string" then
 		self.working_sound.sound = function(levels,grade) return {filename="__"..(mod or self.mod).."__/sound/"..e..".ogg",volume = i or 0.8} end
@@ -3139,7 +3163,7 @@ function BuildGen:setSound(e)
 	end
 	return self
 end
-function BuildGen:returnSound(levels,grade)	
+function BuildGen:returnSound(levels,grade)
 	return {
 		sound = self.working_sound.sound(levels,grade),
 		idle_sound = self.working_sound.idle_sound(levels,grade),
@@ -3158,7 +3182,7 @@ function BuildGen:setFluidBox(s,hide,tmp)
 		self.fluid_boxes=s
 	end
 	return self
-end	
+end
 function BuildGen:setFilter(filter,nr)
 	local a = clone_function(self.fluid_boxes)
 	local sb = "(1)."
@@ -3174,10 +3198,10 @@ function BuildGen:setCorpse(s)
 	if string.find(s,"remnants") then
 		self.corpse = s
 	else
-		self.corpse = s.."-remnants"	
+		self.corpse = s.."-remnants"
 	end
 	return self
-end	
+end
 function BuildGen:setMiningSpeed(s)
 	if type(s)=="number" then
 		self.mining_speed = function(levels,grade) return s end
@@ -3185,7 +3209,7 @@ function BuildGen:setMiningSpeed(s)
 		self.mining_speed = s
 	end
 	return self
-end	
+end
 function BuildGen:setMiningPower(s)
 	if type(s)=="number" then
 		self.mining_power = function(levels,grade) return s end
@@ -3193,7 +3217,7 @@ function BuildGen:setMiningPower(s)
 		self.mining_power = s
 	end
 	return self
-end	
+end
 function BuildGen:setMiningRadius(s)
 	if type(s)=="number" then
 		self.resource_searching_radius = function(levels,grade) return s-0.01 end
@@ -3214,7 +3238,7 @@ function BuildGen:setPlaceShift(s)
 	if type(s)=="function" then
 		self.vector_to_place_result=s
 	elseif type(s)=="table" then
-		self.vector_to_place_result = function(levels,grade) return table.deepcopy(s) end	
+		self.vector_to_place_result = function(levels,grade) return table.deepcopy(s) end
 	else
 		self.vector_to_place_result = function(levels,grade) return s end
 	end
@@ -3285,7 +3309,7 @@ function BuildGen:generateBuilding()
 		lname = {"entity-name."..self.loc_name(0,0)}
 	end
 	if self.type=="lab" and self.inputs(0,0)==nil then error("labs require inputs for science packs, use 'setInputs' on "..self.name..".") end
-	self.rtn[#self.rtn+1]= {	
+	self.rtn[#self.rtn+1]= {
 		type = self.type,
 		name = self.name,
 		icon_size = 32,
@@ -3343,7 +3367,7 @@ function BuildGen:generateBuilding()
 		off_animation=self.off_animation(0,0),
 		on_animation=self.off_animation(0,0)
     }
-	
+
 	if self.fluid_boxes(0,0) and type(self.fluid_boxes(0,0))=="table" and type(self.fluid_boxes(0,0)[1])=="table" then self.rtn[#self.rtn].fluid_box = self.fluid_boxes(0,0)[1] end
 	if self.fuel_category then self.rtn[#self.rtn].energy_source.fuel_category = self.fuel_category end
 	if self.overlay.name then
@@ -3420,7 +3444,7 @@ end
 function BuildChain:generate_building_chain()
 	local levels = tonumber(self.levels)
 	if self.burner then
-	
+
 	end
 	for i=1,levels do
 		local tname = self.tech.name(levels,i) or self.name
@@ -3442,13 +3466,13 @@ function BuildChain:generate_building_chain()
 			tname = temptname.."-"..i-d
 			if i-d > 1 then prevtname = temptname.."-"..i-d-1 end
 		end
-		
+
 		--Must fix so this can adapt to fit normal and expensive
 		local ingnorm,ingexp = self.ingredients(levels,i,0),self.ingredients(levels,i,1)
 		if i>1 and not omni.lib.is_in_table(self.name.."-"..i,ingnorm) then ingnorm[#ingnorm+1]={name=self.name.."-"..i-1,amount=1,type="item"} end
 		if i>1 and not omni.lib.is_in_table(self.name.."-"..i,ingexp) then ingexp[#ingexp+1]={name=self.name.."-"..i-1,amount=1,type="item"} end
 		if i>1 and mods["omnimatter_marathon"] then omni.marathon.equalize(self.name.."-"..i-1,self.name.."-"..i) end
-		
+
 		local tprereq = self.tech.prerequisites(levels,i)
 		if type(tprereq)=="string" then tprereq={tprereq} end
 		if tprereq and #tprereq == 0 and not omni.lib.is_in_table(prevtname,tprereq) and i>1 then
@@ -3513,11 +3537,11 @@ function BuildChain:generate_building_chain()
 		setInputs(self.inputs(levels,i)):
 		setOffAnimation(self.off_animation(levels,i)):
 		setOnAnimation(self.on_animation(levels,i))
-		
+
 		if self.tech.loc_name(levels,i) then
 			stuff:addTechLocName(i)
 		end
-		
+
 		for _,m in pairs(stuff:return_array()) do
 			self.rtn[#self.rtn+1]=table.deepcopy(m)
 		end
@@ -3525,7 +3549,7 @@ function BuildChain:generate_building_chain()
 end
 
 
-	
+
 function BuildGen:setOverlay(n,l)
 	if n then
 		self.overlay={name = n, level = l}
@@ -3839,7 +3863,7 @@ function ResourceGen:create(mod,name)
 	r.sharpness = function(levels,grade) return 1 end
 	return setmetatable(r,ResourceGen)
 end
-	  
+
 function ResourceGen:setRichness(val)
 	if type(val)=="boolean" then
 		self.richness.is = function(levels,grade) return val end
@@ -3983,7 +4007,7 @@ function InsertGen:create(mod,name)
         }
       }
     } end
-	
+
     b.pickup_position = function(levels,grade) return {0, -1} end
     b.insert_position = function(levels,grade) return {0, 1.2} end
 	b.hand_base_picture =function(levels,grade) return {
@@ -4294,7 +4318,7 @@ function InsertGen:setAnimation(platform,base,baseShadow,open,openShadow,closed,
 	elseif type(closedShadow)=="table" then
 		self.hand_closed_shadow = function(levels,grade) return closedShadow end
 	elseif type(closedShadow)=="string" then
-		self.hand_closed_shadow = function(levels,grade) return 
+		self.hand_closed_shadow = function(levels,grade) return
       {
         filename = "__"..self.mod.."__/graphics/entity/inserter/"..closedShadow.."-hand-closed-shadow.png",
         priority = "extra-high",
@@ -4395,7 +4419,7 @@ function InsertGen:generateInserter()
     circuit_wire_max_distance = inserter_circuit_wire_max_distance,
     default_stack_control_input_signal = inserter_default_stack_control_input_signal
   }
-  
+
 	local stuff = RecGen:create(self.mod,self.name):
 	setIngredients(self.ingredients):
 	setResults(self.name):
@@ -4449,7 +4473,7 @@ hand_base_picture
         percent = 90
       }
     },
-    
+
   }
 
   --[[

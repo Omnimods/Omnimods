@@ -16,7 +16,7 @@ data:extend(
     category = "crafting",
 	subgroup = "omni-basic",
     energy_required = 0.5,
-    icon_size = 32,
+    --icon_size = 64,
 	enabled = "true",
     ingredients ={{"stone-crushed", 2}},
     results=

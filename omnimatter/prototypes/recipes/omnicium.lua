@@ -11,7 +11,7 @@ RecGen:create("omnimatter","omnicium-plate-pure"):
 	setSubgroup("raw-material"):
 	setEnabled():
 	extend()
-	
+
 RecGen:create("omnimatter","omnicium-plate-mix"):
 	setSubgroup("intermediate-product"):
 	setIngredients({type="item", name="omnite",amount=4}):
@@ -27,7 +27,7 @@ RecGen:create("omnimatter","omnicium-plate-mix"):
 	setEnergy(5):
 	setEnabled():
 	extend()
-	
+
 RecGen:create("omnimatter","omnicium-gear-wheel"):
 	setStacksize(100):
 	setSubgroup("intermediate-product"):
@@ -46,7 +46,7 @@ RecGen:create("omnimatter","omnicium-iron-gear-box"):
 	setEnabled():
 	setEnergy(0.25):
 	extend()
-	
+
 BuildGen:create("omnimatter","omni-furnace"):
 	setEnergy(5):
 	setIngredients({ "omnicium-plate", 5},{ "stone-brick", 5},{ "stone-furnace", 1}):
@@ -181,7 +181,7 @@ BuildGen:create("omnimatter","omni-furnace"):
       },
     }):
 	setReplace("furnace"):extend()
-	
+
 local plates = {"steel","brass","titanium","tungsten","nitinol"}
 local plateTech = {"steel-processing","zinc-processing","titanium-processing","tungsten-processing","nitinol-processing"}
 for i,p in pairs(plates) do
@@ -201,8 +201,8 @@ if mods["bobplates"] then
 	data.raw.item["steel-gear-wheel"].icon="__omnimatter__/graphics/icons/steel-gear-wheel.png"
 end
 
-data.raw.item["iron-gear-wheel"].icon="__omnimatter__/graphics/icons/iron-gear-wheel.png"
-data.raw.item["iron-gear-wheel"].icon_size=32
+data.raw.item["iron-gear-wheel"].icons={{icon="__omnimatter__/graphics/icons/iron-gear-wheel.png",icon_size=32,mipmaps=1}}
+
 ItemGen:import("ingot-iron"):
 	setName("ingot-omnicium","omnimatter"):
 	setSubgroup("angels-omnicium"):
@@ -224,7 +224,7 @@ RecGen:import("iron-ore-smelting"):
 	setTechName("angels-omnicium-smelting-1"):
 	setTechIcon("smelting-omnicium"):
 	extend()
-	
+
 RecGen:import("molten-iron-smelting-1"):
 	setName("molten-omnicium-smelting-1","omnimatter"):
 	setItemName("liquid-molten-omnicium"):
@@ -259,7 +259,7 @@ RecGen:import("iron-ore-processing"):
 	setTechName("angels-omnicium-smelting-2"):
 	setTechPrereq("angels-omnicium-smelting-1"):
 	setTechIcon("smelting-omnicium"):extend()
-	
+
 RecGen:import("processed-iron-smelting"):
 	setName("processed-omnicium-smelting","omnimatter"):
 	setItemName("processed-omnicium"):
@@ -271,7 +271,7 @@ RecGen:import("processed-iron-smelting"):
 	addSmallIcon("processed-omnicium",3):
 	setReqAllMods("angelssmelting"):
 	setTechName("angels-omnicium-smelting-2"):extend()
-	
+
 RecGen:import("iron-processed-processing"):
 	setName("omnicium-processed-processing","omnimatter"):
 	setItemName("pellet-omnicium"):
@@ -283,7 +283,7 @@ RecGen:import("iron-processed-processing"):
 	setTechName("angels-omnicium-smelting-3"):
 	setTechPrereq("angels-omnicium-smelting-2"):
 	setTechIcon("smelting-omnicium"):extend()
-	
+
 RecGen:import("pellet-iron-smelting"):
 	setName("pellet-omnicium-smelting","omnimatter"):
 	replaceIngredients("pellet-iron","pellet-omnicium"):
@@ -296,7 +296,7 @@ RecGen:import("pellet-iron-smelting"):
 	setReqAllMods("angelssmelting"):
 	setTechName("angels-omnicium-smelting-3"):
 	setTechIcon("smelting-omnicium"):extend()
-	
+
 RecGen:import("roll-iron-casting"):
 	setName("roll-omnicium-casting","omnimatter"):
 	setItemName("angels-roll-omnicium"):
@@ -306,7 +306,7 @@ RecGen:import("roll-iron-casting"):
 	setSubgroup("omnicium-casting"):
 	setReqAllMods("angelssmelting"):
 	setTechName("angels-omnicium-smelting-2"):extend()
-	
+
 RecGen:import("roll-iron-casting-fast"):
 	setName("roll-omnicium-casting-fast","omnimatter"):
 	setIcons("roll-omnicium","omnimatter"):
@@ -315,7 +315,7 @@ RecGen:import("roll-iron-casting-fast"):
 	setSubgroup("omnicium-casting"):
 	setReqAllMods("angelssmelting"):
 	setTechName("angels-omnicium-smelting-3"):extend()
-	
+
 RecGen:import("angels-roll-iron-converting"):
 	setName("angels-roll-omnicium-converting","omnimatter"):
 	setIcons("omnicium-plate"):
@@ -325,9 +325,9 @@ RecGen:import("angels-roll-iron-converting"):
 	setSubgroup("omnicium-casting"):
 	setReqAllMods("angelssmelting"):
 	setTechName("angels-omnicium-smelting-2"):extend()
-	
-	
-	
+
+
+
 if mods["angelssmelting"] then
 	data:extend({
   {
@@ -343,7 +343,7 @@ if mods["angelssmelting"] then
     order = "r",
   },
   })
-  data.raw.item["omnicium-plate"].subgroup = "omnicium-casting"    
+  data.raw.item["omnicium-plate"].subgroup = "omnicium-casting"
 end
 if mods["only-smelting"] then
 else
