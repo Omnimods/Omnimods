@@ -478,11 +478,18 @@ end
 function prototype_icon(proto)
 	local item = omni.lib.find_prototype(proto)
 	local icons = {}
+	local ic_sz=32
 	if item ~= nil then
 		if item.icon then
-			icons = {icon = item.icon}
+			if item.icon_size then
+				ic_sz=item.icon_size
+			end
+			icons = {icon = item.icon,icon_size=ic_sz}
 		else
 			icons = item.icons
+			if not icons[1].icon_size then
+				icons[1].icon_size=ic_sz
+			end
 		end
 	end
 	if #icons == 0 or icons == {} then icons = nil end
@@ -531,8 +538,6 @@ function FluidGen:create(mod,name)
 end
 
 function ItemGen:import(item)
-	log("ItemGen:import(item)")
-	log(serpent.block(item))
 	local proto = omni.lib.find_prototype(item) or item
 	if proto then
 		local it = ItemGen:create():
@@ -587,18 +592,18 @@ end
 
 function ItemGen:setIcons(icons,mod)
 	local proto = nil
-	log("ItemGen:setIcons(icons,mod)")
-	log(serpent.block(icons))
-	if type(icons)=="string" then proto = omni.lib.find_prototype(icons) end
+	if type(icons)=="string" then
+		proto = omni.lib.find_prototype(icons)
+	end
 	if type(icons)~= "function" and mod and (type(icons)~= "string" or not string.match(icons, "%_%_(.-)%_%_")) then
 		if type(icons)=="table" then
 			local ic = {}
 			for _, c in pairs(icons) do
 				if type(icons)=="table" then
 					ic[#ic+1]={icon = "__"..(mod or self.mod).."__/graphics/icons/"..c.name..".png",
-						icon_size=c.icon_size,
-						scale=c.scale*32/c.icon_size,
-						shift=c.shift}
+					icon_size=c.icon_size,
+					scale=c.scale*32/c.icon_size,
+					shift=c.shift}
 				else
 					ic[#ic+1]={icon = "__"..(mod or self.mod).."__/graphics/icons/"..c..".png",icon_size=c.icon_size}
 				end
@@ -613,15 +618,37 @@ function ItemGen:setIcons(icons,mod)
 			self.icons = function(levels,grade) return {{icon = "__"..(mod or self.mod).."__/graphics/icons/"..icons..".png",icon_size=ic_size}} end
 		end
 	elseif type(icons)~= "function" then
+		local ic_sz=32
+		--find where icon_size is in icons (entities, tools, recipes, items)
+		if type(icons)=="table" and type(icons[1].icon)=="string" then
+			if icons[1].icon_size then
+				ic_sz=icons[1].icon_size
+			elseif type(icons[1].icon)=="string" then
+				name=string.match(icons[1].icon,".*%/(.-).png")
+				--find out the type by elimiation
+				if data.raw[name] then
+					ic_sz=data.raw[name].icon_size
+				elseif data.raw.item[name] then
+					ic_sz=data.raw.item[name].icon_size
+				elseif data.raw.tool[name] then
+					ic_sz=data.raw.tool[name].icon_size
+				elseif data.raw.recipe[name] then
+					ic_sz=data.raw.recipe[name].icon_size
+				end
+				icons[1].icon_size=ic_sz
+			end
+		end
 		if type(icons)=="string" and string.match(icons, "%_%_(.-)%_%_") then
-			self.icons = function(levels,grade) return {{icon = icons}} end
+			self.icons = function(levels,grade) return {{icon = icons, icon_size=ic_sz}} end
 		elseif type(icons) == "string" and not proto and (mod or self.mod) then
-			self.icons = function(levels,grade) return {{icon = "__"..(mod or self.mod).."__/graphics/icons/"..icons..".png"}} end
+			self.icons = function(levels,grade) return {{icon = "__"..(mod or self.mod).."__/graphics/icons/"..icons..".png",icon_size=ic_sz}} end
 		elseif proto then
 			if proto.icons then
+				proto.icons[1].icon_size=proto.icon_size
 				self.icons=function(levels,grade) return proto.icons end
 			else
-				self.icons=function(levels,grade) return {{icon=proto.icon, icon_size=proto.icon_size}} end
+				proto.icons={{icon=proto.icon, icon_size=proto.icon_size}}
+				self.icons=function(levels,grade) return proto.icons end
 			end
 		else
 			self.icons = function(levels,grade) return icons end
@@ -633,8 +660,6 @@ function ItemGen:setIcons(icons,mod)
 	return self
 end
 function ItemGen:addIcon(icon)
-	log("ItemGen:addIcon(icon)")
-	log(serpent.block(icon))
 	local a = nil
 	if type(icon) == "table" and icon.icon then
 		local f = string.match(icon.icon, "%_%_(.-)%_%_")
@@ -1853,14 +1878,14 @@ function RecGen:generate_recipe()
 			if item.icons then
 				self.icons = function(levels,grade) return item.icons end
 			elseif item.icon then
-				self.icons = function(levels,grade) return {{icon = item.icon}} end
+				self.icons = function(levels,grade) return {{icon = item.icon,icon_size=item.icon_size}} end
 			end
 		elseif data.raw.fluid[self.main_product(0,0)] then
 			local fluid = data.raw.fluid[self.main_product(0,0)]
 			if fluid.icons then
 				self.icons = function(levels,grade) return fluid.icons end
 			elseif fluid.icon then
-				self.icons = function(levels,grade) return {{icon = fluid.icon}} end
+				self.icons = function(levels,grade) return {{icon = fluid.icon,icon_size=fluid.icon_size}} end
 			end
 		end
 	end
