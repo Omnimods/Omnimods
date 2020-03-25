@@ -52,6 +52,9 @@ local get_pure_req = function(levels,i)
 		--r[#r+1]="omnitech-omnic-acid-hydrolyzation-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
 		--r[#r+1]="omnitech-omnisolvent-omnisludge-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
 	end
+	if i == 2 then
+		r[#r+1]="omnitech-omnisolvent-omnisludge-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
+	end
 	for j,tier in pairs(omnifluid) do
 		if tonumber(j) < i and tonumber(j) >= i-3 then
 			for _,fluid in pairs(tier) do
