@@ -3,7 +3,7 @@ if mods["aai-industry-sp0"] then
 	industry.add_tech("omniwaste")
 end
 
-if mods["angelsbioprocessing"] then
+if mods["angelsbioprocessing"] and mods["bob-greenhouse"] then
 	omni.lib.replace_all_ingredient("seedling","omniseedling")
 	omni.lib.replace_recipe_result("wood-sawing-manual","wood","omniwood")
 
