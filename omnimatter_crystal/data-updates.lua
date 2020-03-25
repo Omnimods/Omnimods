@@ -21,11 +21,16 @@ end
 
 local salt_omnide_icon = function(metal)
 	local nr = 5
-    --Build the icons table
-    local icons = {}
-	icons[#icons+1] = {icon = "__omnimatter_crystal__/graphics/icons/omnide-salt.png"}
-	icons[#icons+1] = {icon = data.raw.item[metal].icon,scale=0.4,shift={-10,10}}
-    return icons
+	--Build the icons table
+	local icons = {}
+	icons[#icons+1] = {icon = "__omnimatter_crystal__/graphics/icons/omnide-salt.png",icon_size=32}
+	icons[#icons+1] = {
+		icon = data.raw.item[metal].icon or data.raw.item[metal].icons[1].icon,
+		icon_size=omni.crystal.get_ore_ic_size(metal),
+		scale=0.4*32/omni.crystal.get_ore_ic_size(metal),
+		shift={-10,10}
+	}
+	return icons
 end
 
 local crystalines = {}
@@ -64,6 +69,7 @@ if not mods["angelsrefining"] then
 			end
 			rec.normal.results[1].name=plate
 			rec.icon=data.raw.item[plate].icon
+			rec.icon_size=data.raw.item[plate].icon_size
 			rec.localised_name = {"recipe-name.item", {"item-name."..plate}}
 			local tier = 1
 			for i,t in pairs(omnisource) do
@@ -89,7 +95,7 @@ if not mods["angelsrefining"] then
 				},
 				order = "a[angelsore1-crushed]",
 				icons = ic,
-				icon_size = 32,
+				icon_size = omni.crystal.get_ore_ic_size(ore),--32,
 				results = {
 				{type="item",name=ore.."-omnide-salt",amount=1},
 				},

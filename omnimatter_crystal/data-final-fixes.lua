@@ -29,12 +29,19 @@ for i=2,4 do
 		--data.raw.technology["crystallonics-"..i].enabled = false
 	end
 end
-
+local pipeadd="pipe" --vanilla set
+local elecadd="electronic-circuit" --vanilla set
+if data.raw.item["copper-pipe"] then
+	pipeadd="copper-pipe"
+end
+if data.raw.item["basic-circuit-board"] then
+	elecadd="basic-circuit-board"
+end
 BuildGen:create("omnimatter_crystal","omniplant"):
 	setSubgroup("crystallization"):
 	setLocName("omniplant-burner"):
 	setIcons("omniplant","omnimatter_crystal"):
-	setIngredients({"copper-pipe",15},{"omnicium-plate",5},{"basic-circuit-board",5},{"omnite-brick",10},{"iron-gear-wheel",10}):
+	setIngredients({pipeadd,15},{"omnicium-plate",5},{elecadd,5},{"omnite-brick",10},{"iron-gear-wheel",10}):
 	setBurner(0.75,2):
 	setEnergy(25):
 	setUsage(function(level,grade) return "750kW" end):
@@ -64,5 +71,5 @@ BuildGen:create("omnimatter_crystal","omniplant"):
 	setOverlay("omni-plant-overlay"):
 	setFluidBox("XWXWX.XXXXX.XXXXX.XXXXX.XKXKX"):
 	extend()
-	
+
 RecGen:import("omniplant-1"):addIngredients({"burner-omniplant",1}):extend()

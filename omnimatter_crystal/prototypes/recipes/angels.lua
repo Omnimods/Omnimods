@@ -1,6 +1,6 @@
 
 local angel_stupid = {"manganese","chrome"}
-
+--ingredient lists (may need to remove old nodule stuff)
 local ingrediences_solvation=function(recipe)
 	local ing = {}
 	ing[#ing+1]={type = "fluid", name = "hydromnic-acid", amount = 120}
@@ -57,21 +57,21 @@ local results_nodule_solvation=function(recipe)
 	end
 	return ing
 end
+--icons
 local salt_omnide_icon = function(metal)
 	local nr = 5
 	--Build the icons table
 	local icons = {}
-	local icon_size=data.raw.item[metal].icon_size or data.raw.item[metal].icons[1].icon_size or 32
 	icons[#icons+1] = {icon = "__omnimatter_crystal__/graphics/icons/omnide-salt.png",icon_size=32}
 	icons[#icons+1] = {
 		icon = data.raw.item[metal].icon or data.raw.item[metal].icons[1].icon,
-		icon_size=icon_size,
-		scale=0.4*32/icon_size,
+		icon_size=omni.crystal.get_ore_ic_size(metal),
+		scale=0.4*32/omni.crystal.get_ore_ic_size(metal),
 		shift={-10,10}
 	}
 	return icons
 end
-
+--checks
 local find_type = function(recipe,name)
 	if recipe.normal and recipe.normal.ingredients then
 		for _,ing in pairs(recipe.normal.ingredients) do
@@ -92,15 +92,13 @@ local has_unlock = function(tech,recipe)
 	return false
 end
 
-
-
 if angelsmods and angelsmods.refining then
 	----log("test: "..settings.startup["omnicrystal-sloth"].value)
 	--"angelsore7-crystallization-"
 	if mods["angelspetrochem"] then omni.crystal.add_crystal("fluorite-ore","Fluorite")end
 	omni.crystal.add_crystal("manganese-ore","Manganese")
 	omni.crystal.add_crystal("chrome-ore","Chrome")
-	omni.crystal.add_crystal("thorium-ore","Thorium")
+	--omni.crystal.add_crystal("thorium-ore","Thorium")
 	local rec = {}
 	--log("fixing angels shit again")
 	local crystalines = {}
@@ -150,6 +148,7 @@ if angelsmods and angelsmods.refining then
 						ingredients = ing,
 						order = "a[angelsore1-crushed]",
 						icons = ic,
+						icon_size=32,--just in case
 						results = res,
 						energy_required = 5,
 					}

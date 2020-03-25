@@ -17,8 +17,8 @@ local metal_omnide_icon = function(metal)
 	local nr = 5
     --Build the icons table
     local icons = {}
-	icons[#icons+1] = {icon = "__omnimatter_crystal__/graphics/icons/omnide-solution.png"}
-	icons[#icons+1] = {icon = data.raw.item[metal].icon,icon_size=32,scale=0.4,shift={-10,10}}
+	icons[#icons+1] = {icon = "__omnimatter_crystal__/graphics/icons/omnide-solution.png",icon_size=32}
+	icons[#icons+1] = {icon = data.raw.item[metal].icon,icon_size=omni.crystal.get_ore_ic_size(metal),scale=0.4*32/omni.crystal.get_ore_ic_size(metal),shift={-10,10}}
     return icons
 end
 
@@ -26,8 +26,8 @@ local salt_omnide_icon = function(metal)
 	local nr = 5
     --Build the icons table
     local icons = {}
-	icons[#icons+1] = {icon = "__omnimatter_crystal__/graphics/icons/omnide-salt.png"}
-	icons[#icons+1] = {icon = data.raw.item[metal].icon,icon_size=32,scale=0.4,shift={-10,10}}
+	icons[#icons+1] = {icon = "__omnimatter_crystal__/graphics/icons/omnide-salt.png",icon_size=32}
+	icons[#icons+1] = {icon = data.raw.item[metal].icon,icon_size=omni.crystal.get_ore_ic_size(metal),scale=0.4*32/omni.crystal.get_ore_ic_size(metal),shift={-10,10}}
     return icons
 end
 
@@ -35,7 +35,6 @@ end
 
 omni.crystal.add_crystal=function(metal,name,recipe)
 	if data.raw.item[metal] then
-		--log(metal)
 		omni.crystal.metals[#omni.crystal.metals+1]=data.raw.item[metal]
 
 		RecGen:create("omnimatter_crystal",metal.."-crystal"):
@@ -153,7 +152,7 @@ omni.crystal.add_recipe=function(recipe,name)
 		ingredients = ing,
 		order = "a[angelsore1-crushed]",
 		icons = ic,
-		icon_size = 32,
+		--icon_size = 32,
 		results = res,
 		energy_required = 5,
 	}
