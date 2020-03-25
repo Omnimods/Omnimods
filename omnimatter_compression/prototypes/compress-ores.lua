@@ -15,7 +15,7 @@ local get_icons = function(item)
             icons[#icons+1] = shrink
         end
     else
-        icons[#icons+1] = {icon = item.icon}
+        icons[#icons+1] = {icon = item.icon,icon_size=item.icon_size or 32}
     end
     return icons
 end
@@ -30,7 +30,7 @@ for name,ore in pairs(data.raw.resource) do
 			new.localised_name = {"entity-name.compressed-ore",{"entity-name."..new.name}}
 			new.name = "compressed-"..new.name.."-ore"
 			if new.autoplace then new.autoplace = nil end
-			
+
 			if new.minable.result then
 				new.minable.results = {{
 					amount_max=1,
@@ -41,7 +41,7 @@ for name,ore in pairs(data.raw.resource) do
 				}}
 				new.minable.result=nil
 			end
-			
+
 			local max_stacksize = 0
 			for i,drop in ipairs(new.minable.results) do
 				if omni.lib.is_in_table("compressed-"..drop.name,compressed_item_names) then
@@ -63,7 +63,7 @@ for name,ore in pairs(data.raw.resource) do
 				local a = 10*ss
 				local n = new.minable.required_fluid
 				local r = "concentrated-"..new.minable.required_fluid
-				
+
 				local cf = table.deepcopy(data.raw.fluid[n])
 				cf.localised_name={"fluid-name.concentrated-fluid",{"fluid-name."..n}}
 				cf.name = r

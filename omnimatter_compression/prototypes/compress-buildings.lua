@@ -4,7 +4,7 @@ local multiplier = settings.startup["omnicompression_multiplier"].value
 --for _,kind in pairs({"mining-drill"})
 
 local new_icon = function(build,level)
-	local icons = {{icon = "__omnimatter_compression__/graphics/compress-"..level.."-"..(build.icon_size or 32)..".png", icon_size = build.icon_size or 32}}
+	local icons = {{icon = "__omnimatter_compression__/graphics/compress-"..level.."-32.png", icon_size = 32, scale=1}}
 
 	if build.icons then
 		for _,icon in pairs(build.icons) do
@@ -14,7 +14,7 @@ local new_icon = function(build,level)
 	else
 		icons[#icons+1]={icon=build.icon, icon_size = build.icon_size or 32}
 	end
-	icons[#icons+1] = {icon = "__omnimatter_compression__/graphics/compress-"..level.."-"..(build.icon_size or 32)..".png", icon_size = build.icon_size or 32}
+	icons[#icons+1] = {icon = "__omnimatter_compression__/graphics/compress-"..level.."-32.png", icon_size = 32, scale=1}
 	-- log(build.name..largesticon)
 	-- log(serpent.line(icons))
 	return icons
@@ -137,19 +137,18 @@ for _,kind in pairs(building_list) do
 					already_compressed[#already_compressed+1]=build.name
 					for i=1,settings.startup["omnicompression_building_levels"].value do
 						local new = table.deepcopy(build)
-						
 						local icons = new_icon(new,i)
-						
+
 						local loc = {"entity-name."..build.name}
-						
+
 						if build.localised_name then loc = build.localised_name end
-						
+
 						new.localised_name = {"entity-name.compressed_building",loc,compress_level[i]}
 						new.icons = icons
 						new.icon_size = nil
 						new.icon = nil
 						new.name = new.name.."-compressed-"..string.lower(compress_level[i])
-						
+
 						new.max_health=new.max_health*math.pow(multiplier,i)
 
 						--new.minable.mining_time = new.minable.mining_time * i
@@ -164,7 +163,7 @@ for _,kind in pairs(building_list) do
 							end
 						end
 						if new.module_specification then new.module_specification.module_slots = new.module_specification.module_slots * (i+1) end
-						
+
 						if kind == "assembling-machine" or kind == "furnace" then
 							local new_cat = {}
 							for i, cat in pairs(new.crafting_categories) do
@@ -172,14 +171,14 @@ for _,kind in pairs(building_list) do
 									new_cat[#new_cat+1]=cat.."-compressed"
 								end
 							end
-							
+
 							new.crafting_categories=new_cat
 							new.crafting_speed = new.crafting_speed* math.pow(multiplier,i)
 						end
 						if kind == "mining-drill" then
 							new.mining_speed = new.mining_speed * math.pow(multiplier,i/2)
 							--new.mining_power = new.mining_power * math.pow(multiplier,i/2)
-							
+
 							new.resource_searching_radius = new.resource_searching_radius *(i+1)
 						end
 						if kind=="solar-panel" then
@@ -191,7 +190,7 @@ for _,kind in pairs(building_list) do
 								new.heatbuffer.max_transfer = new_effect(new.heatbuffer.max_transfer,i,true)
 							end
 						end
-						
+
 						if kind=="lab" then
 							for i,input in pairs(new.inputs) do
 								if data.raw.tool["compressed-"..input] then
@@ -209,14 +208,14 @@ for _,kind in pairs(building_list) do
 								newFluid.localised_name={"fluid-name.compressed-fluid",{"fluid-name."..newFluid.name},i}
 								newFluid.name = newFluid.name.."-concentrated-grade-"..i
 								newFluid.heat_capacity = tonumber(string.sub(newFluid.heat_capacity,1,string.len(newFluid.heat_capacity)-2))*math.pow(multiplier,i)..string.sub(newFluid.heat_capacity,string.len(newFluid.heat_capacity)-1,string.len(newFluid.heat_capacity))
-								if newFluid.fuel_value then 
+								if newFluid.fuel_value then
 									newFluid.fuel_value=tonumber(string.sub(newFluid.fuel_value,1,string.len(newFluid.fuel_value)-2))*math.pow(multiplier,i)..string.sub(newFluid.fuel_value,string.len(newFluid.fuel_value)-2,string.len(newFluid.fuel_value))
 								end
 								if newFluid.icon then
 									newFluid.icons = {{icon=newFluid.icon}}
 									newFluid.icon=nil
 								end
-								table.insert(newFluid.icons,{icon="__omnilib__/graphics/lvl"..i..".png"})
+								table.insert(newFluid.icons,{icon="__omnilib__/graphics/lvl"..i..".png",icon_size=32})
 								data:extend({newFluid})
 							end
 							new.output_fluid_box.filter = new.output_fluid_box.filter.."-concentrated-grade-"..i
@@ -244,9 +243,9 @@ for _,kind in pairs(building_list) do
 							new.maximum_wire_distance = math.min(new.maximum_wire_distance*multiplier*i,64)
 							new.supply_area_distance=math.min(new.supply_area_distance*(i+1),64)
 						end
-									
+
 						compressed_buildings[#compressed_buildings+1]=new
-						
+
 						local item = table.deepcopy(find_placing_item(build))
 						item.localised_name = new.localised_name
 						item.name = new.name
@@ -271,7 +270,7 @@ for _,kind in pairs(building_list) do
 							end
 							item.subgroup = "compressor-"..item.subgroup.."-"..math.floor((i-1)/2)+1
 						end
-						
+
 						compressed_buildings[#compressed_buildings+1]=item
 						local rec_name = rc.name
 						local ing = {}
@@ -288,7 +287,7 @@ for _,kind in pairs(building_list) do
 						----log("compressed building recipe: "..recipe.name)
 						recipe.localised_name = new.localised_name
 						compressed_buildings[#compressed_buildings+1]=recipe
-						
+
 						local uncompress = {
 							type = "recipe",
 							name = "uncompress-"..string.lower(compress_level[i]).."-"..rec_name,
