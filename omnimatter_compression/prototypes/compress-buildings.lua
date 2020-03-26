@@ -4,23 +4,29 @@ local multiplier = settings.startup["omnicompression_multiplier"].value
 --for _,kind in pairs({"mining-drill"})
 
 local new_icon = function(build,level)
-	local icons = {{icon = "__omnimatter_compression__/graphics/compress-"..level.."-32.png", icon_size = 32, scale=1}}
-
+	local icons_1 = {icon = "__omnimatter_compression__/graphics/compress-"..level.."-32.png", icon_size = 32, scale=1}
+	local icons={}
 	if build.icons then
-		for _,icon in pairs(build.icons) do
-			icon.icon_size = icon.icon_size or build.icon_size or 32
-			icons[#icons+1]=icon
+		icons=build.icons
+		table.insert(icons,icons_1)
+		local ic_sz=32
+		if build.icon_size then
+			ic_sz=build.icon_size
+		elseif build.icons.icon_size then
+			ic_sz=build.icons.icon_size
+		end
+		for pos,icon in pairs(icons) do
+			if not icon.icon_size then
+				--back-up setting icon size if not found
+				icon.icon_size=ic_sz
+			end
 		end
 	else
-		icons[#icons+1]={icon=build.icon, icon_size = build.icon_size or 32}
+		icons[1]=icons_1
+		icons[2]={icon=build.icon, icon_size = build.icon_size or 32}
 	end
-	icons[#icons+1] = {icon = "__omnimatter_compression__/graphics/compress-"..level.."-32.png", icon_size = 32, scale=1}
-	-- log(build.name..largesticon)
-	-- log(serpent.line(icons))
 	return icons
 end
-
-
 
 local find_top_tier = function(build,kind)
 	local name = build.name
@@ -212,7 +218,7 @@ for _,kind in pairs(building_list) do
 									newFluid.fuel_value=tonumber(string.sub(newFluid.fuel_value,1,string.len(newFluid.fuel_value)-2))*math.pow(multiplier,i)..string.sub(newFluid.fuel_value,string.len(newFluid.fuel_value)-2,string.len(newFluid.fuel_value))
 								end
 								if newFluid.icon then
-									newFluid.icons = {{icon=newFluid.icon}}
+									newFluid.icons = {{icon=newFluid.icon,icon_size=newFluid.icon_size or 32}}
 									newFluid.icon=nil
 								end
 								table.insert(newFluid.icons,{icon="__omnilib__/graphics/lvl"..i..".png",icon_size=32})
@@ -284,7 +290,7 @@ for _,kind in pairs(building_list) do
 							energy_required = 5*math.floor(math.pow(multiplier,i/2)),
 							enabled = false,
 						}
-						----log("compressed building recipe: "..recipe.name)
+						--log("compressed building recipe: "..recipe.name)
 						recipe.localised_name = new.localised_name
 						compressed_buildings[#compressed_buildings+1]=recipe
 

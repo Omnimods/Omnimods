@@ -70,18 +70,25 @@ end
 
 local get_icons = function(item)
 	--Build the icons table
-	local icons = {{icon = "__omnimatter_compression__/graphics/compress-32.png", icon_size = 32}}
+	local icons_1 = {icon = "__omnimatter_compression__/graphics/compress-32.png", icon_size = 32}
+	local icons={}
 	if item.icons then
-		for _ , icon in pairs(item.icons) do
-			local shrink = icon
-			--local scale = icon.scale or 1
-			--shrink.scale = scale*0.65
-			icons[#icons+1] = shrink
+		icons=item.icons
+		table.insert(icons,icons_1)
+		if item.icon_size and not item.icons[1].icon_size then
+			icons[1].icon_size=item.icon_size
 		end
+		for pos,icon in pairs(icons) do
+			if not icon.icon_size then
+				--back-up setting icon size to 32 if not found
+				icon.icon_size=32
+			end
+		end
+
 	else
-		icons[#icons+1] = {icon = item.icon, icon_size = item.icon_size or 32}
+		icons[1] = icons_1
+		icons[2] = {icon = item.icon, icon_size = item.icon_size or 32}
 	end
-	-- if item.name=="crude-oil" then log(serpent.block(icons)) end
 	return icons
 end
 
@@ -91,7 +98,7 @@ local find_icon = function(item)
 			if data.raw[p][item].icons then
 				return data.raw[p][item].icons
 			else
-				return {{icon=data.raw[p][item].icon,icon_size=data.raw[p][item].icon_size or 32}}
+				return {{icon=data.raw[p][item].icon,icon_size=data.raw[p][item].icon_size}}
 			end
 		end
 	end
@@ -100,17 +107,18 @@ end
 
 local get_icons_rec = function(rec)
 	--Build the icons table
-	local icons = {{icon = "__omnimatter_compression__/graphics/compress-32.png",icon_size=32}}
+	local icons = {}
+	local icons_1 = {icon = "__omnimatter_compression__/graphics/compress-32.png",icon_size=32}
 	if rec.icons then
-		for _ , icon in pairs(rec.icons) do
-			local shrink = icon
-			local scale = shrink.scale or 1
-			shrink.scale = scale
-			icons[#icons+1] = shrink
+		icons=rec.icons
+		table.insert(icons,icons_1)
+		if rec.icon_size and not rec.icons[1].icon_size then
+			icons[1].icon_size=rec.icon_size
 		end
 	else
 		if rec.icon then
-			icons[#icons+1] = {icon=rec.icon,icon_size=rec.icon_size or 32}
+			icons[1] = icons_1
+			icons[2] = {icon=rec.icon,icon_size=rec.icon_size}
 		else
 			local process = {}
 			if rec.result or (rec.normal and rec.normal.result) then
@@ -126,25 +134,19 @@ local get_icons_rec = function(rec)
 					process = find_icon(rec.normal.results[1].name)
 				end
 			end
+			icons[1]=icons_1
 			for _,p in pairs(process) do
-				--local scale = p.scale or 1
 				icons[#icons+1]=p
-				--icons[#icons].scale=0.65*scale
 			end
-			--icons[#icons+1] = {icon = find_icon(rec.normal.results[1].name), scale = .65}
 		end
 	end
-	icons[#icons+1]={icon = "__omnimatter_compression__/graphics/compress-32.png",icon_size=32}
 	return icons
 end
 
 local uncompress_icons = function(icons)
-	local u_icons = {{icon = "__omnimatter_compression__/graphics/compress-out-arrow-32.png", icon_size = 32}}
-	for _ , icon in pairs(icons) do
-		local shrink = icon
-		--shrink.scale = .65
-		u_icons[#u_icons+1] = shrink
-	end
+	local u_icons={}
+	local u_icons_1 = {icon = "__omnimatter_compression__/graphics/compress-out-arrow-32.png", icon_size = 32}
+	table.insert(u_icons,u_icons_1)
 	return u_icons
 end
 
@@ -210,7 +212,7 @@ for _, group in pairs({"fluid"}) do
 					localised_name = {"fluid-name.concentrated-fluid", table.deepcopy(loc_key)},
 					localised_description = {"fluid-description.concentrated-fluid", table.deepcopy(loc_key)},
 					icons = icons,
-					icon_size = item.icon_size,
+					icon_size = item.icon_size or 32,
 					order = order,
 					default_temperature = item.default_temperature,
 					max_temperature = item.max_temperature,
@@ -237,7 +239,7 @@ for _, group in pairs({"fluid"}) do
 					},
 					subgroup = "concentrator-"..sub_group,
 					icons=icons,
-					icon_size=item.icon_size,
+					icon_size=item.icon_size or 32,
 					order = order,
 					results={
 						{name="concentrated-"..item.name,type="fluid", amount=sluid_contain_fluid}
@@ -253,7 +255,7 @@ for _, group in pairs({"fluid"}) do
 					localised_name = {"recipe-name.deconcentrate-fluid", loc_key},
 					localised_description = {"recipe-description.deconcentrate-fluid", loc_key},
 					icons = icons,
-					icon_size=item.icon_size,
+					icon_size=item.icon_size or 32,
 					category = "compression",
 					enabled = true,
 					hidden = true,
@@ -332,7 +334,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 				localised_description = {"item-description.compressed-item", loc_key},
 				flags = item.flags,
 				icons = icons,
-				icon_size = item.icon_size,
+				icon_size = item.icon_size or 32,
 				subgroup = item.subgroup,
 				order = order,
 				stack_size = compressed_item_stack_size,
@@ -358,7 +360,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 				},
 				subgroup = "compressor-"..sub_group,
 				icons=icons,
-				icon_size = item.icon_size,-- or 32,
+				icon_size = item.icon_size or 32,
 				order = order,
 				inter_item_count = item_count,
 				result = "compressed-"..item.name,
@@ -373,7 +375,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 				localised_name = {"recipe-name.uncompress-item", loc_key},
 				localised_description = {"recipe-description.uncompress-item", loc_key},
 				icons = icons,
-				icon_size = item.icon_size,
+				icon_size = item.icon_size or 32,
 				category = "compression",
 				enabled = true,
 				hidden = true,
@@ -914,7 +916,7 @@ function create_compression_recipe(recipe)
 					icons[#icons+1] = shrink
 				end
 			else
-				icons[#icons+1] = {icon = r.icon,icon_size=r.icon_size or 32}
+				icons[#icons+1] = {icon = r.icon}
 			end
 			r.icon = nil
 			r.icons = icons
@@ -964,12 +966,12 @@ local create_void = function(recipe)
 end
 
 
-log("Tok you bastard")
+--log("Tok you bastard")
 
 for _,recipe in pairs(data.raw.recipe) do
 	--omni.lib.gcd(m,n)
 	--Start with the ingredients
-	log("calc compressed recipe of "..recipe.name)
+	--log("calc compressed recipe of "..recipe.name)
 	if not mods["omnimatter_marathon"] then omni.marathon.standardise(recipe) end
 	if recipe.subgroup ~= "y_personal_equip" and (recipe.icon_size or 0)%32 == 0 and math.log(recipe.icon_size or 32)/math.log(2) > 4 then
 		local rc = create_compression_recipe(recipe)
@@ -982,14 +984,13 @@ for _,recipe in pairs(data.raw.recipe) do
 	end
 end
 
-log("Finished compressing recipes")
+--log("Finished compressing recipes")
 
 local multiplier = settings.startup["omnicompression_multiplier"].value
 
---log(serpent.block(generatorFluidRecipes))
 
 for name,fluid in pairs(generatorFluidRecipes) do
-	log("working on fluid "..name)
+	--log("working on fluid "..name)
 	for _,rec in pairs(fluid.recipes) do
 		for i = 1, settings.startup["omnicompression_building_levels"].value do
 			local new = table.deepcopy(rec)
@@ -1016,7 +1017,7 @@ for name,fluid in pairs(generatorFluidRecipes) do
 				newFluid.fuel_value=tonumber(string.sub(newFluid.fuel_value,1,string.len(newFluid.fuel_value)-2))*math.pow(multiplier,i)..string.sub(newFluid.fuel_value,string.len(newFluid.fuel_value)-2,string.len(newFluid.fuel_value))
 			end
 			if newFluid.icon then
-				newFluid.icons = {{icon=newFluid.icon,icon=newfluid.icon_size or 32}}
+				newFluid.icons = {{icon=newFluid.icon,icon_size=newFluid.icon_size or 32}}
 				newFluid.icon=nil
 			end
 			table.insert(newFluid.icons,{icon="__omnilib__/graphics/lvl"..i..".png",icon_size=32})
@@ -1026,7 +1027,7 @@ for name,fluid in pairs(generatorFluidRecipes) do
 		end
 	end
 end
-log("damn it zom!")
+--log("damn it zom!")
 --log(serpent.block(compress_recipes))
 --log("ep")
 data:extend(compress_recipes)
