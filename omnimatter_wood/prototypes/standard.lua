@@ -96,7 +96,7 @@ RecGen:create("omnimatter_wood","basic-wood-mutation"):
     }):
 	setTechName("bob-greenhouse"):
 	setGenerationCondition(mods["bobgreenhouse"]~=nil or mods["Bio_Industries"]~=nil):
-	setResults({type = "item", name = "omniseedling", amount_min = 6, amount_max = 8}):extend()
+	setResults({type = "item", name = "omniseedling", amount_min = 2, amount_max = 8}):extend()
 
 	RecGen:create("omnimatter_wood","basic-omniwood-growth"):
 	setSubgroup("omnimutator-items"):

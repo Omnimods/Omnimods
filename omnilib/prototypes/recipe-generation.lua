@@ -1022,7 +1022,7 @@ function ItemGen:setGenerationCondition(...)
 end
 function ItemGen:notCondition()
 	local a=clone_function(self.requiredMods)
-	self.requiredMods=function(levels,grade) return not a(levels,grade) end
+	self.requiredMods=function(lkevels,grade) return not a(levels,grade) end
 	return self
 end
 function ItemGen:setReqAllMods(...)

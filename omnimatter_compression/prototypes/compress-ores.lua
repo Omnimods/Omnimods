@@ -176,7 +176,7 @@ for name,ore in pairs(data.raw.resource) do
 				compressed_ores[#compressed_ores+1]=concentrate
 				new.minable.required_fluid="concentrated-"..new.minable.required_fluid
 			end
-			if compressed and max_stacksize > 0 then
+			if compressed and max_stacksize > 0then
 				compressed_ores[#compressed_ores+1]=new
 			end
 		end

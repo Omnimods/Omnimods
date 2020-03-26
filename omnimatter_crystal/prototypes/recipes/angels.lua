@@ -125,8 +125,7 @@ if angelsmods and angelsmods.refining then
 							type = "item-subgroup",
 							name = recipe.subgroup.."-omnide",
 							group = "omnicrystal",
-							--order = "aa",
-							order = data.raw["item-subgroup"]["salting"].order, -- set the order of the "salting" subgroup to be able to control the order of all created subgroups
+							order = "aa",
 						}
 						crystalines[#crystalines+1]=cat
 					end

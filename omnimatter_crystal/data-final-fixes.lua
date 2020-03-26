@@ -73,5 +73,3 @@ BuildGen:create("omnimatter_crystal","omniplant"):
 	extend()
 
 RecGen:import("omniplant-1"):addIngredients({"burner-omniplant",1}):extend()
--- Add the Burner Omniplant to the omnitractor tech here until the tech is moved out of final fixes in omnimatter
-RecGen:import("burner-omniplant"):setTechName("omnitractor-electric-1"):extend()

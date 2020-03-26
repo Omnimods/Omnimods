@@ -6,7 +6,7 @@ RecGen:create("omnimatter_crystal","hydromnic-acid"):
 	fluid():
 	setBothColour(1,1,1):
 	setEnergy(1):
-	setSubgroup("omni-fluids"):
+	setSubgroup("crystallization"):
 	marathon():
 	setCategory("omniplant"):
 	setTechName("omnitech-omnic-acid-hydrolyzation-1"):
@@ -29,21 +29,9 @@ local cost = OmniGen:create():
 	setQuant("gear-wheel",10):
 	setQuant("circuit",5,dif)
 	
-	RecGen:create("omnimatter_crystal","omnite-brick"):
-	setIngredients("stone","omnite"):
-	setCategory("omnifurnace"):
-	setEnabled():
-	tile():
-	setPlace("omnite-brick"):extend()
 	
-RecGen:create("omnimatter_crystal","early-omnite-brick"):
-	setIngredients({"omnite",40},{"stone-brick"}):
-	setResults("omnite-brick"):
-	setEnabled():extend()
-	
---Omniplant	
 BuildChain:create("omnimatter_crystal","omniplant"):
-	setSubgroup("omniplant"):
+	setSubgroup("crystallization"):
 	setLocName("omniplant"):
 	setIcons("omniplant","omnimatter_crystal"):
 	setIngredients(cost:ingredients()):
@@ -90,43 +78,17 @@ BuildChain:create("omnimatter_crystal","omniplant"):
 	setFluidBox("XWXWX.XXXXX.XXXXX.XXXXX.XKXKX"):
 	extend()
 	
-	-- Burner Omniplant
-	BuildGen:create("omnimatter_crystal","omniplant"):
-	setSubgroup("omniplant"):
-	setLocName("omniplant-burner"):
-	setIcons("omniplant","omnimatter_crystal"):
-	setIngredients({"copper-pipe",15},{"omnicium-plate",5},{"basic-circuit-board",5},{"omnite-brick",10},{"iron-gear-wheel",10}):
-	setBurner(0.75,2):
-	setEnergy(25):
-	setUsage(function(level,grade) return "750kW" end):
-	--setTechName("omnitractor-electric-1"): --Done in final-fixes for now
-	setReplace("omniplant"):
-	setStacksize(20):
-	setSize(5):
-	setCrafting({"omniplant"}):
-	setSpeed(1):
-	setSoundWorking("oil-refinery",1,"base"):
-	setSoundVolume(2):
-	setAnimation({
-	layers={
-	{
-        filename = "__omnimatter_crystal__/graphics/buildings/omni-plant.png",
-		priority = "extra-high",
-        width = 224,
-        height = 224,
-        frame_count = 36,
-		line_length = 6,
-        shift = {0.00, -0.05},
-		scale = 1,
-		animation_speed = 0.5
-	},
-	}
-	}):
-	setOverlay("omni-plant-overlay"):
-	setFluidBox("XWXWX.XXXXX.XXXXX.XXXXX.XKXKX"):
-	extend()
+RecGen:create("omnimatter_crystal","omnite-brick"):
+	setIngredients("stone","omnite"):
+	setCategory("omnifurnace"):
+	setEnabled():
+	tile():
+	setPlace("omnite-brick"):extend()
 	
-RecGen:import("omniplant-1"):addIngredients({"burner-omniplant",1}):extend()
+RecGen:create("omnimatter_crystal","early-omnite-brick"):
+	setIngredients({"omnite",40},{"stone-brick"}):
+	setResults("omnite-brick"):
+	setEnabled():extend()
 	
 local omnitile = table.deepcopy(data.raw.tile["stone-path"])
 omnitile.name="omnite-brick"
@@ -160,7 +122,7 @@ cost = OmniGen:create():
 	
 local tmp = {{"advanced-electronics"}}
 BuildChain:create("omnimatter_crystal","crystallomnizer"):
-	setSubgroup("crystallomnizer"):
+	setSubgroup("crystallization"):
 	setIcons("crystallomnizer","omnimatter_crystal"):
 	setLocName("crystallomnizer"):
 	setIngredients(cost:ingredients()):
