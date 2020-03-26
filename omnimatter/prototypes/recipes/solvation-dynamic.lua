@@ -17,7 +17,7 @@ local sorting = {
 	order = "aa",
 	}
 omniston_subcategories[#omniston_subcategories+1]=sorting
-	
+
 data:extend(omniston_subcategories)
 
 local get_omniston_req=function(lvl)
@@ -35,17 +35,23 @@ end
 
 
 local get_sludge_req=function(lvl)
-	local req = {}
-	req[#req+1]="omnitech-omnic-acid-hydrolyzation-"..lvl
-	if (lvl-1)%omni.fluid_levels_per_tier == 0 then
-		req[#req+1]="omnitractor-electric-"..((lvl-1)/omni.fluid_levels_per_tier+1)
-		if lvl > 1 and omni.fluid_dependency < omni.fluid_levels_per_tier then
-			req[#req+1]="omnitech-omnisolvent-omnisludge-"..(lvl-1)
-		end
-	else
-		req[#req+1]="omnitech-omnisolvent-omnisludge-"..(lvl-1)
-	end
-	return req
+  local req = {}
+  req[#req+1]="omnitech-omnic-acid-hydrolyzation-"..lvl
+  if (lvl-1)%omni.fluid_levels_per_tier == 0 then
+    req[#req+1]="omnitractor-electric-"..((lvl-1)/omni.fluid_levels_per_tier+1)
+    if lvl > 1 and omni.fluid_dependency < omni.fluid_levels_per_tier then
+      if data.raw.technology["omnitech-omnisolvent-omnisludge-"..(lvl-1)] then
+        req[#req+1]="omnitech-omnisolvent-omnisludge-"..(lvl-1)
+      else
+        log("no sludge here")
+      end
+    end
+  else
+    if data.raw.technology["omnitech-omnisolvent-omnisludge-"..(lvl-1)] then
+      req[#req+1]="omnitech-omnisolvent-omnisludge-"..(lvl-1)
+    end
+  end
+  return req
 end
 
 
@@ -124,7 +130,7 @@ local omniston = RecChain:create("omnimatter","water-omnitraction"):
 		setTechTime(15):
 		setTechLocName("water-omnitraction"):
 		extend()
-		
+
 local cost = OmniGen:create():
 		setYield("omniston"):
 		setIngredients("omnite"):
@@ -147,7 +153,7 @@ local omniston = RecChain:create("omnimatter","omniston"):
 		setTechTime(15):
 		setTechLocName("omniston_solvation"):
 		extend()
-		
+
 cost = OmniGen:create():
 		setYield("omnisludge"):
 		setIngredients("omnite"):
@@ -216,6 +222,6 @@ for _,tier in pairs(omnifluid) do
 			setTechLocName("omnistillation",{"fluid-name."..fluid.name}):
 			setTechTime(15):
 			extend()
-		
+
 	end
 end
