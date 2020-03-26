@@ -36,13 +36,6 @@ end
 local crystalines = {}
 if not mods["angelsrefining"] then
 	local turn_to_plate = {}
-	local cat = {
-		type = "item-subgroup",
-		name = "omnide-salts",
-		group = "omnicrystal",
-		order = "aa",
-	}
-	crystalines[#crystalines+1]=cat
 	for _,rec in pairs(data.raw.recipe) do
 		if string.find(rec.name,"crystal") and omni.lib.end_with(rec.name,"omnitraction") and rec.category=="omnite-extraction" then
 			local ore = rec.normal.results[1].name
@@ -87,7 +80,7 @@ if not mods["angelsrefining"] then
 				localised_name = {"recipe-name.omnide-salting", {"item-name."..ore}},
 				localised_description = {"recipe-description.pure_extraction", {"item-name."..ore}},
 				category = "omniplant",
-				subgroup = "omnide-salts",
+				subgroup = "salting",
 				enabled = false,
 				ingredients = {
 				{type="item",name=ore,amount=1},
@@ -114,25 +107,3 @@ if not mods["angelsrefining"] then
 	data:extend(crystalines)
 	--data.raw.technology["crystallology-4"].enabled=false
 end
---[[omni.crystal.generate_control_crystal("omnine","iron","copper",nil,1)
-if mods["bobplates"] then
-	omni.crystal.generate_control_crystal("copper","lead","tin",nil,1)
-	omni.crystal.generate_control_crystal("bauxite","lead","zinc","copper",2)
-	if mods["angelssmelting"] then
-		omni.crystal.generate_control_crystal("manganese","rutile","cobalt","chrome",2)
-	end
-end]]
-
---omnimatter_crystal
---[[
-data.raw["inserter"]["filter-inserter"].hand_base_picture.filename="__omnimatter_crystal__/graphics/inserter/filter-inserter-hand-base.png"
-data.raw["inserter"]["filter-inserter"].hand_base_picture.hr_version.filename="__omnimatter_crystal__/graphics/inserter/hr-filter-inserter-hand-base.png"
-data.raw["inserter"]["filter-inserter"].hand_closed_picture.filename="__omnimatter_crystal__/graphics/inserter/filter-inserter-hand-closed.png"
-data.raw["inserter"]["filter-inserter"].hand_closed_picture.hr_version.filename="__omnimatter_crystal__/graphics/inserter/hr-filter-inserter-hand-closed.png"
-data.raw["inserter"]["filter-inserter"].hand_open_picture.filename="__omnimatter_crystal__/graphics/inserter/filter-inserter-hand-open.png"
-data.raw["inserter"]["filter-inserter"].hand_open_picture.hr_version.filename="__omnimatter_crystal__/graphics/inserter/hr-filter-inserter-hand-open.png"
-data.raw["inserter"]["filter-inserter"].platform_picture.sheet.filename="__omnimatter_crystal__/graphics/inserter/filter-inserter-platform.png"
-data.raw["inserter"]["filter-inserter"].platform_picture.sheet.hr_version.filename="__omnimatter_crystal__/graphics/inserter/hr-filter-inserter-platform.png"
-data.raw["inserter"]["filter-inserter"].icon="__omnimatter_crystal__/graphics/icons/filter-inserter.png"
-data.raw.item["filter-inserter"].icon = "__omnimatter_crystal__/graphics/icons/filter-inserter.png"
-]]

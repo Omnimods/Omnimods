@@ -62,8 +62,8 @@ RecGen:create("omnimatter_wood","wood-omnitraction"):
 	marathon():
 	setIngredients({type = "item", name = "omniwood", amount = 6}):
 	setResults({type = "item", name = "wood", amount=8}):extend()
-	
-	
+
+
 RecGen:create("omnimatter_wood","basic-wood-mutation"):
 	setIcons("omniwood"):
 	setCategory("omnimutator"):
@@ -96,7 +96,7 @@ RecGen:create("omnimatter_wood","basic-wood-mutation"):
     }):
 	setTechName("bob-greenhouse"):
 	setGenerationCondition(mods["bobgreenhouse"]~=nil or mods["Bio_Industries"]~=nil):
-	setResults({type = "item", name = "omniseedling", amount_min = 2, amount_max = 8}):extend()
+	setResults({type = "item", name = "omniseedling", amount_min = 6, amount_max = 8}):extend()
 
 	RecGen:create("omnimatter_wood","basic-omniwood-growth"):
 	setSubgroup("omnimutator-items"):
@@ -127,4 +127,3 @@ RecGen:create("omnimatter_wood","basic-wood-mutation"):
 	setTechName("bob-greenhouse"):
 	setGenerationCondition(mods["bobgreenhouse"]~= nil and not mods["angelsbioprocessing"]):
 	setResults({type = "item", name = "omniwood", amount_min = 20, amount_max = 60}):extend()
-	

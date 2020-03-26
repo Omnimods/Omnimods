@@ -135,7 +135,7 @@ omni.crystal.add_recipe=function(recipe,name)
 			type = "item-subgroup",
 			name = data.raw.recipe[recipe].subgroup.."-omnide",
 			group = "omnicrystal",
-			order = "aa",
+			order = data.raw["item-subgroup"]["solvation"].order, -- set the order of the "solvation" subgroup to be able to control the order of all created subgroups
 		}
 		crystalines[#crystalines+1]=cat
 	end
