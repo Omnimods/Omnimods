@@ -101,7 +101,7 @@ for _,boiler in pairs(data.raw.boiler) do
 	if generator_fluid[boiler.output_fluid_box.filter] then
 		generator_fluid[boiler.output_fluid_box.filter] = nil
 	end
-	
+
 	if not forbidden_boilers[boiler.name] and data.raw.fluid[boiler.fluid_box.filter] and data.raw.fluid[boiler.fluid_box.filter].heat_capacity and boiler.minable then
 		local rec = omni.lib.find_recipe(boiler.minable.result)
 		--log(boiler.name)
@@ -114,13 +114,13 @@ for _,boiler in pairs(data.raw.boiler) do
 		end
 		fix_boilers_recipe[#fix_boilers_recipe+1]=rec.name
 		fix_boilers_item[boiler.minable.result]=true
-		
+
 		data.raw.recipe[rec.name].normal.results[1].name=boiler.name.."-converter"
 		data.raw.recipe[rec.name].normal.main_product=boiler.name.."-converter"
 		data.raw.recipe[rec.name].expensive.results[1].name=boiler.name.."-converter"
 		data.raw.recipe[rec.name].expensive.main_product=boiler.name.."-converter"
 		data.raw.recipe[rec.name].main_product=boiler.name.."-converter"
-		
+
 		local water = boiler.fluid_box.filter or "water"
 		local water_cap = convert_mj(data.raw.fluid[water].heat_capacity)
 		local water_delta_tmp = data.raw.fluid[water].max_temperature-data.raw.fluid[water].default_temperature
@@ -131,19 +131,19 @@ for _,boiler in pairs(data.raw.boiler) do
 		local lcm = omni.lib.lcm(prod_steam,sluid_contain_fluid)
 		local prod = lcm/sluid_contain_fluid
 		local tid=lcm/prod_steam
-		
+
 		--omni.lib.replace_all_ingredient(boiler.name,boiler.name.."-converter")
-		
+
 		new_boiler[#new_boiler+1]={
 		type = "recipe",
 		name = boiler.name.."-boiling-steam-"..boiler.target_temperature,
-		icon = "__base__/graphics/icons/fluid/steam.png",
+		icons = {{"__base__/graphics/icons/fluid/steam.png",icon_size=32}},
 		subgroup = "fluid-recipes",
 		category = "boiler-omnifluid-"..boiler.name,
 		order = "g[hydromnic-acid]",
 		energy_required = tid,
 		enabled = true,
-		icon_size = 32,
+		--icon_size = 32,
 		main_product= steam,
 		ingredients =
 		{
@@ -157,13 +157,13 @@ for _,boiler in pairs(data.raw.boiler) do
 		new_boiler[#new_boiler+1]={
 		type = "recipe",
 		name = boiler.name.."-boiling-solid-steam-"..boiler.target_temperature,
-		icon = "__base__/graphics/icons/fluid/steam.png",
+		icons = {{"__base__/graphics/icons/fluid/steam.png", icon_size=32}},
 		subgroup = "fluid-recipes",
 		category = "boiler-omnifluid-"..boiler.name,
 		order = "g[hydromnic-acid]",
 		energy_required = tid,
 		enabled = true,
-		icon_size = 32,
+		--icon_size = 32,
 		main_product= steam,
 		ingredients =
 		{
@@ -176,16 +176,16 @@ for _,boiler in pairs(data.raw.boiler) do
 	  }
 		if mods["omnimatter_marathon"] then omni.marathon.exclude_recipe(boiler.name.."-boiling-solid-steam-"..boiler.target_temperature) end
 		if mods["omnimatter_marathon"] then omni.marathon.exclude_recipe(boiler.name.."-boiling-steam-"..boiler.target_temperature) end
-		
+
 		local loc_key={"entity-name."..boiler.name}
 		local new_item = table.deepcopy(data.raw.item[boiler.name])
 		new_item.name = boiler.name.."-converter"
 		new_item.place_result = boiler.name.."-converter"
 		new_item.localised_name = {"item-name.boiler-converter", loc_key}
 		new_boiler[#new_boiler+1]=new_item
-		
+
 		boiler.minable.result=boiler.name.."-converter"
-		
+
 		loc_key={"entity-name."..boiler.name}
 		forbidden_assembler[boiler.name.."-converter"]=true
 		local new = {
@@ -194,7 +194,7 @@ for _,boiler in pairs(data.raw.boiler) do
 		localised_name = {"entity-name.boiler-converter", loc_key},
 		icon = boiler.icon,
 		icons = boiler.icons,
-		icon_size = 32,
+		icon_size = boiler.icon_size or 32,
 		flags = {"placeable-neutral","placeable-player", "player-creation"},
 		minable = {hardness = 0.2, mining_time = 0.5, result = boiler.name.."-converter"},
 		max_health = 300,
@@ -202,7 +202,7 @@ for _,boiler in pairs(data.raw.boiler) do
 		dying_explosion = "medium-explosion",
 		collision_box = {{-1.29, -1.29}, {1.29, 1.29}},
 		selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
-		
+
 		animation = make_4way_animation_from_spritesheet({ layers =
 		{
 		  {
@@ -286,26 +286,31 @@ for _,boiler in pairs(data.raw.boiler) do
 		  }
 		}
 	  }
-	  
-		
+
+
 		new_boiler[#new_boiler+1]=new
 	end
 end
 
 local get_icons = function(item)
-    --Build the icons table
-    local icons = {}
-    if item.icons then
-        for _ , icon in pairs(item.icons) do
-            local shrink = icon
-			--local scale = icon.scale or 1
-            --shrink.scale = scale*0.65
-            icons[#icons+1] = shrink
-        end
-    else
-        icons[#icons+1] = {icon = item.icon}
-    end
-    return icons
+	--Build the icons table
+	local icons={}
+	if item.icons then
+		icons=item.icons
+		table.insert(icons,icons_1)
+		if item.icon_size and not item.icons[1].icon_size then
+			icons[1].icon_size=item.icon_size
+		end
+		for pos,icon in pairs(icons) do
+			if not icon.icon_size then
+				--back-up setting icon size to 32 if not found
+				icon.icon_size=32
+			end
+		end
+	else
+		icons[1] = {icon = item.icon, icon_size = item.icon_size or 32}
+	end
+	return icons
 end
 
 	new_boiler[#new_boiler+1]={
@@ -386,14 +391,14 @@ for _,build in pairs(data.raw["furnace"]) do
 		if not build.source_inventory_size then build.source_inventory_size = 0 end
 		if not build.result_inventory_size then build.result_inventory_size = 0 end
 		for _, c in pairs(build.crafting_categories) do
-			if cat_add[c] then 
+			if cat_add[c] then
 				if cat_add[c].ingredients and cat_add[c].ingredients > build.source_inventory_size then
 					build.source_inventory_size = cat_add[c].ingredients
 				end
 				if cat_add[c].ingredients and cat_add[c].ingredients > build.source_inventory_size then
 					build.result_inventory_size = cat_add[c].results
 				end
-				if cat_add[c] and (build.ingredient_count and cat_add[c].ingredients > build.ingredient_count) then 
+				if cat_add[c] and (build.ingredient_count and cat_add[c].ingredients > build.ingredient_count) then
 					build.ingredient_count = cat_add[c].ingredients
 				end
 			end
@@ -409,16 +414,16 @@ end
 local dont_remove = {}
 
 
-for _,pump in pairs(data.raw["offshore-pump"]) do	
+for _,pump in pairs(data.raw["offshore-pump"]) do
 	if not (mods["omnimatter_water"] and mods["aai-industry"]) then
 		if data.raw.item[pump.name] then
 			local new={}
-			
+
 			new[#new+1]={
 					type = "recipe-category",
 					name = "pump-fluid-source-"..pump.name,
 				}
-			
+
 			new[#new+1]={
 				type = "recipe",
 				name = pump.name.."-fluid-production",
@@ -440,13 +445,13 @@ for _,pump in pairs(data.raw["offshore-pump"]) do
 				},
 			  }
 			local loc_key={"entity-name."..pump.name}
-			
+
 			local new_item = table.deepcopy(data.raw.item[pump.name])
 				new_item.name = pump.name.."-source"
 				new_item.place_result = pump.name.."-source"
 				new_item.localised_name = {"item-name.fluid-source", loc_key}
 			new[#new+1] = new_item
-			
+
 			if standardized_recipes[pump.name] == nil then
 				omni.marathon.standardise(data.raw.recipe[pump.name])
 			end
@@ -456,7 +461,7 @@ for _,pump in pairs(data.raw["offshore-pump"]) do
 			data.raw.recipe[pump.name].expensive.results[1].name=pump.name.."-source"
 			data.raw.recipe[pump.name].expensive.main_product=pump.name.."-source"
 			data.raw.recipe[pump.name].main_product=pump.name.."-source"
-			
+
 			pump.minable.result=pump.name.."-source"
 			new[#new+1] = {
 				type = "assembling-machine",
@@ -533,7 +538,7 @@ for _,pump in pairs(data.raw["offshore-pump"]) do
 							scale = 0.5
   						}
  					}
-				},					
+				},
 				vehicle_impact_sound =  { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 },
 				working_sound =
 				{
@@ -555,7 +560,7 @@ for _,pump in pairs(data.raw["offshore-pump"]) do
 			  fuel_inventory_size = 7,
 			  emissions = 0.00,
 			  smoke = nil
-			  
+
 			},
 				energy_usage = "1W",
 				ingredient_count = 4,
@@ -657,7 +662,7 @@ end
 
 
 --"autoplace-control"
---name,ore in pairs(data.raw.resource) 
+--name,ore in pairs(data.raw.resource)
 
 
 for _,build in pairs(data.raw["assembling-machine"]) do
@@ -665,7 +670,7 @@ for _,build in pairs(data.raw["assembling-machine"]) do
 		local found_generator = false
 		if not build.ingredient_count then build.ingredient_count = 0 end
 		for _, c in pairs(build.crafting_categories) do
-			if cat_add[c] and cat_add[c].ingredients > build.ingredient_count then 
+			if cat_add[c] and cat_add[c].ingredients > build.ingredient_count then
 				build.ingredient_count = cat_add[c].ingredients
 			end
 			if generator_cat[c] then found_generator = true end
@@ -680,7 +685,7 @@ for _,build in pairs(data.raw["assembling-machine"]) do
 				end
 			end
 		else
-			build.fluid_boxes=nil		
+			build.fluid_boxes=nil
 		end
 	end
 end
@@ -712,7 +717,7 @@ for _,recipe in pairs(data.raw.recipe) do
 		for _,dif in pairs({"normal","expensive"}) do
 			for _,ingres in pairs({"ingredients","results"}) do
 				for j,component in pairs(recipe[dif][ingres]) do
-					if component.type == "fluid" then 
+					if component.type == "fluid" then
 						if fuel_fluid[component.name] then energy_fluid[#energy_fluid+1]=table.deepcopy(recipe) end
 						if component.amount then
 							fluids[dif][ingres][j] = {name=component.name,amount=round_fluid(component.amount)}
@@ -735,7 +740,7 @@ for _,recipe in pairs(data.raw.recipe) do
 			local gcd_primes = {}
 			for _,ingres in pairs({"results"}) do
 				for j,component in pairs(recipe[dif][ingres]) do
-					if component.type == "fluid" then 
+					if component.type == "fluid" then
 						local c = fluids[dif][ingres][j].amount*mult[dif]/sluid_contain_fluid
 						if c > 500 and (not need_adjustment or c > need_adjustment) then
 							need_adjustment = c
@@ -768,7 +773,7 @@ for _,recipe in pairs(data.raw.recipe) do
 				local totalPrimeVal = omni.lib.prime.value(omni.lib.prime.mult(addPrimes,gcd_primes))
 				for _,ingres in pairs({"ingredients","results"}) do
 					for j,component in pairs(recipe[dif][ingres]) do
-						if component.type == "fluid" then 
+						if component.type == "fluid" then
 							local fluid_amount = 0
 							for i=1,#roundFluidValues do
 								if roundFluidValues[i]%totalPrimeVal == 0 then
@@ -798,12 +803,12 @@ for _,recipe in pairs(data.raw.recipe) do
 		for _,dif in pairs({"normal","expensive"}) do
 			for _,ingres in pairs({"ingredients","results"}) do
 				for j,component in pairs(recipe[dif][ingres]) do
-					if component.type == "fluid" then 
+					if component.type == "fluid" then
 						component.amount = omni.lib.round(fluids[dif][ingres][j].amount*mult[dif]/sluid_contain_fluid)
 						component.type="item"
 						local new_name = "solid-"..component.name
 						if component.temperature or component.maximum_temperature or component.minimum_temperature then
-							local tp = component.temperature or component.minimum_temperature or component.maximum_temperature 
+							local tp = component.temperature or component.minimum_temperature or component.maximum_temperature
 							--new_name=new_name.."-"..tp
 							if not temperature_fluids[component.name] then
 								temperature_fluids[component.name]={name = component.name, recipes = {},temperatures={},used={}}
@@ -818,7 +823,7 @@ for _,recipe in pairs(data.raw.recipe) do
 									for i = 1, #temperature_fluids[component.name].temperatures do
 										if not omni.lib.is_in_table(tp,temperature_fluids[component.name].temperatures) and temperature_fluids[component.name].temperatures[i] > tp and ((temperature_fluids[component.name].temperatures[i+1] ~= nil and temperature_fluids[component.name].temperatures[i+1]<tp) or temperature_fluids[component.name][i+1]== nil) then
 											table.insert(temperature_fluids[component.name].temperatures,i,tp)
-											break	
+											break
 										end
 									end
 								else
@@ -860,16 +865,16 @@ for _,f in pairs(temperature_fluids) do
 							local found_tmp = f.temperatures[1]
 							for _,t in pairs(f.temperatures) do
 								if p.tmp.mini and p.tmp.maxi and t>=p.tmp.mini and t<p.tmp.maxi  then
-									found_tmp = t 
+									found_tmp = t
 									break
 								elseif p.tmp.mini and t>=p.tmp.mini and not p.tmp.maxi then
-									found_tmp = t 
-									break						
+									found_tmp = t
+									break
 								elseif p.tmp.maxi and t<p.tmp.maxi and not p.tmp.mini then
-									found_tmp = t 
+									found_tmp = t
 									break
 								elseif p.tmp.base and t>=p.tmp.base and not p.tmp.mini and not p.tmp.maxi then
-									found_tmp = t 
+									found_tmp = t
 									break
 								end
 							end
@@ -877,7 +882,7 @@ for _,f in pairs(temperature_fluids) do
 							if not data.raw.item["solid-"..f.name.."-"..found_tmp] then make_tmp_sluid(f.name,found_tmp) end
 						else
 							data.raw.recipe[r.name][dif][ingres][p.pos].name = "solid-"..f.name.."-"..p.tmp.base
-							if not data.raw.item["solid-"..f.name.."-"..p.tmp.base] then make_tmp_sluid(f.name,p.tmp.base) end 
+							if not data.raw.item["solid-"..f.name.."-"..p.tmp.base] then make_tmp_sluid(f.name,p.tmp.base) end
 						end
 					end
 				end
@@ -913,7 +918,7 @@ for _,f in pairs(temperature_fluids) do
 					end
 				end
 			end
-			
+
 		end
 	end
 end
@@ -940,7 +945,7 @@ for _, recipe in pairs(extra_fluid_rec) do
 	for _,dif in pairs({"normal","expensive"}) do
 		for _,ingres in pairs({"ingredients","results"}) do
 			for j,component in pairs(recipe[dif][ingres]) do
-				if component.type == "fluid" and not generator_fluid[component.name]  then 
+				if component.type == "fluid" and not generator_fluid[component.name]  then
 					fluids[dif][ingres][j] = {name=component.name,amount=round_fluid(component.amount)}
 					mult[dif]=omni.lib.lcm(omni.lib.lcm(sluid_contain_fluid,fluids[dif][ingres][j].amount)/fluids[dif][ingres][j].amount,mult[dif])
 					primes[dif][ingres][j]=omni.lib.factorize(fluids[dif][ingres][j].amount)
@@ -954,7 +959,7 @@ for _, recipe in pairs(extra_fluid_rec) do
 		local gcd_primes = {}
 		for _,ingres in pairs({"results"}) do
 			for j,component in pairs(recipe[dif][ingres]) do
-				if component.type == "fluid" and not generator_fluid[component.name] then 
+				if component.type == "fluid" and not generator_fluid[component.name] then
 					local c = fluids[dif][ingres][j].amount*mult[dif]/sluid_contain_fluid
 					if c > 500 and (not need_adjustment or c > need_adjustment) then
 						need_adjustment = c
@@ -987,7 +992,7 @@ for _, recipe in pairs(extra_fluid_rec) do
 			local totalPrimeVal = omni.lib.prime.value(omni.lib.prime.mult(addPrimes,gcd_primes))
 			for _,ingres in pairs({"ingredients","results"}) do
 				for j,component in pairs(recipe[dif][ingres]) do
-					if component.type == "fluid" then 
+					if component.type == "fluid" then
 						local fluid_amount = 0
 						for i=1,#roundFluidValues do
 							if roundFluidValues[i]%totalPrimeVal == 0 then
@@ -1017,12 +1022,12 @@ for _, recipe in pairs(extra_fluid_rec) do
 	for _,dif in pairs({"normal","expensive"}) do
 		for _,ingres in pairs({"ingredients","results"}) do
 			for j,component in pairs(recipe[dif][ingres]) do
-				if component.type == "fluid" and not generator_fluid[component.name] then 
+				if component.type == "fluid" and not generator_fluid[component.name] then
 					component.amount = fluids[dif][ingres][j].amount*mult[dif]/sluid_contain_fluid
 					component.type="item"
 					local new_name = "solid-"..component.name
 					if temperature_fluids[component.name] and omni.lib.cardTable(temperature_fluids[component.name].used) > 1 and (component.temperature or component.maximum_temperature or component.minimum_temperature) then
-						local tp = component.temperature or component.minimum_temperature or component.maximum_temperature 
+						local tp = component.temperature or component.minimum_temperature or component.maximum_temperature
 						new_name=new_name.."-"..tp
 						if not temperature_fluids[component.name] then
 							temperature_fluids[component.name]={name = component.name, recipes = {},temperatures={}}
@@ -1037,7 +1042,7 @@ for _, recipe in pairs(extra_fluid_rec) do
 								for i = 1, #temperature_fluids[component.name].temperatures do
 									if not omni.lib.is_in_table(tp,temperature_fluids[component.name].temperatures) and temperature_fluids[component.name].temperatures[i] > tp and ((temperature_fluids[component.name].temperatures[i+1] ~= nil and temperature_fluids[component.name].temperatures[i+1]<tp) or temperature_fluids[component.name][i+1]== nil) then
 										table.insert(temperature_fluids[component.name].temperatures,i,tp)
-										break	
+										break
 									end
 								end
 							else
@@ -1085,27 +1090,27 @@ for _, recipe in pairs(energy_fluid) do
 	if mods["omnimatter_marathon"] then omni.marathon.exclude_recipe(recipe.name) end
 	local fluids = {normal={ingredients={},results={}},expensive={ingredients={},results={}}}
 	local lcm = 1
-	local mult=1		
+	local mult=1
 	for _,dif in pairs({"normal","expensive"}) do
 		for _,ingres in pairs({"ingredients","results"}) do
 			for j,component in pairs(recipe[dif][ingres]) do
-				if component.type == "fluid" and not fuel_fluid[component.name]  then 
+				if component.type == "fluid" and not fuel_fluid[component.name]  then
 					fluids[dif][ingres][j] = {name=component.name,amount=round_fluid(component.amount)}
 					mult=omni.lib.lcm(omni.lib.lcm(sluid_contain_fluid,fluids[dif][ingres][j].amount)/fluids[dif][ingres][j].amount,mult)
 				end
 			end
 		end
 	end
-	
+
 	for _,dif in pairs({"normal","expensive"}) do
 		for _,ingres in pairs({"ingredients","results"}) do
 			for j,component in pairs(recipe[dif][ingres]) do
-				if component.type == "fluid" and not fuel_fluid[component.name] then 
+				if component.type == "fluid" and not fuel_fluid[component.name] then
 					component.amount = fluids[dif][ingres][j].amount*mult/sluid_contain_fluid
 					component.type="item"
 					local new_name = "solid-"..component.name
 					if temperature_fluids[component.name] and temperature_fluids[component.name].used ~= nil and (component.temperature or component.maximum_temperature or component.minimum_temperature) then
-						local tp = component.temperature or component.minimum_temperature or component.maximum_temperature 
+						local tp = component.temperature or component.minimum_temperature or component.maximum_temperature
 						if omni.lib.is_in_table(tp,temperature_fluids[component.name].used) then
 							new_name=new_name.."-"..tp
 						end
@@ -1122,7 +1127,7 @@ for _, recipe in pairs(energy_fluid) do
 								for i = 1, #temperature_fluids[component.name].temperatures do
 									if not omni.lib.is_in_table(tp,temperature_fluids[component.name].temperatures) and temperature_fluids[component.name].temperatures[i] > tp and ((temperature_fluids[component.name].temperatures[i+1] ~= nil and temperature_fluids[component.name].temperatures[i+1]<tp) or temperature_fluids[component.name][i+1]== nil) then
 										table.insert(temperature_fluids[component.name].temperatures,i,tp)
-										break	
+										break
 									end
 								end
 							else
