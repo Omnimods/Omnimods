@@ -27,15 +27,6 @@ if mods["angelsbioprocessing"] then
 		rec.icon_size = 32
 		rec.localised_name = {"item-name.omniwood"}
 	end
-	if mods["bobgreenhouse"] then --checks both bio and greenhouse
-		omni.lib.replace_all_ingredient("seedling","omniseedling")
-		omni.lib.replace_recipe_result("wood-sawing-manual","wood","omniwood")
-
-		data.raw.recipe["wood-sawing-manual"].icons[1].icon = data.raw.item["omniwood"].icons[1].icon
-		data.raw.recipe["wood-sawing-manual"].icons[1].icon_size = 32
-		data.raw.recipe["wood-sawing-manual"].icons[1].scale = 1
-		data.raw.recipe["wood-sawing-manual"].localised_name = {"item-name.omniwood"}
-	end
 end
 --update electronics if bobs-electronics
 if bobmods and bobmods.electronics then omni.lib.add_recipe_ingredient("omnimutator",{"basic-circuit-board",2}) end
