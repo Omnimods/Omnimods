@@ -8,6 +8,7 @@ require("prototypes.fuel-category")
 --require("prototypes.circuit")
 --require("prototypes.technology.crystallology")
 require("functions")
+<<<<<<< HEAD
 
 local pipeadd="pipe" --vanilla set
 local elecadd="electronic-circuit" --vanilla set
@@ -51,3 +52,5 @@ BuildGen:create("omnimatter_crystal","omniplant"):
 	setOverlay("omni-plant-overlay"):
 	setFluidBox("XWXWX.XXXXX.XXXXX.XXXXX.XKXKX"):
 	extend()
+=======
+>>>>>>> parent of 5910ed9... moved the building generation from dff to data
