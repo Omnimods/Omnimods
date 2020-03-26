@@ -19,7 +19,7 @@ if data.raw.item["basic-circuit-board"] then
 	elecadd="basic-circuit-board"
 end
 BuildGen:create("omnimatter_crystal","omniplant"):
-	setSubgroup("omniplant"):
+	setSubgroup("crystallization"):
 	setLocName("omniplant-burner"):
 	setIcons("omniplant","omnimatter_crystal"):
 	setIngredients({pipeadd,15},{"omnicium-plate",5},{elecadd,5},{"omnite-brick",10},{"iron-gear-wheel",10}):
