@@ -15,8 +15,8 @@ if omni.impure_dependency > omni.impure_levels_per_tier then omni.impure_depende
 if omni.fluid_dependency > omni.fluid_levels_per_tier then omni.fluid_dependency = omni.fluid_levels_per_tier end
 
 --Infinite ore result probability check
---LOAD PROTOTYPES
-require("prototypes.omniore")
+--LOAD PROTOTYPES	 
+require("prototypes.omniore") 
 require("prototypes.generation.omnite-inf")
 require("prototypes.generation.omnite")
 require("prototypes.categories")
@@ -100,7 +100,7 @@ local omnic_acid = RecChain:create("omnimatter","omnic-acid"):
 		setTechLocName("omnic-acid"):
 		setTechTime(15):
 		extend()
-
+		
 		BuildGen:create("omnimatter","omniphlog"):
 		setBurner(0.75,1):
 		setStacksize(10):

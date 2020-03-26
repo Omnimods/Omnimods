@@ -7,14 +7,14 @@ require("prototypes.bioindustries")
 if mods["angelsbioprocessing"] then
 	--omni.lib.add_prerequisite("bio-processing-green","omnialgae")
 	omni.lib.add_prerequisite("bio-processing-brown","omnialgae")
-
+	
 	omni.lib.remove_unlock_recipe("bio-processing-green","algae-farm")
-
+	
 	omni.lib.add_recipe_ingredient("algae-green",{type="item",name="omnialgae",amount=40})
 	omni.lib.add_recipe_ingredient("algae-brown",{type="item",name="omnialgae",amount=40})
 	omni.lib.add_recipe_ingredient("algae-red",{type="item",name="omnialgae",amount=40})
 	omni.lib.add_recipe_ingredient("algae-blue",{type="item",name="omnialgae",amount=40})
-
+	
 	for i=1,3 do
 		local rec = data.raw.recipe["wood-sawing-"..i]
 		omni.marathon.standardise(rec)
@@ -28,5 +28,3 @@ if mods["angelsbioprocessing"] then
 		rec.localised_name = {"item-name.omniwood"}
 	end
 end
---update electronics if bobs-electronics
-if bobmods and bobmods.electronics then omni.lib.add_recipe_ingredient("omnimutator",{"basic-circuit-board",2}) end
