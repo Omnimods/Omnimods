@@ -36,13 +36,13 @@ end
 local crystalines = {}
 if not mods["angelsrefining"] then
 	local turn_to_plate = {}
-	--local cat = {
-	--	type = "item-subgroup",
-	--	name = "omnide-salts",
-	--	group = "omnicrystal",
-	--	order = "aa"
-	--}
-	--crystalines[#crystalines+1]=cat
+	local cat = {
+		type = "item-subgroup",
+		name = "omnide-salts",
+		group = "omnicrystal",
+		order = "aa",
+	}
+	crystalines[#crystalines+1]=cat
 	for _,rec in pairs(data.raw.recipe) do
 		if string.find(rec.name,"crystal") and omni.lib.end_with(rec.name,"omnitraction") and rec.category=="omnite-extraction" then
 			local ore = rec.normal.results[1].name
@@ -87,7 +87,7 @@ if not mods["angelsrefining"] then
 				localised_name = {"recipe-name.omnide-salting", {"item-name."..ore}},
 				localised_description = {"recipe-description.pure_extraction", {"item-name."..ore}},
 				category = "omniplant",
-				subgroup = "salting",
+				subgroup = "omnide-salts",
 				enabled = false,
 				ingredients = {
 				{type="item",name=ore,amount=1},
@@ -102,7 +102,7 @@ if not mods["angelsrefining"] then
 				energy_required = 5,
 			}
 
-			--crystalines[#crystalines+1]=solution
+			crystalines[#crystalines+1]=solution
 			omni.lib.add_unlock_recipe("crystallology-"..tier, ore.."-salting")
 			omni.lib.add_unlock_recipe("crystallology-"..tier, ore.."-omnide-solution")
 			omni.lib.add_unlock_recipe("crystallology-"..tier, ore.."-crystal-omnitraction")
