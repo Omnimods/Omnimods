@@ -29,9 +29,7 @@ log(serpent.block(data.raw["assembling-machine"]["mixing-furnace"]))
 for _,entity in pairs(burnerEntities) do
 	BuildGen:importIf(entity):setFuelCategory("omnite"):extend()
 end
-log(serpent.block(data.raw["assembling-machine"]["mixing-furnace"]))
---error("merp")
-
+--log(serpent.block(data.raw["assembling-machine"]["mixing-furnace"]))
 BuildGen:create("omnimatter_crystal","omniplant"):
 	setSubgroup("crystallization"):
 	setLocName("omniplant-burner"):
@@ -67,5 +65,5 @@ BuildGen:create("omnimatter_crystal","omniplant"):
 	setOverlay("omni-plant-overlay"):
 	setFluidBox("XWXWX.XXXXX.XXXXX.XXXXX.XKXKX"):
 	extend()
-	
+
 RecGen:import("omniplant-1"):addIngredients({"burner-omniplant",1}):extend()
