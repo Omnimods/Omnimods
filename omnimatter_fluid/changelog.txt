@@ -1,9 +1,11 @@
 --------------------------------------------------------------------------------------------------
 Version: 3.0.1
+Date: 2020.03.24
   Features:
-    - Updated to 0.18
+    - Update to Factorio version 0.18.15
     - Added Changelog
     - Moved scripting to a separate file
+    - Added Thumbnail
   Bugfixes:
     - Icon size issues fixed
 --------------------------------------------------------------------------------------------------
