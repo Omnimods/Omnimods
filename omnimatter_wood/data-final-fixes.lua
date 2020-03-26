@@ -1,7 +1,4 @@
 --omni.lib.add_prerequisite("omnimutator", "omnitech-omnic-hydrolyzation-1")
-if bobmods and bobmods.electronics then omni.lib.add_recipe_ingredient("omnimutator",{"basic-circuit-board",2}) end
-
-
 
 if mods["bobgreenhouse"] then
 	omni.lib.remove_recipe_all_techs("bob-seedling")
@@ -15,21 +12,18 @@ if mods["bobgreenhouse"] then
 	omni.lib.remove_recipe_all_techs("bob-advanced-greenhouse-cycle")
 end
 
-if mods["bobplates"] then
-	omni.lib.replace_recipe_ingredient("omnimutator","copper-plate","glass")
-end
-
 if settings.startup["omniwood-pure-wood-only"].value then
 	if mods["bobelectronics"] then
 		omni.lib.remove_recipe_all_techs("synthetic-wood")
 		omni.lib.remove_recipe_all_techs("bob-resin-wood")
 	end
-end	
+end
+
 
 if settings.startup["omniwood-all-mutated"].value then
 	for _,tree in pairs(data.raw.tree) do
 		if not string.find(tree.icon,"angelsbioprocessing") then
-			if tree.minable then 
+			if tree.minable then
 				if tree.minable.result then
 					tree.minable.result="omniwood"
 				else
@@ -49,7 +43,7 @@ if mods["pycoalprocessing"] then
 	local pylog = {"log1", "log2", "log3", "log4", "log5", "log6", "log-organics", "log-wood"}
 	for _, p in pairs(pylog) do
 		omni.lib.remove_recipe_all_techs(p)
-		data.raw.recipe[p] = nil	
+		data.raw.recipe[p] = nil
 	end
 	omni.lib.remove_recipe_all_techs("botanical-nursery")
 	data.raw.recipe["botanical-nursery"] = nil

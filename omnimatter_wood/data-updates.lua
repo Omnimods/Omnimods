@@ -3,7 +3,11 @@ if mods["aai-industry-sp0"] then
 	industry.add_tech("omniwaste")
 end
 
-if mods["angelsbioprocessing"] and mods["bob-greenhouse"] then
+if mods["omnimatter_marathon"] then
+	omni.marathon.equalize("burner-omniphlog","omni-mutator")
+end
+
+if mods["angelsbioprocessing"] and mods["bobgreenhouse"] then
 	omni.lib.replace_all_ingredient("seedling","omniseedling")
 	omni.lib.replace_recipe_result("wood-sawing-manual","wood","omniwood")
 
@@ -12,7 +16,5 @@ if mods["angelsbioprocessing"] and mods["bob-greenhouse"] then
 	data.raw.recipe["wood-sawing-manual"].icons[1].scale = 1
 	data.raw.recipe["wood-sawing-manual"].localised_name = {"item-name.omniwood"}
 end
-
-if mods["omnimatter_marathon"] then
-	omni.marathon.equalize("burner-omniphlog","omni-mutator")
-end
+--update ingredients
+if mods["bobplates"] then	omni.lib.replace_recipe_ingredient("omnimutator","copper-plate","glass") end

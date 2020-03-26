@@ -8,10 +8,7 @@ for _,om in pairs({omnisource,omnifluid}) do
 end
 omni.max_tier = math.min(math.max(omni.max_tier,m+2),8)
 
-require("prototypes.omnitractor-dynamic")
-require("prototypes.recipes.extraction-dynamic")
-require("prototypes.recipes.solvation-dynamic")
-if mods["angelsrefining"] then 
+if mods["angelsrefining"] then
 	data.raw.resource["uranium-ore"]=nil
 end
 for _,f in pairs(data.raw.fluid) do
@@ -24,6 +21,7 @@ omni.lib.add_unlock_recipe("base-impure-extraction","pulverized-stone")
 omni.lib.add_unlock_recipe("base-impure-extraction","pulver-omnic-waste")
 
 --TEMPORARY
+--omnifluid (basically should be same timing as barrelling)
 local fluid_unlock = {}
 for _, fluid in pairs(data.raw.fluid) do
 	if fluid.name ~= "heat" then
@@ -62,55 +60,6 @@ for _, f in pairs(fluid_unlock) do
 	data.raw.recipe[f].enabled=true
 end
 --END TEMPORARY
-
-if true or phlog then
-	--omni.lib.add_prerequisite("omnitractor-electric-1","omniwaste")
-local cost = OmniGen:create():
-		building():
-		setMissConstant(3):
-		setPreRequirement("burner-omniphlog"):
-		setQuant("omniplate",10):
-		setQuant("plates",20):
-		setQuant("gear-box",15)
-		
-
-
-
-	BuildChain:create("omnimatter","omniphlog"):
-		setSubgroup("omniphlog"):
-		setLocName("omniphlog"):
-		setIngredients(cost:ingredients()):
-		setEnergy(5):
-		setUsage(function(level,grade) return (200+100*grade).."kW" end):
-		addElectricIcon():
-		setReplace("omniphlog"):
-		setStacksize(10):
-		setSize(3):
-		setTechName("omnitractor-electric"):
-		setFluidBox("XWX.XXX.XKX"):
-		setLevel(omni.max_tier):
-		setSoundWorking("ore-crusher"):
-		setSoundVolume(2):
-		setModSlots(function(levels,grade) return grade end):
-		setCrafting("omniphlog"):
-		setSpeed(function(levels,grade) return 0.5+grade/2 end):
-		setAnimation({
-		layers={
-		{
-			filename = "__omnimatter__/graphics/entity/buildings/omniphlog.png",
-			priority = "extra-high",
-			width = 160,
-			height = 160,
-			frame_count = 36,
-			line_length = 6,
-			shift = {0.00, -0.05},
-			scale = 0.90,
-			animation_speed = 0.5
-		},
-		},
-		}):setOverlay("tractor-over"):
-		extend()
-end
 
 --omni.lib.add_unlock_recipe("omnic-hydrolyzation-"..math.floor(omni.fluid_levels/2),"stone-omnisolvent")
 --omni.lib.add_unlock_recipe("omnic-hydrolyzation-"..math.floor(omni.fluid_levels/2),"omnite-crystalization")
@@ -221,15 +170,7 @@ end
 
 RecGen:import("coal-liquefaction"):replaceIngredients("heavy-oil","omniston"):replaceIngredients("liquid-naphtha","omniston"):extend()
 
--- Fix for Steam SP Bob's Tech introduces sometimes
-if data.raw.recipe["steam-science-pack"] then
-	new_ingredients =
-    {
-      {"omnite", 1},
-      {"stone", 1},
-    }
-	data.raw.recipe["steam-science-pack"].ingredients = new_ingredients
-end
+
 
 --log("zombiee why more ideas?")
 
