@@ -53,7 +53,11 @@ local get_pure_req = function(levels,i)
 		--r[#r+1]="omnitech-omnisolvent-omnisludge-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
 	end
 	if i == 2 then
-		r[#r+1]="omnitech-omnisolvent-omnisludge-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
+		if data.raw.technology["omnitech-omnisolvent-omnisludge-"..(i-2)] then
+			r[#r+1]="omnitech-omnisolvent-omnisludge-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
+		else
+			log("no sludge here")
+		end
 	end
 	for j,tier in pairs(omnifluid) do
 		if tonumber(j) < i and tonumber(j) >= i-3 then
@@ -77,7 +81,7 @@ function timestier(row,col)
 		return 0.2
 	else
 		return timestier(row-1,col)+timestier(row-1,col+1)
-	end	
+	end
 end
 
 local get_tech_times = function(levels,tier)
@@ -108,7 +112,7 @@ local cost = OmniGen:create():
 	setQuant("circuit",5):
 	setQuant("omniplate",20):
 	setQuant("gear-box",10)
-	
+
 
 if mods["bobplates"] then
 	cost:setQuant("bearing",5,-1)
