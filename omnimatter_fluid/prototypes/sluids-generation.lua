@@ -566,7 +566,7 @@ end
 --name,ore in pairs(data.raw.resource)
 
 
-for _,build in pairs(data.raw["assembling-machine"]) do
+--[[for _,build in pairs(data.raw["assembling-machine"]) do
 	if not string.find(build.name,"creative") and not forbidden_assembler[build.name] then
 		local found_generator = false
 		if not build.ingredient_count then build.ingredient_count = 0 end
@@ -589,7 +589,7 @@ for _,build in pairs(data.raw["assembling-machine"]) do
 			build.fluid_boxes=nil
 		end
 	end
-end
+end]]
 
 local excluded_subgroups = {"empty-barrel","fill-barrel","barreling-pump"}
 local excluded_names = {"creative",{"boiling","steam"},{"solid","fluid","conversion"},{"fluid","production"}}
