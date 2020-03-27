@@ -4,7 +4,7 @@ RecGen:create("omnimatter","omnicium-plate-pure"):
 	setItemName("omnicium-plate"):
 	setIcons("omnicium-plate","omnimatter"):
 	setStacksize(400):
-	setIngredients({ "crushed-omnite", 40}):
+	setIngredients({ "crushed-omnite", 10}):
 	setResults("omnicium-plate"):
 	setCategory("smelting"):
 	setEnergy(5):
