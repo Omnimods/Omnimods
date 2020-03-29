@@ -161,7 +161,7 @@ cost = OmniGen:create():
 		yieldQuant(function(levels,grade) return 26/15*(120+(grade-1)*120/(omni.fluid_levels-1)) end ):
 		wasteQuant(function(levels,grade) return math.max(12-extraction_value(levels,grade),0) end)
 local omnisludge = RecChain:create("omnimatter","omnisludge"):
-		setLocName("omnisludge"):
+		setLocName("recipe-name.omnisludge"):
 		setIngredients({
 		{name = "pulverized-stone", amount = quant/2},
 		{type="fluid", name="omnic-acid", amount=240}

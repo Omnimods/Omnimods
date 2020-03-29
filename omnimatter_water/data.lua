@@ -34,6 +34,7 @@ function omniwateradd(element,gain,tier,const,input)
 		setYield(element):
 		setIngredients("omnite"):
 		setWaste("omnic-waste"):
+		--setLocName("fluid-name."..element):
 		yieldQuant(function(levels,grade) return gain+(grade-1)*gain/(levels-1) end):
 		wasteQuant(function(levels,grade) return gain-(grade-1)*gain/(levels-1) end)
 	--log("making omniwater "..element)
@@ -45,6 +46,7 @@ function omniwateradd(element,gain,tier,const,input)
 		setEnabled(false):
 		setCategory(cat):
 		setSubgroup("omnifluids"):
+		setLocName("recipe-name.water-waste-omnitraction",{"fluid-name."..element}):
 		setLevel(water_levels):
 		setEnergy(5*(input or 1)):
 		setTechIcon("omnimatter_water",element):
@@ -59,8 +61,8 @@ end
 local c = 1
 if mods["omnimatter_compression"] then c = 1/3 end
 omniwateradd("omnic-water",1728*2*c,1,72,c)
-		
-if mods["angelsrefining"] then 
+
+if mods["angelsrefining"] then
 	omniwateradd("water-viscous-mud",1728/2,1,144)
 	for _,fluid in pairs(data.raw.fluid) do
 		if omni.lib.start_with(fluid.name,"water") and omni.lib.end_with(fluid.name,"waste") then
