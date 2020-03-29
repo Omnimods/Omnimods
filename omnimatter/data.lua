@@ -165,11 +165,3 @@ omnitile.variants.u_transition.hr_version.picture="__omnimatter_crystal__/graphi
 omnitile.variants.o_transition.picture="__omnimatter_crystal__/graphics/terrain/stone-path/stone-path-o.png"
 omnitile.variants.o_transition.hr_version.picture="__omnimatter_crystal__/graphics/terrain/stone-path/hr-stone-path-o.png"
 data:extend({omnitile})
-
-cost = OmniGen:create():
-	building():
-	setMissConstant(4):
-	setQuant("pipe",5,2):
-	setQuant("omniplate",10):
-	setQuant("gear-wheel",5,1):
-	setQuant("circuit",15)
