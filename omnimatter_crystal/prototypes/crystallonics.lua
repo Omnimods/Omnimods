@@ -44,7 +44,7 @@ RecGen:create("omnimatter_crystal","early-omnite-brick"):
 --Omniplant
 BuildChain:create("omnimatter_crystal","omniplant"):
 	setSubgroup("omniplant"):
-	setLocName("omni-fluids"):
+	setLocName("omniplant"):
 	setIcons("omniplant","omnimatter_crystal"):
 	setIngredients(cost:ingredients()):
 	setEnergy(25):
@@ -321,6 +321,7 @@ RecChain:create("omnimatter_crystal","pseudoliquid-amorphous-crystal"):
 	setResults(function (levels,grade) return {{type="fluid",name="pseudoliquid-amorphous-crystal",amount=240+2160*(grade-1)/levels}} end):
 	setLevel(omni.fluid_levels):
 	setTechName("pseudoliquid-amorphous-crystal"):
+	setTechLocName("pseudoliquid-amorphous-crystal",grade):
 	setTechIcon("omnimatter_crystal","amorphous-crystal"):
 	setTechCost(function(levels,grade) return 500+50*grade end):
 	setTechPacks(function(levels,grade) return 3+math.floor(grade*3/levels) end):
