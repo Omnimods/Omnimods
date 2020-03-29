@@ -256,7 +256,7 @@ for _, group in pairs({"fluid"}) do
 					localised_description = {"recipe-description.deconcentrate-fluid", loc_key},
 					icons = icons,
 					icon_size=item.icon_size or 32,
-					category = "compression",
+					category = "fluid-concentration",
 					enabled = true,
 					hidden = true,
 					ingredients = {
