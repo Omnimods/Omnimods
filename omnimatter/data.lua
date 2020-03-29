@@ -16,6 +16,7 @@ if omni.fluid_dependency > omni.fluid_levels_per_tier then omni.fluid_dependency
 
 --Infinite ore result probability check
 --LOAD PROTOTYPES
+require("prototypes.stone")
 require("prototypes.omniore")
 require("prototypes.generation.omnite-inf")
 require("prototypes.generation.omnite")
@@ -88,7 +89,7 @@ local omnic_acid = RecChain:create("omnimatter","omnic-acid"):
 		{type="fluid", name="steam", amount=120},
 		}):
 		setCategory(omniFluidCat):
-		setSubgroup("omnifluids"):
+		setSubgroup("omni-fluids"):
 		setLevel(omni.fluid_levels):
 		setResults(cost:results()):
 		setEnergy(function(levels,grade) return 3 end):
@@ -104,7 +105,7 @@ local omnic_acid = RecChain:create("omnimatter","omnic-acid"):
 		BuildGen:create("omnimatter","omniphlog"):
 		setBurner(0.75,1):
 		setStacksize(10):
-		setSubgroup("omnitractor"):
+		setSubgroup("omniphlog"):
 		setReplace("omniphlog"):
 		setSize(3):
 		setCrafting("omniphlog"):
