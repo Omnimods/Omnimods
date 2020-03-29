@@ -1,82 +1,3 @@
-local fluid_solid = {}
-
-local top_value = 500000
-local roundFluidValues = {}
-local b,c,d = math.log(5),math.log(3),math.log(2)
-for i=0,math.floor(math.log(top_value)/b) do
-    local pow5 = math.pow(5,i)
-    for j=0,math.floor(math.log(top_value/pow5)/c) do
-        local pow3=math.pow(3,j)
-        for k=0,math.floor(math.log(top_value/pow5/pow3)/d) do
-            roundFluidValues[#roundFluidValues+1] = pow5*pow3*math.pow(2,k)
-        end
-    end
-end
-table.sort(roundFluidValues)
-
-local round_fluid = function(nr)
-	local t = omni.lib.round(nr)
-	local mod={30,20,15, 12, 10,6}
-	local pick = 1
-	local dif = 1
-	for j,m in pairs(mod) do
-		local ch = t%m
-		if math.min(ch,m-ch)/m < dif then
-			pick = m
-			dif = math.min(ch,m-ch)/m
-		end
-	end
-	local val = 0
-	local ch = t%pick
-	if pick-ch < ch then val = t+pick-ch else val = t-ch end
-	local newval = val
-	for p,inner in pairs(primeRound) do
-		local prime = tonumber(p)
-		if val%prime == 0 then
-			local cval= newval/prime
-			if cval * inner.above-newval < newval-cval * inner.below then
-				newval = newval / prime * inner.above
-			else
-				newval = newval / prime * inner.above
-			end
-		end
-	end
-	return math.max(newval,60)
-end
-
-local round_fluid = function(nr,round)
-	local t = omni.lib.round(nr)
-	local newval = t
-	for i=1,#roundFluidValues-1 do
-		if roundFluidValues[i]< t and roundFluidValues[i+1]>t then
-			if t-roundFluidValues[i] < roundFluidValues[i+1]-t then
-				local c = 0
-				if roundFluidValues[i] ~= t and round == 1 then c=1 end
-				newval = roundFluidValues[i+c]
-			else
-				local c = 0
-				if roundFluidValues[i+1] ~= t and round == -1 then c=-1 end
-				newval = roundFluidValues[i+1+c]
-			end
-		end
-	end
-	return math.max(newval,10)
-end
-
-local convert_mj=function(value)
-	local unit = string.sub(value,string.len(value)-1,string.len(value)-1)
-	local val = tonumber(string.sub(value,1,string.len(value)-2))
-	if unit == "K" or unit == "k" then
-		return val/1000
-	elseif unit == "M" then
-		return val
-	elseif unit=="G" then
-		return val*1000
-	elseif tonumber(unit) ~= nil then
-		return tonumber(string.sub(value,1,string.len(value)-1))
-	end
-end
-
 --log("stupid Luna")
 local generator_fluid={}
 for _, gen in pairs(data.raw.generator) do
@@ -122,12 +43,12 @@ for _,boiler in pairs(data.raw.boiler) do
 		data.raw.recipe[rec.name].main_product=boiler.name.."-converter"
 
 		local water = boiler.fluid_box.filter or "water"
-		local water_cap = convert_mj(data.raw.fluid[water].heat_capacity)
+		local water_cap = omni.fluid.convert_mj(data.raw.fluid[water].heat_capacity)
 		local water_delta_tmp = data.raw.fluid[water].max_temperature-data.raw.fluid[water].default_temperature
 		local steam = boiler.output_fluid_box.filter or "steam"
-		local steam_cap = convert_mj(data.raw.fluid[steam].heat_capacity)
+		local steam_cap = omni.fluid.convert_mj(data.raw.fluid[steam].heat_capacity)
 		local steam_delta_tmp = boiler.target_temperature-data.raw.fluid[water].max_temperature
-		local prod_steam = round_fluid(omni.lib.round(convert_mj(boiler.energy_consumption)/(water_delta_tmp*water_cap+steam_delta_tmp*steam_cap)),1)
+		local prod_steam = omni.fluid.round_fluid(omni.lib.round(omni.fluid.convert_mj(boiler.energy_consumption)/(water_delta_tmp*water_cap+steam_delta_tmp*steam_cap)),1)
 		local lcm = omni.lib.lcm(prod_steam,sluid_contain_fluid)
 		local prod = lcm/sluid_contain_fluid
 		local tid=lcm/prod_steam
@@ -292,27 +213,6 @@ for _,boiler in pairs(data.raw.boiler) do
 	end
 end
 
-local get_icons = function(item)
-	--Build the icons table
-	local icons={}
-	if item.icons then
-		icons=item.icons
-		table.insert(icons,icons_1)
-		if item.icon_size and not item.icons[1].icon_size then
-			icons[1].icon_size=item.icon_size
-		end
-		for pos,icon in pairs(icons) do
-			if not icon.icon_size then
-				--back-up setting icon size to 32 if not found
-				icon.icon_size=32
-			end
-		end
-	else
-		icons[1] = {icon = item.icon, icon_size = item.icon_size or 32}
-	end
-	return icons
-end
-
 	new_boiler[#new_boiler+1]={
 		type = "recipe-category",
 		name = "general-omni-boiler",
@@ -327,6 +227,7 @@ local generator_cat={}
 local cat_add = {}
 
 local fuel_fluid = {}
+local fluid_solid = {}
 
 for _,fluid in pairs(data.raw.fluid) do
 	local loc_key={}
@@ -345,7 +246,7 @@ for _,fluid in pairs(data.raw.fluid) do
 		name = "solid-"..fluid.name,
 		localised_name = {"item-name.solid-fluid", loc_key},
 		localised_description = {"item-description.solid-fluid", loc_key},
-		icons = get_icons(fluid),
+		icons = omni.fluid.get_icons(fluid),
 		icon_size = 32,
 		subgroup = "omni-solid-fluids",
 		order = "a",
@@ -385,7 +286,7 @@ for _,rec in pairs(data.raw.recipe) do
 	end
 end
 --log("absolute garbage")
-for _,build in pairs(data.raw["furnace"]) do
+--[[for _,build in pairs(data.raw["furnace"]) do
 	if not string.find(build.name,"creative") and not forbidden_assembler[build.name] then
 		build.fluid_boxes=nil
 		if not build.source_inventory_size then build.source_inventory_size = 0 end
@@ -409,7 +310,7 @@ for _,build in pairs(data.raw["furnace"]) do
 			data.raw.furnace[build.name]=nil
 		end
 	end
-end
+end]]
 
 local dont_remove = {}
 
@@ -665,7 +566,7 @@ end
 --name,ore in pairs(data.raw.resource)
 
 
-for _,build in pairs(data.raw["assembling-machine"]) do
+--[[for _,build in pairs(data.raw["assembling-machine"]) do
 	if not string.find(build.name,"creative") and not forbidden_assembler[build.name] then
 		local found_generator = false
 		if not build.ingredient_count then build.ingredient_count = 0 end
@@ -688,15 +589,7 @@ for _,build in pairs(data.raw["assembling-machine"]) do
 			build.fluid_boxes=nil
 		end
 	end
-end
-local has_fluid = function(recipe)
-	for _,ingres in pairs({"ingredients","results"}) do
-		for _,component in pairs(recipe.normal[ingres]) do
-			if component.type == "fluid" then return true end
-		end
-	end
-	return false
-end
+end]]
 
 local excluded_subgroups = {"empty-barrel","fill-barrel","barreling-pump"}
 local excluded_names = {"creative",{"boiling","steam"},{"solid","fluid","conversion"},{"fluid","production"}}
@@ -709,7 +602,7 @@ local energy_fluid = {}
 for _,recipe in pairs(data.raw.recipe) do
 	omni.marathon.standardise(recipe)
 	if generator_recipe[recipe.name] then extra_fluid_rec[#extra_fluid_rec+1]=table.deepcopy(recipe) end
-	if not forbidden_recipe[recipe.name] and has_fluid(recipe) and not omni.lib.is_in_table(recipe.subgroup,excluded_subgroups) and not omni.lib.is_in_table(recipe.name,excluded_names) and recipe.category ~= "creative-mode_free-fluids" and recipe.category ~= "general-omni-boiler" and ((recipe.category and not omni.lib.start_with(recipe.category,"boiler-omnifluid-")) or recipe.category==nil) then
+	if not forbidden_recipe[recipe.name] and omni.fluid.has_fluid(recipe) and not omni.lib.is_in_table(recipe.subgroup,excluded_subgroups) and not omni.lib.is_in_table(recipe.name,excluded_names) and recipe.category ~= "creative-mode_free-fluids" and recipe.category ~= "general-omni-boiler" and ((recipe.category and not omni.lib.start_with(recipe.category,"boiler-omnifluid-")) or recipe.category==nil) then
 		local fluids = {normal={ingredients={},results={}},expensive={ingredients={},results={}}}
 		local primes = {normal={ingredients={},results={}},expensive={ingredients={},results={}}}
 		local lcm = 1
@@ -720,13 +613,13 @@ for _,recipe in pairs(data.raw.recipe) do
 					if component.type == "fluid" then
 						if fuel_fluid[component.name] then energy_fluid[#energy_fluid+1]=table.deepcopy(recipe) end
 						if component.amount then
-							fluids[dif][ingres][j] = {name=component.name,amount=round_fluid(component.amount)}
+							fluids[dif][ingres][j] = {name=component.name,amount=omni.fluid.round_fluid(component.amount)}
 							mult[dif]=omni.lib.lcm(omni.lib.lcm(sluid_contain_fluid,fluids[dif][ingres][j].amount)/fluids[dif][ingres][j].amount,mult[dif])
 							primes[dif][ingres][j]=omni.lib.factorize(fluids[dif][ingres][j].amount)
 						else
 							--Temporary, need improvement
 							local avg = (component.amount_max+component.amount_min)/2
-							fluids[dif][ingres][j] = {name=component.name,amount=round_fluid(avg)}
+							fluids[dif][ingres][j] = {name=component.name,amount=omni.fluid.round_fluid(avg)}
 							mult[dif]=omni.lib.lcm(omni.lib.lcm(sluid_contain_fluid,fluids[dif][ingres][j].amount)/fluids[dif][ingres][j].amount,mult[dif])
 							primes[dif][ingres][j]=omni.lib.factorize(fluids[dif][ingres][j].amount)
 						end
@@ -854,6 +747,7 @@ for _,recipe in pairs(data.raw.recipe) do
 		end
 	end
 end
+
 log("pyc is shit")
 for _,f in pairs(temperature_fluids) do
 	for _,r in pairs(f.recipes) do
@@ -946,7 +840,7 @@ for _, recipe in pairs(extra_fluid_rec) do
 		for _,ingres in pairs({"ingredients","results"}) do
 			for j,component in pairs(recipe[dif][ingres]) do
 				if component.type == "fluid" and not generator_fluid[component.name]  then
-					fluids[dif][ingres][j] = {name=component.name,amount=round_fluid(component.amount)}
+					fluids[dif][ingres][j] = {name=component.name,amount=omni.fluid.round_fluid(component.amount)}
 					mult[dif]=omni.lib.lcm(omni.lib.lcm(sluid_contain_fluid,fluids[dif][ingres][j].amount)/fluids[dif][ingres][j].amount,mult[dif])
 					primes[dif][ingres][j]=omni.lib.factorize(fluids[dif][ingres][j].amount)
 				end
@@ -1095,7 +989,7 @@ for _, recipe in pairs(energy_fluid) do
 		for _,ingres in pairs({"ingredients","results"}) do
 			for j,component in pairs(recipe[dif][ingres]) do
 				if component.type == "fluid" and not fuel_fluid[component.name]  then
-					fluids[dif][ingres][j] = {name=component.name,amount=round_fluid(component.amount)}
+					fluids[dif][ingres][j] = {name=component.name,amount=omni.fluid.round_fluid(component.amount)}
 					mult=omni.lib.lcm(omni.lib.lcm(sluid_contain_fluid,fluids[dif][ingres][j].amount)/fluids[dif][ingres][j].amount,mult)
 				end
 			end
@@ -1157,9 +1051,11 @@ for _, recipe in pairs(energy_fluid) do
 		recipe[dif].energy_required=recipe[dif].energy_required*mult
 	end
 end
+
 if #energy_fluid > 0 then
 	data:extend(energy_fluid)
 end
+
 for _,fix in pairs(data.raw.recipe) do
 	for _,dif in pairs({"normal","expensive"}) do
 		for _,ing in pairs(fix[dif].ingredients) do
