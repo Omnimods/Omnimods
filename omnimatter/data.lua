@@ -140,11 +140,7 @@ RecGen:create("omnimatter","omnite-brick"):
 	setPlace("omnite-brick"):extend()
 
 RecGen:create("omnimatter","early-omnite-brick"):
-<<<<<<< HEAD
 	setIngredients({"omnite",10},{"stone-brick"}):
-=======
-	setIngredients({"omnite",40},{"stone-brick"}):
->>>>>>> 518838e... Moved omnite brick to omnimatter
 	setResults("omnite-brick"):
 	setEnabled():extend()
 	
@@ -176,8 +172,4 @@ cost = OmniGen:create():
 	setQuant("pipe",5,2):
 	setQuant("omniplate",10):
 	setQuant("gear-wheel",5,1):
-<<<<<<< HEAD
 	setQuant("circuit",15)
-=======
-	setQuant("circuit",15)
->>>>>>> 518838e... Moved omnite brick to omnimatter
