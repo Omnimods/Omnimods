@@ -2,6 +2,17 @@ ItemGen:create("omnimatter","omnite"):
 setFuelValue(2):
 setStacksize(500):extend()
 
+RecGen:create("omnimatter","stone"):
+	setSubgroup("omni-solids"):
+	setStacksize(200):
+	setEnergy(0.5):
+	setCategory():
+	marathon():
+	setIcons("stone", "base"):
+	setIngredients({"stone-crushed", 4}):
+	setResults({type="item", name="stone", amount=2}):
+	setEnabled():extend()
+
 local c = nil
 if mods["angelsrefining"] then c = "ore-sorting-t1" end
 RecGen:create("omnimatter","stone-crushed"):
@@ -14,8 +25,6 @@ RecGen:create("omnimatter","stone-crushed"):
 	setResults({type="item", name="stone-crushed", amount=10}):
 	setEnabled():extend()
 	
-
-
 RecGen:create("omnimatter","crushed-omnite"):
 	setSubgroup("omni-crushing"):
 	setStacksize(500):
