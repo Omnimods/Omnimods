@@ -4,7 +4,7 @@ RecGen:create("omnimatter","omnicium-plate-pure"):
 	setItemName("omnicium-plate"):
 	setIcons("omnicium-plate","omnimatter"):
 	setStacksize(400):
-	setIngredients({ "crushed-omnite", 40}):
+	setIngredients({ "crushed-omnite", 10}):
 	setResults("omnicium-plate"):
 	setCategory("smelting"):
 	setEnergy(5):
@@ -49,7 +49,7 @@ RecGen:create("omnimatter","omnicium-iron-gear-box"):
 
 BuildGen:create("omnimatter","omni-furnace"):
 	setEnergy(5):
-	setIngredients({ "omnicium-plate", 5},{ "stone-brick", 5},{ "stone-furnace", 1}):
+	setIngredients({ "omnicium-plate", 5},{ "omnite-brick", 5},{ "stone-furnace", 1}):
 	setStacksize(20):
 	setSubgroup("omnitractor"):
 	setSize(2):
