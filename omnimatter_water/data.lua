@@ -45,7 +45,7 @@ function omniwateradd(element,gain,tier,const,input)
 		setResults(cost:results()):
 		setEnabled(false):
 		setCategory(cat):
-		setSubgroup("omnifluids"):
+		setSubgroup("omni-fluids"):
 		setLocName("recipe-name.water-waste-omnitraction",{"fluid-name."..element}):
 		setLevel(water_levels):
 		setEnergy(5*(input or 1)):

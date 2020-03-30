@@ -119,7 +119,7 @@ local omniston = RecChain:create("omnimatter","water-omnitraction"):
 		setIcons("water"):
 		setMain("water"):
 		setResults(cost:results()):
-		setSubgroup("omnifluids"):
+		setSubgroup("omni-fluids"):
 		setLevel(omni.fluid_levels):
 		setEnergy(function(levels,grade) return 1 end):
 		setEnabled(function(levels,grade) return grade == 1 end):
@@ -142,7 +142,7 @@ local omniston = RecChain:create("omnimatter","omniston"):
 		setLocName("fluid-name.omniston"):
 		setCategory(omniFluidCat):
 		setResults(cost:results()):
-		setSubgroup("omnifluids"):
+		setSubgroup("omni-fluids"):
 		setLevel(omni.fluid_levels):
 		setEnergy(function(levels,grade) return 5 end):
 		setTechPrefix("solvation"):
@@ -167,7 +167,7 @@ local omnisludge = RecChain:create("omnimatter","omnisludge"):
 		{type="fluid", name="omnic-acid", amount=240}
 		}):
 		setCategory(omniFluidCat):
-		setSubgroup("omnifluids"):
+		setSubgroup("omni-fluids"):
 		setReqAllMods("omnimatter_crystal"):
 		setResults(cost:results()):
 		setLevel(omni.fluid_levels):
@@ -210,7 +210,7 @@ for _,tier in pairs(omnifluid) do
 			{type="fluid", name="omniston", amount=240}
 			}):
 			setCategory(omniFluidCat):
-			setSubgroup("omnifluids"):
+			setSubgroup("omni-fluids"):
 			setLevel(omni.fluid_levels):
 			setIcons(fluid.name):
 			setResults(cost:results()):

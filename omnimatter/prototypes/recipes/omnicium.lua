@@ -51,7 +51,7 @@ BuildGen:create("omnimatter","omni-furnace"):
 	setEnergy(5):
 	setIngredients({ "omnicium-plate", 5},{ "omnite-brick", 5},{ "stone-furnace", 1}):
 	setStacksize(20):
-	setSubgroup("omnitractor"):
+	setSubgroup("omni-buildings"):
 	setSize(2):
 	setCrafting("smelting","omnifurnace"):
 	setUsage(45):
