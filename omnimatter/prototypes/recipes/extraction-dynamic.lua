@@ -263,7 +263,7 @@ for i, tier in pairs(omnisource) do
 		setResults(cost:results()):
 		setEnabled(false):
 		setCategory("omnite-extraction"):
-		setSubgroup("omnisolids"):
+		setSubgroup("omni-pure"):
 		setMain(item):
 		setLevel(3*omni.pure_levels_per_tier):
 		setEnergy(function(levels,grade) return 5*(math.floor((grade-1+(tier_int-1)/2)/levels)+1) end):
@@ -327,7 +327,7 @@ for _,ore_tiers in pairs(omnisource) do
 				local focused_ore = RecGen:create("omnimatter","omnirec-focus-"..j.."-"..ore.name.."-"..ord[i]):
 				setLocName("impure-omnitraction",{"item-name."..ore.name}):
 				setIngredients({name="omnite",type="item",amount=10}):
-				setSubgroup("omni-impure-solids"):
+				setSubgroup("omni-impure"):
 				setEnergy(5*(math.floor(t/2+0.5))):
 				setIcons("omnite"):
 				setEnabled(false):

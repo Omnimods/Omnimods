@@ -598,6 +598,7 @@ local temperature_fluids = {}
 local extra_fluid_rec = {}
 
 local energy_fluid = {}
+omni.fluid.SetRoundFluidValues()
 --log("zombie damn it!")
 for _,recipe in pairs(data.raw.recipe) do
 	omni.marathon.standardise(recipe)

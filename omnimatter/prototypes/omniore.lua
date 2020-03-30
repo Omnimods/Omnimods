@@ -2,21 +2,10 @@ ItemGen:create("omnimatter","omnite"):
 setFuelValue(2):
 setStacksize(500):extend()
 
-RecGen:create("omnimatter","stone"):
-	setSubgroup("omni-basic"):
-	setStacksize(200):
-	setEnergy(0.5):
-	setCategory():
-	marathon():
-	setIngredients({"stone-crushed", 4}):
-	setResults({type="item", name="stone", amount=2}):
-	setEnabled():extend()
-
-
 local c = nil
 if mods["angelsrefining"] then c = "ore-sorting-t1" end
 RecGen:create("omnimatter","stone-crushed"):
-	setSubgroup("omni-basic"):
+	setSubgroup("omni-crushing"):
 	setStacksize(200):
 	setEnergy(0.5):
 	setCategory(c):
@@ -28,7 +17,7 @@ RecGen:create("omnimatter","stone-crushed"):
 
 
 RecGen:create("omnimatter","crushed-omnite"):
-	setSubgroup("omni-basic"):
+	setSubgroup("omni-crushing"):
 	setStacksize(500):
 	setCategory(c):
 	marathon():
@@ -38,6 +27,7 @@ RecGen:create("omnimatter","crushed-omnite"):
 	setResults({type="item", name="crushed-omnite", amount=10}):extend()
 
 RecGen:create("omnimatter","crushing-omnite-by-hand"):
+	setSubgroup("omni-crushing"):
 	setEnergy(0.25):
 	setCategory("crafting"):
 	setEnabled():
@@ -50,7 +40,7 @@ RecGen:create("omnimatter","crushing-omnite-by-hand"):
 	setIcons("crushed-omnite","omnimatter"):extend()
 	
 RecGen:create("omnimatter","pulverized-omnite"):
-	setSubgroup("omni-basic"):
+	setSubgroup("omni-crushing"):
 	setStacksize(500):
 	setCategory(c):
 	marathon():
@@ -59,7 +49,7 @@ RecGen:create("omnimatter","pulverized-omnite"):
 	setEnergy(0.5):extend()
 
 RecGen:create("omnimatter","pulverized-stone"):
-	setSubgroup("omni-basic"):
+	setSubgroup("omni-crushing"):
 	setStacksize(500):
 	setEnergy(0.5):
 	--setReqAllMods("omnimatter_crystal"):
@@ -132,7 +122,7 @@ setBothColour(0.41,0.34,0.49):extend()
 
 	
 RecGen:create("omnimatter","pulver-omnic-waste"):
-	setSubgroup("omni-basic"):
+	setSubgroup("omni-solids"):
 	setCategory("omniphlog"):
 	setIcons("omnic-waste"):
 	marathon():

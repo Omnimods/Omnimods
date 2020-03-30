@@ -18,19 +18,23 @@ function omni.fluid.excempt_recipe(boiler)
 end
 local fluid_solid = {}
 
-local top_value = 500000
-local roundFluidValues = {}
-local b,c,d = math.log(5),math.log(3),math.log(2)
-for i=0,math.floor(math.log(top_value)/b) do
-    local pow5 = math.pow(5,i)
-    for j=0,math.floor(math.log(top_value/pow5)/c) do
-        local pow3=math.pow(3,j)
-        for k=0,math.floor(math.log(top_value/pow5/pow3)/d) do
-            roundFluidValues[#roundFluidValues+1] = pow5*pow3*math.pow(2,k)
-        end
-    end
+function omni.fluid.SetRoundFluidValues()
+	local top_value = 500000
+	local roundFluidValues = {}
+	local b,c,d = math.log(5),math.log(3),math.log(2)
+	for i=0,math.floor(math.log(top_value)/b) do
+		local pow5 = math.pow(5,i)
+		for j=0,math.floor(math.log(top_value/pow5)/c) do
+			local pow3=math.pow(3,j)
+			for k=0,math.floor(math.log(top_value/pow5/pow3)/d) do
+				roundFluidValues[#roundFluidValues+1] = pow5*pow3*math.pow(2,k)
+			end
+		end
+	end
+	table.sort(roundFluidValues)
+	return(roundFluidValues)
 end
-table.sort(roundFluidValues)
+
 function omni.fluid.round_fluid1(nr)
 	local t = omni.lib.round(nr)
 	local mod={30,20,15, 12, 10,6}
@@ -62,6 +66,7 @@ function omni.fluid.round_fluid1(nr)
 end
 
 function omni.fluid.round_fluid(nr,round)
+	roundFluidValues=omni.fluid.SetRoundFluidValues()
 	local t = omni.lib.round(nr)
 	local newval = t
 	for i=1,#roundFluidValues-1 do

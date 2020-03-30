@@ -95,10 +95,20 @@ end
 if angelsmods and angelsmods.refining then
 	----log("test: "..settings.startup["omnicrystal-sloth"].value)
 	--"angelsore7-crystallization-"
+
+	if not (mods["bobplates"] or (mods["angels-industries"] and startup.settings["enable-angels-overhaul"])) then
+		log("angels-special-case")
+		--find angels refining special case
+		omni.crystal.add_crystal("angels-iron-nugget","Iron nugget")
+		omni.crystal.add_crystal("angels-iron-pebbles","Iron pebbles")
+		omni.crystal.add_crystal("angels-iron-slag","Iron slag")
+		omni.crystal.add_crystal("angels-copper-nugget","Copper nugget")
+		omni.crystal.add_crystal("angels-copper-pebbles","Copper pebbles")
+		omni.crystal.add_crystal("angels-copper-slag","Copper slag")
+	end
 	if mods["angelspetrochem"] then omni.crystal.add_crystal("fluorite-ore","Fluorite")end
 	omni.crystal.add_crystal("manganese-ore","Manganese")
 	omni.crystal.add_crystal("chrome-ore","Chrome")
-	--omni.crystal.add_crystal("thorium-ore","Thorium")
 	local rec = {}
 	--log("fixing angels shit again")
 	local crystalines = {}
@@ -106,9 +116,7 @@ if angelsmods and angelsmods.refining then
 		--log(serpent.block (recipe.name))
 		if (recipe.normal and recipe.normal.results and (#recipe.normal.results > 1 or string.find(recipe.name,"mix") or string.find(recipe.name,"ore8") or string.find(recipe.name,"ore9")))
 		or (recipe.results and (#recipe.results > 1 or string.find(recipe.name,"mix") or string.find(recipe.name,"ore8") or string.find(recipe.name,"ore9"))) then
-			--log(serpent.block (recipe.name))
 			if string.find(recipe.name,"angelsore") and string.find(recipe.name,"processing") then
-				--log(serpent.block (recipe.name))
 				local ing = table.deepcopy(ingrediences_solvation(recipe))
 				local res = table.deepcopy(results_solvation(recipe))
 				if #ing > 0 and #res > 0 then
