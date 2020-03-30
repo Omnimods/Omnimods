@@ -17,6 +17,7 @@ component["angel-bob-plate"]={"iron-plate", "copper-plate", "tin-plate", "lead-p
 component["vanilla-omniplate"]= {"omnicium-plate","omnicium-iron-alloy","omnicium-steel-alloy"}
 component["bearing"]={"steel-bearing", nil, "cobalt-steel-bearing", "titanium-bearing", "nitinol-bearing", "ceramic-bearing"}
 component["vanilla-pipe"] = {"pipe"}
+component["bob-logistics"] = {"stone-pipe", "copper-pipe", "pipe", "steel-pipe", "plastic-pipe"}
 component["bob-pipe"] = {"stone-pipe", "copper-pipe", "pipe", "bronze-pipe", "brass-pipe", "steel-pipe", "plastic-pipe", "ceramic-pipe", "titanium-pipe", "tungsten-pipe"}
 component["bob-circuit"]={"basic-circuit-board","electronic-circuit","advanced-circuit","processing-unit","advanced-processing-unit","advanced-processing-unit"}
 component["omni-alloys"] = {"omnicium-plate","omnicium-iron-alloy","omnicium-steel-alloy"}
@@ -31,32 +32,39 @@ if mods["bobelectronics"] then
 		component["circuit"]=component["bob-circuit"]
 	end
 else
-	if mods["omnimatter_crystal"] then	
+	if mods["omnimatter_crystal"] then
 		component["circuit"]=component["vanilla-crystallo-circuit"]
 	else
 		component["circuit"]=component["vanilla-circuit"]
 	end
 end
-
 if mods["bobplates"] then
 	component["gear-wheel"]=component["bob-gear-wheel"]
 	component["gear-box"]=component["bob-gear-box"]
 	component["omniplate"]=component["omni-bob-alloys"]
-	component["pipe"]=component["bob-pipe"]
+	if mods["boblogistics"] then
+		component["pipe"]=component["bob-pipe"]
+	else
+		component["pipe"]=component["vanilla-pipe"]
+	end
 	if mods["angelssmelting"] then
 		component["plates"]=component["angel-bob-plate"]
 	else
-		component["plates"]=component["bob-plate"]		
+		component["plates"]=component["bob-plate"]
 	end
 else
 	component["gear-wheel"]=component["vanilla-gear-wheel"]
 	component["gear-box"]=component["vanilla-gear-box"]
 	component["omniplate"]=component["vanilla-omniplate"]
-	component["pipe"]=component["vanilla-pipe"]
+	if mods["boblogistics"] then
+		component["pipe"]=component["bob-logistics"]
+	else
+		component["pipe"]=component["vanilla-pipe"]
+	end
 	if mods["angelssmelting"] then
 		component["plates"]=component["angel-plate"]
 	else
-		component["plates"]=component["vanilla-plate"]		
+		component["plates"]=component["vanilla-plate"]
 	end
 end
 
