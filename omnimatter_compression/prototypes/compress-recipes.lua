@@ -110,7 +110,7 @@ local get_icons_rec = function(rec)
 	local icons = {}
 	local icons_1 = {icon = "__omnimatter_compression__/graphics/compress-32.png",icon_size=32}
 	if rec.icons then
-		icons=rec.icons
+		icons=table.deepcopy(rec.icons)
 		table.insert(icons,icons_1)
 		if rec.icon_size and not rec.icons[1].icon_size then
 			icons[1].icon_size=rec.icon_size
