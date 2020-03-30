@@ -33,6 +33,17 @@ local salt_omnide_icon = function(metal)
 	return icons
 end
 
+if data.raw.item["angels-copper-pebbles-crystal"] then
+	for _,metal in pairs({"iron","copper"}) do
+		for _,type in pairs({"-pebbles","-slag","-nugget"}) do
+			for _,style in pairs({"-omnide-solution","-crystal-omnitraction","-crystal"}) do
+				omni.lib.add_unlock_recipe("crystallology-1", "angels-"..metal..type..style)
+				omni.lib.add_unlock_recipe("crystallology-1", metal.."-ore"..style)
+			end
+		end
+	end
+end
+
 local crystalines = {}
 if not mods["angelsrefining"] then
 	local turn_to_plate = {}
@@ -58,7 +69,7 @@ if not mods["angelsrefining"] then
 				metal="thorium"
 			else
 				plate = string.sub(ore,1,string.len(ore)-string.len("-ore")).."-plate"
-				metal=string.sub(ore,1,string.len(ore)-string.len("-ore"))
+				metal = string.sub(ore,1,string.len(ore)-string.len("-ore"))
 			end
 			rec.normal.results[1].name=plate
 			rec.icon=data.raw.item[plate].icon
@@ -100,7 +111,6 @@ if not mods["angelsrefining"] then
 			omni.lib.add_unlock_recipe("crystallology-"..tier, ore.."-omnide-solution")
 			omni.lib.add_unlock_recipe("crystallology-"..tier, ore.."-crystal-omnitraction")
 			omni.lib.add_unlock_recipe("crystallology-"..tier, ore.."-crystal")
-
 
 		end
 	end
