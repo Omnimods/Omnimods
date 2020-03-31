@@ -97,7 +97,7 @@ if angelsmods and angelsmods.refining then
 	--"angelsore7-crystallization-"
 
 	if not (mods["bobplates"] or (mods["angels-industries"] and startup.settings["enable-angels-overhaul"])) then
-		log("angels-special-case")
+		log("angels-special-vanilla-case")
 		--find angels refining special case
 		omni.crystal.add_crystal("angels-iron-nugget","Iron nugget")
 		omni.crystal.add_crystal("angels-iron-pebbles","Iron pebbles")
@@ -114,8 +114,14 @@ if angelsmods and angelsmods.refining then
 	local crystalines = {}
 	for _,recipe in pairs(data.raw.recipe) do
 		--log(serpent.block (recipe.name))
-		if (recipe.normal and recipe.normal.results and (#recipe.normal.results > 1 or string.find(recipe.name,"mix") or string.find(recipe.name,"ore8") or string.find(recipe.name,"ore9")))
-		or (recipe.results and (#recipe.results > 1 or string.find(recipe.name,"mix") or string.find(recipe.name,"ore8") or string.find(recipe.name,"ore9"))) then
+		local results={}
+		if recipe.normal and recipe.normal.results then
+			results=recipe.normal.results
+		elseif recipe.results then
+			results=recipe.results
+		end
+		--now we do the checks
+		if #results>1 or string.find(recipe.name,"mix") or string.find(recipe.name,"ore8") or string.find(recipe.name,"ore9") then
 			if string.find(recipe.name,"angelsore") and string.find(recipe.name,"processing") then
 				local ing = table.deepcopy(ingrediences_solvation(recipe))
 				local res = table.deepcopy(results_solvation(recipe))
@@ -163,13 +169,17 @@ if angelsmods and angelsmods.refining then
 					if mods["omnimatter_marathon"] then omni.marathon.exclude_recipe(metal.."-salting") end
 					crystalines[#crystalines+1]=solution
 					--"angelsore-crushed-mix1-processing"
-					if find_type(recipe,"crushed") or ((string.find(recipe.name,"ore8") or string.find(recipe.name,"ore9")) and string.find(recipe.name,"crushed")) then
+					local blended_ore="false"
+					if string.find(recipe.name,"ore8") or string.find(recipe.name,"ore9") then
+						blended_ore="true"
+					end
+					if find_type(recipe,"crushed") or (blended_ore=="true" and string.find(recipe.name,"crushed")) then
 						omni.lib.add_unlock_recipe("crystallology-1", metal.."-salting")
-					elseif find_type(recipe,"chunk") or ((string.find(recipe.name,"ore8") or string.find(recipe.name,"ore9")) and string.find(recipe.name,"powder")) then
+					elseif find_type(recipe,"chunk") or (blended_ore=="true" and string.find(recipe.name,"powder")) then
 						omni.lib.add_unlock_recipe("crystallology-2", metal.."-salting")
-					elseif (find_type(recipe,"crystal") and not (string.find(recipe.name,"ore8") or string.find(recipe.name,"ore9"))) or ((string.find(recipe.name,"ore8") or string.find(recipe.name,"ore9")) and string.find(recipe.name,"dust")) then
+					elseif (find_type(recipe,"crystal") and blended_ore=="false") or (blended_ore=="true" and string.find(recipe.name,"dust")) then
 						omni.lib.add_unlock_recipe("crystallology-3", metal.."-salting")
-					elseif find_type(recipe,"pure") or ((string.find(recipe.name,"ore8") or string.find(recipe.name,"ore9")) and string.find(recipe.name,"crystal")) then
+					elseif find_type(recipe,"pure") or (blended_ore=="true" and string.find(recipe.name,"crystal")) then
 						omni.lib.add_unlock_recipe("crystallology-4", metal.."-salting")
 					end
 				end
@@ -185,6 +195,13 @@ if angelsmods and angelsmods.refining then
 					if #data.raw.recipe[eff.recipe].ingredients > 2 then
 						local metal = string.sub(eff.recipe,1,string.len(eff.recipe)-string.len("-salting"))
 						if not string.find(metal,"void") then omni.lib.add_unlock_recipe("crystallology-"..i, metal..suf) end
+					elseif string.find(data.raw.recipe[eff.recipe].name,"ore8") or string.find(data.raw.recipe[eff.recipe].name,"ore9") then
+						for _, res in pairs(data.raw.recipe[eff.recipe].results) do
+							if string.find(res.name,"manganese") or string.find(res.name,"chrome") then
+								local metal = string.sub(res.name,1,string.len(res.name)-string.len("-omnide-salt"))
+								if not string.find(metal,"void") then  omni.lib.add_unlock_recipe("crystallology-"..i, metal..suf) end
+							end
+						end
 					end
 					local metal = string.sub(eff.recipe,1,string.len(eff.recipe)-string.len("-salting"))
 				end

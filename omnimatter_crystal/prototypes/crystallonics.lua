@@ -439,6 +439,6 @@ if omni.rocket_locked then
 	omni.lib.add_prerequisite("rocket-silo","omnitech-pseudoliquid-amorphous-crystal-"..i)
 end
 
-if mods["bobores"] then
+if data.raw.item["tin-ore"] then
 	omni.lib.replace_recipe_ingredient("crystal-rod","copper-ore-crystal","tin-ore-crystal")
 end
