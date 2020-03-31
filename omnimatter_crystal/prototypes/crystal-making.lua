@@ -38,7 +38,7 @@ omni.crystal.add_crystal=function(metal,name,recipe)
 		omni.crystal.metals[#omni.crystal.metals+1]=data.raw.item[metal]
 
 		RecGen:create("omnimatter_crystal",metal.."-crystal"):
-			setLocName("item-name.crystal",name):
+			setLocName("recipe-name.crystal",name):
 			setFuelValue(35):
 			setFuelCategory("crystal"):
 			setSubgroup("crystallization"):
@@ -87,17 +87,6 @@ omni.crystal.add_crystal=function(metal,name,recipe)
 			setIngredients({type = "item", name = metal.."-crystal", amount=3}):
 			setResults({type = "item", name = metal, amount=4}):
 			setEnergy(1.5):extend()
-
-		--[[local ic = shard_icons(metal)
-		local shard =   {
-		type = "item",
-		name = metal.."-shard",
-		icon_size = 32,
-		icons = ic,
-		flags = {"goes-to-main-inventory"},
-		subgroup = "crystallization",
-		stack_size = 200
-		}]]
 	end
 end
 

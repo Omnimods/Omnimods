@@ -108,7 +108,6 @@ for i,tech in pairs(data.raw.technology) do
 	end
 end
 for _,recipe in pairs(data.raw.recipe) do
-	log(recipe.name)
 	if (recipe.result and string.find(recipe.result,"pumpjack"))
 	or (recipe.results and recipe.results[1] and recipe.results[1].name
 		and string.find( recipe.results[1].name,"pumpjack")) then
