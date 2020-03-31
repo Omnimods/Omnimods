@@ -16,7 +16,6 @@ if omni.fluid_dependency > omni.fluid_levels_per_tier then omni.fluid_dependency
 
 --Infinite ore result probability check
 --LOAD PROTOTYPES
-require("prototypes.stone")
 require("prototypes.omniore")
 require("prototypes.generation.omnite-inf")
 require("prototypes.generation.omnite")
