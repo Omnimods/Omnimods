@@ -1,6 +1,9 @@
 ---------------------------------------------------------------------------------------------------
-Version: 3.0.10
-Date: 2020.02.24
+Version: 3.18.0
+Date: 2020.##.##
+  Features:
+    - Updated to 0.18
+    - Added thumbnail
   Bugfixes:
     - Fixed recipe standardization not getting main_product out of expensive.
   Info:

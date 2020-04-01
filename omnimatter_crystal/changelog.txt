@@ -1,0 +1,150 @@
+---------------------------------------------------------------------------------------------------
+Version: 3.18.0
+Date: 2020.##.##
+  Features:
+    - Migrated to 0.18
+    - Added thumbnail
+    - Added thorium crystals when bobs is active
+    - Added angels special vanilla case crystals
+    - Added angels industries compatibility
+    - Added support for manganese, platinum and chrome sorting recipes
+  Bugfixes:
+    - Removed an old migration script which cased a game crash (0.1.12)
+    - Fixed icon size issues
+    - Fixed localisation issues
+  Info:
+    - Added changelog.
+---------------------------------------------------------------------------------------------------
+Version: 3.0.0
+  Features:
+    - Updated to 0.17
+---------------------------------------------------------------------------------------------------
+Version: 2.0.0
+  Features:
+    - Updated to the new API!
+  Info:
+    - UPDATING TO THIS WILL BREAK SAVES!
+      - Again, sorry
+---------------------------------------------------------------------------------------------------
+Version: 0.2.6
+  Features:
+    - Further overhauling of the mod
+      - the crystallonics never felt proper and well made, made it more wholesome.
+    - Thanks redalert for sprites.
+    - Crystallonics is now more elaborated.
+  Info:
+    - Warning! Any existing file will suffer massive loss in items.
+      - migration script not included
+    - Currently only guaranteed to work with full Angel and bobs
+      - if you try without, if it doesn't work, please contact me ON THE DISCORD!
+      - DISCORD server link in description
+---------------------------------------------------------------------------------------------------
+Version: 0.3.0
+  Features:
+    - Huge structural overhaul.
+  Info:
+    - WARNING! RECIPE DISAPPEARENCE IS EXPECTED! UPDATE AT YOUR OWN RISK!
+      - migration script not included
+---------------------------------------------------------------------------------------------------
+Version: 0.2.5
+  Bugfixes:
+    - Fixes a few interesting angels compatibility oddities
+    - Fixed so omniplants uses omnicium.
+    - Removed Omniserter and Crystal Reactors, will be elsewhere
+  Info:
+    - Warning, shards are replaced by other names and due to how it is structured they will not be transferred.
+      - Use them up and stop producing before updating.
+---------------------------------------------------------------------------------------------------
+Version: 0.2.1
+  Bugfixes:
+    - Fixed the bug where the game wouldn't load past main menu.
+---------------------------------------------------------------------------------------------------
+Version: 0.2.0
+  Features:
+    - 0.16 Compatibility and other stuff
+---------------------------------------------------------------------------------------------------
+Version: 0.1.18
+  Bugfixes:
+    - Fixed so it works with angels update
+---------------------------------------------------------------------------------------------------
+Version: 0.1.17
+  Bugfixes:
+    - Fixed bug where omnide solutions did not get barrelings.
+---------------------------------------------------------------------------------------------------
+Version: 0.1.16
+  Bugfixes:
+    - Miscellaneous
+---------------------------------------------------------------------------------------------------
+Version: 0.1.15
+  Bugfixes:
+    - Fixed impossible price of omniplant
+---------------------------------------------------------------------------------------------------
+Version: 0.1.14
+  Features:
+    - Vanilla compatible once more.
+---------------------------------------------------------------------------------------------------
+Version: 0.1.13
+  Features:
+    - Seperated circuit requirement for crystallonics so hybrids are created instead when needed,
+      - otherwise just crystallonics, thereby reducing cost of certain things.
+---------------------------------------------------------------------------------------------------
+Version: 0.1.12
+  Bugfixes:
+    - Miscellaneous
+---------------------------------------------------------------------------------------------------
+Version: 0.1.11
+  Bugfixes:
+    - Fixed bug that made crystallonics not appear in tech tree.
+---------------------------------------------------------------------------------------------------
+Version: 0.1.10
+  Bugfixes:
+    - Fixed so it works now with angels again after his overhaul caused some issues
+---------------------------------------------------------------------------------------------------
+Version: 0.1.9
+  Bugfixes:
+    - Fixed migration of plants and items.
+---------------------------------------------------------------------------------------------------
+Version: 0.1.8
+  Bugfixes:
+    - Fixed bug where non-angels refining couldn't use crystal pathways
+    - Fixed so they can work with omniscience also
+  Features:
+    - Initiated the usage of control crystals, this will be improved as time goes on.
+    - Added additional levels of omniplant.
+---------------------------------------------------------------------------------------------------
+Version: 0.1.7
+  Bugfixes:
+    - Fixed log spamming of transferring.
+---------------------------------------------------------------------------------------------------
+Version: 0.1.6
+  Bugfixes:
+    - Fixed so the reactor doesn't go on and off when max strained.
+  Features:
+    - Changed recipes to be more friendly.
+---------------------------------------------------------------------------------------------------
+Version: 0.1.5
+  Bugfixes:
+    - Fixed so the reactor doesn't require itself to be built.
+---------------------------------------------------------------------------------------------------
+Version: 0.1.4
+  Features:
+    - Vanilla compatibility
+    - Bobs only compatibility
+  Bugfixes:
+    - Misc
+---------------------------------------------------------------------------------------------------
+Version: 0.1.3
+  Features:
+    - Youki Compatibility
+---------------------------------------------------------------------------------------------------
+Version: 0.1.2
+  Bugfixes:
+    - The bugs! What is always with the bugs!
+---------------------------------------------------------------------------------------------------
+Version: 0.1.1
+  Bugfixes:
+    - Can't go at all without slightest bugs
+---------------------------------------------------------------------------------------------------
+Version: 0.1.0
+  Features:
+    - Initial release!

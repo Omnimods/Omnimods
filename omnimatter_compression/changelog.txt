@@ -1,7 +1,183 @@
 ---------------------------------------------------------------------------------------------------
-Version: 3.0.8
-Date: ????
+Version: 3.18.0
+Date: 2020.##.##
+  Features:
+    - Updated to 0.18
+    - Added thumbnail
+    - Cleaned out redundant files
   Bugfixes:
     - Refactored icons
+    - Fixed that fluid concentration and un-concentration was unavailable
+    - Fixed subgroup ordering
   Info:
     - Added changelog.
+---------------------------------------------------------------------------------------------------
+Version: 3.0.0
+  Features:
+    - Updated to 0.17
+---------------------------------------------------------------------------------------------------
+Version: 2.0.0
+  Features:
+    - Updated to the new API!
+    - Fixed where it with omnifluid gives a wonky location for compressed fluid output!
+  Info:
+    - UPDATING TO THIS WILL BREAK SAVES!
+---------------------------------------------------------------------------------------------------
+Version: 1.3.0
+  Features:
+    - Added compressed science packs and sciences,
+      - whenever whether compressed tech is research or normal, the other is also unlocked.
+---------------------------------------------------------------------------------------------------
+Version: 1.2.0
+  Features:
+    - Huge structural overhaul.
+  Info:
+    - WARNING! RECIPE DISAPPEARENCE IS EXPECTED! UPDATE AT YOUR OWN RISK!
+---------------------------------------------------------------------------------------------------
+Version: 1.1.4:
+  Bugfixes:
+    - Fixed issue where recipes disappeared midgame if changes were made.
+---------------------------------------------------------------------------------------------------
+Version: 1.1.0
+  Features:
+    - 0.16 Compatibility anad other stuff
+---------------------------------------------------------------------------------------------------
+Version: 1.0.11
+  Bugfixes:
+    - Fixed the compressed ore bug where some ores didn't exist.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.10
+  Bugfixes:
+    - Fixed the subgroup issue.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.8
+  Bugfixes:
+    - Compatibility fixes
+---------------------------------------------------------------------------------------------------
+Version: 1.0.7
+  Bugfixes:
+    - Bug fixes
+  Features:
+    - Compatibility with omnimarathon.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.6
+  Bugfixes:
+    - Fixed the bug where normal recipes could take productivity modules but the compressed ones could not.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.5
+  Bugfixes:
+    - Fixed the subgroup not assigned issue.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.4
+  Features:
+    - Reduced mining time multiplier
+    - Localization improvements.
+  Bugfixes:
+    - Fixed a bug where some recipes would not unlock due to name mismatch
+---------------------------------------------------------------------------------------------------
+Version: 1.0.3
+  Bugfixes:
+    - Fixed a bug where items would not register a stack size and thereby cause malfunction.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.2:
+  Features:
+    - Added belts, underground, splitters and loader compressed entity support.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.1
+  Features:
+    - Accumulators added
+    - Factorissimo compatibility and general compatibility (does not add compressed factory buildings)
+    - Compacted stuff with fuel value retains fuelvalue, proportionally so.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.0
+  Features:
+    - Finally the grand release!
+    - Added compressed buildings that comes in 4 stages if one so choose!
+---------------------------------------------------------------------------------------------------
+Version: 0.3.9
+  Bugfixes:
+    - Fixed bug where it wouldn't load due to nil value manipulation.
+---------------------------------------------------------------------------------------------------
+Version: 0.3.8
+  Bugfixes:
+    - Fixed bug where it assumed sometimes the output was one when it wasn't.
+    - Fixed bug where it failed to load due to splitting the result up into multiple outputs.
+---------------------------------------------------------------------------------------------------
+Version: 0.3.7
+  Bugfixes:
+    - Various loading bugs have been adressed
+---------------------------------------------------------------------------------------------------
+Version: 0.3.6
+  Bugfixes:
+    - Fixed localization
+    - Fixed a bug that caused assemblers to not get all the recipes they should have.
+---------------------------------------------------------------------------------------------------
+Version: 0.3.5
+  Bugfixes:
+    - Fixed a bug that prevented loading due to infinite ores.
+---------------------------------------------------------------------------------------------------
+Version: 0.3.4
+  Bugfixes:
+    - Fixed possible migration issue
+    - Changed so getting compressed recipes must be researched beyond just getting the compressed
+---------------------------------------------------------------------------------------------------
+Version: 0.3.3
+  Bugfixes:
+    - Fixed bug where marathon time was wrongly calculated
+    - Fixed bug where too big recipes would never finish crafting.
+---------------------------------------------------------------------------------------------------
+Version: 0.3.2
+  Bugfixes:
+    - Fixed a migration bug that ruined loading of games.
+---------------------------------------------------------------------------------------------------
+Version: 0.3.1
+  Bugfixes:
+    - Fixed a bug where it affected random recipes original.
+---------------------------------------------------------------------------------------------------
+Version: 0.3.0:
+--Now can be made so you mine compressed ores directly! Just use the compression planner to turn ore into compressed ore!
+---------------------------------------------------------------------------------------------------
+Version: 0.2.3
+  Bugfixes:
+    - Fixed the nil bug when all recipes didn't have normal/expensive.
+---------------------------------------------------------------------------------------------------
+Version: 0.2.2
+  Bugfixes:
+    - Fixed incompatibility with marathon mode
+---------------------------------------------------------------------------------------------------
+Version: 0.2.1
+  Bugfixes:
+    - Fixed the dependency bug
+---------------------------------------------------------------------------------------------------
+Version: 0.2.0
+  Features:
+    - Added feature to put all compressed recipes in one category.
+    - Added so it now supports probabilistic recipes!
+    - Known issue is localisation, working on.
+---------------------------------------------------------------------------------------------------
+Version: 0.1.5
+  Bugfixes:
+    - Fixed the bug that made recipes appear prematurely, where all recipes were visible at once.
+---------------------------------------------------------------------------------------------------
+Version: 0.1.4
+  Bugfixes:
+    - Fixed a bug where nil value was called for.
+---------------------------------------------------------------------------------------------------
+Version: 0.1.3
+  Bugfixes:
+    - Fixed bugs causing some recipes to not be calculated (angels smelting for example lacked some)
+    - Fixed so recipes do not show up in tech tree but are enabled as things are unlocked anyway. They will not show up until compression tech has been research and once it is researched, every recipe you have is unlocked in it's compressed form.
+    - Fixed bug where temperature of fluids were ignored.
+---------------------------------------------------------------------------------------------------
+Version: 0.1.2
+  Bugfixes:
+    - Fixed a bug making recipes show early.
+    - Corrected dependencies
+---------------------------------------------------------------------------------------------------
+Version: 0.1.1
+  Bugfixes:
+    - Fixed some information issues.
+---------------------------------------------------------------------------------------------------
+Version: 0.1.0
+  Features:
+    - Release!
