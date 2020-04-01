@@ -38,12 +38,13 @@ omni.crystal.add_crystal=function(metal,name,recipe)
 		omni.crystal.metals[#omni.crystal.metals+1]=data.raw.item[metal]
 
 		RecGen:create("omnimatter_crystal",metal.."-crystal"):
-			setLocName("recipe-name.crystal",name):
+			setLocName("crystal",name):
 			setFuelValue(35):
 			setFuelCategory("crystal"):
 			setSubgroup("crystallization"):
 			setStacksize(500):
 			marathon():
+			setIcons(metal.."-crystal"):
 			setCategory("omniplant"):
 			setIngredients({
 				{type = "item", name = "omnine-shards", amount = 1},
