@@ -135,9 +135,6 @@ if data.raw.recipe["steam-science-pack"] then
       {"stone", 1},
     }
 	data.raw.recipe["steam-science-pack"].ingredients = new_ingredients
-	if mods["omnimatter_wood"] then
-		omni.lib.replace_recipe_ingredient("burner-lab","wood","omniwood")
-	end
 end
 --require("prototypes.omnitractor-dynamic")
 require("prototypes.recipes.extraction-dynamic")
