@@ -136,7 +136,7 @@ if data.raw.recipe["steam-science-pack"] then
     }
 	data.raw.recipe["steam-science-pack"].ingredients = new_ingredients
 end
-require("prototypes.omnitractor-dynamic")
+--require("prototypes.omnitractor-dynamic")
 require("prototypes.recipes.extraction-dynamic")
 require("prototypes.recipes.solvation-dynamic")
 if true or phlog then

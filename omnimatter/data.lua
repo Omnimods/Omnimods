@@ -143,7 +143,7 @@ RecGen:create("omnimatter","early-omnite-brick"):
 	setIngredients({"omnite",10},{"stone-brick"}):
 	setResults("omnite-brick"):
 	setEnabled():extend()
-	
+
 local omnitile = table.deepcopy(data.raw.tile["stone-path"])
 omnitile.name="omnite-brick"
 omnitile.walking_speed_modifier = 1.5
@@ -165,3 +165,7 @@ omnitile.variants.u_transition.hr_version.picture="__omnimatter__/graphics/terra
 omnitile.variants.o_transition.picture="__omnimatter__/graphics/terrain/stone-path/stone-path-o.png"
 omnitile.variants.o_transition.hr_version.picture="__omnimatter__/graphics/terrain/stone-path/hr-stone-path-o.png"
 data:extend({omnitile})
+
+require("prototypes.omnitractor-dynamic")
+--require("prototypes.recipes.extraction-dynamic")
+--require("prototypes.recipes.solvation-dynamic")
