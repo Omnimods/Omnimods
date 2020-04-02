@@ -209,3 +209,28 @@ if angelsmods and angelsmods.refining then
 		end
 	end
 end
+
+if mods["angelsrefining"] and settings.startup["angels-salt-sorting"].value then
+
+	RecGen:create("omnimatter_crystal","omni-catalyst"):
+			setSubgroup("omnine"):
+			setStacksize(500):
+			marathon():
+			--setIcons("catalysator-yellow","angelsrefining"):
+			setIcons("omni-catalyst"):
+			setCategory("crystallizing"):
+			setTechName("crystallology-1"):
+			setOrder("zz"):
+			setIngredients	({
+							{type = "fluid", name = "hydromnic-acid", amount = 120},
+							}):
+			setResults({type = "item", name = "omni-catalyst", amount=1}):
+			setEnergy(0.5):extend()
+
+	for i, rec in pairs(data.raw.recipe) do		
+		if rec.category == "omniplant" and string.find(rec.name,"salting") then
+		omni.lib.replace_recipe_ingredient(rec.name, "hydromnic-acid",{type = "item", name = "omni-catalyst", amount=1})
+		rec.category = "ore-sorting"
+		end
+	end
+end
