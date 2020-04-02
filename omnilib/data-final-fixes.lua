@@ -5,3 +5,6 @@ for _,pack in pairs({"automation-science-pack","logistic-science-pack","chemical
 		data.raw.technology[pack].icon = "__omnilib__/graphics/technology/"..pack..".png"
 	end
 end
+if mods["angelsindustries"] and settings.startup["angels-enable-tech"] then
+  require("prototypes.override-angels-tech")
+end

@@ -1,10 +1,14 @@
 ---------------------------------------------------------------------------------------------------
-Version: 3.0.8
-Date: ##.##.##
-  Bugfixes:
-    - Partial fix of icon size integration
+Version: 3.18.0
+Date: 2020.##.##
   Features:
     - Integrated changelog from mod portal
+    - Updated to 0.18
+    - Added thumbnail
+  Bugfixes:
+    - Fix of icon size issues across the board
+    - Updated particle type to the new standard
+    - Tweaks to dynamic extractions to make them more consistent especially with large ore counts
 ---------------------------------------------------------------------------------------------------
 Version: 3.0.8
 Date: 2020.02.24

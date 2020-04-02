@@ -1,0 +1,119 @@
+---------------------------------------------------------------------------------------------------
+Version: 3.18.0
+Date: 2020.##.##
+  Features:
+    - Migrated to 0.18
+    - Added thumbnail
+    - Cleaned up loading order and functions
+    - Added a trigger to allow for ignoring the omnipack in a lab
+      - Automatically adds to all non-ignored labs
+  Bugfixes:
+    - Fixed icon size issues
+    - Fixed localisation issues
+  Info:
+    - Added changelog.
+    - omnipack ignore trigger: omnimods.triggers.lab_ignore_pack[lab_name] = true
+      - Add in before final fixes stage to ignore that lab
+---------------------------------------------------------------------------------------------------
+Version: 3.0.0
+  Features:
+    - Updated to 0.17
+---------------------------------------------------------------------------------------------------
+Version: 2.0.0
+  Features:
+    - Updated to the new API!
+  Info:
+    - UPDATING TO THIS WILL BREAK SAVES!
+---------------------------------------------------------------------------------------------------
+Version: 0.4.9
+  Features:
+    - Unlocks angels biostuff earlier so you won't hunt yourself to death.
+---------------------------------------------------------------------------------------------------
+Version: 0.4.4
+  Features:
+    - Added a constant that can be used to further refine ones experience that deals with long chains of techs that has only 1 prerequisite.
+      - This one does not apply to omnimatter based technologies.
+---------------------------------------------------------------------------------------------------
+Version: 0.4.3
+  Bugfixes:
+    - Fixed so lines of techs that has only 1 prerequisite grows in a more satisfying fashion.
+---------------------------------------------------------------------------------------------------
+Version: 0.4.1
+  Features:
+    - Updated to work with new omnicrystal
+---------------------------------------------------------------------------------------------------
+Version: 0.4.0
+  Features:
+    - 0.16 Compatibility and other stuff
+---------------------------------------------------------------------------------------------------
+Version: 0.3.4
+  Features:
+    - Added so lone branches is affected more heavily as they don't have the branching effect on them
+    - Added an option to standardize all tech times
+---------------------------------------------------------------------------------------------------
+Version: 0.3.3
+  Features:
+    - Added compatibility with Omnicompression
+---------------------------------------------------------------------------------------------------
+Version: 0.3.2
+  Features:
+    - Added additional mods that are affected by omnipack.
+---------------------------------------------------------------------------------------------------
+Version: 0.3.1
+  Bugfixes:
+    - Fixed so compatible with latest omnicrystal.
+---------------------------------------------------------------------------------------------------
+Version: 0.3.0
+  Features:
+    - Features with new omnicrystal version.
+---------------------------------------------------------------------------------------------------
+Version: 0.2.9
+  Bugfixes:
+    - Fixed anomalies where omnipacks weren't when they should be logically in angels and bobs.
+---------------------------------------------------------------------------------------------------
+Version: 0.2.8
+  Bugfixes:
+    - Fixed bug where it would no longer load
+---------------------------------------------------------------------------------------------------
+Version: 0.2.7
+  Bugfixes:
+    - Fixed bug where it needed omnicrystal.
+---------------------------------------------------------------------------------------------------
+Version: 0.2.6
+  Bugfixes:
+    - Fixed a typo
+    - Reduced price of omnipack.
+---------------------------------------------------------------------------------------------------
+Version: 0.2.5
+  Bugfixes:
+    - Fixed a bug where it couldn't do exponential setting.
+---------------------------------------------------------------------------------------------------
+Version: 0.2.4
+  Features:
+    - Added options that involves omnimatter.
+---------------------------------------------------------------------------------------------------
+Version: 0.2.3
+  Bugfixes:
+    - General Bug fixes
+    - Fixed so it is not dependent on a non-existent version of omniwood.
+---------------------------------------------------------------------------------------------------
+Version: 0.2.2
+  Features:
+    - Increased compatibility with omnicrystal and other mods
+    - Improved the algorithm so it loads faster
+---------------------------------------------------------------------------------------------------
+Version: 0.2.1
+  Features:
+    - Added so one can get the science packs without modifying science costs.
+---------------------------------------------------------------------------------------------------
+Version: 0.2.0
+  Features:
+    - Added properties for Omnicrystal and pack with it.
+---------------------------------------------------------------------------------------------------
+Version: 0.1.1
+  Bugfixes:
+    - Fixed a bug where it got nill values.
+---------------------------------------------------------------------------------------------------
+Version: 0.1.0
+  Features:
+    - RELEASE!

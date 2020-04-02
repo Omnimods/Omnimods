@@ -93,10 +93,13 @@ local has_unlock = function(tech,recipe)
 end
 
 if angelsmods and angelsmods.refining then
-	----log("test: "..settings.startup["omnicrystal-sloth"].value)
-	--"angelsore7-crystallization-"
-
-	if not (mods["bobplates"] or (mods["angels-industries"] and startup.settings["enable-angels-overhaul"])) then
+	local spec_vanilla=true --set else case of no bobs or overhaul
+	if mods["bobplates"] then
+		spec_vanilla=false
+	elseif mods["angelsindustries"] and angelsmods.industries.overhaul.value then
+		spec_vanilla=false
+	end
+	if spec_vanilla==true then
 		log("angels-special-vanilla-case")
 		--find angels refining special case
 		omni.crystal.add_crystal("angels-iron-nugget","Iron nugget")
