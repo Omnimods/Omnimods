@@ -1,6 +1,6 @@
 {
 "name":"omnimatter_permutation",
-"version":"1.0.1",
+"version":"1.18.0",
 "title":"Omnipermute",
 "author":"EmperorZelos",
 "description":"Let's you shift the outputs of fluids on recipes and buildings to make better designs. This involves ALL premutations of ANY recipe and output/input.",
