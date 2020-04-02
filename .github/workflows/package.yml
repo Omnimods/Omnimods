@@ -1,0 +1,8 @@
+on: push
+name: Check & Release
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Factorio mod package
+        uses: Roang-zero1/factorio-mod-package@master
