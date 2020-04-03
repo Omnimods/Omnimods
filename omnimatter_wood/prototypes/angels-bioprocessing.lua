@@ -21,6 +21,9 @@ data:extend({{
 	group = "bio-processing-nauvis",
 	order = "a",
   }})
+  data.raw.recipe["algae-green"].icons = nil
+  data.raw.recipe["algae-green"].icon = data.raw.recipe["algae-green-simple"].icon
+  data.raw.recipe["algae-green-simple"].hidden = true
 end
 
 RecGen:importIf("solid-soil"):setCategory("omnimutator"):addIngredients({type="fluid",name="omnic-acid",amount=20}):setTechName("omnimutator"):extend()

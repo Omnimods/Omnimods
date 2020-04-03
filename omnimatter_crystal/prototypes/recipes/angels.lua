@@ -96,7 +96,7 @@ if angelsmods and angelsmods.refining then
 	local spec_vanilla=true --set else case of no bobs or overhaul
 	if mods["bobplates"] then
 		spec_vanilla=false
-	elseif mods["angelsindustries"] and angelsmods.industries.overhaul.value then
+	elseif mods["angelsindustries"] and angelsmods.industries.overhaul then
 		spec_vanilla=false
 	end
 	if spec_vanilla==true then
@@ -230,7 +230,7 @@ if mods["angelsrefining"] and settings.startup["angels-salt-sorting"].value then
 			setResults({type = "item", name = "omni-catalyst", amount=1}):
 			setEnergy(0.5):extend()
 
-	for i, rec in pairs(data.raw.recipe) do		
+	for i, rec in pairs(data.raw.recipe) do
 		if rec.category == "omniplant" and string.find(rec.name,"salting") then
 		omni.lib.replace_recipe_ingredient(rec.name, "hydromnic-acid",{type = "item", name = "omni-catalyst", amount=1})
 		rec.category = "ore-sorting"
