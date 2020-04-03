@@ -25,7 +25,6 @@ for _,boiler in pairs(data.raw.boiler) do
 
 	if not forbidden_boilers[boiler.name] and data.raw.fluid[boiler.fluid_box.filter] and data.raw.fluid[boiler.fluid_box.filter].heat_capacity and boiler.minable then
 		local rec = omni.lib.find_recipe(boiler.minable.result)
-		--log(boiler.name)
 		new_boiler[#new_boiler+1]={
 			type = "recipe-category",
 			name = "boiler-omnifluid-"..boiler.name,
@@ -515,7 +514,6 @@ end
 
 
 local resource_fluid = {}
-log("resource fluid")
 for _,resource in pairs(data.raw.resource) do
 	local auto = resource.minable.result
 	--and data.raw["autoplace-control"][auto]
@@ -736,10 +734,14 @@ for _,recipe in pairs(data.raw.recipe) do
 						if component.temperature then component.temperature=nil end
 					else
 						if component.amount then
-							component.amount=omni.lib.round(component.amount*mult[dif])
+							component.amount=math.min(omni.lib.round(component.amount*mult[dif]),65535)
 						else
-							if component.amount_min then component.amount_min=omni.lib.round(component.amount_min*mult[dif]) end
-							if component.amount_max then component.amount_max=omni.lib.round(component.amount_max*mult[dif]) end
+							if component.amount_min then 
+								component.amount_min=math.min(omni.lib.round(component.amount_min*mult[dif]),65535) 
+							end
+							if component.amount_max then 
+								component.amount_max=math.min(omni.lib.round(component.amount_max*mult[dif]),65535) 
+							end
 						end
 					end
 				end
@@ -749,8 +751,8 @@ for _,recipe in pairs(data.raw.recipe) do
 	end
 end
 
-log("pyc is shit")
 for _,f in pairs(temperature_fluids) do
+	log("pyc is shit")
 	for _,r in pairs(f.recipes) do
 		if omni.lib.cardTable(f.used) > 1 and omni.lib.cardTable(f.temperatures) > 1 then
 			for _,ingres in pairs({"ingredients","results"}) do
@@ -872,9 +874,9 @@ for _, recipe in pairs(extra_fluid_rec) do
 			local multPrimes = omni.lib.factorize(mult[dif])
 			local addPrimes = {}
 			local checkPrimes = mult[dif]
-			for i = 0,multPrimes["2"] do
-				for j = 0,multPrimes["3"] do
-					for k = 0,multPrimes["5"] do
+			for i = 0,(multPrimes["2"] or 0) do
+				for j = 0,(multPrimes["3"] or 0) do
+					for k = 0,(multPrimes["5"] or 0) do
 						local c = math.pow(2,i)*math.pow(3,j)*math.pow(5,k)
 						if c > modMult and c < checkPrimes then
 							checkPrimes = c
@@ -946,7 +948,6 @@ for _, recipe in pairs(extra_fluid_rec) do
 						else
 							temperature_fluids[component.name].used={}
 						end
-						log(new_name)
 					end
 					if ingres ~= "ingredients" and recipe[dif].main_product==component.name then
 						recipe[dif].main_product=new_name
@@ -1068,7 +1069,6 @@ for _,fix in pairs(data.raw.recipe) do
 end
 
 
-log(serpent.block(data.raw.recipe["omni-pack"]))
 if #extra_fluid_rec > 0 then
 	data:extend(extra_fluid_rec)
 end
