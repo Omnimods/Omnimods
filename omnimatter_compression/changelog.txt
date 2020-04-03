@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.1
+Date: 2020.04.03
+  Features:
+    - Added localization
+  Bugfixes:
+    - Fixed ordering
+---------------------------------------------------------------------------------------------------
 Version: 3.18.0
 Date: 2020.04.02
   Features:
@@ -135,7 +142,8 @@ Version: 0.3.1
     - Fixed a bug where it affected random recipes original.
 ---------------------------------------------------------------------------------------------------
 Version: 0.3.0:
---Now can be made so you mine compressed ores directly! Just use the compression planner to turn ore into compressed ore!
+  Features:
+    - Now can be made so you mine compressed ores directly! Just use the compression planner to turn ore into compressed ore!
 ---------------------------------------------------------------------------------------------------
 Version: 0.2.3
   Bugfixes:

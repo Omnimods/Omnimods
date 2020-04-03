@@ -166,6 +166,6 @@ omnitile.variants.o_transition.picture="__omnimatter__/graphics/terrain/stone-pa
 omnitile.variants.o_transition.hr_version.picture="__omnimatter__/graphics/terrain/stone-path/hr-stone-path-o.png"
 data:extend({omnitile})
 
-require("prototypes.omnitractor-dynamic")
+--require("prototypes.omnitractor-dynamic")
 --require("prototypes.recipes.extraction-dynamic")
 --require("prototypes.recipes.solvation-dynamic")

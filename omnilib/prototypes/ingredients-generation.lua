@@ -3,29 +3,47 @@ BuildMat = {}
 BuildMat.__index = BuildMat
 
 component={}
-
+-- ELECTRONICS
 component["vanilla-circuit"]={"electronic-circuit","advanced-circuit","processing-unit"}
 component["crystallonics"]={"basic-crystallonic","basic-oscillo-crystallonic"}
-component["vanilla-gear-wheel"] = {"iron-gear-wheel"}
-component["bob-gear-wheel"] = {"iron-gear-wheel", "steel-gear-wheel", "brass-gear-wheel", "cobalt-steel-gear-wheel", "titanium-gear-wheel", "tungsten-gear-wheel", "nitinol-gear-wheel"}
-component["vanilla-gear-box"]= {"omnicium-iron-gear-box"}
-component["bob-gear-box"] = {"omnicium-iron-gear-box","omnicium-steel-gear-box","omnicium-brass-gear-box","omnicium-titanium-gear-box","omnicium-tungsten-gear-box","omnicium-nitinol-gear-box"}
-component["vanilla-plate"]={"copper-plate","iron-plate"}
-component["bob-plate"]={"iron-plate", "copper-plate", "tin-plate", "lead-plate", "silver-plate", "zinc-plate", "nickel-plate", "cobalt-plate", "gold-plate", "aluminium-plate", "tungsten-plate", "titanium-plate"}
-component["angel-plate"]={"copper-plate","iron-plate","angels-plate-manganese", "angels-plate-chrome", "angels-plate-platinum"}
-component["angel-bob-plate"]={"iron-plate", "copper-plate", "tin-plate", "lead-plate", "silver-plate", "zinc-plate", "nickel-plate", "cobalt-plate", "angels-plate-manganese", "gold-plate", "aluminium-plate", "tungsten-plate", "titanium-plate", "angels-plate-chrome", "angels-plate-platinum"}
-component["vanilla-omniplate"]= {"omnicium-plate","omnicium-iron-alloy","omnicium-steel-alloy"}
-component["bearing"]={"steel-bearing", nil, "cobalt-steel-bearing", "titanium-bearing", "nitinol-bearing", "ceramic-bearing"}
+component["bob-circuit"]={"basic-circuit-board","electronic-circuit","advanced-circuit","processing-unit","advanced-processing-unit","advanced-processing-unit"}
+component["angels-comp-circuit"]={"circuit-grey","circuit-red-loaded","circuit-green-loaded","circuit-orange-loaded","circuit-blue-loaded","circuit-yellow-loaded"}
+component["bob-crystallo-circuit"]=omni.lib.union(omni.lib.cutTable(component["bob-circuit"],3),component["crystallonics"])
+component["vanilla-crystallo-circuit"]=omni.lib.union(omni.lib.cutTable(component["vanilla-circuit"],2),component["crystallonics"])
+component["angels-crystallo-circuit"]=omni.lib.union(omni.lib.cutTable(component["angels-comp-circuit"],3),component["crystallonics"])
+-- PIPES
 component["vanilla-pipe"] = {"pipe"}
 component["bob-logistics"] = {"stone-pipe", "copper-pipe", "pipe", "steel-pipe", "plastic-pipe"}
 component["bob-pipe"] = {"stone-pipe", "copper-pipe", "pipe", "bronze-pipe", "brass-pipe", "steel-pipe", "plastic-pipe", "ceramic-pipe", "titanium-pipe", "tungsten-pipe"}
-component["bob-circuit"]={"basic-circuit-board","electronic-circuit","advanced-circuit","processing-unit","advanced-processing-unit","advanced-processing-unit"}
+-- PLATES
+component["vanilla-plate"]={"copper-plate","iron-plate"}
+component["bob-plate"]={"iron-plate", "copper-plate", "tin-plate", "lead-plate", "silver-plate", "zinc-plate", "nickel-plate", "cobalt-plate", "gold-plate", "aluminium-plate", "tungsten-plate", "titanium-plate"}
+component["angel-plate"]={"copper-plate","iron-plate","angels-plate-manganese", "angels-plate-chrome", "angels-plate-platinum"}
+component["angels-comp-plate"]={"copper-plate", "iron-plate", "steel-plate","angels-plate-aluminium", "angels-plate-titanium", "angels-plate-tungsten","angels-plate-chrome", "angels-plate-platinum"}
+component["angel-bob-plate"]={"iron-plate", "copper-plate", "tin-plate", "lead-plate", "silver-plate", "zinc-plate", "nickel-plate", "cobalt-plate", "angels-plate-manganese", "gold-plate", "aluminium-plate", "tungsten-plate", "titanium-plate", "angels-plate-chrome", "angels-plate-platinum"}
+component["vanilla-omniplate"]= {"omnicium-plate","omnicium-iron-alloy","omnicium-steel-alloy"}
 component["omni-alloys"] = {"omnicium-plate","omnicium-iron-alloy","omnicium-steel-alloy"}
 component["omni-bob-alloys"] = {"omnicium-plate","omnicium-iron-alloy","omnicium-steel-alloy", "omnicium-aluminium-alloy", "omnicium-tungsten-alloy"}
-component["bob-crystallo-circuit"]=omni.lib.union(omni.lib.cutTable(component["bob-circuit"],2),component["crystallonics"])
-component["vanilla-crystallo-circuit"]=omni.lib.union(omni.lib.cutTable(component["vanilla-circuit"],2),component["crystallonics"])
+-- GEARS
+component["vanilla-gear-wheel"] = {"iron-gear-wheel"}
+component["bob-gear-wheel"] = {"iron-gear-wheel", "steel-gear-wheel", "brass-gear-wheel", "cobalt-steel-gear-wheel", "titanium-gear-wheel", "tungsten-gear-wheel", "nitinol-gear-wheel"}
+component["angels-gear-wheel"] = {"angels-gear", "angels-axle", "angels-roller-chain", "angels-spring", "angels-bearing"}
+component["vanilla-gear-box"]= {"omnicium-iron-gear-box"}
+component["bob-gear-box"] = {"omnicium-iron-gear-box","omnicium-steel-gear-box","omnicium-brass-gear-box","omnicium-titanium-gear-box","omnicium-tungsten-gear-box","omnicium-nitinol-gear-box"}
+component["angels-gear-box"] = {"omnicium-iron-gear-box","omnicium-steel-gear-box","omnicium-titanium-gear-box","omnicium-tungsten-gear-box"}
+component["bearing"]={"steel-bearing", nil, "cobalt-steel-bearing", "titanium-bearing", "nitinol-bearing", "ceramic-bearing"}
 
-if mods["bobelectronics"] then
+--------------------------------------------------------------------------------------------------
+-- Component list swapping logic -----------------------------------------------------------------
+--------------------------------------------------------------------------------------------------
+--ELECTRONIC SWITCHES
+if mods["angelsindustries"] and angelsmods.industries.components then
+	if mods["omnimatter_crystal"] then
+		component["circuit"]=component["angels-crystallo-circuit"]
+	else
+		component["circuit"]=component["angels-comp-circuit"]
+	end
+elseif mods["bobelectronics"] then
 	if mods["omnimatter_crystal"] then
 		component["circuit"]=component["bob-crystallo-circuit"]
 	else
@@ -38,43 +56,53 @@ else
 		component["circuit"]=component["vanilla-circuit"]
 	end
 end
+--PIPE SWITCHES
+if mods["boblogistics"] then
+	if mods["bobplates"] then
+		component["pipe"]=component["bob-pipe"]
+	else
+		component["pipe"]=component["bob-logistics"]
+	end
+else
+	component["pipe"]=component["vanilla-pipe"]
+end
+--Gear SWITCHES
 if mods["bobplates"] then
 	component["gear-wheel"]=component["bob-gear-wheel"]
 	component["gear-box"]=component["bob-gear-box"]
 	component["omniplate"]=component["omni-bob-alloys"]
-	if mods["boblogistics"] then
-		component["pipe"]=component["bob-pipe"]
-	else
-		component["pipe"]=component["vanilla-pipe"]
-	end
+elseif mods["angelsindustries"] and angelsmods.industries.overhaul then
+	component["gear-wheel"]=component["angels-gear-wheel"]
+	component["gear-box"]=component["vanilla-gear-box"]--["angels-gear-box"] -- not functional as an angels list yet
+	component["omniplate"]=component["vanilla-omniplate"]--["omni-bob-alloys"]-- not functional as an angels list yet
+else
+	component["gear-wheel"]=component["vanilla-gear-wheel"]
+	component["gear-box"]=component["vanilla-gear-box"]
+	component["omniplate"]=component["vanilla-omniplate"]
+end
+--PLATE SWITCHES
+if mods["angelsindustries"] and angelsmods.industries.overhaul then
+	component["plates"]=component["angels-comp-plate"]
+elseif mods["bobplates"] then
 	if mods["angelssmelting"] then
 		component["plates"]=component["angel-bob-plate"]
 	else
 		component["plates"]=component["bob-plate"]
 	end
 else
-	component["gear-wheel"]=component["vanilla-gear-wheel"]
-	component["gear-box"]=component["vanilla-gear-box"]
-	component["omniplate"]=component["vanilla-omniplate"]
-	if mods["boblogistics"] then
-		component["pipe"]=component["bob-logistics"]
-	else
-		component["pipe"]=component["vanilla-pipe"]
-	end
 	if mods["angelssmelting"] then
 		component["plates"]=component["angel-plate"]
 	else
 		component["plates"]=component["vanilla-plate"]
 	end
 end
-
-local cmpn = {"vanilla-circuit","crystallonics","vanilla-gear-wheel","bob-gear-wheel","vanilla-gear-box","bob-gear-box","plate","bob-plate","angel-plate","angel-bob-plate",
-"omni-plate","vanilla-pipe","bob-pipe","bob-circuit","omni-alloys","bob-crystallo-circuit","vanilla-crystallo-circuit"}
+--AUTO GROUP SWITCHES
+local cmpn = {"vanilla-circuit","crystallonics","vanilla-gear-wheel","bob-gear-wheel","vanilla-gear-box","bob-gear-box","plate","bob-plate","angel-plate","angel-bob-plate","angels-gear-wheel","omni-bob-alloys",
+"omni-plate","vanilla-pipe","bob-pipe","bob-logistics","bob-circuit","omni-alloys","bob-crystallo-circuit","vanilla-crystallo-circuit","angels-comp-circuit","angels-crystallo-circuit","angels-comp-plate"}
 
 for _, c in pairs(cmpn) do
 	--component[c]=setmetatable(component[c],BuildMat)
 end
-
 
 function OmniGen:building()
 	self.type="building"

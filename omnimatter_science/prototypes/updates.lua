@@ -1,4 +1,3 @@
-require("prototypes.functions")
 if mods["angelsbioprocessing"] then
 	omni.lib.add_unlock_recipe("bio-farm","temperate-garden-cultivating-b")
 	omni.lib.add_unlock_recipe("bio-farm","desert-garden-cultivating-b")

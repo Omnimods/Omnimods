@@ -11,6 +11,8 @@ require("prototypes.omni-pack")
 
 if mods["omnimatter_crystal"] then
   data.raw.tool["production-science-pack"].icon = "__omnimatter_science__/graphics/icons/production-science-pack.png"
+  data.raw.tool["production-science-pack"].icon_size=64
+  data.raw.recipe["production-science-pack"].icon_size=64
   data.raw.tool["omni-pack"].icon_size=64
   data.raw.recipe["omni-pack"].icon_size=64
 end

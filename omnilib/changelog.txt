@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.1
+Date: 2020.04.03
+  Features:
+    - Added material requirement progression support for various Angel's/Bob's combos
+    - Updated localization
+---------------------------------------------------------------------------------------------------
 Version: 3.18.0
 Date: 2020.04.02
   Features:
