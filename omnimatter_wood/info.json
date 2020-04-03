@@ -5,5 +5,5 @@
 "author":"EmperorZelos",
 "description":"Adds a wood production method for omnimatter",
 "factorio_version":"0.18",
-"dependencies":["base","omnimatter >= 3.0.0","omnilib >= 0.0.3","?Bio_Industries","?bobgreenhouse","?angelsbioprocessing"]
+"dependencies":["base","omnimatter >= 3.18.1","omnilib >= 3.18.1","?Bio_Industries","?bobgreenhouse","?angelsbioprocessing"]
 }

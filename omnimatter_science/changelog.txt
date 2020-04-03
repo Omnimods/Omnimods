@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.1
+Date: 2020.04.03
+  Features:
+    - Added localization strings
+    - Updated ordering
+  Bugfixes:
+    - Fixed the omnipack registering multiple times.
+    - Fixed icon issues with production science pack
+---------------------------------------------------------------------------------------------------
 Version: 3.18.0
 Date: 2020.04.02
   Features:

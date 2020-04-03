@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.1
+Date: 2020.04.03
+  Features:
+    - Added support to Mining Drones
+  Bugfixes:
+    - Should not crash any more with integers larger than 65535 in the error message
+--------------------------------------------------------------------------------------------------
 Version: 3.18.0
 Date: 2020.04.02
   Features:
