@@ -5,5 +5,5 @@
 "author":"EmperorZelos",
 "description":"Adds crystalline branches for technology",
 "factorio_version":"0.18",
-"dependencies":["base","omnilib >= 3.0.0","omnimatter >= 3.0.0"]
+"dependencies":["base","omnilib >= 3.18.1","omnimatter >= 3.18.1"]
 }
