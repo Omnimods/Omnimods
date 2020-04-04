@@ -540,6 +540,7 @@ function get_recipe_values(ingredients,results)
 	local new_lcm = lcm_rec*lcm_stack--rec_max*stack_max/omni.lib.gcd(rec_max,stack_max)
 	for i,p in pairs(new_parts) do
 		new[i]=new_lcm*new_stacks[i].amount/new_parts[i].amount
+		new[i]=math.floor(new[i]+0.5) --round 
 		if new_gcd == 0 then
 			new_gcd = new[i]
 		else
