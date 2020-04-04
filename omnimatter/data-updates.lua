@@ -150,7 +150,8 @@ if mods["angelsindustries"] and angelsmods.industries.components then
 	cost:setQuant("construction-block",5):
 	setQuant("electric-block",2):
 	setQuant("fluid-block",5):
-	setQuant("logistic-block",1)
+	setQuant("logistic-block",1):
+	setQuant("omni-block",1)
 else
 	cost:setQuant("omniplate",10):
 	setQuant("plates",20):

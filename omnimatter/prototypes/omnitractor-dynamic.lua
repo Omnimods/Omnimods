@@ -3,7 +3,8 @@ if mods["angelsindustries"] and angelsmods.industries.components then
 	burner_ingredients = {
 	{name="block-construction-1", amount=3},
 	{name="block-electronics-0", amount=1},
-	{name="block-fluidbox-1", amount=1}}
+	{name="block-fluidbox-1", amount=1},
+	{name="block-omni-0", amount=1}}
 else
 	burner_ingredients = {
 	{name="omnicium-gear-wheel", amount=2},
@@ -122,8 +123,9 @@ local cost = OmniGen:create():
 if mods["angelsindustries"] and angelsmods.industries.components then
 	cost:setQuant("construction-block",5):
 	setQuant("electric-block",2):
-	setQuant("fluid-block",5)
-	--setQuant("production-block",1)
+	setQuant("fluid-block",5):
+	setQuant("production-block",1):
+	setQuant("omni-block",1)
 else
 	cost:setQuant("circuit",5):
 	setQuant("omniplate",20):
