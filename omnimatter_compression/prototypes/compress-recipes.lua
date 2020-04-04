@@ -489,14 +489,12 @@ local seperate_fluid_solid = function(collection)
 	return {fluid = fluid,solid = solid}
 end
 
-
 function get_recipe_values(ingredients,results)
 	local parts={}
 	local lng = {0,0}
 
 	local all_ing = seperate_fluid_solid(ingredients)
 	local all_res = seperate_fluid_solid(results)
-
 
 	for _,comp in pairs({all_ing.solid,all_res.solid}) do
 		for _,  resing in pairs(comp) do
@@ -551,7 +549,6 @@ function get_recipe_values(ingredients,results)
 	for i,p in pairs(new_parts) do
 		new[i]=new[i]/new_gcd
 	end
-
 	local total_mult = new[1]*omni.lib.find_stacksize(parts[1].name)/parts[1].amount
 	local newing = {}
 	for i=1,#all_ing.solid do
@@ -740,7 +737,6 @@ function create_compression_recipe(recipe)
 		local subgr = {regular = {}}
 		ing={normal=table.deepcopy(recipe.normal.ingredients),expensive=table.deepcopy(recipe.expensive.ingredients)}
 		res={normal=table.deepcopy(recipe.normal.results),expensive=table.deepcopy(recipe.expensive.results)}
-
 		local gcd = {normal = 0, expensive = 0}
 		local generatorfluid = nil
 		for _,dif in pairs({"normal","expensive"}) do
@@ -764,7 +760,7 @@ function create_compression_recipe(recipe)
 		for _,dif in pairs({"normal","expensive"}) do
 			for _,ingres in pairs({ing,res}) do
 				for _,component in pairs(ingres[dif]) do
-					component.amount=component.amount/gcd[dif]
+					component.amount=math.min(component.amount/gcd[dif],65535) --set max cap
 				end
 			end
 		end
@@ -783,7 +779,6 @@ function create_compression_recipe(recipe)
 
 		local check = {{seperate_fluid_solid(ing.normal),seperate_fluid_solid(res.normal)},{seperate_fluid_solid(ing.expensive),seperate_fluid_solid(res.expensive)}}
 		if compressed_ingredients_exist(check[1][1].solid,check[1][2].solid) and compressed_ingredients_exist(check[2][1].solid,check[2][2].solid) then
-			----log(serpent.block(recipe))
 			local new_val_norm = get_recipe_values(ing.normal,res.normal)
 			local new_val_exp = get_recipe_values(ing.expensive,res.expensive)
 			local mult = {}
@@ -911,8 +906,6 @@ function create_compression_recipe(recipe)
 			if r.icons then
 				for _ , icon in pairs(r.icons) do
 					local shrink = icon
-					--local scale = icon.scale or 1
-					--shrink.scale = scale*0.65
 					icons[#icons+1] = shrink
 				end
 			else
@@ -969,7 +962,6 @@ end
 --log("Tok you bastard")
 
 for _,recipe in pairs(data.raw.recipe) do
-	--omni.lib.gcd(m,n)
 	--Start with the ingredients
 	--log("calc compressed recipe of "..recipe.name)
 	if not mods["omnimatter_marathon"] then omni.marathon.standardise(recipe) end
@@ -1028,7 +1020,6 @@ for name,fluid in pairs(generatorFluidRecipes) do
 	end
 end
 --log("damn it zom!")
---log(serpent.block(compress_recipes))
 --log("ep")
 data:extend(compress_recipes)
 --log("meep")
@@ -1036,5 +1027,4 @@ data:extend(uncompress_recipes)
 --log("deep")
 data:extend(compress_based_recipe)
 --log("seep")
---log(serpent.block(data.raw.recipe["omnirec-omnic-acid-a-compression"]))
 --error("derp")
