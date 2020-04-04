@@ -66,8 +66,6 @@ local get_pure_req = function(levels,i)
 	if i == 2 then
 		if data.raw.technology["omnitech-omnisolvent-omnisludge-"..(i-2)] then
 			r[#r+1]="omnitech-omnisolvent-omnisludge-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
-		else
-			log("this should change")
 		end
 	end
 	for j,tier in pairs(omnifluid) do
@@ -179,3 +177,8 @@ BuildChain:create("omnimatter","omnitractor"):
 	},
 	}):setOverlay("tractor-over"):
 	extend()
+
+for i=1,settings.startup["omnimatter-max-tier"].value do
+	log("Looking for omnitractor-electric-"..i)
+	omni.lib.add_unlock_recipe("omnitractor-electric-"..i, "block-omni-"..i)
+end

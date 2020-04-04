@@ -1,9 +1,3 @@
-
---component["gear-box"]
---component["omniplate"]
---"block-omni-0" ... "block-omni-5"
---"omnitractor-electric-1"..."omnitractor-electric-5"
-
 data:extend(
 {
   -----------------------------------------------------------------------------
@@ -62,7 +56,7 @@ for i=1,5 do
 		{
 			type = "recipe",
 			name = "block-omni-"..i,
-			enabled = true,
+			enabled = false,
 			category = "crafting",
 			energy_required = 5,
 			ingredients =
