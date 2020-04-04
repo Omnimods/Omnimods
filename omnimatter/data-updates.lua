@@ -144,10 +144,18 @@ if true or phlog then
 local cost = OmniGen:create():
 		building():
 		setMissConstant(3):
-		setPreRequirement("burner-omniphlog"):
-		setQuant("omniplate",10):
-		setQuant("plates",20):
-		setQuant("gear-box",15)
+		setPreRequirement("burner-omniphlog")
+
+if mods["angelsindustries"] and angelsmods.industries.components then
+	cost:setQuant("construction-block",5):
+	setQuant("electric-block",2):
+	setQuant("fluid-block",5):
+	setQuant("logistic-block",1)
+else
+	cost:setQuant("omniplate",10):
+	setQuant("plates",20):
+	setQuant("gear-box",15)
+end
 
 	BuildChain:create("omnimatter","omniphlog"):
 		setSubgroup("omniphlog"):

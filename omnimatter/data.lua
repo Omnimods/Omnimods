@@ -101,36 +101,47 @@ local omnic_acid = RecChain:create("omnimatter","omnic-acid"):
 		setTechTime(15):
 		extend()
 
-		BuildGen:create("omnimatter","omniphlog"):
-		setBurner(0.75,1):
-		setStacksize(10):
-		setSubgroup("omniphlog"):
-		setReplace("omniphlog"):
-		setSize(3):
-		setCrafting("omniphlog"):
-		setFluidBox("XWX.XXX.XKX"):
-		setUsage(300):
-		setAnimation({
-		layers={
-		{
-			filename = "__omnimatter__/graphics/entity/buildings/omniphlog.png",
-			priority = "extra-high",
-			width = 160,
-			height = 160,
-			frame_count = 36,
-			line_length = 6,
-			shift = {0.00, -0.05},
-			scale = 0.90,
-			animation_speed = 0.5
-		},
-		}
-		}):
-		setIngredients({
+local phlog_cost = {}
+if mods["angelsindustries"] and angelsmods.industries.components then
+	phlog_cost = {
+	{name="block-construction-1", amount=3},
+	{name="block-electronics-0", amount=1},
+	{name="block-fluidbox-1", amount=2}}
+else
+	phlog_cost = {
 		  {type = "item", name = "omnicium-plate", amount = 10},
 		  {type = "item", name = "omnicium-gear-wheel", amount = 15},
 		  {type = "item", name = "iron-plate", amount = 10},
 		  {type = "item", name = "copper-plate", amount = 5},
-		}):setEnabled():extend()
+		}
+end
+
+BuildGen:create("omnimatter","omniphlog"):
+setBurner(0.75,1):
+setStacksize(10):
+setSubgroup("omniphlog"):
+setReplace("omniphlog"):
+setSize(3):
+setCrafting("omniphlog"):
+setFluidBox("XWX.XXX.XKX"):
+setUsage(300):
+setAnimation({
+layers={
+{
+	filename = "__omnimatter__/graphics/entity/buildings/omniphlog.png",
+	priority = "extra-high",
+	width = 160,
+	height = 160,
+	frame_count = 36,
+	line_length = 6,
+	shift = {0.00, -0.05},
+	scale = 0.90,
+	animation_speed = 0.5
+},
+}
+}):
+setIngredients(phlog_cost):
+setEnabled():extend()
 
 RecGen:create("omnimatter","omnite-brick"):
 	setIngredients("stone","omnite"):

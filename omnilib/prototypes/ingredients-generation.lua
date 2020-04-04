@@ -33,11 +33,23 @@ component["bob-gear-box"] = {"omnicium-iron-gear-box","omnicium-steel-gear-box",
 component["angels-gear-box"] = {"omnicium-iron-gear-box","omnicium-steel-gear-box","omnicium-titanium-gear-box","omnicium-tungsten-gear-box"}
 component["bearing"]={"steel-bearing", nil, "cobalt-steel-bearing", "titanium-bearing", "nitinol-bearing", "ceramic-bearing"}
 
+if mods["angelsindustries"] and angelsmods.industries.components then
+	-- DEFINE BLOCKS
+	component["construction-block"] = {"block-construction-1", "block-construction-2", "block-construction-3", "block-construction-4","block-construction-5"}
+	component["electric-block"] = {"block-electronics-1", "block-electronics-2", "block-electronics-3", "block-electronics-4", "block-electronics-5"}
+	component["fluid-block"] = {"construction-frame-1", "block-fluidbox-1", nil, "block-fluidbox-2", nil}
+	component["mechanical-block"] = {"construction-frame-1", "block-mechanical-1", nil, "block-mechanical-2", nil}
+	component["enhancement-block"] = {"block-enhancement-1", "block-enhancement-2", "block-enhancement-3", "block-enhancement-4", "block-enhancement-5"}
+	component["energy-block"] = {"block-energy-1", "block-energy-2", "block-energy-3", "block-energy-4", "block-energy-5"}
+	component["logistic-block"] = {"block-logistic-1", "block-logistic-2", "block-logistic-3", "block-logistic-4", "block-logistic-5"}
+	component["production-block"] = {"block-production-1", "block-production-2", "block-production-3", "block-production-4", "block-production-5"}
+end
+
 --------------------------------------------------------------------------------------------------
 -- Component list swapping logic -----------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 --ELECTRONIC SWITCHES
-if mods["angelsindustries"] and angelsmods.industries.components then
+if mods["angelsindustries"] and angelsmods.industries.components then	
 	if mods["omnimatter_crystal"] then
 		component["circuit"]=component["angels-crystallo-circuit"]
 	else
