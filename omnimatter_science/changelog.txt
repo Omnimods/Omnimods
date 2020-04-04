@@ -2,7 +2,7 @@
 Version: 3.18.1
 Date: 2020.04.04
   Bugfixes:
-    - Fixed some Tech science costs not beeing affected.
+    - Fixed some Tech science costs not being affected.
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.1
 Date: 2020.04.03
