@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.1
+Date: 2020.04.03
+  Features:
+    - Bob's Burner Lab now requires omnifused wood
+    - Angel's Bioprocessing slothful green algae recipe removed
+---------------------------------------------------------------------------------------------------
 Version: 3.18.0
 Date: 2020.04.02
   Info:

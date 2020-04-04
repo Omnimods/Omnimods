@@ -4,6 +4,18 @@ if mods["angelsbioprocessing"] then
 	omni.lib.add_unlock_recipe("bio-farm","swamp-garden-cultivating-b")
 end
 if mods["omnimatter_crystal"] then
+	--UPDATE LABS INPUT
+	for i, labs in pairs(data.raw["lab"]) do
+		local found = false
+		for i,v in ipairs(labs.inputs) do
+			if v == "omni-pack" then
+				found = true
+			end
+		end
+		if not lab_ignore_pack[labs.name] and not found then
+				table.insert(labs.inputs, "omni-pack")
+		end
+	end
 	omni.lib.add_recipe_ingredient("omni-pack",{type = "item", name = "fast-transport-belt", amount = 1})
 	omni.lib.add_recipe_ingredient("omni-pack",{type = "fluid", name = "omniston", amount = 50})
 	omni.lib.change_recipe_category("omni-pack","crafting-with-fluid")
