@@ -1,6 +1,6 @@
 
 local lab_inputs = {}
-
+log("begin tech compression")
 local has_input  = function(tab)
 	local  found = false
 	for _, li in pairs(lab_inputs) do
@@ -55,7 +55,7 @@ for _,tech in pairs(data.raw.technology) do
 	if tech.unit and ((tech.unit.count and type(tech.unit.count)=="number" and tech.unit.count > settings.startup["omnicompression_compressed_tech_min"].value) or not tech.unit.count or containsOne(tech.unit.ingredients,alwaysSP)) then
 		local t = table.deepcopy(tech)
 		t.name=t.name.."-omnipressed"
-		t.localised_name = tech.localised_name or {"technology-name."..tech.name}
+		t.localised_name = t.localised_name or {"technology-name.compressed", tech.name}
 		local lcm = 1
 		for _, ing in pairs(t.unit.ingredients) do
 			local item = data.raw.tool[ing[1]]
@@ -88,4 +88,5 @@ for _,tech in pairs(data.raw.technology) do
 		end
 	end
 end
+log("end tech compression")
 data:extend(compressed_techs)

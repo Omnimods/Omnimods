@@ -13,7 +13,6 @@ require("prototypes/compress-random")
 require("prototypes/compress-ores")
 require("prototypes/compress-buildings")
 require("prototypes/compress-technology")
-
 --Extend our items/recipes for use in the game.
 for _,kind in pairs({"assembling-machine","furnace"}) do
 	for _,build in pairs(data.raw[kind]) do
