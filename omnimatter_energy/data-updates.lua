@@ -46,7 +46,6 @@ RecGen:import("steam-engine"):setIngredients(
 	  equalize("omni-heat-burner"):
 	  setEnabled(false):
 	  setTechName("steam-power"):extend()
-
 	  
 RecGen:import("electric-mining-drill"):setIngredients(
       {type="item", name="iron-gear-wheel", amount=4},

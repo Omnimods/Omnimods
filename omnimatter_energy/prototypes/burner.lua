@@ -83,9 +83,6 @@ RecGen:create("omnimatter_energy","omni-tablet"):
 	setEnabled():
 	setEnergy(0.5):extend()
 	
---
-
-
 BuildGen:import("burner-mining-drill"):setFuelCategory("omnite"):
 	setIngredients(
       {type="item", name="stone-brick", amount=4},
@@ -93,20 +90,44 @@ BuildGen:import("burner-mining-drill"):setFuelCategory("omnite"):
       {type="item", name="omnitor", amount=1}):setEnabled():extend()
 
 ItemGen:import("omnite"):setFuelCategory("omnite"):extend()
-ItemGen:import("omniwood"):setFuelCategory("omnite"):extend()
 ItemGen:import("crushed-omnite"):setFuelCategory("omnite"):extend()
+ItemGen:importIf("omniwood"):setFuelCategory("omnite"):extend()
 
 RecGen:create("omnimatter_energy","omnitor"):
 	setStacksize(50):
 	addMask(197/255,58/255,97/255):
 	setCategory("crafting"):
+	setSubgroup("omnienergy-intermediates"):
+	setOrder("a"):
 	setEnergy(0.75):
 	setIngredients({type="item", name="omnicium-plate", amount=2},{type="item", name="omnicium-gear-wheel", amount=1}):
 	addProductivity():
 	setEnabled():extend()
 
+RecGen:create("omnimatter_energy","anbaric-omnitor"):
+	setStacksize(50):
+	addMask(0/255,186/255,184/255):
+	setCategory("crafting"):
+	setSubgroup("omnienergy-intermediates"):
+	setOrder("b"):
+	setEnergy(0.75):
+	setTechName("anbaricity"):
+	setIngredients({type="item", name="omnicium-plate", amount=2},{type="item", name="copper-cable", amount=2},{type="item", name="omnitor", amount=1}):
+	addProductivity():extend()
+
+RecGen:create("omnimatter_energy","cokomni"):
+	setSubgroup("omni-basic"):
+	setStacksize(200):
+	setCategory("omnifurnace"):
+	setFuelCategory("omnite"):
+	setFuelValue(2.4):
+	setEnergy(0.5):
+	setFuelGroup("omnite"):
+	setTechName("anbaricity"):
+	setIngredients({type="item", name="crushed-omnite", amount=4}):
+	setResults({type="item", name="cokomni", amount=2}):extend()
 	
-RecGen:create("omnimatter_energy","heat"):
+	RecGen:create("omnimatter_energy","heat"):
 	fluid():
 	setIcons("burner","omnilib"):
 	setBothColour(1,0,0):
@@ -130,33 +151,7 @@ RecGen:create("omnimatter_energy","heat"):
 	extend()
 
 data.raw.fluid.heat.auto_barrel = false
-	
-RecGen:create("omnimatter_energy","anbaric-omnitor"):
-	setStacksize(50):
-	addMask(0/255,186/255,184/255):
-	setCategory("crafting"):
-	setEnergy(0.75):
-	setTechName("anbaricity"):
-	setIngredients({type="item", name="omnicium-plate", amount=2},{type="item", name="copper-cable", amount=2},{type="item", name="omnitor", amount=1}):
-	addProductivity():extend()
 
-if data.raw.item["anbaric-omnitor"] then 
-    log("anbaric omnitor exists gtfo error") 
-else 
-    log("wtf") 
-end
-	
-RecGen:create("omnimatter_energy","cokomni"):
-	setSubgroup("omni-basic"):
-	setStacksize(200):
-	setCategory("omnifurnace"):
-	setFuelValue(2.4):
-	setEnergy(0.5):
-	setTechName("anbaricity"):
-	setIngredients({type="item", name="crushed-omnite", amount=4}):
-	setResults({type="item", name="cokomni", amount=2}):extend()
-	
-log("Zoms at it again")
 BuildGen:import("steam-turbine"):
 	setName("omni-heat-burner","omnimatter_energy"):
 	--setFluidBox("XTX.XXX.XXX.XXX.XGX","heat",400)
@@ -371,22 +366,10 @@ BuildGen:import("lab"):
   }
 }):extend()
 
-RecGen:create("omnimatter_energy","omnite-brick"):
-	setIngredients("stone","omnite"):
-	setCategory("omnifurnace"):
-	setEnabled():
-	tile():
-	setPlace("omnite-brick"):extend()
-	
-RecGen:create("omnimatter_energy","early-omnite-brick"):
-	setIngredients({"omnite",40},{"stone-brick"}):
-	setResults("omnite-brick"):
-	--setCategory("smelting"):
-	setEnabled():extend()
-	
-log("HIYA!")
 InsertGen:create("omnimatter_energy","burner-filter-inserter"):
 	setIngredients({"burner-inserter",1},{"omnitor",2},{"omnicium-gear-wheel",2}):
+	setSubgroup("inserter"):
+	setOrder("z"): --doesnt do shit?
 	setTechName("burner-filter"):
 	setTechCost(100):
 	setTechIcon("burner-filter"):
@@ -395,28 +378,5 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter"):
 	setFilter(1):
 	setAnimation("burner-filter-inserter"):
 	setBurner(0.75,1):extend()
-log("KYA!")
+
 	
-local omnitile = table.deepcopy(data.raw.tile["stone-path"])
-omnitile.name="omnite-brick"
-omnitile.walking_speed_modifier = 1.5
-omnitile.minable.result="omnite-brick"
-omnitile.variants.main[1].picture="__omnimatter_energy__/graphics/terrain/stone-path/stone-path-1.png"
-omnitile.variants.main[1].hr_version.picture="__omnimatter_energy__/graphics/terrain/stone-path/hr-stone-path-1.png"
-omnitile.variants.main[2].picture="__omnimatter_energy__/graphics/terrain/stone-path/stone-path-2.png"
-omnitile.variants.main[2].hr_version.picture="__omnimatter_energy__/graphics/terrain/stone-path/hr-stone-path-2.png"
-omnitile.variants.main[3].picture="__omnimatter_energy__/graphics/terrain/stone-path/stone-path-4.png"
-omnitile.variants.main[3].hr_version.picture="__omnimatter_energy__/graphics/terrain/stone-path/hr-stone-path-4.png"
-omnitile.variants.inner_corner.picture="__omnimatter_energy__/graphics/terrain/stone-path/stone-path-inner-corner.png"
-omnitile.variants.inner_corner.hr_version.picture="__omnimatter_energy__/graphics/terrain/stone-path/hr-stone-path-inner-corner.png"
-omnitile.variants.outer_corner.picture="__omnimatter_energy__/graphics/terrain/stone-path/stone-path-outer-corner.png"
-omnitile.variants.outer_corner.hr_version.picture="__omnimatter_energy__/graphics/terrain/stone-path/hr-stone-path-outer-corner.png"
-omnitile.variants.side.picture="__omnimatter_energy__/graphics/terrain/stone-path/stone-path-side.png"
-omnitile.variants.side.hr_version.picture="__omnimatter_energy__/graphics/terrain/stone-path/hr-stone-path-side.png"
-omnitile.variants.u_transition.picture="__omnimatter_energy__/graphics/terrain/stone-path/stone-path-u.png"
-omnitile.variants.u_transition.hr_version.picture="__omnimatter_energy__/graphics/terrain/stone-path/hr-stone-path-u.png"
-omnitile.variants.o_transition.picture="__omnimatter_energy__/graphics/terrain/stone-path/stone-path-o.png"
-omnitile.variants.o_transition.hr_version.picture="__omnimatter_energy__/graphics/terrain/stone-path/hr-stone-path-o.png"
-data:extend({omnitile})
-log("What?")
-log(serpent.block(data.raw.inserter["burner-filter-inserter"]))

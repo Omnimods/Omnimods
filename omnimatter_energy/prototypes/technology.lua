@@ -65,6 +65,7 @@ data:extend({
     },
     order = "c-a"
     },
+
 	{ 
     type = "technology",
     name = "omnibattery",
@@ -98,6 +99,7 @@ data:extend({
     },
     order = "c-a"
     },
+    
 	{ 
     type = "technology",
     name = "omni-electric-train",
@@ -135,7 +137,8 @@ data:extend({
 
 if mods["boblogistics"] then
 	omni.lib.replace_prerequisite("omnicells","fluid-handling","bob-fluid-handling-2")
-	omni.lib.replace_prerequisite("omnium-power","fluid-handling","bob-fluid-handling-2")
+  omni.lib.replace_prerequisite("omnium-power","fluid-handling","bob-fluid-handling-2")
+  omni.lib.replace_prerequisite("naturize-omnicell","fluid-handling","bob-fluid-handling-2")
 end
 
 if mods["bobpower"] then

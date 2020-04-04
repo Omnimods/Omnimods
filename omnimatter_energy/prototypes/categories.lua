@@ -17,6 +17,12 @@ data:extend({
   },
   {
     type = "item-subgroup",
+    name = "omnienergy-intermediates",
+	  group = "intermediate-products",
+	  order = "a",
+  },
+  {
+    type = "item-subgroup",
     name = "Omnicell",
 	group = "omnienergy",
 	order = "a",

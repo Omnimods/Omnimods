@@ -1,6 +1,6 @@
+require("prototypes.categories")
 require("prototypes.solar_road")
 --require("prototypes.vehicles")
-require("prototypes.categories")
 require("prototypes.solar_panels")
 require("prototypes.burner")
 --require("prototypes.technology")
