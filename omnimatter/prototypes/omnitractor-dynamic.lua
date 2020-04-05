@@ -178,7 +178,15 @@ BuildChain:create("omnimatter","omnitractor"):
 	}):setOverlay("tractor-over"):
 	extend()
 
-for i=1,settings.startup["omnimatter-max-tier"].value do
-	log("Looking for omnitractor-electric-"..i)
-	omni.lib.add_unlock_recipe("omnitractor-electric-"..i, "block-omni-"..i)
+if mods["angelsindustries"] and angelsmods.industries.components then
+	for i=1,settings.startup["omnimatter-max-tier"].value do
+		-- Add omniblock unlocks
+		omni.lib.add_unlock_recipe("omnitractor-electric-"..i, "block-omni-"..i)
+		-- Remove previous tier buildings from the recipes
+		if i == 1 then
+			omni.lib.remove_recipe_ingredient("omnitractor-1", "burner-omnitractor")
+		else
+			omni.lib.remove_recipe_ingredient("omnitractor-"..i, "omnitractor-"..i-1)
+		end
+	end
 end
