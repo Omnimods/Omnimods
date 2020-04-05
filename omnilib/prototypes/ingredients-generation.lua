@@ -104,7 +104,7 @@ if mods["angelsindustries"] and angelsmods.industries.components then
 	-- DEFINE BLOCKS
 	require("prototypes.omniblocks")
 	component["construction-block"] = {"block-construction-1", "block-construction-2", "block-construction-3", "block-construction-4","block-construction-5"}
-	component["electric-block"] = {"block-electronics-1", "block-electronics-2", "block-electronics-3", "block-electronics-4", "block-electronics-5"}
+	component["electric-block"] = {"block-electronics-0", "block-electronics-1", "block-electronics-2", "block-electronics-3", "block-electronics-4", "block-electronics-5"}
 	component["fluid-block"] = {"construction-frame-1", "block-fluidbox-1", nil, "block-fluidbox-2", nil}
 	component["mechanical-block"] = {"construction-frame-1", "block-mechanical-1", nil, "block-mechanical-2", nil}
 	component["enhancement-block"] = {"block-enhancement-1", "block-enhancement-2", "block-enhancement-3", "block-enhancement-4", "block-enhancement-5"}
