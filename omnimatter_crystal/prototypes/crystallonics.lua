@@ -31,11 +31,13 @@ if mods["angelsindustries"] and angelsmods.industries.components then
 	cost_plant:setQuant("construction-block",5):
 	setQuant("electric-block",2):
 	setQuant("fluid-block",5):
-	setQuant("energy-block",1)
+	setQuant("energy-block",1):
+	setQuant("omni-block",1)
 	cost_omnizer:setQuant("construction-block",5):
 	setQuant("electric-block",2):
 	setQuant("fluid-block",5):
-	setQuant("enhancement-block",1)
+	setQuant("enhancement-block",1):
+	setQuant("omni-block",1)
 else
 	cost_plant:setQuant("pipe",15,2):
 	setQuant("omniplate",10):
@@ -200,6 +202,18 @@ BuildChain:create("omnimatter_crystal","crystallomnizer"):
 	}):
 	setFluidBox("XWX.XXX.XKX"):
 	extend()
+
+if mods["angelsindustries"] and angelsmods.industries.components then
+	for i=1,settings.startup["omnimatter-max-tier"].value do
+		-- Remove previous tier buildings from the recipes
+		if i == 1 then
+			omni.lib.remove_recipe_ingredient("omniplant-1", "burner-omniplant")
+		else
+			omni.lib.remove_recipe_ingredient("omniplant-"..i, "omniplant-"..i-1)
+			omni.lib.remove_recipe_ingredient("crystallomnizer-"..i, "crystallomnizer-"..i-1)
+		end
+	end
+end
 
 --[[                         ]]
 --[[         Omnine          ]]
