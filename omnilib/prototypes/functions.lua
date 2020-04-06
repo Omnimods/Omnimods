@@ -714,6 +714,9 @@ function omni.lib.add_prerequisite(tech, req)
 	local found = nil
 	if type(req) == "table" then
 		for _,r in pairs(req) do
+			if not data.raw.technology[tech].prerequisites then
+				data.raw.technology[tech].prerequisites = {}
+			end
 			for i,prereq in pairs(data.raw.technology[tech].prerequisites) do
 				if prereq == r then found = 1 end
 			end
@@ -726,6 +729,9 @@ function omni.lib.add_prerequisite(tech, req)
 		end
 	elseif req then
 		if data.raw.technology[tech] then
+			if not data.raw.technology[tech].prerequisites then
+				data.raw.technology[tech].prerequisites = {}
+			end
 			for i,prereq in pairs(data.raw.technology[tech].prerequisites) do
 				if prereq == req then found = 1 end
 			end
