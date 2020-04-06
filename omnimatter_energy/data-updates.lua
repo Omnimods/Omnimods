@@ -1,6 +1,6 @@
-require("prototypes.omnium-cycle")
+require("prototypes.fuel")
+--require("prototypes.compat.omnium-cycle")
 
-RecGen:import("omni-furnace"):replaceIngredients("stone-brick","omnite-brick"):setFuelCategory("omnite"):extend()
 RecGen:import("repair-pack"):
 	setNormalIngredients({type="item", name="omnicium-plate", amount=6},{type="item", name="omni-tablet", amount=2}):
 	setExpensiveIngredients({type="item", name="omnicium-plate", amount=15},{type="item", name="omni-tablet", amount=7}):extend()
@@ -18,7 +18,6 @@ RecGen:import("electric-engine-unit"):setIngredients({type="fluid", name="lubric
 RecGen:import("electric-furnace"):addIngredients({"steel-furnace", 1}):extend()
 
 RecGen:import("burner-inserter"):setIngredients({"omnitor",1},{"iron-plate",1}):setTechName("basic-automation"):extend()
-data.raw.inserter["burner-inserter"].energy_source.fuel_category="omnite"
 
 RecGen:import("inserter"):setIngredients({"burner-inserter",1},{"omnitor",1}):
 	setEnabled(false):

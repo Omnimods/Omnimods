@@ -18,7 +18,7 @@ local sol = {{
 		{
 		type = "recipe",
 		name = "zolar-panel",
-		subgroup = "Omnicell",
+		subgroup = "omnicell",
 		category="omniphlog",
 		energy_required = 2,
 		ingredients = {{"iron-ore-crystal",2},{"copper-ore-crystal",3},{"basic-crystallonic",3}},
@@ -183,7 +183,7 @@ for i=1,max_size do
 	  sol[#sol+1]={
 		type = "recipe",
 		name = "crystal-solar-panel-tier-"..j.."-size-"..i,
-		subgroup = "Omnicell",
+		subgroup = "omnicell",
 		category="omniphlog",
 		energy_required = 1,
 		enabled=false,

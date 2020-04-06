@@ -83,15 +83,11 @@ RecGen:create("omnimatter_energy","omni-tablet"):
 	setEnabled():
 	setEnergy(0.5):extend()
 	
-BuildGen:import("burner-mining-drill"):setFuelCategory("omnite"):
+BuildGen:import("burner-mining-drill"):
 	setIngredients(
       {type="item", name="stone-brick", amount=4},
       {type="item", name="iron-plate", amount=4},
       {type="item", name="omnitor", amount=1}):setEnabled():extend()
-
-ItemGen:import("omnite"):setFuelCategory("omnite"):extend()
-ItemGen:import("crushed-omnite"):setFuelCategory("omnite"):extend()
-ItemGen:importIf("omniwood"):setFuelCategory("omnite"):extend()
 
 RecGen:create("omnimatter_energy","omnitor"):
 	setStacksize(50):
@@ -115,17 +111,17 @@ RecGen:create("omnimatter_energy","anbaric-omnitor"):
 	setIngredients({type="item", name="omnicium-plate", amount=2},{type="item", name="copper-cable", amount=2},{type="item", name="omnitor", amount=1}):
 	addProductivity():extend()
 
-RecGen:create("omnimatter_energy","cokomni"):
-	setSubgroup("omni-basic"):
-	setStacksize(200):
-	setCategory("omnifurnace"):
-	setFuelCategory("omnite"):
-	setFuelValue(2.4):
-	setEnergy(0.5):
-	setFuelGroup("omnite"):
-	setTechName("anbaricity"):
-	setIngredients({type="item", name="crushed-omnite", amount=4}):
-	setResults({type="item", name="cokomni", amount=2}):extend()
+--RecGen:create("omnimatter_energy","cokomni"):
+--	setSubgroup("omni-basic"):
+--	setStacksize(200):
+--	setCategory("omnifurnace"):
+--	setFuelCategory("omnite"):
+--	setFuelValue(2.4):
+--	setEnergy(0.5):
+--	setFuelCategory("omnite"):
+--	setTechName("anbaricity"):
+--	setIngredients({type="item", name="crushed-omnite", amount=4}):
+--	setResults({type="item", name="cokomni", amount=2}):extend()
 	
 	RecGen:create("omnimatter_energy","heat"):
 	fluid():
@@ -212,6 +208,7 @@ BuildGen:import("assembling-machine-1"):
 	setInventory(3):
 	setCrafting("crafting", "basic-crafting"):
 	setFuelCategory("omnite"):
+	setFuelCategory("chemical"):
 	setIngredients({"omnitor",2},{"iron-plate",5},{"burner-inserter",1}):
 	setAnimation(
 	{layers={{
@@ -367,6 +364,7 @@ BuildGen:import("lab"):
 }):extend()
 
 InsertGen:create("omnimatter_energy","burner-filter-inserter"):
+	--setName("burner-filter-inserter"):
 	setIngredients({"burner-inserter",1},{"omnitor",2},{"omnicium-gear-wheel",2}):
 	setSubgroup("inserter"):
 	setOrder("z"): --doesnt do shit?
@@ -374,9 +372,11 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter"):
 	setTechCost(100):
 	setTechIcon("burner-filter"):
 	setTechPacks(1):
-	setTechPrereq("basic-logistics"):
+	setTechPrereq("logistics"):
 	setFilter(1):
 	setAnimation("burner-filter-inserter"):
+	setFuelCategory("omnite"): --not working...
 	setBurner(0.75,1):extend()
+	data.raw["inserter"]["burner-burner-filter-inserter"].energy_source.fuel_category = "omnite"
 
 	

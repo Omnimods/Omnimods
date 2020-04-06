@@ -1,4 +1,3 @@
-if mods["angellssmelting"] then	
 local salts = {}
 
 local omnide_salt_loss = 0.1
@@ -311,7 +310,7 @@ BuildGen:create("omnimatter_energy","omnium-turbine"):
 			},
 		  },
 		}):extend()
-	end
+
 	--[[
 	reg[#reg+1]={
     type = "generator",

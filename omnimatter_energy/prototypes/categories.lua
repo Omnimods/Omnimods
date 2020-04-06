@@ -7,6 +7,10 @@ data:extend({
         type = "fuel-category",
         name = "omnite"
     },
+    {
+      type = "fuel-category",
+      name = "omni-0"
+  },
 	{
     type = "item-group",
     name = "omnienergy",
@@ -23,7 +27,7 @@ data:extend({
   },
   {
     type = "item-subgroup",
-    name = "Omnicell",
+    name = "omnicell",
 	group = "omnienergy",
 	order = "a",
   },
