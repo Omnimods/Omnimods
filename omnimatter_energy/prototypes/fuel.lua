@@ -1,19 +1,20 @@
-
-local energyblacklist = {
+local ignore = {
 	"omnite",
     "crushed-omnite",
     "omniwood",
+    "seedling",
+    "omniseedling",
 }
 
 if mods["omnimatter-wood"] then
-    table.insert(energyblacklist, "wood")
+    table.insert(ignore, "wood")
     data.raw.item["wood"].fuel_value = nil
     data.raw.item["wood"].fuel_category = nil
 end
 
 for _,fuelitem in pairs(data.raw.item) do  
 
-    for _,blockeditem in pairs(energyblacklist) do
+    for _,blockeditem in pairs(ignore) do
         if fuelitem.name == blockeditem then
             fuelitem.fuel_value = omni.lib.multFuelValue(fuelitem.fuel_value, 0.75)
             goto continue 

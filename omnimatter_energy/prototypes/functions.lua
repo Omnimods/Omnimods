@@ -1,11 +1,12 @@
--- returns the plain fuel value number
-function omni.lib.getFuelNumber(fv)
-    return tonumber(string.sub(fv,1,-3))
-end
-
 --returns the fuel value unit
 function omni.lib.getFuelUnit(fv)
-    return string.sub(fv,-2)
+    return string.match(fv, "%a+")
+end
+
+-- returns the plain fuel value number
+function omni.lib.getFuelNumber(fv)
+    local unit = omni.lib.getFuelUnit(fv)
+    return tonumber(string.sub(fv,1,-#unit-1))
 end
 
 --Multiplies the fuel value with mult
@@ -16,7 +17,9 @@ end
 -- converts the fuel value into MJ and returns the number
 function omni.lib.getFuelNumberInMJ(fv)
     local unit = omni.lib.getFuelUnit(fv)
-    if unit == "kJ" then
+    if unit == "J" then
+        return omni.lib.getFuelNumber(fv)/1000000
+    elseif unit == "kJ" then
         return omni.lib.getFuelNumber(fv)/1000
     elseif unit == "MJ" then
         return omni.lib.getFuelNumber(fv)
