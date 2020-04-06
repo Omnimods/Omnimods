@@ -121,8 +121,7 @@ if mods["angelsindustries"] and angelsmods.industries.components then
 	cost:setQuant("construction-block",5):
 	setQuant("electric-block",2):
 	setQuant("fluid-block",5):
-	setQuant("production-block",1):
-	setQuant("omni-block",1)
+	setQuant("omni-block",2)
 else
 	cost:setQuant("circuit",5):
 	setQuant("omniplate",20):
@@ -178,7 +177,7 @@ BuildChain:create("omnimatter","omnitractor"):
 	extend()
 
 if mods["angelsindustries"] and angelsmods.industries.components then
-	for i=1,settings.startup["omnimatter-max-tier"].value do
+	for i=1,math.min(settings.startup["omnimatter-max-tier"].value,5) do
 		-- Add omniblock unlocks
 		omni.lib.add_unlock_recipe("omnitractor-electric-"..i, "block-omni-"..i)
 		-- Remove previous tier buildings from the recipes
