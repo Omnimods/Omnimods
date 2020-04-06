@@ -110,7 +110,8 @@ BuildChain:create("omnimatter_crystal","omniplant"):
 		burner_ings = {
 		{name="block-construction-1", amount=5},
 		{name="block-electronics-0", amount=3},
-		{name="block-fluidbox-1", amount=5}
+		{name="block-fluidbox-1", amount=5},
+		{name="block-omni-0", amount=5}
 		}
 	else
 		burner_ings = {{pipe,15},{"omnicium-plate",5},{electronic,5},{"omnite-brick",10},{"iron-gear-wheel",10}}
