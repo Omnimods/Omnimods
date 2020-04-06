@@ -55,6 +55,7 @@ RecGen:create("omnimatter_wood","wasteMutation"):
 	setEnabled():extend()
 
 RecGen:create("omnimatter_wood","wood-omnitraction"):
+	setIcons("wood"):
 	setEnergy(2):
 	setEnabled():
 	setSubgroup("omnimutator-items"):
