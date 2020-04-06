@@ -89,28 +89,6 @@ BuildGen:import("burner-mining-drill"):
       {type="item", name="iron-plate", amount=4},
       {type="item", name="omnitor", amount=1}):setEnabled():extend()
 
-RecGen:create("omnimatter_energy","omnitor"):
-	setStacksize(50):
-	addMask(197/255,58/255,97/255):
-	setCategory("crafting"):
-	setSubgroup("omnienergy-intermediates"):
-	setOrder("a"):
-	setEnergy(0.75):
-	setIngredients({type="item", name="omnicium-plate", amount=2},{type="item", name="omnicium-gear-wheel", amount=1}):
-	addProductivity():
-	setEnabled():extend()
-
-RecGen:create("omnimatter_energy","anbaric-omnitor"):
-	setStacksize(50):
-	addMask(0/255,186/255,184/255):
-	setCategory("crafting"):
-	setSubgroup("omnienergy-intermediates"):
-	setOrder("b"):
-	setEnergy(0.75):
-	setTechName("anbaricity"):
-	setIngredients({type="item", name="omnicium-plate", amount=2},{type="item", name="copper-cable", amount=2},{type="item", name="omnitor", amount=1}):
-	addProductivity():extend()
-
 --RecGen:create("omnimatter_energy","cokomni"):
 --	setSubgroup("omni-basic"):
 --	setStacksize(200):
@@ -161,8 +139,29 @@ BuildGen:import("steam-turbine"):
 	setFluidConsumption(1):
 	setEffectivity(2/13.5/2):
 	setMaxTemp(250):extend()
+
+RecGen:create("omnimatter_energy","omnitor"):
+	setStacksize(50):
+	addMask(197/255,58/255,97/255):
+	setCategory("crafting"):
+	setSubgroup("omnienergy-intermediates"):
+	setOrder("a"):
+	setEnergy(0.75):
+	setIngredients({type="item", name="omnicium-plate", amount=2},{type="item", name="omnicium-gear-wheel", amount=1}):
+	addProductivity():
+	setEnabled():extend()
+
+RecGen:create("omnimatter_energy","anbaric-omnitor"):
+	setStacksize(50):
+	addMask(0/255,186/255,184/255):
+	setCategory("crafting"):
+	setSubgroup("omnienergy-intermediates"):
+	setOrder("b"):
+	setEnergy(0.75):
+	setTechName("anbaricity"):
+	setIngredients({type="item", name="omnicium-plate", amount=2},{type="item", name="copper-cable", amount=2},{type="item", name="omnitor", amount=1}):
+	addProductivity():extend()
 	
-log("test")
 RecGen:import("small-electric-pole"):setTechName("anbaricity"):extend()
 BuildGen:import("small-electric-pole"):
 	setName("small-iron-electric-pole"):
@@ -200,7 +199,7 @@ BuildGen:import("assembling-machine-1"):
 	--setFilter("heat"):
 	--setFluidBurn():
 	setEnabled(false):
-	setTechName("basic-automation"):
+	setTechName("simple-automation"):
 	setTechIcon("base","automation"):
 	setTechPrereq():
 	setTechPacks(1):
@@ -208,7 +207,7 @@ BuildGen:import("assembling-machine-1"):
 	setInventory(3):
 	setCrafting("crafting", "basic-crafting"):
 	setFuelCategory("omnite"):
-	setFuelCategory("chemical"):
+	setSpeed(0.1):
 	setIngredients({"omnitor",2},{"iron-plate",5},{"burner-inserter",1}):
 	setAnimation(
 	{layers={{
@@ -232,7 +231,6 @@ BuildGen:import("assembling-machine-1"):
 	}}}
 	):
 	extend()
-
 
 BuildGen:import("lab"):
 	setBurner(0.9):

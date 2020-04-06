@@ -13,10 +13,10 @@ data:extend({
         },
         unit =
         {
-          count = 250,
+          count = 80,
           ingredients = 
             {
-            {"automation-science-pack", 50},
+            {"automation-science-pack", 1},
             },
           time = 30
         },
@@ -36,10 +36,10 @@ data:extend({
         },
         unit =
         {
-          count = 250,
+          count = 120,
           ingredients = {
-            {"automation-science-pack", 50},
-            {"logistic-science-pack", 50},
+            {"automation-science-pack", 1},
+            {"logistic-science-pack", 1},
           },
           time = 30
         },
@@ -59,11 +59,11 @@ data:extend({
         },
         unit =
         {
-          count = 250,
+          count = 175,
           ingredients = {
-            {"automation-science-pack", 50},
-            {"logistic-science-pack", 50},
-            {"chemical-science-pack", 50},
+            {"automation-science-pack", 1},
+            {"logistic-science-pack", 1},
+            {"chemical-science-pack", 1},
           },
           time = 30
         },
@@ -85,10 +85,10 @@ data:extend({
         {
           count = 250,
           ingredients = {
-            {"automation-science-pack", 50},
-            {"logistic-science-pack", 50},
-            {"chemical-science-pack", 50},
-            {"production-science-pack", 50},
+            {"automation-science-pack", 1},
+            {"logistic-science-pack", 1},
+            {"chemical-science-pack", 1},
+            {"production-science-pack", 1},
             },
           time = 30
         },
@@ -108,13 +108,13 @@ data:extend({
         },
         unit =
         {
-          count = 250,
+          count = 400,
           ingredients = {
-            {"automation-science-pack", 50},
-            {"logistic-science-pack", 50},
-            {"chemical-science-pack", 50},
-            {"production-science-pack", 50},
-            {"utility-science-pack", 50},
+            {"automation-science-pack", 1},
+            {"logistic-science-pack", 1},
+            {"chemical-science-pack", 1},
+            {"production-science-pack", 1},
+            {"utility-science-pack", 1},
             },
           time = 30
         },
