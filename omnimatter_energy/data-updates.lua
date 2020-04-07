@@ -57,41 +57,37 @@ RecGen:import("electric-mining-drill"):setIngredients(
 	setEnabled(false):
 	setTechPrereq("anbaricity"):extend()
 	  
-TechGen:import("logistics"):setPrereq("simple-automation"):extend()
+
 
 if mods["bobassembly"] then
 	omni.lib.add_prerequisite("basic-automation", "simple-automation")
+	omni.lib.add_prerequisite("automation", "anbaricity")
 
 	RecGen:import("burner-assembling-machine"):
 		addIngredients({type="item", name="omnitor", amount=1}):
 		setTechCost(15):extend()
 
-		RecGen:import("assembling-machine-1"):setIngredients(
-			{type="item", name="iron-gear-wheel", amount=4},
-			{type="item", name="anbaric-omnitor", amount=1},
-			{type="item", name="burner-assembling-machine", amount=1}):
-			setEnabled(false):
-			setTechName("automation"):
-			setTechCost(20):extend()
+	RecGen:import("assembling-machine-1"):setIngredients(
+		{type="item", name="iron-gear-wheel", amount=4},
+		{type="item", name="anbaric-omnitor", amount=1},
+		{type="item", name="burner-assembling-machine", amount=1}):
+		setEnabled(false):
+		setTechName("automation"):
+		setTechCost(20):extend()
 else
 	omni.lib.add_prerequisite("automation", "simple-automation")
+	omni.lib.add_prerequisite("automation", "anbaricity")
 
 	RecGen:import("assembling-machine-1"):setIngredients(
-      {type="item", name="iron-gear-wheel", amount=4},
-      {type="item", name="anbaric-omnitor", amount=1},
-      {type="item", name="omnitor-assembling-machine", amount=1}):
-	  setEnabled(false):
-	  setTechCost(15):
-	  setTechName("automation"):extend()
+      	{type="item", name="iron-gear-wheel", amount=4},
+     	{type="item", name="anbaric-omnitor", amount=1},
+      	{type="item", name="omnitor-assembling-machine", amount=1}):
+		setEnabled(false):
+		setTechName("automation"):
+	 	setTechCost(15):extend()
 end
 
-
-RecGen:import("assembling-machine-1"):setIngredients(
-      {type="item", name="iron-gear-wheel", amount=4},
-      {type="item", name="anbaric-omnitor", amount=1},
-      {type="item", name="omnitor-assembling-machine", amount=1}):
-	  setEnabled(false):
-	  setTechName("automation"):extend()
+TechGen:importIf("bob-drills-1"):addPrereq("anbaric-mining"):extend()
 
 local i=2
 while data.raw.recipe["assembling-machine-"..i] do
@@ -117,11 +113,6 @@ RecGen:import("lab"):setEnabled(false):
 	setTechPacks(1):
 	setTechPrereq("anbaricity"):extend()
 	
-TechGen:import("automation"):setPrereq("basic-automation","anbaricity"):extend()
-
-RecGen:import("assembling-machine-1"):setTechName("automation"):extend()
-	
-TechGen:importIf("bob-drills-1"):addPrereq("anbaric-mining"):extend()
 
 RecGen:import("omnicium-plate-pure"):multiplyIngredients(0.5):extend()
 RecGen:import("omnicium-plate-mix"):multiplyIfModsIngredients(0.5,"angelsrefining"):extend()

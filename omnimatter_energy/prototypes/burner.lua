@@ -1,23 +1,22 @@
 
 if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].value then
+	log("OmniEnergy: Bobs Belt Overhaul found")
+	--log(serpent.block(data.raw.technology["logistics-0s"]))
 	for _,t in pairs(data.raw.technology) do
-		if omni.lib.is_in_table("bob-logistics-0",t.prerequisites) then
-			omni.lib.remove_prerequisite(t.name,"bob-logistics-0")
+		if omni.lib.is_in_table("logistics-0",t.prerequisites) then
+			omni.lib.remove_prerequisite(t.name,"logistics-0")
 			omni.lib.add_prerequisite(t.name,"splitter-logistics")
 			omni.lib.add_prerequisite(t.name,"underground-logistics")
 		end
 	end
-	
-	data.raw.technology["bob-logistics-0"]=nil
+	TechGen:import("logistics-0"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():extend()
+	data.raw.technology["logistics-0"]=nil
 
-	TechGen:import("basic-logistics"):setPrereq():setUpgrade(false):setEnabled(true):removeUnlocks("transport-belt"):extend()
-	
-	log(serpent.block(data.raw.technology["basic-logistics"]))
-	
 	RecGen:import("basic-transport-belt"):
 		setEnabled(false):
-		setTechName("basic-logistics"):
+		setTechName("basic-belt-logistics"):
 		setTechIcon("base","logistics"):
+		setTechPrereq("simple-automation"):
 		setTechPacks(1):
 		setTechCost(25):
 		setIngredients(
@@ -25,22 +24,24 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
       {type="item", name="omnitor", amount=1}):
 		setResults({"basic-transport-belt",3}):extend()
 	
-	RecGen:import("basic-splitter"):setEnabled(false):
+	RecGen:import("basic-splitter"):
+		setEnabled(false):
 		setTechName("basic-splitter-logistics"):
 		setTechIcon("base","logistics"):
-		setTechPrereq("basic-logistics"):
-		setTechLocName():
+		setTechPrereq("basic-belt-logistics"):
 		setTechPacks(1):
 		setTechCost(25):extend()
-	RecGen:import("basic-underground-belt"):setEnabled(false):
+
+	RecGen:import("basic-underground-belt"):
+		setEnabled(false):
 		setTechName("basic-underground-logistics"):
 		setTechIcon("base","logistics"):
-		setTechLocName():
-		setTechPrereq("basic-logistics"):
-		setTechPacks(1):
-		setTechCost(25):extend()
+		setTechPrereq("basic-belt-logistics"):
+	 	setTechPacks(1):
+	 	setTechCost(25):extend()
 		
-	TechGen:import("logistics"):setPrereq("basic-logistics","basic-splitter-logistics","basic-underground-logistics"):extend()
+	 TechGen:import("logistics"):setPrereq("basic-splitter-logistics","basic-underground-logistics"):extend()
+	 RecGen:import("burner-filter-inserter"):setTechPrereq("basic-belt-logistics"):extend()
 else
 	TechGen:import("logistics"):nullUnlocks():extend()
 	
@@ -51,11 +52,15 @@ else
 			omni.lib.add_prerequisite(t.name,"underground-logistics")
 		end
 	end
+
+	TechGen:import("logistics"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():extend()
+	data.raw.technology["logistics"]=nil
 	
 	RecGen:import("transport-belt"):
 		setEnabled(false):
-		setTechName("logistics"):
+		setTechName("belt-logistics"):
 		setTechIcon("base","logistics"):
+		setTechPrereq("simple-automation"):
 		setTechPacks(1):
 		setTechPrereq():
 		setTechCost(25):
@@ -66,15 +71,18 @@ else
 	RecGen:import("splitter"):setEnabled(false):setTechName("basic-logistics"):
 		setTechName("underground-logistics"):
 		setTechIcon("base","logistics"):
-		setTechPrereq("logistics"):
+		setTechPrereq("belt-logistics"):
 		setTechPacks(1):
 		setTechCost(25):extend()
+
 	RecGen:import("underground-belt"):setEnabled(false):
 		setTechName("splitter-logistics"):
 		setTechIcon("base","logistics"):
-		setTechPrereq("logistics"):
+		setTechPrereq("belt-logistics"):
 		setTechPacks(1):
 		setTechCost(25):extend()
+
+		RecGen:import("burner-filter-inserter"):setTechPrereq("belt-logistics"):extend()
 end
 
 RecGen:create("omnimatter_energy","omni-tablet"):
@@ -89,19 +97,7 @@ BuildGen:import("burner-mining-drill"):
       {type="item", name="iron-plate", amount=4},
       {type="item", name="omnitor", amount=1}):setEnabled():extend()
 
---RecGen:create("omnimatter_energy","cokomni"):
---	setSubgroup("omni-basic"):
---	setStacksize(200):
---	setCategory("omnifurnace"):
---	setFuelCategory("omnite"):
---	setFuelValue(2.4):
---	setEnergy(0.5):
---	setFuelCategory("omnite"):
---	setTechName("anbaricity"):
---	setIngredients({type="item", name="crushed-omnite", amount=4}):
---	setResults({type="item", name="cokomni", amount=2}):extend()
-	
-	RecGen:create("omnimatter_energy","heat"):
+RecGen:create("omnimatter_energy","heat"):
 	fluid():
 	setIcons("burner","omnilib"):
 	setBothColour(1,0,0):
@@ -123,7 +119,6 @@ BuildGen:import("burner-mining-drill"):
 	setTechPacks(1):	
 	setResults({type="fluid",name="heat",amount=2*60+1,temperature=250}):
 	extend()
-
 data.raw.fluid.heat.auto_barrel = false
 
 BuildGen:import("steam-turbine"):
@@ -370,7 +365,6 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter"):
 	setTechCost(100):
 	setTechIcon("burner-filter"):
 	setTechPacks(1):
-	setTechPrereq("logistics"):
 	setFilter(1):
 	setAnimation("burner-filter-inserter"):
 	setFuelCategory("omnite"): --not working...
