@@ -26,12 +26,11 @@ for _,fuelitem in pairs(data.raw.item) do
         log("IMPORTING: "..fuelitem.name)
         --log(serpent.block(fuelitem))
 
-        RecGen:create(fuelitem.name):
+        RecGen:create("omni-energy-"..fuelitem.name):
             setName("omni-energy-"..fuelitem.name,"omnimatter_energy"):
             setItemName("omni-energy-"..fuelitem.name):
-            setIcons(fuelitem.icons or {{icon = fuelitem.icon,icon_size = fuelitem.icon_size, tint = {255,0,255} }}):
-            --setIcons({{icon = item.icon,icon_size = item.icon_size, tint = {255,0,255} }}):
-            --setBothColour({r = 125/255, g = 0/255, b = 161/255}):
+            setIcons(fuelitem.icons or {{icon = fuelitem.icon,icon_size = fuelitem.icon_size}}):
+            addSmallIcon("__omnimatter_energy__/graphics/icons/omnicell-charged.png",3):
             setResults({"omni-energy-"..fuelitem.name,1}):
             setSubgroup("omnicell"):
             setEnabled(false):
