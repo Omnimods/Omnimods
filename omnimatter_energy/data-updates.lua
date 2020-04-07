@@ -64,7 +64,11 @@ if mods["bobassembly"] then
 	omni.lib.add_prerequisite("automation", "anbaricity")
 
 	RecGen:import("burner-assembling-machine"):
-		addIngredients({type="item", name="omnitor", amount=1}):
+		addIngredients({type="item", name="omnitor", amount=1},{type="item", name="omnitor-assembling-machine", amount=1}):
+		setTechCost(15):extend()
+
+	RecGen:import("steam-assembling-machine"):
+		addIngredients({type="item", name="omnitor", amount=1},{type="item", name="omnitor-assembling-machine", amount=1}):
 		setTechCost(15):extend()
 
 	RecGen:import("assembling-machine-1"):setIngredients(
@@ -75,7 +79,7 @@ if mods["bobassembly"] then
 		setTechName("automation"):
 		setTechCost(20):extend()
 else
-	omni.lib.add_prerequisite("automation", "simple-automation")
+	--omni.lib.add_prerequisite("automation", "simple-automation")
 	omni.lib.add_prerequisite("automation", "anbaricity")
 
 	RecGen:import("assembling-machine-1"):setIngredients(
