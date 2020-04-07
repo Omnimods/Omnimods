@@ -5,6 +5,7 @@ for _, sol in pairs(data.raw["solar-panel"]) do
 	end
 end
 
+
 local sol = {{ 
 		type = "item",
 		name = "zolar-panel",
@@ -18,7 +19,7 @@ local sol = {{
 		{
 		type = "recipe",
 		name = "zolar-panel",
-		subgroup = "omnicell",
+		subgroup = "Omnicell",
 		category="omniphlog",
 		energy_required = 2,
 		ingredients = {{"iron-ore-crystal",2},{"copper-ore-crystal",3},{"basic-crystallonic",3}},
@@ -31,6 +32,8 @@ local sol = {{
 		}
 		}
 
+local component={}
+
 local parts={"plate","crystal","circuit"}
 
 local quant={}
@@ -38,13 +41,13 @@ quant["crystal"]=5
 quant["plate"]=5
 quant["circuit"]=5
 
-local component={}
 component["circuit"]={"basic-crystallonic","basic-oscillo-crystallonic"}
 component["plate"]= {"steel-plate"}
 component["crystal"]={"iron-ore-crystal"}
-
 if mods["bobores"] then
 	component["crystal"][#component["crystal"]+1] = "lead-ore-crystal"
+else
+
 end
 
 local nr_tiers = settings.startup["omnielectricity-solar-tiers"].value
@@ -183,7 +186,7 @@ for i=1,max_size do
 	  sol[#sol+1]={
 		type = "recipe",
 		name = "crystal-solar-panel-tier-"..j.."-size-"..i,
-		subgroup = "omnicell",
+		subgroup = "Omnicell",
 		category="omniphlog",
 		energy_required = 1,
 		enabled=false,

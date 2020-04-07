@@ -1,17 +1,9 @@
 {
 "name":"omnimatter_energy",
-"version":"1.18.0",
+"version":"0.2.2",
 "title":"Omnienergy",
 "author":"EmperorZelos",
 "description":"Adds a wood production method for omnimatter",
 "factorio_version":"0.18",
-"dependencies":
-        	[
-                "base",
-                "omnilib >= 3.0.0",
-                "omnimatter >= 3.0.0",
-                "omnimatter_crystal",
-                "?boblogistics",
-                "?bobassembly"
-            ]
+"dependencies":["base","omnimatter >= 3.0.0","omnilib >= 3.0.0","omnimatter_crystal","?ShinyBobGFX"]
 }

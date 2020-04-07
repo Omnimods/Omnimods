@@ -52,7 +52,7 @@ end
 	subgroup = "electro-components",
 	order="a",
 	stack_size = 100}]]
-
+	
 FluidGen:create("omnimatter_energy","molten-oxyomnide-salt"):extend()
 ItemGen:create("omnimatter_energy","hydromnide-salt"):
 	setStacksize(100):extend()
@@ -67,11 +67,7 @@ RecGen:create("omnimatter_energy","oxyomnide-hydromnization"):
 	setTechPrereq(
 		"omnicells",
 		"crystallonics-2"):
-	addCondPrereq(
-		"boblogistics",
-		"fluid-handling",":"
-		--"bob-fluid-handling-2"
-	):
+	addCondPrereq("boblogistics","fluid-handling",":","bob-fluid-handling-2"):
 	setCategory("omniplant"):
 	setIngredients(
 		{type="item",name="oxyomnide-salt",amount=1},
@@ -194,8 +190,6 @@ FluidGen:create("omnimatter_energy","molten-oxyomnide-salt"):setMaxTemp(600):ext
 
 local waterLoss = 0.1
 
-
-
 RecGen:create("omnimatter_energy","omnium"):
 	fluid():
 	setMaxTemp(600):
@@ -254,7 +248,7 @@ RecGen:create("omnimatter_energy","oxyomnide-solidification"):
 	setSubgroup("coolant"):
 	marathon():
 	setEnergy(1):extend()
-
+	
 --[[
 if mods["bobpower"] then
 	omni.lib.replace_recipe_ingredient("omnictor", "boiler","boiler-2")
@@ -310,7 +304,7 @@ BuildGen:create("omnimatter_energy","omnium-turbine"):
 			},
 		  },
 		}):extend()
-
+		
 	--[[
 	reg[#reg+1]={
     type = "generator",
