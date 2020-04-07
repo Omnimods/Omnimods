@@ -109,7 +109,7 @@ RecGen:create("omnimatter_energy","heat"):
 	setTechName("anbaricity"):
 	setTechCost(50):
 	setTechIcon("base","electric-engine"):
-	setTechPrereq("basic-automation"):
+	setTechPrereq("simple-automation"):
 	ifAddTechPrereq(settings.startup["bobmods-logistics-beltoverhaul"] and settings.startup["bobmods-logistics-beltoverhaul"].value,
 	"basic-splitter-logistics","basic-underground-logistics"
 	):
