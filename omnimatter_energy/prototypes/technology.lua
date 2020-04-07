@@ -6,7 +6,7 @@ data:extend({
         icon_size = 128,
         prerequisites =
         {
-            "basic-automation",
+            "simple-automation",
         },
         effects =
         {
