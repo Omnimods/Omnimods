@@ -44,13 +44,11 @@ for _,fuelitem in pairs(data.raw.item) do
         else
             props_add=props[300]
         end
-        RecGen:create("omnimatter_energy","omni-energy-"..fuelitem.name):
-            setLocName("omni-energy",fuelitem.localised_name or fuelitem.name):
-            --setName("omni-energy-"..fuelitem.name,"omnimatter_energy"):
-            --setItemName("omni-energy-"..fuelitem.name):
+        RecGen:create("omnimatter_energy","omnified-"..fuelitem.name):
+            setLocName("item-name.omnified", "item-name."..fuelitem.name):
             setIcons(fuelitem.icons or {{icon = fuelitem.icon,icon_size = fuelitem.icon_size}}):
             addSmallIcon("__omnimatter_energy__/graphics/icons/omnicell-charged.png",3):
-            setResults({"omni-energy-"..fuelitem.name,1}):
+            setResults({"omnified-"..fuelitem.name,1}):
             setSubgroup("omnicell"):
             setIngredients({fuelitem.name,1},props_add.ing_add):
             setCategory(props_add.cat):
@@ -64,12 +62,12 @@ for _,fuelitem in pairs(data.raw.item) do
             extend()
 
         --Copy over fuel related values
-        data.raw.item["omni-energy-"..fuelitem.name].fuel_acceleration = fuelitem.fuel_acceleration
-        data.raw.item["omni-energy-"..fuelitem.name].fuel_acceleration_multiplier = fuelitem.fuel_acceleration_multiplier
-        data.raw.item["omni-energy-"..fuelitem.name].fuel_top_speed = fuelitem.fuel_top_speed
-        data.raw.item["omni-energy-"..fuelitem.name].fuel_top_speed_multiplier = fuelitem.fuel_top_speed_multiplier
-        data.raw.item["omni-energy-"..fuelitem.name].fuel_emissions = fuelitem.fuel_emissions
-        data.raw.item["omni-energy-"..fuelitem.name].fuel_glow_color = fuelitem.fuel_glow_color
+        data.raw.item["omnified-"..fuelitem.name].fuel_acceleration = fuelitem.fuel_acceleration
+        data.raw.item["omnified-"..fuelitem.name].fuel_acceleration_multiplier = fuelitem.fuel_acceleration_multiplier
+        data.raw.item["omnified-"..fuelitem.name].fuel_top_speed = fuelitem.fuel_top_speed
+        data.raw.item["omnified-"..fuelitem.name].fuel_top_speed_multiplier = fuelitem.fuel_top_speed_multiplier
+        data.raw.item["omnified-"..fuelitem.name].fuel_emissions = fuelitem.fuel_emissions
+        data.raw.item["omnified-"..fuelitem.name].fuel_glow_color = fuelitem.fuel_glow_color
 
         --Remove Fuel related values on the old item
         --FUCKS UP COMPATIBILITY!!!!
