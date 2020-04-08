@@ -363,6 +363,6 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter"):
 	setAnimation("burner-filter-inserter"):
 	setFuelCategory("omnite"): --not working...
 	setBurner(0.75,1):extend()
-	data.raw["inserter"]["burner-burner-filter-inserter"].energy_source.fuel_category = "omnite"
+	data.raw["inserter"]["burner-filter-inserter"].energy_source.fuel_category = "omnite"
 
 	
