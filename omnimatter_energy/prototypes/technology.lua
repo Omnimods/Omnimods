@@ -125,4 +125,33 @@ data:extend({
         },
         order = "c-a"
     },
+    { 
+      type = "technology",
+      name = "omni-solar-road",
+      localised_name = {"technology-name.omni-solar-road"},
+      icon = "__omnimatter_energy__/graphics/technology/omni-solar-road.png",
+      icon_size = 128,
+      prerequisites =
+      {
+        "concrete",
+        "crystal-solar-panel-tier-"..settings.startup["omnielectricity-solar-tiers"].value.."-size-"..settings.startup["omnielectricity-solar-size"].value,
+      },
+      effects =
+      {
+        {type = "unlock-recipe",recipe = "omni-solar-road"}
+      },
+      unit =
+      {
+        count = 800,
+        ingredients = {
+          {"automation-science-pack", 1},
+          {"logistic-science-pack", 1},
+          {"chemical-science-pack", 1},
+          {"production-science-pack", 1},
+          {"utility-science-pack", 1},
+          },
+        time = 30
+      },
+      order = "c-a"
+  },
 })
