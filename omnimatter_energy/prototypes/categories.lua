@@ -27,32 +27,32 @@ data:extend({
   },
   {
     type = "item-subgroup",
-    name = "omnicell",
+    name = "omnienergy-fuel",
 	group = "omnienergy",
-	order = "a",
+	order = "b",
   },
   {
     type = "item-subgroup",
-    name = "zolar-panel",
-	group = "omnienergy",
-	order = "a",
-  },
-  {
-    type = "item-subgroup",
-    name = "electro-components",
-	group = "omnienergy",
-	order = "a",
-  },
-  {
-    type = "item-subgroup",
-    name = "hydromnide",
+    name = "omnienergy-components",
 	group = "omnienergy",
 	order = "c",
   },
   {
     type = "item-subgroup",
-    name = "omnielectrobuildings",
+    name = "omnienergy-solar",
 	group = "omnienergy",
 	order = "d",
+  },
+  {
+    type = "item-subgroup",
+    name = "hydromnide",
+	group = "omnienergy",
+	order = "e",
+  },
+  {
+    type = "item-subgroup",
+    name = "omnicell",
+	group = "omnienergy",
+	order = "f",
   },
 })

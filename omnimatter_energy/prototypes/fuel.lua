@@ -22,7 +22,7 @@ for _,fuelitem in pairs(data.raw.item) do
     end
 
     --Generate Chemical Fuel Recipes
-    if fuelitem.fuel_category == "chemical" and fuelitem.fuel_value and fuelitem.subgroup ~= "omnicell" then
+    if fuelitem.fuel_category == "chemical" and fuelitem.fuel_value and fuelitem.subgroup ~= "omnienergy-fuel" then
         log("IMPORTING: "..fuelitem.name)
         --lets define the variables first, then jump in and create it all in one go:
         local FV=omni.lib.getFuelNumberInMJ(fuelitem.fuel_value)
@@ -49,7 +49,7 @@ for _,fuelitem in pairs(data.raw.item) do
             setIcons(fuelitem.icons or {{icon = fuelitem.icon,icon_size = fuelitem.icon_size}}):
             addSmallIcon("__omnimatter_energy__/graphics/icons/omnicell-charged.png",3):
             setResults({"omnified-"..fuelitem.name,1}):
-            setSubgroup("omnicell"):
+            setSubgroup("omnienergy-fuel"):
             setIngredients({fuelitem.name,1},props_add.ing_add):
             setCategory(props_add.cat):
             setEnergy(props_add.time):

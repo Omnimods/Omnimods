@@ -1,12 +1,9 @@
---[[
-
 local gather = function(pos,entity)
 	return surface.find_entities_filtered{
       area= {{pos.x -0.5, pos.y -0.5},{pos.x +0.5, pos.y +0.5}},
       name=entity,
     }
 end
-
 
 local function On_Remove(event)
 	local entity = event.entity	
@@ -24,6 +21,7 @@ local function On_Remove(event)
         ungroup_entities(pos_hash)
 	end
 end
+
 local function Player_Tile_Built(event)
 
 	local player = game.players[event.player_index]
@@ -74,12 +72,8 @@ local function Player_Tile_Built(event)
 			else
 				writeDebug("bi_solar-panel_for_Solar-Mat not found")				
 			end
-
-
-			
 		end
-	end	
-		
+	end		
 end
 
 local function Robot_Tile_Built(event)
@@ -111,10 +105,7 @@ local function Robot_Tile_Built(event)
 			create_sm_pole.destructible = false
 			create_sm_panel.minable = false
 			create_sm_panel.destructible = false
-		
 		else
-		
-				
 			local radius = 0.5
 			local area = {{position.x - radius, position.y - radius}, {position.x + radius, position.y + radius}}
 			local entities = surface.find_entities(area)
@@ -142,12 +133,8 @@ local function Robot_Tile_Built(event)
 			else
 				writeDebug("bi_solar-panel_for_Solar-Mat not found")				
 			end
-
-
-		
 		end
-	end	
-		
+	end			
 end
 	
 local function Robot_Tile_Built(event)
@@ -287,4 +274,4 @@ function writeDebug(message)
 		end
 	end
 end
-]]
+

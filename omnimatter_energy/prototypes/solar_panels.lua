@@ -5,20 +5,21 @@ for _, sol in pairs(data.raw["solar-panel"]) do
 	end
 end
 
-local sol = {{ 
+local sol = {
+	{ 
 		type = "item",
 		name = "zolar-panel",
-		icon = "__omnimatter_energy__/graphics/icons/omni-solar-tile.png",
+		icon = "__omnimatter_energy__/graphics/icons/zolar-panel.png",
 		flags = {},
 		subgroup = "omnitractor",
 		order = "zolar-panel",
 		icon_size = 32,
 		stack_size = 50,
-		},
-		{
+	},
+	{
 		type = "recipe",
 		name = "zolar-panel",
-		subgroup = "omnicell",
+		subgroup = "omnienergy-solar",
 		category="omniphlog",
 		energy_required = 2,
 		ingredients = {{"iron-ore-crystal",2},{"copper-ore-crystal",3},{"basic-crystallonic",3}},
@@ -28,8 +29,8 @@ local sol = {{
 		  {type="item", name="zolar-panel", amount=1},
 		},
 		order = "a[angelsore1-crushed-hand]",
-		}
-		}
+	}
+}
 
 local parts={"plate","crystal","circuit"}
 
@@ -82,6 +83,33 @@ local get_cost = function(tier, size)
 	return ing
 end
 
+local get_req = function(tier, size, msize)
+	local req = {}
+	if tier == 1 and size == 1 then
+		req = {"automation"}
+	elseif size == 1 then
+		req = {"crystal-solar-panel-tier-"..(tier-1).."-size-"..msize}
+	else 
+		req = {"crystal-solar-panel-tier-"..tier.."-size-"..size-1}
+	end
+	return req
+end
+
+local get_scienceing = function(size)
+	local sizetech= {
+		[1]={{"automation-science-pack", 1},},
+		[2]={{"automation-science-pack", 1},{"logistic-science-pack", 1},},
+		[3]={{"automation-science-pack", 1},{"logistic-science-pack", 1},{"chemical-science-pack", 1},},
+		[4]={{"automation-science-pack", 1},{"logistic-science-pack", 1},{"chemical-science-pack", 1},{"production-science-pack", 1},},
+		[5]={{"automation-science-pack", 1},{"logistic-science-pack", 1},{"chemical-science-pack", 1},{"production-science-pack", 1},{"utility-science-pack", 1},},
+	}
+	if size <= #sizetech then
+		return sizetech[size]
+	else
+		return sizetech[#sizetech]
+	end
+end
+
 --log("solar shite")
 for i=1,max_size do
 	for j=1,nr_tiers do
@@ -127,7 +155,7 @@ for i=1,max_size do
 		sol[#sol+1]={ 
 		type = "item",
 		name = "crystal-solar-panel-tier-"..j.."-size-"..i,
-		localized_name={"entity.name-zolar_panel",j,i},
+		localised_name = {"item-name.crystal-solar-panel", j, i},
 		icons = icons,
 		flags = {},
 		subgroup = "omnitractor",
@@ -139,6 +167,7 @@ for i=1,max_size do
 		sol[#sol+1]={ 
 		type = "solar-panel",
 		name = "crystal-solar-panel-tier-"..j.."-size-"..i,
+		localised_name = {"entity-name.crystal-solar-panel", j, i},
 		icon = "__base__/graphics/icons/solar-panel.png",
 		icon_size = 32,
 		flags = {"placeable-neutral", "player-creation"},
@@ -179,21 +208,46 @@ for i=1,max_size do
 		},]]
 		vehicle_impact_sound =  { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 },
 		production = math.floor(5*math.pow(i,2)*math.pow(1.2,i-1)*math.pow(1.5,j-1)).."kW"
-	  }
-	  sol[#sol+1]={
+		}
+
+	  	sol[#sol+1]={
 		type = "recipe",
 		name = "crystal-solar-panel-tier-"..j.."-size-"..i,
-		subgroup = "omnicell",
+		localised_name = {"recipe-name.crystal-solar-panel", j, i},
+		subgroup = "omnienergy-solar",
 		category="omniphlog",
 		energy_required = 1,
 		enabled=false,
-		ingredients =get_cost(j,i),
+		ingredients = get_cost(j,i),
 		results=
 		{
 		  {type="item", name="crystal-solar-panel-tier-"..j.."-size-"..i, amount=1},
 		},
+		energy_required = 6.0,
 		order = "a[angelsore1-crushed-hand]",
+		}
+		
+		sol[#sol+1]={ 
+		type = "technology",
+		name = "crystal-solar-panel-tier-"..j.."-size-"..i,
+		localised_name = {"technology-name.crystal-solar-panel", j, i},
+		icon = "__omnimatter_energy__/graphics/technology/zolar-panel.png",
+		--icons = icons,
+		icon_size = 128,
+		prerequisites = get_req(j,i,max_size),
+		effects =
+		{
+			{type = "unlock-recipe", recipe = "crystal-solar-panel-tier-"..j.."-size-"..i}
+		},
+		unit =
+		{
+			count = 30+i*30+j*10,
+			ingredients = get_scienceing(i),
+			time = 30
+		},
+			order = "c-a",
 		}
 	end
 end
 data:extend(sol)
+omni.lib.add_unlock_recipe("crystal-solar-panel-tier-1-size-1", "zolar-panel")

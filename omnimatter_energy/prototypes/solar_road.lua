@@ -7,7 +7,7 @@ data:extend({
 	icon_size = 32,
 	flags = {},
 	subgroup = "energy",
-    order = "d[solar-panel]-aa[solar-panel-1-a]",
+    order = "ad[solar-panel]-aa[solar-panel-1-a]",
 	stack_size = 400,
 	place_as_tile =
 		 {
@@ -15,6 +15,24 @@ data:extend({
 		  condition_size = 4,
 		  condition = { "water-tile" }
 		 }
+  },
+  {
+	type = "recipe",
+	name = "omni_solar_road",
+	icon = "__omnimatter_energy__/graphics/icons/omni-solar-tile.png",
+	icon_size = 32,
+	category = "crafting",
+	subgroup = "omnienergy-components",
+	energy_required = 3.0,
+	enabled=true,
+	order = "ad[solar-panel]-aa[solar-panel-1-a]",
+	ingredients = 
+		{
+			{type = "item",name = "zolar-panel", amount = 4},
+			{type = "item",name = "small-omnicium-electric-pole", amount = 1},
+			{type = "item",name = "refined-concrete", amount = 4}
+		},
+	results = {{type = "item",name = "omni_solar_road", amount = 4}}
   },
   {
 	  type = "tile",
@@ -207,8 +225,6 @@ data:extend({
 	collision_mask = {"ground-tile"},
     collision_box = {{-0.0, -0.0}, {0.0, 0.0}},
     selection_box = {{0, 0}, {0, 0}},
-	
-	
     energy_source =
     {
       type = "electric",
@@ -223,5 +239,4 @@ data:extend({
     },
     production = "10kW"
   },
-  
 })
