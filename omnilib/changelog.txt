@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.3
+Date: 2020.XX.XX
+  Bugfixes:
+    - Fixed a crash when adding a Prereq to a tech that had none so far
+    - Fixed a crash when the added Prereq already existed
+---------------------------------------------------------------------------------------------------
+Version: 3.18.2
+Date: 2020.04.04
+  Bugfixes:
+    - Fixed a crash when a message was send over the server interface
+---------------------------------------------------------------------------------------------------
 Version: 3.18.1
 Date: 2020.04.03
   Features:
