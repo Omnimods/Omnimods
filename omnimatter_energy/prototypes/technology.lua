@@ -1,149 +1,157 @@
 data:extend({
-{ 
-    type = "technology",
-    name = "omnium-power",
-    icon = "__omnimatter_electricity__/graphics/technology/omnium-power.png",
-	icon_size = 128,
-	prerequisites =
-    {
-		"fluid-handling",
-		"omnicells",
-		"crystallonics-2",
+    { 
+        type = "technology",
+        name = "omnium-power-1",
+        localised_name = {"technology-name.omnium-power-1"},
+        icon = "__omnimatter_energy__/graphics/technology/omnium-power.png",
+        icon_size = 128,
+        prerequisites =
+        {
+            "simple-automation",
+        },
+        effects =
+        {
+        },
+        unit =
+        {
+          count = 80,
+          ingredients = 
+            {
+            {"automation-science-pack", 1},
+            },
+          time = 30
+        },
+        order = "c-a"
     },
-    effects =
-    {
-	  {
-        type = "unlock-recipe",
-        recipe = "omnictor"
-      },
-	  {
-        type = "unlock-recipe",
-        recipe = "omnium-reactor"
-      },
-	  {
-        type = "unlock-recipe",
-        recipe = "molten-hydromnide-salt"
-      },
-	  {
-        type = "unlock-recipe",
-        recipe = "omnium"
-      },
-	  {
-        type = "unlock-recipe",
-        recipe = "oxyomnide-cooling-500"
-      },
-	  {
-        type = "unlock-recipe",
-        recipe = "oxyomnide-cooling-400"
-      },
-	  {
-        type = "unlock-recipe",
-        recipe = "oxyomnide-cooling-300"
-      },
-	  {
-        type = "unlock-recipe",
-        recipe = "oxyomnide-solidification"
-      },
-	  {
-        type = "unlock-recipe",
-        recipe = "omnium-turbine"
-      },
-	  {
-        type = "unlock-recipe",
-        recipe = "oxyomnide-hydromnization"
-      },
+    { 
+        type = "technology",
+        name = "omnium-power-2",
+        localised_name = {"technology-name.omnium-power-2"},
+        icon = "__omnimatter_energy__/graphics/technology/omnium-power.png",
+        icon_size = 128,
+        prerequisites =
+        {
+            "omnium-power-1",
+        },
+        effects =
+        {
+        },
+        unit =
+        {
+          count = 120,
+          ingredients = {
+            {"automation-science-pack", 1},
+            {"logistic-science-pack", 1},
+          },
+          time = 30
+        },
+        order = "c-a"
     },
-    unit =
-    {
-      count = 250,
-      ingredients = {
-	  {"science-pack-1", 1},
-	  {"science-pack-2", 1},
-	  {"science-pack-3", 1},
-	  },
-      time = 30
+    { 
+        type = "technology",
+        name = "omnium-power-3",
+        localised_name = {"technology-name.omnium-power-3"},
+        icon = "__omnimatter_energy__/graphics/technology/omnium-power.png",
+        icon_size = 128,
+        prerequisites =
+        {
+            "omnium-power-2",
+        },
+        effects =
+        {
+        },
+        unit =
+        {
+          count = 175,
+          ingredients = {
+            {"automation-science-pack", 1},
+            {"logistic-science-pack", 1},
+            {"chemical-science-pack", 1},
+          },
+          time = 30
+        },
+        order = "c-a"
     },
-    order = "c-a"
+    { 
+        type = "technology",
+        name = "omnium-power-4",
+        localised_name = {"technology-name.omnium-power-4"},
+        icon = "__omnimatter_energy__/graphics/technology/omnium-power.png",
+        icon_size = 128,
+        prerequisites =
+        {
+            "omnium-power-3",
+        },
+        effects =
+        {
+        },
+        unit =
+        {
+          count = 250,
+          ingredients = {
+            {"automation-science-pack", 1},
+            {"logistic-science-pack", 1},
+            {"chemical-science-pack", 1},
+            {"production-science-pack", 1},
+            },
+          time = 30
+        },
+        order = "c-a"
     },
-	{ 
-    type = "technology",
-    name = "omnibattery",
-    icon = "__omnimatter_electricity__/graphics/technology/battery.png",
-	icon_size = 128,
-	prerequisites =
-    {
-		"omnitech-omniston-solvation-1",
-		"battery",
+    { 
+        type = "technology",
+        name = "omnium-power-5",
+        localised_name = {"technology-name.omnium-power-5"},
+        icon = "__omnimatter_energy__/graphics/technology/omnium-power.png",
+        icon_size = 128,
+        prerequisites =
+        {
+            "omnium-power-4",
+        },
+        effects =
+        {
+        },
+        unit =
+        {
+          count = 400,
+          ingredients = {
+            {"automation-science-pack", 1},
+            {"logistic-science-pack", 1},
+            {"chemical-science-pack", 1},
+            {"production-science-pack", 1},
+            {"utility-science-pack", 1},
+            },
+          time = 30
+        },
+        order = "c-a"
     },
-    effects =
-    {
-	  {
-        type = "unlock-recipe",
-        recipe = "charge-omnicell"
+    { 
+      type = "technology",
+      name = "omni-solar-road",
+      localised_name = {"technology-name.omni-solar-road"},
+      icon = "__omnimatter_energy__/graphics/technology/omni-solar-road.png",
+      icon_size = 128,
+      prerequisites =
+      {
+        "concrete",
+        "crystal-solar-panel-tier-"..settings.startup["omnielectricity-solar-tiers"].value.."-size-"..settings.startup["omnielectricity-solar-size"].value,
       },
-	  {
-        type = "unlock-recipe",
-        recipe = "naturize-omnicell"
+      effects =
+      {
+        {type = "unlock-recipe",recipe = "omni-solar-road"}
       },
-    },
-    unit =
-    {
-      count = 450,
-      ingredients = {
-	  {"science-pack-1", 1},
-	  {"science-pack-2", 1},
-	  {"science-pack-3", 1},
-	  },
-      time = 30
-    },
-    order = "c-a"
-    },
-	{ 
-    type = "technology",
-    name = "omni-electric-train",
-    icon = "__omnimatter_electricity__/graphics/technology/battery.png",
-	icon_size = 128,
-	prerequisites =
-    {
-		"omnibattery",
-		"railway",
-    },
-    effects =
-    {
-	  {
-        type = "unlock-recipe",
-        recipe = "charge-omnicell"
+      unit =
+      {
+        count = 800,
+        ingredients = {
+          {"automation-science-pack", 1},
+          {"logistic-science-pack", 1},
+          {"chemical-science-pack", 1},
+          {"production-science-pack", 1},
+          {"utility-science-pack", 1},
+          },
+        time = 30
       },
-	  {
-        type = "unlock-recipe",
-        recipe = "naturize-omnicell"
-      },
-    },
-    unit =
-    {
-      count = 450,
-      ingredients = {
-	  {"science-pack-1", 1},
-	  {"science-pack-2", 1},
-	  {"science-pack-3", 1},
-	  },
-      time = 30
-    },
-    order = "c-a"
-    }
+      order = "c-a"
+  },
 })
-
-if mods["boblogistics"] then
-	omni.lib.replace_prerequisite("omnicells","fluid-handling","bob-fluid-handling-2")
-	omni.lib.replace_prerequisite("omnium-power","fluid-handling","bob-fluid-handling-2")
-end
-
-if mods["bobpower"] then
-	omni.lib.add_prerequisite("omnium-power","bob-steam-power-2")
-end
-
-if mods["omnimatter_science"] then
-	omni.lib.replace_science_pack("omnicells","science-pack-3")
-	omni.lib.replace_science_pack("omnibattery","science-pack-3")
-	omni.lib.add_science_pack("omnium-power")
-end

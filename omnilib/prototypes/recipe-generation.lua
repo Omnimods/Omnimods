@@ -3012,7 +3012,10 @@ function BuildGen:setBurner(efficiency,size)
           starting_frame_deviation = 60
         }
       }}
-	self:addBurnerIcon():setName("burner-"..self.name)
+	self:addBurnerIcon()
+	if not string.find(self.name,"burner-") then
+		self:setName("burner-"..self.name)
+	end
 	return self
 end
 function BuildGen:setEnergySupply()

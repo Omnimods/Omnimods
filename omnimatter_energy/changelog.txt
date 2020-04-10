@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.18.0
+Date: 2020.XX.XX
+  Features:
+    - Added Crystal Solar Panels (Max Size & Tier configurable)
+    - Added Solar Road (Tiles that produce & distribute energy)
+    - Added Omnified Fuel, all aviable Fuels have to be Omnified before they can be used
+    - Lowered the crafting Speed
+    - Overhauled the early game Tech Tree
+  Bugfixes:
+    - Fixed / Added missing localisations
+---------------------------------------------------------------------------------------------------
 Version: 0.2.2
 Date: 2020.02.24
   Changes:
