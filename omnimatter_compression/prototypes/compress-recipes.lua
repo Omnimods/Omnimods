@@ -24,8 +24,8 @@ for _,cat in pairs(data.raw["recipe-category"]) do
 	for _,bcat in pairs(building_list) do
 		for _,build in pairs(data.raw[bcat]) do
 			if omni.lib.is_in_table(cat.name,build.crafting_categories) then
-				if build.crafting_speed and build.crafting_speed > max_cat[cat.name].speed then max_cat[cat.name].speed = build.crafting_speed end
-				if build.module_specification and build.module_specification.module_slots and build.module_specification.module_slots > max_cat[cat.name].modules then max_cat[cat.name].modules=build.module_specification.module_slots end
+				if build.crafting_speed and build.crafting_speed > tonumber(max_cat[cat.name].speed) then max_cat[cat.name].speed = build.crafting_speed end
+				if build.module_specification and build.module_specification.module_slots and build.module_specification.module_slots > tonumber(max_cat[cat.name].modules) then max_cat[cat.name].modules=build.module_specification.module_slots end
 				--new.module_specification.module_slots
 			end
 		end
@@ -550,6 +550,7 @@ function get_recipe_values(ingredients,results)
 	for i,p in pairs(new_parts) do
 		new[i]=new[i]/new_gcd
 	end
+
 	local total_mult = new[1]*omni.lib.find_stacksize(parts[1].name)/parts[1].amount
 	local newing = {}
 	for i=1,#all_ing.solid do
@@ -738,6 +739,7 @@ function create_compression_recipe(recipe)
 		local subgr = {regular = {}}
 		ing={normal=table.deepcopy(recipe.normal.ingredients),expensive=table.deepcopy(recipe.expensive.ingredients)}
 		res={normal=table.deepcopy(recipe.normal.results),expensive=table.deepcopy(recipe.expensive.results)}
+
 		local gcd = {normal = 0, expensive = 0}
 		local generatorfluid = nil
 		for _,dif in pairs({"normal","expensive"}) do
