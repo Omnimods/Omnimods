@@ -158,11 +158,12 @@ function omni_update(game)
 end
 
 script.on_event(defines.events.on_console_chat, function(event)
-	local player = game.players[event.player_index]
-	if event.message=="omnidate" then
+	if event.player_index then
+		local player = game.players[event.player_index]
+		if event.message=="omnidate" then
 		omni_update(game)
+		end
 	end
-
 end)
 
 local omni_cat={}
