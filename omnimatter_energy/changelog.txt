@@ -4,7 +4,7 @@ Date: 2020.XX.XX
   Features:
     - Added Crystal Solar Panels (Max Size & Tier configurable)
     - Added Solar Road (Tiles that produce & distribute energy)
-    - Added Omnified Fuel, all aviable Fuels have to be Omnified before they can be used
+    - Added Omnified Fuel, all available Fuels have to be Omnified before they can be used
     - Lowered the crafting Speed
     - Overhauled the early game Tech Tree
   Bugfixes:
