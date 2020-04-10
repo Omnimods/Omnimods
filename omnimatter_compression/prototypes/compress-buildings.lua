@@ -242,7 +242,11 @@ for _,kind in pairs(building_list) do
 							new.speed = new.speed*(i+2)
 						end
 						if kind == "beacon" then
-							new.supply_area_distance = new.supply_area_distance*(i+1)
+							if new.supply_area_distance*(i+1) <= 64 then
+								new.supply_area_distance = new.supply_area_distance*(i+1)
+							else
+								new.supply_area_distance = 64
+							end
 							new.module_specification.module_slots=new.module_specification.module_slots*(i+1)
 						end
 						if kind == "electric-pole" then
