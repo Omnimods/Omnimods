@@ -60,6 +60,7 @@ for _,fuelitem in pairs(data.raw.item) do
             setFuelCategory(fuelitem.fuel_category):
             setFuelValue(fuelitem.fuel_value):
             extend()
+            omni.lib.add_prerequisite(props_add.tech,omni.lib.find_tech_name(fuelitem.name))
 
         --Copy over fuel related values
         data.raw.item["omnified-"..fuelitem.name].fuel_acceleration = fuelitem.fuel_acceleration

@@ -135,6 +135,7 @@ data:extend({
       {
         "concrete",
         "crystal-solar-panel-tier-"..settings.startup["omnielectricity-solar-tiers"].value.."-size-"..settings.startup["omnielectricity-solar-size"].value,
+        "space-science-pack",
       },
       effects =
       {
