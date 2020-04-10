@@ -125,6 +125,7 @@ for j=1,nr_tiers do
 	for i=1,max_size do
 		--panel pictures
 		local pic = {}
+		local icons={{icon="__omnimatter_energy__/graphics/icons/empty.png"}}
 		for k=i,1,-1 do
 			for l=1, i do
 				--entity pictures
@@ -139,9 +140,9 @@ for j=1,nr_tiers do
 				--icons
 				icons[#icons+1]={
 					icon="__omnimatter_energy__/graphics/icons/zolar-panel.png",
-					icon_size= 32,
-					scale = 1/size,
-					shift={(k-size/2-0.5)*32/size,(l-size/2-0.5)*32/size}
+					--icon_size= 32,
+					scale = 1/i,
+					shift={(k-i/2-0.5)*32/i,(l-i/2-0.5)*32/i}
 				}
 			end
 		end
@@ -161,13 +162,13 @@ for j=1,nr_tiers do
 				icons[#icons+1]={
 					icon="__omnimatter_energy__/graphics/entity/buildings/zolar-crystal.png",
 					icon_size=192,
-					scale = 1/size*72/192,
-					shift={(k-size/2)*32/size,(l-size/2)*32/size}
+					scale = 1/i*72/192,
+					shift={(k-i/2)*32/i,(l-i/2)*32/i}
 				}
 			end
 		end
 		--add tier icon
-		icons[#icons+1]={icon="__omnilib__/graphics/lvl"..tier..".png",icon_size=32} --handles 0-8
+		icons[#icons+1]={icon="__omnilib__/graphics/lvl"..j..".png",icon_size=32} --handles 0-8
 		--solar panel array item sets
 		sol[#sol+1]={
 			type = "item",
