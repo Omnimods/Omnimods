@@ -28,7 +28,7 @@ data:extend({
 	order = "ad[solar-panel]-aa[solar-panel-1-a]",
 	ingredients = 
 		{
-			{type = "item",name = "zolar-panel", amount = 4},
+			{type = "item",name = "crystal-panel", amount = 4},
 			{type = "item",name = "small-omnicium-electric-pole", amount = 1},
 			{type = "item",name = "refined-concrete", amount = 4}
 		},

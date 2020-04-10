@@ -9,18 +9,18 @@ local sol = {
 	--sol item
 	{
 		type = "item",
-		name = "zolar-panel",
-		icon = "__omnimatter_energy__/graphics/icons/zolar-panel.png",
+		name = "crystal-panel",
+		icon = "__omnimatter_energy__/graphics/icons/crystal-panel.png",
 		flags = {},
 		subgroup = "omnitractor",
-		order = "zolar-panel",
+		order = "crystal-panel",
 		icon_size = 32,
 		stack_size = 50,
 	},
 	--sol recipe
 	{
 		type = "recipe",
-		name = "zolar-panel",
+		name = "crystal-panel",
 		subgroup = "omnienergy-solar",
 		category="omniphlog",
 		energy_required = 2,
@@ -28,7 +28,7 @@ local sol = {
 		enabled=false,
 		results=
 		{
-			{type="item", name="zolar-panel", amount=1},
+			{type="item", name="crystal-panel", amount=1},
 		},
 		order = "a[angelsore1-crushed-hand]",
 	}
@@ -77,7 +77,7 @@ local get_cost = function(tier, size)
 		end
 		ing[#ing+1]={type="item",name="electrocrystal",amount=math.pow(size-1,2)-math.pow(size-2,2)}
 	else
-		ing[#ing+1]={type="item",name="zolar-panel",amount=7}
+		ing[#ing+1]={type="item",name="crystal-panel",amount=7}
 	end
 	if tier > 1 and size == 1 then
 		ing[#ing+1]={type="item",name="crystal-solar-panel-tier-"..(tier-1).."-size-1",amount=1}
@@ -140,7 +140,7 @@ for j=1,nr_tiers do
 				--icons
 				icons[#icons+1]={
 					icon="__omnimatter_energy__/graphics/icons/zolar-panel.png",
-					--icon_size= 32,
+					icon_size= 32,
 					scale = 1/i,
 					shift={(k-i/2-0.5)*32/i,(l-i/2-0.5)*32/i}
 				}
@@ -249,4 +249,4 @@ for j=1,nr_tiers do
 	end
 end
 data:extend(sol)
-omni.lib.add_unlock_recipe("crystal-solar-panel-tier-1-size-1", "zolar-panel")
+omni.lib.add_unlock_recipe("crystal-solar-panel-tier-1-size-1", "crystal-panel")
