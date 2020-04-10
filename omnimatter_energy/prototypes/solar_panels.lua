@@ -95,26 +95,60 @@ local get_req = function(tier, size, msize)
 	return req
 end
 
-local get_scienceing = function(size)
-	local sizetech= {
+local get_scienceing = function(tier)
+	local techtier= {
 		[1]={{"automation-science-pack", 1},},
 		[2]={{"automation-science-pack", 1},{"logistic-science-pack", 1},},
 		[3]={{"automation-science-pack", 1},{"logistic-science-pack", 1},{"chemical-science-pack", 1},},
 		[4]={{"automation-science-pack", 1},{"logistic-science-pack", 1},{"chemical-science-pack", 1},{"production-science-pack", 1},},
 		[5]={{"automation-science-pack", 1},{"logistic-science-pack", 1},{"chemical-science-pack", 1},{"production-science-pack", 1},{"utility-science-pack", 1},},
 	}
-	if size <= #sizetech then
-		return sizetech[size]
+	if tier <= #techtier then
+		return techtier[tier]
 	else
-		return sizetech[#sizetech]
+		return techtierh[#techtier]
 	end
 end
 
+local get_icon = function(size)
+	local icons={{icon="__omnimatter_energy__/graphics/icons/empty.png"}}
+	for k=size,1,-1 do
+		for l=1, size do
+			icons[#icons+1]={
+				icon="__omnimatter_energy__/graphics/icons/zolar-panel.png",
+				scale = 1/size,
+			--	shift={((max_size-i)/(max_size-1)+k-2)*32/i,((max_size-i)/(max_size-1)+l-2)*32/i}
+			--	shift={((max_size-i)/(max_size-1)+k-2)*32/i+2-i*2,((max_size-i)/(max_size-1)+l-2)*32/i+2-i*2}
+				shift={((max_size-size)/(max_size-1)+k-2)*32/size-(size-1)*2,((max_size-size)/(max_size-1)+l-2)*32/size-(size-1)*2}
+			}
+		end
+	end
+	for k=1,size-1 do
+		for l=1, size-1 do
+			icons[#icons+1]={
+				icon="__omnimatter_energy__/graphics/icons/zolar-panel.png",
+				scale = 1/size,
+			--	shift={((max_size-i)/(max_size-1)+k-2)*32/i,((max_size-i)/(max_size-1)+l-2)*32/i}
+			--	shift={((max_size-i)/(max_size-1)+k-2)*32/i+2-i*2,((max_size-i)/(max_size-1)+l-2)*32/i+2-i*2}
+				shift={((max_size-size)/(max_size-1)+k-2)*32/size-(size-1)*2,((max_size-size)/(max_size-1)+l-2)*32/size-(size-1)*2}
+			}
+		end
+	end
+	return icons
+end
+
 --log("solar shite")
-for i=1,max_size do
-	for j=1,nr_tiers do
+for j=1,nr_tiers do
+
+	sol[#sol+1]={ 
+		type = "item-subgroup",
+		name = "omnienergy-solar-tier-"..j,
+		group = "omnienergy",
+		order = data.raw["item-subgroup"]["omnienergy-solar"].order..j,
+	  	}
+
+	for i=1,max_size do
 	
-		local icons={{icon="__omnimatter_energy__/graphics/icons/empty.png"}}
 		local pic = {}
 		for k=i,1,-1 do
 			for l=1, i do
@@ -126,11 +160,6 @@ for i=1,max_size do
 				  scale=0.5,
 				  shift = {k-i/2-0.5,l-i/2-0.4},
 				}
-				--[[icons[#icons+1]={
-					icon="__omnimatter_energy__/graphics/icons/zolar-panel.png",
-					scale = 1/i,
-					shift={((max_size-i)/(max_size-1)+k-2)*32/i,((max_size-i)/(max_size-1)+l-2)*32/i}
-				}]]
 			end
 		end
 		for k=1,i-1 do
@@ -143,20 +172,15 @@ for i=1,max_size do
 				  scale=0.5,
 				  shift = {k-i/2,l-i/2},
 				}
-				--[[icons[#icons+1]={
-					icon="__omnimatter_energy__/graphics/icons/zolar-panel.png",
-					scale = 1/i,
-					shift={((max_size-i)/(max_size-1)+k-2)*32/i,((max_size-i)/(max_size-1)+l-2)*32/i}
-				}]]
 			end
 		end
-		icons[#icons+1]={icon="__omnimatter_energy__/graphics/icons/zolar-panel.png"}
+		--icons[#icons+1]={icon="__omnimatter_energy__/graphics/icons/zolar-panel.png"}
 		
 		sol[#sol+1]={ 
 		type = "item",
 		name = "crystal-solar-panel-tier-"..j.."-size-"..i,
 		localised_name = {"item-name.crystal-solar-panel", j, i},
-		icons = icons,
+		icons = get_icon(i,32),
 		flags = {},
 		subgroup = "omnitractor",
 		order = "zolar-panel",
@@ -214,7 +238,9 @@ for i=1,max_size do
 		type = "recipe",
 		name = "crystal-solar-panel-tier-"..j.."-size-"..i,
 		localised_name = {"recipe-name.crystal-solar-panel", j, i},
-		subgroup = "omnienergy-solar",
+		icons = get_icon(i),
+		icon_size = 32,
+		subgroup = "omnienergy-solar-tier-"..j,
 		category="omniphlog",
 		energy_required = 1,
 		enabled=false,
@@ -231,9 +257,9 @@ for i=1,max_size do
 		type = "technology",
 		name = "crystal-solar-panel-tier-"..j.."-size-"..i,
 		localised_name = {"technology-name.crystal-solar-panel", j, i},
-		icon = "__omnimatter_energy__/graphics/technology/zolar-panel.png",
-		--icons = icons,
-		icon_size = 128,
+		--icon = "__omnimatter_energy__/graphics/technology/zolar-panel.png",
+		icons = get_icon(i),
+		icon_size = 32,
 		prerequisites = get_req(j,i,max_size),
 		effects =
 		{
@@ -242,7 +268,7 @@ for i=1,max_size do
 		unit =
 		{
 			count = 30+i*30+j*10,
-			ingredients = get_scienceing(i),
+			ingredients = get_scienceing(j),
 			time = 30
 		},
 			order = "c-a",

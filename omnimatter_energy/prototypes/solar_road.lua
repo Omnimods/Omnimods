@@ -22,7 +22,7 @@ data:extend({
 	icon = "__omnimatter_energy__/graphics/icons/omni-solar-tile.png",
 	icon_size = 32,
 	category = "crafting",
-	subgroup = "omnienergy-components",
+	subgroup = "omnienergy-solar",
 	energy_required = 3.0,
 	enabled=false,
 	order = "ad[solar-panel]-aa[solar-panel-1-a]",
