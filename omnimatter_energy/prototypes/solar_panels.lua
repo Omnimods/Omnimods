@@ -1,10 +1,3 @@
-for _, sol in pairs(data.raw["solar-panel"]) do
-	if sol.minable then
-		local recipe = omni.lib.find_recipe(sol.minable.result)
-		omni.lib.remove_recipe_all_techs(recipe.name)
-	end
-end
-
 local sol = {
 	--sol item
 	{
@@ -88,7 +81,7 @@ end
 local get_req = function(tier, size, msize)
 	local req = {}
 	if tier == 1 and size == 1 then
-		req = {"automation"}
+		req = {"solar-energy"}
 	elseif size == 1 then
 		req = {"crystal-solar-panel-tier-"..(tier-1).."-size-"..msize}
 	else
@@ -99,11 +92,10 @@ end
 
 local get_scienceing = function(tier)
 	local techtier= {
-		[1]={{"automation-science-pack", 1},},
-		[2]={{"automation-science-pack", 1},{"logistic-science-pack", 1},},
-		[3]={{"automation-science-pack", 1},{"logistic-science-pack", 1},{"chemical-science-pack", 1},},
-		[4]={{"automation-science-pack", 1},{"logistic-science-pack", 1},{"chemical-science-pack", 1},{"production-science-pack", 1},},
-		[5]={{"automation-science-pack", 1},{"logistic-science-pack", 1},{"chemical-science-pack", 1},{"production-science-pack", 1},{"utility-science-pack", 1},},
+		[1]={{"automation-science-pack", 1},{"logistic-science-pack", 1},},
+		[2]={{"automation-science-pack", 1},{"logistic-science-pack", 1},{"chemical-science-pack", 1},},
+		[3]={{"automation-science-pack", 1},{"logistic-science-pack", 1},{"chemical-science-pack", 1},{"production-science-pack", 1},},
+		[4]={{"automation-science-pack", 1},{"logistic-science-pack", 1},{"chemical-science-pack", 1},{"production-science-pack", 1},{"utility-science-pack", 1},},
 	}
 	if tier <= #techtier then
 		return techtier[tier]
@@ -240,7 +232,7 @@ for j=1,nr_tiers do
 			},
 			unit =
 			{
-				count = 30+i*30+j*10,
+				count = 150+((j-1)*max_size+i)*75+j*100,	--base_cost+...*cost_between_techs+...*addidional_cost_between_tiers
 				ingredients = get_scienceing(j),
 				time = 30
 			},
@@ -249,4 +241,14 @@ for j=1,nr_tiers do
 	end
 end
 data:extend(sol)
-omni.lib.add_unlock_recipe("crystal-solar-panel-tier-1-size-1", "crystal-panel")
+
+--Disable all Solar Panels
+for _, sol in pairs(data.raw["solar-panel"]) do
+	if sol.minable then
+		local recipe = omni.lib.find_recipe(sol.minable.result)
+		omni.lib.remove_recipe_all_techs(recipe.name)
+	end
+end
+
+omni.lib.replace_all_ingredient("solar-panel","crystal-panel")
+omni.lib.add_unlock_recipe("solar-energy", "crystal-panel")
