@@ -3,6 +3,25 @@ if not omni.marathon then omni.marathon={} end
 
 standardized_recipes={}
 
+local function set_loc_name(item) --pass full table
+	if item then
+		if item.localised_name then
+			loc_name = table.deepcopy(item.localised_name)
+		elseif item.type == item and item.place_result then
+			loc_name = {"entity-name."..item.place_result}
+		elseif item.place_result then
+			loc_name = {"entity-name."..item.name}
+		elseif string.find(item.name,"equipment") ~= nil then
+			loc_name = {"equipment-name."..item.name}
+		elseif item.type == "fluid" then
+			 loc_name = {item.type.."-name."..item.name}
+		else --should cover items, fluids etc...
+ 			loc_name = {item.type.."-name."..item.name}
+ 		end
+	end
+return loc_name
+end
+
 function omni.marathon.standardise(recipe)
 	if recipe == nil then return nil end
 	if standardized_recipes[recipe.name] then return recipe end
@@ -22,37 +41,17 @@ function omni.marathon.standardise(recipe)
 		ingredients = {expensive=table.deepcopy(recipe.ingredients),normal=table.deepcopy(recipe.ingredients)}
 	end
 	local std_ingredients = {normal = {}, expensive = {}}
-
+	local it={}
 	if recipe.localized_name == nil and recipe.main_product and recipe.main_product~="" then
-		local it = omni.lib.find_prototype(recipe.main_product)
-		if it then
-			if it.type == item and it.place_result then
-				recipe.localised_name = {"entity-name."..it.place_result}
-			else
-				recipe.localised_name = {it.type.."-name."..it.name}
-			end
-		end
-	end
-	if recipe.localized_name == nil and recipe.normal and recipe.normal.main_product and recipe.normal.main_product~="" then
+		it = omni.lib.find_prototype(recipe.main_product)
+		recipe.localised_name=set_loc_name(it)
+	elseif recipe.localized_name == nil and recipe.normal and recipe.normal.main_product and recipe.normal.main_product~="" then
 		local it = omni.lib.find_prototype(recipe.normal.main_product)
-		if it then
-			if it.type == item and it.place_result then
-				recipe.localised_name = {"entity-name."..it.place_result}
-			else
-				recipe.localised_name = {it.type.."-name."..it.name}
-			end
-		end
+		recipe.localised_name=set_loc_name(it)
 	end
-	if recipe.localized_name == nil and recipe.expensive and recipe.expensive.main_product and recipe.expensive.main_product~="" then
+	--[[if recipe.localized_name == nil and recipe.expensive and recipe.expensive.main_product and recipe.expensive.main_product~="" then
 		local it = omni.lib.find_prototype(recipe.expensive.main_product)
-		if it then
-			if it.type == item and it.place_result then
-				recipe.localised_name = {"entity-name."..it.place_result}
-			else
-				recipe.localised_name = {it.type.."-name."..it.name}
-			end
-		end
-	end
+	end]]
 
 	recipe.normal.ingredients={}
 	recipe.expensive.ingredients={}
@@ -123,7 +122,8 @@ function omni.marathon.standardise(recipe)
 
 	if recipe.localised_name == nil and #recipe.normal.results==1 then
 		local it = omni.lib.find_prototype(recipe.normal.results[1].name)
-		if it then
+		set_loc_name(it)
+		--[[if it then
 			if it.localised_name then
 				recipe.localised_name = table.deepcopy(it.localised_name)
 			elseif it.place_result then
@@ -133,7 +133,7 @@ function omni.marathon.standardise(recipe)
 			else
 				recipe.localised_name = {"item-name."..it.name}
 			end
-		end
+		end]]
 	end
 
 	--new.normal.ingredients=std_ingredients.normal
@@ -202,7 +202,7 @@ function omni.marathon.standardise(recipe)
 
 	if recipe.normal.category == nil then recipe.normal.category = recipe.category end
 	if recipe.expensive.category == nil then recipe.expensive.category = recipe.category end
-	
+
 	--recipe.normal.main_product = recipe.normal.main_product or recipe.main_product
 	--recipe.expensive.main_product = recipe.expensive.main_product or recipe.main_product
 
