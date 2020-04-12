@@ -153,7 +153,7 @@ RecGen:create("omnimatter_energy","anbaric-omnitor"):
 	setIngredients({type="item", name="omnicium-plate", amount=2},{type="item", name="copper-cable", amount=2},{type="item", name="omnitor", amount=1}):
 	addProductivity():extend()
 	
-RecGen:import("small-electric-pole"):setEnabled(false):setTechName("anbaricity"):extend()
+RecGen:import("small-electric-pole"):setTechName("anbaricity"):extend()
 BuildGen:import("small-electric-pole"):
 	setName("small-iron-electric-pole"):
 	setIngredients({"iron-plate", 1},{"copper-cable", 1}):
@@ -164,8 +164,7 @@ BuildGen:import("small-electric-pole"):
       height = 124,
       direction_count = 4,
       shift = {1.4, -1.1}
-	}):
-	setEnabled(false):
+    }):
 	setTechName("anbaricity"):extend()
 	
 BuildGen:import("small-electric-pole"):
@@ -180,8 +179,7 @@ BuildGen:import("small-electric-pole"):
       height = 124,
       direction_count = 4,
       shift = {1.4, -1.1}
-	}):
-	setEnabled(false):
+    }):
 	setTechName("anbaricity"):extend()
 	
 BuildGen:import("assembling-machine-1"):
