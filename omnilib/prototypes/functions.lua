@@ -647,8 +647,6 @@ function omni.lib.add_science_pack(tech,pack)
 		local found = false
 		for __,sp in pairs(data.raw.technology[tech].unit.ingredients) do
 			for __,ing in pairs(sp) do
-				log("XYZ TECG: ")
-				log(serpent.block(data.raw.technology[tech].unit.ingredients))
 				if ing == pack then found=true end
 			end
 		end
