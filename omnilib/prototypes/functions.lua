@@ -644,14 +644,26 @@ end
 
 function omni.lib.add_science_pack(tech,pack)
 	if data.raw.technology[tech] then
-		if type(pack) == "table" then
-			table.insert(data.raw.technology[tech].unit.ingredients,pack)
-		elseif type(pack) == "string" then
-			table.insert(data.raw.technology[tech].unit.ingredients,{pack,1})
-		elseif type(pack)=="number" then
-			table.insert(data.raw.technology[tech].unit.ingredients,{"omni-pack",pack})
+		local found = false
+		for __,sp in pairs(data.raw.technology[tech].unit.ingredients) do
+			for __,ing in pairs(sp) do
+				log("XYZ TECG: ")
+				log(serpent.block(data.raw.technology[tech].unit.ingredients))
+				if ing == pack then found=true end
+			end
+		end
+		if not found then
+			if type(pack) == "table" then
+				table.insert(data.raw.technology[tech].unit.ingredients,pack)
+			elseif type(pack) == "string" then
+				table.insert(data.raw.technology[tech].unit.ingredients,{pack,1})
+			elseif type(pack)=="number" then
+				table.insert(data.raw.technology[tech].unit.ingredients,{"omni-pack",pack})
+			else
+				table.insert(data.raw.technology[tech].unit.ingredients,{"omni-pack",1})
+			end
 		else
-			table.insert(data.raw.technology[tech].unit.ingredients,{"omni-pack",1})
+			log("Ingredient "..pack.." already exists.")
 		end
 	else
 		log("Cannot find "..tech..", ignoring it.")
