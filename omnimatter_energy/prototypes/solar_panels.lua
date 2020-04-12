@@ -1,3 +1,11 @@
+--Disable all Solar Panels
+for _, sol in pairs(data.raw["solar-panel"]) do
+	if sol.minable then
+		local recipe = omni.lib.find_recipe(sol.minable.result)
+		omni.lib.remove_recipe_all_techs(recipe.name)
+	end
+end
+
 local sol = {
 	--sol item
 	{
@@ -241,14 +249,6 @@ for j=1,nr_tiers do
 	end
 end
 data:extend(sol)
-
---Disable all Solar Panels
-for _, sol in pairs(data.raw["solar-panel"]) do
-	if sol.minable then
-		local recipe = omni.lib.find_recipe(sol.minable.result)
-		omni.lib.remove_recipe_all_techs(recipe.name)
-	end
-end
 
 omni.lib.replace_all_ingredient("solar-panel","crystal-panel")
 omni.lib.add_unlock_recipe("solar-energy", "crystal-panel")
