@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.18.0
-Date: 2020.04.13
+Date: 2020-04-13
   Features:
     - First public release
     - Added Crystal Solar Panels (Max Size & Tier configurable)
