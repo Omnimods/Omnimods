@@ -1,5 +1,6 @@
 require("prototypes.functions")
 require("prototypes.categories")
+require("prototypes.omnifurnace")
 require("prototypes.burner")
 require("prototypes.solar_panels")
 require("prototypes.solar_road")
