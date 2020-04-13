@@ -90,8 +90,8 @@ if __name__ == "__main__":
         target_folder=DEFAULT_FOLDER,
         source_folder=pathlib.Path(__file__).parent,
         mod_key="omni",
-        avoidables=["omnimatter_chemistry", "omnimatter_research"],
-        building_all=False,
+        avoidables=["omnimatter_chemistry", "omnimatter_logistics", "omnimatter_marathon", "omnimatter_research"],
+        building_all=True,
     )
     mb.find_mods()
     mb.delete_mods()
