@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.3
 Date: 2020.XX.XX
+  Features:
+    - Support for Angel's Industry components
   Bugfixes:
     - Fixed a crash when adding a Prereq to a tech that had none so far
     - Fixed a crash when the added Prereq already existed
