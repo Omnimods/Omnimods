@@ -3,7 +3,7 @@
 "version":"1.18.0",
 "title":"Omnienergy",
 "author":"EmperorZelos",
-"description":"Adds a wood production method for omnimatter",
+"description":"Start with limited access to fuel and research better refining methods up to renewable energy",
 "factorio_version":"0.18",
 "dependencies":
         	[
