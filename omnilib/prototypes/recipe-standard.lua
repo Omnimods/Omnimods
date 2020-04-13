@@ -61,7 +61,7 @@ function omni.marathon.standardise(recipe)
 			for i,ing in pairs(ingredients[diff]) do
 				local temp = {}
 				if ing.name then
-					temp = {type = ing.type, name=ing.name,amount=ing.amount,maximum_temperature=ing.maximum_temperature,minimum_temperature=ing.minimum_temperature}
+					temp = {type = ing.type, name=ing.name,amount=ing.amount,maximum_temperature=ing.maximum_temperature,minimum_temperature=ing.minimum_temperature,fluidbox_index=ing.fluidbox_index}
 					if not temp.type then temp.type ="item" end
 				else
 					temp = {type = "item", name=ing[1],amount=ing[2]}
@@ -107,7 +107,7 @@ function omni.marathon.standardise(recipe)
 			for j,res in pairs(results[diff]) do
 				local temp = {}
 				if res.name then
-					temp = {type = res.type, name=res.name,amount=res.amount,probability = res.probability, amount_min = res.amount_min, amount_max = res.amount_max,temperature=res.temperature}
+					temp = {type = res.type, name=res.name,amount=res.amount,probability = res.probability, amount_min = res.amount_min, amount_max = res.amount_max,temperature=res.temperature,fluidbox_index=res.fluidbox_index}
 					if not temp.type then temp.type ="item" end
 				else
 					temp = {type = "item", name=res[1],amount=res[2]}
