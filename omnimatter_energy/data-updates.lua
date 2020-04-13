@@ -33,9 +33,9 @@ RecGen:import("boiler"):setTechName("steam-power"):
 	setEnabled(false):
 	setTechPacks(2):extend()
 	
-TechGen:importIf("bob-steam-engine-2"):addPrereq("steam-power"):extend()
-TechGen:importIf("bob-boiler-2"):addPrereq("steam-power"):extend()
-TechGen:importIf("fast-inserter"):addPrereq("burner-filter"):extend()
+omni.lib.add_prerequisite("bob-steam-engine-2", "steam-power")
+omni.lib.add_prerequisite("bob-boiler-2", "steam-power")
+omni.lib.add_prerequisite("fast-inserter", "burner-filter")
 
 RecGen:import("steam-engine"):setIngredients(
       {type="item", name="iron-plate", amount=10},
@@ -112,8 +112,9 @@ RecGen:import("inserter"):setEnabled(false):
 	setTechIcon("__base__/graphics/technology/demo/electric-inserter.png"):
 	setTechPacks(1):
 	setTechPrereq("anbaricity"):extend()
+
 	omni.lib.remove_unlock_recipe("automation", "inserter")
-	TechGen:importIf("logistic-science-pack"):addPrereq("anbaric-inserter"):extend()
+	omni.lib.add_prerequisite("logistic-science-pack", "anbaric-inserter")
 
 local i=2
 while data.raw.recipe["assembling-machine-"..i] do
