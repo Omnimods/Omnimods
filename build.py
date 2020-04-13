@@ -26,11 +26,11 @@ class ModBuilder:
     def delete_mods(self, delete_zips=True):
         if delete_zips:
             for mod in self.found_mods:
-                for f in self.target_folder.glob(f"*{mod.name}*.zip"):
+                for f in self.target_folder.glob(f"{mod.name}_[0-9]*.zip"):
                     f.unlink()
 
         for mod in self.found_mods:
-            for folder in self.target_folder.glob(f"*{mod.name}*"):
+            for folder in self.target_folder.glob(f"{mod.name}_[0-9]*"):
                 if folder.is_dir():
                     shutil.rmtree(folder)
 
@@ -90,10 +90,9 @@ if __name__ == "__main__":
         target_folder=DEFAULT_FOLDER,
         source_folder=pathlib.Path(__file__).parent,
         mod_key="omni",
-        avoidables=["omnimatter_energy"],
-        building_all=True,
+        avoidables=["omnimatter_chemistry", "omnimatter_research"],
+        building_all=False,
     )
     mb.find_mods()
-    print(mb.found_mods)
-    # mb.delete_mods()
-    # mb.build_mods()
+    mb.delete_mods()
+    mb.build_mods()
