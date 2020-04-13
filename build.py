@@ -37,7 +37,7 @@ class ModBuilder:
     def find_mods(self):
         """
         If build_all, returns all mods in the source_folder.
-        Else only the ones found in both mod_folder and source_folder
+        Else only the ones found in mod_folder.
         """
         source_mods = [
             Mod(path) for path in self.source_folder.glob(f"*{self.mod_key}*")
