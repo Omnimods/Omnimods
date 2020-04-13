@@ -2615,7 +2615,9 @@ function TechGen:generate_tech()
 			self.loc_name[1]="technology-name."..self.loc_name[1]
 		end
 		tech.localised_name = self.loc_name
-		tech.localised_name[1]="technology-name."..tech.localised_name[1]
+		if self.loc_name[1] then
+			tech.localised_name[1]="technology-name."..tech.localised_name[1]
+		end
 	end
 	if self.loc_desc and self.loc_desc then tech.localised_description = {"technology-description."..self.loc_desc,self.loc_desc_keys} end
 	self.rtn[#self.rtn+1] = tech
