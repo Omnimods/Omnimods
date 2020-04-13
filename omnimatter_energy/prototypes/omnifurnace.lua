@@ -13,7 +13,7 @@ setEnabled(false):
 setTechName("advanced-material-processing"):extend()
 
 BuildGen:import("burner-omni-furnace"):
- setName("burner-omni-furnace-3","omnimatter_energy"):
+setName("burner-omni-furnace-3","omnimatter_energy"):
 addIcon("__omnilib__/graphics/lvl3.png"):
 setReplace("burner-omni-furnace-2"):
 setSpeed(2.0):
