@@ -144,10 +144,19 @@ if true or phlog then
 local cost = OmniGen:create():
 		building():
 		setMissConstant(3):
-		setPreRequirement("burner-omniphlog"):
-		setQuant("omniplate",10):
-		setQuant("plates",20):
-		setQuant("gear-box",15)
+		setPreRequirement("burner-omniphlog")
+
+if mods["angelsindustries"] and angelsmods.industries.components then
+	cost:setQuant("construction-block",5):
+	setQuant("electric-block",2):
+	setQuant("fluid-block",5):
+	setQuant("logistic-block",1):
+	setQuant("omni-block",1)
+else
+	cost:setQuant("omniplate",10):
+	setQuant("plates",20):
+	setQuant("gear-box",15)
+end
 
 	BuildChain:create("omnimatter","omniphlog"):
 		setSubgroup("omniphlog"):
@@ -183,4 +192,15 @@ local cost = OmniGen:create():
 		},
 		}):setOverlay("tractor-over"):
 		extend()
+end
+
+if mods["angelsindustries"] and angelsmods.industries.components then
+	for i=1,settings.startup["omnimatter-max-tier"].value do
+		-- Remove previous tier buildings from the recipes
+		if i == 1 then
+			omni.lib.remove_recipe_ingredient("omniphlog-1", "burner-omniphlog")
+		else
+			omni.lib.remove_recipe_ingredient("omniphlog-"..i, "omniphlog-"..i-1)
+		end
+	end
 end

@@ -1,23 +1,18 @@
 
 if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].value then
-	for _,t in pairs(data.raw.technology) do
-		if omni.lib.is_in_table("bob-logistics-0",t.prerequisites) then
-			omni.lib.remove_prerequisite(t.name,"bob-logistics-0")
-			omni.lib.add_prerequisite(t.name,"splitter-logistics")
-			omni.lib.add_prerequisite(t.name,"underground-logistics")
-		end
-	end
-	
-	data.raw.technology["bob-logistics-0"]=nil
+	log("OmniEnergy: Bobs Belt Overhaul found")
 
-	TechGen:import("basic-logistics"):setPrereq():setUpgrade(false):setEnabled(true):removeUnlocks("transport-belt"):extend()
-	
-	log(serpent.block(data.raw.technology["basic-logistics"]))
-	
+	--Remove logistics-0 Tech
+	TechGen:import("logistics-0"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():extend()
+	data.raw.technology["logistics-0"]=nil
+
+	--Create seperate techs for Basic Belt, Splitter and UG
 	RecGen:import("basic-transport-belt"):
 		setEnabled(false):
-		setTechName("basic-logistics"):
+		setTechName("basic-belt-logistics"):
 		setTechIcon("base","logistics"):
+		ifAddTechPrereq(data.raw.technology["basic-automation"], "basic-automation"):
+		ifAddTechPrereq(not data.raw.technology["basic-automation"], "simple-automation"):
 		setTechPacks(1):
 		setTechCost(25):
 		setIngredients(
@@ -25,39 +20,48 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
       {type="item", name="omnitor", amount=1}):
 		setResults({"basic-transport-belt",3}):extend()
 	
-	RecGen:import("basic-splitter"):setEnabled(false):
+	RecGen:import("basic-splitter"):
+		setEnabled(false):
 		setTechName("basic-splitter-logistics"):
 		setTechIcon("base","logistics"):
-		setTechPrereq("basic-logistics"):
-		setTechLocName():
+		setTechPrereq("basic-belt-logistics"):
 		setTechPacks(1):
 		setTechCost(25):extend()
-	RecGen:import("basic-underground-belt"):setEnabled(false):
+
+	RecGen:import("basic-underground-belt"):
+		setEnabled(false):
 		setTechName("basic-underground-logistics"):
 		setTechIcon("base","logistics"):
-		setTechLocName():
-		setTechPrereq("basic-logistics"):
-		setTechPacks(1):
+		setTechPrereq("basic-belt-logistics"):
+	 	setTechPacks(1):
 		setTechCost(25):extend()
-		
-	TechGen:import("logistics"):setPrereq("basic-logistics","basic-splitter-logistics","basic-underground-logistics"):extend()
-else
-	TechGen:import("logistics"):nullUnlocks():extend()
-	
+
+	--Add new Techs as Prereq for vanilla logistics
+	TechGen:import("logistics"):setPrereq("basic-splitter-logistics","basic-underground-logistics"):extend()
+
+	--Move all Techs that have logistics-0 as Prereq behind Basic Splitter & UG Techs
 	for _,t in pairs(data.raw.technology) do
-		if omni.lib.is_in_table("logistics",t.prerequisites) then
-			omni.lib.remove_prerequisite(t.name,"logistics")
-			omni.lib.add_prerequisite(t.name,"splitter-logistics")
-			omni.lib.add_prerequisite(t.name,"underground-logistics")
+		if omni.lib.is_in_table("logistics-0",t.prerequisites) then
+			omni.lib.remove_prerequisite(t.name,"logistics-0")
+			omni.lib.add_prerequisite(t.name,"basic-splitter-logistics")
+			omni.lib.add_prerequisite(t.name,"basic-underground-logistics")
 		end
 	end
+
+else
 	
+	--Remove logistics Tech
+	TechGen:import("logistics"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():extend()
+	data.raw.technology["logistics"]=nil
+
+	--Create seperate techs for Belt, Splitter and UG
 	RecGen:import("transport-belt"):
 		setEnabled(false):
-		setTechName("logistics"):
+		setTechName("belt-logistics"):
 		setTechIcon("base","logistics"):
+		ifAddTechPrereq(data.raw.technology["basic-automation"], "basic-automation"):
+		ifAddTechPrereq(not data.raw.technology["basic-automation"], "simple-automation"):
 		setTechPacks(1):
-		setTechPrereq():
 		setTechCost(25):
 		setIngredients(
       {type="item", name="iron-plate", amount=1},
@@ -66,15 +70,25 @@ else
 	RecGen:import("splitter"):setEnabled(false):setTechName("basic-logistics"):
 		setTechName("underground-logistics"):
 		setTechIcon("base","logistics"):
-		setTechPrereq("logistics"):
+		setTechPrereq("belt-logistics"):
 		setTechPacks(1):
 		setTechCost(25):extend()
+
 	RecGen:import("underground-belt"):setEnabled(false):
 		setTechName("splitter-logistics"):
 		setTechIcon("base","logistics"):
-		setTechPrereq("logistics"):
+		setTechPrereq("belt-logistics"):
 		setTechPacks(1):
 		setTechCost(25):extend()
+
+	--Move all Techs that have logistics as Prereq behind Splitter & UG Techs
+	for _,t in pairs(data.raw.technology) do
+		if omni.lib.is_in_table("logistics",t.prerequisites) then
+			omni.lib.remove_prerequisite(t.name,"logistics")
+			omni.lib.add_prerequisite(t.name,"splitter-logistics")
+			omni.lib.add_prerequisite(t.name,"underground-logistics")
+		end
+	end	
 end
 
 RecGen:create("omnimatter_energy","omni-tablet"):
@@ -83,29 +97,12 @@ RecGen:create("omnimatter_energy","omni-tablet"):
 	setEnabled():
 	setEnergy(0.5):extend()
 	
---
-
-
-BuildGen:import("burner-mining-drill"):setFuelCategory("omnite"):
+BuildGen:import("burner-mining-drill"):
 	setIngredients(
       {type="item", name="stone-brick", amount=4},
       {type="item", name="iron-plate", amount=4},
       {type="item", name="omnitor", amount=1}):setEnabled():extend()
 
-ItemGen:import("omnite"):setFuelCategory("omnite"):extend()
-ItemGen:import("omniwood"):setFuelCategory("omnite"):extend()
-ItemGen:import("crushed-omnite"):setFuelCategory("omnite"):extend()
-
-RecGen:create("omnimatter_energy","omnitor"):
-	setStacksize(50):
-	addMask(197/255,58/255,97/255):
-	setCategory("crafting"):
-	setEnergy(0.75):
-	setIngredients({type="item", name="omnicium-plate", amount=2},{type="item", name="omnicium-gear-wheel", amount=1}):
-	addProductivity():
-	setEnabled():extend()
-
-	
 RecGen:create("omnimatter_energy","heat"):
 	fluid():
 	setIcons("burner","omnilib"):
@@ -118,7 +115,7 @@ RecGen:create("omnimatter_energy","heat"):
 	setTechName("anbaricity"):
 	setTechCost(50):
 	setTechIcon("base","electric-engine"):
-	setTechPrereq("basic-automation"):
+	setTechPrereq():
 	ifAddTechPrereq(settings.startup["bobmods-logistics-beltoverhaul"] and settings.startup["bobmods-logistics-beltoverhaul"].value,
 	"basic-splitter-logistics","basic-underground-logistics"
 	):
@@ -128,35 +125,8 @@ RecGen:create("omnimatter_energy","heat"):
 	setTechPacks(1):	
 	setResults({type="fluid",name="heat",amount=2*60+1,temperature=250}):
 	extend()
-
 data.raw.fluid.heat.auto_barrel = false
-	
-RecGen:create("omnimatter_energy","anbaric-omnitor"):
-	setStacksize(50):
-	addMask(0/255,186/255,184/255):
-	setCategory("crafting"):
-	setEnergy(0.75):
-	setTechName("anbaricity"):
-	setIngredients({type="item", name="omnicium-plate", amount=2},{type="item", name="copper-cable", amount=2},{type="item", name="omnitor", amount=1}):
-	addProductivity():extend()
 
-if data.raw.item["anbaric-omnitor"] then 
-    log("anbaric omnitor exists gtfo error") 
-else 
-    log("wtf") 
-end
-	
-RecGen:create("omnimatter_energy","cokomni"):
-	setSubgroup("omni-basic"):
-	setStacksize(200):
-	setCategory("omnifurnace"):
-	setFuelValue(2.4):
-	setEnergy(0.5):
-	setTechName("anbaricity"):
-	setIngredients({type="item", name="crushed-omnite", amount=4}):
-	setResults({type="item", name="cokomni", amount=2}):extend()
-	
-log("Zoms at it again")
 BuildGen:import("steam-turbine"):
 	setName("omni-heat-burner","omnimatter_energy"):
 	--setFluidBox("XTX.XXX.XXX.XXX.XGX","heat",400)
@@ -170,9 +140,30 @@ BuildGen:import("steam-turbine"):
 	setFluidConsumption(1):
 	setEffectivity(2/13.5/2):
 	setMaxTemp(250):extend()
+
+RecGen:create("omnimatter_energy","omnitor"):
+	setStacksize(50):
+	addMask(197/255,58/255,97/255):
+	setCategory("crafting"):
+	setSubgroup("omnienergy-intermediates"):
+	setOrder("a"):
+	setEnergy(0.75):
+	setIngredients({type="item", name="omnicium-plate", amount=2},{type="item", name="omnicium-gear-wheel", amount=1}):
+	addProductivity():
+	setEnabled():extend()
+
+RecGen:create("omnimatter_energy","anbaric-omnitor"):
+	setStacksize(50):
+	addMask(0/255,186/255,184/255):
+	setCategory("crafting"):
+	setSubgroup("omnienergy-intermediates"):
+	setOrder("b"):
+	setEnergy(0.75):
+	setTechName("anbaricity"):
+	setIngredients({type="item", name="omnicium-plate", amount=2},{type="item", name="copper-cable", amount=2},{type="item", name="omnitor", amount=1}):
+	addProductivity():extend()
 	
-log("test")
-RecGen:import("small-electric-pole"):setTechName("anbaricity"):extend()
+RecGen:import("small-electric-pole"):setEnabled(false):setTechName("anbaricity"):extend()
 BuildGen:import("small-electric-pole"):
 	setName("small-iron-electric-pole"):
 	setIngredients({"iron-plate", 1},{"copper-cable", 1}):
@@ -183,7 +174,8 @@ BuildGen:import("small-electric-pole"):
       height = 124,
       direction_count = 4,
       shift = {1.4, -1.1}
-    }):
+	}):
+	setEnabled(false):
 	setTechName("anbaricity"):extend()
 	
 BuildGen:import("small-electric-pole"):
@@ -198,18 +190,16 @@ BuildGen:import("small-electric-pole"):
       height = 124,
       direction_count = 4,
       shift = {1.4, -1.1}
-    }):
+	}):
+	setEnabled(false):
 	setTechName("anbaricity"):extend()
 	
 BuildGen:import("assembling-machine-1"):
 	setBurner(0.9,1):
 	setName("omnitor-assembling-machine"):
 	setIcons("omnitor-assembling-machine","omnimatter_energy"):
-	--setFluidBox("XWX.XXX.XXX"):
-	--setFilter("heat"):
-	--setFluidBurn():
 	setEnabled(false):
-	setTechName("basic-automation"):
+	setTechName("simple-automation"):
 	setTechIcon("base","automation"):
 	setTechPrereq():
 	setTechPacks(1):
@@ -217,6 +207,7 @@ BuildGen:import("assembling-machine-1"):
 	setInventory(3):
 	setCrafting("crafting", "basic-crafting"):
 	setFuelCategory("omnite"):
+	setSpeed(0.1):
 	setIngredients({"omnitor",2},{"iron-plate",5},{"burner-inserter",1}):
 	setAnimation(
 	{layers={{
@@ -240,7 +231,6 @@ BuildGen:import("assembling-machine-1"):
 	}}}
 	):
 	extend()
-
 
 BuildGen:import("lab"):
 	setBurner(0.9):
@@ -371,52 +361,20 @@ BuildGen:import("lab"):
   }
 }):extend()
 
-RecGen:create("omnimatter_energy","omnite-brick"):
-	setIngredients("stone","omnite"):
-	setCategory("omnifurnace"):
-	setEnabled():
-	tile():
-	setPlace("omnite-brick"):extend()
-	
-RecGen:create("omnimatter_energy","early-omnite-brick"):
-	setIngredients({"omnite",40},{"stone-brick"}):
-	setResults("omnite-brick"):
-	--setCategory("smelting"):
-	setEnabled():extend()
-	
-log("HIYA!")
 InsertGen:create("omnimatter_energy","burner-filter-inserter"):
 	setIngredients({"burner-inserter",1},{"omnitor",2},{"omnicium-gear-wheel",2}):
+	setSubgroup("inserter"):
+	setOrder("z"): --doesnt do shit?
 	setTechName("burner-filter"):
 	setTechCost(100):
 	setTechIcon("burner-filter"):
+	ifAddTechPrereq(data.raw.technology["basic-belt-logistics"], "basic-belt-logistics"):
+	ifAddTechPrereq(data.raw.technology["belt-logistics"], "belt-logistics"):
 	setTechPacks(1):
-	setTechPrereq("basic-logistics"):
 	setFilter(1):
 	setAnimation("burner-filter-inserter"):
+	setFuelCategory("omnite"): --not working...
 	setBurner(0.75,1):extend()
-log("KYA!")
+	data.raw["inserter"]["burner-filter-inserter"].energy_source.fuel_category = "omnite"
+
 	
-local omnitile = table.deepcopy(data.raw.tile["stone-path"])
-omnitile.name="omnite-brick"
-omnitile.walking_speed_modifier = 1.5
-omnitile.minable.result="omnite-brick"
-omnitile.variants.main[1].picture="__omnimatter_energy__/graphics/terrain/stone-path/stone-path-1.png"
-omnitile.variants.main[1].hr_version.picture="__omnimatter_energy__/graphics/terrain/stone-path/hr-stone-path-1.png"
-omnitile.variants.main[2].picture="__omnimatter_energy__/graphics/terrain/stone-path/stone-path-2.png"
-omnitile.variants.main[2].hr_version.picture="__omnimatter_energy__/graphics/terrain/stone-path/hr-stone-path-2.png"
-omnitile.variants.main[3].picture="__omnimatter_energy__/graphics/terrain/stone-path/stone-path-4.png"
-omnitile.variants.main[3].hr_version.picture="__omnimatter_energy__/graphics/terrain/stone-path/hr-stone-path-4.png"
-omnitile.variants.inner_corner.picture="__omnimatter_energy__/graphics/terrain/stone-path/stone-path-inner-corner.png"
-omnitile.variants.inner_corner.hr_version.picture="__omnimatter_energy__/graphics/terrain/stone-path/hr-stone-path-inner-corner.png"
-omnitile.variants.outer_corner.picture="__omnimatter_energy__/graphics/terrain/stone-path/stone-path-outer-corner.png"
-omnitile.variants.outer_corner.hr_version.picture="__omnimatter_energy__/graphics/terrain/stone-path/hr-stone-path-outer-corner.png"
-omnitile.variants.side.picture="__omnimatter_energy__/graphics/terrain/stone-path/stone-path-side.png"
-omnitile.variants.side.hr_version.picture="__omnimatter_energy__/graphics/terrain/stone-path/hr-stone-path-side.png"
-omnitile.variants.u_transition.picture="__omnimatter_energy__/graphics/terrain/stone-path/stone-path-u.png"
-omnitile.variants.u_transition.hr_version.picture="__omnimatter_energy__/graphics/terrain/stone-path/hr-stone-path-u.png"
-omnitile.variants.o_transition.picture="__omnimatter_energy__/graphics/terrain/stone-path/stone-path-o.png"
-omnitile.variants.o_transition.hr_version.picture="__omnimatter_energy__/graphics/terrain/stone-path/hr-stone-path-o.png"
-data:extend({omnitile})
-log("What?")
-log(serpent.block(data.raw.inserter["burner-filter-inserter"]))

@@ -7,6 +7,10 @@ data:extend({
         type = "fuel-category",
         name = "omnite"
     },
+    {
+      type = "fuel-category",
+      name = "omni-0"
+  },
 	{
     type = "item-group",
     name = "omnienergy",
@@ -17,32 +21,38 @@ data:extend({
   },
   {
     type = "item-subgroup",
-    name = "Omnicell",
-	group = "omnienergy",
-	order = "a",
+    name = "omnienergy-intermediates",
+	  group = "intermediate-products",
+	  order = "a",
   },
   {
     type = "item-subgroup",
-    name = "zolar-panel",
+    name = "omnienergy-fuel",
 	group = "omnienergy",
-	order = "a",
+	order = "b",
   },
   {
     type = "item-subgroup",
-    name = "electro-components",
-	group = "omnienergy",
-	order = "a",
-  },
-  {
-    type = "item-subgroup",
-    name = "hydromnide",
+    name = "omnienergy-components",
 	group = "omnienergy",
 	order = "c",
   },
   {
     type = "item-subgroup",
-    name = "omnielectrobuildings",
+    name = "omnienergy-solar",
 	group = "omnienergy",
 	order = "d",
+  },
+  {
+    type = "item-subgroup",
+    name = "hydromnide",
+	group = "omnienergy",
+	order = "e",
+  },
+  {
+    type = "item-subgroup",
+    name = "omnicell",
+	group = "omnienergy",
+	order = "f",
   },
 })

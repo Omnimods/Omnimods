@@ -12,16 +12,17 @@ function omni.science.tech_post_find_update()
 					for _,req in pairs(tech.prerequisites) do
 						local requnits = {}
 						if not data.raw.technology[req] then
-							--log("the prerequisite "..req.." of "..tech.name.." does not exist")
-							error("the prerequisite "..req.." of "..tech.name.." does not exist")
-						end
-						for _,ing in pairs(data.raw.technology[req].unit.ingredients) do
-							requnits[#requnits+1]=ing[1]
-						end
-						if omni.lib.is_in_table("omni-pack",requnits)  then
-							post_find = true
-							omni.lib.add_science_pack(tech.name)
-							break
+							log("the prerequisite "..req.." of "..tech.name.." does not exist")
+							--error("the prerequisite "..req.." of "..tech.name.." does not exist")
+						else
+							for _,ing in pairs(data.raw.technology[req].unit.ingredients) do
+								requnits[#requnits+1]=ing[1]
+							end
+							if omni.lib.is_in_table("omni-pack",requnits)  then
+								post_find = true
+								omni.lib.add_science_pack(tech.name)
+								break
+							end
 						end
 					end
 				end
