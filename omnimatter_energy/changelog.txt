@@ -8,7 +8,7 @@ Date: 2020.04.13
     - Added Omnified Fuel, all available Fuels have to be Omnified before they can be used
     - Lowered the crafting Speed of the Omnitor Assembling Machine
     - Added 2 new Omnifurnace Tiers
-    - Starter Burner Entitys only accept (crushed-) Omnite as fuel
+    - Starter Burner Entities only accept (crushed-) Omnite as fuel
     - Overhauled the early game Tech Tree
   Bugfixes:
     - Fixed / Added missing localisations

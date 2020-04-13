@@ -1,6 +1,6 @@
 
 local lab_inputs = {}
-log("begin tech compression")
+--log("begin tech compression")
 local has_input  = function(tab)
 	local  found = false
 	for _, li in pairs(lab_inputs) do
@@ -88,5 +88,5 @@ for _,tech in pairs(data.raw.technology) do
 		end
 	end
 end
-log("end tech compression")
+--log("end tech compression")
 data:extend(compressed_techs)

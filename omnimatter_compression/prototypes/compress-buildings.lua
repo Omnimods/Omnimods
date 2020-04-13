@@ -2,7 +2,7 @@
 local multiplier = settings.startup["omnicompression_multiplier"].value
 
 --for _,kind in pairs({"mining-drill"})
-log("started building compression")
+--log("started building compression")
 local new_icon = function(build,level)
 	local icons_1 = {icon = "__omnimatter_compression__/graphics/compress-"..level.."-32.png", icon_size = 32, scale=1}
 	local icons={}
@@ -323,5 +323,5 @@ for _,kind in pairs(building_list) do
 		end
 	end
 end
-log("end building compression")
+--log("end building compression")
 data:extend(compressed_buildings)

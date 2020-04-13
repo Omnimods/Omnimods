@@ -2,6 +2,9 @@
 Version: 3.18.2
 Date: 2020.04.13
   Changes:
+    - Very early game made a tad easier
+  Features:
+    - Omnitractors and omniphlogs support now Angel's Industry components
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.1
 Date: 2020.04.03

@@ -6,6 +6,7 @@ Date: 2020.04.13
   Bugfixes:
     - Fixed a crash when adding a Prereq to a tech that had none so far
     - Fixed a crash when the added Prereq already existed
+    - A ton of under the hood fixes and refactoring
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.2
 Date: 2020.04.04
