@@ -2,15 +2,6 @@
 if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].value then
 	log("OmniEnergy: Bobs Belt Overhaul found")
 
-	--Move all Techs that have logistics-0 as Prereq behind Basic Splitter & UG Techs
-	for _,t in pairs(data.raw.technology) do
-		if omni.lib.is_in_table("logistics-0",t.prerequisites) then
-			omni.lib.remove_prerequisite(t.name,"logistics-0")
-			omni.lib.add_prerequisite(t.name,"basic-splitter-logistics")
-			omni.lib.add_prerequisite(t.name,"basic-underground-logistics")
-		end
-	end
-	
 	--Remove logistics-0 Tech
 	TechGen:import("logistics-0"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():extend()
 	data.raw.technology["logistics-0"]=nil
@@ -48,16 +39,16 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
 	--Add new Techs as Prereq for vanilla logistics
 	TechGen:import("logistics"):setPrereq("basic-splitter-logistics","basic-underground-logistics"):extend()
 
-else
-
-	--Move all Techs that have logistics as Prereq behind Splitter & UG Techs
+	--Move all Techs that have logistics-0 as Prereq behind Basic Splitter & UG Techs
 	for _,t in pairs(data.raw.technology) do
-		if omni.lib.is_in_table("logistics",t.prerequisites) then
-			omni.lib.remove_prerequisite(t.name,"logistics")
-			omni.lib.add_prerequisite(t.name,"splitter-logistics")
-			omni.lib.add_prerequisite(t.name,"underground-logistics")
+		if omni.lib.is_in_table("logistics-0",t.prerequisites) then
+			omni.lib.remove_prerequisite(t.name,"logistics-0")
+			omni.lib.add_prerequisite(t.name,"basic-splitter-logistics")
+			omni.lib.add_prerequisite(t.name,"basic-underground-logistics")
 		end
 	end
+
+else
 	
 	--Remove logistics Tech
 	TechGen:import("logistics"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():extend()
@@ -89,7 +80,15 @@ else
 		setTechPrereq("belt-logistics"):
 		setTechPacks(1):
 		setTechCost(25):extend()
-	
+
+	--Move all Techs that have logistics as Prereq behind Splitter & UG Techs
+	for _,t in pairs(data.raw.technology) do
+		if omni.lib.is_in_table("logistics",t.prerequisites) then
+			omni.lib.remove_prerequisite(t.name,"logistics")
+			omni.lib.add_prerequisite(t.name,"splitter-logistics")
+			omni.lib.add_prerequisite(t.name,"underground-logistics")
+		end
+	end	
 end
 
 RecGen:create("omnimatter_energy","omni-tablet"):

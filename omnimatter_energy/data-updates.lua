@@ -59,6 +59,7 @@ RecGen:import("electric-mining-drill"):setIngredients(
 	  
 if mods["bobassembly"] then
 	omni.lib.add_prerequisite("basic-automation", "simple-automation")
+	omni.lib.remove_prerequisite("automation", "basic-automation")
 
 	RecGen:import("burner-assembling-machine"):
 		addIngredients({type="item", name="omnitor", amount=1},{type="item", name="omnitor-assembling-machine", amount=1}):
