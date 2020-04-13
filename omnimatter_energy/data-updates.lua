@@ -33,10 +33,6 @@ RecGen:import("boiler"):setTechName("steam-power"):
 	setEnabled(false):
 	setTechPacks(2):extend()
 	
-omni.lib.add_prerequisite("bob-steam-engine-2", "steam-power")
-omni.lib.add_prerequisite("bob-boiler-2", "steam-power")
-omni.lib.add_prerequisite("fast-inserter", "burner-filter")
-
 RecGen:import("steam-engine"):setIngredients(
       {type="item", name="iron-plate", amount=10},
       {type="item", name="iron-gear-wheel", amount=5},
@@ -86,7 +82,17 @@ else
 		setTechName("automation"):
 	 	setTechCost(15):extend()
 end
-TechGen:importIf("bob-drills-1"):addPrereq("anbaric-mining"):extend()
+
+if mods["bobpower"] then
+	omni.lib.add_prerequisite("bob-steam-engine-2", "steam-power")
+	omni.lib.add_prerequisite("bob-boiler-2", "steam-power")
+end
+
+if mods["bobmining"] then
+	omni.lib.add_prerequisite("bob-drills-1", "anbaric-mining")
+end
+
+omni.lib.add_prerequisite("fast-inserter", "burner-filter")
 
 --Move All Electric Automation Recipes behind logistic science
 omni.lib.add_prerequisite("automation", "logistic-science-pack")
