@@ -24,9 +24,11 @@ end
 
 function omni.marathon.standardise(recipe)
 	if recipe == nil then return nil end
+	if recipe.result or (recipe.normal and recipe.normal.result) then --if the recipe was changed after initial standardisation, re-standardise
+		standardized_recipes[recipe.name]=false
+	end
 	if standardized_recipes[recipe.name] then return recipe end
 	--local new = table.deepcopy(recipe)
-
 	if not recipe.expensive then recipe.expensive={} end
 	if not recipe.normal then recipe.normal={} end
 	local ingredients = {}
@@ -52,7 +54,6 @@ function omni.marathon.standardise(recipe)
 	--[[if recipe.localized_name == nil and recipe.expensive and recipe.expensive.main_product and recipe.expensive.main_product~="" then
 		local it = omni.lib.find_prototype(recipe.expensive.main_product)
 	end]]
-
 	recipe.normal.ingredients={}
 	recipe.expensive.ingredients={}
 	for _, diff in pairs({"normal","expensive"}) do
@@ -74,7 +75,7 @@ function omni.marathon.standardise(recipe)
 		if recipe.normal.results then
 			results.normal = table.deepcopy(recipe.normal.results)
 		else
-			results.normal = {{recipe.normal.result,recipe.normal.result_count}}
+			results.normal = {{recipe.normal.result,recipe.normal.result_count or 1}}
 			if not results.normal[1][2] then results.normal[1][2]=1 end
 		end
 	end
@@ -91,8 +92,8 @@ function omni.marathon.standardise(recipe)
 			if not results.expensive then results.expensive = table.deepcopy(recipe.results) end
 			if not results.normal then results.normal = table.deepcopy(recipe.results) end
 		else
-			if not results.expensive then results.expensive = {{recipe.result,recipe.result_count}} end
-			if not results.normal then results.normal = {{recipe.result,recipe.result_count}} end
+			if not results.expensive then results.expensive = {{recipe.result,recipe.result_count or 1}} end
+			if not results.normal then results.normal = {{recipe.result,recipe.result_count or 1}} end
 			if not (results.expensive[1] and results.expensive[1][2]) then results.expensive[1][2]=1 end
 			if not results.normal[1][2] then results.normal[1][2]=1 end
 		end
@@ -119,7 +120,6 @@ function omni.marathon.standardise(recipe)
 	recipe.result_count = nil
 	recipe.results = nil
 	recipe.ingredients = nil
-
 	if recipe.localised_name == nil and #recipe.normal.results==1 then
 		local it = omni.lib.find_prototype(recipe.normal.results[1].name)
 		set_loc_name(it)
@@ -215,22 +215,38 @@ function omni.marathon.standardise(recipe)
 
 	recipe.energy_required = nil
 	if (recipe.main_product and recipe.main_product ~= "") or (recipe.normal.main_product and recipe.normal.main_product ~= "") or (recipe.expensive.main_product and recipe.expensive.main_product ~= "") then
-		--log("recipe with main product: "..recipe.name)
 		local item = omni.lib.find_prototype(recipe.main_product or recipe.normal.main_product or recipe.expensive.main_product)
 		if item then
-			--log("item found: "..item.name)
+			if item.icon then recipe.icon = item.icon end
+			if item.icons then recipe.icons = item.icons end
+			if item.icon_size then recipe.icon_size = item.icon_size end
+		end
+	else
+		if recipe.result and recipe.result.name then
+			res=recipe.result.name
+		elseif recipe.result then
+			res=recipe.result 
+		elseif recipe.results and recipe.results[1] and recipe.results[1].name then
+			res=recipe.results[1].name
+		elseif 	recipe.normal.results and recipe.normal.results[1] and recipe.normal.results[1].name then
+			res=recipe.normal.results[1].name
+		else
+			res=recipe.name
+		end
+		local item = omni.lib.find_prototype(res)
+		if item then
 			if item.icon then recipe.icon = item.icon end
 			if item.icons then recipe.icons = item.icons end
 			if item.icon_size then recipe.icon_size = item.icon_size end
 		end
 	end
 	if recipe.icon and recipe.icon ~= "" then
-		recipe.icons = {{icon=recipe.icon}}
+		recipe.icons = {{icon=recipe.icon,icon_size=recipe.icon_size}}
 		recipe.icon=nil
 	end
 	recipe.main_product=nil
 	recipe.normal.main_product=nil
 	recipe.expensive.main_product=nil
-	--standardized_recipes[recipe.name] = true
+	standardized_recipes[recipe.name] = true
 	return table.deepcopy(recipe)
 end
