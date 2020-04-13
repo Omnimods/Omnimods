@@ -2,6 +2,7 @@
 Version: 1.18.0
 Date: 2020.04.13
   Features:
+    - First public release
     - Added Crystal Solar Panels (Max Size & Tier configurable)
     - Added Solar Road (Tiles that produce & distribute energy)
     - Added Omnified Fuel, all available Fuels have to be Omnified before they can be used

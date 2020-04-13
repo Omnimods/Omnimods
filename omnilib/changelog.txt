@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.3
-Date: 2020.XX.XX
+Date: 2020.04.13
   Features:
     - Support for Angel's Industry components
   Bugfixes:

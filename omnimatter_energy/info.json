@@ -8,7 +8,7 @@
 "dependencies":
         	[
                 "base",
-                "omnilib >= 3.0.0",
+                "omnilib >= 3.18.3",
                 "omnimatter >= 3.0.0",
                 "omnimatter_crystal",
                 "?boblogistics",
