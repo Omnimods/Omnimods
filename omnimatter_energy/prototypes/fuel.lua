@@ -109,7 +109,8 @@ end
 RecGen:create("omnimatter_energy","purified-omnite"):
     setIngredients({type="item", name="crushed-omnite", amount=4}):
     setResults({type="item", name="purified-omnite", amount=2}):
-	setSubgroup("omni-solids"):
+    setSubgroup("omni-solids"):
+    setOrder("z"):
 	setStacksize(200):
 	setCategory("omnifurnace"):
 	setFuelCategory("chemical"):
