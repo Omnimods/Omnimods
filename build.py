@@ -1,12 +1,20 @@
 # -*- coding: utf-8 -*-
 
 from dataclasses import dataclass, field
+from functools import partial
 import os
 import json
 import pathlib
 import shutil
+import sys
 
-DEFAULT_FOLDER = pathlib.Path(os.getenv("APPDATA")).joinpath(r"Factorio\mods")
+# Use symlinks on Linux, copy everything over on Windows
+if sys.platform.startswith("linux"):
+    default_folder = pathlib.Path("~/.factorio/mods").expanduser().resolve()
+    link_function = partial(os.symlink, target_is_directory=True)
+elif sys.platform.startswith("win"):
+    default_folder = pathlib.Path(os.getenv("APPDATA")).joinpath(r"Factorio\mods")
+    link_function = shutil.copytree
 
 
 @dataclass
@@ -21,17 +29,21 @@ class ModBuilder:
     def build_mods(self):
         for mod in self.found_mods:
             new_target_folder = self.target_folder.joinpath(repr(mod))
-            shutil.copytree(self.source_folder.joinpath(mod.name), new_target_folder)
+            link_function(
+                src=self.source_folder.joinpath(mod.name), dst=new_target_folder,
+            )
 
     def delete_mods(self, delete_zips=True):
         if delete_zips:
             for mod in self.found_mods:
-                for f in self.target_folder.glob(f"{mod.name}_[0-9]*.zip"):
+                for f in self.target_folder.glob(f"{mod.name}_[0-9.]*.zip"):
                     f.unlink()
 
         for mod in self.found_mods:
-            for folder in self.target_folder.glob(f"{mod.name}_[0-9]*"):
-                if folder.is_dir():
+            for folder in self.target_folder.glob(f"{mod.name}_[0-9.]*"):
+                if folder.is_symlink():
+                    os.unlink(folder)
+                elif folder.is_dir():
                     shutil.rmtree(folder)
 
     def find_mods(self):
@@ -70,7 +82,7 @@ class Mod:
         return f"{self.name}_{self.version}"
 
     def _initialize(self):
-        if self.path.is_file():
+        if self.path.is_file() and not self.path.is_symlink():
             # zip file, name and version is in the filename
             last_dash_idx = self.path.name.rfind("_")
             self.name = self.path.name[:last_dash_idx]
@@ -87,10 +99,15 @@ class Mod:
 
 if __name__ == "__main__":
     mb = ModBuilder(
-        target_folder=DEFAULT_FOLDER,
-        source_folder=pathlib.Path(__file__).parent,
+        target_folder=default_folder,
+        source_folder=pathlib.Path(__file__).parent.resolve(),
         mod_key="omni",
-        avoidables=["omnimatter_chemistry", "omnimatter_logistics", "omnimatter_marathon", "omnimatter_research"],
+        avoidables=[
+            "omnimatter_chemistry",
+            "omnimatter_logistics",
+            "omnimatter_marathon",
+            "omnimatter_research",
+        ],
         building_all=True,
     )
     mb.find_mods()
