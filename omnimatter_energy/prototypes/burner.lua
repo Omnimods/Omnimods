@@ -99,7 +99,7 @@ RecGen:create("omnimatter_energy","omni-tablet"):
 	
 BuildGen:import("burner-mining-drill"):
 	setIngredients(
-      {type="item", name="stone-brick", amount=4},
+      {type="item", name="omnite-brick", amount=4},
       {type="item", name="iron-plate", amount=4},
       {type="item", name="omnitor", amount=1}):setEnabled():extend()
 

@@ -32,6 +32,7 @@ RecGen:import("boiler"):setTechName("steam-power"):
 	equalize("burner-omnitractor"):
 	setEnabled(false):
 	setTechPacks(2):extend()
+omni.lib.add_unlock_recipe("steam-power", "purified-omnite")
 	
 RecGen:import("steam-engine"):setIngredients(
       {type="item", name="iron-plate", amount=10},
@@ -128,11 +129,11 @@ while data.raw.recipe["assembling-machine-"..i] do
 	i=i+1
 end
 
-RecGen:importIf("burner-ore-crusher"):setIngredients({type="item", name="stone-brick", amount=4},
+RecGen:importIf("burner-ore-crusher"):setIngredients({type="item", name="omnite-brick", amount=4},
       {type="item", name="iron-plate", amount=4},
       {type="item", name="omnitor", amount=1}):extend()
 	  
-RecGen:importIf("ore-sorting-facility"):setIngredients({type="item", name="stone-brick", amount=30},
+RecGen:importIf("ore-sorting-facility"):setIngredients({type="item", name="omnite-brick", amount=30},
       {type="item", name="iron-plate", amount=15},
       {type="item", name="anbaric-omnitor", amount=5}):extend()
 	  

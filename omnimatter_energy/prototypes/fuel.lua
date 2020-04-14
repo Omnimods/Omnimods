@@ -1,3 +1,4 @@
+--Fuels to ignore, no Omnified Fuel will be created, Fuel Value will be decreased by 10%
 local ignore = {
 	"omnite",
     "crushed-omnite",
@@ -6,17 +7,33 @@ local ignore = {
     "omniseedling",
 }
 
-if mods["omnimatter-wood"] then
-    table.insert(ignore, "wood")
-    data.raw.item["wood"].fuel_value = nil
-    data.raw.item["wood"].fuel_category = nil
+--Fuels to disable,no omnified version will be created, fuel values will be nilled
+local nilfuel = {}
+
+if mods["omnimatter_wood"] then
+    table.insert(nilfuel, "wood")
+end
+
+--nil Bob´s carbon if angel is present
+if mods["angelspetrochem"] then
+    table.insert(nilfuel, "carbon")
 end
 
 for _,fuelitem in pairs(data.raw.item) do  
 
     for _,blockeditem in pairs(ignore) do
         if fuelitem.name == blockeditem then
-            fuelitem.fuel_value = omni.lib.multFuelValue(fuelitem.fuel_value, 0.75)
+            fuelitem.fuel_value = omni.lib.multFuelValue(fuelitem.fuel_value, 0.9)
+            goto continue 
+        end
+    end
+
+    for _,nilit in pairs(nilfuel) do
+        if fuelitem.name == nilit then
+            --fuelitem.fuel_value = nil
+            --fuelitem.fuel_category = nil
+            fuelitem.fuel_value = "1kJ"
+            fuelitem.fuel_category = "omni-0"
             goto continue 
         end
     end
@@ -58,7 +75,7 @@ for _,fuelitem in pairs(data.raw.item) do
             setEnabled(false):
             setStacksize(fuelitem.stack_size):
             setFuelCategory(fuelitem.fuel_category):
-            setFuelValue(fuelitem.fuel_value):
+            setFuelValue(omni.lib.multFuelValue(fuelitem.fuel_value, 1.1)):
             extend()
             omni.lib.add_prerequisite(props_add.tech,omni.lib.find_tech_name(fuelitem.name))
 
@@ -88,3 +105,14 @@ for _,fuelitem in pairs(data.raw.item) do
     end
 ::continue::
 end
+
+RecGen:create("omnimatter_energy","purified-omnite"):
+    setIngredients({type="item", name="crushed-omnite", amount=4}):
+    setResults({type="item", name="purified-omnite", amount=2}):
+	setSubgroup("omni-solids"):
+	setStacksize(200):
+	setCategory("omnifurnace"):
+	setFuelCategory("chemical"):
+	setFuelValue(2.4):
+    setEnergy(0.5):
+    setEnabled(false):extend()
