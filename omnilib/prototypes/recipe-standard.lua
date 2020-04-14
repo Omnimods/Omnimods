@@ -26,6 +26,8 @@ function omni.marathon.standardise(recipe)
 	if recipe == nil then return nil end
 	if recipe.result or (recipe.normal and recipe.normal.result) then --if the recipe was changed after initial standardisation, re-standardise
 		standardized_recipes[recipe.name]=false
+	elseif recipe.icon and recipe.icon ~="" then --check for icons not icon if it passes the previous check
+		standardized_recipes[recipe.name]=false
 	end
 	if standardized_recipes[recipe.name] then return recipe end
 	--local new = table.deepcopy(recipe)
@@ -214,35 +216,36 @@ function omni.marathon.standardise(recipe)
 	if recipe.normal == false then recipe.normal = table.deepcopy(recipe.expensive) end
 
 	recipe.energy_required = nil
-	if (recipe.main_product and recipe.main_product ~= "") or (recipe.normal.main_product and recipe.normal.main_product ~= "") or (recipe.expensive.main_product and recipe.expensive.main_product ~= "") then
-		local item = omni.lib.find_prototype(recipe.main_product or recipe.normal.main_product or recipe.expensive.main_product)
-		if item then
-			if item.icon then recipe.icon = item.icon end
-			if item.icons then recipe.icons = item.icons end
-			if item.icon_size then recipe.icon_size = item.icon_size end
-		end
-	else
-		if recipe.result and recipe.result.name then
-			res=recipe.result.name
-		elseif recipe.result then
-			res=recipe.result 
-		elseif recipe.results and recipe.results[1] and recipe.results[1].name then
-			res=recipe.results[1].name
-		elseif 	recipe.normal.results and recipe.normal.results[1] and recipe.normal.results[1].name then
-			res=recipe.normal.results[1].name
+	if not recipe.icon and not recipe.icons then
+		if (recipe.main_product and recipe.main_product ~= "") or (recipe.normal.main_product and recipe.normal.main_product ~= "") or (recipe.expensive.main_product and recipe.expensive.main_product ~= "") then
+			local item = omni.lib.find_prototype(recipe.main_product or recipe.normal.main_product or recipe.expensive.main_product)
+			if item then
+				if item.icon then recipe.icon = item.icon end
+				if item.icons then recipe.icons = item.icons end
+				if item.icon_size then recipe.icon_size = item.icon_size end
+			end
 		else
-			res=recipe.name
+			if recipe.result and recipe.result.name then
+				res=recipe.result.name
+			elseif recipe.result then
+				res=recipe.result 
+			elseif recipe.results and recipe.results[1] and recipe.results[1].name then
+				res=recipe.results[1].name
+			elseif 	recipe.normal.results and recipe.normal.results[1] and recipe.normal.results[1].name then
+				res=recipe.normal.results[1].name
+			else
+				res=recipe.name
+			end
+			local item = omni.lib.find_prototype(res)
+			if item then
+				if item.icon then recipe.icon = item.icon end
+				if item.icons then recipe.icons = item.icons end
+				if item.icon_size then recipe.icon_size = item.icon_size end
+			end
 		end
-		local item = omni.lib.find_prototype(res)
-		if item then
-			if item.icon then recipe.icon = item.icon end
-			if item.icons then recipe.icons = item.icons end
-			if item.icon_size then recipe.icon_size = item.icon_size end
-		end
-	end
-	if recipe.icon and recipe.icon ~= "" then
+	elseif recipe.icon and recipe.icon ~= "" then
 		recipe.icons = {{icon=recipe.icon,icon_size=recipe.icon_size}}
-		recipe.icon=nil
+		recipe.icon=nil 
 	end
 	recipe.main_product=nil
 	recipe.normal.main_product=nil
