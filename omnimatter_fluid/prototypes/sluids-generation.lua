@@ -843,7 +843,13 @@ for _, recipe in pairs(extra_fluid_rec) do
 		for _,ingres in pairs({"ingredients","results"}) do
 			for j,component in pairs(recipe[dif][ingres]) do
 				if component.type == "fluid" and not generator_fluid[component.name]  then
-					fluids[dif][ingres][j] = {name=component.name,amount=omni.fluid.round_fluid(component.amount)}
+					local amnt=component.amount
+					if component.amount_max then
+						if component.amount_min then
+							amnt=(component.amount_max+component.amount_min)/2 --average, not great, but meh
+						end
+					end
+					fluids[dif][ingres][j] = {name=component.name,amount=omni.fluid.round_fluid(amnt)}
 					mult[dif]=omni.lib.lcm(omni.lib.lcm(sluid_contain_fluid,fluids[dif][ingres][j].amount)/fluids[dif][ingres][j].amount,mult[dif])
 					primes[dif][ingres][j]=omni.lib.factorize(fluids[dif][ingres][j].amount)
 				end
