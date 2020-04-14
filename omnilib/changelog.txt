@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.4
+Date: 2020.04.14
+  Bugfixes:
+    - Fixed that recipe-standard function was forcing icon overrides even when not needed, causing icon size mismatch
+---------------------------------------------------------------------------------------------------
 Version: 3.18.3
 Date: 2020.04.13
   Features:
