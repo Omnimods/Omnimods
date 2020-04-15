@@ -91,9 +91,15 @@ for _,fuelitem in pairs(data.raw.item) do
 
        log("DONE WITH: "..fuelitem.name)
       -- log(serpent.block(data.raw["item"]["omni-energy-"..fuelitem.name]))
-   
     end
 ::continue::
+end
+
+--Add Solid Fuel Tech Prereq manually
+if data.raw.technology["solid-fuel"] then
+    omni.lib.add_prerequisite("omnium-power-3","solid-fuel")
+elseif data.raw.technology["advanced-oil-processing"] then
+    omni.lib.add_prerequisite("omnium-power-3","advanced-oil-processing")
 end
 
 RecGen:create("omnimatter_energy","purified-omnite"):
