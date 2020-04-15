@@ -208,7 +208,7 @@ BuildGen:import("assembling-machine-1"):
 	setCrafting("crafting", "basic-crafting"):
 	setFuelCategory("omnite"):
 	setSpeed(0.1):
-	setIngredients({"omnitor",2},{"iron-plate",5},{"burner-inserter",1}):
+	setIngredients({"omnitor",1},{"iron-plate",2},{"burner-inserter",1}):
 	setAnimation(
 	{layers={{
 	  filename = "__omnimatter_energy__/graphics/entity/omnitor-assembling-machine/omnitor-assembling-machine.png",
