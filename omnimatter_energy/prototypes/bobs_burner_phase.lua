@@ -24,7 +24,12 @@ omni.lib.remove_unlock_recipe("electricity","small-electric-pole")
 omni.lib.remove_unlock_recipe("electricity","electric-mining-drill")
 omni.lib.remove_unlock_recipe("electricity","inserter")
 -- Move steam-engine waaay back
-omni.lib.add_prerequisite("bob-steam-engine-1", "automation-science-pack")
+if data.raw.technology["bob-steam-engine-1"] then
+    omni.lib.add_prerequisite("bob-steam-engine-1", "automation-science-pack")
+else
+    omni.lib.remove_unlock_recipe("electricity","steam-engine")
+    omni.lib.add_unlock_recipe("automation", "steam-engine")
+end
 omni.lib.add_prerequisite("automation-science-pack", "electricity")
 omni.lib.add_prerequisite("automation-science-pack", "steam-power")
 --change technologies to be steam pack in place of red packs
@@ -37,5 +42,7 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
     omni.lib.replace_science_pack("basic-underground-logistics","automation-science-pack", "steam-science-pack")
     omni.lib.replace_science_pack("basic-splitter-logistics","automation-science-pack", "steam-science-pack")
 end
-omni.lib.replace_science_pack("bob-steam-engine-1", "steam-science-pack","automation-science-pack")
-omni.lib.replace_science_pack("bob-steam-engine-2", "steam-science-pack","automation-science-pack")
+if data.raw.technology["bob-steam-engine-1"] then
+    omni.lib.replace_science_pack("bob-steam-engine-1", "steam-science-pack","automation-science-pack")
+    omni.lib.replace_science_pack("bob-steam-engine-2", "steam-science-pack","automation-science-pack")
+end
