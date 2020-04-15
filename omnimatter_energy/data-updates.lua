@@ -146,6 +146,10 @@ RecGen:import("lab"):setEnabled(false):
 	setTechIcon("omnimatter_energy","anbaric-lab"):
 	setTechPacks(1):
 	setTechPrereq("anbaricity"):extend()
+
+if mods["bobtech"] and settings.startup["bobmods-burnerphase"].value then
+	require("prototypes.bobs_burner_phase")
+end
 	
 RecGen:import("omnicium-plate-pure"):multiplyIngredients(0.5):extend()
 RecGen:import("omnicium-plate-mix"):multiplyIfModsIngredients(0.5,"angelsrefining"):extend()
