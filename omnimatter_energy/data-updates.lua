@@ -185,10 +185,24 @@ RecGen:import("lab"):setEnabled(false):
 	setTechPacks(1):
 	setTechPrereq("anbaricity"):extend()
 
+--Stuff to manually remove from the Omnitor Lab
+local packs = {
+	"token-bio",
+	"omni-pack"
+}
+
+for i,inputs in pairs(data.raw["lab"]["omnitor-lab"].inputs) do
+	for _,pack in pairs(packs) do
+		if inputs == pack then
+			table.remove(data.raw["lab"]["omnitor-lab"].inputs,i, pack)
+		end
+	end
+end
+
 if mods["bobtech"] and settings.startup["bobmods-burnerphase"].value then
 	require("prototypes.bobs_burner_phase")
 end
-	
+
 RecGen:import("omnicium-plate-pure"):multiplyIngredients(0.5):extend()
 RecGen:import("omnicium-plate-mix"):multiplyIfModsIngredients(0.5,"angelsrefining"):extend()
 RecGen:import("omnite-smelting"):multiplyIngredients(0.5):extend()
