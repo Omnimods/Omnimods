@@ -129,12 +129,7 @@ end
 --moved from DFF
 -- Fix for Steam SP Bob's Tech introduces sometimes
 if data.raw.recipe["steam-science-pack"] then
-	new_ingredients =
-    {
-      {"omnite", 1},
-      {"stone", 1},
-    }
-	data.raw.recipe["steam-science-pack"].ingredients = new_ingredients
+	omni.lib.replace_recipe_ingredient("steam-science-pack","coal","omnite")
 end
 require("prototypes.omnitractor-dynamic")
 require("prototypes.recipes.extraction-dynamic")
