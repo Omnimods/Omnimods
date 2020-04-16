@@ -1,10 +1,9 @@
-
 if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].value then
 	log("OmniEnergy: Bobs Belt Overhaul found")
 
 	--Remove logistics-0 Tech
 	TechGen:import("logistics-0"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():extend()
-	data.raw.technology["logistics-0"]=nil
+	data.raw.technology["logistics-0"].hidden = true
 
 	--Create seperate techs for Basic Belt, Splitter and UG
 	RecGen:import("basic-transport-belt"):
@@ -97,11 +96,19 @@ RecGen:create("omnimatter_energy","omni-tablet"):
 	setEnabled():
 	setEnergy(0.5):extend()
 	
-BuildGen:import("burner-mining-drill"):
-	setIngredients(
-      {type="item", name="omnite-brick", amount=4},
-      {type="item", name="iron-plate", amount=4},
-      {type="item", name="omnitor", amount=1}):setEnabled():extend()
+if mods["angelsindustries"] and angelsmods.industries.components then
+	BuildGen:import("burner-mining-drill"):
+		setIngredients(
+		{type="item", name="stone-furnace", amount=1},
+		{type="item", name="mechanical-parts", amount=3},
+		{type="item", name="construction-frame-1", amount=3}):setEnabled():extend()
+else
+	BuildGen:import("burner-mining-drill"):
+		setIngredients(
+		{type="item", name="omnite-brick", amount=4},
+		{type="item", name="iron-plate", amount=4},
+		{type="item", name="omnitor", amount=1}):setEnabled():extend()
+end
 
 RecGen:create("omnimatter_energy","heat"):
 	fluid():
@@ -127,14 +134,23 @@ RecGen:create("omnimatter_energy","heat"):
 	extend()
 data.raw.fluid.heat.auto_barrel = false
 
+local regular_cost = {}
+local expensive cost = {}
+if mods["angelsindustries"] and angelsmods.industries.components then
+	regular_cost = {{"stone-furnace", 1}, {"block-omni-1", 4}, {"construction-frame-1", 4}, {"block-fluidbox-1", 4}}
+	expensive_cost = {{"stone-furnace", 2}, {"block-omni-1", 10}, {"construction-frame-1", 10}, {"block-fluidbox-1", 10}}
+else
+	regular_cost = {{"anbaric-omnitor",4},{"omnicium-gear-wheel",5},{"stone-furnace",1}}
+	expensive_cost = {{"anbaric-omnitor",9},{"omnicium-gear-wheel",12},{"stone-furnace",2}}
+end
 BuildGen:import("steam-turbine"):
 	setName("omni-heat-burner","omnimatter_energy"):
 	--setFluidBox("XTX.XXX.XXX.XXX.XGX","heat",400)
 	setLocName():
 	setFilter("heat"):
 	nullIngredients():
-	setNormalIngredients({"anbaric-omnitor",4},{"omnicium-gear-wheel",5},{"stone-furnace",1}):
-	setExpensiveIngredients({"anbaric-omnitor",9},{"omnicium-gear-wheel",12},{"stone-furnace",2}):
+	setNormalIngredients(regular_cost):
+	setExpensiveIngredients(expensive_cost):
 	setReplace("heat-burner"):
 	setTechName("anbaricity"):
 	setFluidConsumption(1):
@@ -163,6 +179,13 @@ RecGen:create("omnimatter_energy","anbaric-omnitor"):
 	setIngredients({type="item", name="omnicium-plate", amount=2},{type="item", name="copper-cable", amount=2},{type="item", name="omnitor", amount=1}):
 	addProductivity():extend()
 	
+
+if mods["angelsindustries"] and angelsmods.industries.components then
+	-- Add omnitors to omniblocks
+	omni.lib.replace_recipe_ingredient("block-omni-0",component["omniplate"][1],"omnitor")
+	omni.lib.replace_recipe_ingredient("block-omni-1",component["omniplate"][1],"anbaric-omnitor")
+end
+
 RecGen:import("small-electric-pole"):setEnabled(false):setTechName("anbaricity"):extend()
 BuildGen:import("small-electric-pole"):
 	setName("small-iron-electric-pole"):
@@ -193,7 +216,14 @@ BuildGen:import("small-electric-pole"):
 	}):
 	setEnabled(false):
 	setTechName("anbaricity"):extend()
-	
+
+local ings = {}
+if mods["angelsindustries"] and angelsmods.industries.components then
+	ings = {{"block-omni-0", 2}, {"construction-frame-1"}}
+else
+	ings = {{"omnitor",1},{"iron-plate",2},{"burner-inserter",1}}
+end
+
 BuildGen:import("assembling-machine-1"):
 	setBurner(0.9,1):
 	setName("omnitor-assembling-machine"):
@@ -208,7 +238,7 @@ BuildGen:import("assembling-machine-1"):
 	setCrafting("crafting", "basic-crafting"):
 	setFuelCategory("omnite"):
 	setSpeed(0.1):
-	setIngredients({"omnitor",2},{"iron-plate",5},{"burner-inserter",1}):
+	setIngredients(ings):
 	setAnimation(
 	{layers={{
 	  filename = "__omnimatter_energy__/graphics/entity/omnitor-assembling-machine/omnitor-assembling-machine.png",
@@ -232,6 +262,14 @@ BuildGen:import("assembling-machine-1"):
 	):
 	extend()
 
+if mods["angelsindustries"] and angelsmods.industries.components then
+	regular_cost = {{"block-omni-0", 4}, {"cable-harness-1", 5}, {"omnite-brick", 5}}
+	expensive_cost = {{"block-omni-0", 8}, {"cable-harness-1", 15}, {"omnite-brick", 9}}
+else
+	regular_cost = {{"omnitor", 10},{"copper-plate", 10},{"omnite-brick", 5}}
+	expensive_cost = {{"omnitor", 20},{"copper-plate", 30},{"omnite-brick", 9}}
+end
+
 BuildGen:import("lab"):
 	setBurner(0.9):
 	setName("omnitor-lab"):
@@ -239,8 +277,8 @@ BuildGen:import("lab"):
 	setEnabled():
 	setInputs("automation-science-pack"):
 	setFuelCategory("omnite"):
-	setNormalIngredients({type="item", name="omnitor", amount=10},{type="item", name="copper-plate", amount=10},{type="item", name="omnite-brick", amount=5}):
-	setExpensiveIngredients({type="item", name="omnitor", amount=20},{type="item", name="copper-plate", amount=30},{type="item", name="omnite-brick", amount=9}):
+	setNormalIngredients(regular_cost):
+	setExpensiveIngredients(expensive_cost):
 	setOnAnimation({
   layers =
   {
