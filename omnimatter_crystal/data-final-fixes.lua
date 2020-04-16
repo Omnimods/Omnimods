@@ -33,6 +33,9 @@ end
 -- If omniwater and bob's steam phase is on, we need a way to produce water early via omniplant
 if mods["omnimatter_water"] and data.raw.recipe["steam-science-pack"] then
 	RecGen:import("burner-omniplant"):setTechName("base-impure-extraction"):extend()
+	omni.lib.replace_science_pack("omnitech-water-omnitraction-1","automation-science-pack", "steam-science-pack")
+	omni.lib.replace_science_pack("omnitech-omnic-water-omnitraction-1","automation-science-pack", "steam-science-pack")
+	omni.lib.remove_prerequisite("omnitech-omnic-water-omnitraction-1", "omnitractor-electric-1")
 else
 	RecGen:import("burner-omniplant"):setTechName("omnitractor-electric-1"):extend()
 end
