@@ -92,7 +92,11 @@ class Mod:
 
     def _data_from_info(self):
         with open(self.path.joinpath("info.json"), "r") as info_file:
-            data = json.load(info_file)
+            try:
+                data = json.load(info_file)
+            except:
+                print(info_file)
+                raise
             self.name = data["name"]
             self.version = data["version"]
 

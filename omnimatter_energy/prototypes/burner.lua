@@ -51,7 +51,7 @@ else
 	
 	--Remove logistics Tech
 	TechGen:import("logistics"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():extend()
-	data.raw.technology["logistics"]=nil
+	data.raw.technology["logistics"].hidden = true
 
 	--Create seperate techs for Belt, Splitter and UG
 	RecGen:import("transport-belt"):

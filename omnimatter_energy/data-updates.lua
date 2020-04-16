@@ -208,3 +208,10 @@ RecGen:import("omnicium-plate-mix"):multiplyIfModsIngredients(0.5,"angelsrefinin
 RecGen:import("omnite-smelting"):multiplyIngredients(0.5):extend()
 RecGen:import("omnicium-processing"):multiplyIngredients(0.5):extend()
 
+-- Deadlock compatibility
+if data.raw.technology["basic-transport-belt-beltbox"] then
+	omni.lib.add_unlock_recipe("basic-belt-logistics", "basic-transport-belt-loader")
+	TechGen:import("basic-transport-belt-beltbox"):
+	setPrereq("basic-splitter-logistics","basic-underground-logistics"):
+	extend()
+end
