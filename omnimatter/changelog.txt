@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.3
+Date: 2020.04.16
+  Bugfixes:
+    - Bob´s steam SP recipe overwrite not working properly
+    - Fixed Omnifluid distillation localisation
+---------------------------------------------------------------------------------------------------
 Version: 3.18.2
 Date: 2020.04.13
   Changes:

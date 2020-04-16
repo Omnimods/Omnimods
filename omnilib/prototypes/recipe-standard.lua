@@ -24,7 +24,7 @@ end
 
 function omni.marathon.standardise(recipe)
 	if recipe == nil then return nil end
-	if recipe.result or (recipe.normal and recipe.normal.result) then --if the recipe was changed after initial standardisation, re-standardise
+	if recipe.result or recipe.results or (recipe.normal and recipe.normal.result) then --if the recipe was changed after initial standardisation, re-standardise
 		standardized_recipes[recipe.name]=false
 	elseif recipe.icon and recipe.icon ~="" then --check for icons not icon if it passes the previous check
 		standardized_recipes[recipe.name]=false

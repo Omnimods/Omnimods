@@ -1,3 +1,4 @@
+--Fuels to ignore, no Omnified Fuel will be created, Fuel Value will be decreased by 10%
 local ignore = {
 	"omnite",
     "crushed-omnite",
@@ -6,17 +7,31 @@ local ignore = {
     "omniseedling",
 }
 
-if mods["omnimatter-wood"] then
-    table.insert(ignore, "wood")
-    data.raw.item["wood"].fuel_value = nil
-    data.raw.item["wood"].fuel_category = nil
+--Fuels to disable,no omnified version will be created, fuel values will be nilled
+local nilfuel = {}
+
+if mods["omnimatter_wood"] then
+    table.insert(nilfuel, "wood")
+end
+
+--nil Bob´s carbon if angel is present
+if mods["angelspetrochem"] then
+    table.insert(nilfuel, "carbon")
 end
 
 for _,fuelitem in pairs(data.raw.item) do  
 
     for _,blockeditem in pairs(ignore) do
         if fuelitem.name == blockeditem then
-            fuelitem.fuel_value = omni.lib.multFuelValue(fuelitem.fuel_value, 0.75)
+            fuelitem.fuel_value = omni.lib.multFuelValue(fuelitem.fuel_value, 0.9)
+            goto continue 
+        end
+    end
+
+    for _,nilit in pairs(nilfuel) do
+        if fuelitem.name == nilit then
+            --fuelitem.fuel_value = "1kJ"
+            fuelitem.fuel_category = "omni-0"
             goto continue 
         end
     end
@@ -27,11 +42,11 @@ for _,fuelitem in pairs(data.raw.item) do
         --lets define the variables first, then jump in and create it all in one go:
         local FV=omni.lib.getFuelNumberInMJ(fuelitem.fuel_value)
         local props={
-            [5]={ing_add={"crushed-omnite",2},cat="crafting",time=1.0,tech="omnium-power-1"},
-            [10]={ing_add={"pulverized-omnite",4},cat="omnitractor",time=2.0,tech="omnium-power-2"},
-            [40]={ing_add={type = "fluid", name = "omnic-acid", amount = 20},cat="omniphlog",time=2.0,tech="omnium-power-3"},
-            [250]={ing_add={type = "fluid", name = "omnisludge", amount = 80},cat="omniplant",time=4.0,tech="omnium-power-4"},
-            [300]={ing_add={type = "fluid",name = "omniston", amount = 40},cat="omniplant",time=4.0,tech="omnium-power-5"},}
+            [5]={ing_add={"crushed-omnite",2},cat="crafting",time=1.0,tech="omnium-power-1",fuelmult = 1.30},
+            [10]={ing_add={"pulverized-omnite",4},cat="omnitractor",time=2.0,tech="omnium-power-2",fuelmult = 1.25},
+            [40]={ing_add={type = "fluid", name = "omnic-acid", amount = 20},cat="omniphlog",time=2.0,tech="omnium-power-3",fuelmult = 1.20},
+            [250]={ing_add={type = "fluid", name = "omnisludge", amount = 80},cat="omniplant",time=4.0,tech="omnium-power-4",fuelmult = 1.15},
+            [300]={ing_add={type = "fluid",name = "omniston", amount = 40},cat="omniplant",time=4.0,tech="omnium-power-5",fuelmult = 1.10},}
             local props_add={}
         if FV<=5 then
             props_add=props[5]
@@ -58,7 +73,7 @@ for _,fuelitem in pairs(data.raw.item) do
             setEnabled(false):
             setStacksize(fuelitem.stack_size):
             setFuelCategory(fuelitem.fuel_category):
-            setFuelValue(fuelitem.fuel_value):
+            setFuelValue(omni.lib.multFuelValue(fuelitem.fuel_value, props_add.fuelmult)):
             extend()
             omni.lib.add_prerequisite(props_add.tech,omni.lib.find_tech_name(fuelitem.name))
 
@@ -70,21 +85,31 @@ for _,fuelitem in pairs(data.raw.item) do
         data.raw.item["omnified-"..fuelitem.name].fuel_emissions = fuelitem.fuel_emissions
         data.raw.item["omnified-"..fuelitem.name].fuel_glow_color = fuelitem.fuel_glow_color
 
-        --Remove Fuel related values on the old item
-        --FUCKS UP COMPATIBILITY!!!!
-        --fuelitem.fuel_acceleration = nil
-        --fuelitem.fuel_acceleration_multiplier = nil
-        --fuelitem.fuel_top_speed = nil
-        --fuelitem.fuel_top_speed_multiplier = nil
-        --fuelitem.fuel_emissions = nil
-        --fuelitem.fuel_glow_color = nil
-        fuelitem.fuel_value = "1kJ"
+        --fuelitem.fuel_value = "1kJ" not needed since the fuel category is changed
         fuelitem.fuel_category = "omni-0"
 
 
        log("DONE WITH: "..fuelitem.name)
       -- log(serpent.block(data.raw["item"]["omni-energy-"..fuelitem.name]))
-   
     end
 ::continue::
 end
+
+--Add Solid Fuel Tech Prereq manually
+if data.raw.technology["solid-fuel"] then
+    omni.lib.add_prerequisite("omnium-power-3","solid-fuel")
+elseif data.raw.technology["advanced-oil-processing"] then
+    omni.lib.add_prerequisite("omnium-power-3","advanced-oil-processing")
+end
+
+RecGen:create("omnimatter_energy","purified-omnite"):
+    setIngredients({type="item", name="crushed-omnite", amount=5}):
+    setResults({type="item", name="purified-omnite", amount=2}):
+    setSubgroup("omni-solids"):
+    setOrder("z"):
+	setStacksize(200):
+	setCategory("omnifurnace"):
+	setFuelCategory("chemical"):
+	setFuelValue(2.4):
+    setEnergy(0.5):
+    setEnabled(false):extend()
