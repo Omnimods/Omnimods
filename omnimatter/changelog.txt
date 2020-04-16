@@ -1,11 +1,9 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.3
 Date: 2020.04.16
-  Changes:
-    - Bob´s steam SP now requires Omnite instead of Coal
   Bugfixes:
     - Bob´s steam SP recipe overwrite not working properly
-	- Fixed Omnifluid distillation localisation
+    - Fixed Omnifluid distillation localisation
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.2
 Date: 2020.04.13

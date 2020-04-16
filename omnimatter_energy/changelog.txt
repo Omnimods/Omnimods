@@ -5,7 +5,8 @@ Date: 2020-04-13
     - First public release
     - Added Crystal Solar Panels (Max Size & Tier configurable)
     - Added Solar Road (Tiles that produce & distribute energy)
-    - Added Omnified Fuel, Omnified Fuel has a boosted Fuel value. All available Fuels have to be Omnified before they can be used
+    - Added Omnified Fuel, Omnified Fuel has a boosted Fuel value. 
+      All available Fuels have to be Omnified before they can be used
     - Lowered the crafting Speed of the Omnitor Assembling Machine
     - Added 2 new Omnifurnace Tiers
     - Starter Burner Entities only accept (crushed-) Omnite as fuel
