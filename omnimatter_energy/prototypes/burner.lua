@@ -3,7 +3,7 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
 
 	--Remove logistics-0 Tech
 	TechGen:import("logistics-0"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():extend()
-	data.raw.technology["logistics-0"]=nil
+	data.raw.technology["logistics-0"].hidden = true
 
 	--Create seperate techs for Basic Belt, Splitter and UG
 	RecGen:import("basic-transport-belt"):
