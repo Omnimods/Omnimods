@@ -30,4 +30,9 @@ for i=2,4 do
 end
 
 -- Add the Burner Omniplant to the omnitractor tech here until the tech is moved out of final fixes in omnimatter
-RecGen:import("burner-omniplant"):setTechName("omnitractor-electric-1"):extend()
+-- If omniwater and bob's steam phase is on, we need a way to produce water early via omniplant
+if mods["omnimatter_water"] and data.raw.recipe["steam-science-pack"] then
+	RecGen:import("burner-omniplant"):setTechName("base-impure-extraction"):extend()
+else
+	RecGen:import("burner-omniplant"):setTechName("omnitractor-electric-1"):extend()
+end
