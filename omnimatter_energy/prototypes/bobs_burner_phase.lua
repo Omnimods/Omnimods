@@ -11,7 +11,8 @@
 
 -- Remove bobs burner lab
 table.insert(data.raw["lab"]["omnitor-lab"].inputs, "steam-science-pack")
-data.raw.recipe["burner-lab"].enabled=false
+data.raw.recipe["burner-lab"]["normal"].enabled=false
+data.raw.recipe["burner-lab"]["expensive"].enabled=false
 omni.lib.remove_recipe_ingredient("lab", "burner-lab")
 
 -- Remove steam engine from steam power technology
