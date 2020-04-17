@@ -38,7 +38,7 @@ for _,fuelitem in pairs(data.raw.item) do
 
     --Generate Chemical Fuel Recipes
     if fuelitem.fuel_category == "chemical" and fuelitem.fuel_value and fuelitem.subgroup ~= "omnienergy-fuel" then
-        log("IMPORTING: "..fuelitem.name)
+
         --lets define the variables first, then jump in and create it all in one go:
         local FV=omni.lib.getFuelNumberInMJ(fuelitem.fuel_value)
         local props={
@@ -89,7 +89,7 @@ for _,fuelitem in pairs(data.raw.item) do
         fuelitem.fuel_category = "omni-0"
 
 
-       log("DONE WITH: "..fuelitem.name)
+       log("Created Omnified "..fuelitem.name)
       -- log(serpent.block(data.raw["item"]["omni-energy-"..fuelitem.name]))
     end
 ::continue::

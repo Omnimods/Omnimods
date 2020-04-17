@@ -47,9 +47,6 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
 		end
 	end
 
-	-- Finally nuke logistics-0
-	--data.raw.technology["logistics-0"].hidden = true
-
 else
 	
 	--Remove logistics Tech
@@ -91,8 +88,6 @@ else
 		end
 	end	
 
-	-- Finally nuke logistics
-	--data.raw.technology["logistics"].hidden = true
 end
 
 RecGen:create("omnimatter_energy","omni-tablet"):
