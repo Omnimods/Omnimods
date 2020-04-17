@@ -2646,6 +2646,7 @@ function setBuildingParameters(b,subpart)
     }
 	b.crafting_speed=function(levels,grade) return 1 end
 	b.source_inventory_size = function(levels,grade) return 7 end
+	b.result_inventory_size = function(levels,grade) return 7 end
 	b.ingredient_count = function(levels,grade) return 7 end
 	b.energy_source =
     {
@@ -2725,6 +2726,7 @@ function BuildGen:import(name)
 		setSpeed(build.crafting_speed):
 		setEnergySource(build.energy_source):
 		setInventory(math.max(build.source_inventory_size or 3,build.ingredient_count or 3)):
+		setResultInventory(math.max(build.result_inventory_size or 3,build.result_count or 3)):
 		setUsage(build.energy_usage):
 		setAnimation(build.animation):
 		setAnimations(build.animations):
@@ -2995,6 +2997,16 @@ function BuildGen:setInventory(h)
 	else
 		self.source_inventory_size = function(levels,grade) return h end
 		self.ingredient_count=function(levels,grade) return h end
+	end
+	return self
+end
+function BuildGen:setResultInventory(h)
+	if type(h) == "function" then
+		self.result_inventory_size = h
+		self.result_count=h
+	else
+		self.result_inventory_size = function(levels,grade) return h end
+		self.result_count=function(levels,grade) return h end
 	end
 	return self
 end
@@ -3331,7 +3343,10 @@ function BuildGen:generateBuilding()
 			end
 		end
 	end
-	if self.type=="furnace" then self.source_inventory_size = function(levels,grade) return 1 end end
+	if self.type=="furnace" then 
+		self.source_inventory_size = function(levels,grade) return 1 end 
+		self.result_inventory_size = function(levels,grade) return 1 end
+	end
 	local lname = {"entity-name."..self.name}
 	if self.loc_name(0,0) and type(self.loc_name(0,0))=="table" then
 		lname = self.loc_name(0,0)
@@ -3378,7 +3393,7 @@ function BuildGen:generateBuilding()
 		working_sound =self:returnSound(0,0),
 		burns_fluid=self.burns_fluid(0,0),
 		fluid_boxes = self.fluid_boxes(0,0),
-		result_inventory_size = 7,
+		result_inventory_size = self.result_inventory_size(0,0) or 7,
 		effectivity = self.effectivity(0,0),
 		fluid_usage_per_tick = self.fluid_usage_per_tick(0,0),
 		vertical_animation = self.vertical_animation(0,0),
