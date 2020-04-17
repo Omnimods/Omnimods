@@ -19,7 +19,7 @@ end
 function omni.add_omnicium_alloy(name,plate,ingot)
 	local reg = {}
 	ItemGen:create("omnimatter","omnicium-"..name.."-alloy"):
-		setSubgroup("raw-material"):
+		setSubgroup("omnicium"):
 		setStacksize(400):
 		setIcons("omnicium-plate"):
 		addSmallIcon(plate,3):extend()
