@@ -107,7 +107,7 @@ else
 	BuildGen:import("burner-mining-drill"):
 		setIngredients(
 		{type="item", name="omnite-brick", amount=4},
-		{type="item", name="iron-plate", amount=2},
+		{type="item", name="iron-plate", amount=4},
 		{type="item", name="omnitor", amount=1}):setEnabled():extend()
 end
 
