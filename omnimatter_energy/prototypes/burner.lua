@@ -93,6 +93,7 @@ end
 RecGen:create("omnimatter_energy","omni-tablet"):
 	setIngredients("omnite-brick"):
 	setStacksize(200):
+	setSubgroup("omnienergy-intermediates"):
 	setEnabled():
 	setEnergy(0.5):extend()
 	
@@ -106,7 +107,7 @@ else
 	BuildGen:import("burner-mining-drill"):
 		setIngredients(
 		{type="item", name="omnite-brick", amount=4},
-		{type="item", name="iron-plate", amount=4},
+		{type="item", name="iron-plate", amount=2},
 		{type="item", name="omnitor", amount=1}):setEnabled():extend()
 end
 
@@ -115,6 +116,8 @@ RecGen:create("omnimatter_energy","heat"):
 	setIcons("burner","omnilib"):
 	setBothColour(1,0,0):
 	setCategory("omnite-extraction-burner"):
+	setSubgroup("omnienergy-fuel"):
+	setOrder("aa"):
 	setEnergy(20):
 	setMaxTemp(250):
 	setFuelCategory("thermo"):
