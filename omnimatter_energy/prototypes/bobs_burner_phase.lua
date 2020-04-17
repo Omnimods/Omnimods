@@ -46,11 +46,13 @@ omni.lib.replace_science_pack("base-impure-extraction","automation-science-pack"
 omni.lib.replace_science_pack("anbaricity","automation-science-pack", "steam-science-pack")
 omni.lib.replace_science_pack("simple-automation","automation-science-pack", "steam-science-pack")
 
-omni.lib.remove_prerequisite("steam-automation","basic-automation")
+if mods["bobassembly"] and settings.startup["bobmods-assembly-burner"].value then
+    omni.lib.remove_prerequisite("steam-automation","basic-automation")
+    data.raw.technology["basic-automation"].unit.count = 15
+    data.raw.technology["steam-automation"].unit.count = 65
+end
 
-data.raw.technology["basic-automation"].unit.count = 15
 data.raw.technology["steam-power"].unit.count = 60
-data.raw.technology["steam-automation"].unit.count = 65
 data.raw.technology["automation-science-pack"].unit.count = 75
 
 if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].value then

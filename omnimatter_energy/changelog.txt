@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.18.1
+Date: 2020-04-17
+  Bugfixes:
+    - Fixed logistics tech dead end. Might have some empty techs left in some cases.
+    - Fixed crashes if Bob's assembers are on without steam machines
+---------------------------------------------------------------------------------------------------
 Version: 1.18.0
 Date: 2020-04-13
   Features:

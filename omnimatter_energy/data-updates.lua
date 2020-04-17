@@ -71,7 +71,7 @@ else
 	setTechPrereq("anbaricity"):extend()
 end
 	
-if mods["bobassembly"] then
+if mods["bobassembly"] and settings.startup["bobmods-assembly-burner"].value then
 	omni.lib.add_prerequisite("basic-automation", "simple-automation")
 	omni.lib.remove_prerequisite("automation", "basic-automation")
 	
@@ -214,4 +214,10 @@ if data.raw.technology["basic-transport-belt-beltbox"] then
 	TechGen:import("basic-transport-belt-beltbox"):
 	setPrereq("basic-splitter-logistics","basic-underground-logistics"):
 	extend()
+end
+
+if data.raw.technology["logistics-0"] then
+	-- Finally removing logistics-0
+	omni.lib.remove_prerequisite("logistics","logistics-0")
+	data.raw.technology["logistics-0"] = nil
 end
