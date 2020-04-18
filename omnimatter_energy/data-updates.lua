@@ -172,7 +172,9 @@ else
 		
 	RecGen:importIf("ore-sorting-facility"):setIngredients({type="item", name="omnite-brick", amount=30},
 		{type="item", name="iron-plate", amount=15},
-		{type="item", name="anbaric-omnitor", amount=5}):extend()
+		{type="item", name="anbaric-omnitor", amount=5}):
+		setTechPrereq("anbaricity"):extend() --not working...
+		omni.lib.add_prerequisite("ore-crushing", "anbaricity")
 end
 	  
 RecGen:import("basic-circuit-board"):setEnabled(false):setTechName("anbaricity"):extend()
