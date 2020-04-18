@@ -51,7 +51,7 @@ else
 	
 	--Remove logistics Tech
 	TechGen:import("logistics"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():extend()
-
+	
 	--Create seperate techs for Belt, Splitter and UG
 	RecGen:import("transport-belt"):
 		setEnabled(false):
@@ -65,20 +65,25 @@ else
       {type="item", name="iron-plate", amount=1},
       {type="item", name="omnitor", amount=1}):extend()
 	
-	RecGen:import("splitter"):setEnabled(false):setTechName("basic-logistics"):
-		setTechName("underground-logistics"):
-		setTechIcon("base","logistics"):
-		setTechPrereq("belt-logistics"):
-		setTechPacks(1):
-		setTechCost(25):extend()
-
-	RecGen:import("underground-belt"):setEnabled(false):
+	RecGen:import("splitter"):
+		setEnabled(false):
 		setTechName("splitter-logistics"):
 		setTechIcon("base","logistics"):
 		setTechPrereq("belt-logistics"):
 		setTechPacks(1):
 		setTechCost(25):extend()
 
+	RecGen:import("underground-belt"):
+		setEnabled(false):
+		setTechName("underground-logistics"):
+		setTechIcon("base","logistics"):
+		setTechPrereq("belt-logistics"):
+		setTechPacks(1):
+		setTechCost(25):extend()
+
+		omni.lib.remove_prerequisite("belt-logistics","basic-mining")
+		--log(serpent.block(data.raw.technology["belt-logistics"]))
+		--log(serpent.block(data.raw.technology["basic-mining"]))
 	--Move all Techs that have logistics as Prereq behind Splitter & UG Techs
 	for _,t in pairs(data.raw.technology) do
 		if omni.lib.is_in_table("logistics",t.prerequisites) then
