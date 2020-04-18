@@ -116,8 +116,8 @@ RecGen:create("omnimatter_energy","heat"):
 	setIcons("burner","omnilib"):
 	setBothColour(1,0,0):
 	setCategory("omnite-extraction-burner"):
-	setSubgroup("omnienergy-fuel"):
-	setOrder("aa"):
+	setSubgroup("omnienergy-power"):
+	setOrder("ab"):
 	setEnergy(20):
 	setMaxTemp(250):
 	setFuelCategory("thermo"):
@@ -155,6 +155,8 @@ BuildGen:import("steam-turbine"):
 	setNormalIngredients(regular_cost):
 	setExpensiveIngredients(expensive_cost):
 	setReplace("heat-burner"):
+	setSubgroup("omnienergy-power"):
+	setOrder("aa"):
 	setTechName("anbaricity"):
 	setFluidConsumption(1):
 	setEffectivity(2/13.5/2):

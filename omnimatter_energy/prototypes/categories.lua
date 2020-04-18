@@ -33,26 +33,32 @@ data:extend({
   },
   {
     type = "item-subgroup",
-    name = "omnienergy-solar",
+    name = "omnienergy-power",
 	group = "omnienergy",
 	order = "c",
   },
   {
     type = "item-subgroup",
-    name = "hydromnide",
+    name = "omnienergy-solar",
 	group = "omnienergy",
 	order = "d",
   },
   {
     type = "item-subgroup",
-    name = "omnicell",
+    name = "hydromnide",
 	group = "omnienergy",
 	order = "e",
   },
   {
     type = "item-subgroup",
-    name = "omnienergy-fuel",
+    name = "omnicell",
 	group = "omnienergy",
 	order = "f",
+  },
+  {
+    type = "item-subgroup",
+    name = "omnienergy-fuel",
+	group = "omnienergy",
+	order = "g",
   },
 })

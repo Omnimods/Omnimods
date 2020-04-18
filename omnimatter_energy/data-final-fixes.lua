@@ -33,4 +33,3 @@ for _,entity in pairs(burnerEntities) do
 	BuildGen:importIf(entity):setFuelCategory("omnite"):extend()
 end
 data.raw["inserter"]["burner-inserter"].energy_source.fuel_category = "omnite"
---log(serpent.block(data.raw["inserter"]["burner-inserter"]))
