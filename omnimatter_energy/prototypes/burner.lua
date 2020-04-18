@@ -169,7 +169,7 @@ RecGen:create("omnimatter_energy","omnitor"):
 	setSubgroup("omnienergy-intermediates"):
 	setOrder("a"):
 	setEnergy(0.75):
-	setIngredients({type="item", name="omnicium-plate", amount=2},{type="item", name="omnicium-gear-wheel", amount=1}):
+	setIngredients({type="item", name="omnicium-plate", amount=1},{type="item", name="omnicium-gear-wheel", amount=1}):
 	addProductivity():
 	setEnabled():extend()
 

@@ -32,7 +32,7 @@ RecGen:create("omnimatter","omnicium-plate-mix"):
 
 RecGen:create("omnimatter","omnicium-gear-wheel"):
 	setStacksize(100):
-	setIngredients({normal = {{"omnicium-plate", 3}},expensive={{"omnicium-plate",2}}}):
+	setIngredients({normal = {{"omnicium-plate", 2}},expensive={{"omnicium-plate",2}}}):
 	setResults({normal = {{"omnicium-gear-wheel", 2}},expensive={{"omnicium-gear-wheel",1}}}):
 	addProductivity():
 	setSubgroup("omni-gears"):
