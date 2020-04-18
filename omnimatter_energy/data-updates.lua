@@ -175,7 +175,9 @@ else
 		{type="item", name="iron-plate", amount=15},
 		{type="item", name="anbaric-omnitor", amount=5}):
 		setTechPrereq("anbaricity"):extend() --not working...
-		omni.lib.add_prerequisite("ore-crushing", "anbaricity")
+		if mods["angelsrefining"] then
+			omni.lib.add_prerequisite("ore-crushing", "anbaricity")
+		end
 end
 	  
 RecGen:import("basic-circuit-board"):setEnabled(false):setTechName("anbaricity"):extend()
