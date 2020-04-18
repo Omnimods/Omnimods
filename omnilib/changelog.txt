@@ -1,4 +1,23 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.5
+Date: 2020.04.16
+  Bugfixes:
+    - Fixed standardisation function not updating all results
+---------------------------------------------------------------------------------------------------
+Version: 3.18.4
+Date: 2020.04.14
+  Bugfixes:
+    - Fixed that recipe-standard function was forcing icon overrides even when not needed, causing icon size mismatch
+---------------------------------------------------------------------------------------------------
+Version: 3.18.3
+Date: 2020.04.13
+  Features:
+    - Support for Angel's Industry components
+  Bugfixes:
+    - Fixed a crash when adding a Prereq to a tech that had none so far
+    - Fixed a crash when the added Prereq already existed
+    - A ton of under the hood fixes and refactoring
+---------------------------------------------------------------------------------------------------
 Version: 3.18.2
 Date: 2020.04.04
   Bugfixes:

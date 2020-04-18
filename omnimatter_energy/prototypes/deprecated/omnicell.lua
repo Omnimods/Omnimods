@@ -7,9 +7,7 @@ RecGen:create("omnimatter_energy","naturize-omnicell"):
 	setTechPacks(4):
 	setTechCost(250):
 	setTechIcon("omnimatter_energy","omnicell"):
-	setTechPrereq(
-		"bob-steam-engine-4",
-		"fluid-handling"):
+	setTechPrereq("fluid-handling"):
 	setCategory("omniphlog"):
 	setIngredients(
 		{type="item",name="omnicell-denatured",amount=1},
@@ -37,9 +35,10 @@ ItemGen:create("omnimatter_energy","omnicell-denatured"):
 	setSubgroup("Omnicell"):
 	extend()
 
-
+if mods["angellsrefining"] then
 local main_ores = {"copper-ore","iron-ore"}
 local bi_ores = {"lead-ore","tin-ore"}
+
 for _,m in pairs(main_ores) do
 	for _,b in pairs(bi_ores) do
 		RecGen:create("omnimatter_energy","omnicell-natured-"..m.."-"..b):
@@ -56,4 +55,5 @@ for _,m in pairs(main_ores) do
 			marathon():
 			setEnergy(10):extend()
 	end
+end
 end

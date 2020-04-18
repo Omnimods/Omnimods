@@ -31,8 +31,11 @@ if mods["omnimatter_crystal"] then
 	omni.lib.add_recipe_ingredient("chemical-science-pack","basic-crystallonic")
 	omni.lib.add_recipe_ingredient("production-science-pack","basic-oscillo-crystallonic")
 	omni.lib.add_recipe_ingredient("utility-science-pack","basic-oscillo-crystallonic")
-	omni.lib.replace_science_pack("advanced-ore-refining-3","chemical-science-pack")
-	omni.lib.replace_science_pack("ore-leaching","chemical-science-pack")
+	if mods["angelsrefining"] then
+		omni.lib.replace_science_pack("advanced-ore-refining-3","chemical-science-pack")
+		omni.lib.replace_science_pack("ore-leaching","chemical-science-pack")
+		omni.lib.replace_science_pack("ore-processing-2","chemical-science-pack")
+	end
 	omni.lib.replace_science_pack("crystallonics-1","chemical-science-pack")
 	if mods["omnimatter_wood"] then omni.lib.replace_science_pack("omnimutator-2","chemical-science-pack") end
 	omni.lib.add_science_pack("electric-engine")
@@ -80,16 +83,15 @@ if mods["omnimatter_crystal"] then
 		omni.lib.add_science_pack("angels-coolant-1")
 		omni.lib.replace_science_pack("water-treatment-2","logistic-science-pack")
 	end
-	if mods["angelsrefining"] then omni.lib.replace_science_pack("ore-processing-2","chemical-science-pack")	end
 	if mods["omnimatter_wood"] then	omni.lib.replace_science_pack("omnimutator-2","chemical-science-pack")	end
 	if mods["bobpower"] then	omni.lib.add_science_pack("bob-solar-energy-2")	end
 	if mods["bobplates"] then	omni.lib.add_science_pack("gem-processing-1")	end
-	omni.lib.replace_science_pack("rocket-damage-3","chemical-science-pack")
+	--omni.lib.replace_science_pack("rocket-damage-3","chemical-science-pack") --keeps throwing an error??
 	omni.lib.replace_science_pack("crystallology-2","chemical-science-pack")
 	omni.lib.replace_science_pack("military-3","chemical-science-pack")
 	omni.lib.replace_science_pack("mining-productivity-4","chemical-science-pack")
-	omni.lib.replace_science_pack("mining-productivity-8","production-science-pack")
-	omni.lib.replace_science_pack("mining-productivity-12","utility-science-pack")
+	--omni.lib.replace_science_pack("mining-productivity-8","production-science-pack") --keeps throwing an error??
+	--omni.lib.replace_science_pack("mining-productivity-12","utility-science-pack") --keeps throwing an error??
 	omni.science.tech_post_find_update()
 end
 omni.science.tech_updates()
