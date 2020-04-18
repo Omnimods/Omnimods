@@ -9,6 +9,7 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
 		setEnabled(false):
 		setTechName("basic-belt-logistics"):
 		setTechIcon("base","logistics"):
+		setTechPrereq():
 		ifAddTechPrereq(data.raw.technology["basic-automation"], "basic-automation"):
 		ifAddTechPrereq(not data.raw.technology["basic-automation"], "simple-automation"):
 		setTechPacks(1):
@@ -40,7 +41,6 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
 	--Move all Techs that have logistics-0 as Prereq behind Basic Splitter & UG Techs
 	for _,t in pairs(data.raw.technology) do
 		if omni.lib.is_in_table("logistics-0",t.prerequisites) then
-			log("logistics-0 found in tech "..t.name)
 			omni.lib.remove_prerequisite(t.name,"logistics-0")
 			omni.lib.add_prerequisite(t.name,"basic-splitter-logistics")
 			omni.lib.add_prerequisite(t.name,"basic-underground-logistics")
@@ -48,15 +48,15 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
 	end
 
 else
-	
 	--Remove logistics Tech
 	TechGen:import("logistics"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():extend()
-	
+
 	--Create seperate techs for Belt, Splitter and UG
 	RecGen:import("transport-belt"):
 		setEnabled(false):
 		setTechName("belt-logistics"):
 		setTechIcon("base","logistics"):
+		setTechPrereq():
 		ifAddTechPrereq(data.raw.technology["basic-automation"], "basic-automation"):
 		ifAddTechPrereq(not data.raw.technology["basic-automation"], "simple-automation"):
 		setTechPacks(1):
@@ -81,9 +81,6 @@ else
 		setTechPacks(1):
 		setTechCost(25):extend()
 
-		omni.lib.remove_prerequisite("belt-logistics","basic-mining")
-		--log(serpent.block(data.raw.technology["belt-logistics"]))
-		--log(serpent.block(data.raw.technology["basic-mining"]))
 	--Move all Techs that have logistics as Prereq behind Splitter & UG Techs
 	for _,t in pairs(data.raw.technology) do
 		if omni.lib.is_in_table("logistics",t.prerequisites) then
@@ -424,5 +421,3 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter"):
 	setFuelCategory("omnite"): --not working...
 	setBurner(0.75,1):extend()
 	data.raw["inserter"]["burner-filter-inserter"].energy_source.fuel_category = "omnite"
-
-	
