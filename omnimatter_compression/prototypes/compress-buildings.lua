@@ -2,7 +2,7 @@
 local multiplier = settings.startup["omnicompression_multiplier"].value
 
 --for _,kind in pairs({"mining-drill"})
-
+--log("started building compression")
 local new_icon = function(build,level)
 	local icons_1 = {icon = "__omnimatter_compression__/graphics/compress-"..level.."-32.png", icon_size = 32, scale=1}
 	local icons={}
@@ -242,7 +242,11 @@ for _,kind in pairs(building_list) do
 							new.speed = new.speed*(i+2)
 						end
 						if kind == "beacon" then
-							new.supply_area_distance = new.supply_area_distance*(i+1)
+							if new.supply_area_distance*(i+1) <= 64 then
+								new.supply_area_distance = new.supply_area_distance*(i+1)
+							else
+								new.supply_area_distance = 64
+							end
 							new.module_specification.module_slots=new.module_specification.module_slots*(i+1)
 						end
 						if kind == "electric-pole" then
@@ -319,4 +323,5 @@ for _,kind in pairs(building_list) do
 		end
 	end
 end
+--log("end building compression")
 data:extend(compressed_buildings)

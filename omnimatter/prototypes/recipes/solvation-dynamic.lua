@@ -205,7 +205,7 @@ for _,tier in pairs(omnifluid) do
 			yieldQuant(function(levels,grade) return fluid.ratio*(120+120*(grade-1)/(levels-1)) end ):
 			wasteQuant(function(levels,grade) return 240-fluid.ratio*(120+120*(grade-1)/(levels-1)) end)
 		local thingy = RecChain:create("omnimatter","distillation-"..fluid.name):
-			setLocName("omnifluid_distillation","fluid-name."..fluid.name):
+			setLocName("fluid-name."..fluid.name):
 			setIngredients({
 			{type="fluid", name="omniston", amount=240}
 			}):

@@ -43,7 +43,7 @@ RecGen:create("omnimatter","crushing-omnite-by-hand"):
 	setIngredients({"omnite", 4}):
 	marathon():
 	setResults({
-		  {type="item", name="crushed-omnite", amount=2},
+		  {type="item", name="crushed-omnite", amount=4},
 		  {type="item", name="stone-crushed", amount=1}
 		}):
 	setIcons("crushed-omnite","omnimatter"):extend()

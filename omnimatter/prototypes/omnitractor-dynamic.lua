@@ -1,9 +1,19 @@
-BuildGen:create("omnimatter","omnitractor"):
-	setSubgroup("omnitractor"):
-	setIngredients({
+local burner_ingredients = {}
+if mods["angelsindustries"] and angelsmods.industries.components then
+	burner_ingredients = {
+	{name="block-construction-1", amount=1},
+	{name="block-fluidbox-1", amount=1},
+	{name="block-omni-0", amount=1}}
+else
+	burner_ingredients = {
 	{name="omnicium-gear-wheel", amount=2},
 	{name="omnicium-plate", amount=4},
-	{name="iron-plate", amount=3}}):
+	{name="iron-plate", amount=3}}
+end
+
+BuildGen:create("omnimatter","omnitractor"):
+	setSubgroup("omnitractor"):
+	setIngredients(burner_ingredients):
 	setEnergy(10):
 	setBurner(1,1):
 	setUsage(100):
@@ -55,8 +65,6 @@ local get_pure_req = function(levels,i)
 	if i == 2 then
 		if data.raw.technology["omnitech-omnisolvent-omnisludge-"..(i-2)] then
 			r[#r+1]="omnitech-omnisolvent-omnisludge-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
-		else
-			log("no sludge here")
 		end
 	end
 	for j,tier in pairs(omnifluid) do
@@ -108,14 +116,19 @@ end
 local cost = OmniGen:create():
 	building():
 	setMissConstant(2):
-	setPreRequirement("burner-omnitractor"):
-	setQuant("circuit",5):
+	setPreRequirement("burner-omnitractor")
+if mods["angelsindustries"] and angelsmods.industries.components then
+	cost:setQuant("construction-block",5):
+	setQuant("electric-block",2):
+	setQuant("fluid-block",5):
+	setQuant("omni-block",2)
+else
+	cost:setQuant("circuit",5):
 	setQuant("omniplate",20):
 	setQuant("gear-box",10)
-
-
-if mods["bobplates"] then
-	cost:setQuant("bearing",5,-1)
+	if mods["bobplates"] then
+		cost:setQuant("bearing",5,-1)
+	end
 end
 
 
@@ -162,3 +175,16 @@ BuildChain:create("omnimatter","omnitractor"):
 	},
 	}):setOverlay("tractor-over"):
 	extend()
+
+if mods["angelsindustries"] and angelsmods.industries.components then
+	for i=1,math.min(settings.startup["omnimatter-max-tier"].value,5) do
+		-- Add omniblock unlocks
+		omni.lib.add_unlock_recipe("omnitractor-electric-"..i, "block-omni-"..i)
+		-- Remove previous tier buildings from the recipes
+		if i == 1 then
+			omni.lib.remove_recipe_ingredient("omnitractor-1", "burner-omnitractor")
+		else
+			omni.lib.remove_recipe_ingredient("omnitractor-"..i, "omnitractor-"..i-1)
+		end
+	end
+end

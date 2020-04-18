@@ -1,11 +1,24 @@
 ---------------------------------------------------------------------------------------------------
-Version: 3.18.2
+Version: 3.18.4
 Date: 2020.04.18
   Features:
     - Added Omnicium Gear Casting to casting machines
   Bugfixes:
     - Fixed mising localization for Omnicium Sheet Coil
     - Fixed some recipes being in Angel's Casting that should be in the Induction Smelter
+---------------------------------------------------------------------------------------------------
+Version: 3.18.3
+Date: 2020.04.16
+  Bugfixes:
+    - Bob´s steam SP recipe overwrite not working properly
+    - Fixed Omnifluid distillation localisation
+---------------------------------------------------------------------------------------------------
+Version: 3.18.2
+Date: 2020.04.13
+  Changes:
+    - Very early game made a tad easier
+  Features:
+    - Omnitractors and omniphlogs support now Angel's Industry components
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.1
 Date: 2020.04.03

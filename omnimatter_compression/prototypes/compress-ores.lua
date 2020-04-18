@@ -183,7 +183,7 @@ for name,ore in pairs(data.raw.resource) do
 	end
 end
 
-----log(serpent.block(compressed_ores))
+--log(serpent.block(compressed_ores))
 if compressed_ores and #compressed_ores > 0 then
 	data:extend(compressed_ores)
 else

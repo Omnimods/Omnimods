@@ -1,5 +1,10 @@
 ---------------------------------------------------------------------------------------------------
-Version: 3.18.1
+Version: 3.18.3
+Date: 2020.04.13
+  Bugfixes:
+    - A variety of fixes aimed to make your experience somewhat more tolerable.
+---------------------------------------------------------------------------------------------------
+Version: 3.18.2
 Date: 2020.04.04
   Bugfixes:
     - Fixed some Tech science costs not being affected.
