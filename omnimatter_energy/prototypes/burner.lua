@@ -242,7 +242,7 @@ BuildGen:import("assembling-machine-1"):
 	setInventory(3):
 	setCrafting("crafting", "basic-crafting"):
 	setFuelCategory("omnite"):
-	setSpeed(0.1):
+	setSpeed(0.25):
 	setIngredients(ings):
 	setAnimation(
 	{layers={{
