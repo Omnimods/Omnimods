@@ -6,6 +6,7 @@ Date: 2020.04.19
   Changes:
     - Changed the omnicium plate to gear ratio from 3:2 to 1:1
     - Players now start with 2 Burner Mining Drills
+    - Moved the omnicium and brick recipe Subgroup into the Omnimatter category
     - Internal Code Refactoring
   Bugfixes:
     - Fixed mising localisation for Omnicium Sheet Coils
