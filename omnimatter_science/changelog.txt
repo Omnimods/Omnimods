@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.4
+Date: 2020.04.19
+  Features:
+    - Rebalanced omnipack tech replacements
+  Bugfixes:
+    - Cement Processing 3 was not being replaced with omnipack
+---------------------------------------------------------------------------------------------------
 Version: 3.18.3
 Date: 2020.04.13
   Bugfixes:
