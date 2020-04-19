@@ -85,6 +85,7 @@ RecGen:import("iron-ore-smelting"):
 		{type="item", name="omnite", amount=48}):
 	replaceResults("ingot-iron","ingot-omnicium"):
 	setSubgroup("angels-omnicium"):
+	setOrder("rc"):
 	setReqAllMods("angelssmelting"):
 	setIcons("ingot-omnicium","omnimatter"):
 	addSmallIcon("iron-ore",3):
@@ -109,6 +110,7 @@ RecGen:import("angels-plate-iron"):
 	replaceIngredients("liquid-molten-iron","liquid-molten-omnicium"):
 	replaceResults("angels-plate-iron","omnicium-plate"):
 	setSubgroup("omnicium-casting"):
+	setOrder("ua"):
 	setIcons("omnicium-plate","omnimatter"):
 	addSmallIcon("molten-omnicium",3):
 	addProductivity():
@@ -121,6 +123,7 @@ RecGen:import("iron-ore-processing"):
 	setIngredients({"iron-ore",4},{"copper-ore",4},{"omnite",8}):
 	replaceResults("processed-iron","processed-omnicium"):
 	setSubgroup("angels-omnicium"):
+	setOrder("ra"):
 	setIcons("processed-omnicium","omnimatter"):
 	addSmallIcon("molten-omnicium",3):
 	setReqAllMods("angelssmelting"):
@@ -135,6 +138,7 @@ RecGen:import("processed-iron-smelting"):
 	replaceIngredients("solid-coke",{type="fluid",name="omnic-acid",amount=40}):
 	replaceResults("ingot-iron","ingot-omnicium"):
 	setSubgroup("angels-omnicium"):
+	setOrder("rd"):
 	setIcons("ingot-omnicium","omnimatter"):
 	addSmallIcon("processed-omnicium",3):
 	setReqAllMods("angelssmelting"):
@@ -145,7 +149,8 @@ RecGen:import("iron-processed-processing"):
 	setItemName("pellet-omnicium"):
 	replaceIngredients("processed-iron","processed-omnicium"):
 	replaceResults("pellet-iron","pellet-omnicium"):
-	setSubgroup("omnicium-casting"):
+	setOrder("rb"):
+	setSubgroup("angels-omnicium"):
 	setIcons("pellet-omnicium","omnimatter"):
 	setReqAllMods("angelssmelting"):
 	setTechName("angels-omnicium-smelting-3"):
@@ -158,7 +163,8 @@ RecGen:import("pellet-iron-smelting"):
 	replaceIngredients("solid-limestone",{type="fluid", name="omnic-acid", amount = 30}):
 	ifModsReplaceIngredients("omnimatter_crystal","solid-coke","omnine"):
 	replaceResults("ingot-iron","ingot-omnicium"):
-	setSubgroup("omnicium-casting"):
+	setSubgroup("angels-omnicium"):
+	setOrder("re"):
 	setIcons("ingot-omnicium","omnimatter"):
 	addSmallIcon("pellet-omnicium",3):
 	setReqAllMods("angelssmelting"):
@@ -194,9 +200,20 @@ RecGen:import("angels-roll-iron-converting"):
 	setReqAllMods("angelssmelting"):
 	setTechName("angels-omnicium-smelting-2"):extend()
 
-
-
 if mods["angelssmelting"] then
+
+	RecGen:create("omnimatter","omnicium-gear-wheel-casting"):
+	setStacksize(100):
+	setSubgroup("omnicium-casting"):
+	setOrder("ub"):
+	setIngredients({normal = {{type="fluid",name="liquid-molten-omnicium",amount=40}},expensive={{type="fluid",name="liquid-molten-omnicium",amount=40}}}):
+	setCategory("casting"):
+	setResults({normal = {{"omnicium-gear-wheel", 9}},expensive={{"omnicium-gear-wheel",9}}}):
+	addProductivity():
+	setEnergy(2):
+	setReqAllMods("angelssmelting"):
+	setTechName("angels-omnicium-smelting-1"):extend()
+
 	data:extend({
   {
     type = "item-subgroup",

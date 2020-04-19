@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.4
+Date: 2020.04.18
+  Features:
+    - Added Omnicium Gear Casting to casting machines
+  Bugfixes:
+    - Fixed mising localization for Omnicium Sheet Coil
+    - Fixed some recipes being in Angel's Casting that should be in the Induction Smelter
+---------------------------------------------------------------------------------------------------
 Version: 3.18.3
 Date: 2020.04.16
   Bugfixes:
