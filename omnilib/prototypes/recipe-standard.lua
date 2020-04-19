@@ -131,7 +131,7 @@ function omni.marathon.standardise(recipe)
 	-- Localisation
 	---------------------------------------------------------------------------
 	--if no localised name, seach for one in main product or first ingredient in the list
-	if recipe.localized_name == nil and type(recipe.localised_name) ~= "table" then
+	if recipe.localised_name == nil and type(recipe.localised_name) ~= "table" then
 		local it={}
 		if recipe.main_product and recipe.main_product~="" then
 			it = omni.lib.find_prototype(recipe.main_product)
