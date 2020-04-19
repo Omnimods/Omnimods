@@ -16,7 +16,7 @@ data:extend({
     name = "omnienergy",
     order = "z",
     inventory_order = "z",
-    icon = "__omnimatter_energy__/graphics/technology/omnicell.png",
+    icon = "__omnimatter_energy__/graphics/technology/omnimatter-energy.png",
 	icon_size = 128,
   },
   {
