@@ -57,7 +57,7 @@ else
 		--sulfur
 	else
 		omni.add_resource("iron-ore",1)
-		omni.add_resource("copper-ore",2)
+		omni.add_resource("copper-ore",1)
 		omni.add_resource("uranium-ore",3)
 	end
 	for _, gen in pairs(data.raw["resource"]) do
