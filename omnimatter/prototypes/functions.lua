@@ -31,7 +31,7 @@ function omni.add_omnicium_alloy(name,plate,ingot)
 		setIcons("liquid-molten-omnicium"):
 		addSmallIcon(ingot,3):
 		setCategory("induction-smelting"):
-		setSubgroup("angels-alloys-casting"):
+		setSubgroup("omnicium-casting"):
 		setEnergy(4):
 		setTechName("angels-omnicium-"..name.."-alloy-smelting"):
 		setTechIcon("smelting-omnicium-"..name):
@@ -50,7 +50,7 @@ function omni.add_omnicium_alloy(name,plate,ingot)
 	RecGen:create("omnimatter","angels-plate-omnicium-"..name.."-alloy"):
 		setReqAllMods("angelssmelting"):
 		setCategory("casting"):
-		setSubgroup("angels-alloys-casting"):
+		setSubgroup("omnicium-casting"):
 		setEnergy(4):
 		addProductivity():
 		setTechName("angels-omnicium-"..name.."-alloy-smelting"):
