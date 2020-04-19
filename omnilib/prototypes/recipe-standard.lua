@@ -7,8 +7,8 @@ local function set_loc_name(item) --pass full table
 	if item then
 		if item.localised_name then
 			loc_name = table.deepcopy(item.localised_name)
-		elseif item.type == item and item.place_result then
-			loc_name = {"item-name."..item.place_result}
+		--elseif item.type == "entity" and item.place_result then
+		--	loc_name = {"entity-name."..item.place_result}
 		elseif item.place_result then
 			loc_name = {"entity-name."..item.name}
 		elseif item.type == "fluid" then
