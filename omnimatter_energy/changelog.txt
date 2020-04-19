@@ -1,4 +1,17 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.18.2
+Date: 2020-04-19
+  Changes:
+    - Reorganised Item-Subgroups
+    - Steel Furnaces accept Omnified Fuel
+    - Disabled Bob´s burner generator
+    - Buff Omnitor Assembler speed when playing without Bob´s assembly
+    - Lower Omnitor Omnicium cost
+  Bugfixes:
+    - Fixed Omni Furnaces not beeing fast replacable
+    - Fixed Furnaces having 7 Output slots in some cases
+    - Fixed logistics Tech having hidden prerequisites in some cases
+---------------------------------------------------------------------------------------------------
 Version: 1.18.1
 Date: 2020-04-17
   Bugfixes:
