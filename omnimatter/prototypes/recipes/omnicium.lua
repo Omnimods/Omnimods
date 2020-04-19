@@ -208,7 +208,7 @@ if mods["angelssmelting"] then
 	setOrder("ub"):
 	setIngredients({normal = {{type="fluid",name="liquid-molten-omnicium",amount=40}},expensive={{type="fluid",name="liquid-molten-omnicium",amount=40}}}):
 	setCategory("casting"):
-	setResults({normal = {{"omnicium-gear-wheel", 9}},expensive={{"omnicium-gear-wheel",9}}}):
+	setResults({normal = {{"omnicium-gear-wheel", 6}},expensive={{"omnicium-gear-wheel",6}}}):
 	addProductivity():
 	setEnergy(2):
 	setReqAllMods("angelssmelting"):
