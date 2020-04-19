@@ -7,13 +7,13 @@ RecGen:create("omnimatter","omnicium-plate-pure"):
 	setIngredients({ "crushed-omnite", 10}):
 	setResults("omnicium-plate"):
 	setCategory("smelting"):
+	setSubgroup("omnicium"):
+	setOrder("aa"):
 	setEnergy(5):
-	setSubgroup("raw-material"):
 	setEnabled():
 	extend()
 
 RecGen:create("omnimatter","omnicium-plate-mix"):
-	setSubgroup("intermediate-product"):
 	setIngredients({type="item", name="omnite",amount=4}):
 	ifModsAddIngredients("angelsrefining",{"angels-ore1-crushed",4},{"angels-ore3-crushed",4}):
 	ifAddIngredients(not mods["angelsrefining"],{"copper-ore",1},{"iron-ore",1}):
@@ -23,6 +23,8 @@ RecGen:create("omnimatter","omnicium-plate-mix"):
 	addSmallIngIcon(2,1):
 	addSmallIngIcon(3,3):
 	setCategory("omnifurnace"):
+	setSubgroup("omnicium"):
+	setOrder("ab"):
 	marathon():
 	setEnergy(5):
 	setEnabled():
@@ -30,169 +32,35 @@ RecGen:create("omnimatter","omnicium-plate-mix"):
 
 RecGen:create("omnimatter","omnicium-gear-wheel"):
 	setStacksize(100):
-	setSubgroup("intermediate-product"):
-	setIngredients({normal = {{"omnicium-plate", 3}},expensive={{"omnicium-plate",2}}}):
+	setIngredients({normal = {{"omnicium-plate", 2}},expensive={{"omnicium-plate",2}}}):
 	setResults({normal = {{"omnicium-gear-wheel", 2}},expensive={{"omnicium-gear-wheel",1}}}):
 	addProductivity():
+	setSubgroup("omni-gears"):
+	setOrder("aa"):
 	setEnabled():
 	setEnergy(1):
 	extend()
 
 RecGen:create("omnimatter","omnicium-iron-gear-box"):
 	setStacksize(100):
-	setSubgroup("intermediate-product"):
+	setSubgroup("omni-gears"):
 	setIngredients({"omnicium-gear-wheel", 1},{"iron-gear-wheel", 1}):
 	addProductivity():
 	setEnabled():
 	setEnergy(0.25):
 	extend()
 
-BuildGen:create("omnimatter","omni-furnace"):
-	setEnergy(5):
-	setIngredients({ "omnicium-plate", 5},{ "omnite-brick", 5},{ "stone-furnace", 1}):
-	setStacksize(20):
-	setSubgroup("omni-buildings"):
-	setSize(2):
-	setCrafting("smelting","omnifurnace"):
-	setUsage(45):
-	setEnabled():
-	setBurner(1,1):
-	setAnimation({
-      layers = {
-        {
-          filename = "__omnimatter__/graphics/entity/buildings/omni-furnace.png",
-          priority = "high",
-          width = 85,
-          height = 87,
-          frame_count = 1,
-          shift = util.by_pixel(-1.5, 1.5),
-          hr_version = {
-            filename = "__omnimatter__/graphics/entity/buildings/hr-omni-furnace.png",
-            priority = "high",
-            width = 171,
-            height = 174,
-            frame_count = 1,
-            shift = util.by_pixel(-1.25, 2),
-            scale = 0.5
-          }
-        },
-        {
-          filename = "__base__/graphics/entity/steel-furnace/steel-furnace-shadow.png",
-          priority = "high",
-          width = 139,
-          height = 43,
-          frame_count = 1,
-          draw_as_shadow = true,
-          shift = util.by_pixel(39.5, 11.5),
-          hr_version = {
-            filename = "__base__/graphics/entity/steel-furnace/hr-steel-furnace-shadow.png",
-            priority = "high",
-            width = 277,
-            height = 85,
-            frame_count = 1,
-            draw_as_shadow = true,
-            shift = util.by_pixel(39.25, 11.25),
-            scale = 0.5
-          }
-        },
-      },
-    }):
-	setWorkVis({
-      {
-        north_position = {0.0, 0.0},
-        east_position = {0.0, 0.0},
-        south_position = {0.0, 0.0},
-        west_position = {0.0, 0.0},
-        animation =
-        {
-          filename = "__base__/graphics/entity/steel-furnace/steel-furnace-fire.png",
-          priority = "high",
-          line_length = 8,
-          width = 29,
-          height = 40,
-          frame_count = 48,
-          axially_symmetrical = false,
-          direction_count = 1,
-          shift = util.by_pixel(-0.5, 6),
-          hr_version = {
-            filename = "__base__/graphics/entity/steel-furnace/hr-steel-furnace-fire.png",
-            priority = "high",
-            line_length = 8,
-            width = 57,
-            height = 81,
-            frame_count = 48,
-            axially_symmetrical = false,
-            direction_count = 1,
-            shift = util.by_pixel(-0.75, 5.75),
-            scale = 0.5
-          }
-        },
-        light = {intensity = 1, size = 1, color = {r = 1.0, g = 1.0, b = 1.0}}
-      },
-      {
-        north_position = {0.0, 0.0},
-        east_position = {0.0, 0.0},
-        south_position = {0.0, 0.0},
-        west_position = {0.0, 0.0},
-        effect = "flicker", -- changes alpha based on energy source light intensity
-        animation =
-        {
-          filename = "__base__/graphics/entity/steel-furnace/steel-furnace-glow.png",
-          priority = "high",
-          width = 60,
-          height = 43,
-          frame_count = 1,
-          shift = {0.03125, 0.640625},
-          blend_mode = "additive"
-        }
-      },
-      {
-        north_position = {0.0, 0.0},
-        east_position = {0.0, 0.0},
-        south_position = {0.0, 0.0},
-        west_position = {0.0, 0.0},
-        effect = "flicker", -- changes alpha based on energy source light intensity
-        animation =
-        {
-          filename = "__base__/graphics/entity/steel-furnace/steel-furnace-working.png",
-          priority = "high",
-          line_length = 8,
-          width = 64,
-          height = 75,
-          frame_count = 1,
-          axially_symmetrical = false,
-          direction_count = 1,
-          shift = util.by_pixel(0, -4.5),
-          blend_mode = "additive",
-          hr_version = {
-            filename = "__base__/graphics/entity/steel-furnace/hr-steel-furnace-working.png",
-            priority = "high",
-            line_length = 8,
-            width = 130,
-            height = 149,
-            frame_count = 1,
-            axially_symmetrical = false,
-            direction_count = 1,
-            shift = util.by_pixel(0, -4.25),
-            blend_mode = "additive",
-            scale = 0.5
-          }
-        }
-      },
-    }):
-	setReplace("furnace"):extend()
-
 local plates = {"steel","brass","titanium","tungsten","nitinol"}
 local plateTech = {"steel-processing","zinc-processing","titanium-processing","tungsten-processing","nitinol-processing"}
 for i,p in pairs(plates) do
 	RecGen:create("omnimatter","omnicium-"..p.."-gear-box"):
-		setSubgroup("intermediate-product"):
 		setStacksize(100):
 		setReqAllMods("bobplates"):
 		setEnergy(0.25):
 		addProductivity():
 		setIngredients("omnicium-gear-wheel",p.."-gear-wheel"):
 		setCategory("crafting"):
+		setSubgroup("omni-gears"):
 		setTechName(plateTech[i]):
 		extend()
 end
@@ -217,6 +85,7 @@ RecGen:import("iron-ore-smelting"):
 		{type="item", name="omnite", amount=48}):
 	replaceResults("ingot-iron","ingot-omnicium"):
 	setSubgroup("angels-omnicium"):
+	setOrder("rc"):
 	setReqAllMods("angelssmelting"):
 	setIcons("ingot-omnicium","omnimatter"):
 	addSmallIcon("iron-ore",3):
@@ -241,6 +110,7 @@ RecGen:import("angels-plate-iron"):
 	replaceIngredients("liquid-molten-iron","liquid-molten-omnicium"):
 	replaceResults("angels-plate-iron","omnicium-plate"):
 	setSubgroup("omnicium-casting"):
+	setOrder("ua"):
 	setIcons("omnicium-plate","omnimatter"):
 	addSmallIcon("molten-omnicium",3):
 	addProductivity():
@@ -253,6 +123,7 @@ RecGen:import("iron-ore-processing"):
 	setIngredients({"iron-ore",4},{"copper-ore",4},{"omnite",8}):
 	replaceResults("processed-iron","processed-omnicium"):
 	setSubgroup("angels-omnicium"):
+	setOrder("ra"):
 	setIcons("processed-omnicium","omnimatter"):
 	addSmallIcon("molten-omnicium",3):
 	setReqAllMods("angelssmelting"):
@@ -267,6 +138,7 @@ RecGen:import("processed-iron-smelting"):
 	replaceIngredients("solid-coke",{type="fluid",name="omnic-acid",amount=40}):
 	replaceResults("ingot-iron","ingot-omnicium"):
 	setSubgroup("angels-omnicium"):
+	setOrder("rd"):
 	setIcons("ingot-omnicium","omnimatter"):
 	addSmallIcon("processed-omnicium",3):
 	setReqAllMods("angelssmelting"):
@@ -277,7 +149,8 @@ RecGen:import("iron-processed-processing"):
 	setItemName("pellet-omnicium"):
 	replaceIngredients("processed-iron","processed-omnicium"):
 	replaceResults("pellet-iron","pellet-omnicium"):
-	setSubgroup("omnicium-casting"):
+	setOrder("rb"):
+	setSubgroup("angels-omnicium"):
 	setIcons("pellet-omnicium","omnimatter"):
 	setReqAllMods("angelssmelting"):
 	setTechName("angels-omnicium-smelting-3"):
@@ -290,7 +163,8 @@ RecGen:import("pellet-iron-smelting"):
 	replaceIngredients("solid-limestone",{type="fluid", name="omnic-acid", amount = 30}):
 	ifModsReplaceIngredients("omnimatter_crystal","solid-coke","omnine"):
 	replaceResults("ingot-iron","ingot-omnicium"):
-	setSubgroup("omnicium-casting"):
+	setSubgroup("angels-omnicium"):
+	setOrder("re"):
 	setIcons("ingot-omnicium","omnimatter"):
 	addSmallIcon("pellet-omnicium",3):
 	setReqAllMods("angelssmelting"):
@@ -326,9 +200,20 @@ RecGen:import("angels-roll-iron-converting"):
 	setReqAllMods("angelssmelting"):
 	setTechName("angels-omnicium-smelting-2"):extend()
 
-
-
 if mods["angelssmelting"] then
+
+	RecGen:create("omnimatter","omnicium-gear-wheel-casting"):
+	setStacksize(100):
+	setSubgroup("omnicium-casting"):
+	setOrder("ub"):
+	setIngredients({normal = {{type="fluid",name="liquid-molten-omnicium",amount=40}},expensive={{type="fluid",name="liquid-molten-omnicium",amount=40}}}):
+	setCategory("casting"):
+	setResults({normal = {{"omnicium-gear-wheel", 6}},expensive={{"omnicium-gear-wheel",6}}}):
+	addProductivity():
+	setEnergy(2):
+	setReqAllMods("angelssmelting"):
+	setTechName("angels-omnicium-smelting-1"):extend()
+
 	data:extend({
   {
     type = "item-subgroup",

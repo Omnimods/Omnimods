@@ -3,13 +3,13 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
 
 	--Remove logistics-0 Tech
 	TechGen:import("logistics-0"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():extend()
-	data.raw.technology["logistics-0"].hidden = true
 
 	--Create seperate techs for Basic Belt, Splitter and UG
 	RecGen:import("basic-transport-belt"):
 		setEnabled(false):
 		setTechName("basic-belt-logistics"):
 		setTechIcon("base","logistics"):
+		setTechPrereq():
 		ifAddTechPrereq(data.raw.technology["basic-automation"], "basic-automation"):
 		ifAddTechPrereq(not data.raw.technology["basic-automation"], "simple-automation"):
 		setTechPacks(1):
@@ -48,16 +48,15 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
 	end
 
 else
-	
 	--Remove logistics Tech
 	TechGen:import("logistics"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():extend()
-	data.raw.technology["logistics"].hidden = true
 
 	--Create seperate techs for Belt, Splitter and UG
 	RecGen:import("transport-belt"):
 		setEnabled(false):
 		setTechName("belt-logistics"):
 		setTechIcon("base","logistics"):
+		setTechPrereq():
 		ifAddTechPrereq(data.raw.technology["basic-automation"], "basic-automation"):
 		ifAddTechPrereq(not data.raw.technology["basic-automation"], "simple-automation"):
 		setTechPacks(1):
@@ -66,15 +65,17 @@ else
       {type="item", name="iron-plate", amount=1},
       {type="item", name="omnitor", amount=1}):extend()
 	
-	RecGen:import("splitter"):setEnabled(false):setTechName("basic-logistics"):
-		setTechName("underground-logistics"):
+	RecGen:import("splitter"):
+		setEnabled(false):
+		setTechName("splitter-logistics"):
 		setTechIcon("base","logistics"):
 		setTechPrereq("belt-logistics"):
 		setTechPacks(1):
 		setTechCost(25):extend()
 
-	RecGen:import("underground-belt"):setEnabled(false):
-		setTechName("splitter-logistics"):
+	RecGen:import("underground-belt"):
+		setEnabled(false):
+		setTechName("underground-logistics"):
 		setTechIcon("base","logistics"):
 		setTechPrereq("belt-logistics"):
 		setTechPacks(1):
@@ -88,11 +89,13 @@ else
 			omni.lib.add_prerequisite(t.name,"underground-logistics")
 		end
 	end	
+
 end
 
 RecGen:create("omnimatter_energy","omni-tablet"):
 	setIngredients("omnite-brick"):
 	setStacksize(200):
+	setSubgroup("omnienergy-intermediates"):
 	setEnabled():
 	setEnergy(0.5):extend()
 	
@@ -115,6 +118,8 @@ RecGen:create("omnimatter_energy","heat"):
 	setIcons("burner","omnilib"):
 	setBothColour(1,0,0):
 	setCategory("omnite-extraction-burner"):
+	setSubgroup("omnienergy-power"):
+	setOrder("ab"):
 	setEnergy(20):
 	setMaxTemp(250):
 	setFuelCategory("thermo"):
@@ -152,6 +157,8 @@ BuildGen:import("steam-turbine"):
 	setNormalIngredients(regular_cost):
 	setExpensiveIngredients(expensive_cost):
 	setReplace("heat-burner"):
+	setSubgroup("omnienergy-power"):
+	setOrder("aa"):
 	setTechName("anbaricity"):
 	setFluidConsumption(1):
 	setEffectivity(2/13.5/2):
@@ -164,7 +171,7 @@ RecGen:create("omnimatter_energy","omnitor"):
 	setSubgroup("omnienergy-intermediates"):
 	setOrder("a"):
 	setEnergy(0.75):
-	setIngredients({type="item", name="omnicium-plate", amount=2},{type="item", name="omnicium-gear-wheel", amount=1}):
+	setIngredients({type="item", name="omnicium-plate", amount=1},{type="item", name="omnicium-gear-wheel", amount=1}):
 	addProductivity():
 	setEnabled():extend()
 
@@ -237,7 +244,7 @@ BuildGen:import("assembling-machine-1"):
 	setInventory(3):
 	setCrafting("crafting", "basic-crafting"):
 	setFuelCategory("omnite"):
-	setSpeed(0.1):
+	setSpeed(0.25):
 	setIngredients(ings):
 	setAnimation(
 	{layers={{
@@ -414,5 +421,3 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter"):
 	setFuelCategory("omnite"): --not working...
 	setBurner(0.75,1):extend()
 	data.raw["inserter"]["burner-filter-inserter"].energy_source.fuel_category = "omnite"
-
-	

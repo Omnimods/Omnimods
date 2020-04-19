@@ -19,7 +19,7 @@ end
 function omni.add_omnicium_alloy(name,plate,ingot)
 	local reg = {}
 	ItemGen:create("omnimatter","omnicium-"..name.."-alloy"):
-		setSubgroup("raw-material"):
+		setSubgroup("omnicium"):
 		setStacksize(400):
 		setIcons("omnicium-plate"):
 		addSmallIcon(plate,3):extend()
@@ -31,7 +31,7 @@ function omni.add_omnicium_alloy(name,plate,ingot)
 		setIcons("liquid-molten-omnicium"):
 		addSmallIcon(ingot,3):
 		setCategory("induction-smelting"):
-		setSubgroup("angels-alloys-casting"):
+		setSubgroup("omnicium-casting"):
 		setEnergy(4):
 		setTechName("angels-omnicium-"..name.."-alloy-smelting"):
 		setTechIcon("smelting-omnicium-"..name):
@@ -50,7 +50,7 @@ function omni.add_omnicium_alloy(name,plate,ingot)
 	RecGen:create("omnimatter","angels-plate-omnicium-"..name.."-alloy"):
 		setReqAllMods("angelssmelting"):
 		setCategory("casting"):
-		setSubgroup("angels-alloys-casting"):
+		setSubgroup("omnicium-casting"):
 		setEnergy(4):
 		addProductivity():
 		setTechName("angels-omnicium-"..name.."-alloy-smelting"):

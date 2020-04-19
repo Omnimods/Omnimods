@@ -5,8 +5,20 @@ function omni.science.tech_post_find_update()
 		for _,tech in pairs(data.raw.technology) do
 			if tech.prerequisites and #tech.prerequisites > 0 and (not string.find(tech.name,"module") or tech.name=="modules") then
 				local techunits = {}
+				local skip = false
 				for _,ing in pairs(tech.unit.ingredients) do
-					techunits[#techunits+1]=ing[1]
+					for _,sub_ing in pairs(ing) do
+						if string.find(sub_ing, "science%-pack%-gold") then
+							skip = true
+						end
+					end
+					if not skip then
+						techunits[#techunits+1]=ing[1]
+					end
+				end
+				if skip then
+					log("Should skip on tech "..tech.name)
+					break
 				end
 				if not omni.lib.is_in_table("omni-pack",techunits)then
 					for _,req in pairs(tech.prerequisites) do

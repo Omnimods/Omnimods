@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.4
+Date: 2020.04.19
+  Features:
+    - Rebalanced omnipack tech replacements
+  Bugfixes:
+    - Omnipack is no longer added to tech requiring Bob's Golden SP requiring Alien Tech
+    - Cement Processing 3 was not being replaced with omnipack
+---------------------------------------------------------------------------------------------------
 Version: 3.18.3
 Date: 2020.04.13
   Bugfixes:

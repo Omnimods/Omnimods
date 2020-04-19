@@ -72,7 +72,7 @@ function omni_update(game)
 						if not catrec[rec.category] then
 							catrec[rec.category] = {}
 						end
-						
+
 						local grade = 0
 						local name = eff.recipe
 						local suffix = ""
@@ -83,8 +83,8 @@ function omni_update(game)
 						end
 						local prefix = string.sub(name,1,string.len(name)-1)
 						grade = invOrd(string.sub(name,string.len(name),string.len(name)))
-						
-						
+
+
 						if not catrec[rec.category][prefix] then
 							catrec[rec.category][prefix] = {level = grade,suffixes = {""}}
 						elseif grade > catrec[rec.category][prefix].level then
@@ -260,7 +260,7 @@ script.on_event(defines.events.on_research_finished, function(event)
 		local tech = event.research
 		if tech.force.technologies["compression-recipes"] and tech.force.technologies["compression-recipes"].researched then
 			for _, eff in pairs(tech.effects) do
-				local compressCheck 
+				local compressCheck
 				if eff.type=="unlock-recipe" then
 					compressCheck = eff.recipe.."-compression"
 					if string.find(eff.recipe,"omniperm") then
@@ -300,21 +300,21 @@ script.on_event(defines.events.on_research_finished, function(event)
 			local tech_recs = {}
 			local omniperm={}
 			local tDif = 0
-			
+
 			local catRec = {}
-			
+
 			local work_name = tech.name
 			if end_with(tech.name,"omnipressed") then
 				work_name=string.sub(tech.name,1,string.len(tech.name)-12)
 			end
-			
+
 			local niva = 0
 			if string.sub(tech.name,string.len(tech.name)-1,string.len(tech.name)-1)=="-" then
 				niva=tonumber(string.sub(tech.name,string.len(tech.name),string.len(tech.name)))
 			else
-				niva=tonumber(string.sub(tech.name,string.len(tech.name)-1,string.len(tech.name)))			
+				niva=tonumber(string.sub(tech.name,string.len(tech.name)-1,string.len(tech.name)))
 			end
-			
+
 			local tprefix = string.sub(work_name,1,string.len(tech.name)-string.len(tostring(niva)))
 			for i=1,niva do
 				for _, eff in pairs(tech.force.technologies[tprefix..i].effects) do
@@ -352,14 +352,14 @@ script.on_event(defines.events.on_research_finished, function(event)
 												if ing.type=="fluid" then
 													table.insert(ingredients.fluidbox,ing)
 												else
-													table.insert(ingredients.inventory,ing)											
+													table.insert(ingredients.inventory,ing)
 												end
 											end
 											--[[table.insert(recipeDeficiet,{
 												entity=entity,
 												ingredients = ingredients
 											})]]
-										end										
+										end
 										for prefix,recipe in pairs(c) do
 											if recipe.level > 1 then
 												for _,suffix in pairs(recipe.suffixes) do
@@ -382,11 +382,13 @@ script.on_event(defines.events.on_research_finished, function(event)
 						end
 					end
 					for prefix,recipe in pairs(c) do
-						for i=1,recipe.level-1 do
-							for _,suffix in pairs(recipe.suffixes) do
-								for _,comp in pairs(compressionSuffix) do
-									if tech.force.recipes[prefix..ord[i]..comp..suffix] then
-										tech.force.recipes[prefix..ord[i]..comp..suffix].enabled = false
+						if recipe.level then
+							for i=1,recipe.level-1 do
+								for _,suffix in pairs(recipe.suffixes) do
+									for _,comp in pairs(compressionSuffix) do
+										if tech.force.recipes[prefix..ord[i]..comp..suffix] then
+											tech.force.recipes[prefix..ord[i]..comp..suffix].enabled = false
+										end
 									end
 								end
 							end

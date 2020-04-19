@@ -1,6 +1,6 @@
 if not omni then omni={} end
 if not omni.crystal then omni.crystal={} end
-require("functions")
+require("prototypes.functions")
 require("prototypes.crystallonics")
 require("prototypes.crystal-making")
 require("prototypes.categories")
