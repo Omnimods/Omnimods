@@ -7,16 +7,16 @@ local function set_loc_name(item) --pass full table
 	if item then
 		if item.localised_name then
 			loc_name = table.deepcopy(item.localised_name)
-		elseif item.type == item and item.place_result then
-			loc_name = {"entity-name."..item.place_result}
+		--elseif item.type == "entity" and item.place_result then
+		--	loc_name = {"entity-name."..item.place_result}
 		elseif item.place_result then
 			loc_name = {"entity-name."..item.name}
-		elseif string.find(item.name,"equipment") ~= nil then
-			loc_name = {"equipment-name."..item.name}
 		elseif item.type == "fluid" then
-			 loc_name = {item.type.."-name."..item.name}
-		else --should cover items, fluids etc...
- 			loc_name = {item.type.."-name."..item.name}
+			loc_name = {"fluid-name."..item.name}
+		elseif string.find(item.name,"equipment") then
+			loc_name = {"equipment-name."..item.name}
+		else --should cover items, tools, capsules etc...
+			loc_name = {"item-name."..item.name}
  		end
 	end
 return loc_name
@@ -24,140 +24,145 @@ end
 
 function omni.marathon.standardise(recipe)
 	if recipe == nil then return nil end
-	if recipe.result or recipe.results or (recipe.normal and recipe.normal.result) then --if the recipe was changed after initial standardisation, re-standardise
-		standardized_recipes[recipe.name]=false
-	elseif recipe.icon and recipe.icon ~="" then --check for icons not icon if it passes the previous check
-		standardized_recipes[recipe.name]=false
-	end
-	if standardized_recipes[recipe.name] then return recipe end
-	--local new = table.deepcopy(recipe)
+	--Set table parts if they don't already exist
 	if not recipe.expensive then recipe.expensive={} end
 	if not recipe.normal then recipe.normal={} end
+	---------------------------------------------------------------------------
+	-- Ingredient Standarisation
+	---------------------------------------------------------------------------
 	local ingredients = {}
-	--ingredients.normal = recipe.ingredients
-	if recipe.normal and recipe.normal.ingredients and recipe.expensive and recipe.expensive.ingredients then
-		ingredients.normal = table.deepcopy(recipe.normal.ingredients)
-		ingredients.expensive = table.deepcopy(recipe.expensive.ingredients)
-	elseif recipe.normal and recipe.normal.ingredients and not (recipe.expensive and recipe.expensive.ingredients) then
-		ingredients.normal = table.deepcopy(recipe.normal.ingredients)
-		ingredients.expensive = table.deepcopy(recipe.normal.ingredients)
+	if recipe.normal.ingredients and recipe.expensive.ingredients and not recipe.ingredients then
+		--skip
 	else
-		ingredients = {expensive=table.deepcopy(recipe.ingredients),normal=table.deepcopy(recipe.ingredients)}
-	end
-	local std_ingredients = {normal = {}, expensive = {}}
-	local it={}
-	if recipe.localized_name == nil and recipe.main_product and recipe.main_product~="" then
-		it = omni.lib.find_prototype(recipe.main_product)
-		recipe.localised_name=set_loc_name(it)
-	elseif recipe.localized_name == nil and recipe.normal and recipe.normal.main_product and recipe.normal.main_product~="" then
-		local it = omni.lib.find_prototype(recipe.normal.main_product)
-		recipe.localised_name=set_loc_name(it)
-	end
-	--[[if recipe.localized_name == nil and recipe.expensive and recipe.expensive.main_product and recipe.expensive.main_product~="" then
-		local it = omni.lib.find_prototype(recipe.expensive.main_product)
-	end]]
-	recipe.normal.ingredients={}
-	recipe.expensive.ingredients={}
-	for _, diff in pairs({"normal","expensive"}) do
-		if ingredients[diff] then
-			for i,ing in pairs(ingredients[diff]) do
-				local temp = {}
-				if ing.name then
-					temp = {type = ing.type, name=ing.name,amount=ing.amount,maximum_temperature=ing.maximum_temperature,minimum_temperature=ing.minimum_temperature,fluidbox_index=ing.fluidbox_index}
-					if not temp.type then temp.type ="item" end
-				else
-					temp = {type = "item", name=ing[1],amount=ing[2]}
+		local norm={}
+		local expens={}
+		-- check if each exists and parse to set part of the script
+		if recipe.normal.ingredients then
+			norm = table.deepcopy(recipe.normal.ingredients)
+		else --if recipe.ingredients
+			norm = table.deepcopy(recipe.ingredients)
+		end
+		if recipe.expensive.ingredients then
+			expens = table.deepcopy(recipe.expensive.ingredients)
+		else --if recipe.ingredients
+			expens = norm
+		end
+		--set normal and expensive ingredients
+		ingredients = {expensive=expens,normal=norm}
+		
+		--reset and repopulate ingredients list ensuring tags exist
+		recipe.normal.ingredients={}
+		recipe.expensive.ingredients={}
+		for _, diff in pairs({"normal","expensive"}) do
+			if ingredients[diff] then
+				for i,ing in pairs(ingredients[diff]) do
+					local temp = {}
+					if ing.name then
+						temp = {type = ing.type, name=ing.name,amount=ing.amount,maximum_temperature=ing.maximum_temperature,minimum_temperature=ing.minimum_temperature,fluidbox_index=ing.fluidbox_index}
+						if not temp.type then temp.type ="item" end
+					else
+						temp = {type = "item", name=ing[1],amount=ing[2]}
+					end
+					recipe[diff].ingredients[i] = temp -- table.deepcopy(temp) why deepcopy?table.deepcopy(temp)
 				end
-				recipe[diff].ingredients[i]=table.deepcopy(temp)
 			end
 		end
+		--nil out non-standard ingredients
+		recipe.ingredients = nil
 	end
+	---------------------------------------------------------------------------
+	-- Results Standarisation
+	---------------------------------------------------------------------------
 	local results = {}
-	if recipe.normal and (recipe.normal.results or recipe.normal.result)then
+	--check if already normalised before jumping in
+	if recipe.normal.results and recipe.expensive.results and not (recipe.results or recipe.result) then
+		--skip
+	else
+		local norm={}
+		local expens={}
+		-- check if each exists and parse to set part of the script
 		if recipe.normal.results then
-			results.normal = table.deepcopy(recipe.normal.results)
-		else
-			results.normal = {{recipe.normal.result,recipe.normal.result_count or 1}}
-			if not results.normal[1][2] then results.normal[1][2]=1 end
+			norm = table.deepcopy(recipe.normal.results)
+		elseif recipe.normal.result then
+			norm = {{recipe.normal.result,recipe.normal.result_count or 1}}
+			--if not norm[1][2] then norm[1][2]=1 end
+		elseif recipe.results then
+			norm = table.deepcopy(recipe.results)
+		elseif recipe.result then
+			norm = {{recipe.result,recipe.result_count or 1}}
 		end
-	end
-	if recipe.expensive and (recipe.expensive.results or recipe.expensive.result)then
+
 		if recipe.expensive.results then
-			results.expensive = table.deepcopy(recipe.expensive.results)
-		else
-			results.expensive = {{recipe.expensive.result,recipe.expensive.result_count}}
-			if not results.expensive[1][2] then results.expensive[1][2]=1 end
+			expens = table.deepcopy(recipe.expensive.results)
+		elseif recipe.expensive.result then
+			expens = {{recipe.expensive.result,recipe.expensive.result_count or 1}}
+			--if not expens[1][2] then expens[1][2]=1 end
+		elseif recipe.results then
+			expens = table.deepcopy(recipe.results)
+		elseif recipe.result then
+			expens = {{recipe.result,recipe.result_count or 1}}
 		end
-	end
-	if recipe.results or recipe.result then
-		if recipe.results then
-			if not results.expensive then results.expensive = table.deepcopy(recipe.results) end
-			if not results.normal then results.normal = table.deepcopy(recipe.results) end
-		else
-			if not results.expensive then results.expensive = {{recipe.result,recipe.result_count or 1}} end
-			if not results.normal then results.normal = {{recipe.result,recipe.result_count or 1}} end
-			if not (results.expensive[1] and results.expensive[1][2]) then results.expensive[1][2]=1 end
-			if not results.normal[1][2] then results.normal[1][2]=1 end
-		end
-	end
-	if not results.expensive then results.expensive = table.deepcopy(results.normal) end
-	std_results = {normal={},expensive={}}
-	recipe.normal.results={}
-	recipe.expensive.results={}
-	for i, diff in pairs({"normal","expensive"}) do
-		if results[diff] then
-			for j,res in pairs(results[diff]) do
-				local temp = {}
-				if res.name then
-					temp = {type = res.type, name=res.name,amount=res.amount,probability = res.probability, amount_min = res.amount_min, amount_max = res.amount_max,temperature=res.temperature,fluidbox_index=res.fluidbox_index}
-					if not temp.type then temp.type ="item" end
-				else
-					temp = {type = "item", name=res[1],amount=res[2]}
+		--set normal and expensive results
+		results = {expensive=expens,normal=norm}
+		
+		--reset and repopulate ingredients list ensuring tags exist
+		recipe.normal.results={}
+		recipe.expensive.results={}
+		for i, diff in pairs({"normal","expensive"}) do
+			if results[diff] then
+				for j,res in pairs(results[diff]) do
+					local temp = {}
+					if res.name then
+						temp = {type = res.type, name=res.name,amount=res.amount,probability = res.probability, amount_min = res.amount_min, amount_max = res.amount_max,temperature=res.temperature,fluidbox_index=res.fluidbox_index}
+						if not temp.type then temp.type ="item" end
+					else
+						temp = {type = "item", name=res[1],amount=res[2]}
+					end
+					recipe[diff].results[j] = temp -- table.deepcopy(temp) why deepcopy?
 				end
-				recipe[diff].results[j] = table.deepcopy(temp)
 			end
 		end
+		--nil out non-standard ingredients
+		recipe.result = nil
+		recipe.result_count = nil
+		recipe.results = nil
 	end
-	recipe.result = nil
-	recipe.result_count = nil
-	recipe.results = nil
-	recipe.ingredients = nil
-	if recipe.localised_name == nil and #recipe.normal.results==1 then
-		local it = omni.lib.find_prototype(recipe.normal.results[1].name)
-		set_loc_name(it)
-		--[[if it then
-			if it.localised_name then
-				recipe.localised_name = table.deepcopy(it.localised_name)
-			elseif it.place_result then
-				 recipe.localised_name = {"entity-name."..it.name}
-			elseif it.type == "fluid" then
-				 recipe.localised_name = {it.type.."-name."..it.name}
-			else
-				recipe.localised_name = {"item-name."..it.name}
-			end
-		end]]
+	---------------------------------------------------------------------------
+	-- Localisation
+	---------------------------------------------------------------------------
+	--if no localised name, seach for one in main product or first ingredient in the list
+	if recipe.localised_name == nil and type(recipe.localised_name) ~= "table" then
+		local it={}
+		if recipe.main_product and recipe.main_product~="" then
+			it = omni.lib.find_prototype(recipe.main_product)
+		elseif recipe.normal.main_product and recipe.normal.main_product~="" then
+			it = omni.lib.find_prototype(recipe.normal.main_product)
+		elseif #recipe.normal.results>=1 then
+			it = omni.lib.find_prototype(recipe.normal.results[1].name)
+		else--if not find result 1 or main product
+			it = recipe.name --hail mary
+		end
+		recipe.localised_name=set_loc_name(it)
 	end
-
-	--new.normal.ingredients=std_ingredients.normal
-	--new.normal.results=std_results.normal
-	--new.expensive.ingredients=std_ingredients.expensive
-	--new.expensive.results=std_results.expensive
-
-	--if #recipe.normal.results==1 then recipe.normal.main_product = recipe.normal.results[1].name end
-	--if #recipe.expensive.results==1 then recipe.expensive.main_product = recipe.expensive.results[1].name end
-
+	---------------------------------------------------------------------------
+	-- Move Flags to difficulty zone
+	---------------------------------------------------------------------------
 	for _, flag in pairs({"hidden", "enabled", "allow_decomposition", "hide_from_player_crafting", "allow_as_intermediate", "allow_intermediates"}) do
 		for _, difficulty in pairs({"normal", "expensive"}) do
-			if recipe[difficulty][flag] == nil then recipe[difficulty][flag] = recipe[flag] end
+			-- is this adding all of the flags, or only the ones that already exist?
+			if recipe[difficulty][flag] == nil then
+				recipe[difficulty][flag] = recipe[flag]
+			end
 		end
 	end
-
-	-- if recipe.normal.hidden == nil then recipe.normal.hidden = recipe.hidden end
-	-- if recipe.expensive.hidden == nil then recipe.expensive.hidden = recipe.hidden end
-	-- if recipe.normal.enabled == nil then recipe.normal.enabled = recipe.enabled end
-	-- if recipe.expensive.enabled == nil then recipe.expensive.enabled = recipe.enabled end
-
+	-- remove settings outside of difficulty
+	recipe.hidden = nil
+	recipe.enabled = nil
+	---------------------------------------------------------------------------
+	-- Subgroup setting
+	---------------------------------------------------------------------------
 	if not recipe.subgroup and recipe.main_product and recipe.main_product ~="" then
+		-- group based in main product settings
 		local it = omni.lib.find_prototype(recipe.main_product)
 		if it then
 			if it.subgroup then
@@ -167,6 +172,7 @@ function omni.marathon.standardise(recipe)
 			end
 		end
 	elseif not recipe.subgroup and #recipe.normal.results == 1 then
+		-- group based on single result settings
 		local it = omni.lib.find_prototype(recipe.normal.results[1].name)
 		if it then
 			if it.subgroup then
@@ -176,46 +182,22 @@ function omni.marathon.standardise(recipe)
 			end
 		end
 	end
-
-	--[[
-	if recipe.normal.subgroup == nil then
-		if recipe.subgroup then
-			recipe.normal.subgroup = recipe.subgroup
-		elseif #recipe.normal.results == 1 then
-			local proto = omni.lib.find_prototype(recipe.normal.results[1].name)
-			if proto then
-				recipe.normal.subgroup = proto.subgroup
-			end
-		end
-	end
-	if recipe.expensive.subgroup == nil then
-		if recipe.subgroup then
-			recipe.expensive.subgroup = recipe.subgroup
-		elseif #recipe.expensive.results == 1 then
-			local proto = omni.lib.find_prototype(recipe.expensive.results[1].name)
-			recipe.expensive.subgroup = proto.subgroup
-		end
-	end]]
-
-	--recipe.main_product = recipe.main_product or recipe.normal.main_product or recipe.expensive.main_product
-	--recipe.normal.main_product=recipe.main_product or recipe.normal.main_product or recipe.expensive.main_product
-	--recipe.expensive.main_product=recipe.main_product or recipe.normal.main_product or recipe.expensive.main_product
-
-
+	---------------------------------------------------------------------------
+	-- Misc setting properties
+	---------------------------------------------------------------------------
 	if recipe.normal.category == nil then recipe.normal.category = recipe.category end
 	if recipe.expensive.category == nil then recipe.expensive.category = recipe.category end
 
-	--recipe.normal.main_product = recipe.normal.main_product or recipe.main_product
-	--recipe.expensive.main_product = recipe.expensive.main_product or recipe.main_product
-
 	if recipe.normal.energy_required == nil then recipe.normal.energy_required = recipe.energy_required or 0.5 end
 	if recipe.expensive.energy_required == nil then recipe.expensive.energy_required = recipe.energy_required or 0.5 end
-	recipe.hidden = nil
-	recipe.enabled = nil
-
-	if recipe.normal == false then recipe.normal = table.deepcopy(recipe.expensive) end
-
 	recipe.energy_required = nil
+
+	--if recipe.normal == false then recipe.normal = table.deepcopy(recipe.expensive) end -- really? that is an interesting potential option...
+
+	---------------------------------------------------------------------------
+	-- Icons standardisation 
+	---------------------------------------------------------------------------
+	-- no specific recipe icons
 	if not recipe.icon and not recipe.icons then
 		if (recipe.main_product and recipe.main_product ~= "") or (recipe.normal.main_product and recipe.normal.main_product ~= "") or (recipe.expensive.main_product and recipe.expensive.main_product ~= "") then
 			local item = omni.lib.find_prototype(recipe.main_product or recipe.normal.main_product or recipe.expensive.main_product)
@@ -247,9 +229,34 @@ function omni.marathon.standardise(recipe)
 		recipe.icons = {{icon=recipe.icon,icon_size=recipe.icon_size}}
 		recipe.icon=nil 
 	end
-	recipe.main_product=nil
-	recipe.normal.main_product=nil
-	recipe.expensive.main_product=nil
-	standardized_recipes[recipe.name] = true
+	---------------------------------------------------------------------------
+	-- Main Product Check
+	---------------------------------------------------------------------------
+	-- this will run each time a main product is found
+	if (recipe.main_product and recipe.main_product ~= "") or (recipe.normal.main_product and recipe.normal.main_product ~= "") or (recipe.expensive.main_product and recipe.expensive.main_product ~= "") then  	
+		-- check if main_product is in results list
+		local mp_check=false
+		if recipe.main_product and recipe.main_product ~= "" then
+			if not recipe.normal.main_product then recipe.normal.main_product=recipe.main_product end
+			if not recipe.expensive.main_product then recipe.expensive.main_product=recipe.main_product end
+			recipe.main_product=nil
+		end
+		local mp = recipe.normal.main_product
+		for j,res in pairs(recipe.normal.results) do
+			local temp = {}
+			if res.name and res.name==mp then
+				mp_check=true
+			end
+		end
+		if mp_check==false then -- may need a more sophisticated main_product checking system 
+			recipe.normal.main_product=nil
+			recipe.expensive.main_product=nil
+		end
+	end
+	--clobber main product in all cases regardless?
+	--recipe.main_product=nil
+	--recipe.normal.main_product=nil
+	--recipe.expensive.main_product=nil
+	--standardized_recipes[recipe.name] = true
 	return table.deepcopy(recipe)
 end

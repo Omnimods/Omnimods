@@ -41,33 +41,45 @@ data:extend(
   },
   {
     type = "item-subgroup",
-    name = "omni-fluids",
+    name = "omnicium",
 	group = "omnimatter",
 	order = "af",
   },
   {
     type = "item-subgroup",
-    name = "omni-basic",
+    name = "omni-gears",
 	group = "omnimatter",
 	order = "ag",
   },
   {
     type = "item-subgroup",
-    name = "omni-impure-basic",
-	group = "omnimatter",
-	order = "ag",
-  },
-  {
-    type = "item-subgroup",
-    name = "omni-impure",
+    name = "omni-fluids",
 	group = "omnimatter",
 	order = "ah",
   },
   {
     type = "item-subgroup",
-    name = "omni-pure",
+    name = "omni-basic",
 	group = "omnimatter",
 	order = "ai",
+  },
+  {
+    type = "item-subgroup",
+    name = "omni-impure-basic",
+	group = "omnimatter",
+	order = "aj",
+  },
+  {
+    type = "item-subgroup",
+    name = "omni-impure",
+	group = "omnimatter",
+	order = "ak",
+  },
+  {
+    type = "item-subgroup",
+    name = "omni-pure",
+	group = "omnimatter",
+	order = "al",
   },
 }
 )

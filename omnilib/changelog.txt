@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.6
+Date: 2020.04.19
+  Features:
+    - Added a function to set entity Output Slots
+  Bugfixes:
+    - Fixed that Furnace output slots default to 7 like assemblers
+    - Fixed Recipe standardisation causing invalid main products
+    - Fixed localisations not working in some cases
+---------------------------------------------------------------------------------------------------
 Version: 3.18.5
 Date: 2020.04.16
   Bugfixes:

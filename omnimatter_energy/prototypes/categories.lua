@@ -22,18 +22,18 @@ data:extend({
   {
     type = "item-subgroup",
     name = "omnienergy-intermediates",
-	  group = "intermediate-products",
+	  group = "omnienergy",
 	  order = "a",
   },
   {
     type = "item-subgroup",
-    name = "omnienergy-fuel",
+    name = "omnienergy-components",
 	group = "omnienergy",
 	order = "b",
   },
   {
     type = "item-subgroup",
-    name = "omnienergy-components",
+    name = "omnienergy-power",
 	group = "omnienergy",
 	order = "c",
   },
@@ -54,5 +54,11 @@ data:extend({
     name = "omnicell",
 	group = "omnienergy",
 	order = "f",
+  },
+  {
+    type = "item-subgroup",
+    name = "omnienergy-fuel",
+	group = "omnienergy",
+	order = "g",
   },
 })

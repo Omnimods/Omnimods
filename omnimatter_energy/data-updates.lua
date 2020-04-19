@@ -71,10 +71,10 @@ else
 	setTechPrereq("anbaricity"):extend()
 end
 	
-if mods["bobassembly"] then
+if mods["bobassembly"] and settings.startup["bobmods-assembly-burner"].value then
 	omni.lib.add_prerequisite("basic-automation", "simple-automation")
 	omni.lib.remove_prerequisite("automation", "basic-automation")
-	
+	BuildGen:import("omnitor-assembling-machine"):setSpeed(0.1):extend()
 	if mods["angelsindustries"] and angelsmods.industries.components then
 		RecGen:import("burner-assembling-machine"):
 			setTechCost(15):extend()
@@ -121,6 +121,7 @@ end
 if mods["bobpower"] then
 	omni.lib.add_prerequisite("bob-steam-engine-2", "steam-power")
 	omni.lib.add_prerequisite("bob-boiler-2", "steam-power")
+	RecGen:import("bob-burner-generator"):setEnabled(false):extend()
 end
 
 if mods["bobmining"] then
@@ -172,7 +173,11 @@ else
 		
 	RecGen:importIf("ore-sorting-facility"):setIngredients({type="item", name="omnite-brick", amount=30},
 		{type="item", name="iron-plate", amount=15},
-		{type="item", name="anbaric-omnitor", amount=5}):extend()
+		{type="item", name="anbaric-omnitor", amount=5}):
+		setTechPrereq("anbaricity"):extend() --not working...
+		if mods["angelsrefining"] then
+			omni.lib.add_prerequisite("ore-crushing", "anbaricity")
+		end
 end
 	  
 RecGen:import("basic-circuit-board"):setEnabled(false):setTechName("anbaricity"):extend()
@@ -214,4 +219,10 @@ if data.raw.technology["basic-transport-belt-beltbox"] then
 	TechGen:import("basic-transport-belt-beltbox"):
 	setPrereq("basic-splitter-logistics","basic-underground-logistics"):
 	extend()
+end
+
+if data.raw.technology["logistics-0"] then
+	-- Finally removing logistics-0
+	omni.lib.remove_prerequisite("logistics","logistics-0")
+	data.raw.technology["logistics-0"] = nil
 end

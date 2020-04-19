@@ -21,11 +21,8 @@ local burnerEntities = {
 	"burner-omni-furnace-1",
 	"burner-omni-furnace-2",
 	"burner-ore-crusher",
-	"mixing-steel-furnace",
 	"mixing-furnace",
-	"chemical-steel-furnace",
 	"chemical-boiler",
-	"steel-furnace",
 	"stone-furnace",
 	"burner-assembling-machine",
 	"burner-mining-drill",
@@ -36,4 +33,3 @@ for _,entity in pairs(burnerEntities) do
 	BuildGen:importIf(entity):setFuelCategory("omnite"):extend()
 end
 data.raw["inserter"]["burner-inserter"].energy_source.fuel_category = "omnite"
---log(serpent.block(data.raw["inserter"]["burner-inserter"]))

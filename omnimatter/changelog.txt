@@ -1,10 +1,15 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.4
-Date: 2020.04.18
+Date: 2020.04.19
   Features:
     - Added Omnicium Gear Casting to casting machines
+  Changes:
+    - Changed the omnicium plate to gear ratio from 3:2 to 1:1
+    - Players now start with 2 Burner Mining Drills
+    - Moved the omnicium and brick recipe Subgroup into the Omnimatter category
+    - Internal Code Refactoring
   Bugfixes:
-    - Fixed mising localization for Omnicium Sheet Coil
+    - Fixed mising localisation for Omnicium Sheet Coils
     - Fixed some recipes being in Angel's Casting that should be in the Induction Smelter
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.3
