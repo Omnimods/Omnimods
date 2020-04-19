@@ -8,15 +8,15 @@ local function set_loc_name(item) --pass full table
 		if item.localised_name then
 			loc_name = table.deepcopy(item.localised_name)
 		elseif item.type == item and item.place_result then
-			loc_name = {"entity-name."..item.place_result}
+			loc_name = {"item-name."..item.place_result}
 		elseif item.place_result then
 			loc_name = {"entity-name."..item.name}
 		elseif item.type == "fluid" then
-			loc_name = {item.type.."-name."..item.name}
+			loc_name = {"fluid-name."..item.name}
 		elseif string.find(item.name,"equipment") then
 			loc_name = {"equipment-name."..item.name}
-		else --should cover items, fluids etc...
- 			loc_name = {item.type.."-name."..item.name}
+		else --should cover items, tools, capsules etc...
+			loc_name = {"item-name."..item.name}
  		end
 	end
 return loc_name
@@ -130,9 +130,9 @@ function omni.marathon.standardise(recipe)
 	---------------------------------------------------------------------------
 	-- Localisation
 	---------------------------------------------------------------------------
-	local it={}
 	--if no localised name, seach for one in main product or first ingredient in the list
-	if recipe.localized_name == nil then
+	if recipe.localized_name == nil and type(recipe.localised_name) ~= "table" then
+		local it={}
 		if recipe.main_product and recipe.main_product~="" then
 			it = omni.lib.find_prototype(recipe.main_product)
 		elseif recipe.normal.main_product and recipe.normal.main_product~="" then
