@@ -31,16 +31,39 @@ function omni.marathon.standardise(recipe)
 	-- Ingredient Standarisation
 	---------------------------------------------------------------------------
 	local ingredients = {}
+	local pass = false
+	-- check if every ingredient has a name tag, fluids always have them, items not, find mixed recipes
 	if recipe.normal.ingredients and recipe.expensive.ingredients and not recipe.ingredients then
-		--skip
-	else
+		pass = true
+		for i,ingred in pairs(recipe.normal.ingredients) do
+			if ingred.name == nil then pass = false end
+		end
+	end
+	if pass == false then
 		local norm={}
 		local expens={}
 		-- check if each exists and parse to set part of the script
-		if recipe.normal.ingredients then
-			norm = table.deepcopy(recipe.normal.ingredients)
-		else --if recipe.ingredients
-			norm = table.deepcopy(recipe.ingredients)
+		--.normal.ingredients already exists:
+		if recipe.normal.ingredients then 	
+			for i,ingred in pairs(recipe.normal.ingredients) do
+				--name tag exists
+				if ingred.name and ingred.amount then -- name tag
+					norm[i] = ingred
+				--no name tag
+				else
+					norm[i] = {type="item" ,name = ingred[1], amount = ingred[2] or 1}
+				end
+			end
+		else
+			for i,ingred in pairs(recipe.ingredients) do
+				--name tag exists
+				if ingred.name and ingred.amount then
+					norm[i] = ingred
+				--no name tag
+				else
+					norm[i] = {type="item" ,name = ingred[1], amount = ingred[2] or 1}
+				end
+			end
 		end
 		if recipe.expensive.ingredients then
 			expens = table.deepcopy(recipe.expensive.ingredients)
@@ -58,7 +81,7 @@ function omni.marathon.standardise(recipe)
 				for i,ing in pairs(ingredients[diff]) do
 					local temp = {}
 					if ing.name then
-						temp = {type = ing.type, name=ing.name,amount=ing.amount,maximum_temperature=ing.maximum_temperature,minimum_temperature=ing.minimum_temperature,fluidbox_index=ing.fluidbox_index}
+						temp = {type = ing.type, name=ing.name, amount=ing.amount, maximum_temperature=ing.maximum_temperature, minimum_temperature=ing.minimum_temperature, fluidbox_index=ing.fluidbox_index}
 						if not temp.type then temp.type ="item" end
 					else
 						temp = {type = "item", name=ing[1],amount=ing[2]}
@@ -113,7 +136,7 @@ function omni.marathon.standardise(recipe)
 				for j,res in pairs(results[diff]) do
 					local temp = {}
 					if res.name then
-						temp = {type = res.type, name=res.name,amount=res.amount,probability = res.probability, amount_min = res.amount_min, amount_max = res.amount_max,temperature=res.temperature,fluidbox_index=res.fluidbox_index}
+						temp = {type = res.type, name=res.name, amount=res.amount, amount_min = res.amount_min, amount_max = res.amount_max, probability = res.probability, temperature=res.temperature, fluidbox_index=res.fluidbox_index}
 						if not temp.type then temp.type ="item" end
 					else
 						temp = {type = "item", name=res[1],amount=res[2]}
