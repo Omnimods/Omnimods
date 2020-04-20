@@ -931,6 +931,10 @@ function create_compression_recipe(recipe)
 				end
 			end
 		end
+		r.main_product = nil
+		r.normal.main_product = nil
+		r.expensive.main_product = nil
+		omni.marathon.standardise(r)
 		return r
 	end
 	return nil
@@ -955,7 +959,6 @@ local create_void = function(recipe)
 		new_rc.category = new_cat
 		new_rc.normal.ingredients[1].name="compressed-"..new_rc.normal.ingredients[1].name
 		new_rc.expensive.ingredients[1].name="compressed-"..new_rc.expensive.ingredients[1].name
-
 		return table.deepcopy(new_rc)
 	end
 	return nil
