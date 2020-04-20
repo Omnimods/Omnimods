@@ -112,5 +112,5 @@ RecGen:create("omnimatter_energy","purified-omnite"):
     setOrder("ab"):
 	setFuelCategory("chemical"):
 	setFuelValue(2.4):
-    setEnergy(0.5):
+    setEnergy(2.0):
     setEnabled(false):extend()

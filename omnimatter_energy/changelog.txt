@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.18.3
+Date: 2020-04-17
+  Changes:
+    - Change the Subgroup Icon to the Thumbnail
+    - Increase the crafting time of Purified Omnite to 2s
+---------------------------------------------------------------------------------------------------
 Version: 1.18.2
 Date: 2020-04-19
   Changes:

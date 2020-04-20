@@ -25,7 +25,7 @@ local burnerEntities = {
 	"chemical-boiler",
 	"stone-furnace",
 	"burner-assembling-machine",
-	"burner-mining-drill",
+	"burner-mining-drill"
 }
 
 
