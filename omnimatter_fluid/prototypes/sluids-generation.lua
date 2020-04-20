@@ -1078,6 +1078,7 @@ for _,fix in pairs(data.raw.recipe) do
 			end
 		end
 	end
+	omni.marathon.standardise(fix)
 end
 
 
