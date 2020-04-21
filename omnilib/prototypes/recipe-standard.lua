@@ -31,15 +31,15 @@ function omni.marathon.standardise(recipe)
 	-- Ingredient Standarisation
 	---------------------------------------------------------------------------
 	local ingredients = {}
-	local pass = false
+	local ingpass = false
 	-- check if every ingredient has a name tag, fluids always have them, items not, find mixed recipes
 	if recipe.normal.ingredients and recipe.expensive.ingredients and not recipe.ingredients then
-		pass = true
+		ingpass = true
 		for i,ingred in pairs(recipe.normal.ingredients) do
-			if ingred.name == nil then pass = false end
+			if ingred and ingred.name == nil then ingpass = false end
 		end
 	end
-	if pass == false then
+	if ingpass == false then
 		local norm={}
 		local expens={}
 		-- check if each exists and parse to set part of the script
@@ -97,22 +97,45 @@ function omni.marathon.standardise(recipe)
 	-- Results Standarisation
 	---------------------------------------------------------------------------
 	local results = {}
+	local respass = false
 	--check if already normalised before jumping in
 	if recipe.normal.results and recipe.expensive.results and not (recipe.results or recipe.result) then
-		--skip
-	else
+		respass = true
+		for i,res in pairs(recipe.normal.results) do
+			if res and res.name == nil then respass = false end
+		end
+	end
+	if respass == false then
 		local norm={}
 		local expens={}
 		-- check if each exists and parse to set part of the script
-		if recipe.normal.results then
-			norm = table.deepcopy(recipe.normal.results)
+		--normal.results exists
+		if recipe.normal.results then	
+			--norm = table.deepcopy(recipe.normal.results)
+			for i,res in pairs(recipe.normal.results) do
+				--name tag exists 
+				if res.name and (res.amount or res.amount_min or res.amount_max) and #res == 0 then
+					norm[i] = res
+				--no name tag or broken recipe
+				else
+					norm[i] = {type="item" ,name = res[1], amount = res[2] or 1}
+				end
+			end
 		elseif recipe.normal.result then
-			norm = {{recipe.normal.result,recipe.normal.result_count or 1}}
-			--if not norm[1][2] then norm[1][2]=1 end
-		elseif recipe.results then
-			norm = table.deepcopy(recipe.results)
+			norm = {{type="item" ,name = recipe.normal.result, amount = recipe.normal.result_count or 1}}
 		elseif recipe.result then
-			norm = {{recipe.result,recipe.result_count or 1}}
+			norm = {{type="item" ,name = recipe.result, amount = recipe.result_count or 1}}
+			--recipe.results only choice left
+		else
+			for i,res in pairs(recipe.results) do
+				--name tag exists
+				if res.name and (res.amount or res.amount_min or res.amount_max) then
+					norm[i] = res
+				--no name tag
+				else
+					norm[i] = {type="item" ,name = res[1], amount = res[2] or 1}
+				end
+			end
 		end
 
 		if recipe.expensive.results then
@@ -120,10 +143,8 @@ function omni.marathon.standardise(recipe)
 		elseif recipe.expensive.result then
 			expens = {{recipe.expensive.result,recipe.expensive.result_count or 1}}
 			--if not expens[1][2] then expens[1][2]=1 end
-		elseif recipe.results then
-			expens = table.deepcopy(recipe.results)
-		elseif recipe.result then
-			expens = {{recipe.result,recipe.result_count or 1}}
+		else
+			expens = norm
 		end
 		--set normal and expensive results
 		results = {expensive=expens,normal=norm}
