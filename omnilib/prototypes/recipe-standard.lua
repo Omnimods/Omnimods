@@ -113,7 +113,7 @@ function omni.marathon.standardise(recipe)
 		if recipe.normal.results then	
 			--norm = table.deepcopy(recipe.normal.results)
 			for i,res in pairs(recipe.normal.results) do
-				--name tag exists 
+				--name tag exists and there are no subtables without tags (#res)
 				if res.name and (res.amount or res.amount_min or res.amount_max) and #res == 0 then
 					norm[i] = res
 				--no name tag or broken recipe
@@ -174,8 +174,14 @@ function omni.marathon.standardise(recipe)
 	---------------------------------------------------------------------------
 	-- Localisation
 	---------------------------------------------------------------------------
-	--if no localised name, seach for one in main product or first ingredient in the list
-	if recipe.localised_name == nil and type(recipe.localised_name) ~= "table" then
+	--if no localised name, seach for one in main product or first result in the list
+	--Update loc. name if there is only 1 result and no main_product set (result could have changed)
+	local uplocal = false
+	if ((recipe.results and #recipe.results == 1) or (recipe.normal.results and #recipe.normal.results == 1)) and not recipe.main_product and not recipe.normal.main_product then
+		uplocal = true
+	end
+
+	if type(recipe.localised_name) ~= "table" and (recipe.localised_name == nil or uplocal) then
 		local it={}
 		if recipe.main_product and recipe.main_product~="" then
 			it = omni.lib.find_prototype(recipe.main_product)
@@ -242,7 +248,13 @@ function omni.marathon.standardise(recipe)
 	-- Icons standardisation 
 	---------------------------------------------------------------------------
 	-- no specific recipe icons
-	if not recipe.icon and not recipe.icons then
+	-- Update icon if there is only 1 result and no main_product set (result could have changed)
+	local upicon= false
+	if ((recipe.results and #recipe.results == 1) or (recipe.normal.results and #recipe.normal.results == 1)) and not recipe.main_product and not recipe.normal.main_product then
+		upicon = true
+	end
+
+	if (not recipe.icon and not recipe.icons) or upicon then
 		if (recipe.main_product and recipe.main_product ~= "") or (recipe.normal.main_product and recipe.normal.main_product ~= "") or (recipe.expensive.main_product and recipe.expensive.main_product ~= "") then
 			local item = omni.lib.find_prototype(recipe.main_product or recipe.normal.main_product or recipe.expensive.main_product)
 			if item then
