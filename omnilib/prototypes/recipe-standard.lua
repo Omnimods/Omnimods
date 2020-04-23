@@ -269,13 +269,18 @@ function omni.marathon.standardise(recipe)
 	---------------------------------------------------------------------------
 	-- Icons standardisation 
 	---------------------------------------------------------------------------
+	--Check if there is only 1 result and no main product --> result could have chnaged, icon needs to be updated
+	local upicon= false
+	if ((recipe.results and #recipe.results == 1) or (recipe.normal.results and #recipe.normal.results == 1)) and not recipe.main_product and not recipe.normal.main_product then
+		upicon = true
+	end
 	if recipe.icons and recipe.icon then -- case both, replace icons with icon (assume icon is new)
 		--replace recipe.icons with the new
 		recipe.icons={{icon=recipe.icon,icon_size=recipe.icon_size or 32}}
 		-- nil out non-compliant
 		recipe.icon=nil
 		--recipe.icon_size=nil
-	elseif not recipe.icons and not recipe.icon then -- case neither icon or icons (search via product)
+	elseif (not recipe.icons and not recipe.icon) or upicon then -- case neither icon or icons (search via product)
 		---------------------------------------------
 		-- NO RECIPE ICONS, SEARCH FOR MAIN PRODUCT --
 		----------------------------------------------
