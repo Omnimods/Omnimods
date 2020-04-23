@@ -1,6 +1,5 @@
 require("prototypes.fuel")
 --require("prototypes.compat.omnium-cycle")
-
 RecGen:import("repair-pack"):
 	setNormalIngredients({type="item", name="omnicium-plate", amount=6},{type="item", name="omni-tablet", amount=2}):
 	setExpensiveIngredients({type="item", name="omnicium-plate", amount=15},{type="item", name="omni-tablet", amount=7}):extend()
@@ -14,8 +13,8 @@ RecGen:import("electric-engine-unit"):setIngredients({type="fluid", name="lubric
       {type="item", name="electronic-circuit", amount=1},
       {type="item", name="anbaric-omnitor", amount=1},
       {type="item", name="engine-unit", amount=1}):extend()
-	  
-RecGen:import("electric-furnace"):addIngredients({"steel-furnace", 1}):extend()
+
+omni.lib.add_recipe_ingredient("electric-furnace", {"steel-furnace", 1})
 
 RecGen:import("burner-inserter"):setIngredients({"omnitor",1},{"iron-plate",1}):setTechName("basic-automation"):extend()
 

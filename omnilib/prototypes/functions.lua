@@ -475,24 +475,38 @@ end
 
 function omni.lib.add_recipe_ingredient(recipe, ingredient)
 	if data.raw.recipe[recipe] then
+		local norm = {}
+		local expens = {}
 		omni.marathon.standardise(data.raw.recipe[recipe])
 		if not ingredient.name then
 			if type(ingredient)=="string" then
-					table.insert(data.raw.recipe[recipe].normal.ingredients,table.deepcopy({type="item",name=ingredient,amount=1}))
-					table.insert(data.raw.recipe[recipe].expensive.ingredients,table.deepcopy({type="item",name=ingredient,amount=1}))
+				norm = table.deepcopy({type="item",name=ingredient,amount=1})
+				expens = table.deepcopy({type="item",name=ingredient,amount=1})
 			elseif ingredient.normal then
-				table.insert(data.raw.recipe[recipe].normal.ingredients,table.deepcopy(ingredient.normal))
-				table.insert(data.raw.recipe[recipe].expensive.ingredients,table.deepcopy(ingredient.expensive))
+				norm = table.deepcopy(ingredient.normal)
+				expens = table.deepcopy(ingredient.expensive)
 			elseif ingredient[1].name then
-				table.insert(data.raw.recipe[recipe].normal.ingredients,table.deepcopy(ingredient[1]))
-				table.insert(data.raw.recipe[recipe].expensive.ingredients,table.deepcopy(ingredient[2]))
+				norm = table.deepcopy(ingredient[1])
+				expens = table.deepcopy(ingredient[2])
 			elseif type(ingredient[1])=="string" then
-				table.insert(data.raw.recipe[recipe].normal.ingredients,table.deepcopy({type="item",name=ingredient[1],amount=ingredient[2]}))
-				table.insert(data.raw.recipe[recipe].expensive.ingredients,table.deepcopy({type="item",name=ingredient[1],amount=ingredient[2]}))
+				norm = table.deepcopy({type="item",name=ingredient[1],amount=ingredient[2]})
+				expens = table.deepcopy({type="item",name=ingredient[1],amount=ingredient[2]})
 			end
 		else
-			table.insert(data.raw.recipe[recipe].normal.ingredients,table.deepcopy(ingredient))
-			table.insert(data.raw.recipe[recipe].expensive.ingredients,table.deepcopy(ingredient))
+			norm = table.deepcopy(ingredient)
+			expens = table.deepcopy(ingredient)
+		end
+		local found = false
+		for i, diff in pairs({"normal","expensive"}) do
+			for _, ing in pairs(data.raw.recipe[recipe][diff].ingredients) do
+				if ing == norm or ing == expens then
+					found = true
+				end
+			end
+		end
+		if found == false then
+			table.insert(data.raw.recipe[recipe].normal.ingredients,norm)
+			table.insert(data.raw.recipe[recipe].expensive.ingredients,expens)
 		end
 	else
 		--log(recipe.." does not exist.")
