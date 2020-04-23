@@ -64,7 +64,7 @@ function omni.marathon.standardise(recipe)
 		local expens={}
 		-- check if each exists and parse to set part of the script
 		--.normal.ingredients already exists:
-		if recipe.normal.ingredients then 	
+		if recipe.normal.ingredients then
 			for i,ingred in pairs(recipe.normal.ingredients) do
 				--name tag exists
 				if ingred.name and ingred.amount then -- name tag
@@ -92,7 +92,7 @@ function omni.marathon.standardise(recipe)
 		end
 		--set normal and expensive ingredients
 		ingredients = {expensive=expens,normal=norm}
-		
+
 		--reset and repopulate ingredients list ensuring tags exist
 		recipe.normal.ingredients={}
 		recipe.expensive.ingredients={}
@@ -130,7 +130,7 @@ function omni.marathon.standardise(recipe)
 		local expens={}
 		-- check if each exists and parse to set part of the script
 		--normal.results exists
-		if recipe.normal.results then	
+		if recipe.normal.results then
 			--norm = table.deepcopy(recipe.normal.results)
 			for i,res in pairs(recipe.normal.results) do
 				--name tag exists and there are no subtables without tags (#res)
@@ -168,7 +168,7 @@ function omni.marathon.standardise(recipe)
 		end
 		--set normal and expensive results
 		results = {expensive=expens,normal=norm}
-		
+
 		--reset and repopulate ingredients list ensuring tags exist
 		recipe.normal.results={}
 		recipe.expensive.results={}
@@ -200,9 +200,9 @@ function omni.marathon.standardise(recipe)
 	if ((recipe.results and #recipe.results == 1) or (recipe.normal.results and #recipe.normal.results == 1)) and not recipe.main_product and not recipe.normal.main_product then
 		uplocal = true
 	end
+
 <<<<<<< HEAD
 =======
-
 >>>>>>> bccddc13433778188ea591146d86e00018c738db
 	if (type(recipe.localised_name) ~= "table" and recipe.localised_name == nil) or uplocal then
 		local it={}
@@ -265,7 +265,7 @@ function omni.marathon.standardise(recipe)
 	if recipe.expensive.energy_required == nil then recipe.expensive.energy_required = recipe.energy_required or 0.5 end
 	recipe.energy_required = nil
 	---------------------------------------------------------------------------
-	-- Icons standardisation 
+	-- Icons standardisation
 	---------------------------------------------------------------------------
 	--Check if there is only 1 result and no main product --> result could have chnaged, icon needs to be updated
 	local upicon= false
@@ -301,16 +301,16 @@ function omni.marathon.standardise(recipe)
 		elseif (recipe.normal.main_product and recipe.normal.main_product ~= "") then
 			res=recipe.normal.main_product
 		----------------------------------------------
-		-- NO MAIN PRODUCT, SEARCH FOR FIRST RESULT --		
+		-- NO MAIN PRODUCT, SEARCH FOR FIRST RESULT --
 		----------------------------------------------
 		elseif recipe.result and recipe.result.name then
 			res=recipe.result.name
 		elseif recipe.result then
-			res=recipe.result 
+			res=recipe.result
 		elseif recipe.normal.result and recipe.normal.result.name then
 			res=recipe.normal.result.name
 		elseif recipe.normal.result then
-			res=recipe.normal.result 
+			res=recipe.normal.result
 		elseif recipe.results and recipe.results[1] and recipe.results[1].name then
 			res=recipe.results[1].name
 		elseif 	recipe.normal.results and recipe.normal.results[1] and recipe.normal.results[1].name then
@@ -331,7 +331,7 @@ function omni.marathon.standardise(recipe)
 	-- Main Product Check
 	---------------------------------------------------------------------------
 	-- this will run each time a main product is found
-	if (recipe.main_product and recipe.main_product ~= "") or (recipe.normal.main_product and recipe.normal.main_product ~= "") or (recipe.expensive.main_product and recipe.expensive.main_product ~= "") then  	
+	if (recipe.main_product and recipe.main_product ~= "") or (recipe.normal.main_product and recipe.normal.main_product ~= "") or (recipe.expensive.main_product and recipe.expensive.main_product ~= "") then
 		-- check if main_product is in results list
 		local mp_check=false
 		if recipe.main_product and recipe.main_product ~= "" then
@@ -346,7 +346,7 @@ function omni.marathon.standardise(recipe)
 				mp_check=true
 			end
 		end
-		if mp_check==false then -- may need a more sophisticated main_product checking system 
+		if mp_check==false then -- may need a more sophisticated main_product checking system
 			recipe.normal.main_product=nil
 			recipe.expensive.main_product=nil
 		end
