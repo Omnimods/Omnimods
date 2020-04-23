@@ -201,9 +201,6 @@ function omni.marathon.standardise(recipe)
 		uplocal = true
 	end
 
-<<<<<<< HEAD
-=======
->>>>>>> bccddc13433778188ea591146d86e00018c738db
 	if (type(recipe.localised_name) ~= "table" and recipe.localised_name == nil) or uplocal then
 		local it={}
 		if recipe.main_product and recipe.main_product~="" then
@@ -351,4 +348,5 @@ function omni.marathon.standardise(recipe)
 			recipe.expensive.main_product=nil
 		end
 	end
+	return table.deepcopy(recipe)
 end
