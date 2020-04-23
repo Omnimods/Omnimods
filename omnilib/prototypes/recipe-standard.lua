@@ -203,7 +203,7 @@ function omni.marathon.standardise(recipe)
 		uplocal = true
 	end
 
-	if type(recipe.localised_name) ~= "table" and (recipe.localised_name == nil or uplocal) then
+	if (type(recipe.localised_name) ~= "table" and recipe.localised_name == nil) or uplocal then
 		local it={}
 		if recipe.main_product and recipe.main_product~="" then
 			it = omni.lib.find_prototype(recipe.main_product)
