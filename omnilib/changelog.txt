@@ -1,3 +1,8 @@
+Version: 3.18.8
+Date: XXX
+  Features:
+    - Added steam powered buildings
+>>>>>>> Steam omnitractor and omniphlog added
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.7
 Date: 2020.04.20
