@@ -22,7 +22,7 @@ end
 if angelsmods and angelsmods.refining then
 	omni.add_resource("angels-ore1",1)
 	omni.add_resource("angels-ore3",1)
-	if bobmods and bobmods.ores then
+	if bobmods and bobmods.ores or (angelsmods.industries and angelsmods.industries.overhaul) then
 		omni.add_resource("angels-ore5",2)
 		omni.add_resource("angels-ore6",2)
 		omni.add_resource("angels-ore2",3)
@@ -50,6 +50,7 @@ else
 		omni.add_resource("silver-ore",3)
 		omni.add_resource("uranium-ore",3)
 		omni.add_resource("tungsten-ore",3)
+		omni.add_resource("thorium-ore",3)
 
 		omni.add_resource("gem-ore",3)
 

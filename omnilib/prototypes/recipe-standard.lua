@@ -21,6 +21,26 @@ local function set_loc_name(item) --pass full table
 	end
 return loc_name
 end
+local function set_icons_tab(it) --pass item table to fish icons from
+	local ics={}--set icons table as 0
+	--icon only
+	if it.icon and not it.icons then
+		ics[#ics+1] = {icon=it.icon,icon_size=it.icon_size or 32}
+	--icons only
+	elseif it.icons and not it.icon then
+		--check tags and set name and size in each
+		for i,ic in pairs(it.icons) do
+			ic.icon = ic.icon or ic[1]
+			ic.icon_size = ic.icon_size or ic[2] or 32
+			ic.scale =ic.scale or 32/ic.icon_size
+			ics[#ics+1]=ic
+		end
+	--both, this implies an error has occurred with the item lookup function
+	elseif it.icon and it.icons then
+		ics[#ics+1]={icon=it.icon,icon_size=it.icon_size or 32}
+	end
+	return ics
+end
 
 function omni.marathon.standardise(recipe)
 	if recipe == nil then return nil end
@@ -247,43 +267,47 @@ function omni.marathon.standardise(recipe)
 	---------------------------------------------------------------------------
 	-- Icons standardisation 
 	---------------------------------------------------------------------------
-	-- no specific recipe icons
-	-- Update icon if there is only 1 result and no main_product set (result could have changed)
-	local upicon= false
-	if ((recipe.results and #recipe.results == 1) or (recipe.normal.results and #recipe.normal.results == 1)) and not recipe.main_product and not recipe.normal.main_product then
-		upicon = true
-	end
-
-	if (not recipe.icon and not recipe.icons) or upicon then
-		if (recipe.main_product and recipe.main_product ~= "") or (recipe.normal.main_product and recipe.normal.main_product ~= "") or (recipe.expensive.main_product and recipe.expensive.main_product ~= "") then
-			local item = omni.lib.find_prototype(recipe.main_product or recipe.normal.main_product or recipe.expensive.main_product)
-			if item then
-				if item.icon then recipe.icon = item.icon end
-				if item.icons then recipe.icons = item.icons end
-				if item.icon_size then recipe.icon_size = item.icon_size end
-			end
+	if recipe.icons and recipe.icon then -- case both, replace icons with icon (assume icon is new)
+		--replace recipe.icons with the new
+		recipe.icons={{icon=recipe.icon,icon_size=recipe.icon_size or 32}}
+		-- nil out non-compliant
+		recipe.icon=nil
+		--recipe.icon_size=nil
+	elseif not recipe.icons and not recipe.icon then -- case neither icon or icons (search via product)
+		---------------------------------------------
+		-- NO RECIPE ICONS, SEARCH FOR MAIN PRODUCT --
+		----------------------------------------------
+		if (recipe.main_product and recipe.main_product ~= "") then
+			res=recipe.main_product
+		elseif (recipe.normal.main_product and recipe.normal.main_product ~= "") then
+			res=recipe.normal.main_product
+		----------------------------------------------
+		-- NO MAIN PRODUCT, SEARCH FOR FIRST RESULT --		
+		----------------------------------------------
+		elseif recipe.result and recipe.result.name then
+			res=recipe.result.name
+		elseif recipe.result then
+			res=recipe.result 
+		elseif recipe.normal.result and recipe.normal.result.name then
+			res=recipe.normal.result.name
+		elseif recipe.normal.result then
+			res=recipe.normal.result 
+		elseif recipe.results and recipe.results[1] and recipe.results[1].name then
+			res=recipe.results[1].name
+		elseif 	recipe.normal.results and recipe.normal.results[1] and recipe.normal.results[1].name then
+			res=recipe.normal.results[1].name
 		else
-			if recipe.result and recipe.result.name then
-				res=recipe.result.name
-			elseif recipe.result then
-				res=recipe.result 
-			elseif recipe.results and recipe.results[1] and recipe.results[1].name then
-				res=recipe.results[1].name
-			elseif 	recipe.normal.results and recipe.normal.results[1] and recipe.normal.results[1].name then
-				res=recipe.normal.results[1].name
-			else
-				res=recipe.name
-			end
-			local item = omni.lib.find_prototype(res)
-			if item then
-				if item.icon then recipe.icon = item.icon end
-				if item.icons then recipe.icons = item.icons end
-				if item.icon_size then recipe.icon_size = item.icon_size end
-			end
+			res=recipe.name --should never get this far...
 		end
-	elseif recipe.icon and recipe.icon ~= "" then
-		recipe.icons = {{icon=recipe.icon,icon_size=recipe.icon_size}}
-		recipe.icon=nil 
+		--find res
+		local item = omni.lib.find_prototype(res)
+		if item then
+			recipe.icons=set_icons_tab(item)
+			-- nil out non-compliant
+			recipe.icon=nil
+			--recipe.icon_size=nil
+		end
+		elseif recipe.icons then --skip, nothing to see here
 	end
 	---------------------------------------------------------------------------
 	-- Main Product Check
