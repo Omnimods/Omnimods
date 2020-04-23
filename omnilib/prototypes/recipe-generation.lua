@@ -745,13 +745,15 @@ function ItemGen:addSmallIcon(icon,nr)
 			self:addIcon({icon = ic.icon,
 			icon_size=ic_sz,
 				scale = 0.4375*(ic.scale or 32/ic_sz),
-				shift = quad[nr or 1]})
+				shift = quad[nr or 1],
+				tint = ic.tint or nil})
 		end
 	else
 		local ic = icon
 		self:addIcon({icon = icon,
 			scale = 0.4375,
-			shift = quad[nr or 1]})
+			shift = quad[nr or 1],
+			tint = ic.tint or nil})
 	end
 	return self
 end
