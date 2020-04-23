@@ -15,6 +15,8 @@ local function set_loc_name(item) --pass full table
 			loc_name = {"fluid-name."..item.name}
 		elseif string.find(item.name,"equipment") then
 			loc_name = {"equipment-name."..item.name}
+		elseif item.result or item.results or item.normal then
+			loc_name = {"recipe-name."..item.name}
 		else --should cover items, tools, capsules etc...
 			loc_name = {"item-name."..item.name}
  		end
@@ -149,7 +151,7 @@ function omni.marathon.standardise(recipe)
 		else
 			for i,res in pairs(recipe.results) do
 				--name tag exists
-				if res.name and (res.amount or res.amount_min or res.amount_max) then
+				if res.name and (res.amount or res.amount_min or res.amount_max) and #res == 0 then
 					norm[i] = res
 				--no name tag
 				else
