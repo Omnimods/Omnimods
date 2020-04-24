@@ -73,7 +73,7 @@ end
 if mods["bobassembly"] and settings.startup["bobmods-assembly-burner"].value then
 	omni.lib.add_prerequisite("basic-automation", "simple-automation")
 	omni.lib.remove_prerequisite("automation", "basic-automation")
-	BuildGen:import("omnitor-assembling-machine"):setSpeed(0.1):extend()
+	BuildGen:import("omnitor-assembling-machine"):setSpeed(0.1):setFuelCategory("omnite"):extend()
 	if mods["angelsindustries"] and angelsmods.industries.components then
 		RecGen:import("burner-assembling-machine"):
 			setTechCost(15):extend()
