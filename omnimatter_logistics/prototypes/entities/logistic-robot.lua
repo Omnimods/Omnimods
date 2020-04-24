@@ -46,6 +46,12 @@ local function flying_robot(volume)
 	}
 end
 
+if not mods["angelsindustries"] then
+costs.circuit[#costs.circuit+1] = {name = "electronic-circuit", quant={10,11,19,33,58}}
+else
+	costs.circuit[#costs.circuit+1] = {name = "circuit-red-loaded", quant={15,14,25}}
+	costs.circuit[#costs.circuit+1] = {name = "electronic-circuit", quant={10,16}}
+end
 if not mods["bobelectronics"] then
 	costs.circuit[#costs.circuit+1] = {name = "electronic-circuit", quant={10,11,19,33,58}}
 else
