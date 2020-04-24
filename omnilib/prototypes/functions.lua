@@ -435,7 +435,9 @@ function omni.lib.replace_recipe_ingredient(recipe, ingredient,replacement)
 		--log("could not find "..recipe)
 
 	end
-	omni.marathon.standardise(data.raw.recipe[recipe])
+	if data.raw.recipe[recipe].ingredient or data.raw.recipe[recipe].ingredients then
+		omni.marathon.standardise(data.raw.recipe[recipe])
+	end
 	for _,dif in pairs({"normal","expensive"}) do
 		for i,ing in pairs(data.raw.recipe[recipe][dif].ingredients) do
 			if ing.name==ingredient then

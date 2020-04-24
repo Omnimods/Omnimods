@@ -2765,18 +2765,19 @@ function BuildGen:import(name)
 
 		--if build.energy_source and build.energy_source.fuel_category then b:setFuelCategory(build.energy_source.fuel_category) end
 
-	local rec = name
-	for _,r in pairs(data.raw.recipe) do
-		omni.marathon.standardise(r)
-		for _,res in pairs(r.normal.results) do
-			if res.name == name then
-				rec = res.name
-				break
-			end
-		end
-	end
+	--local rec = name
+	-- for _,r in pairs(data.raw.recipe) do
+	-- 	omni.marathon.standardise(r)
+	-- 	for _,res in pairs(r.normal.results) do
+	-- 		if res.name == name then
+	-- 			rec = res.name
+	-- 			break
+	-- 		end
+	-- 	end
+	-- end
 
-	local r = RecGen:import(rec)
+	--local r = RecGen:import(rec)
+	local r = RecGen:import(name)
 
 	local notFields = {}
 	for name,data in pairs(r) do
