@@ -122,7 +122,7 @@ function omni.marathon.standardise(recipe)
 	if recipe.normal.results and recipe.expensive.results and not (recipe.results or recipe.result) then
 		respass = true
 		for i,res in pairs(recipe.normal.results) do
-			if res and res.name == nil then respass = false end
+			if (res and not res.name) or #res ~= 0 then respass = false end
 		end
 	end
 	if respass == false then
@@ -195,9 +195,9 @@ function omni.marathon.standardise(recipe)
 	-- Localisation
 	---------------------------------------------------------------------------
 	--if no localised name, seach for one in main product or first result in the list
-	--Update loc. name if there is only 1 result and no main_product set (result could have changed)
+	--Update loc. name if there is only 1 result and no main_product set and if respass was false (result could have changed)
 	local uplocal = false
-	if ((recipe.results and #recipe.results == 1) or (recipe.normal.results and #recipe.normal.results == 1)) and not recipe.main_product and not recipe.normal.main_product then
+	if ((recipe.results and #recipe.results == 1) or (recipe.normal.results and #recipe.normal.results == 1)) and not respass and not recipe.main_product and not recipe.normal.main_product then
 		uplocal = true
 	end
 
