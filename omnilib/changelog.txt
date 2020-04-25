@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.8
+Date: 2020.04.XX
+  Bugfixes:
+    - Fixed Recipe standardisation not updating icons & localised names in some edge cases
+    - Optimised small icon addition
+    - Fixed tinting on omnic water recipes
+---------------------------------------------------------------------------------------------------
 Version: 3.18.7
 Date: 2020.04.20
   Bugfixes:
