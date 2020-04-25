@@ -132,7 +132,7 @@ if data.raw.recipe["steam-science-pack"] then
 	omni.lib.replace_recipe_ingredient("steam-science-pack","coal","omnite")
 	if mods["bobassembly"] then
 		-- Adding Steam omnitractor/omniphlog based on bob's machines
-		require("prototypes.buildings.steam-omnitractor")
+		require("prototypes.buildings.steam-omni")
 	end
 end
 
