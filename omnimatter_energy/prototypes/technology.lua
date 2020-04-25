@@ -7,7 +7,7 @@ data:extend({
         icon_size = 128,
         prerequisites =
         {
-            "anbaricity",
+            "steam-power",
         },
         effects =
         {
