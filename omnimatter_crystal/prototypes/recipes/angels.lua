@@ -1,5 +1,5 @@
 
-local angel_stupid = {"manganese","chrome"}
+--local angel_stupid = {"manganese","chrome"}
 --ingredient lists (may need to remove old nodule stuff)
 local ingrediences_solvation=function(recipe)
 	local ing = {}
@@ -92,9 +92,10 @@ local has_unlock = function(tech,recipe)
 	return false
 end
 
+
 if angelsmods and angelsmods.refining then
-	local spec_vanilla=true --set else case of no bobs or overhaul
-	if mods["bobplates"] then
+  spec_vanilla=true --set else case of no bobs or overhaul
+  if mods["bobplates"] then
 		spec_vanilla=false
 	elseif mods["angelsindustries"] and angelsmods.industries.overhaul then
 		spec_vanilla=false
@@ -109,16 +110,18 @@ if angelsmods and angelsmods.refining then
 		omni.crystal.add_crystal("angels-copper-pebbles","Copper pebbles")
 		omni.crystal.add_crystal("angels-copper-slag","Copper slag")
 	end
-	if mods["angelspetrochem"] then omni.crystal.add_crystal("fluorite-ore","Fluorite")end
-	omni.crystal.add_crystal("manganese-ore","Manganese")
+	if angelsmods.petrochem then omni.crystal.add_crystal("fluorite-ore","Fluorite") end
+	omni.crystal.add_crystal("manganese-ore","Manganese") -- do these show up in special vanilla?
 	omni.crystal.add_crystal("chrome-ore","Chrome")
+
 	local rec = {}
-	--log("fixing angels shit again")
 	local crystalines = {}
+	local processed={}
+
 	for _,recipe in pairs(data.raw.recipe) do
 		--log(serpent.block (recipe.name))
 		local results={}
-		if recipe.normal and recipe.normal.results then
+		if recipe.normal and recipe.normal.results then --non-standardised check?
 			results=recipe.normal.results
 		elseif recipe.results then
 			results=recipe.results
@@ -172,18 +175,22 @@ if angelsmods and angelsmods.refining then
 					if mods["omnimatter_marathon"] then omni.marathon.exclude_recipe(metal.."-salting") end
 					crystalines[#crystalines+1]=solution
 					--"angelsore-crushed-mix1-processing"
+					--adding unlocks in sequence, once unlocked, add exclusion...
 					local blended_ore="false"
-					if string.find(recipe.name,"ore8") or string.find(recipe.name,"ore9") then
-						blended_ore="true"
+					if string.find(recipe.name,"ore8") or string.find(recipe.name,"ore9") then blended_ore="true" end
+
+					--find unlock tier
+					local tier=nil
+					if find_type(recipe,"crushed") then tier= 1 --covers cupric/ferrous tier 1
+					elseif find_type(recipe,"chunk") or (blended_ore=="true" and string.find(recipe.name,"powder")) then tier= 2
+					elseif (find_type(recipe,"crystal") and blended_ore=="false") or (blended_ore=="true" and string.find(recipe.name,"dust")) then	tier= 3
+					elseif find_type(recipe,"pure") or (blended_ore=="true" and string.find(recipe.name,"crystal")) then tier= 4
+					else tier = 4 --if something goes horribly wrong...
 					end
-					if find_type(recipe,"crushed") or (blended_ore=="true" and string.find(recipe.name,"crushed")) then
-						omni.lib.add_unlock_recipe("crystallology-1", metal.."-salting")
-					elseif find_type(recipe,"chunk") or (blended_ore=="true" and string.find(recipe.name,"powder")) then
-						omni.lib.add_unlock_recipe("crystallology-2", metal.."-salting")
-					elseif (find_type(recipe,"crystal") and blended_ore=="false") or (blended_ore=="true" and string.find(recipe.name,"dust")) then
-						omni.lib.add_unlock_recipe("crystallology-3", metal.."-salting")
-					elseif find_type(recipe,"pure") or (blended_ore=="true" and string.find(recipe.name,"crystal")) then
-						omni.lib.add_unlock_recipe("crystallology-4", metal.."-salting")
+					omni.lib.add_unlock_recipe("crystallology-"..tier, metal.."-salting")
+					--check and set unlock tier
+					for i,ore in pairs(results) do
+						if not processed[ore.name] then processed[ore.name]=tier end
 					end
 				end
 			end
@@ -192,48 +199,32 @@ if angelsmods and angelsmods.refining then
 	data:extend(crystalines)
 	local suffixes = {"-omnide-solution","-crystal","-crystal-omnitraction"}
 	for _,suf in pairs(suffixes) do
-		for i=1,omni.max_tier-1 do
-			for _,eff in pairs(data.raw.technology["crystallology-"..i].effects) do
-				if string.find(eff.recipe,"-salting") then
-					if #data.raw.recipe[eff.recipe].ingredients > 2 then
-						local metal = string.sub(eff.recipe,1,string.len(eff.recipe)-string.len("-salting"))
-						if not string.find(metal,"void") then omni.lib.add_unlock_recipe("crystallology-"..i, metal..suf) end
-					elseif string.find(data.raw.recipe[eff.recipe].name,"ore8") or string.find(data.raw.recipe[eff.recipe].name,"ore9") then
-						for _, res in pairs(data.raw.recipe[eff.recipe].results) do
-							if string.find(res.name,"manganese") or string.find(res.name,"chrome") then
-								local metal = string.sub(res.name,1,string.len(res.name)-string.len("-omnide-salt"))
-								if not string.find(metal,"void") then  omni.lib.add_unlock_recipe("crystallology-"..i, metal..suf) end
-							end
-						end
-					end
-					local metal = string.sub(eff.recipe,1,string.len(eff.recipe)-string.len("-salting"))
-				end
+		for ore,i in pairs(processed) do
+			if ore~="slag" then
+				for _,eff in pairs(data.raw.technology["crystallology-"..i].effects) do	omni.lib.add_unlock_recipe("crystallology-"..i, ore..suf) end
 			end
 		end
 	end
-end
-
-if mods["angelsrefining"] and settings.startup["angels-salt-sorting"].value then
-
-	RecGen:create("omnimatter_crystal","omni-catalyst"):
-			setSubgroup("omnine"):
-			setStacksize(500):
-			marathon():
-			--setIcons("catalysator-yellow","angelsrefining"):
-			setIcons("omni-catalyst"):
-			setCategory("crystallizing"):
-			setTechName("crystallology-1"):
-			setOrder("zz"):
-			setIngredients	({
-							{type = "fluid", name = "hydromnic-acid", amount = 120},
-							}):
-			setResults({type = "item", name = "omni-catalyst", amount=1}):
-			setEnergy(0.5):extend()
-
-	for i, rec in pairs(data.raw.recipe) do
-		if rec.category == "omniplant" and string.find(rec.name,"salting") then
-		omni.lib.replace_recipe_ingredient(rec.name, "hydromnic-acid",{type = "item", name = "omni-catalyst", amount=1})
-		rec.category = "ore-sorting"
+	if settings.startup["angels-salt-sorting"].value then
+		RecGen:create("omnimatter_crystal","omni-catalyst"):
+		setSubgroup("omnine"):
+		setStacksize(500):
+		marathon():
+		--setIcons("catalysator-yellow","angelsrefining"):
+		setIcons("omni-catalyst"):
+		setCategory("crystallizing"):
+		setTechName("crystallology-1"):
+		setOrder("zz"):
+		setIngredients	({
+			{type = "fluid", name = "hydromnic-acid", amount = 120},
+		}):
+		setResults({type = "item", name = "omni-catalyst", amount=1}):
+		setEnergy(0.5):extend()
+		for i, rec in pairs(data.raw.recipe) do
+			if rec.category == "omniplant" and string.find(rec.name,"salting") then
+				omni.lib.replace_recipe_ingredient(rec.name, "hydromnic-acid",{type = "item", name = "omni-catalyst", amount=1})
+				rec.category = "ore-sorting"
+			end
 		end
 	end
 end

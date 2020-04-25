@@ -1,6 +1,5 @@
 require("prototypes.fuel")
 --require("prototypes.compat.omnium-cycle")
-
 RecGen:import("repair-pack"):
 	setNormalIngredients({type="item", name="omnicium-plate", amount=6},{type="item", name="omni-tablet", amount=2}):
 	setExpensiveIngredients({type="item", name="omnicium-plate", amount=15},{type="item", name="omni-tablet", amount=7}):extend()
@@ -14,8 +13,8 @@ RecGen:import("electric-engine-unit"):setIngredients({type="fluid", name="lubric
       {type="item", name="electronic-circuit", amount=1},
       {type="item", name="anbaric-omnitor", amount=1},
       {type="item", name="engine-unit", amount=1}):extend()
-	  
-RecGen:import("electric-furnace"):addIngredients({"steel-furnace", 1}):extend()
+
+omni.lib.add_recipe_ingredient("electric-furnace", {"steel-furnace", 1})
 
 RecGen:import("burner-inserter"):setIngredients({"omnitor",1},{"iron-plate",1}):setTechName("basic-automation"):extend()
 
@@ -32,7 +31,10 @@ RecGen:import("boiler"):setTechName("steam-power"):
 	equalize("burner-omnitractor"):
 	setEnabled(false):
 	setTechPacks(2):extend()
+	
 omni.lib.add_unlock_recipe("steam-power", "purified-omnite")
+omni.lib.add_unlock_recipe("steam-power", "burner-filter-inserter-2")
+omni.lib.add_unlock_recipe("steam-power", "burner-inserter-2")
 	
 if mods["angelsindustries"] and angelsmods.industries.components then
 	RecGen:import("steam-engine"):
@@ -74,7 +76,7 @@ end
 if mods["bobassembly"] and settings.startup["bobmods-assembly-burner"].value then
 	omni.lib.add_prerequisite("basic-automation", "simple-automation")
 	omni.lib.remove_prerequisite("automation", "basic-automation")
-	BuildGen:import("omnitor-assembling-machine"):setSpeed(0.1):extend()
+	BuildGen:import("omnitor-assembling-machine"):setSpeed(0.1):setFuelCategory("omnite"):extend()
 	if mods["angelsindustries"] and angelsmods.industries.components then
 		RecGen:import("burner-assembling-machine"):
 			setTechCost(15):extend()
