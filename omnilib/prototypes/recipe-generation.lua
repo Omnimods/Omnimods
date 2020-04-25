@@ -731,6 +731,14 @@ function ItemGen:addElectricIcon()
 		shift = {-10, 10}})
 	return self
 end
+function ItemGen:addSteamIcon()
+	-- CC BY-NC 4.0 Licensed from http://getdrawings.com/get-icon#steam-icon-51.png
+	self:addIcon({icon = "__omnilib__/graphics/steam-icon-51-32x32.png",
+	icon_size=32,
+		scale = 0.4375,
+		shift = {-10, 10}})
+	return self
+end
 function ItemGen:addSmallIcon(icon,nr)
 	local quad = {{10, -10},{-10, -10},{-10, 10},{10, 10}}
 	local icons = prototype_icon(icon)
@@ -3029,6 +3037,49 @@ function BuildGen:setBurner(efficiency,size)
 	self:addBurnerIcon()
 	if not string.find(self.name,"burner-") then
 		self:setName("burner-"..self.name)
+	end
+	return self
+end
+function BuildGen:setSteam(efficiency,size)
+	-- Taken from Bob's steam assembling machine, might be a prereq...
+	self.energy_source = 
+    {
+      type = "fluid",
+      effectivity = 1,
+      emissions_per_minute = 10, --fairly sure this scales, so it would be 2 at level 1 speed.
+      fluid_box =
+      {
+        base_area = 1,
+        height = 2,
+        base_level = -1,
+        pipe_connections =
+        {
+          {type = "input-output", position = { 2, 0}},
+          {type = "input-output", position = {-2, 0}}
+        },
+        pipe_covers = pipecoverspictures(),
+        pipe_picture = assembler2pipepictures(),
+        production_type = "input-output",
+        filter = "steam"
+      },
+      burns_fluid = false,
+      scale_fluid_usage = false,
+      fluid_usage_per_tick = (2/60),
+      maximum_temperature = 765,
+      smoke =
+      {
+        {
+          name = "light-smoke",
+          frequency = 10 / 32,
+          starting_vertical_speed = 0.08,
+          slow_down_factor = 1,
+          starting_frame_deviation = 60
+        }
+      }
+    }
+	self:addSteamIcon()
+	if not string.find(self.name,"steam-") then
+		self:setName("steam-"..self.name)
 	end
 	return self
 end
