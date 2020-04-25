@@ -31,7 +31,10 @@ RecGen:import("boiler"):setTechName("steam-power"):
 	equalize("burner-omnitractor"):
 	setEnabled(false):
 	setTechPacks(2):extend()
+	
 omni.lib.add_unlock_recipe("steam-power", "purified-omnite")
+omni.lib.add_unlock_recipe("steam-power", "burner-filter-inserter-2")
+omni.lib.add_unlock_recipe("steam-power", "burner-inserter-2")
 	
 if mods["angelsindustries"] and angelsmods.industries.components then
 	RecGen:import("steam-engine"):
