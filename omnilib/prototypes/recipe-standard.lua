@@ -21,6 +21,7 @@ local function set_loc_name(item) --pass full table
 	end
 return loc_name
 end
+
 local function set_icons_tab(it) --pass item table to fish icons from
 	local ics={}--set icons table as 0
 	--icon only
@@ -47,6 +48,7 @@ function omni.marathon.standardise(recipe)
 	--Set table parts if they don't already exist
 	if not recipe.expensive then recipe.expensive={} end
 	if not recipe.normal then recipe.normal={} end
+
 	---------------------------------------------------------------------------
 	-- Ingredient Standarisation
 	---------------------------------------------------------------------------
@@ -113,6 +115,7 @@ function omni.marathon.standardise(recipe)
 		--nil out non-standard ingredients
 		recipe.ingredients = nil
 	end
+
 	---------------------------------------------------------------------------
 	-- Results Standarisation
 	---------------------------------------------------------------------------
@@ -125,6 +128,7 @@ function omni.marathon.standardise(recipe)
 			if (res and not res.name) or #res ~= 0 then respass = false end
 		end
 	end
+
 	if respass == false then
 		local norm={}
 		local expens={}
@@ -191,16 +195,16 @@ function omni.marathon.standardise(recipe)
 		recipe.result_count = nil
 		recipe.results = nil
 	end
+
 	---------------------------------------------------------------------------
 	-- Localisation
 	---------------------------------------------------------------------------
 	--if no localised name, seach for one in main product or first result in the list
 	--Update loc. name if there is only 1 result and no main_product set and if respass was false (result could have changed)
 	local uplocal = false
-	if ((recipe.results and #recipe.results == 1) or (recipe.normal.results and #recipe.normal.results == 1)) and not respass and not recipe.main_product and not recipe.normal.main_product then
+	if ((recipe.results and #recipe.results == 1) or (recipe.normal.results and #recipe.normal.results == 1)) and not recipe.main_product and not recipe.normal.main_product then
 		uplocal = true
 	end
-
 	if (type(recipe.localised_name) ~= "table" and recipe.localised_name == nil) or uplocal then
 		local it={}
 		if recipe.main_product and recipe.main_product~="" then
@@ -214,6 +218,7 @@ function omni.marathon.standardise(recipe)
 		end
 		recipe.localised_name=set_loc_name(it)
 	end
+
 	---------------------------------------------------------------------------
 	-- Move Flags to difficulty zone
 	---------------------------------------------------------------------------
@@ -228,6 +233,7 @@ function omni.marathon.standardise(recipe)
 	-- remove settings outside of difficulty
 	recipe.hidden = nil
 	recipe.enabled = nil
+
 	---------------------------------------------------------------------------
 	-- Subgroup setting
 	---------------------------------------------------------------------------
@@ -252,6 +258,7 @@ function omni.marathon.standardise(recipe)
 			end
 		end
 	end
+
 	---------------------------------------------------------------------------
 	-- Misc setting properties
 	---------------------------------------------------------------------------
@@ -261,6 +268,7 @@ function omni.marathon.standardise(recipe)
 	if recipe.normal.energy_required == nil then recipe.normal.energy_required = recipe.energy_required or 0.5 end
 	if recipe.expensive.energy_required == nil then recipe.expensive.energy_required = recipe.energy_required or 0.5 end
 	recipe.energy_required = nil
+
 	---------------------------------------------------------------------------
 	-- Icons standardisation
 	---------------------------------------------------------------------------
