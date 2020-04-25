@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.18.4
+Date: 2020-04-XX
+  Features:
+    - Added Burner inserter Mk2 and burner filter-inserter Mk2 that accept Omnified Fuel
+  Changes:
+    - Moved Omnium-power behind logistics science pack research
+---------------------------------------------------------------------------------------------------
 Version: 1.18.3
 Date: 2020-04-17
   Changes:
