@@ -11,56 +11,70 @@ if mods["omnimatter_marathon"] then
 	omni.marathon.exclude_recipe("omni-saphirite-general-1")
 	omni.marathon.exclude_recipe("omni-stiratite-general-1")
 end
-
-omni.add_resource("coal",2)
-omni.add_resource("stone",3)
-
+----------------------------------------------------------------------------
+-- ore generation removal and omnitraction creation --
+-- common alternative mods --
+----------------------------------------------------------------------------
 if mods["SigmaOne_Nuclear"] then
 	omni.add_resource("fluorine-ore",3)
 end
-
+if mods["dark-matter-replicators"] then
+	omni.add_resource("tenemut",3)
+end
+if mods["Yuoki"] then
+	omni.add_resource("y-res1",2)
+	omni.add_resource("y-res2",3)
+end
+----------------------------------------------------------------------------
+-- Vanilla, Angels and Bobs combo solid ores section --
+----------------------------------------------------------------------------
+-- all the time resources
+omni.add_resource("coal",2)
+omni.add_resource("stone",3)
 if angelsmods and angelsmods.refining then
 	omni.add_resource("angels-ore1",1)
-	omni.add_resource("angels-ore3",1)
+	omni.add_resource("angels-ore3",1) 
+	omni.add_resource("angels-ore4",3)
+	omni.add_fluid("thermal-water",3,3)
 	if bobmods and bobmods.ores or (angelsmods.industries and angelsmods.industries.overhaul) then
+		omni.add_resource("angels-ore2",3)
 		omni.add_resource("angels-ore5",2)
 		omni.add_resource("angels-ore6",2)
-		omni.add_resource("angels-ore2",3)
-		omni.add_resource("angels-ore4",3)
 	else
 		omni.add_resource("angels-ore2",2)
-		omni.add_resource("angels-ore4",3)
-		omni.add_resource("uranium-ore",3)
-		omni.add_fluid("crude-oil",1,1)
 	end
-	omni.add_fluid("thermal-water",3,3)
 else
+	omni.add_resource("iron-ore",1)
+	omni.add_resource("copper-ore",1)
+	omni.add_resource("uranium-ore",3)
 	if bobmods and bobmods.ores then
-		omni.add_resource("iron-ore",1)
-		omni.add_resource("copper-ore",1)
-		omni.add_resource("lead-ore",1)
-		omni.add_resource("tin-ore",1)
-		omni.add_resource("quartz",2)
-		omni.add_resource("zinc-ore",2)
-		omni.add_resource("nickel-ore",2)
-		omni.add_resource("bauxite-ore",2)
-		omni.add_resource("rutile-ore",3)
-		omni.add_resource("gold-ore",3)
-		omni.add_resource("cobalt-ore",3)
-		omni.add_resource("silver-ore",3)
-		omni.add_resource("uranium-ore",3)
-		omni.add_resource("tungsten-ore",3)
-		omni.add_resource("thorium-ore",3)
-
+		local levels={		
+			--["iron-ore"]=1,
+			--["copper-ore"]=1,
+			["lead-ore"]=1,
+			["tin-ore"]=1,
+			["quartz"]=2,
+			["zinc-ore"]=2,
+			["nickel-ore"]=2,
+			["bauxite-ore"]=2,
+			["rutile-ore"]=3,
+			["gold-ore"]=3,
+			["cobalt-ore"]=3,
+			["silver-ore"]=3,
+			["tungsten-ore"]=3,
+			--["uranium-ore"]=3,
+			["thorium-ore"]=3,
+			--["gem-ore"]=3
+		}
+		for i, ore in pairs(bobmods.ores) do --check ore triggers (works with plates)
+			if ore.enabled and levels[ore.name] then
+				omni.add_resource(ore.name,levels[ore.name])
+			end
+		end
 		omni.add_resource("gem-ore",3)
-
 		omni.add_fluid("lithia-water",2,3/4)
-		--sulfur
-	else
-		omni.add_resource("iron-ore",1)
-		omni.add_resource("copper-ore",1)
-		omni.add_resource("uranium-ore",3)
 	end
+	--remove stone from mining
 	for _, gen in pairs(data.raw["resource"]) do
 		if gen.minable.result == "stone" then
 			data.raw.resource[gen.name] = nil
@@ -75,6 +89,10 @@ else
 		end
 	end
 end
+
+----------------------------------------------------------------------------
+-- Oils ain't oils section --
+----------------------------------------------------------------------------
 if angelsmods and angelsmods.petrochem then
 	omni.add_fluid("gas-natural-1",1,3+4/7)
 	omni.add_fluid("liquid-multi-phase-oil",2,1+3/8)
@@ -82,13 +100,7 @@ if angelsmods and angelsmods.petrochem then
 else
 	omni.add_fluid("crude-oil",1,1)
 end
-if mods["dark-matter-replicators"] then
-	omni.add_resource("tenemut",3)
-end
-if mods["Yuoki"] then
-	omni.add_resource("y-res1",2)
-	omni.add_resource("y-res2",3)
-end
+
 for i,tech in pairs(data.raw.technology) do
 	if string.find(tech.name,"pumpjack") then
 		--table.remove(data.raw.technology,i)
@@ -115,7 +127,6 @@ for _,recipe in pairs(data.raw.recipe) do
 		data.raw.recipe[recipe.name].enabled=false
 	end
 end
-
 for _, item in pairs(data.raw.item) do
 	if string.find(item.name,"pumpjack") then
 		--data.raw.item[item.name]=nil
@@ -127,7 +138,9 @@ if mods["omnimatter_marathon"] then
 	omni.marathon.exclude_recipe("omnicium-plate-pure")
 	omni.marathon.exclude_recipe("crushing-omnite-by-hand")
 end
---moved from DFF
+----------------------------------------------------------------------------
+-- Steam science compatability --
+----------------------------------------------------------------------------
 -- Fix for Steam SP Bob's Tech introduces sometimes
 if data.raw.recipe["steam-science-pack"] then
 	omni.lib.replace_recipe_ingredient("steam-science-pack","coal","omnite")
@@ -136,7 +149,9 @@ if data.raw.recipe["steam-science-pack"] then
 		require("prototypes.buildings.steam-omni")
 	end
 end
-
+----------------------------------------------------------------------------
+-- Late requires --
+----------------------------------------------------------------------------
 require("prototypes.buildings.omnitractor-dynamic")
 require("prototypes.recipes.extraction-dynamic")
 require("prototypes.recipes.solvation-dynamic")
