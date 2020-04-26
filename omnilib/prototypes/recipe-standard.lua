@@ -206,17 +206,23 @@ function omni.marathon.standardise(recipe)
 		uplocal = true
 	end
 	if (type(recipe.localised_name) ~= "table" and recipe.localised_name == nil) or uplocal then
-		local it={}
-		if recipe.main_product and recipe.main_product~="" then
-			it = omni.lib.find_prototype(recipe.main_product)
-		elseif recipe.normal.main_product and recipe.normal.main_product~="" then
-			it = omni.lib.find_prototype(recipe.normal.main_product)
-		elseif #recipe.normal.results>=1 then
-			it = omni.lib.find_prototype(recipe.normal.results[1].name)
-		else--if not find result 1 or main product
-			it = recipe.name --hail mary
+		--if theres is no localised name yet AND if the recipe has multiple results AND no Mainproduct, use the recipe name as localised name
+		if recipe.localised_name == nil and ((recipe.results and #recipe.results > 1) or (recipe.normal.results and #recipe.normal.results > 1)and not recipe.main_product and not recipe.normal.main_product) then
+			recipe.localised_name={"recipe-name."..recipe.name}
+		--else use the mainproduct / single result name
+		else
+			local it={}
+			if recipe.main_product and recipe.main_product~="" then
+				it = omni.lib.find_prototype(recipe.main_product)
+			elseif recipe.normal.main_product and recipe.normal.main_product~="" then
+				it = omni.lib.find_prototype(recipe.normal.main_product)
+			elseif #recipe.normal.results>=1 then
+				it = omni.lib.find_prototype(recipe.normal.results[1].name)
+			else--if not find result 1 or main product
+				it = recipe.name --hail mary
+			end
+			recipe.localised_name=set_loc_name(it)
 		end
-		recipe.localised_name=set_loc_name(it)
 	end
 
 	---------------------------------------------------------------------------
