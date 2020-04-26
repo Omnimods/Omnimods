@@ -7,6 +7,17 @@ if not mods["omnimatter_marathon"] then
 	end
 end
 
+if mods["omnimatter_marathon"] or mods["omnimatter_science"] then
+	omni.lib.remove_science_pack("compression-initial", "chemical-science-pack")
+	omni.lib.remove_science_pack("compression-initial", "omni-pack")
+	omni.lib.remove_science_pack("compression-mining", "production-science-pack")
+	omni.lib.remove_science_pack("compression-mining", "chemical-science-pack")
+	omni.lib.remove_science_pack("compression-recipes", "chemical-science-pack")
+	omni.lib.remove_science_pack("compression-compact-buildings", "chemical-science-pack")
+	omni.lib.remove_science_pack("compression-compact-buildings", "production-science-pack")
+	omni.lib.remove_science_pack("compression-nanite-buildings", "production-science-pack")
+	omni.lib.remove_science_pack("compression-quantum-buildings", "utility-science-pack")
+end
 
 require("prototypes/compress-recipes")
 require("prototypes/compress-random")
