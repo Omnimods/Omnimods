@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.8
-Date: 2020.04.XX
+Date: 2020.04.26
   Features:
     - Added a steam powered Omnitractor and Omniphlog
   Bugfixes:
