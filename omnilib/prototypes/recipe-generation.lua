@@ -743,23 +743,21 @@ function ItemGen:addSmallIcon(icon,nr)
 	local quad = {{10, -10},{-10, -10},{-10, 10},{10, 10}}
 	local icons = prototype_icon(icon)
 	local ic_sz=32
-	if icons and icons.icon_size then
-		ic_sz=icons.icon_size
-	end
 	if icons then
-		if icons.icon_size then ic_sz=icons.icon_size	end
+		if icons.icon_size then ic_sz=icons.icon_size end
 		for _,ic in pairs(icons) do
 			if ic.icon_size then ic_sz=ic.icon_size	end
 			self:addIcon({icon = ic.icon,
 			icon_size=ic_sz,
 				scale = 0.4375*(ic.scale or 32/ic_sz),
-				shift = quad[nr or 1]})
+				shift = quad[nr or 1], --currently "centres" the icon if it was already offset, may need to math that out
+				tint = ic.tint or nil})
 		end
 	else
 		local ic = icon
 		self:addIcon({icon = icon,
 			scale = 0.4375,
-			shift = quad[nr or 1]})
+			shift = quad[nr or 1]}) --currently "centres" the icon if it was already offset, may need to math that out
 	end
 	return self
 end
@@ -2775,18 +2773,19 @@ function BuildGen:import(name)
 
 		--if build.energy_source and build.energy_source.fuel_category then b:setFuelCategory(build.energy_source.fuel_category) end
 
-	local rec = name
-	for _,r in pairs(data.raw.recipe) do
-		omni.marathon.standardise(r)
-		for _,res in pairs(r.normal.results) do
-			if res.name == name then
-				rec = res.name
-				break
-			end
-		end
-	end
+	--local rec = name
+	-- for _,r in pairs(data.raw.recipe) do
+	-- 	omni.marathon.standardise(r)
+	-- 	for _,res in pairs(r.normal.results) do
+	-- 		if res.name == name then
+	-- 			rec = res.name
+	-- 			break
+	-- 		end
+	-- 	end
+	-- end
 
-	local r = RecGen:import(rec)
+	--local r = RecGen:import(rec)
+	local r = RecGen:import(name)
 
 	local notFields = {}
 	for name,data in pairs(r) do
