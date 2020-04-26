@@ -2,7 +2,7 @@
 Version: 3.18.4
 Date: 2020.04.26
   Features:
-        - If Omnimarathon or Omniscience is decteded compression techs will be made available earlier
+    - If Omnimarathon or Omniscience is detected compression techs will be made available earlier
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.3
 Date: 2020.04.20

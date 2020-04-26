@@ -2,7 +2,7 @@
 Version: 3.18.5
 Date: 2020.04.26
   Bugfixes:
-    - Fixed omnipack not beeing added in when Alien SP is present
+    - Fixed omnipack not being added in when Alien SP is present
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.4
 Date: 2020.04.19
