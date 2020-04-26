@@ -2,6 +2,7 @@ RecGen:create("omnimatter","omnite-brick"):
 	setIngredients("stone","omnite"):
 	setCategory("omnifurnace"):
 	setSubgroup("omni-solids"):
+	setStacksize(200):
 	setEnabled():
 	tile():
 	setPlace("omnite-brick"):extend()

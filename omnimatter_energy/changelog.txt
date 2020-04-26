@@ -6,6 +6,7 @@ Date: 2020-04-26
     - Added tech description for Omnified Fuel 1-5
   Changes:
     - Moved Omnium-power behind steam-power research
+    - Changed Omnitor stack size from 50 to 100
 ---------------------------------------------------------------------------------------------------
 Version: 1.18.3
 Date: 2020-04-17
