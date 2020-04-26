@@ -165,7 +165,7 @@ BuildGen:import("steam-turbine"):
 	setMaxTemp(250):extend()
 
 RecGen:create("omnimatter_energy","omnitor"):
-	setStacksize(50):
+	setStacksize(100):
 	addMask(197/255,58/255,97/255):
 	setCategory("crafting"):
 	setSubgroup("omnienergy-intermediates"):
@@ -176,7 +176,7 @@ RecGen:create("omnimatter_energy","omnitor"):
 	setEnabled():extend()
 
 RecGen:create("omnimatter_energy","anbaric-omnitor"):
-	setStacksize(50):
+	setStacksize(100):
 	addMask(0/255,186/255,184/255):
 	setCategory("crafting"):
 	setSubgroup("omnienergy-intermediates"):
