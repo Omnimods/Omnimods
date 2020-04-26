@@ -593,7 +593,7 @@ function ItemGen:setIcons(icons,mod)
 			local ic = {}
 			local ic_sz=32
 			for _, c in pairs(icons) do
-				if c.icon_size then	ic_sz=c.icon_size	end
+				if c.icon_size then	ic_sz=c.icon_size end
 				if type(icons)=="table" then
 					ic[#ic+1]={icon = "__"..(mod or self.mod).."__/graphics/icons/"..c.name..".png",
 					icon_size=ic_sz,
@@ -638,14 +638,21 @@ function ItemGen:setIcons(icons,mod)
 			end
 		end
 		if type(icons)=="string" and string.match(icons, "%_%_(.-)%_%_") then
-			self.icons = function(levels,grade) return {{icon = icons, icon_size=ic_sz}} end
+			name=string.match(icons,".*%/(.-).png")
+			proto = omni.lib.find_prototype(name)
+			if proto then
+				setup={{icon=proto.icon,icon_size=proto.icon_size,mipmaps=proto.mipmaps or nil}}
+			else
+				setup={{icon = icons, icon_size=ic_sz}}
+			end
+			self.icons = function(levels,grade)	return setup end
 		elseif type(icons) == "string" and not proto and (mod or self.mod) then
 			self.icons = function(levels,grade) return {{icon = "__"..(mod or self.mod).."__/graphics/icons/"..icons..".png",icon_size=ic_sz}} end
 		elseif proto then
 			if proto.icons then
 				self.icons=function(levels,grade) return proto.icons end
 			else
-				self.icons=function(levels,grade) return {{icon=proto.icon,icon_size=proto.icon_size}} end
+				self.icons=function(levels,grade) return {{icon=proto.icon,icon_size=proto.icon_size,mipmaps=proto.mipmaps or nil}} end
 			end
 		else
 			self.icons = function(levels,grade) return icons end
@@ -653,7 +660,7 @@ function ItemGen:setIcons(icons,mod)
 	else
 		self.icons = icons
 	end
-	self.set_icon = true
+	self.set_icon = true 
 	return self
 end
 
@@ -1100,7 +1107,7 @@ function ItemGen:generate_item()
 		fuel_category = self.fuel_category,
 		subgroup = self.subgroup(0,0),
 		order = self.order(0,0),
-		icon_size = 32,
+		icon_size =self.icon_size or 32,
 		stack_size = self.stack_size,
 		default_temperature = self.default_temperature,
 		heat_capacity=self.heat_capacity,
