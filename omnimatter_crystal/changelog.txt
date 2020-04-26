@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.4
+Date: 2020.04.26
+  Features:
+    - Updated the ore capture method for angels ores
+    - Improved sorting recipe unlock times (so you get access to them when needed)
+---------------------------------------------------------------------------------------------------
 Version: 3.18.3
 Date: 2020.04.16
   Features:
