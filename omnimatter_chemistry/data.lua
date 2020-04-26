@@ -22,7 +22,7 @@ BuildChain:create("omnimatter_chemistry","omnismelter"):
 	setSubgroup("omnitractor"):
 	setLocName("omnismelter"):
 	setIngredients(cost:ingredients()):
-	setEnergy(25):
+	setEnergy(5):
 	setUsage(function(level,grade) return (200+50*grade).."kW" end):
 	setTechPrereq(function(levels,grade) return "omnitractor-electric-"..grade end):
 	setTechIcon("omnimatter_chemistry","omnismelter"):
@@ -71,7 +71,7 @@ BuildChain:create("omnimatter_chemistry","omnization-chamber"):
 	setSubgroup("omnitractor"):
 	setLocName("omnization-chamber"):
 	setIngredients(cost:ingredients()):
-	setEnergy(25):
+	setEnergy(5):
 	setUsage(function(level,grade) return (100+50*grade).."kW" end):
 	setTechPrereq(function(levels,grade) return "omnitractor-electric-"..grade end):
 	setTechIcon("omnimatter_chemistry","omnichem"):
@@ -118,7 +118,7 @@ BuildChain:create("omnimatter_chemistry","omni-refinery"):
 	setSubgroup("omnitractor"):
 	setLocName("omnization-chamber"):
 	setIngredients(cost:ingredients()):
-	setEnergy(25):
+	setEnergy(5):
 	setUsage(function(level,grade) return (200+50*grade).."kW" end):
 	setTechName("omni-refining"):
 	setTechPrereq(function(levels,grade) if grade +2 < omni.max_tier then return "omnitractor-electric-"..(grade+2) else return nil end end):
