@@ -4,7 +4,7 @@ Date: XXX
   Features:
     - Added steam omnitractor and omniphlog if Bob's burner phase is enabled
     - Updated ore capture and replace script to have increased functionality
-      - Should not have other ores showing up on map generation screen
+    - Should not have other ores showing up on map generation screen
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.5
 Date: 2020.04.19
