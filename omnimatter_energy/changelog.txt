@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.18.4
+Date: 2020-04-26
+  Features:
+    - Added Burner inserter Mk2 and burner filter-inserter Mk2 that accept Omnified Fuel
+    - Added tech description for Omnified Fuel 1-5
+  Changes:
+    - Moved Omnium-power behind steam-power research
+    - Changed Omnitor stack size from 50 to 100
+---------------------------------------------------------------------------------------------------
 Version: 1.18.3
 Date: 2020-04-17
   Changes:

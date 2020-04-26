@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.6
+Date: 2020.04.26
+  Features:
+    - Added steam omnitractor and omniphlog if Bob's burner phase is enabled
+    - Updated ore capture and replace script to have increased functionality
+  Changes:
+    - Changed Omnicium Plate stack size from 400 to 200
+    - Changed Omnite Brick stack size from 100 to 200
+  Bugfixes:
+    - Should not have other ores showing up on map generation screen
+    - Improved readability of generation scripts
+---------------------------------------------------------------------------------------------------
 Version: 3.18.5
 Date: 2020.04.19
   Bugfixes:

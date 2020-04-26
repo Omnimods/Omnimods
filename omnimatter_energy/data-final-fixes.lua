@@ -32,4 +32,6 @@ local burnerEntities = {
 for _,entity in pairs(burnerEntities) do
 	BuildGen:importIf(entity):setFuelCategory("omnite"):extend()
 end
-data.raw["inserter"]["burner-inserter"].energy_source.fuel_category = "omnite"
+
+--Overwrite the localised name of the Burner inserter
+data.raw.recipe["burner-inserter"].localised_name = {"entity-name.burner-inserter-1"}

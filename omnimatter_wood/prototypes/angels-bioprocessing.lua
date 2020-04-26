@@ -16,6 +16,7 @@ if mods["angelsbioprocessing"] then
 		end
 		rec.icons[1].icon = data.raw.item["omniwood"].icons[1].icon
 		rec.icons[1].icon_size = data.raw.item["omniwood"].icons[1].icon_size
+		rec.icons[1].scale = 1
 		rec.localised_name = {"item-name.omniwood"}
 	end
 

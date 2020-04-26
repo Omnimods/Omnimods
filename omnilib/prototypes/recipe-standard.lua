@@ -22,29 +22,51 @@ local function set_loc_name(item) --pass full table
 return loc_name
 end
 
+local function set_icons_tab(it) --pass item table to fish icons from
+	local ics={}--set icons table as 0
+	--icon only
+	if it.icon and not it.icons then
+		ics[#ics+1] = {icon=it.icon,icon_size=it.icon_size or 32}
+	--icons only
+	elseif it.icons and not it.icon then
+		--check tags and set name and size in each
+		for i,ic in pairs(it.icons) do
+			ic.icon = ic.icon or ic[1]
+			ic.icon_size = ic.icon_size or ic[2] or 32
+			ic.scale =ic.scale or 32/ic.icon_size
+			ics[#ics+1]=ic
+		end
+	--both, this implies an error has occurred with the item lookup function
+	elseif it.icon and it.icons then
+		ics[#ics+1]={icon=it.icon,icon_size=it.icon_size or 32}
+	end
+	return ics
+end
+
 function omni.marathon.standardise(recipe)
 	if recipe == nil then return nil end
 	--Set table parts if they don't already exist
 	if not recipe.expensive then recipe.expensive={} end
 	if not recipe.normal then recipe.normal={} end
+
 	---------------------------------------------------------------------------
 	-- Ingredient Standarisation
 	---------------------------------------------------------------------------
 	local ingredients = {}
-	local pass = false
+	local ingpass = false
 	-- check if every ingredient has a name tag, fluids always have them, items not, find mixed recipes
 	if recipe.normal.ingredients and recipe.expensive.ingredients and not recipe.ingredients then
-		pass = true
+		ingpass = true
 		for i,ingred in pairs(recipe.normal.ingredients) do
-			if ingred.name == nil then pass = false end
+			if ingred and ingred.name == nil then ingpass = false end
 		end
 	end
-	if pass == false then
+	if ingpass == false then
 		local norm={}
 		local expens={}
 		-- check if each exists and parse to set part of the script
 		--.normal.ingredients already exists:
-		if recipe.normal.ingredients then 	
+		if recipe.normal.ingredients then
 			for i,ingred in pairs(recipe.normal.ingredients) do
 				--name tag exists
 				if ingred.name and ingred.amount then -- name tag
@@ -72,7 +94,7 @@ function omni.marathon.standardise(recipe)
 		end
 		--set normal and expensive ingredients
 		ingredients = {expensive=expens,normal=norm}
-		
+
 		--reset and repopulate ingredients list ensuring tags exist
 		recipe.normal.ingredients={}
 		recipe.expensive.ingredients={}
@@ -93,26 +115,51 @@ function omni.marathon.standardise(recipe)
 		--nil out non-standard ingredients
 		recipe.ingredients = nil
 	end
+
 	---------------------------------------------------------------------------
 	-- Results Standarisation
 	---------------------------------------------------------------------------
 	local results = {}
+	local respass = false
 	--check if already normalised before jumping in
 	if recipe.normal.results and recipe.expensive.results and not (recipe.results or recipe.result) then
-		--skip
-	else
+		respass = true
+		for i,res in pairs(recipe.normal.results) do
+			if (res and not res.name) or #res ~= 0 then respass = false end
+		end
+	end
+
+	if respass == false then
 		local norm={}
 		local expens={}
 		-- check if each exists and parse to set part of the script
+		--normal.results exists
 		if recipe.normal.results then
-			norm = table.deepcopy(recipe.normal.results)
+			--norm = table.deepcopy(recipe.normal.results)
+			for i,res in pairs(recipe.normal.results) do
+				--name tag exists and there are no subtables without tags (#res)
+				if res.name and (res.amount or res.amount_min or res.amount_max) and #res == 0 then
+					norm[i] = res
+				--no name tag or broken recipe
+				else
+					norm[i] = {type="item" ,name = res[1], amount = res[2] or 1}
+				end
+			end
 		elseif recipe.normal.result then
-			norm = {{recipe.normal.result,recipe.normal.result_count or 1}}
-			--if not norm[1][2] then norm[1][2]=1 end
-		elseif recipe.results then
-			norm = table.deepcopy(recipe.results)
+			norm = {{type="item" ,name = recipe.normal.result, amount = recipe.normal.result_count or 1}}
 		elseif recipe.result then
-			norm = {{recipe.result,recipe.result_count or 1}}
+			norm = {{type="item" ,name = recipe.result, amount = recipe.result_count or 1}}
+			--recipe.results only choice left
+		else
+			for i,res in pairs(recipe.results) do
+				--name tag exists
+				if res.name and (res.amount or res.amount_min or res.amount_max) and #res == 0 then
+					norm[i] = res
+				--no name tag
+				else
+					norm[i] = {type="item" ,name = res[1], amount = res[2] or 1}
+				end
+			end
 		end
 
 		if recipe.expensive.results then
@@ -120,14 +167,12 @@ function omni.marathon.standardise(recipe)
 		elseif recipe.expensive.result then
 			expens = {{recipe.expensive.result,recipe.expensive.result_count or 1}}
 			--if not expens[1][2] then expens[1][2]=1 end
-		elseif recipe.results then
-			expens = table.deepcopy(recipe.results)
-		elseif recipe.result then
-			expens = {{recipe.result,recipe.result_count or 1}}
+		else
+			expens = norm
 		end
 		--set normal and expensive results
 		results = {expensive=expens,normal=norm}
-		
+
 		--reset and repopulate ingredients list ensuring tags exist
 		recipe.normal.results={}
 		recipe.expensive.results={}
@@ -150,23 +195,36 @@ function omni.marathon.standardise(recipe)
 		recipe.result_count = nil
 		recipe.results = nil
 	end
+
 	---------------------------------------------------------------------------
 	-- Localisation
 	---------------------------------------------------------------------------
-	--if no localised name, seach for one in main product or first ingredient in the list
-	if recipe.localised_name == nil and type(recipe.localised_name) ~= "table" then
-		local it={}
-		if recipe.main_product and recipe.main_product~="" then
-			it = omni.lib.find_prototype(recipe.main_product)
-		elseif recipe.normal.main_product and recipe.normal.main_product~="" then
-			it = omni.lib.find_prototype(recipe.normal.main_product)
-		elseif #recipe.normal.results>=1 then
-			it = omni.lib.find_prototype(recipe.normal.results[1].name)
-		else--if not find result 1 or main product
-			it = recipe.name --hail mary
-		end
-		recipe.localised_name=set_loc_name(it)
+	--if no localised name, seach for one in main product or first result in the list
+	--Update loc. name if there is only 1 result and no main_product set and if respass was false (result could have changed)
+	local uplocal = false
+	if ((recipe.results and #recipe.results == 1) or (recipe.normal.results and #recipe.normal.results == 1)) and not recipe.main_product and not recipe.normal.main_product then
+		uplocal = true
 	end
+	if (type(recipe.localised_name) ~= "table" and recipe.localised_name == nil) or uplocal then
+		--if theres is no localised name yet AND if the recipe has multiple results AND no Mainproduct, use the recipe name as localised name
+		if recipe.localised_name == nil and ((recipe.results and #recipe.results > 1) or (recipe.normal.results and #recipe.normal.results > 1)and not recipe.main_product and not recipe.normal.main_product) then
+			recipe.localised_name={"recipe-name."..recipe.name}
+		--else use the mainproduct / single result name
+		else
+			local it={}
+			if recipe.main_product and recipe.main_product~="" then
+				it = omni.lib.find_prototype(recipe.main_product)
+			elseif recipe.normal.main_product and recipe.normal.main_product~="" then
+				it = omni.lib.find_prototype(recipe.normal.main_product)
+			elseif #recipe.normal.results>=1 then
+				it = omni.lib.find_prototype(recipe.normal.results[1].name)
+			else--if not find result 1 or main product
+				it = recipe.name --hail mary
+			end
+			recipe.localised_name=set_loc_name(it)
+		end
+	end
+
 	---------------------------------------------------------------------------
 	-- Move Flags to difficulty zone
 	---------------------------------------------------------------------------
@@ -181,6 +239,7 @@ function omni.marathon.standardise(recipe)
 	-- remove settings outside of difficulty
 	recipe.hidden = nil
 	recipe.enabled = nil
+
 	---------------------------------------------------------------------------
 	-- Subgroup setting
 	---------------------------------------------------------------------------
@@ -205,6 +264,7 @@ function omni.marathon.standardise(recipe)
 			end
 		end
 	end
+
 	---------------------------------------------------------------------------
 	-- Misc setting properties
 	---------------------------------------------------------------------------
@@ -215,48 +275,74 @@ function omni.marathon.standardise(recipe)
 	if recipe.expensive.energy_required == nil then recipe.expensive.energy_required = recipe.energy_required or 0.5 end
 	recipe.energy_required = nil
 
-	--if recipe.normal == false then recipe.normal = table.deepcopy(recipe.expensive) end -- really? that is an interesting potential option...
-
 	---------------------------------------------------------------------------
-	-- Icons standardisation 
+	-- Icons standardisation
 	---------------------------------------------------------------------------
-	-- no specific recipe icons
-	if not recipe.icon and not recipe.icons then
-		if (recipe.main_product and recipe.main_product ~= "") or (recipe.normal.main_product and recipe.normal.main_product ~= "") or (recipe.expensive.main_product and recipe.expensive.main_product ~= "") then
-			local item = omni.lib.find_prototype(recipe.main_product or recipe.normal.main_product or recipe.expensive.main_product)
-			if item then
-				if item.icon then recipe.icon = item.icon end
-				if item.icons then recipe.icons = item.icons end
-				if item.icon_size then recipe.icon_size = item.icon_size end
+	--Check if there is only 1 result and no main product --> result could have chnaged, icon needs to be updated
+	local upicon= false
+	if (recipe.icons and #recipe.icons==1) then
+		if (recipe.results and #recipe.results == 1) or (recipe.normal.results and #recipe.normal.results == 1) and not recipe.main_product and not recipe.normal.main_product then
+			local resic=nil
+			if recipe.results then
+				resic= omni.lib.find_prototype(recipe.results[1].name)
+			elseif recipe.normal.results then
+				resic= omni.lib.find_prototype(recipe.normal.results[1].name)
 			end
-		else
-			if recipe.result and recipe.result.name then
-				res=recipe.result.name
-			elseif recipe.result then
-				res=recipe.result 
-			elseif recipe.results and recipe.results[1] and recipe.results[1].name then
-				res=recipe.results[1].name
-			elseif 	recipe.normal.results and recipe.normal.results[1] and recipe.normal.results[1].name then
-				res=recipe.normal.results[1].name
-			else
-				res=recipe.name
-			end
-			local item = omni.lib.find_prototype(res)
-			if item then
-				if item.icon then recipe.icon = item.icon end
-				if item.icons then recipe.icons = item.icons end
-				if item.icon_size then recipe.icon_size = item.icon_size end
+			if resic then
+				if resic.icon then
+					test=resic.icon
+				elseif resic.icons and resic.icons[1].icon then
+					test=resic.icons[1].icon
+				end
+				if recipe.icons[1].icon ~= test then upicon = true end
 			end
 		end
-	elseif recipe.icon and recipe.icon ~= "" then
-		recipe.icons = {{icon=recipe.icon,icon_size=recipe.icon_size}}
-		recipe.icon=nil 
 	end
+	if recipe.icons and recipe.icon then -- case both, replace icons with icon (assume icon is new)
+		--replace recipe.icons with the new
+		recipe.icons[1]={icon=recipe.icon,icon_size=recipe.icon_size or 32,icon_mipmaps=recipe.icon_mipmaps or nil}
+	elseif recipe.icon then --only icon, set icons
+		recipe.icons={{icon=recipe.icon,icon_size=recipe.icon_size or 32,icon_mipmaps=recipe.icon_mipmaps or nil}}
+	elseif (not recipe.icons and not recipe.icon) or upicon then -- case neither icon or icons (search via product)
+		----------------------------------------------
+		-- NO RECIPE ICONS, SEARCH FOR MAIN PRODUCT --
+		----------------------------------------------
+		if (recipe.main_product and recipe.main_product ~= "") then
+			res=recipe.main_product
+		elseif (recipe.normal.main_product and recipe.normal.main_product ~= "") then
+			res=recipe.normal.main_product
+		----------------------------------------------
+		-- NO MAIN PRODUCT, SEARCH FOR FIRST RESULT --
+		----------------------------------------------
+		elseif recipe.result and recipe.result.name then
+			res=recipe.result.name
+		elseif recipe.result then
+			res=recipe.result
+		elseif recipe.normal.result and recipe.normal.result.name then
+			res=recipe.normal.result.name
+		elseif recipe.normal.result then
+			res=recipe.normal.result
+		elseif recipe.results and recipe.results[1] and recipe.results[1].name then
+			res=recipe.results[1].name
+		elseif 	recipe.normal.results and recipe.normal.results[1] and recipe.normal.results[1].name then
+			res=recipe.normal.results[1].name
+		else
+			res=recipe.name --should never get this far...
+		end
+		--find res
+		local item = omni.lib.find_prototype(res)
+		if item then
+			recipe.icons=set_icons_tab(item)
+		end
+	end
+	-- nil out non-compliant
+	recipe.icon=nil
+
 	---------------------------------------------------------------------------
 	-- Main Product Check
 	---------------------------------------------------------------------------
 	-- this will run each time a main product is found
-	if (recipe.main_product and recipe.main_product ~= "") or (recipe.normal.main_product and recipe.normal.main_product ~= "") or (recipe.expensive.main_product and recipe.expensive.main_product ~= "") then  	
+	if (recipe.main_product and recipe.main_product ~= "") or (recipe.normal.main_product and recipe.normal.main_product ~= "") or (recipe.expensive.main_product and recipe.expensive.main_product ~= "") then
 		-- check if main_product is in results list
 		local mp_check=false
 		if recipe.main_product and recipe.main_product ~= "" then
@@ -271,15 +357,10 @@ function omni.marathon.standardise(recipe)
 				mp_check=true
 			end
 		end
-		if mp_check==false then -- may need a more sophisticated main_product checking system 
+		if mp_check==false then -- may need a more sophisticated main_product checking system
 			recipe.normal.main_product=nil
 			recipe.expensive.main_product=nil
 		end
 	end
-	--clobber main product in all cases regardless?
-	--recipe.main_product=nil
-	--recipe.normal.main_product=nil
-	--recipe.expensive.main_product=nil
-	--standardized_recipes[recipe.name] = true
 	return table.deepcopy(recipe)
 end

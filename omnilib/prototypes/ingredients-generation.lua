@@ -72,7 +72,11 @@ if mods["bobplates"] then
 	component["gear-box"]=component["bob-gear-box"]
 	component["omniplate"]=component["omni-bob-alloys"]
 elseif mods["angelsindustries"] and angelsmods.industries.overhaul then
-	component["gear-wheel"]=component["angels-gear-wheel"]
+	if angelsmods.industries.components then
+		component["gear-wheel"]=component["angels-gear-wheel"]
+	else
+		component["gear-wheel"]=component["vanilla-gear-wheel"]
+	end
 	component["gear-box"]=component["vanilla-gear-box"]--["angels-gear-box"] -- not functional as an angels list yet
 	component["omniplate"]=component["vanilla-omniplate"]--["omni-bob-alloys"]-- not functional as an angels list yet
 else

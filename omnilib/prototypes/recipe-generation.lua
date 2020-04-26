@@ -593,7 +593,7 @@ function ItemGen:setIcons(icons,mod)
 			local ic = {}
 			local ic_sz=32
 			for _, c in pairs(icons) do
-				if c.icon_size then	ic_sz=c.icon_size	end
+				if c.icon_size then	ic_sz=c.icon_size end
 				if type(icons)=="table" then
 					ic[#ic+1]={icon = "__"..(mod or self.mod).."__/graphics/icons/"..c.name..".png",
 					icon_size=ic_sz,
@@ -638,14 +638,21 @@ function ItemGen:setIcons(icons,mod)
 			end
 		end
 		if type(icons)=="string" and string.match(icons, "%_%_(.-)%_%_") then
-			self.icons = function(levels,grade) return {{icon = icons, icon_size=ic_sz}} end
+			name=string.match(icons,".*%/(.-).png")
+			proto = omni.lib.find_prototype(name)
+			if proto then
+				setup={{icon=proto.icon,icon_size=proto.icon_size,mipmaps=proto.mipmaps or nil}}
+			else
+				setup={{icon = icons, icon_size=ic_sz}}
+			end
+			self.icons = function(levels,grade)	return setup end
 		elseif type(icons) == "string" and not proto and (mod or self.mod) then
 			self.icons = function(levels,grade) return {{icon = "__"..(mod or self.mod).."__/graphics/icons/"..icons..".png",icon_size=ic_sz}} end
 		elseif proto then
 			if proto.icons then
 				self.icons=function(levels,grade) return proto.icons end
 			else
-				self.icons=function(levels,grade) return {{icon=proto.icon,icon_size=proto.icon_size}} end
+				self.icons=function(levels,grade) return {{icon=proto.icon,icon_size=proto.icon_size,mipmaps=proto.mipmaps or nil}} end
 			end
 		else
 			self.icons = function(levels,grade) return icons end
@@ -653,7 +660,7 @@ function ItemGen:setIcons(icons,mod)
 	else
 		self.icons = icons
 	end
-	self.set_icon = true
+	self.set_icon = true 
 	return self
 end
 
@@ -731,27 +738,33 @@ function ItemGen:addElectricIcon()
 		shift = {-10, 10}})
 	return self
 end
+function ItemGen:addSteamIcon()
+	-- CC BY-NC 4.0 Licensed from http://getdrawings.com/get-icon#steam-icon-51.png
+	self:addIcon({icon = "__omnilib__/graphics/steam-icon-51-32x32.png",
+	icon_size=32,
+		scale = 0.4375,
+		shift = {-10, 10}})
+	return self
+end
 function ItemGen:addSmallIcon(icon,nr)
 	local quad = {{10, -10},{-10, -10},{-10, 10},{10, 10}}
 	local icons = prototype_icon(icon)
 	local ic_sz=32
-	if icons and icons.icon_size then
-		ic_sz=icons.icon_size
-	end
 	if icons then
-		if icons.icon_size then ic_sz=icons.icon_size	end
+		if icons.icon_size then ic_sz=icons.icon_size end
 		for _,ic in pairs(icons) do
 			if ic.icon_size then ic_sz=ic.icon_size	end
 			self:addIcon({icon = ic.icon,
 			icon_size=ic_sz,
 				scale = 0.4375*(ic.scale or 32/ic_sz),
-				shift = quad[nr or 1]})
+				shift = quad[nr or 1], --currently "centres" the icon if it was already offset, may need to math that out
+				tint = ic.tint or nil})
 		end
 	else
 		local ic = icon
 		self:addIcon({icon = icon,
 			scale = 0.4375,
-			shift = quad[nr or 1]})
+			shift = quad[nr or 1]}) --currently "centres" the icon if it was already offset, may need to math that out
 	end
 	return self
 end
@@ -1094,7 +1107,7 @@ function ItemGen:generate_item()
 		fuel_category = self.fuel_category,
 		subgroup = self.subgroup(0,0),
 		order = self.order(0,0),
-		icon_size = 32,
+		icon_size =self.icon_size or 32,
 		stack_size = self.stack_size,
 		default_temperature = self.default_temperature,
 		heat_capacity=self.heat_capacity,
@@ -2767,18 +2780,19 @@ function BuildGen:import(name)
 
 		--if build.energy_source and build.energy_source.fuel_category then b:setFuelCategory(build.energy_source.fuel_category) end
 
-	local rec = name
-	for _,r in pairs(data.raw.recipe) do
-		omni.marathon.standardise(r)
-		for _,res in pairs(r.normal.results) do
-			if res.name == name then
-				rec = res.name
-				break
-			end
-		end
-	end
+	--local rec = name
+	-- for _,r in pairs(data.raw.recipe) do
+	-- 	omni.marathon.standardise(r)
+	-- 	for _,res in pairs(r.normal.results) do
+	-- 		if res.name == name then
+	-- 			rec = res.name
+	-- 			break
+	-- 		end
+	-- 	end
+	-- end
 
-	local r = RecGen:import(rec)
+	--local r = RecGen:import(rec)
+	local r = RecGen:import(name)
 
 	local notFields = {}
 	for name,data in pairs(r) do
@@ -3029,6 +3043,49 @@ function BuildGen:setBurner(efficiency,size)
 	self:addBurnerIcon()
 	if not string.find(self.name,"burner-") then
 		self:setName("burner-"..self.name)
+	end
+	return self
+end
+function BuildGen:setSteam(efficiency,size)
+	-- Taken from Bob's steam assembling machine, might be a prereq...
+	self.energy_source = 
+    {
+      type = "fluid",
+      effectivity = 1,
+      emissions_per_minute = 10, --fairly sure this scales, so it would be 2 at level 1 speed.
+      fluid_box =
+      {
+        base_area = 1,
+        height = 2,
+        base_level = -1,
+        pipe_connections =
+        {
+          {type = "input-output", position = { 2, 0}},
+          {type = "input-output", position = {-2, 0}}
+        },
+        pipe_covers = pipecoverspictures(),
+        pipe_picture = assembler2pipepictures(),
+        production_type = "input-output",
+        filter = "steam"
+      },
+      burns_fluid = false,
+      scale_fluid_usage = false,
+      fluid_usage_per_tick = (2/60),
+      maximum_temperature = 765,
+      smoke =
+      {
+        {
+          name = "light-smoke",
+          frequency = 10 / 32,
+          starting_vertical_speed = 0.08,
+          slow_down_factor = 1,
+          starting_frame_deviation = 60
+        }
+      }
+    }
+	self:addSteamIcon()
+	if not string.find(self.name,"steam-") then
+		self:setName("steam-"..self.name)
 	end
 	return self
 end
