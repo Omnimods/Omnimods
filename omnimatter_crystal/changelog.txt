@@ -1,10 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.5
+Date: TBD
+  Changes:
+    - Reduced building time of Omniplants and crystallomnizer
+---------------------------------------------------------------------------------------------------
 Version: 3.18.4
 Date: 2020.04.26
   Features:
     - Updated the ore capture method for angels ores
     - Improved sorting recipe unlock times (so you get access to them when needed)
-    - Reduced building time of Omniplants and crystallomnizer
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.3
 Date: 2020.04.16
