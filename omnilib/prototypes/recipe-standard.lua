@@ -197,28 +197,62 @@ function omni.marathon.standardise(recipe)
 	end
 
 	---------------------------------------------------------------------------
+	-- Main Product Check
+	---------------------------------------------------------------------------
+	-- this will run each time a main product is found
+	if (recipe.main_product and recipe.main_product ~= "") or (recipe.normal.main_product and recipe.normal.main_product ~= "") or (recipe.expensive.main_product and recipe.expensive.main_product ~= "") then
+		-- check if main_product is in results list
+		local mp_check=false
+		if recipe.main_product and recipe.main_product ~= "" then
+			if not recipe.normal.main_product then recipe.normal.main_product=recipe.main_product end
+			if not recipe.expensive.main_product then recipe.expensive.main_product=recipe.main_product end
+			recipe.main_product=nil
+		end
+		local mp = recipe.normal.main_product
+		for j,res in pairs(recipe.normal.results) do
+			local temp = {}
+			if res.name and res.name==mp then
+				mp_check=true
+			end
+		end
+		if mp_check==false then -- may need a more sophisticated main_product checking system
+			recipe.normal.main_product=nil
+			recipe.expensive.main_product=nil
+		end
+	end
+
+	---------------------------------------------------------------------------
 	-- Localisation
 	---------------------------------------------------------------------------
-	--if no localised name, seach for one in main product or first result in the list
-	--Update loc. name if there is only 1 result and no main_product set and if respass was false (result could have changed)
-	local uplocal = false
-	if ((recipe.results and #recipe.results == 1) or (recipe.normal.results and #recipe.normal.results == 1)) and not recipe.main_product and not recipe.normal.main_product then
-		uplocal = true
-	end
-	if (type(recipe.localised_name) ~= "table" and recipe.localised_name == nil) or uplocal then
-		--if theres is no localised name yet AND if the recipe has multiple results AND no Mainproduct, use the recipe name as localised name
-		if recipe.localised_name == nil and ((recipe.results and #recipe.results > 1) or (recipe.normal.results and #recipe.normal.results > 1)and not recipe.main_product and not recipe.normal.main_product) then
-			recipe.localised_name={"recipe-name."..recipe.name}
-		--else use the mainproduct / single result name
-		else
-			local it={}
+	--Update loc. name if there is no localised name or no main product set
+	if (type(recipe.localised_name) ~= "table" and recipe.localised_name == nil) or (not recipe.main_product and not recipe.normal.main_product) then
+		local it={}
+		---------------------------------------------------------------------------
+		-- Multiple Results
+		---------------------------------------------------------------------------
+		if (recipe.results and #recipe.results > 1) or (recipe.normal.results and #recipe.normal.results > 1) then
+			--use the main product name if it exists
+			if recipe.main_product and recipe.main_product~="" then
+				it = omni.lib.find_prototype(recipe.main_product)
+			elseif recipe.normal.main_product and recipe.normal.main_product~="" then
+				it = omni.lib.find_prototype(recipe.normal.main_product)
+			--else use the recipe name
+			else
+				recipe.localised_name={"recipe-name."..recipe.name}
+			end
+		---------------------------------------------------------------------------
+		-- Single Result
+		---------------------------------------------------------------------------
+		elseif (recipe.results and #recipe.results == 1) or (recipe.normal.results and #recipe.normal.results == 1) then
+			--use the main product name if it exists
 			if recipe.main_product and recipe.main_product~="" then
 				it = omni.lib.find_prototype(recipe.main_product)
 			elseif recipe.normal.main_product and recipe.normal.main_product~="" then
 				it = omni.lib.find_prototype(recipe.normal.main_product)
 			elseif #recipe.normal.results>=1 then
 				it = omni.lib.find_prototype(recipe.normal.results[1].name)
-			else--if not find result 1 or main product
+			--if not find result 1 or main product
+			else
 				it = recipe.name --hail mary
 			end
 			recipe.localised_name=set_loc_name(it)
@@ -278,32 +312,12 @@ function omni.marathon.standardise(recipe)
 	---------------------------------------------------------------------------
 	-- Icons standardisation
 	---------------------------------------------------------------------------
-	--Check if there is only 1 result and no main product --> result could have chnaged, icon needs to be updated
-	local upicon= false
-	if (recipe.icons and #recipe.icons==1) then
-		if (recipe.results and #recipe.results == 1) or (recipe.normal.results and #recipe.normal.results == 1) and not recipe.main_product and not recipe.normal.main_product then
-			local resic=nil
-			if recipe.results then
-				resic= omni.lib.find_prototype(recipe.results[1].name)
-			elseif recipe.normal.results then
-				resic= omni.lib.find_prototype(recipe.normal.results[1].name)
-			end
-			if resic then
-				if resic.icon then
-					test=resic.icon
-				elseif resic.icons and resic.icons[1].icon then
-					test=resic.icons[1].icon
-				end
-				if recipe.icons[1].icon ~= test then upicon = true end
-			end
-		end
-	end
 	if recipe.icons and recipe.icon then -- case both, replace icons with icon (assume icon is new)
 		--replace recipe.icons with the new
 		recipe.icons[1]={icon=recipe.icon,icon_size=recipe.icon_size or 32,icon_mipmaps=recipe.icon_mipmaps or nil}
 	elseif recipe.icon then --only icon, set icons
 		recipe.icons={{icon=recipe.icon,icon_size=recipe.icon_size or 32,icon_mipmaps=recipe.icon_mipmaps or nil}}
-	elseif (not recipe.icons and not recipe.icon) or upicon then -- case neither icon or icons (search via product)
+	elseif (not recipe.icons and not recipe.icon) then -- case neither icon or icons (search via product)
 		----------------------------------------------
 		-- NO RECIPE ICONS, SEARCH FOR MAIN PRODUCT --
 		----------------------------------------------
@@ -337,30 +351,5 @@ function omni.marathon.standardise(recipe)
 	end
 	-- nil out non-compliant
 	recipe.icon=nil
-
-	---------------------------------------------------------------------------
-	-- Main Product Check
-	---------------------------------------------------------------------------
-	-- this will run each time a main product is found
-	if (recipe.main_product and recipe.main_product ~= "") or (recipe.normal.main_product and recipe.normal.main_product ~= "") or (recipe.expensive.main_product and recipe.expensive.main_product ~= "") then
-		-- check if main_product is in results list
-		local mp_check=false
-		if recipe.main_product and recipe.main_product ~= "" then
-			if not recipe.normal.main_product then recipe.normal.main_product=recipe.main_product end
-			if not recipe.expensive.main_product then recipe.expensive.main_product=recipe.main_product end
-			recipe.main_product=nil
-		end
-		local mp = recipe.normal.main_product
-		for j,res in pairs(recipe.normal.results) do
-			local temp = {}
-			if res.name and res.name==mp then
-				mp_check=true
-			end
-		end
-		if mp_check==false then -- may need a more sophisticated main_product checking system
-			recipe.normal.main_product=nil
-			recipe.expensive.main_product=nil
-		end
-	end
 	return table.deepcopy(recipe)
 end
