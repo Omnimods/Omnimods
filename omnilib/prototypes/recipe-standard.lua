@@ -351,6 +351,5 @@ function omni.marathon.standardise(recipe)
 	end
 	-- nil out non-compliant
 	recipe.icon=nil
-	end
 	return table.deepcopy(recipe)
 end
