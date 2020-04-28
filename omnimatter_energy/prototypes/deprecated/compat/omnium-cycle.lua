@@ -120,7 +120,7 @@ end
 BuildGen:create("omnimatter_energy","omnictor"):
 	setSubgroup("hydromnide"):
 	setStacksize(20):
-	setEnergy(5):
+	setEnergy(25):
 	setIngredients({"omnicium-plate",20},{"basic-oscillo-crystallonic",10},{"boiler",3},{"steel-plate",10}):
 	setTechName("omnium-power"):
 	ifModsReplaceIngredients("bobpower","boiler","boiler-3"):
