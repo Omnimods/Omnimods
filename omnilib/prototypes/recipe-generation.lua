@@ -4092,23 +4092,23 @@ function InsertGen:create(mod,name)
       {
         {
           filename = "__base__/sound/inserter-basic-1.ogg",
-          volume = 0.75
+          volume = 0.3
         },
         {
           filename = "__base__/sound/inserter-basic-2.ogg",
-          volume = 0.75
+          volume = 0.3
         },
         {
           filename = "__base__/sound/inserter-basic-3.ogg",
-          volume = 0.75
+          volume = 0.3
         },
         {
           filename = "__base__/sound/inserter-basic-4.ogg",
-          volume = 0.75
+          volume = 0.3
         },
         {
           filename = "__base__/sound/inserter-basic-5.ogg",
-          volume = 0.75
+          volume = 0.3
         }
       }
     } end
