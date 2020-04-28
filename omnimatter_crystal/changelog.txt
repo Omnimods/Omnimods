@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.5
 Date: TBD
+  Bugfixes:
+    - Fixed Plac Extraction grade levels not showing in tech tree
   Changes:
     - Reduced building time of Omniplants and crystallomnizer
 ---------------------------------------------------------------------------------------------------
