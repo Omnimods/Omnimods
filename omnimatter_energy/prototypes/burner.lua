@@ -453,6 +453,7 @@ InsertGen:create("omnimatter_energy","burner-inserter-2"):
 
 ItemGen:import("burner-inserter"):
 	addBurnerIcon():
+	setSubgroup("inserter"):
 	addIcon("__omnilib__/graphics/lvl1.png"):
 	setLocName("entity-name.burner-inserter-1"):
 	setFuelCategory("omnite"):extend()
