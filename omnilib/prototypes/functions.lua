@@ -746,17 +746,19 @@ function omni.lib.add_prerequisite(tech, req)
 	end
 	if type(req) == "table" then
 		for _,r in pairs(req) do
-			for i,prereq in pairs(data.raw.technology[tech].prerequisites) do
-				if prereq == r then found = 1 end
+			if data.raw.technology[r] then
+				for i,prereq in pairs(data.raw.technology[tech].prerequisites) do
+					if prereq == r then found = 1 end
+				end
+				if not found then
+					table.insert(data.raw.technology[tech].prerequisites,r)
+				else
+					log("Prerequisite"..r.."already exists")
+				end
+				found = nil
 			end
-			if not found then
-				table.insert(data.raw.technology[tech].prerequisites,r)
-			else
-				log("Prerequisite"..r.."already exists")
-			end
-			found = nil
 		end
-	elseif req then
+	elseif req and data.raw.technology[req] then
 		if data.raw.technology[tech] then
 			for i,prereq in pairs(data.raw.technology[tech].prerequisites) do
 				if prereq == req then found = 1 end
@@ -767,7 +769,7 @@ function omni.lib.add_prerequisite(tech, req)
 				log("Prerequisite"..req.."already exists")
 			end
 		else
-			error(tech.." does not exist, please check spelling.")
+			log(tech.." does not exist, please check spelling.")
 		end
 	else
 		log("There is no prerequisities to add to "..tech)
