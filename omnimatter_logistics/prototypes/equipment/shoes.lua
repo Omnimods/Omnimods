@@ -2,11 +2,11 @@ data:extend({
 {
     type = "item",
     name = "omni-shoes-1",
-    icon = "__omnimatter_logistics__/graphics/icons/omni-shoes-1.png",
+    icons={{icon = "__omnimatter_logistics__/graphics/icons/omni-shoes-1.png", icon_size=32}},
+    icon_size = 32,
     placed_as_equipment_result = "omni-shoes-1",
     flags = {},
     order = "a[angels-burner-generator-vequip]",
-    icon_size = 32,
     stack_size = 10,
     default_request_amount = 10
   },
