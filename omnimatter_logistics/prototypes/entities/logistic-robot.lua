@@ -46,23 +46,23 @@ local function flying_robot(volume)
 	}
 end
 
-if not mods["bobelectronics"] then
-	costs.circuit[#costs.circuit+1] = {name = "electronic-circuit", quant={10,11,19,33,58}}
-else
-	costs.circuit[#costs.circuit+1] = {name = "basic-circuit-board", quant={15,14,25}}
-	costs.circuit[#costs.circuit+1] = {name = "electronic-circuit", quant={10,16}}
+costs.circuit[#costs.circuit+1] = {name = "electronic-circuit", quant={10,16}}
+if mods["angelsindustries"] then
+	costs.circuit[#costs.circuit+1] = {name = "circuit-red-loaded", quant={5,7,10}}
+elseif mods["bobelectronics"] then
+	costs.circuit[#costs.circuit+1] = {name = "basic-circuit-board", quant={5,7,10}}
 end
 if not mods["aai-industry"] then
-	costs.mechanical[#costs.mechanical+1]={name = "iron-gear-wheel", quant={40,30,65,68,102}}
+	costs.mechanical[#costs.mechanical+1]={name = "iron-gear-wheel", quant={5,7,10,15,20}}
 else
-	costs.mechanical[#costs.mechanical+1]={name = "motor", quant={10,8,12}}
+	costs.mechanical[#costs.mechanical+1]={name = "motor", quant={5,8,12}}
 	costs.mechanical[#costs.mechanical+1]={name = "electric-motor", quant={7,7}}
 end
 if not mods["bobplates"] then
-	costs.plate[#costs.plate+1]={name = "steel-plate", quant={20,9,12,15,20}}
+	costs.plate[#costs.plate+1]={name = "steel-plate", quant={5,8,12,15,20}}
 else
-	costs.plate[#costs.plate+1]={name = "steel-plate", quant={15,8}}
-	costs.plate[#costs.plate+1]={name = "bronze-alloy", quant={10,7,8}}
+	costs.plate[#costs.plate+1]={name = "steel-plate", quant={8,12}}
+	costs.plate[#costs.plate+1]={name = "bronze-alloy", quant={7,10,15}}
 end
   
 for i=1,nr_bots do
