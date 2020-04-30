@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------------------------------
+Version: 0.18.0
+Date: ????
+  Features:
+    - Adds early omni based logistics and construction systems for inherently long games
+    - Adds early "power armour" which gives burner generators and primitive bot capabilities
+    - Recommended with the omnisuite (especially with science marathod or energy)
+    - Bots are currently based on angels early bots and roboports/chests
+    - All bots are used as ingredients for the next tier
+      - Including the highest one being used in the vanilla or angels bot recipe
+    - Compatible with angels industries
+    - Compatible with bobs logistics
+    - Some cost balancing by Szentigrad3

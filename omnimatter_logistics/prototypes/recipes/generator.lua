@@ -2,13 +2,6 @@ local nr_reactors = settings.startup["omnilogistics-nr-reactors"].value
 local nr_slots = settings.startup["omnilogistics-nr-slots"].value
 local reactor = {}
 
-reactor[#reactor+1]={
-    type = "item-subgroup",
-    name = "generator",
-	group = "omnilogistics",
-	order = "aa",
-  }
-  
 local costs = {slots={circuit={},mechanical={},plate={},engine={}},efficiency={circuit={},mechanical={},plate={},engine={}}}
 if not mods["bobpower"] then
 	costs.efficiency.engine[#costs.efficiency.engine+1] = {name = "steel-furnace", quant={2,2,3,6,7,8}}
@@ -55,13 +48,21 @@ end
 
 for efficiency=1,nr_reactors do
 	for slots=1,nr_slots do
+		--sizing calculations
+		local width=1 --set defaults each time
+		local height=1
+		width=math.floor(math.sqrt(slots))
+		height=math.ceil(slots/width)
 		reactor[#reactor+1]={
 			type = "item",
 			name = "omni-generator-eff-"..efficiency.."-slot-"..slots,
-			icon = "__omnimatter_logistics__/graphics/icons/reactor/"..(efficiency-1).."-"..(slots-1)..".png",
+			localised_name={"equipment-name.omni-generator",{"eff-slot-lookup.eff-"..efficiency},{"eff-slot-lookup.slot-"..slots}},
+			icons={
+				{icon = "__omnimatter_logistics__/graphics/icons/reactor/"..(efficiency-1).."-"..(slots-1)..".png", icon_size=32},
+			},
 			placed_as_equipment_result = "omni-generator-eff-"..efficiency.."-slot-"..slots,
 			flags = {},
-			order = "a[angels-burner-generator-vequip]",
+			order = "a[omni-burner-generator-vequip]",
 			stack_size = 10,
 			default_request_amount = 10,
 			icon_size = 32,
@@ -70,6 +71,7 @@ for efficiency=1,nr_reactors do
 		reactor[#reactor+1]={
 		type = "generator-equipment",
 		name = "omni-generator-eff-"..efficiency.."-slot-"..slots,
+		localised_name={"equipment-name.omni-generator",{"eff-slot-lookup.eff-"..efficiency},{"eff-slot-lookup.slot-"..slots}},
 		sprite =
 		{
 		  filename = "__omnimatter_logistics__/graphics/equipment//reactor/"..(efficiency-1).."-"..(slots-1)..".png",
@@ -79,8 +81,8 @@ for efficiency=1,nr_reactors do
 		},
 		shape =
 		{
-		  width = 1,
-		  height = 2,
+		  width = width,
+		  height = height,
 		  type = "full"
 		},
 		energy_source =
@@ -128,9 +130,10 @@ for efficiency=1,nr_reactors do
 	reactor[#reactor+1]={
 		type = "recipe",
 		name = "omni-generator-eff-"..efficiency.."-slot-"..slots,
+		localised_name={"equipment-name.omni-generator",{"eff-slot-lookup.eff-"..efficiency},{"eff-slot-lookup.slot-"..slots}},
 		icon = "__omnimatter_logistics__/graphics/icons/reactor/"..(efficiency-1).."-"..(slots-1)..".png",
 		icon_size = 32,
-		subgroup = "generator",
+		subgroup = "omni-generator",
 		order = "g[hydromnic-acid]",
 		energy_required = 10,
 		enabled = false,
@@ -149,7 +152,8 @@ for efficiency=1,nr_reactors do
 	if efficiency == 1 then req[#req+1]="omniquipment-basic" else req[#req+1]="omnireactor-effiency-"..efficiency-1 end
 	reactor[#reactor+1]={ 
     type = "technology",
-    name = "omnireactor-effiency-"..efficiency,
+	name = "omnireactor-effiency-"..efficiency,
+	localised_name={"technology-name.omnireactor-efficiency",efficiency},
     icon = "__omnimatter_logistics__/graphics/technology/generator-effiency.png",
 	icon_size = 128,
 	prerequisites = req,
@@ -173,7 +177,8 @@ for slots=1,nr_slots do
 	if slots == 1 then req[#req+1]="omniquipment-basic" else req[#req+1]="omnireactor-slots-"..slots-1 end
 	reactor[#reactor+1]={ 
     type = "technology",
-    name = "omnireactor-slots-"..slots,
+	name = "omnireactor-slots-"..slots,
+	localised_name={"technology-name.omnireactor-slots",slots},
     icon = "__omnimatter_logistics__/graphics/technology/generator-slots.png",
 	icon_size = 128,
 	prerequisites = req,

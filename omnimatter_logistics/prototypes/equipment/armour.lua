@@ -2,8 +2,8 @@ data:extend({
 {
     type = "armor",
     name = "primitive-armour",
-    icon = "__omnimatter_logistics__/graphics/icons/primitive-armor.png",
-    icon_size = 32,
+    icons ={{icon= "__omnimatter_logistics__/graphics/icons/primitive-armor.png", icon_size = 32}},
+    icon_size=32,
     flags = {},
     resistances =
     {

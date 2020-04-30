@@ -9,7 +9,7 @@ data:extend(
     minimum_value = 1,
 	order=a
   },
-    {
+  {
     type = "int-setting",
     name = "omnilogistics-nr-armour",
     setting_type = "startup",
@@ -18,7 +18,7 @@ data:extend(
     minimum_value = 1,
 	order=a
   },
-    {
+  {
     type = "int-setting",
     name = "omnilogistics-nr-reactors",
     setting_type = "startup",
