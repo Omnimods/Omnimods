@@ -108,6 +108,7 @@ if __name__ == "__main__":
         mod_key="omni",
         avoidables=[
             "omnimatter_chemistry",
+            "omnimatter_logistics",
             "omnimatter_marathon",
             "omnimatter_research",
         ],
