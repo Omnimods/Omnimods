@@ -57,7 +57,7 @@ for _,boiler in pairs(data.raw.boiler) do
 		new_boiler[#new_boiler+1]={
 		type = "recipe",
 		name = boiler.name.."-boiling-steam-"..boiler.target_temperature,
-		icons = {{icon="__base__/graphics/icons/fluid/steam.png",icon_size=32}},
+		icons = {{icon="__base__/graphics/icons/fluid/steam.png",icon_size=64}},
 		subgroup = "fluid-recipes",
 		category = "boiler-omnifluid-"..boiler.name,
 		order = "g[hydromnic-acid]",
@@ -77,7 +77,7 @@ for _,boiler in pairs(data.raw.boiler) do
 		new_boiler[#new_boiler+1]={
 		type = "recipe",
 		name = boiler.name.."-boiling-solid-steam-"..boiler.target_temperature,
-		icons = {{icon="__base__/graphics/icons/fluid/steam.png", icon_size=32}},
+		icons = {{icon="__base__/graphics/icons/fluid/steam.png", icon_size=64}},
 		subgroup = "fluid-recipes",
 		category = "boiler-omnifluid-"..boiler.name,
 		order = "g[hydromnic-acid]",
