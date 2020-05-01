@@ -27,5 +27,6 @@ If applicable, add screenshots to help explain your problem.
 Add any other context about the problem here.
 
 **Additional Info**
-- Factorio Version 0.xx.xx
-- Modlist / Savegame:
+- Factorio Version: 0.xx.xx
+- Minimal required mods to reproduce:
+- Savegame:

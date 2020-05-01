@@ -1,9 +1,10 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.10
-Date: 2020.xx.xx
+Date: 2020.05.01
   Changes:
     - Removed hard crash from omni.lib.add_prerequisite(tech, req) if tech does not exist
     - Added an additional check if req exists to prevent crashes with mods removing techs
+    - Recipe standardisation no longer sets icons() for single result recipes
   Bugfixes:
     - Fixed omni inserters beeing more than twice as loud as vanilla inserters
 ---------------------------------------------------------------------------------------------------
