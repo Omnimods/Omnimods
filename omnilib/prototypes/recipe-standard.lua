@@ -317,7 +317,8 @@ function omni.marathon.standardise(recipe)
 		recipe.icons[1]={icon=recipe.icon,icon_size=recipe.icon_size or 32,icon_mipmaps=recipe.icon_mipmaps or nil}
 	elseif recipe.icon then --only icon, set icons
 		recipe.icons={{icon=recipe.icon,icon_size=recipe.icon_size or 32,icon_mipmaps=recipe.icon_mipmaps or nil}}
-	elseif (not recipe.icons and not recipe.icon) then -- case neither icon or icons (search via product)
+	 -- case neither icon or icons exist and recipe has ~= 1 results (search via product) (with 1 result its using the item icons)
+	elseif (not recipe.icons and not recipe.icon and ((recipe.normal.results and #recipe.normal.results ~= 1) or (recipe.expensive.results and #recipe.expensive.results ~= 1))) then
 		----------------------------------------------
 		-- NO RECIPE ICONS, SEARCH FOR MAIN PRODUCT --
 		----------------------------------------------

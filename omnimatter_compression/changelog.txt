@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.5
+Date: 2020.05.01
+  Changes:
+      - Add Advanced Electronics 2 as prereq to nanite buildings when marathon or science is active
+---------------------------------------------------------------------------------------------------
 Version: 3.18.4
 Date: 2020.04.26
   Features:

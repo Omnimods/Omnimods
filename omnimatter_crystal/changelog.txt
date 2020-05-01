@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.5
+Date: 2020.05.01
+  Bugfixes:
+    - Fixed Plac Extraction grade levels not showing in tech tree
+  Changes:
+    - Reduced building time of Omniplants and crystallomnizer
+---------------------------------------------------------------------------------------------------
 Version: 3.18.4
 Date: 2020.04.26
   Features:

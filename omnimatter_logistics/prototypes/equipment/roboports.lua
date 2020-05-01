@@ -2,11 +2,11 @@ data:extend({
 {
     type = "recipe",
     name = "omni-roboport-equipment",
-    icon = "__omnimatter_logistics__/graphics/icons/omni-roboport-equipment.png",
+    icons={{icon = "__omnimatter_logistics__/graphics/icons/omni-roboport-equipment.png", icon_size=32}},
     icon_size = 32,
     subgroup = "early-armours",
     order = "g[hydromnic-acid]",
-	energy_required = 10,
+	  energy_required = 10,
     enabled = false,
     ingredients =
     {

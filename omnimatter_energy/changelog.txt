@@ -1,6 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.18.5
+Date: 2020.05.01
+  Bugfixes:
+    - Fixed burner inserter beeing in the wrong item subgroup in some cases
+	- Fixed Changelog formatting
+---------------------------------------------------------------------------------------------------
 Version: 1.18.4
-Date: 2020-04-26
+Date: 2020.04.26
   Features:
     - Added Burner inserter Mk2 and burner filter-inserter Mk2 that accept Omnified Fuel
     - Added tech description for Omnified Fuel 1-5
@@ -9,13 +15,13 @@ Date: 2020-04-26
     - Changed Omnitor stack size from 50 to 100
 ---------------------------------------------------------------------------------------------------
 Version: 1.18.3
-Date: 2020-04-17
+Date: 2020.04.17
   Changes:
     - Change the Subgroup Icon to the Thumbnail
     - Increase the crafting time of Purified Omnite to 2s
 ---------------------------------------------------------------------------------------------------
 Version: 1.18.2
-Date: 2020-04-19
+Date: 2020.04.19
   Changes:
     - Reorganised Item-Subgroups
     - Steel Furnaces accept Omnified Fuel
@@ -28,13 +34,13 @@ Date: 2020-04-19
     - Fixed logistics Tech having hidden prerequisites in some cases
 ---------------------------------------------------------------------------------------------------
 Version: 1.18.1
-Date: 2020-04-17
+Date: 2020.04.17
   Bugfixes:
     - Fixed logistics tech dead end. Might have some empty techs left in some cases.
     - Fixed crashes if Bob's assembers are on without steam machines
 ---------------------------------------------------------------------------------------------------
 Version: 1.18.0
-Date: 2020-04-13
+Date: 2020.04.13
   Features:
     - First public release
     - Added Crystal Solar Panels (Max Size & Tier configurable)

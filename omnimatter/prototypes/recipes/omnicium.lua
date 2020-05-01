@@ -9,7 +9,7 @@ RecGen:create("omnimatter","omnicium-plate-pure"):
 	setCategory("smelting"):
 	setSubgroup("omnicium"):
 	setOrder("aa"):
-	setEnergy(5):
+	setEnergy(25):
 	setEnabled():
 	extend()
 
