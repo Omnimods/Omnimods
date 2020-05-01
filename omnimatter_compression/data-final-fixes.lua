@@ -17,6 +17,9 @@ if mods["omnimatter_marathon"] or mods["omnimatter_science"] then
 	omni.lib.remove_science_pack("compression-compact-buildings", "production-science-pack")
 	omni.lib.remove_science_pack("compression-nanite-buildings", "production-science-pack")
 	omni.lib.remove_science_pack("compression-quantum-buildings", "utility-science-pack")
+	omni.lib.remove_prerequisite("compression-mining", "advanced-electronics-2")
+	omni.lib.add_prerequisite("compression-nanite-buildings", "advanced-electronics-2")
+
 end
 
 require("prototypes/compress-recipes")

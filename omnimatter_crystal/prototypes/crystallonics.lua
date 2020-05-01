@@ -55,7 +55,7 @@ BuildChain:create("omnimatter_crystal","omniplant"):
 	setLocName("omniplant"):
 	setIcons("omniplant","omnimatter_crystal"):
 	setIngredients(cost_plant:ingredients()):
-	setEnergy(25):
+	setEnergy(5):
 	setUsage(function(level,grade) return (200+50*grade).."kW" end):
 	setTechPrereq(get_pure_req):
 	addElectricIcon():
@@ -122,7 +122,7 @@ BuildChain:create("omnimatter_crystal","omniplant"):
 	setIcons("omniplant","omnimatter_crystal"):
 	setIngredients(burner_ings):
 	setBurner(0.75,2):
-	setEnergy(25):
+	setEnergy(5):
 	setUsage(function(level,grade) return "750kW" end):
 	--setTechName("omnitractor-electric-1"): --Done in final-fixes for now
 	setReplace("omniplant"):
@@ -159,7 +159,7 @@ BuildChain:create("omnimatter_crystal","crystallomnizer"):
 	setIcons("crystallomnizer","omnimatter_crystal"):
 	setLocName("crystallomnizer"):
 	setIngredients(cost_omnizer:ingredients()):
-	setEnergy(25):
+	setEnergy(5):
 	setUsage(function(level,grade) return (200+50*grade).."kW" end):
 	setTechPrereq(get_pure_req):
 	addElectricIcon():

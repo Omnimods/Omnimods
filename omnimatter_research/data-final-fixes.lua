@@ -36,7 +36,7 @@ BuildChain:create("omnimatter_research","omnicosm"):
 	setSubgroup("omnitractor"):
 	setLocName("omnicosm"):
 	setIngredients(cost:ingredients()):
-	setEnergy(15):
+	setEnergy(5):
 	setUsage(function(level,grade) return (100+25*grade).."kW" end):
 	addElectricIcon():
 	setTechName("omnitractor-electric"):
@@ -98,7 +98,7 @@ BuildChain:create("omnimatter_research","research_facility"):
 	setSubgroup("omnitractor"):
 	setLocName("research_facility"):
 	setIngredients(cost:ingredients()):
-	setEnergy(15):
+	setEnergy(5):
 	addElectricIcon():
 	setReplace("research_facility"):
 	setUsage(function(level,grade) return (100+25*grade).."kW" end):
