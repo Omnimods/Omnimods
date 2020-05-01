@@ -206,10 +206,6 @@ for i,inputs in pairs(data.raw["lab"]["omnitor-lab"].inputs) do
 	end
 end
 
-if mods["bobtech"] and settings.startup["bobmods-burnerphase"].value then
-	require("prototypes.bobs_burner_phase")
-end
-
 RecGen:import("omnicium-plate-pure"):multiplyIngredients(0.5):extend()
 RecGen:import("omnicium-plate-mix"):multiplyIfModsIngredients(0.5,"angelsrefining"):extend()
 RecGen:import("omnite-smelting"):multiplyIngredients(0.5):extend()
@@ -228,3 +224,5 @@ if data.raw.technology["logistics-0"] then
 	omni.lib.remove_prerequisite("logistics","logistics-0")
 	data.raw.technology["logistics-0"] = nil
 end
+
+require("prototypes.bobs_burner_phase")
