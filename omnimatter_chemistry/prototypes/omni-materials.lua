@@ -26,7 +26,7 @@ RecChain:create("omnimatter_chemistry","omnion"):
 	
 cost = OmniGen:create():
 		setYield("omnirous-acid"):
-		setIngredients({type="fluid",name="omniline-water",amount=270},{type="fluid",name="omniperoxide",amount=90}):
+		setIngredients({type="fluid",name="water-purified",amount=270},{type="fluid",name="omniperoxide",amount=90}):
 		setWaste("oxomni"):
 		linearPercentOutput(360,0.5)
 		
@@ -88,12 +88,12 @@ RecChain:create("omnimatter_chemistry","omnic-mutagen"):
 	setEnergy(1):extend()
 	
 ItemGen:create("omnimatter_chemistry","crystalline-wood"):
-		setSubgroup("omnimutator-items"):
+		setSubgroup("omnimutator"):
 		setStacksize(200):
 		extend()
 
 --[[RecGen:create("omnimatter_chemistry","heavy-mutation"):
-	setSubgroup("omnimutator-items"):
+	setSubgroup("omnimutator"):
 	setCategory("bob-greenhouse"):
 	marathon():
 	setIcons("omniwood"):

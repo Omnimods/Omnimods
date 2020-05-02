@@ -1,12 +1,12 @@
 {
 "name":"omnimatter_research",
-"version":"0.2.14",
+"version":"3.18.0",
 "title":"Omniresearch",
 "author":"EmperorZelos",
 "description":"Lets you move orefields.",
 "factorio_version":"0.18",
 "dependencies":["base",
-	"omnilib >= 2.0.10",
+	"omnilib >= 3.18.0",
 	"omnimatter",
 	"?omnimatter_science"]
 }
