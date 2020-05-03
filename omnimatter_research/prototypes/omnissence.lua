@@ -23,7 +23,7 @@ log(serpent.block(data.raw.fluid["omnissence"]))
 for _, ex in pairs(omnissence_extraction) do
 	RecGen:create("omnimatter_research","omnissence-extraction-"..ex[1]):
 		setLocName({"recipe-name.omnissence-extraction",{"item-name."..ex[1]}}):
-		setIcons("__omnimatter_research__/graphics/icons/omnissence.png"):
+		setIcons("omnissence"):
 		addSmallIcon(ex[1],4):
 		setEnergy(3):
 		marathon():

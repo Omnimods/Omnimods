@@ -1,6 +1,6 @@
 
 RecGen:create("omnimatter_chemistry","crystallo-mutation"):
-	setSubgroup("omnimutator-items"):
+	setSubgroup("omnimutator"):
 	setCategory("omni-mutator"):
 	ifCategory("bobgreenhouse","bob-greenhouse"):
 	ifCategory("angelsbioprocessing","angels-arboretum"):
@@ -24,7 +24,7 @@ RecGen:create("omnimatter_chemistry","crystallo-mutation"):
 	):extend()
 	
 RecGen:create("omnimatter_chemistry","carbomnilline"):
-	setSubgroup("omnimutator-items"):
+	setSubgroup("omnimutator"):
 	setCategory("smelting"):
 	setEnergy(5):
 	setIngredients({
@@ -35,7 +35,7 @@ RecGen:create("omnimatter_chemistry","carbomnilline"):
 	):extend()
 	
 RecGen:create("omnimatter_chemistry","tree-making"):
-	setSubgroup("omnimutator-items"):
+	setSubgroup("omnimutator"):
 	setCategory("angels-tree"):
 	setEnergy(5):
 	setGenerationCondition(mods["angelsbioprocessing"]~=nil):

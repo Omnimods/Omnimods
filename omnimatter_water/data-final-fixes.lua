@@ -19,6 +19,6 @@ if settings.startup["omniwater-integrate"].value then
 	end
 end
 if mods["aai-industry"] then
-	data.raw.boiler["burner-turbine"].energy_source.effectivity=0.9/3
+	data.raw["burner-generator"]["burner-turbine"].energy_source.effectivity=0.9/3
 end
 

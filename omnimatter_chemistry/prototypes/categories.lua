@@ -44,5 +44,12 @@ data:extend(
 	group = "omnichem",
 	order = "d",
   },
+
+  {
+    type = "item-subgroup",
+    name = "omnimutator",
+	group = "omnichem",
+	order = "e",
+  },
 }
 )

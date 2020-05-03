@@ -3,7 +3,7 @@ Version: 1.18.5
 Date: 2020.05.01
   Bugfixes:
     - Fixed burner inserter beeing in the wrong item subgroup in some cases
-	- Fixed Changelog formatting
+    - Fixed Changelog formatting
 ---------------------------------------------------------------------------------------------------
 Version: 1.18.4
 Date: 2020.04.26
