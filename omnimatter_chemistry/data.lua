@@ -116,7 +116,7 @@ cost = OmniGen:create():
 
 BuildChain:create("omnimatter_chemistry","omni-refinery"):
 	setSubgroup("omnitractor"):
-	setLocName("omnization-chamber"):
+	setLocName("omni-refinery"):
 	setIngredients(cost:ingredients()):
 	setEnergy(5):
 	setUsage(function(level,grade) return (200+50*grade).."kW" end):
@@ -152,8 +152,6 @@ BuildChain:create("omnimatter_chemistry","omni-refinery"):
 	},
 	}):--setOverlay("tractor-over"):
 	extend()
-	
-
 	
 require("prototypes/carbomni")
 require("prototypes/thiomni")

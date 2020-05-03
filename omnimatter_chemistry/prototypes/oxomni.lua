@@ -16,7 +16,9 @@ RecChain:create("omnimatter_chemistry","oxomni"):
 			req = {"omnitech-basic-thiomni-processing-1"} --"omnitech-omnic-water-omnitraction-2"
 		end
 		return req
-	end):setCategory("omnization"):
+	end):
+	setTechLocName("basic-oxomni-processing"):
+	setCategory("omnization"):
 	setIngredients(cost:ingredients()):
 	setResults(cost:results()):
 	setSubgroup("omnioxygen"):
@@ -72,6 +74,7 @@ RecChain:create("omnimatter_chemistry","omniperoxide"):
 	setTechPacks(function(levels,grade) return 2+math.floor(grade*3/omni.chem.levels)+1 end):
 	setTechIcon("omnimatter_chemistry","oxomni-advanced"):
 	setTechPrereq("omnitech-basic-oxomni-processing-3","omnitractor-electric-3"):
+	setTechLocName("advanced-oxomni-processing"):
 	setCategory("omniplant"):
 	setIngredients(cost:ingredients()):
 	setResults(cost:results()):
@@ -95,6 +98,7 @@ RecChain:create("omnimatter_chemistry","oxomnithiolic-acid"):
 	setTechPacks(function(levels,grade) return 2+math.floor(grade*3/omni.chem.levels) end):
 	setTechIcon("omnimatter_chemistry","oxomnithiol"):
 	setTechPrereq("omnitech-basic-oxomni-processing-3","omnitech-basic-thiomni-processing-3"):
+	setTechLocName("basic-oxomnithiol-processing"):
 	setCategory("omnization"):
 	setIngredients(cost:ingredients()):
 	setResults(cost:results()):

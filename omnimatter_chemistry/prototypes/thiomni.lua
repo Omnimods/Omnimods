@@ -20,6 +20,7 @@ RecChain:create("omnimatter_chemistry","omnisite"):
 		end
 		return req
 	end):
+	setTechLocName("basic-thiomni-processing"):
 	setCategory("omnization"):
 	setIngredients(cost:ingredients()):
 	setResults(cost:results()):

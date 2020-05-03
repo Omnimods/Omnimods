@@ -17,7 +17,9 @@ RecChain:create("omnimatter_chemistry","omnion"):
 			req = {"omnitech-omnic-acid-hydrolyzation-1", "omnization-chamber-1"}
 		end
 		return req
-	end):setCategory("omnization"):
+	end):
+	setTechLocName("basic-omni-processing"):
+	setCategory("omnization"):
 	setIngredients(cost:ingredients()):
 	setResults(cost:results()):
 	setSubgroup("omnipure"):
@@ -26,7 +28,7 @@ RecChain:create("omnimatter_chemistry","omnion"):
 	
 cost = OmniGen:create():
 		setYield("omnirous-acid"):
-		setIngredients({type="fluid",name="omniline-water",amount=270},{type="fluid",name="omniperoxide",amount=90}):
+		setIngredients({type="fluid",name="water-purified",amount=270},{type="fluid",name="omniperoxide",amount=90}):
 		setWaste("oxomni"):
 		linearPercentOutput(360,0.5)
 		
@@ -38,6 +40,7 @@ RecChain:create("omnimatter_chemistry","omnirous-acid"):
 	setTechPacks(function(levels,grade) return 2+math.floor(grade*3/omni.chem.levels)+1 end):
 	setTechIcon("omnimatter_chemistry","omni-processing-advanced"):
 	setTechPrereq("omnitech-basic-omni-processing-3","omnitractor-electric-3"):
+	setTechLocName("advanced-omni-processing"):
 	setCategory("omniplant"):
 	setIngredients(cost:ingredients()):
 	setResults(cost:results()):
@@ -88,12 +91,12 @@ RecChain:create("omnimatter_chemistry","omnic-mutagen"):
 	setEnergy(1):extend()
 	
 ItemGen:create("omnimatter_chemistry","crystalline-wood"):
-		setSubgroup("omnimutator-items"):
+		setSubgroup("omnimutator"):
 		setStacksize(200):
 		extend()
 
 --[[RecGen:create("omnimatter_chemistry","heavy-mutation"):
-	setSubgroup("omnimutator-items"):
+	setSubgroup("omnimutator"):
 	setCategory("bob-greenhouse"):
 	marathon():
 	setIcons("omniwood"):
