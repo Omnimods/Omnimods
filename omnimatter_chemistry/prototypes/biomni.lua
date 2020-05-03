@@ -9,6 +9,7 @@ RecChain:create("omnimatter_chemistry","xenokaryote"):
 	setTechPacks(function(levels,grade) return math.floor(grade*4/omni.chem.levels)+3 end):
 	setTechIcon("omnimatter_chemistry","biomni"):
 	setTechPrereq({"omnitractor-electric-3"}):--"omnitech-omnic-water-omnitraction-5"
+	setTechLocName("basic-biomni-processing"):
 	setCategory("water-treatment"):
 	setIngredients(cost:ingredients()):
 	setResults(cost:results()):

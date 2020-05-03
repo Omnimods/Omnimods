@@ -17,7 +17,9 @@ RecChain:create("omnimatter_chemistry","omnion"):
 			req = {"omnitech-omnic-acid-hydrolyzation-1", "omnization-chamber-1"}
 		end
 		return req
-	end):setCategory("omnization"):
+	end):
+	setTechLocName("basic-omni-processing"):
+	setCategory("omnization"):
 	setIngredients(cost:ingredients()):
 	setResults(cost:results()):
 	setSubgroup("omnipure"):
@@ -38,6 +40,7 @@ RecChain:create("omnimatter_chemistry","omnirous-acid"):
 	setTechPacks(function(levels,grade) return 2+math.floor(grade*3/omni.chem.levels)+1 end):
 	setTechIcon("omnimatter_chemistry","omni-processing-advanced"):
 	setTechPrereq("omnitech-basic-omni-processing-3","omnitractor-electric-3"):
+	setTechLocName("advanced-omni-processing"):
 	setCategory("omniplant"):
 	setIngredients(cost:ingredients()):
 	setResults(cost:results()):

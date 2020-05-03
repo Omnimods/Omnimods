@@ -18,6 +18,7 @@ RecChain:create("omnimatter_chemistry","omnicarbide"):
 		end
 		return req
 	end):
+	setTechLocName("basic-carbomni-processing"):
 	setCategory("omnization"):
 	setIngredients(cost:ingredients()):
 	setResults(cost:results()):

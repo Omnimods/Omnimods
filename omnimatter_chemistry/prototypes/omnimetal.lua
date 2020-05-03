@@ -17,6 +17,7 @@ RecChain:create("omnimatter_chemistry","omnirgyrum"):
 		end
 		return req
 	end):
+	setTechLocName("basic-omnirgyrum-processing"):
 	setCategory("omniplant"):
 	setIngredients(cost:ingredients()):
 	setResults(cost:results()):
