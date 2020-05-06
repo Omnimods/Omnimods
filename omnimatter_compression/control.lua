@@ -49,7 +49,7 @@ end)
 
 script.on_event(defines.events.on_research_finished, function(event)
 	local tech = event.research
-	--[[if end_with(tech.name,"omnipressed") then
+	if end_with(tech.name,"omnipressed") then
 		tech.force.technologies[string.sub(tech.name,1,string.len(tech.name)-12)].researched = true
 	elseif tech.force.technologies[tech.name.."-omnipressed"] then
 		tech.force.technologies[tech.name.."-omnipressed"].researched = true
@@ -60,7 +60,7 @@ script.on_event(defines.events.on_research_finished, function(event)
 				tech.force.recipes[r.name.."-compression"].enabled = true
 			end
 		end
-	end]]
+	end
 	for _,kind in pairs({"compact","nanite","quantum","singularity"}) do
 		if tech.name == "compression-"..kind.."-buildings" then
 			for _,r in pairs(tech.force.recipes) do
