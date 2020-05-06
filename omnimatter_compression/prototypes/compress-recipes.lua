@@ -1,25 +1,24 @@
--------------------------------------------------------------------------------
---[[Initialisation and Config Variables]]--
--------------------------------------------------------------------------------
+
 local compress_recipes, uncompress_recipes, compress_items = {}, {}, {}
 local item_count = 0
+
 local concentrationRatio = sluid_contain_fluid
-compressed_item_names = {}  --global?
-random_recipes = {} --global?
--------------------------------------------------------------------------------
---[[Module limitation transfers]]--
--------------------------------------------------------------------------------
---Module Limitations
+
+
+
+compressed_item_names = {}
+random_recipes = {}
+
 local max_module_speed = 0
 local max_module_prod = 0
 for _,modul in pairs(data.raw.module) do
 	if modul.effect.speed and modul.effect.speed.bonus > max_module_speed then max_module_speed=modul.effect.speed.bonus end
 	if modul.effect.productivity and modul.effect.productivity.bonus > max_module_prod then max_module_prod=modul.effect.productivity.bonus end
 end
-
---Transfer category set modules
 local max_cat = {}
+
 local building_list = {"assembling-machine","furnace"}
+
 for _,cat in pairs(data.raw["recipe-category"]) do
 	max_cat[cat.name] = {speed = 0,modules = 0}
 	for _,bcat in pairs(building_list) do
@@ -42,9 +41,6 @@ local max_stack_size_to_compress = 2000 -- Don't compress items over this stack 
 local speed_div = 8 --Recipe speed is stack_size/speed_div
 
 local hcn = {1, 2, 4, 6, 12, 24, 36, 48, 60, 120, 180, 240, 360, 720, 840, 1260, 1680, 2520}
--------------------------------------------------------------------------------
---[[General functions for use within the file -- should be in lib?]]--
--------------------------------------------------------------------------------
 function roundHcn(nr)
 	if math.floor(nr)==nr then
 		for i=1,#hcn-1 do
@@ -71,10 +67,7 @@ function roundUpHcn(nr)
 		return nr
 	end
 end
--------------------------------------------------------------------------------
---[[Local functions for use within the file]]--
--------------------------------------------------------------------------------
---get icons
+
 local get_icons = function(item)
 	--Build the icons table
 	local icons_1 = {icon = "__omnimatter_compression__/graphics/compress-32.png", icon_size = 32}
@@ -98,7 +91,7 @@ local get_icons = function(item)
 	end
 	return icons
 end
---find icon
+
 local find_icon = function(item)
 	for _, p in pairs({"item","mining-tool","gun","ammo","armor","repair-tool","capsule","module","tool","rail-planner","item-with-entity-data","fluid"}) do
 		if data.raw[p][item] then
@@ -110,7 +103,8 @@ local find_icon = function(item)
 		end
 	end
 end
---get recipe icons
+
+
 local get_icons_rec = function(rec)
 	--Build the icons table
 	local icons = {}
@@ -148,14 +142,14 @@ local get_icons_rec = function(rec)
 	end
 	return icons
 end
---add uncompress overlay icon
+
 local uncompress_icons = function(icons)
 	local u_icons={}
 	local u_icons_1 = {icon = "__omnimatter_compression__/graphics/compress-out-arrow-32.png", icon_size = 32}
 	table.insert(u_icons,u_icons_1)
 	return u_icons
 end
---set new fuel value
+
 local new_fuel_value = function(effect,stack)
 	if not effect then return nil end
 	local eff = string.sub(effect,1,string.len(effect)-2)
@@ -171,7 +165,7 @@ local new_fuel_value = function(effect,stack)
 	end
 	return eff..value.."J"
 end
---update science packs in labs
+
 local is_science = function(item)
 	for _, lab in pairs(data.raw.lab) do
 		for _, input in pairs(lab.inputs) do
@@ -180,9 +174,7 @@ local is_science = function(item)
 	end
 	return false
 end
--------------------------------------------------------------------------------
---[[Compressed items and Condensed Fluids]]--
--------------------------------------------------------------------------------
+
 --Create concentrated
 for _, group in pairs({"fluid"}) do
 	--Loop through all of the items in the category
@@ -412,11 +404,9 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 	end
 end
 data:extend(compress_items)
--------------------------------------------------------------------------------
---[[Set-up the functions for compressed recipes]]--
--------------------------------------------------------------------------------
+
 local compressed_recipes = {}
---fluids check, returns true if anything except fluids is present
+
 local not_only_fluids = function(recipe)
 	local all_ing = {}
 	local all_res = {}
@@ -454,7 +444,7 @@ local not_only_fluids = function(recipe)
 end
 
 local compress_based_recipe = {}
---checks results for probabilistic returns (probability, amount min, amount max etc)
+
 local not_random = function(recipe)
 	local results = {}
 	if recipe.normal and recipe.normal.results then
@@ -471,7 +461,7 @@ local not_random = function(recipe)
 	end
 	return true
 end
---splits fluids and solids per "table"
+
 local seperate_fluid_solid = function(collection)
 	local fluid = {}
 	local solid = {}
@@ -498,7 +488,7 @@ local seperate_fluid_solid = function(collection)
 	end
 	return {fluid = fluid,solid = solid}
 end
---sort and clean up groups of ingredients and results for type processing
+
 function get_recipe_values(ingredients,results)
 	local parts={}
 	local lng = {0,0}
@@ -578,7 +568,7 @@ function get_recipe_values(ingredients,results)
 	end
 	return {ingredients = newing , results = newres}
 end
---stack size of more than 1 function
+
 local more_than_one = function(recipe)
 	if recipe.result or (recipe.normal and recipe.normal.result) then
 		if recipe.result then
@@ -637,7 +627,7 @@ local more_than_one = function(recipe)
 		end
 	end
 end
---check if already compressed
+
 local compressed_ingredients_exist = function(ingredients,results)
 	if #ingredients > 0 then
 		for _, ing in pairs(ingredients) do
@@ -656,7 +646,7 @@ local compressed_ingredients_exist = function(ingredients,results)
 	return true
 end
 local supremumTime = settings.startup["omnicompression_too_long_time"].value
---output(results) adjustments
+
 function adjustOutput(recipe)
 	for _, dif in pairs({"normal","expensive"}) do
 		local gcd = 0
@@ -725,7 +715,7 @@ function adjustOutput(recipe)
 end
 
 local generatorFluidRecipes = {}
---generator styled recipes
+
 for _, gen in pairs(data.raw.generator) do
 	if not string.find(gen.name,"creative") then
 		if not gen.burns_fluid and gen.fluid_box and gen.fluid_box.filter then
@@ -738,14 +728,9 @@ for _, gen in pairs(data.raw.generator) do
 		end
 	end
 end
---create actual recipe
+
 function create_compression_recipe(recipe)
-  if (recipe.normal.results and #recipe.normal.results > 0) and --ingredients.normal.results and 1+
-    not_only_fluids(recipe) and not_random(recipe) and --contains non-fluids and no probability results
-    not omni.lib.is_in_table(recipe.name,excluded_recipes) and --not excluded
-    (more_than_one(recipe) or omni.lib.is_in_table(recipe.name,include_recipes)) and --stack size>1 or include anyway?
-    not string.find(recipe.name,"creative") then --not creative mod
-      
+	if (recipe.icon_size or 0)%32 == 0 and math.log(recipe.icon_size or 32)/math.log(2) > 4 and recipe.normal.results and #recipe.normal.results > 0 and not_only_fluids(recipe) and not_random(recipe) and not omni.lib.is_in_table(recipe.name,excluded_recipes) and (more_than_one(recipe) or omni.lib.is_in_table(recipe.name,include_recipes)) and not string.find(recipe.name,"creative") then
 		local parts = {}
 		--log("creating compressed recipe for "..recipe.name)
 		--get list of ingredients and results
@@ -861,14 +846,11 @@ function create_compression_recipe(recipe)
 					end
 				end
 			end
-      if recipe.localised_name then
-        loc = recipe.localised_name
-      elseif recipe.main_product then --other cases?
-        loc = recipe.main_product --should be the name string?
-      else 
-        loc=recipe.name
-      end
-      r.localised_name = {"recipe-name.compressed-recipe",loc}
+			--if not r.subgroup then
+			if recipe.localised_name then
+				loc = recipe.localised_name
+			end
+			r.localised_name = {"recipe-name.compressed-recipe",loc}
 			if true or settings.startup["omnicompression_one_list"].value then
 				r.subgroup = "compressor-".."items"
 				r.normal.subgroup = "compressor-".."items"
@@ -911,12 +893,7 @@ function create_compression_recipe(recipe)
 			end
 			return adjustOutput(r)
 		end
-  elseif recipe.normal.results and #recipe.normal.results > 0 and --ingredients.normal.results and 1+
-    not_random(recipe) and --contains no probability results
-    not omni.lib.is_in_table(recipe.name,excluded_recipes) and --not excluded 
-    (more_than_one(recipe) or omni.lib.is_in_table(recipe.name,include_recipes)) --stack size>1 or include anyway?
-    and not string.find(recipe.name,"creative") then --not creative mod
-
+	elseif (recipe.icon_size or 0)%32 == 0 and math.log(recipe.icon_size or 32)/math.log(2) > 4 and recipe.normal.results and #recipe.normal.results > 0 and not_random(recipe) and not omni.lib.is_in_table(recipe.name,excluded_recipes) and (more_than_one(recipe) or omni.lib.is_in_table(recipe.name,include_recipes)) and not string.find(recipe.name,"creative") then
 		local new_cat = "crafting-compressed"
 		if recipe.normal.category then new_cat = recipe.normal.category.."-compressed" end
 		if recipe.normal.category and not data.raw["recipe-category"][recipe.normal.category.."-compressed"] then
@@ -924,7 +901,7 @@ function create_compression_recipe(recipe)
 		elseif not data.raw["recipe-category"]["general-compressed"] then
 			data:extend({{type = "recipe-category",name = "general-compressed"}})
 		end
-    local r = table.deepcopy(recipe)
+		local r = table.deepcopy(recipe)
 		r.enabled=false
 		r.name = r.name.."-compression"
 		if r.icon or r.icons then
@@ -935,19 +912,11 @@ function create_compression_recipe(recipe)
 					icons[#icons+1] = shrink
 				end
 			else
-				icons[#icons+1] = {icon = r.icon,icon_size=r.icon_size or 32}
+				icons[#icons+1] = {icon = r.icon}
 			end
 			r.icon = nil
 			r.icons = icons
-    end
-    if recipe.localised_name then
-      loc = recipe.localised_name
-    elseif recipe.main_product then --other cases?
-      loc = recipe.main_product --should be the name string?
-    else 
-      loc=recipe.name
-    end
-    r.localised_name = {"recipe-name.compressed-recipe",loc}
+		end
 		if true or settings.startup["omnicompression_one_list"].value then
 			r.subgroup = "compressor-".."items"
 			r.normal.subgroup = "compressor-".."items"
@@ -961,12 +930,11 @@ function create_compression_recipe(recipe)
 					r[dif][ingres][i].name="concentrated-"..r[dif][ingres][i].name
 				end
 			end
-    end
-    r.category=new_cat
+		end
 		r.main_product = nil
 		r.normal.main_product = nil
 		r.expensive.main_product = nil
-    omni.marathon.standardise(r)
+		omni.marathon.standardise(r)
 		return r
 	end
 	return nil
