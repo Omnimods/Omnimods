@@ -139,12 +139,16 @@ local get_icons_rec = function(rec)
 				else
 					process = find_icon(rec.normal.results[1].name)
 				end
-			end
-			icons[1]=icons_1
-			for _,p in pairs(process) do
-				icons[#icons+1]=p
-			end
-		end
+      end
+      if process ~=nil then
+        icons[1]=icons_1
+        for _,p in pairs(process) do
+          icons[#icons+1]=p
+        end
+      else
+        icons=table.insert(icons,icons_1) --should give a blank, and should not be used within the later functions.
+      end
+    end
 	end
 	return icons
 end
@@ -453,7 +457,6 @@ local not_only_fluids = function(recipe)
 	return false
 end
 
-local compress_based_recipe = {}
 --checks results for probabilistic returns (probability, amount min, amount max etc)
 local not_random = function(recipe)
 	local results = {}
@@ -738,238 +741,271 @@ for _, gen in pairs(data.raw.generator) do
 		end
 	end
 end
+-------------------------------------------------------------------------------
+--[[Recipe Creation Function]]--
+-------------------------------------------------------------------------------
 --create actual recipe
+local compress_based_recipe = {}
 function create_compression_recipe(recipe)
+  --set common activation conditions
   if (recipe.normal.results and #recipe.normal.results > 0) and --ingredients.normal.results and 1+
-    not_only_fluids(recipe) and not_random(recipe) and --contains non-fluids and no probability results
-    not omni.lib.is_in_table(recipe.name,excluded_recipes) and --not excluded
+    not omni.lib.is_in_table(recipe.name,excluded_recipes) and --not excluded 
     (more_than_one(recipe) or omni.lib.is_in_table(recipe.name,include_recipes)) and --stack size>1 or include anyway?
     not string.find(recipe.name,"creative") then --not creative mod
-      
-		local parts = {}
-		--log("creating compressed recipe for "..recipe.name)
-		--get list of ingredients and results
-		local res = {}
-		local ing = {}
-		local subgr = {regular = {}}
-		ing={normal=table.deepcopy(recipe.normal.ingredients),expensive=table.deepcopy(recipe.expensive.ingredients)}
-		res={normal=table.deepcopy(recipe.normal.results),expensive=table.deepcopy(recipe.expensive.results)}
-
-		local gcd = {normal = 0, expensive = 0}
-		local generatorfluid = nil
-		for _,dif in pairs({"normal","expensive"}) do
-			for _,ingres in pairs({"ingredients","results"}) do
-				if #recipe[dif][ingres] > 0 then
-					for _,component in pairs(recipe[dif][ingres]) do
-						if component.type ~= "fluid" then
-							if gcd[dif]==0 then
-								gcd[dif]=component.amount
-							else
-								gcd[dif]=omni.lib.gcd(gcd[dif],component.amount or math.floor((component.amount_min+component.amount_max)/2))
-							end
-						end
-						if ingres=="results" and component.type == "fluid" and generatorFluidRecipes[component.name] then
-							generatorfluid=component.name
-						end
-					end
-				end
-			end
-		end
-		for _,dif in pairs({"normal","expensive"}) do
-			for _,ingres in pairs({ing,res}) do
-				for _,component in pairs(ingres[dif]) do
-					component.amount=math.min(component.amount/gcd[dif],65535) --set max cap
-				end
-			end
-		end
-		if recipe.subgroup or recipe.normal.subgroup then
-			if recipe.subgroup then
-				recipe.normal.subgroup =recipe.subgroup
-				recipe.expensive.subgroup =recipe.subgroup
-			else
-				subgr.normal = recipe.normal.subgroup
-				subgr.expensive = recipe.expensive.subgroup
-			end
-		else
-			subgr.normal = subgr.regular
-			subgr.expensive = subgr.regular
-		end
-
-		local check = {{seperate_fluid_solid(ing.normal),seperate_fluid_solid(res.normal)},{seperate_fluid_solid(ing.expensive),seperate_fluid_solid(res.expensive)}}
-		if compressed_ingredients_exist(check[1][1].solid,check[1][2].solid) and compressed_ingredients_exist(check[2][1].solid,check[2][2].solid) then
-			local new_val_norm = get_recipe_values(ing.normal,res.normal)
-			local new_val_exp = get_recipe_values(ing.expensive,res.expensive)
-			local mult = {}
-			if check[1][1].solid[1] then
-				mult = {normal=new_val_norm.ingredients[1].amount/check[1][1].solid[1].amount*omni.lib.find_stacksize(check[1][1].solid[1].name),
-				expensive=new_val_exp.ingredients[1].amount/check[2][1].solid[1].amount*omni.lib.find_stacksize(check[2][1].solid[1].name)}
-			else
-				mult = {normal=new_val_norm.results[1].amount/check[1][2].solid[1].amount*omni.lib.find_stacksize(check[1][2].solid[1].name),
-				expensive = new_val_exp.results[1].amount/check[2][2].solid[1].amount*omni.lib.find_stacksize(check[2][2].solid[1].name)}
-			end
-			local tid = {}
-			if recipe.normal and recipe.normal.energy_required then
-				tid = {normal = recipe.normal.energy_required*mult.normal,expensive = recipe.expensive.energy_required*mult.expensive}
-			else
-				tid = {normal = mult.normal,expensive = mult.expensive}
-			end
-			tid.normal = tid.normal/gcd.normal
-			tid.expensive = tid.expensive/gcd.expensive
-			local icons = get_icons_rec(recipe)
-
-			if recipe.normal.category and not data.raw["recipe-category"][recipe.normal.category.."-compressed"] then
-				data:extend({{type = "recipe-category",name = recipe.normal.category.."-compressed"}})
-			elseif not data.raw["recipe-category"]["general-compressed"] then
-				data:extend({{type = "recipe-category",name = "general-compressed"}})
-			end
-
-			local new_cat = "crafting-compressed"
-			if recipe.normal.category then new_cat = recipe.normal.category.."-compressed" end
-
-			local loc = {"recipe-name."..recipe.name}
-			local r = {
-				type = "recipe",
-				icons = icons,
-				icon_size = recipe.icon_size or 32,
-				name = recipe.name.."-compression",
-				enabled = false,
-				hidden = recipe.hidden,
-				normal = {
-					ingredients = new_val_norm.ingredients,
-					results = new_val_norm.results,
-					energy_required = tid.normal,
-					subgroup = subgr.normal
-				},
-				expensive = {
-					ingredients = new_val_exp.ingredients,
-					results = new_val_exp.results,
-					energy_required = tid.expensive,
-					subgroup = subgr.expensive
-				},
-				category = new_cat,
-				subgroup = subgr.regular,
-				order = recipe.order,
-			}
-			if settings.startup["omnicompression_normalize_stacked_buildings"].value then
-				for _,dif in pairs({"normal","expensive"}) do
-					if #r[dif].results == 1 and omni.lib.find_entity_prototype(string.sub(r[dif].results[1].name,string.len("compressed-")+1,string.len(r[dif].results[1].name))) then
-						for _,ing in pairs(r[dif].ingredients) do
-							ing.amount = omni.lib.round_up(ing.amount/r[dif].results[1].amount)
-						end
-						r[dif].energy_required = r[dif].energy_required/r[dif].results[1].amount
-						r[dif].results[1].amount=1
-					end
-				end
-			end
-      if recipe.localised_name then
-        loc = recipe.localised_name
-      elseif recipe.main_product then --other cases?
-        loc = recipe.main_product --should be the name string?
-      else 
-        loc=recipe.name
-      end
-      r.localised_name = {"recipe-name.compressed-recipe",loc}
-			if true or settings.startup["omnicompression_one_list"].value then
-				r.subgroup = "compressor-".."items"
-				r.normal.subgroup = "compressor-".."items"
-				r.expensive.subgroup = "compressor-".."items"
-			end
-
-			r.normal.hidden = recipe.normal.hidden
-			r.normal.enabled = false
-			r.normal.category= new_cat
-			if r.main_product and r.main_product ~= "" then
-				r.main_product = recipe.main_product
-				if not data.raw.fluid[r.main_product] then r.main_product="compressed-"..r.main_product end
-			end
-			if #r.normal.results==1 then r.normal.main_product = r.normal.results[1].name end
-			if #r.expensive.results==1 then r.expensive.main_product = r.expensive.results[1].name end
-			r.expensive.enabled = false
-			r.expensive.hidden = recipe.expensive.hidden
-			r.expensive.category = new_cat
-			if r.main_product == "compressed-" or (r.normal and r.normal.main_product == "compressed-") or (r.expensive and r.expensive.main_product == "compressed-") then
-				if r.normal then r.normal.main_product = nil end
-				if r.expensive then r.expensive.main_product = nil end
-				r.main_product = nil
-			end
-			for _, module in pairs(data.raw.module) do
-				if module.limitation then
-					for _,lim in pairs(module.limitation) do
-						if lim==recipe.name then
-							table.insert(module.limitation, r.name)
-							break
-						end
-					end
-				end
-			end
-			r.main_product = nil
-			r.normal.main_product = nil
-			r.expensive.main_product = nil
-			omni.marathon.standardise(r)
-			if generatorfluid then
-				table.insert(generatorFluidRecipes[generatorfluid].recipes,adjustOutput(r))
-			end
-			return adjustOutput(r)
-		end
-  elseif recipe.normal.results and #recipe.normal.results > 0 and --ingredients.normal.results and 1+
-    not_random(recipe) and --contains no probability results
-    not omni.lib.is_in_table(recipe.name,excluded_recipes) and --not excluded 
-    (more_than_one(recipe) or omni.lib.is_in_table(recipe.name,include_recipes)) --stack size>1 or include anyway?
-    and not string.find(recipe.name,"creative") then --not creative mod
-
-		local new_cat = "crafting-compressed"
-		if recipe.normal.category then new_cat = recipe.normal.category.."-compressed" end
-		if recipe.normal.category and not data.raw["recipe-category"][recipe.normal.category.."-compressed"] then
-			data:extend({{type = "recipe-category",name = recipe.normal.category.."-compressed"}})
-		elseif not data.raw["recipe-category"]["general-compressed"] then
-			data:extend({{type = "recipe-category",name = "general-compressed"}})
-		end
-    local r = table.deepcopy(recipe)
-		r.enabled=false
-		r.name = r.name.."-compression"
-		if r.icon or r.icons then
-			local icons = {{icon = "__omnimatter_compression__/graphics/compress-32.png",icon_size=32}}
-			if r.icons then
-				for _ , icon in pairs(r.icons) do
-					local shrink = icon
-					icons[#icons+1] = shrink
-				end
-			else
-				icons[#icons+1] = {icon = r.icon,icon_size=r.icon_size or 32}
-			end
-			r.icon = nil
-			r.icons = icons
+    --skip all other cases
+    local comrec={}
+    --log("creating compressed recipe for "..recipe.name)
+    --set parts that work in both conditions
+    local new_cat = "crafting-compressed"
+    --get icons for the recipe
+    local icons = get_icons_rec(recipe)
+    --check for, create and set crafting category as required 
+    if recipe.normal.category and not data.raw["recipe-category"][recipe.normal.category.."-compressed"] then
+      data:extend({{type = "recipe-category",name = recipe.normal.category.."-compressed"}})
+    elseif not data.raw["recipe-category"]["general-compressed"] then
+      data:extend({{type = "recipe-category",name = "general-compressed"}})
     end
+    if recipe.normal.category then new_cat = recipe.normal.category.."-compressed" end
+    --localisation (CLEARLY BROKEN)
+    local loc={"recipe-name.compressed-recipe",omni.compression.CleanName(recipe.name)}
     if recipe.localised_name then
       loc = recipe.localised_name
     elseif recipe.main_product then --other cases?
-      loc = recipe.main_product --should be the name string?
-    else 
-      loc=recipe.name
+      item=omni.lib.find_prototype(recipe.main_product)
+      if item then loc = item.localised_name end
+    elseif recipe.normal.main_product then
+      item=omni.lib.find_prototype(recipe.normal.main_product)
+      if item then loc = item.localised_name end--omni.compression.CleanName()
     end
-    r.localised_name = {"recipe-name.compressed-recipe",loc}
-		if true or settings.startup["omnicompression_one_list"].value then
-			r.subgroup = "compressor-".."items"
-			r.normal.subgroup = "compressor-".."items"
-			r.expensive.subgroup = "compressor-".."items"
-		end
-		for _, dif in pairs({"normal","expensive"}) do
-			r[dif].category=new_cat
-			r[dif].energy_required = concentrationRatio*r[dif].energy_required
-			for _,ingres in pairs({"ingredients","results"}) do
-				for i,item in pairs(r[dif][ingres]) do
-					r[dif][ingres][i].name="concentrated-"..r[dif][ingres][i].name
-				end
-			end
+    log(serpent.block(loc))
+    --subgroup check--already standardised, there should be no subgroup in its own
+    local subgr = {regular = {}}
+    if recipe.subgroup or recipe.normal.subgroup then --already standardised, there should be no subgroup in its own
+      if recipe.subgroup then
+        subgr.regular = recipe.subgroup
+        subgr.normal = recipe.subgroup
+        subgr.expensive = recipe.subgroup
+      else
+        subgr.normal = recipe.normal.subgroup
+        subgr.expensive = recipe.expensive.subgroup
+      end
+    else
+      subgr.normal = subgr.regular --set as default "crafting"
+      subgr.expensive = subgr.regular --set as default "crafting"
     end
-    r.category=new_cat
-		r.main_product = nil
-		r.normal.main_product = nil
-		r.expensive.main_product = nil
-    omni.marathon.standardise(r)
-		return r
-	end
-	return nil
+    -------------------------------------------------------------------------------
+    --first conditional-- 
+      --contains mixed or only solid ingredients and results with no probability--
+      --is not excluded or result 1 has a stack size of > 1)--
+    -------------------------------------------------------------------------------
+    if not_only_fluids(recipe) and not_random(recipe) then--contains no probability results then 
+      --Set Init values
+      local parts = {}
+      local res = {}
+      local ing = {}
+      --set ingredient and result tables from recipe
+      ing={normal=table.deepcopy(recipe.normal.ingredients),expensive=table.deepcopy(recipe.expensive.ingredients)}
+      res={normal=table.deepcopy(recipe.normal.results),expensive=table.deepcopy(recipe.expensive.results)}
+      --GCD checks for each recipe
+        --iterates through each ingredient to find the 4? gcd variables {norm.ing,exp.ing,norm.res,exp.res}
+      local gcd = {normal = 0, expensive = 0}
+      local generatorfluid = nil
+      for _,dif in pairs({"normal","expensive"}) do
+        for _,ingres in pairs({"ingredients","results"}) do
+          if #recipe[dif][ingres] > 0 then
+            for _,component in pairs(recipe[dif][ingres]) do
+              if component.type ~= "fluid" then
+                if gcd[dif]==0 then
+                  gcd[dif]=component.amount
+                else
+                  gcd[dif]=omni.lib.gcd(gcd[dif],component.amount)-- or math.floor((component.amount_min+component.amount_max)/2)) --amount_max should false out the not_random check
+                end
+              end
+              if ingres=="results" and component.type == "fluid" and generatorFluidRecipes[component.name] then
+                generatorfluid=component.name
+              end
+            end
+          end
+        end
+      end
+      --set new amounts based on GCD calculated from above
+      for _,dif in pairs({"normal","expensive"}) do
+        for _,ingres in pairs({ing,res}) do
+          for _,component in pairs(ingres[dif]) do
+            component.amount=math.min(component.amount/gcd[dif],65535) --set max cap
+          end
+        end
+      end
+
+      --process solids components separately
+      local check = {{seperate_fluid_solid(ing.normal),seperate_fluid_solid(res.normal)},{seperate_fluid_solid(ing.expensive),seperate_fluid_solid(res.expensive)}}
+      if compressed_ingredients_exist(check[1][1].solid,check[1][2].solid) and compressed_ingredients_exist(check[2][1].solid,check[2][2].solid) then
+        local new_val_norm = get_recipe_values(ing.normal,res.normal)
+        local new_val_exp = get_recipe_values(ing.expensive,res.expensive)
+        local mult = {}
+        --grab new ingredient costs
+        if check[1][1].solid[1] then
+          mult = {normal=new_val_norm.ingredients[1].amount/check[1][1].solid[1].amount*omni.lib.find_stacksize(check[1][1].solid[1].name),
+          expensive=new_val_exp.ingredients[1].amount/check[2][1].solid[1].amount*omni.lib.find_stacksize(check[2][1].solid[1].name)}
+        else
+          mult = {normal=new_val_norm.results[1].amount/check[1][2].solid[1].amount*omni.lib.find_stacksize(check[1][2].solid[1].name),
+          expensive = new_val_exp.results[1].amount/check[2][2].solid[1].amount*omni.lib.find_stacksize(check[2][2].solid[1].name)}
+        end
+        --new crafting time calculations
+        local tid = {}
+        if recipe.normal and recipe.normal.energy_required then
+          tid = {normal = recipe.normal.energy_required*mult.normal,expensive = recipe.expensive.energy_required*mult.expensive}
+        else
+          tid = {normal = mult.normal,expensive = mult.expensive}
+        end
+        tid.normal = tid.normal/gcd.normal
+        tid.expensive = tid.expensive/gcd.expensive
+        --set up basics for new recipe
+        local r = {
+          type = "recipe",
+          icons = icons,
+          icon_size = recipe.icon_size or 32,
+          name = recipe.name.."-compression",
+          localised_name = loc,
+          enabled = false,
+          hidden = recipe.hidden,
+          normal = {
+            ingredients = new_val_norm.ingredients,
+            results = new_val_norm.results,
+            energy_required = tid.normal,
+            subgroup = subgr.normal
+          },
+          expensive = {
+            ingredients = new_val_exp.ingredients,
+            results = new_val_exp.results,
+            energy_required = tid.expensive,
+            subgroup = subgr.expensive
+          },
+          category = new_cat,
+          subgroup = subgr.regular,
+          order = recipe.order,
+        }
+        
+        if settings.startup["omnicompression_normalize_stacked_buildings"].value then
+          for _,dif in pairs({"normal","expensive"}) do
+            if #r[dif].results == 1 and omni.lib.find_entity_prototype(string.sub(r[dif].results[1].name,string.len("compressed-")+1,string.len(r[dif].results[1].name))) then
+              for _,ing in pairs(r[dif].ingredients) do
+                ing.amount = omni.lib.round_up(ing.amount/r[dif].results[1].amount)
+              end
+              r[dif].energy_required = r[dif].energy_required/r[dif].results[1].amount
+              r[dif].results[1].amount=1
+            end
+          end
+        end
+        --other property copies (hidden, enabled, category)
+        r.normal.hidden = recipe.normal.hidden
+        --main_product
+        if r.main_product and r.main_product ~= "" then
+          if not data.raw.fluid[r.main_product] then
+            r.main_product="compressed-"..r.main_product --set correct name for solid
+          else
+            r.main_product="concentrated-"..r.main_product --set correct name for fluid
+          end
+        end
+        if #r.normal.results==1 then r.normal.main_product = r.normal.results[1].name end
+        if #r.expensive.results==1 then r.expensive.main_product = r.expensive.results[1].name end
+        r.expensive.enabled = false
+        r.expensive.hidden = recipe.expensive.hidden
+        r.expensive.category = new_cat
+        r.subgroup=r.subgroup or subgr.regular
+        r.normal.subgroup = r.normal.subgroup or subgr.normal
+        r.expensive.subgroup = r.expensive.subgroup or subgr.expensive
+        for _, module in pairs(data.raw.module) do
+          if module.limitation then
+            for _,lim in pairs(module.limitation) do
+              if lim==recipe.name then
+                table.insert(module.limitation, r.name)
+                break
+              end
+            end
+          end
+        end
+        if generatorfluid then
+          table.insert(generatorFluidRecipes[generatorfluid].recipes,adjustOutput(r))
+        end
+        comrec=adjustOutput(r)
+      end
+    -------------------------------------------------------------------------------
+    --second conditional-- 
+      --contains only fluid ingredients and results with no probability--
+      --is not excluded or result 1 has a stack size of > 1)--
+    -------------------------------------------------------------------------------
+    elseif not_random(recipe) then --only fluid recipes and other not from above
+      --grab the base recipe to start from
+      local r = table.deepcopy(recipe)
+
+      r.name = r.name.."-compression"
+      r.localised_name = loc--{"recipe-name.compressed-recipe",loc}
+      r.icon = nil
+      r.icons = icons
+      for _, dif in pairs({"normal","expensive"}) do
+        r[dif].category=new_cat
+        r[dif].energy_required = concentrationRatio*r[dif].energy_required
+        for _,ingres in pairs({"ingredients","results"}) do
+          for i,item in pairs(r[dif][ingres]) do
+            r[dif][ingres][i].name="concentrated-"..r[dif][ingres][i].name
+          end
+        end
+      end
+      comrec=r
+    --[[else --fails the not_random test
+      local r = table.deepcopy(recipe)
+
+      r.name = r.name.."-compression"
+      r.localised_name = r.localised_name or loc--{"recipe-name.compressed-recipe",loc}
+      r.icon = nil
+      r.icons = icons
+      for _, dif in pairs({"normal","expensive"}) do
+        r[dif].category=new_cat
+        r[dif].energy_required = concentrationRatio*r[dif].energy_required
+        for _,ingres in pairs({"ingredients","results"}) do
+          for i,item in pairs(r[dif][ingres]) do
+            --find all tags, and fetch useful tags
+            group={name=item.name,amount=item.amount,amount_max=item.amount_max,amount_min=item.amount_min,probability=item.probability,type=item.type,catalyst_amount=item.catalyst_amount}
+            if group.amount ~=nil then 
+            r[dif][ingres][i].name="concentrated-"..r[dif][ingres][i].name
+            for j,tag in pairs({name,amount,amount_max,amount_min,probability,type,catalyst_amount}) do
+              
+            --r[dif][ingres][i].name="concentrated-"..r[dif][ingres][i].name
+            end
+          end
+        end
+      end
+      comrec=r]]
+    end
+    -------------------------------------------------------------------------------
+    --final adjustments--
+      --tags, categories, grouping
+    -------------------------------------------------------------------------------
+    if comrec and comrec.name and comrec.type =="recipe" then
+      if settings.startup["omnicompression_one_list"].value then
+        comrec.subgroup = "compressor-".."items"
+        if comrec.normal then comrec.normal.subgroup = "compressor-".."items" end
+        if comrec.expensive then comrec.expensive.subgroup = "compressor-".."items" end
+      end
+      --if comrec.normal then --should always work
+      comrec.normal.hidden = recipe.normal.hidden
+      comrec.normal.enabled = false
+      comrec.normal.main_product = nil
+      comrec.expensive.main_product = nil
+      comrec.expensive.enabled = false
+      --end
+      comrec.enabled=false
+      comrec.category=new_cat
+      comrec.main_product = nil
+      --omni.marathon.standardise(comrec) --redundant?
+      return comrec
+    else
+      return nil --should not
+    end
+  else
+    return nil
+  end
 end
 
 local create_void = function(recipe)
@@ -998,13 +1034,15 @@ end
 
 
 --log("Tok you bastard")
-
+-------------------------------------------------------------------------------
+--[[Call creation functions (CALLS THE MEAT OF THE FILE)]]--
+-------------------------------------------------------------------------------
 for _,recipe in pairs(data.raw.recipe) do
 	--Start with the ingredients
 	--log("calc compressed recipe of "..recipe.name)
-	if not mods["omnimatter_marathon"] then omni.marathon.standardise(recipe) end
-	if recipe.subgroup ~= "y_personal_equip" and (recipe.icon_size or 0)%32 == 0 and math.log(recipe.icon_size or 32)/math.log(2) > 4 then
-		local rc = create_compression_recipe(recipe)
+	if not mods["omnimatter_marathon"] then omni.marathon.standardise(recipe) end --ensure standardised
+	if recipe.subgroup ~= "y_personal_equip" then
+    local rc = create_compression_recipe(recipe)
 		if not rc and string.find(recipe.name,"void") then rc=create_void(recipe) end
 		if rc then
 			compress_based_recipe[#compress_based_recipe+1] = table.deepcopy(rc)

@@ -42,10 +42,36 @@ for _,recipe in pairs(check_recipes) do
 	if not omni.lib.is_in_table(recipe,exclusion_list) and not string.find(recipe,"creative") then
 		local double = false
 		--local store = data.raw.recipe[recipe]
-		local rec = table.deepcopy(data.raw.recipe[recipe])
-		
+    local rec = table.deepcopy(data.raw.recipe[recipe])
+    --grab localisation before standardisation
+    local loc=""
+    if rec.name then --check it exists before setting it as fallback
+      loc={"recipe-name.compressed-recipe",omni.compression.CleanName(rec.name)}
+    end
+    if rec.localised_name then
+      loc = rec.localised_name
+    elseif recipe.main_product then --other cases?
+      item=omni.lib.find_prototype(recipe.main_product)
+      if item and item.localised_name then
+        loc = item.localised_name
+      else
+        loc={"recipe-name.compressed-recipe",omni.compression.CleanName(recipe.main_product)}
+      end
+    elseif recipe.normal and recipe.normal.main_product then
+      item=omni.lib.find_prototype(recipe.normal.main_product)
+      if item and item.normal.localised_name then
+        loc = item.localised_name
+      else
+        loc={"recipe-name.compressed-recipe",omni.compression.CleanName(recipe.normal.main_product)}
+      end
+    end
+    --standardise
 		if not mods["omnimatter_marathon"] then omni.marathon.standardise(rec) end
-		
+    --double check shenanigans are not happening
+    rec.ingredients=nil
+    rec.ingredient=nil
+    rec.result=nil
+    rec.results=nil
 		local prob = {normal={},expensive={}}
 		for _,dif in pairs({"normal","expensive"}) do
 			for i,res in pairs(rec[dif].results) do
@@ -59,9 +85,9 @@ for _,recipe in pairs(check_recipes) do
 				res.probability=nil
 			end
 		end
-		
-		local new_rec = create_compression_recipe(rec)
-		if new_rec then
+    local new_rec = create_compression_recipe(rec)
+
+    if new_rec then
 			for _,dif in pairs({"normal","expensive"}) do
 				for i,res in pairs(rec[dif].results) do
 					if prob[dif][i]<1 then
@@ -69,10 +95,12 @@ for _,recipe in pairs(check_recipes) do
 					end
 				end
 			end
-		else
-			--log("you fucked up big time with this recipe: "..rec.name)
-		end
-		if new_rec then data:extend({new_rec}) end
-		
+    else
+      log("you fucked up big time with this recipe: "..rec.name)
+    end
+    if new_rec then
+      new_rec.localised_name=new_rec.localised_name or loc
+      data:extend({new_rec})
+    end
 	end
 end

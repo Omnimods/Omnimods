@@ -31,6 +31,7 @@ function omni.compression.include_entity(entity)
 	end
 end
 function omni.compression.CleanName(name)
+  if type(name)=="table" then return name end
   local str="" --clear each time
   --find and replace all '-' with %20 (space)
   --capitalise first letter of first word
