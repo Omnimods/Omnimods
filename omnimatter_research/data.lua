@@ -2,6 +2,7 @@ require("prototypes.parts")
 require("prototypes.omnicosm")
 require("prototypes.omniphlog")
 require("prototypes.categories")
+require("prototypes.omnissence")
 
 BuildGen:create("omnimatter_research","omnicosm"):
 	setSubgroup("omnitractor"):

@@ -1,5 +1,5 @@
 
-require("prototypes.omnissence")
+
 
 
 omni.lib.add_unlock_recipe("omnitractor-electric-1","omnissenced-wood")
