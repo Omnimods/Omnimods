@@ -1,4 +1,3 @@
-require("prototypes.pyc_aai")
 data:extend({
 	{
     type = "recipe",
