@@ -75,8 +75,6 @@ local new_effect = function(effect,level,linear,constant)
 	return eff..value.."W"
 end
 
-
-
 local new_effect_gain = function(effect,level,linear,constant)
 	local eff = string.sub(effect,1,string.len(effect)-2)
 	local value = string.sub(effect,string.len(effect)-1,string.len(effect)-1)
@@ -133,13 +131,14 @@ local already_compressed = {}
 local building_list = {"lab","assembling-machine","furnace","mining-drill","solar-panel","reactor","accumulator","transport-belt","loader","splitter","underground-belt","beacon","electric-pole"}
 if not mods["omnimatter_fluid"] then building_list[#building_list+1]="boiler" end
 building_list[#building_list+1]="generator"
+
 for _,kind in pairs(building_list) do
-	for _,b in pairs(data.raw[kind]) do
-		if (b.icon_size or 31)%32 == 0 and math.log(b.icon_size or 32)/math.log(2) > 4 and not omni.lib.string_contained_list(b.name,black_list) and (not compress_entity[b] or (compress_entity[b] and (not compress_entity[b].exclude or compress_entity[b].include))) then
-			local build = find_top_tier(b,kind)
+  for _,b in pairs(data.raw[kind]) do
+		if not omni.lib.string_contained_list(b.name,black_list) and (not compress_entity[b] or (compress_entity[b] and (not compress_entity[b].exclude or compress_entity[b].include))) then
+      local build = find_top_tier(b,kind)
 			if not omni.lib.is_in_table(build.name,already_compressed) and category_exists(build) and build.minable and build.minable.result and data.raw.item[build.minable.result] then
-				local rc=find_recipe(build.name)
-				if find_placing_item(build) and rc then
+        local rc=find_recipe(build.name)
+        if find_placing_item(build) and rc then
 					already_compressed[#already_compressed+1]=build.name
 					for i=1,settings.startup["omnicompression_building_levels"].value do
 						local new = table.deepcopy(build)
@@ -284,17 +283,16 @@ for _,kind in pairs(building_list) do
 						compressed_buildings[#compressed_buildings+1]=item
 						local rec_name = rc.name
 						local ing = {}
-						if i == 1 then ing={{build.name,multiplier}} else ing={{build.name.."-compressed-"..string.lower(compress_level[i-1]),multiplier}} end
+            if i == 1 then ing={{build.name,multiplier}} else ing={{build.name.."-compressed-"..string.lower(compress_level[i-1]),multiplier}} end
 						local recipe = {
 							type = "recipe",
 							name = rec_name.."-compressed-"..string.lower(compress_level[i]),
 							ingredients = ing,
 							icon_size = 32,
-							result = new.name,
+              result = new.name,
 							energy_required = 5*math.floor(math.pow(multiplier,i/2)),
 							enabled = false,
 						}
-						--log("compressed building recipe: "..recipe.name)
 						recipe.localised_name = new.localised_name
 						compressed_buildings[#compressed_buildings+1]=recipe
 

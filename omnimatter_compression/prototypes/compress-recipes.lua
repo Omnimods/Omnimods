@@ -967,7 +967,6 @@ function create_compression_recipe(recipe)
 		r.normal.main_product = nil
 		r.expensive.main_product = nil
     omni.marathon.standardise(r)
-    log(serpent.block(r))
 		return r
 	end
 	return nil
