@@ -21,8 +21,6 @@ require("prototypes.recipes.omnicium")
 require("prototypes.recipes.omnibrick")
 require("prototypes.recipes.omnic-acid")
 
---require("prototypes.generation.omniston")
---require("prototypes.localization-override")
 --require("prototypes.omnitractor-dynamic")
 --require("prototypes.recipes.extraction-dynamic")
 --require("prototypes.recipes.solvation-dynamic")
