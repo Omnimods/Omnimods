@@ -1,7 +1,3 @@
-
-require("prototypes.omnissence")
-
-
 omni.lib.add_unlock_recipe("omnitractor-electric-1","omnissenced-wood")
 omni.lib.add_unlock_recipe("crystallology-1","omnissenced-iron-crystal")
 
