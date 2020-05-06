@@ -18,7 +18,7 @@ ItemGen:create("omnimatter_research","omnissence"):
 	fluid():
 	setBothColour(0,1,1):extend()
 log("Zombiee is a douche")
-log(serpent.block(data.raw.fluid["omnissence"]))
+--log(serpent.block(data.raw.fluid["omnissence"]))
 	
 for _, ex in pairs(omnissence_extraction) do
 	RecGen:create("omnimatter_research","omnissence-extraction-"..ex[1]):

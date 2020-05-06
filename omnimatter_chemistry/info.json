@@ -10,6 +10,7 @@
 		"omnimatter >= 3.18.0",
 		"omnilib >= 3.18.0",
 		"angelssmelting",
+		"bobplates",
 		"omnimatter_wood >= 3.18.0",
 		"?omnimatter_water"
 	]
