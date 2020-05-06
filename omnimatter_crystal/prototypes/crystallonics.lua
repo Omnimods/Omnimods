@@ -189,7 +189,7 @@ BuildChain:create("omnimatter_crystal","crystallomnizer"):
 	setAnimation({
 	layers={
 	{
-        filename = "__omnimatter_crystal__/graphics/buildings/iron-curtain.png",
+        filename = "__omnimatter_crystal__/graphics/buildings/crystallomnizer.png",
 		priority = "extra-high",
         width = 164,
         height = 162,

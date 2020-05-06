@@ -6,5 +6,3 @@ require("prototypes.crystal-making")
 require("prototypes.categories")
 require("prototypes.fuel-category")
 
---require("prototypes.circuit")
---require("prototypes.technology.crystallology")
