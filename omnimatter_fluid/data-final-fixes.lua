@@ -12,7 +12,5 @@ if mods["Mining_Drones"] then  --well this does nothing as far as i can tell... 
         end
     end
 end
+
 require("prototypes.sluids-generation")
---require("prototypes.sluids-from-fluids")
---require("prototypes.sluids-building-changes")
---require("prototypes.sluids-generation")
