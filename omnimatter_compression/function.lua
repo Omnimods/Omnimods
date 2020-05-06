@@ -30,3 +30,11 @@ function omni.compression.include_entity(entity)
 		compress_entity[entity]={include=true}
 	end
 end
+function omni.compression.CleanName(name)
+  local str="" --clear each time
+  --find and replace all '-' with %20 (space)
+  --capitalise first letter of first word
+  str = string.gsub(name,"%-"," ")
+  str = str:gsub("(%l)(%w*)", function(a,b) return string.upper(a)..b end)
+  return str
+end

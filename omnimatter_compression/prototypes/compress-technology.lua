@@ -55,7 +55,7 @@ for _,tech in pairs(data.raw.technology) do
 	if tech.unit and ((tech.unit.count and type(tech.unit.count)=="number" and tech.unit.count > settings.startup["omnicompression_compressed_tech_min"].value) or not tech.unit.count or containsOne(tech.unit.ingredients,alwaysSP)) then
 		local t = table.deepcopy(tech)
 		t.name=t.name.."-omnipressed"
-		t.localised_name = t.localised_name or {"technology-name.compressed", tech.name}
+		t.localised_name = t.localised_name or {"technology-name.compressed", omni.compression.CleanName(tech.name)}
 		local lcm = 1
 		for _, ing in pairs(t.unit.ingredients) do
 			local item = data.raw.tool[ing[1]]
