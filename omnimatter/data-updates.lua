@@ -148,7 +148,7 @@ end
 ----------------------------------------------------------------------------
 -- Late requires --
 ----------------------------------------------------------------------------
-require("prototypes.buildings.omnitractor-dynamic")
+--require("prototypes.buildings.omnitractor-dynamic")
 require("prototypes.recipes.extraction-dynamic")
 require("prototypes.recipes.solvation-dynamic")
 require("prototypes.buildings.omniphlog")

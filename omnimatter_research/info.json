@@ -10,5 +10,6 @@
 	"omnimatter",
 	"angelssmelting",
 	"omnimatter_chemistry >= 3.18.0",
+	"?bobplates",
 	"?omnimatter_science"]
 }
