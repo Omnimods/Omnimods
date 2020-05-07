@@ -10,7 +10,7 @@ if mods["bobplates"] then
 end
 
 BuildChain:create("omnimatter_chemistry","omnismelter"):
-	setSubgroup("omnitractor"):
+	setSubgroup("omnichembuildings"):
 	setLocName("omnismelter"):
 	setIngredients(cost:ingredients()):
 	setEnergy(5):
@@ -59,7 +59,7 @@ if mods["bobplates"] then
 end
 
 BuildChain:create("omnimatter_chemistry","omnization-chamber"):
-	setSubgroup("omnitractor"):
+	setSubgroup("omnichembuildings"):
 	setLocName("omnization-chamber"):
 	setIngredients(cost:ingredients()):
 	setEnergy(5):
@@ -106,7 +106,7 @@ cost = OmniGen:create():
 
 
 BuildChain:create("omnimatter_chemistry","omni-refinery"):
-	setSubgroup("omnitractor"):
+	setSubgroup("omnichembuildings"):
 	setLocName("omni-refinery"):
 	setIngredients(cost:ingredients()):
 	setEnergy(5):

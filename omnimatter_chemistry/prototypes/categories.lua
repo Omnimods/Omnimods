@@ -10,46 +10,52 @@ data:extend(
   },
   {
     type = "item-subgroup",
-    name = "omnicarbon",
+    name = "omnichembuildings",
 	group = "omnichem",
 	order = "a",
   },
   {
     type = "item-subgroup",
-    name = "omnisulphur",
+    name = "omnicarbon",
 	group = "omnichem",
 	order = "b",
   },
   {
     type = "item-subgroup",
-    name = "omnioxygen",
+    name = "omnisulphur",
 	group = "omnichem",
 	order = "c",
   },
   {
     type = "item-subgroup",
-    name = "omninitrogen",
+    name = "omnioxygen",
 	group = "omnichem",
 	order = "d",
+  },
+  {
+    type = "item-subgroup",
+    name = "omninitrogen",
+	group = "omnichem",
+	order = "e",
   },
   {
     type = "item-subgroup",
     name = "omnipure",
 	group = "omnichem",
-	order = "d",
+	order = "e",
   },
   {
     type = "item-subgroup",
     name = "biomni",
 	group = "omnichem",
-	order = "d",
+	order = "e",
   },
 
   {
     type = "item-subgroup",
     name = "omnimutator",
 	group = "omnichem",
-	order = "e",
+	order = "f",
   },
 }
 )
