@@ -22,6 +22,28 @@ local function set_loc_name(item) --pass full table
 return loc_name
 end
 
+local function loc_name_is_result(localised_name, results)
+	local name
+	if type(localised_name) == "string" then
+		name = localised_name
+	elseif type(localised_name) == "table" then
+		name = localised_name[1]
+	end
+	--substract localisation string
+	i,j = string.find(name,"-name.")
+	if j then
+	name = string.sub(name,j+1)
+	end
+	-- look for it in the result list
+	local found = false
+	if results then
+		for _,res in pairs(results) do
+			if res.name == name then found = true break end
+		end
+	end
+	return found
+end
+
 local function set_icons_tab(it) --pass item table to fish icons from
 	local ics={}--set icons table as 0
 	--icon only
@@ -225,7 +247,7 @@ function omni.marathon.standardise(recipe)
 	-- Localisation
 	---------------------------------------------------------------------------
 	--Update loc. name if there is no localised name or no main product set
-	if (type(recipe.localised_name) ~= "table" and recipe.localised_name == nil) or (not recipe.main_product and not recipe.normal.main_product) then
+	if (type(recipe.localised_name) ~= "table" and recipe.localised_name == nil) or (not recipe.main_product and not recipe.normal.main_product and loc_name_is_result(recipe.localised_name, recipe.normal.results)) then
 		local it={}
 		---------------------------------------------------------------------------
 		-- Multiple Results
@@ -253,10 +275,10 @@ function omni.marathon.standardise(recipe)
 				it = omni.lib.find_prototype(recipe.normal.results[1].name)
 			--if not find result 1 or main product
 			else
-				it = recipe.name --hail mary
-			end
-			recipe.localised_name=set_loc_name(it)
+				recipe.localised_name={"recipe-name."..recipe.name}--hail mary
+			end	
 		end
+		if next(it) then recipe.localised_name = set_loc_name(it) end
 	end
 
 	---------------------------------------------------------------------------
