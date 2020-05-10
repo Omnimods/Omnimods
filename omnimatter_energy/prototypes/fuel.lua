@@ -37,16 +37,16 @@ for _,fuelitem in pairs(data.raw.item) do
     end
 
     --Generate Chemical Fuel Recipes
-    if fuelitem.fuel_category == "chemical" and fuelitem.fuel_value and fuelitem.subgroup ~= "omnienergy-fuel" then
+    if fuelitem.fuel_category == "chemical" and fuelitem.fuel_value and not string.find(fuelitem.subgroup, "omnienergy-fuel", 1, true) then
 
         --lets define the variables first, then jump in and create it all in one go:
         local FV=omni.lib.getFuelNumberInMJ(fuelitem.fuel_value)
         local props={
-            [5]={ing_add={"crushed-omnite",2},cat="crafting",time=1.0,tech="omnium-power-1",fuelmult = 1.30},
-            [10]={ing_add={"pulverized-omnite",4},cat="omnite-extraction",time=2.0,tech="omnium-power-2",fuelmult = 1.25},
-            [40]={ing_add={type = "fluid", name = "omnic-acid", amount = 20},cat="omniphlog",time=2.0,tech="omnium-power-3",fuelmult = 1.20},
-            [250]={ing_add={type = "fluid", name = "omnisludge", amount = 80},cat="omniplant",time=4.0,tech="omnium-power-4",fuelmult = 1.15},
-            [300]={ing_add={type = "fluid",name = "omniston", amount = 40},cat="omniplant",time=4.0,tech="omnium-power-5",fuelmult = 1.10},}
+            [5]={ing_add={"crushed-omnite",2}, cat="crafting", sub="omnienergy-fuel-1", time=1.0, tech="omnium-power-1", fuelmult = 1.30},
+            [10]={ing_add={"pulverized-omnite",4}, cat="omnite-extraction", sub="omnienergy-fuel-2", time=2.0,tech="omnium-power-2", fuelmult = 1.25},
+            [40]={ing_add={type = "fluid", name = "omnic-acid", amount = 20}, cat="omniphlog", sub="omnienergy-fuel-3", time=2.0,tech="omnium-power-3", fuelmult = 1.20},
+            [250]={ing_add={type = "fluid", name = "omnisludge", amount = 80}, cat="omniplant", sub="omnienergy-fuel-4", time=4.0,tech="omnium-power-4", fuelmult = 1.15},
+            [300]={ing_add={type = "fluid", name = "omniston", amount = 40}, cat="omniplant", sub="omnienergy-fuel-5", time=4.0,tech="omnium-power-5", fuelmult = 1.10},}
             local props_add={}
         if FV<=5 then
             props_add=props[5]
@@ -64,7 +64,7 @@ for _,fuelitem in pairs(data.raw.item) do
             setIcons(fuelitem.icons or {{icon = fuelitem.icon,icon_size = fuelitem.icon_size}}):
             addSmallIcon("__omnimatter_energy__/graphics/icons/omnicell-charged.png",3):
             setResults({"omnified-"..fuelitem.name,1}):
-            setSubgroup("omnienergy-fuel"):
+            setSubgroup(props_add.sub):
             setIngredients({fuelitem.name,1},props_add.ing_add):
             setCategory(props_add.cat):
             setEnergy(props_add.time):
@@ -72,6 +72,7 @@ for _,fuelitem in pairs(data.raw.item) do
             addTechPrereq(omni.lib.find_tech_name(fuelitem.name)):
             setEnabled(false):
             setStacksize(fuelitem.stack_size):
+            setOrder("b"):
             setFuelCategory(fuelitem.fuel_category):
             setFuelValue(omni.lib.multFuelValue(fuelitem.fuel_value, props_add.fuelmult)):
             extend()
@@ -105,11 +106,10 @@ end
 RecGen:create("omnimatter_energy","purified-omnite"):
     setIngredients({type="item", name="crushed-omnite", amount=5}):
     setResults({type="item", name="purified-omnite", amount=2}):
-    setOrder("z"):
 	setStacksize(200):
     setCategory("omnifurnace"):
-    setSubgroup("omnienergy-fuel"):
-    setOrder("ab"):
+    setSubgroup("omnienergy-fuel-1"):
+    setOrder("a"):
 	setFuelCategory("chemical"):
 	setFuelValue(2.4):
     setEnergy(2.0):

@@ -57,8 +57,32 @@ data:extend({
   },
   {
     type = "item-subgroup",
-    name = "omnienergy-fuel",
+    name = "omnienergy-fuel-1",
 	group = "omnienergy",
 	order = "g",
+  },
+  {
+    type = "item-subgroup",
+    name = "omnienergy-fuel-2",
+	group = "omnienergy",
+	order = "h",
+  },
+  {
+    type = "item-subgroup",
+    name = "omnienergy-fuel-3",
+	group = "omnienergy",
+	order = "i",
+  },
+  {
+    type = "item-subgroup",
+    name = "omnienergy-fuel-4",
+	group = "omnienergy",
+	order = "j",
+  },
+  {
+    type = "item-subgroup",
+    name = "omnienergy-fuel-5",
+	group = "omnienergy",
+	order = "k",
   },
 })
