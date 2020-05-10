@@ -43,7 +43,7 @@ for _,fuelitem in pairs(data.raw.item) do
         local FV=omni.lib.getFuelNumberInMJ(fuelitem.fuel_value)
         local props={
             [5]={ing_add={"crushed-omnite",2},cat="crafting",time=1.0,tech="omnium-power-1",fuelmult = 1.30},
-            [10]={ing_add={"pulverized-omnite",4},cat="omnitractor",time=2.0,tech="omnium-power-2",fuelmult = 1.25},
+            [10]={ing_add={"pulverized-omnite",4},cat="omnite-extraction",time=2.0,tech="omnium-power-2",fuelmult = 1.25},
             [40]={ing_add={type = "fluid", name = "omnic-acid", amount = 20},cat="omniphlog",time=2.0,tech="omnium-power-3",fuelmult = 1.20},
             [250]={ing_add={type = "fluid", name = "omnisludge", amount = 80},cat="omniplant",time=4.0,tech="omnium-power-4",fuelmult = 1.15},
             [300]={ing_add={type = "fluid",name = "omniston", amount = 40},cat="omniplant",time=4.0,tech="omnium-power-5",fuelmult = 1.10},}
