@@ -11,7 +11,9 @@
 		"omnilib >= 3.18.0",
 		"angelssmelting",
 		"bobplates",
+		"?bobgreenhouse",
 		"omnimatter_wood >= 3.18.0",
+		"?angelsbioprocessing",
 		"?omnimatter_water"
 	]
 	}
