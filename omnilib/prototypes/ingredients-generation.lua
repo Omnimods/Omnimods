@@ -104,19 +104,9 @@ end
 local cmpn = {"vanilla-circuit","crystallonics","vanilla-gear-wheel","bob-gear-wheel","vanilla-gear-box","bob-gear-box","plate","bob-plate","angel-plate","angel-bob-plate","angels-gear-wheel","omni-bob-alloys",
 "omni-plate","vanilla-pipe","bob-pipe","bob-logistics","bob-circuit","omni-alloys","bob-crystallo-circuit","vanilla-crystallo-circuit","angels-comp-circuit","angels-crystallo-circuit","angels-comp-plate"}
 
-if mods["angelsindustries"] and mods["omnimatter"] and angelsmods.industries.components then
-	-- DEFINE BLOCKS
-	require("prototypes.omniblocks")
-	component["construction-block"] = {"block-construction-1", "block-construction-2", "block-construction-3", "block-construction-4","block-construction-5"}
-	component["electric-block"] = {"block-electronics-0", "block-electronics-1", "block-electronics-2", "block-electronics-3", "block-electronics-4", "block-electronics-5"}
-	component["fluid-block"] = {"construction-frame-1", "block-fluidbox-1", nil, "block-fluidbox-2", nil}
-	component["mechanical-block"] = {"construction-frame-1", "block-mechanical-1", nil, "block-mechanical-2", nil}
-	component["enhancement-block"] = {"block-enhancement-1", "block-enhancement-2", "block-enhancement-3", "block-enhancement-4", "block-enhancement-5"}
-	component["energy-block"] = {"block-energy-1", "block-energy-2", "block-energy-3", "block-energy-4", "block-energy-5"}
-	component["logistic-block"] = {"block-logistic-1", "block-logistic-2", "block-logistic-3", "block-logistic-4", "block-logistic-5"}
-	component["production-block"] = {"block-production-1", "block-production-2", "block-production-3", "block-production-4", "block-production-5"}
-	component["omni-block"] = {"block-omni-1","block-omni-2","block-omni-3","block-omni-4","block-omni-5"}
-end
+-- DEFINE BLOCKS
+require("prototypes.omniblocks")
+
 
 for _, c in pairs(cmpn) do
 	--component[c]=setmetatable(component[c],BuildMat)
