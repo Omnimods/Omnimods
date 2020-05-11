@@ -4524,6 +4524,7 @@ function InsertGen:generateInserter()
     circuit_wire_max_distance = inserter_circuit_wire_max_distance,
     default_stack_control_input_signal = inserter_default_stack_control_input_signal
   }
+  if self.fuel_category then self.rtn[#self.rtn].energy_source.fuel_category = self.fuel_category end
 
 	local stuff = RecGen:create(self.mod,self.name):
 	setIngredients(self.ingredients):

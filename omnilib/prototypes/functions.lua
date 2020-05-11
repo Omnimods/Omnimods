@@ -1136,7 +1136,7 @@ end
 
 function omni.lib.find_prototype(item)
 	if type(item)=="table" then return item elseif type(item)~="string" then return nil end
-	for _, p in pairs({"item","mining-tool","gun","ammo","armor","repair-tool","capsule","module","tool","rail-planner","selection-tool","item-with-entity-data","fluid","selection-tool","item-with-inventory"}) do
+	for _, p in pairs({"item","mining-tool","gun","ammo","armor","repair-tool","capsule","module","tool","rail-planner","selection-tool","item-with-entity-data","fluid","selection-tool","item-with-inventory","item-with-tags"}) do
 		if data.raw[p][item] then return data.raw[p][item] end
 	end
 	--log("Could not find "..item.."'s prototype, check it's type.")
