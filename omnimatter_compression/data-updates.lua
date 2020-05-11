@@ -54,5 +54,8 @@ omni.compression.exclude_recipe("aircraft-afterburner")
 if mods["angelspetrochem"] then
 	omni.lib.replace_recipe_result("fill-heavy-oil-barrel","heavy-oil-barrel","liquid-naphtha-barrel")
 end
-require("prototypes/compress-recipes")
 require("prototypes/compress-buildings")
+require("prototypes/compress-items")
+--require("prototypes/compress-random")
+require("prototypes/compress-ores")
+--require("prototypes/compress-technology")

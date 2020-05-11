@@ -507,7 +507,7 @@ function ItemGen:create(mod,name)
 		loc_desc =  function(levels,grade) return nil end,
 		icons = function(levels,grade) return nil end,
 		flags = {},
-		order=function(levels,grade) return "a" end,
+		order=function(levels,grade) return "y["..name.."]" end,
 		stack_size = 100,
 		subgroup = function(levels,grade) return "raw-resource" end,
 		fuel_value = nil,

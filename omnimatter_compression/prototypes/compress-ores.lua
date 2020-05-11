@@ -20,7 +20,7 @@ local get_icons = function(item)
     return icons
 end
 local compensation_c = 500/120
-log("fixing compressed ores")
+--log("fixing compressed ores")
 --log(serpent.block(compressed_item_names))
 for name,ore in pairs(data.raw.resource) do
 	if not omni.lib.string_contained_list(name,blacklist) and ore.icon_size==32 then

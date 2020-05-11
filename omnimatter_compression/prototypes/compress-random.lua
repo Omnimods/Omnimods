@@ -99,6 +99,7 @@ for _,recipe in pairs(check_recipes) do
       log("you fucked up big time with this recipe: "..rec.name)
     end
     if new_rec then
+      new_rec.icon_size=32 --i should not need this, considering it is after a standardisation...
       new_rec.localised_name=new_rec.localised_name or loc
       data:extend({new_rec})
     end

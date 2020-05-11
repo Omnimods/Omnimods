@@ -48,12 +48,23 @@ end)
 
 
 script.on_event(defines.events.on_research_finished, function(event)
-	local tech = event.research
-	if end_with(tech.name,"omnipressed") then
-		tech.force.technologies[string.sub(tech.name,1,string.len(tech.name)-12)].researched = true
-	elseif tech.force.technologies[tech.name.."-omnipressed"] then
-		tech.force.technologies[tech.name.."-omnipressed"].researched = true
-	end
+  local tech = event.research
+  --local name = string.match(tech.name,"(.*)%-%d*")
+  if tech.level then
+    if start_with(tech.name,"omnipressed-") then
+      if tech.force.technologies[string.sub(tech.name,13,string.len(tech.name))].level < tech.level then
+        tech.force.technologies[string.sub(tech.name,13,string.len(tech.name))].researched = true
+      end
+    elseif tech.force.technologies["omnipressed-"..tech.name].level < tech.level then
+        tech.force.technologies["omnipressed-"..tech.name].researched = true
+    end
+  else
+    if start_with(tech.name,"omnipressed-") then
+	  	tech.force.technologies[string.sub(tech.name,13,string.len(tech.name))].researched = true
+	  elseif tech.force.technologies["omnipressed-"..tech.name] then
+		  tech.force.technologies["omnipressed-"..tech.name].researched = true
+    end
+  end
 	if tech.name == "compression-recipes" then
 		for _,r in pairs(tech.force.recipes) do
 			if r.enabled and tech.force.recipes[r.name.."-compression"] then
