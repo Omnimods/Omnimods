@@ -416,14 +416,46 @@ function omni.marathon.analyse_chain(name)
 	return {yield=yield,ratio=ratio_part,intersection=intersection,in_out=in_out, portion = portion}
 end
 
-function omni.marathon.analyse_fuel(name)
+function round_values(int)
+	if settings.startup["omnimarathon_rounding"].value == true then
+		local val = 0
+		for i, v in pairs(round_numbers_threshold) do
+			if int > v then
+				val=i
+			else
+				break
+			end
+		end
+		if val == 0 then return int end
+		return (math.floor(int/round_numbers[val])+1)*round_numbers[val]
+	else
+		return int
+	end
+end
 
+function omni.marathon.split(inputstr, sep)
+	if sep == nil then
+	   sep = "%s"
+   end
+   local t={} ; i=1
+   for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+	   t[i] = str
+	   i = i + 1
+   end
+   return t
+end
+
+
+
+
+
+
+
+
+function omni.marathon.analyse_fuel(name)
 end
 
 
 function omni.marathon.modify(recipe,item)
-	
-
-
-
 end
+

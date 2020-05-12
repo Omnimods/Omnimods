@@ -1,141 +1,40 @@
+require("prototypes/exceptions")
+
 local expo = settings.startup["omnimarathon_exponential"].value
 local extra_time = settings.startup["omnimarathon_time_increase"].value
 local extra_time_c = settings.startup["omnimarathon_time_const"].value
-local eq = {}
-
-local equal_type = {"lab","assembling-machine","furnace","boiler","generator","mining-drill","locomotive","beacon","logistic-container","inserter"}
---log("why tok, WHY!?")
-for _, rec in pairs(data.raw.recipe) do
-	if standardized_recipes[rec.name] == nil then
-		omni.marathon.standardise(rec)
-	end
-	if string.find(rec.name,"creative") or #rec.normal.ingredients == 0 or (string.find(rec.name,"aspect") and string.find(rec.name,"extraction")) then omni.marathon.exclude_recipe(rec.name) end
-	if expo then
-	if string.find(rec.name,"molten") and string.find(rec.name,"smelting") and rec.category == "induction-smelting" then
-		omni.marathon.exclude_recipe(rec.name)
-	elseif string.find(rec.name,"vehicle") and string.find(rec.name,"fuel") and string.find(rec.name,"from") and rec.category == "fuel-processing" then
-		omni.marathon.exclude_recipe(rec.name)
-	elseif string.find(rec.name,"void") then
-		omni.marathon.exclude_recipe(rec.name)
-	end
-	if rec.subgroup and (rec.subgroup =="empty-barrel" or rec.subgroup =="fill-barrel"  or rec.subgroup =="barreling-pump") then
-		omni.marathon.exclude_recipe(rec.name)
-	end
-	local tot = 0
-		for _,ingres in pairs({"ingredients","results"}) do
-			for _,obj in pairs(rec.normal[ingres]) do
-				if obj.type ~= "fluid" then 
-					if obj.amount then tot = tot+obj.amount end
-					if obj.amount_min then tot = tot+(obj.amount_min+obj.amount_max)/2 end
-					if ingres == "ingredients" and obj.amount == 1 and data.raw.item[obj.name] and data.raw.item[obj.name].place_result then
-						local prot = omni.lib.find_entity_prototype(data.raw.item[obj.name].place_result)
-						if prot and omni.lib.is_in_table(prot.type,equal_type) then
-							eq[obj.name] = {proto = prot}
-						end
-					end
-				end
-			end
-		end
-		if tot >= 1000 then omni.marathon.exclude_recipe(rec.name) end 
-	end
-end
-
+local cnst_string = settings.startup["omnimarathon_constant"].value
 local round_numbers = {2,3,5,6,10,20,50,100}
 local round_numbers_threshold = {3,6,11,15,32,89,353,1000}
+local const = {}
 
-function round_values(int)
-	if settings.startup["omnimarathon_rounding"].value == true then
-		local val = 0
-		for i, v in pairs(round_numbers_threshold) do
-			if int > v then
-				val=i
-			else
-				break
-			end
-		end
-		if val == 0 then return int end
-		return (math.floor(int/round_numbers[val])+1)*round_numbers[val]
-	else
-		return int
-	end
-end
 
-omni.marathon.exclude_recipe("pulverize-stone")
-omni.marathon.exclude_recipe("coal-liquefaction")
-omni.marathon.equalize("light-armor","heavy-armor")
-omni.marathon.equalize("burner-lab","lab")
-omni.marathon.normalize("light-armor")
-omni.marathon.normalize("heavy-armor")
-omni.marathon.equalize("burner-lab","lab")
+-- --save fuel values
+-- local standard_fuel_value = {}
+-- for _, item in pairs(data.raw.item) do
+-- 	if item.fuel_value then
+-- 		standard_fuel_value[item.name] = item.fuel_value
+-- 	end
+-- end
 
-local standard_fuel_value = {}
-
-for _, item in pairs(data.raw.item) do
-	if item.fuel_value then
-		standard_fuel_value[item.name] = item.fuel_value
-	end
-end
-
-for _, rec in pairs(data.raw.recipe) do
-	local found = false
-	local obj = ""
-	for _, ing in pairs(rec.normal.ingredients) do
-		if eq[ing.name] and ing.amount == 1 then
-			found = true
-			obj=ing.name
-			break
-		end
-	end
-	if found then
-		for _, res in pairs(rec.normal.results) do
-			if data.raw.item[res.name] and data.raw.item[res.name].place_result then
-				local prot = omni.lib.find_entity_prototype(data.raw.item[res.name].place_result)
-				if prot and omni.lib.is_in_table(prot.type,equal_type) and prot.fast_replaceable_group == eq[obj].proto.fast_replaceable_group then
-					omni.marathon.equalize(obj,res.name)
-				end
-			end
-		end
-	end
-	--fast_replaceable_group
-end
-omni.marathon.equalize("burner-mining-drill","electric-mining-drill")
-
+--save furnace crafting categories
 local furnace_categories = {}
-
 for _,entity in pairs(data.raw.furnace) do
 	for _,cat in pairs(entity.crafting_categories) do
 		furnace_categories[cat] = true
 	end
 end
 
-local cnst_string = settings.startup["omnimarathon_constant"].value
-
-local modified_recipe = {}
-
-function split(inputstr, sep)
-        if sep == nil then
-                sep = "%s"
-        end
-        local t={} ; i=1
-        for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
-                t[i] = str
-                i = i + 1
-        end
-        return t
-end
-
-local digit_length = function(int)
-	local i = 0
-	
-	while int*math.pow(10,i)-math.floor(int*math.pow(10,i))> 0 do
-		i=i+1
-	end
-	return i-1
-end
-local const = {}
+-- local digit_length = function(int)
+-- 	local i = 0
+-- 	while int*math.pow(10,i)-math.floor(int*math.pow(10,i))> 0 do
+-- 		i=i+1
+-- 	end
+-- 	return i-1
+-- end
 
 if string.find(cnst_string,"/") then
-	const = split(cnst_string,"/")
+	const = omni.marathon.split(cnst_string,"/")
 elseif string.find(cnst_string,".") then
 	local number = tonumber(cnst_string)
 	local int_len = math.floor(math.log10(number))
@@ -145,34 +44,34 @@ else
 	const={tonumber(cnst_string),1}
 end
 
+-- local mod_constant = function(nr)
+-- 	local part = {}
+-- 	if expo then
+-- 		return ratio.root(ratio.power(nr,const[2]),const[1]+const[2],100)
+-- 	else
+-- 		return ratio.multiply(nr,ratio.invert(const))
+-- 	end
+-- end
 
-local mod_constant = function(nr)
-	local part = {}
-	if expo then
-		return ratio.root(ratio.power(nr,const[2]),const[1]+const[2],100)
-	else
-		return ratio.multiply(nr,ratio.invert(const))
-	end
-end
+-- local enlong_with = function(frac,target)
+-- 	if ratio.equal(frac,{1,1}) then return 1 end
+-- 	local part = {1,1}
+-- 	local max_deno = target[2]
+-- 	local i = 1
+-- 	local nume = omni.lib.round(frac[1]/frac[2]*omni.lib.primes[i])
+-- 	while nume == omni.lib.primes[i] do
+-- 		i=i+1
+-- 		nume = omni.lib.round(frac[1]/frac[2]*omni.lib.primes[i])
+-- 	end
+-- 	if i < max_deno then
+-- 		return 1
+-- 	else
+-- 		return omni.lib.round(omni.lib.primes[i]/frac[2]*1.5)+1
+-- 	end
+-- end
 
-local enlong_with = function(frac,target)
-	if ratio.equal(frac,{1,1}) then return 1 end
-	local part = {1,1}
-	local max_deno = target[2]
-	local i = 1
-	local nume = omni.lib.round(frac[1]/frac[2]*omni.lib.primes[i])
-	while nume == omni.lib.primes[i] do
-		i=i+1
-		nume = omni.lib.round(frac[1]/frac[2]*omni.lib.primes[i])
-	end
-	if i < max_deno then
-		return 1
-	else
-		return omni.lib.round(omni.lib.primes[i]/frac[2]*1.5)+1
-	end
-end
-
-local already_found={}
+--local already_found={}
+--local modified_recipe = {}
 --for i,prod in pairs(production_chains) do
 --	local analyse = omni.marathon.analyse_chain(prod.name)
 --	local new_c = {}
@@ -235,7 +134,7 @@ local already_found={}
 local configure_item = function (rec,item)
 	return (marathon_items[item.name] == nil or (marathon_items[item.name] and (marathon_items[item.name].results==nil and marathon_items[item.name].ingredients ~=nil or marathon_items[item.name].equal ~= nil))) and not (marathon_recipes[rec.name] and marathon_recipes[rec.name].item and marathon_recipes[rec.name].item[item.name] and marathon_recipes[rec.name].item[item.name].mult == 0)
 end
---log("tokmor damn you!")
+
 --(marathon_items[res][ingress.name]==nil or marathon_items[res].equal ~= nil)
 
 for _,rec in pairs(data.raw.recipe) do
@@ -245,6 +144,7 @@ for _,rec in pairs(data.raw.recipe) do
 		local post_fuel = { ingredients = {},results = {}}
 		local enlarge = 60
 		local maxEnlarge = math.huge
+
 		for _,ingres in pairs({rec.normal.ingredients,rec.normal.results}) do
 			for _,component in pairs(ingres) do
 				if component.type=="fluid" then
@@ -410,7 +310,7 @@ for _,rec in pairs(data.raw.recipe) do
 							end
 							if rec.normal[ingres.name][component.nr].type=="fluid" then m=m*60 end
 							local val = omni.lib.round(m)
-							if val == 0 then val =1 end
+							if val == 0 then val = 1 end
 							rec.expensive[ingres.name][component.nr] = {name=res,amount = round_values(val),type=rec.normal[ingres.name][component.nr].type}
 						else
 						
@@ -447,6 +347,7 @@ for _,rec in pairs(data.raw.recipe) do
 				end
 			end	
 		else
+
 			found[kind]=false
 		end
 		for j,ing in pairs(rec.expensive.ingredients) do
@@ -551,17 +452,20 @@ for _,rec in pairs(data.raw.recipe) do
 		end
 		--error("read")
 		--log(serpent.block(rec))
-		--[[
+		
+		--Fix recipes with results > stacksize
 		for _,res in pairs(rec.expensive.results) do
 			local size = omni.lib.find_stacksize(res.name)
-			if size and size>1 and res.type == "item" and not res.probability and res.amount and res.amount > size then
+
+			if size and size>=1 and res.type == "item" and not res.probability and res.amount and res.amount > size then
 				while res.amount > size do
 					rec.expensive.results[#rec.expensive.results+1]={name=res.name, amount = size,type=res.type}
 					res.amount = res.amount-size
 				end
-			elseif size and size==1 then
-				rec.expensive
+
+			--standardise to set icons for recipes that had a single result before  (-->prob no icons)
+			omni.marathon.standardise(rec)
 			end
-		end]]
+		end
 	end
 end

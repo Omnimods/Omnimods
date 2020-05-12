@@ -1,8 +1,3 @@
-if not mods["only-smelting"] then
-	
-else
-
-end
 if mods["angelssmelting"] then
 	omni.marathon.add_chain("iron-smelting",{{"iron-ore-smelting",{24,24}}},{"iron-ore"},{"ingot-iron"})
 	omni.marathon.add_chain("iron-smelting",{{"iron-ore-processing",{2,4}},{"processed-iron-smelting",{24,8}}})
