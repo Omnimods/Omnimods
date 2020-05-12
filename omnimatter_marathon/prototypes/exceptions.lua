@@ -36,7 +36,6 @@ for _, rec in pairs(data.raw.recipe) do
 	end
 end
 
-
 for _, rec in pairs(data.raw.recipe) do
 	local found = false
 	local obj = ""
@@ -57,9 +56,7 @@ for _, rec in pairs(data.raw.recipe) do
 			end
 		end
 	end
-	--fast_replaceable_group
 end
-
 
 --equalize
 omni.marathon.equalize("burner-mining-drill","electric-mining-drill")

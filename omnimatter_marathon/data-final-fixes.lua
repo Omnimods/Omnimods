@@ -25,13 +25,13 @@ for _,entity in pairs(data.raw.furnace) do
 	end
 end
 
--- local digit_length = function(int)
--- 	local i = 0
--- 	while int*math.pow(10,i)-math.floor(int*math.pow(10,i))> 0 do
--- 		i=i+1
--- 	end
--- 	return i-1
--- end
+local digit_length = function(int)
+	local i = 0
+	while int*math.pow(10,i)-math.floor(int*math.pow(10,i))> 0 do
+		i=i+1
+	end
+	return i-1
+end
 
 if string.find(cnst_string,"/") then
 	const = omni.marathon.split(cnst_string,"/")
@@ -134,8 +134,6 @@ end
 local configure_item = function (rec,item)
 	return (marathon_items[item.name] == nil or (marathon_items[item.name] and (marathon_items[item.name].results==nil and marathon_items[item.name].ingredients ~=nil or marathon_items[item.name].equal ~= nil))) and not (marathon_recipes[rec.name] and marathon_recipes[rec.name].item and marathon_recipes[rec.name].item[item.name] and marathon_recipes[rec.name].item[item.name].mult == 0)
 end
-
---(marathon_items[res][ingress.name]==nil or marathon_items[res].equal ~= nil)
 
 for _,rec in pairs(data.raw.recipe) do
 	if not omni.lib.start_with(rec.name,"omnirec") and marathon_recipes[rec.name] == nil or (marathon_recipes[rec.name] and (marathon_recipes[rec.name].item or marathon_recipes[rec.name].inverse or marathon_recipes[rec.name].normalize)) then
@@ -453,7 +451,7 @@ for _,rec in pairs(data.raw.recipe) do
 		--error("read")
 		--log(serpent.block(rec))
 		
-		--Fix recipes with results > stacksize
+		--Split up results with amount > stacksize
 		for _,res in pairs(rec.expensive.results) do
 			local size = omni.lib.find_stacksize(res.name)
 
@@ -464,7 +462,7 @@ for _,rec in pairs(data.raw.recipe) do
 				end
 
 			--standardise to set icons for recipes that had a single result before  (-->prob no icons)
-			omni.marathon.standardise(rec)
+			if not rec.icons then omni.marathon.standardise(rec) end
 			end
 		end
 	end

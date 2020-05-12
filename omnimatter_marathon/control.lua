@@ -51,7 +51,6 @@ if game.difficulty_settings.recipe_difficulty == defines.difficulty_settings.rec
 	iteminsert{name="burner-mining-drill", count=nr}
 	nr = round_up(math.pow(2,1+const))-1
 	iteminsert{name="stone-furnace", count=nr}
-	iteminsert{name="steel-axe", count=1}
 	if game.active_mods["omnimatter"] then
 		nr = round_up(math.pow(1.5,1+const))-1
 		iteminsert{name="burner-omnitractor", count=nr}

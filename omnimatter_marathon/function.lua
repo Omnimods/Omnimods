@@ -57,7 +57,6 @@ function omni.marathon.add_chain(name,chain,initial,final)
 	end
 end
 
-
 int = {}
 
 function int.root(alpha,n,closest)
@@ -224,7 +223,6 @@ function ratio.root(alpha,root,limit)
 	end
 	return ratio.simplify(part)]]
 end
-
 
 function ratio.greater(alpha,beta)
 	return alpha[1]*beta[2]>alpha[2]*beta[1]
@@ -444,18 +442,3 @@ function omni.marathon.split(inputstr, sep)
    end
    return t
 end
-
-
-
-
-
-
-
-
-function omni.marathon.analyse_fuel(name)
-end
-
-
-function omni.marathon.modify(recipe,item)
-end
-
