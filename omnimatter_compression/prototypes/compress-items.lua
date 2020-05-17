@@ -66,7 +66,7 @@ for _, group in pairs({"fluid"}) do
       --Create the item
       new_fluid.name = "concentrated-"..new_fluid.name
 			new_fluid.sub_group = "fluids"
-			new_fluid.order = fluid.order .."[concentrated-"..fluid.name .."]"
+			new_fluid.order = fluid.order or "z".."[concentrated-"..fluid.name .."]"
 			new_fluid.icons = omni.compression.add_overlay(fluid.name,"compress")
       new_fluid.localised_name = {"fluid-name.concentrated-fluid", loc_key}
       new_fluid.localised_description = {"fluid-description.concentrated-fluid", loc_key}
@@ -87,7 +87,7 @@ for _, group in pairs({"fluid"}) do
         hidden = true,
         icons = omni.compression.add_overlay(fluid.name,"compress"),
         icon_size = 32,
-        order = fluid.order .."[concentrated-"..fluid.name .."]",
+        order = fluid.order or "z".."[concentrated-"..fluid.name .."]",
         normal = {
           ingredients = {
             {name = fluid.name, type = "fluid", amount = sluid_contain_fluid*concentrationRatio}
@@ -133,7 +133,7 @@ for _, group in pairs({"fluid"}) do
             {name = "concentrated-"..fluid.name,type = "fluid", amount = sluid_contain_fluid}
           },
           subgroup = "compressor-out-fluids",
-          order = fluid.order .."[concentrated-"..fluid.name .."]",
+          order = fluid.order or "z".."[concentrated-"..fluid.name .."]",
           results = {
             {name = fluid.name, type = "fluid", amount = sluid_contain_fluid*concentrationRatio}
           },
@@ -146,7 +146,7 @@ for _, group in pairs({"fluid"}) do
             {name = "concentrated-"..fluid.name, type = "fluid", amount = sluid_contain_fluid}
           },
           subgroup = "compressor-out-fluids",
-          order = fluid.order .."[concentrated-"..fluid.name .."]",
+          order = fluid.order or "z".."[concentrated-"..fluid.name .."]",
           results = {
             {name = fluid.name,type="fluid", amount=sluid_contain_fluid*concentrationRatio}
           },

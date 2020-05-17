@@ -55,7 +55,7 @@ script.on_event(defines.events.on_research_finished, function(event)
       if tech.force.technologies[string.sub(tech.name,13,string.len(tech.name))].level < tech.level then
         tech.force.technologies[string.sub(tech.name,13,string.len(tech.name))].researched = true
       end
-    elseif tech.force.technologies["omnipressed-"..tech.name].level < tech.level then
+    elseif tech.force.technologies["omnipressed-"..tech.name] and tech.force.technologies["omnipressed-"..tech.name].level < tech.level then
         tech.force.technologies["omnipressed-"..tech.name].researched = true
     end
   else

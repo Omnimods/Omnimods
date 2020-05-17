@@ -59,7 +59,7 @@ data:extend(
     type = "int-setting",
     name = "omnicompression_compressed_tech_min",
 	setting_type = "startup",
-    default_value = 15000,
+    default_value = 2000, --space science pack size
 	min_value = 0,
 	max_value = 250000000,
 	order=h

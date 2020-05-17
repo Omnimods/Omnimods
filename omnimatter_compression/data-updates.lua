@@ -56,6 +56,4 @@ if mods["angelspetrochem"] then
 end
 require("prototypes/compress-buildings")
 require("prototypes/compress-items")
---require("prototypes/compress-random")
 require("prototypes/compress-ores")
---require("prototypes/compress-technology")

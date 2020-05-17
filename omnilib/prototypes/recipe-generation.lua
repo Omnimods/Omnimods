@@ -499,7 +499,9 @@ end
 function ItemGen:create(mod,name)
 	local m = nil
 	--if string.find(mod,"omnimatter") then m = "__"..mod.."__" end
-	--if mod == nil or mod == "omnimatter" then m = "__omnimatter__" end
+  --if mod == nil or mod == "omnimatter" then m = "__omnimatter__" end
+  local nm=name
+  if type(nm)~=string then nm="omni" end
 	local t = {
 		mod = mod,
 		name=name,
@@ -507,7 +509,7 @@ function ItemGen:create(mod,name)
 		loc_desc =  function(levels,grade) return nil end,
 		icons = function(levels,grade) return nil end,
 		flags = {},
-		order=function(levels,grade) return "y["..name.."]" end,
+		order=function(levels,grade) return "y["..nm.."]" end,
 		stack_size = 100,
 		subgroup = function(levels,grade) return "raw-resource" end,
 		fuel_value = nil,
