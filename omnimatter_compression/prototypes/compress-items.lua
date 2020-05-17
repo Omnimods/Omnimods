@@ -13,16 +13,7 @@ local speed_div = 8 --Recipe speed is stack_size/speed_div
 -------------------------------------------------------------------------------
 --[[Item Functions]]--
 -------------------------------------------------------------------------------
---finds if the object is hidden by flag
-omni.compression.is_hidden = function(obj)
-  local hidden = false
-	for _, flag in ipairs(obj.flags or {}) do
-    if flag == "hidden" then
-      hidden = true
-    end
-  end
-  return hidden
-end
+
 --set new fuel value
 local new_fuel_value = function(effect,stack)
 	if not effect then return nil end
@@ -52,6 +43,7 @@ end
 --[[Create Dynamic Recipes from fluids]]--
 -------------------------------------------------------------------------------
 --set-up basic parameters (temperature, energy_value etc)
+log("start item compressing")
 for _, group in pairs({"fluid"}) do
 	--Loop through all of the items in the category
 	for _, fluid in pairs(data.raw[group]) do
@@ -308,3 +300,4 @@ end
 data:extend(compress_items)
 data:extend(compress_recipes)
 data:extend(uncompress_recipes)
+log("end item compression")

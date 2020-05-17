@@ -230,14 +230,14 @@ local run_entity_updates = function(new,kind,i)
   end
   return new
 end
-
+log("start building compression")
 -------------------------------------------------------------------------------
 --[[Build Compression Tier Recipes]]--
 -------------------------------------------------------------------------------
-
 for _,kind in pairs(building_list) do --only building types
   for _,b in pairs(data.raw[kind]) do -- for each
     if not omni.lib.string_contained_list(b.name,black_list) and --not on exclusion list
+    not omni.compression.is_hidden(b) and --not hidden
     (not compress_entity[b] or (compress_entity[b] and (not compress_entity[b].exclude or compress_entity[b].include))) then --check already on the compressed list?
       local build = find_top_tier(b,kind)
       --category check and create if not
@@ -348,3 +348,4 @@ end
 data:extend(category)
 --extend new buildings
 data:extend(compressed_buildings)
+log("end building compression")

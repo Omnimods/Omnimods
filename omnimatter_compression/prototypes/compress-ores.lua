@@ -22,6 +22,7 @@ end
 local compensation_c = 500/120
 --log("fixing compressed ores")
 --log(serpent.block(compressed_item_names))
+log("start ore compression")
 for name,ore in pairs(data.raw.resource) do
 	if not omni.lib.string_contained_list(name,blacklist) and ore.icon_size==32 then
 		if (ore.category == nil or ore.category == "basic-solid") and ore.name then
@@ -189,3 +190,4 @@ if compressed_ores and #compressed_ores > 0 then
 else
 	--log("omnicompression didn't find any ores to extend, something is wrong.")
 end
+log("end ore compression")

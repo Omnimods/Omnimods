@@ -19,7 +19,7 @@ local has_input  = function(tab)
 	return found
 end
 local compressed_techs={}
-
+log("start tech compression checks")
 local pack_sizes={}
 for _, lab in pairs(data.raw.lab) do
 	local l = table.deepcopy(lab)
@@ -85,7 +85,7 @@ local include_techs = function(t)
   end
   return false
 end
-
+log("start tech compression")
 for _,tech in pairs(data.raw.technology) do
   if tech.unit and ((tech.unit.count and type(tech.unit.count)=="number" and tech.unit.count > settings.startup["omnicompression_compressed_tech_min"].value) or not tech.unit.count or containsOne(tech.unit.ingredients,alwaysSP) or include_techs(tech)) then
     --fetch original
@@ -158,3 +158,4 @@ for _,tech in pairs(data.raw.technology) do
 end
 --log("end tech compression")
 data:extend(compressed_techs)
+log("end tech compression")

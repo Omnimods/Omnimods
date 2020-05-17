@@ -634,6 +634,7 @@ end
 -------------------------------------------------------------------------------
 --call the recipe creation script, splitting off the randomised recipes and void recipes for further processing
 --log("beginning recipe compression") 
+log("start recipe compression")
 for _,recipe in pairs(data.raw.recipe) do
 	--if not already compressed
   if string.find(recipe.name,"compress") == nil and string.find(recipe.name,"concentrat") == nil then
@@ -734,3 +735,4 @@ if #compress_based_recipe ~= 0 then
 end
 module_limits()
 --log("Finished compressing recipes")
+log("end recipe compression")

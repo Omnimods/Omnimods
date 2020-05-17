@@ -36,6 +36,17 @@ function omni.compression.CleanName(name)
   str = str:gsub("(%l)(%w*)", function(a,b) return string.upper(a)..b end)
   return str
 end
+
+--finds if the object is hidden by flag
+function omni.compression.is_hidden(obj)
+  local hidden = false
+	for _, flag in ipairs(obj.flags or {}) do
+    if flag == "hidden" then
+      hidden = true
+    end
+  end
+  return hidden
+end
 -----------------------------------------------------------------------------
 -- ICON FUNCTIONS --
 -----------------------------------------------------------------------------
@@ -136,3 +147,4 @@ omni.compression.add_overlay = function(it,overlay_type,level)
   end
   return icons
 end
+

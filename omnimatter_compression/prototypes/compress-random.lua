@@ -36,7 +36,7 @@ local roundRandom = function(nr,round)
 	end
 	return math.max(newval,1)
 end
-
+log("start probability style compression")
 --log("random recipes")
 for _,recipe in pairs(check_recipes) do
 	if not omni.lib.is_in_table(recipe,exclusion_list) and not string.find(recipe,"creative") then
@@ -105,3 +105,4 @@ for _,recipe in pairs(check_recipes) do
     end
 	end
 end
+log("end probability style compression")
