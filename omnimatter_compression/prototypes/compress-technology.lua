@@ -103,7 +103,7 @@ for _,tech in pairs(data.raw.technology) do
       loc_key = {"technology-name.compressed",omni.compression.CleanName(name)}
     end
     t.localised_name = loc_key
-    log(serpent.block(loc_key))
+    
     --lowest common multiple for the packs
 		local lcm = 1
     for _, ings in pairs(t.unit.ingredients) do
@@ -134,6 +134,7 @@ for _,tech in pairs(data.raw.technology) do
         ing[2] = lcm/(amt*st_s)
       else
         log("compressed tool missing?"..nme)
+        log(ing)
         wrong=true
         break
       end
