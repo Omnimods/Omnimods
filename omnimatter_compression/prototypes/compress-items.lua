@@ -163,7 +163,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
     if item.stack_size >= 1 and item.stack_size <= max_stack_size_to_compress and
       not (hidden or item.name:find("creative-mode")) then
       --stack size settings
-			if omni.compression.stack_compensate then --setting variable
+      if omni.compression.stack_compensate and item.stack_size > 1 then --setting variable and stack size exclusion
 				if not item.place_result or omni.lib.find_entity_prototype(item.place_result) == nil then
 					item.stack_size = omni.lib.round_up(item.stack_size/60)*60
 				else
