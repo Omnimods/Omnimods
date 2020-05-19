@@ -32,7 +32,11 @@ end
 local containsOne = function(t,d)
 	for _,p in pairs(t) do
 		for _,q in pairs(d) do
-			if p[1]==q then return true end
+      if p[1]==q then
+        return true
+      elseif p.name==q then
+        return true
+      end
 		end
 	end
 	return false
@@ -79,15 +83,18 @@ local name = string.match(tech.name,"(.*)%-%d*")
     end
   end
 end
+--log(serpent.block(tiered_tech))
 --compare tech to the list created (tiered_tech) to include techs missing packs previously in the chain
 local include_techs = function(t)
   --extract name and level
-  local lvl = string.match(t.name,".*%-(%d*)") 
-  local name = string.match(t.name,"(.*)%-%d*")
-  --check if in table and lvl > min lvl
-  if lvl ~="" and lvl ~=nil and tiered_tech[name] then
-    if tonumber(lvl) >= tiered_tech[name] then
-      return true
+  local lvl = string.match(t.name,".*%-(%d*)")
+  if lvl ~="" and lvl ~=nil then
+    local name = string.match(t.name,"(.*)%-%d*")
+    --check if in table and lvl > min lvl
+    if tiered_tech[name] then
+      if tonumber(lvl) >= tiered_tech[name] then
+        return true
+      end
     end
   end
   return false
@@ -117,26 +124,23 @@ for _,tech in pairs(data.raw.technology) do
     --lowest common multiple for the packs
 		local lcm = 1
     for _, ings in pairs(t.unit.ingredients) do
-      local st_s=pack_sizes[ings[1] or ings.name]
+      local st_s=pack_sizes[ings.name or ings[1]]
       --local item = data.raw.tool[ings[1]]
-			lcm=omni.lib.lcm(lcm,(ings[2] or ings.amount)*st_s)
+			lcm=omni.lib.lcm(lcm,(ings.amount or ings[2])*st_s)
     end
     local wrong = false
     --set compressed ingredients and amounts
     for num,ing in pairs(t.unit.ingredients) do
       local nme="" --get name string prepped
-      if ing.name then
-        mne=ing.name
+      local amt="" --get amount sorted out
+      if ing.type then
+        nme=ing.name
+        amt=ing.amount
       else
         nme=ing[1]
+        amt=ing[2]
       end
       local st_s=pack_sizes[nme]
-      local amt={} --get amount sorted out
-      if ing.amount then
-        amt=ing.amount
-      else 
-        amt=ing[2]
-      end 
       --check if compressed tool exists (it had bloody better)
       if data.raw.tool["compressed-"..nme] then
         ing={} --reset ing for this next step
@@ -144,7 +148,7 @@ for _,tech in pairs(data.raw.technology) do
         ing[2] = lcm/(amt*st_s)
       else
         log("compressed tool missing?"..nme)
-        log(ing) --tell log what is wrong
+        log(serpent.block(ing)) --tell log what is wrong
         wrong=true
         break
       end

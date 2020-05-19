@@ -68,7 +68,7 @@ data:extend(
     type = "string-setting",
     name = "omnicompression_always_compress_sp",
 	setting_type = "startup",
-    default_value = "science-pack-3,high-tech-science-pack,production-science-pack,military-science-pack,space-science-pack",
+    default_value = "chemical-science-pack,high-tech-science-pack,production-science-pack,military-science-pack,space-science-pack,datacore-war-1,angels-science-pack-orange,angels-science-pack-blue,angels-science-pack-yellow,angels-science-pack-white,datacore-exploration-1",
 	order=i
   },
 }
