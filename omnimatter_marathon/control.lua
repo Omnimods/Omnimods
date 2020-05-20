@@ -42,8 +42,6 @@ else
 	const=tonumber(cnst_string)
 end
 
-
-
 script.on_event(defines.events.on_player_created, function(event)
 if game.difficulty_settings.recipe_difficulty == defines.difficulty_settings.recipe_difficulty.expensive and settings.startup["omnimarathon_exponential"].value then
 	local iteminsert = game.players[event.player_index].insert

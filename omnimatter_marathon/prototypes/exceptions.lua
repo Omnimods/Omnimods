@@ -65,8 +65,29 @@ omni.marathon.equalize("light-armor","heavy-armor")
 omni.marathon.equalize("burner-lab","lab")
 
 --exclude
+omni.marathon.exclude_recipe("ye_grow_animal3fast_recipe")
+omni.marathon.exclude_recipe("ping-tool")
+omni.marathon.exclude_recipe("upgrade-builder")
+omni.marathon.exclude_recipe("kovarex-enrichment-process")
 omni.marathon.exclude_recipe("pulverize-stone")
 omni.marathon.exclude_recipe("coal-liquefaction")
+
+if mods["omnimatter_wood"] then
+	omni.marathon.exclude_recipe("wood-extraction")
+	omni.marathon.exclude_recipe("basic-mutated-wood-growth")
+	omni.marathon.exclude_recipe("seedling-mutation")
+	omni.marathon.exclude_recipe("advanced-mutated-wood-growth")
+	omni.marathon.exclude_recipe("improved-wood-mutation")
+end
+
+if mods["angelspetrochem"] then
+	omni.marathon.exclude_item("catalyst-metal-carrier")
+	omni.marathon.exclude_item("catalyst-metal-red")
+	omni.marathon.exclude_item("catalyst-metal-green")
+	omni.marathon.exclude_item("catalyst-metal-blue")
+	omni.marathon.exclude_item("catalyst-metal-yellow")
+	omni.marathon.exclude_item("catalyst-metal-cyan")
+end
 
 --normalize
 omni.marathon.normalize("light-armor")
