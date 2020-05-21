@@ -1,6 +1,6 @@
 local compressed_ores = {}
 
-local blacklist = {"stone",{"creative","mode"}}
+local blacklist = {{"creative","mode"}}--{"stone",{"creative","mode"}}
 
 local add_fluid_boxes = false
 
@@ -20,18 +20,19 @@ local get_icons = function(item)
     return icons
 end
 local compensation_c = 500/120
---log("fixing compressed ores")
---log(serpent.block(compressed_item_names))
-log("start ore compression")
 for name,ore in pairs(data.raw.resource) do
-	if not omni.lib.string_contained_list(name,blacklist) and ore.icon_size==32 then
-		if (ore.category == nil or ore.category == "basic-solid") and ore.name then
+	if not omni.lib.string_contained_list(name,blacklist) then
+		if (ore.category == nil or ore.category == "basic-solid" or ore.category == "basic-fluid") and ore.name then
 			local compressed = false
 			local new = table.deepcopy(ore)
-			new.localised_name = {"entity-name.compressed-ore",{"entity-name."..new.name}}
-			new.name = "compressed-"..new.name.."-ore"
+      new.localised_name = {"entity-name.compressed-ore",{"entity-name."..new.name}}
+      if new.category == "basic-fluid" then
+        new.name = "concentrated-" ..new.name --no need for ore in name
+      else
+        new.name = "compressed-"..new.name.."-ore"
+      end
 			if new.autoplace then new.autoplace = nil end
-
+      
 			if new.minable.result then
 				new.minable.results = {{
 					amount_max=1,
@@ -43,19 +44,21 @@ for name,ore in pairs(data.raw.resource) do
 				new.minable.result=nil
 			end
 
-			local max_stacksize = 0
-			for i,drop in ipairs(new.minable.results) do
-				if omni.lib.is_in_table("compressed-"..drop.name,compressed_item_names) then
-					drop.name = "compressed-"..drop.name
-					compressed=true
-					max_stacksize = math.max(omni.lib.find_stacksize(drop.name),max_stacksize)
-				end
+      local max_stacksize = 0
+      for i,drop in ipairs(new.minable.results) do
+        for _,comp in pairs({"compressed-","concentrated-"}) do
+          if omni.lib.is_in_table(comp .. drop.name,compressed_item_names) then
+            drop.name = comp .. drop.name
+            compressed=true
+            max_stacksize = math.max(omni.lib.find_stacksize(drop.name),max_stacksize) --returns 50 for fluids
+          end
+        end
 			end
-			new.minable.mining_time = compensation_c*new.minable.mining_time*max_stacksize
-			if new.infinite then
-				new.minimum = 8
-				new.normal = new.normal/max_stacksize
-				if new.maximum then new.maximum = new.maximum/max_stacksize end
+			new.minable.mining_time = tonumber(compensation_c*new.minable.mining_time*max_stacksize)
+      if new.infinite then --just flat out clobber it by dropping yield by a factor of 3
+				new.minimum = math.max(new.minimum/max_stacksize/3,1) --ensure at least 1
+				new.normal = math.max(new.normal/max_stacksize/3,1) --ensure at least 1
+				if new.maximum then new.maximum = new.maximum/max_stacksize/3 end
 			end
 			compressed=true
 			if new.minable.required_fluid and data.raw.fluid[new.minable.required_fluid] then
@@ -153,10 +156,11 @@ for name,ore in pairs(data.raw.resource) do
 					},
 					energy_required = 0.01,
 				}
-				compressed_ores[#compressed_ores+1]=concentrate
+        compressed_ores[#compressed_ores+1]=concentrate
 				else
 					add_fluid_boxes=true
-				end
+        end
+        
 				local concentrate = {
 					type = "recipe",
 					name = "concentrate-"..new.minable.required_fluid,
@@ -174,19 +178,19 @@ for name,ore in pairs(data.raw.resource) do
 					},
 					energy_required = 0.01,
 				}
-				compressed_ores[#compressed_ores+1]=concentrate
+        compressed_ores[#compressed_ores+1]=concentrate
 				new.minable.required_fluid="concentrated-"..new.minable.required_fluid
 			end
 			if compressed and max_stacksize > 0 then
-				compressed_ores[#compressed_ores+1]=new
+        compressed_ores[#compressed_ores+1]=new
 			end
 		end
 	end
 end
 
---log(serpent.block(compressed_ores))
 if compressed_ores and #compressed_ores > 0 then
-	data:extend(compressed_ores)
+  data:extend(compressed_ores)
+  
 else
 	--log("omnicompression didn't find any ores to extend, something is wrong.")
 end

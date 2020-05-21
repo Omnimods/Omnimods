@@ -109,24 +109,37 @@ script.on_event(defines.events.on_player_selected_area, function(event)
 		local miscount = 0
 		local resource = ""
 		for _,entity in pairs(event.entities) do
-			if entity.type == "resource" and game.entity_prototypes[entity.name].resource_category == "basic-solid" and entity.name ~= "stone" and not start_with(entity.name,"compressed") then
+      if entity.type == "resource" and (game.entity_prototypes[entity.name].resource_category == "basic-solid" or game.entity_prototypes[entity.name].resource_category == "basic-fluid") and entity.name ~= "stone" and not (start_with(entity.name,"compressed") or start_with(entity.name,"concentrated-")) then
+        --check fluid/solid split
+        local typ = ""
+        if game.entity_prototypes[entity.name].resource_category == "basic-solid" then
+          typ="item"
+        elseif game.entity_prototypes[entity.name].resource_category == "basic-fluid" then
+          typ="fluid"
+        end
 				local results = entity.prototype.mineable_properties.products 
-				
-				local size = 0
-				for _, res in pairs(results) do
-					if game.item_prototypes["compressed-"..res.name] then
-						size = size + game.item_prototypes[res.name].stack_size
-						resource=res.name
-					end
+        local size = 0
+        for _, res in pairs(results) do
+          if typ=="item" and game.item_prototypes["compressed-"..res.name] then
+            size = size + game.item_prototypes[res.name].stack_size
+          elseif typ=="fluid" then
+            if game.fluid_prototypes["concentrated-"..res.name] then
+            size = size + 50 --default fluid "stack" is 50
+            end
+          end
+          resource=res.name
 				end
 				size=size/#results
-				
-				local quant = entity.amount
+        local quant=entity.amount
 				if entity.initial_amount == nil then
-					quant = round((entity.amount+miscount)/size)
+          quant = round((entity.amount+miscount)/size)
 					miscount = math.floor((entity.amount+miscount)-quant*size)
-				else
-					quant = quant/50
+        elseif entity.initial_amount then
+          amt=entity.initial_amount*(results.amount_max or 1)--cap at 200
+          quant = math.max(round((amt+miscount)/size/100,2),1)--infinite yield reduction, always assume a minimum of 1
+          --miscount = math.floor((entity.initial_amount+miscount)/90-quant*size) --ignore miscount for infinites and fluids
+        else
+          quant = quant/50
 				end
 				local extra = entity
 				local surf = extra.surface
@@ -135,8 +148,10 @@ script.on_event(defines.events.on_player_selected_area, function(event)
 				local name = extra.name
 				extra.destroy()
 							
-				if quant > 0 then
-					surf.create_entity({name = "compressed-"..name.."-ore" , position = pos, force = force, amount = quant})
+				if quant > 0 and typ =="item" then
+          surf.create_entity({name = "compressed-"..name.."-ore" , position = pos, force = force, amount = quant})
+        elseif quant > 0 then
+          surf.create_entity({name = "concentrated-"..name , position = pos, force = force, initial_amount = quant})
 				end
 			else
 			end

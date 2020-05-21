@@ -551,7 +551,7 @@ if #resource_fluid > 0 then
 	data:extend(resource_fluid)
 end
 
-for , jack in pairs(data.raw["mining-drill"]) do
+for _, jack in pairs(data.raw["mining-drill"]) do
   if string.find(jack.name, "jack") then
       if jack.output_fluid_box then jack.output_fluid_box=nil end
       jack.vector_to_place_result = {0, -1.85}
