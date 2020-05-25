@@ -445,7 +445,7 @@ end
 
 function omni.lib.replace_recipe_ingredient(recipe, ingredient, replacement)
 	if data.raw.recipe[recipe] then
-		if data.raw.recipe[recipe].ingredient or data.raw.recipe[recipe].ingredients then
+		if data.raw.recipe[recipe].ingredient or data.raw.recipe[recipe].ingredients or not data.raw.recipe[recipe].expensive then
 			omni.marathon.standardise(data.raw.recipe[recipe])
 		end
 		for _,dif in pairs({"normal","expensive"}) do
@@ -469,7 +469,7 @@ end
 
 function omni.lib.replace_recipe_result(recipe, result, replacement)
 	if data.raw.recipe[recipe] then
-		if data.raw.recipe[recipe].result or data.raw.recipe[recipe].results then
+		if data.raw.recipe[recipe].result or data.raw.recipe[recipe].results or not data.raw.recipe[recipe].expensive then
 			omni.marathon.standardise(data.raw.recipe[recipe])
 		end
 		for _,dif in pairs({"normal","expensive"}) do
