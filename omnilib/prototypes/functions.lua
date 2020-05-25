@@ -376,6 +376,18 @@ function omni.lib.change_icon_tint(item, tint)
 	data.raw.item[item].icons = icons
 end
 
+function omni.lib.get_tech_name(recipename)
+	for _,tech in pairs(data.raw.technology) do
+		if tech.effects then
+			for _,eff in pairs(tech.effects) do
+				if eff.type == "unlock-recipe" and eff.recipe ==recipename then
+					return tech.name
+				end
+			end
+		end
+	end
+end
+
 function omni.lib.remove_recipe_all_techs(name)
 	for _,tech in pairs(data.raw.technology) do
 		if tech.effects then

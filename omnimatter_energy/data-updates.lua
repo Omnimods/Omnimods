@@ -169,28 +169,42 @@ else
 		i=i+1
 	end
 
-	RecGen:importIf("burner-ore-crusher"):setIngredients({type="item", name="omnite-brick", amount=4},
-		{type="item", name="iron-plate", amount=4},
-		{type="item", name="omnitor", amount=1}):extend()
+	if mods["angelsrefining"] then
+		RecGen:import("burner-ore-crusher"):setIngredients({type="item", name="omnite-brick", amount=4},
+			{type="item", name="iron-plate", amount=4},
+			{type="item", name="omnitor", amount=1}):extend()
 		
-	RecGen:importIf("ore-sorting-facility"):setIngredients({type="item", name="omnite-brick", amount=30},
-		{type="item", name="iron-plate", amount=15},
-		{type="item", name="anbaric-omnitor", amount=5}):
-		setTechPrereq("anbaricity"):extend() --not working...
-		if mods["angelsrefining"] then
+		RecGen:import("ore-sorting-facility"):setIngredients({type="item", name="omnite-brick", amount=30},
+			{type="item", name="iron-plate", amount=15},
+			{type="item", name="anbaric-omnitor", amount=5}):
+			setTechPrereq("anbaricity"):extend() --not working...
+
 			omni.lib.add_prerequisite("ore-crushing", "anbaricity")
-		end
+	end
 end
 	  
 RecGen:import("basic-circuit-board"):setEnabled(false):setTechName("anbaricity"):extend()
 
-RecGen:import("lab"):setEnabled(false):
-	setTechName("anbaric-lab"):
-	addIngredients({"omnitor-lab",1}):
-	setTechCost(100):
-	setTechIcon("omnimatter_energy","anbaric-lab"):
-	setTechPacks(1):
-	setTechPrereq("anbaricity"):extend()
+--Check if the vanilla lab is locked behind a tech /disabled. If yes, modify the tech
+if data.raw.recipe["lab"].enabled == false then
+	RecGen:import("lab"):
+		setTechLocName("anbaric-lab"):
+		addIngredients({"omnitor-lab",1}):
+		setTechIcon("omnimatter_energy","anbaric-lab"):
+		setTechCost(100):extend()
+
+	omni.lib.add_prerequisite(omni.lib.get_tech_name("lab"), "anbaricity")
+else
+--Create a new tech
+	RecGen:import("lab"):setEnabled(false):
+		setTechName("anbaric-lab"):
+		setTechLocName("anbaric-lab"):
+		addIngredients({"omnitor-lab",1}):
+		setTechCost(100):
+		setTechIcon("omnimatter_energy","anbaric-lab"):
+		setTechPacks(1):
+		setTechPrereq("anbaricity"):extend()
+end
 
 --Stuff to manually remove from the Omnitor Lab
 local packs = {
