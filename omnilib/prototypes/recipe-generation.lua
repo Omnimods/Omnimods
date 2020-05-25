@@ -2031,6 +2031,7 @@ function RecGen:setTechName(name)
 	end
 	return self
 end
+
 function RecGen:setTechEffects(...)
 	local name = {...}
 	if type(name[1])=="function" then
@@ -2040,6 +2041,7 @@ function RecGen:setTechEffects(...)
 	end
 	return self
 end
+
 function RecGen:setTechLocName(inname,...)
 	local arg = {...}
 	local rtn = {}
@@ -2048,15 +2050,19 @@ function RecGen:setTechLocName(inname,...)
 	elseif type(inname)=="table" and inname["grade-1"] then
 		rtn[1] = function(levels,grade) return inname["grade-"..grade] end
 	elseif type(inname)=="table" and #arg == 0 then
-		for _, part in pairs(inname) do
-			if type(part) == "function" then
-				rtn[#rtn+1] = part
-			elseif type(part)=="table" and not #part == 1 then
-				rtn[#rtn+1] = function(levels,grade) return inname[grade] end
-			elseif type(part)=="string" and string.find(part,".") and (string.find(part,"name") or string.find(part,"description")) then
-				rtn[#rtn+1] = function(levels,grade) return {part} end
-			else
-				rtn[#rtn+1]=function(levels,grade) return part end
+		if #inname ==1 then
+			rtn[#rtn+1]=function(levels,grade) return inname[1] end
+		else
+			for _, part in pairs(inname) do
+				if type(part) == "function" then
+					rtn[#rtn+1] = part
+				elseif type(part)=="table" and not #part == 1 then
+					rtn[#rtn+1] = function(levels,grade) return inname[grade] end
+				elseif type(part)=="string" and string.find(part,".") and (string.find(part,"name") or string.find(part,"description")) then
+					rtn[#rtn+1] = function(levels,grade) return {part} end
+				else
+					rtn[#rtn+1]=function(levels,grade) return part end
+				end
 			end
 		end
 	else
@@ -2082,6 +2088,7 @@ function RecGen:setTechLocName(inname,...)
 	end
 	return self
 end
+
 function RecGen:addTechLocName(key)
 	local a = clone_function(self.tech.loc_name)
 	local b = function(levels,grade) return {key} end
