@@ -442,44 +442,46 @@ function omni.lib.set_recipe_ingredients(recipe,...)
 		end
 	end
 end
-function omni.lib.replace_recipe_ingredient(recipe, ingredient,replacement)
-	if not data.raw.recipe[recipe] then
-		--log("could not find "..recipe)
 
-	end
-	if data.raw.recipe[recipe].ingredient or data.raw.recipe[recipe].ingredients then
-		omni.marathon.standardise(data.raw.recipe[recipe])
-	end
-	for _,dif in pairs({"normal","expensive"}) do
-		for i,ing in pairs(data.raw.recipe[recipe][dif].ingredients) do
-			if ing.name==ingredient then
-				if type(replacement)=="table" then
-					if replacement[1] == nil then
-						data.raw.recipe[recipe][dif].ingredients[i]=replacement
+function omni.lib.replace_recipe_ingredient(recipe, ingredient, replacement)
+	if data.raw.recipe[recipe] then
+		if data.raw.recipe[recipe].ingredient or data.raw.recipe[recipe].ingredients then
+			omni.marathon.standardise(data.raw.recipe[recipe])
+		end
+		for _,dif in pairs({"normal","expensive"}) do
+			for i,ing in pairs(data.raw.recipe[recipe][dif].ingredients) do
+				if ing.name==ingredient then
+					if type(replacement)=="table" then
+						if replacement[1] == nil then
+							data.raw.recipe[recipe][dif].ingredients[i]=replacement
+						else
+							ing.name=replacement[1]
+							ing.amount=replacement[2]
+						end
 					else
-						ing.name=replacement[1]
-						ing.amount=replacement[2]
+						ing.name=replacement
 					end
-				else
-					ing.name=replacement
 				end
 			end
 		end
 	end
 end
 
-function omni.lib.replace_recipe_result(recipe,result,replacement)
-	omni.marathon.standardise(data.raw.recipe[recipe])
-	--log(recipe)
-	for _,dif in pairs({"normal","expensive"}) do
-		for i,res in pairs(data.raw.recipe[recipe][dif].results) do
-			if not res[1] then
-				if res.name==result then
-					if type(replacement)=="table" then
-						res.name=replacement[1]
-						res.amount=replacement[2]
-					else
-						res.name=replacement
+function omni.lib.replace_recipe_result(recipe, result, replacement)
+	if data.raw.recipe[recipe] then
+		if data.raw.recipe[recipe].result or data.raw.recipe[recipe].results then
+			omni.marathon.standardise(data.raw.recipe[recipe])
+		end
+		for _,dif in pairs({"normal","expensive"}) do
+			for i,res in pairs(data.raw.recipe[recipe][dif].results) do
+				if not res[1] then
+					if res.name==result then
+						if type(replacement)=="table" then
+							res.name=replacement[1]
+							res.amount=replacement[2]
+						else
+							res.name=replacement
+						end
 					end
 				end
 			end
