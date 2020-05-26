@@ -222,7 +222,7 @@ function get_recipe_values(ingredients,results)
 	local new_lcm = lcm_rec*lcm_stack--rec_max*stack_max/omni.lib.gcd(rec_max,stack_max)
 	for i,p in pairs(new_parts) do
 		new[i]=new_lcm*new_stacks[i].amount/new_parts[i].amount
-		new[i]=math.floor(new[i]+0.5) --round 
+		new[i]=math.max(math.floor(new[i]+0.5),1) --round and assume at least 1
 		if new_gcd == 0 then
 			new_gcd = new[i]
 		else
@@ -271,7 +271,18 @@ function adjustOutput(recipe)
 					end
 				end
 			end
-		end
+    end
+    --adjust div to account for results too
+    for _, res in pairs(recipe[dif].results) do
+      if res.type ~= "fluid" then
+        if gcd == 0 then --highly unlikely after dealing with the ingredients
+          gcd = res.amount
+        else
+          gcd = omni.lib.gcd(gcd,res.amount)
+        end
+      end
+    end
+    --now we play with GCD > 0
 		if gcd > 0 then
 			local divisors = omni.lib.divisors(gcd)
 			local div = nil
@@ -285,14 +296,14 @@ function adjustOutput(recipe)
 						end
 					end
 				end
-			end
+      end
 			for _,res in pairs(recipe[dif].results) do
 				if div then
 					res.amount = res.amount/div
 				end
 				if res.type == "item" then
-					if res.amount_max then res.amount = (res.amount_max+res.amount_min)/2 end
-					if res.probability then res.amount = res.amount*res.probability end
+					--if res.amount_max then res.amount = (res.amount_max+res.amount_min)/2 end
+					--if res.probability then res.amount = res.amount*res.probability end
 					while res.amount > compressed_item_stack_size do
 						local add = table.deepcopy(res)
 						add.amount = compressed_item_stack_size
@@ -315,7 +326,7 @@ function adjustOutput(recipe)
 				recipe[dif].energy_required=recipe[dif].energy_required/div
 			end
 		end
-	end
+  end
 	return recipe
 end
 ----------------------------------
@@ -416,7 +427,7 @@ function create_compression_recipe(recipe)
                   if #recipe[dif][ingres] > 0 then
                     for _,component in pairs(recipe[dif][ingres]) do
                       if component.type ~= "fluid" then 
-                        local amount = math.floor(component.amount * 4 + 0.5) / 4 --no more than 4 decimals
+                        local amount = math.max(math.floor(component.amount+0.5),1) --ensure no decimals on items
                         if gcd[dif] == 0 then
                           gcd[dif] = amount
                         else
@@ -430,7 +441,6 @@ function create_compression_recipe(recipe)
                   end
                 end
               end
-              --log(serpent.block(gcd))
               --set new amounts based on GCD calculated from above
               for _,dif in pairs({"normal","expensive"}) do
                 for _,ingres in pairs({ing,res}) do
@@ -450,11 +460,15 @@ function create_compression_recipe(recipe)
                 local mult = {}
                 --grab new ingredient costs
                 if check[1][1].solid[1] then
-                  mult = {normal=new_val_norm.ingredients[1].amount/check[1][1].solid[1].amount*omni.lib.find_stacksize(check[1][1].solid[1].name),
-                  expensive=new_val_exp.ingredients[1].amount/check[2][1].solid[1].amount*omni.lib.find_stacksize(check[2][1].solid[1].name)}
+                  mult = {
+                    normal    = new_val_norm.ingredients[1].amount/check[1][1].solid[1].amount*omni.lib.find_stacksize(check[1][1].solid[1].name),
+                    expensive = new_val_exp.ingredients[1].amount/check[2][1].solid[1].amount*omni.lib.find_stacksize(check[2][1].solid[1].name)
+                  }
                 else
-                  mult = {normal=new_val_norm.results[1].amount/check[1][2].solid[1].amount*omni.lib.find_stacksize(check[1][2].solid[1].name),
-                  expensive = new_val_exp.results[1].amount/check[2][2].solid[1].amount*omni.lib.find_stacksize(check[2][2].solid[1].name)}
+                  mult = {
+                    normal    = new_val_norm.results[1].amount/check[1][2].solid[1].amount*omni.lib.find_stacksize(check[1][2].solid[1].name),
+                    expensive = new_val_exp.results[1].amount/check[2][2].solid[1].amount*omni.lib.find_stacksize(check[2][2].solid[1].name) 
+                  }
                 end
                 --new crafting time calculations
                 local tid = {}
@@ -633,7 +647,6 @@ end
 --[[CALL FUNCTION FOR GENERAL RECIPES]]--
 -------------------------------------------------------------------------------
 --call the recipe creation script, splitting off the randomised recipes and void recipes for further processing
---log("beginning recipe compression") 
 log("start recipe compression")
 for _,recipe in pairs(data.raw.recipe) do
 	--if not already compressed

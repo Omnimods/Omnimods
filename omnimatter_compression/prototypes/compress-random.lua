@@ -37,7 +37,7 @@ local roundRandom = function(nr,round)
   return math.max(newval,1)
 end
 log("start probability style compression")
---log("random recipes")
+
 for _,recipe in pairs(check_recipes) do
   if not omni.lib.is_in_table(recipe,exclusion_list) and not string.find(recipe,"creative") then
     local double = false
@@ -76,8 +76,14 @@ for _,recipe in pairs(check_recipes) do
     --prob table should include more details than just the number, the order of items seems to get changed in create_compression_recipes
     for _,dif in pairs({"normal","expensive"}) do
       for i,res in pairs(rec[dif].results) do
+        --check item not already in table
+        nme = res.name
+        if prob[dif][res.name] then
+          --already exists, give new one a fresh tag
+          nme=res.name .."-p"
+        end
         --begin property setting, bring name into the key
-        prob[dif][res.name]={style="normal"}
+        prob[dif][nme]={style="normal"}
         local amt = res.amount --set default value
         --amount min system
         -- "min-max" parses mininum, sets mm_prob as max/min
@@ -87,23 +93,23 @@ for _,recipe in pairs(check_recipes) do
         if res.amount_min and res.amount_min > 0 then
           amt = res.amount_min
           if res.amount_max then
-            prob[dif][res.name].style = "min-max"
-            prob[dif][res.name].mm_prob = res.amount_max/amt
+            prob[dif][nme].style = "min-max"
+            prob[dif][nme].mm_prob = res.amount_max/amt
           elseif res.probability then --don't know why you would use this, but sure...
-            prob[dif][res.name].style = "min-chance"
-            prob[dif][res.name].mp_prob = res.probability
+            prob[dif][nme].style = "min-chance"
+            prob[dif][nme].mp_prob = res.probability
           end
         elseif res.amount_min and res.amount_min == 0 then
           if res.amount_max then
             amt = res.amount_max
-            prob[dif][res.name].style = "zero-max"
+            prob[dif][nme].style = "zero-max"
           else
             log("what are you doing with".. rec.name .. "?")
           end
         elseif res.amount and res.probability then --normal style, priority over previous step
-          prob[dif][res.name].style = "chance"
-          prob[dif][res.name].prob = res.probability
-          amt = roundRandom(amt*res.probability,1)
+          prob[dif][nme].style = "chance"
+          prob[dif][nme].prob = res.probability
+          amt = math.max(roundRandom(amt*res.probability,1),1) --stop it giving 0?
         end
         --set rec
         res.amount = amt
@@ -117,11 +123,16 @@ for _,recipe in pairs(check_recipes) do
     local new_rec = create_compression_recipe(rec)
     --add in manipulation to return the form
     if new_rec then
+      local secondary = {}
       for _,dif in pairs({"normal","expensive"}) do
         for i,res in pairs(new_rec[dif].results) do
           local name = string.sub(res.name,12)
           if res.type == "fluid" then
             name = string.sub(res.name,14)
+          end
+          --instigate secondary
+          if secondary[name]==true then
+            name=name .."-p"
           end
           if prob[dif][name] then
             local prob_tab = prob[dif][name]
@@ -144,6 +155,10 @@ for _,recipe in pairs(check_recipes) do
             elseif prob_tab.style == "chance" then
               new_tab.probability = prob_tab.prob
             end
+          end
+          --check for double entries after primary
+          if prob[dif][name .."-p"] then
+            secondary[name]=true
           end
         end
       end

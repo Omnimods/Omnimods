@@ -9,6 +9,7 @@ Date: 2020.05.26
     - Fixed potential non-contigious tech level error if a higher tier tech removed a science pack used in a previous tier
     - Fixed that science-pack-3 was being referenced in place of chemical-science-pack in settings
       - No migration has been added for this, so you may need to change this manually in your settings (sorry)
+    - Fixed rounding errors on some recipes giving 0 outputs in some cases
   Features:
     - Added support for offshore pumps and compression of fluid patches (oil etc)
       - Thermal water vents not currently supported
