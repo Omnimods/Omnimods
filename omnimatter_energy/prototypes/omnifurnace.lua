@@ -1,6 +1,7 @@
 BuildGen:import("burner-omni-furnace"):
 setLocName("entity-name.burner-omni-furnace-1"):
-addIcon("__omnilib__/graphics/lvl1.png"):extend()
+addIcon("__omnilib__/graphics/lvl1.png"):
+setFuelCategory("omnite"):extend()
 
 BuildGen:import("burner-omni-furnace"):
 setName("burner-omni-furnace-2","omnimatter_energy"):

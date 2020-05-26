@@ -411,7 +411,7 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter-1"):
 	setSubgroup("inserter"):
 	setIcons("burner-filter-inserter","omnimatter_energy"):
 	addIcon("__omnilib__/graphics/lvl1.png"):
-	--setOrder("d"): --doesnt do shit?
+	setOrder("d"):
 	setTechName("burner-filter"):
 	setTechCost(100):
 	setTechIcon("burner-filter"):
@@ -423,7 +423,6 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter-1"):
 	setAnimation("burner-filter-inserter"):
 	setFuelCategory("omnite"): --not working...
 	setBurner(0.75,1):extend()
-	data.raw["inserter"]["burner-filter-inserter-1"].energy_source.fuel_category = "omnite"
 
 --Create a second tier filter and normal burner inserter that accepts omnified fuel
 InsertGen:create("omnimatter_energy","burner-filter-inserter-2"):
@@ -431,7 +430,7 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter-2"):
 	setSubgroup("inserter"):
 	setIcons("burner-filter-inserter","omnimatter_energy"):
 	addIcon("__omnilib__/graphics/lvl2.png"):
-	--setOrder("e"):
+	setOrder("e"):
 	setFilter(1):
 	setSpeed(0.03, 0.014): --vanilla inserter speed
 	setAnimation("burner-filter-inserter"):
@@ -444,7 +443,7 @@ InsertGen:create("omnimatter_energy","burner-inserter-2"):
 	setSubgroup("inserter"):
 	setIcons("burner-inserter","base"):
 	addIcon("__omnilib__/graphics/lvl2.png"):
-	--setOrder("c"):
+	setOrder("c"):
 	setSpeed(0.03, 0.014): --vanilla inserter speed
 	setAnimation("burner-inserter"):
 	setEnabled(false):
@@ -454,6 +453,7 @@ InsertGen:create("omnimatter_energy","burner-inserter-2"):
 ItemGen:import("burner-inserter"):
 	addBurnerIcon():
 	setSubgroup("inserter"):
+	setOrder("b"):
 	addIcon("__omnilib__/graphics/lvl1.png"):
 	setLocName("entity-name.burner-inserter-1"):
 	setFuelCategory("omnite"):extend()
