@@ -2,7 +2,7 @@
 Version: 3.18.6
 Date: 2020.05.26
   Bugfixes:
-    - Fixed that spme ores could not be compressed with the planner
+    - Fixed that some ores could not be compressed with the planner
     - Fixed that multi-level tech (and infinite tech) with compressed equivalents would try to complete all of them causing a crash in the case of infinite tech
     - Fixed probability not transferring to the compressed recipe correctly
     - Fixed localisations and icons not being made correct
