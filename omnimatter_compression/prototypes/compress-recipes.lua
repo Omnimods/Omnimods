@@ -678,7 +678,6 @@ for _,recipe in pairs(data.raw.recipe) do
       if not rc and string.find(recipe.name,"void") then
         --should create void recipes in place of non-void
         rc = create_void(recipe)
-        log(serpent.block(rc))
       end
       if rc then
         compress_based_recipe[#compress_based_recipe+1] = table.deepcopy(rc)

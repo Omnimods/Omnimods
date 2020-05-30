@@ -31,7 +31,12 @@ for _,kind in pairs({"assembling-machine","furnace"}) do
 		for i,cat in pairs(build.crafting_categories) do
 			if not omni.lib.end_with(cat,"compressed") and data.raw["recipe-category"][cat.."-compressed"] then
 				table.insert(build.crafting_categories,cat.."-compressed")
-			end
-		end
+      end
+    end
+    if kind == "assembling-machine" and string.find(build.name,"assembling") then
+      if not omni.lib.is_in_table("general-compressed",build.crafting_categories) then
+        table.insert(build.crafting_categories,"general-compressed")
+      end
+    end
 	end
 end

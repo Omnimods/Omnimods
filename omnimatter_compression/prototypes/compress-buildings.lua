@@ -123,15 +123,15 @@ local run_entity_updates = function(new,kind,i)
   --recipe category settings for assembly/furnace types
   if kind == "assembling-machine" or kind == "furnace" then
     local new_cat = {} --clear each time
-    for i, cat in pairs(new.crafting_categories) do
+    for j, cat in pairs(new.crafting_categories) do
       if not data.raw["recipe-category"][cat.."-compressed"] then --check if category exists
         if not omni.lib.is_in_table(cat.."-compressed",category) then --check not already in the to-expand table
-          category[#category+1]={type="recipe-category",name=cat.."-compressed"}
+          category[#category+1] = {type = "recipe-category",name = cat.."-compressed"}
         end
       end
       new_cat[#new_cat+1] = cat.."-compressed" --add cat
     end
-    if kind == "assembling-machine" then
+    if kind == "assembling-machine" and string.find(new.name,"assembling") then
       new_cat[#new_cat+1] = "general-compressed"
     end
     new.crafting_categories = new_cat
