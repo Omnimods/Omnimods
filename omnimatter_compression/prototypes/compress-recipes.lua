@@ -351,7 +351,7 @@ end
 -------------------------------------------------------------------------------
 function create_compression_recipe(recipe)
   if not omni.lib.is_in_table(recipe.name,excluded_recipes) then --not excluded
-    if not string.find(recipe.name,"creative") then --not creative mod
+    if not string.find(recipe.name,"creative") and not string.find(recipe.name, "void") then --not creative mod or void
       if (recipe.normal.results and #recipe.normal.results > 0) then --ingredients.normal.results and 1+
         if (more_than_one(recipe) or omni.lib.is_in_table(recipe.name,include_recipes)) then --stack size>1 or include anyway?
           local comrec={} --set basis to zero
@@ -612,7 +612,7 @@ function create_compression_recipe(recipe)
         end
       else --log(serpent.block(recipe.name .. " results < 1"))
       end
-    else --log(serpent.block(recipe.name .. " has creative"))
+    else --log(serpent.block(recipe.name .. " has creative or void"))
     end
   else --log(serpent.block(recipe.name .. " excluded")) 
   end
@@ -621,24 +621,43 @@ end
 --[[VOID CREATION RECIPE]]--
 -------------------------------------------------------------------------------
 local create_void = function(recipe)
-	local continue = false
+  local continue = false
+  local prefix = "compressed-"
+  --local prob = 1
 	for _, dif in pairs({"normal","expensive"}) do
-		if #recipe[dif].results == 1 and recipe[dif].results[1].type=="item" and #recipe[dif].ingredients == 1 and recipe[dif].ingredients[1].type=="item" and recipe[dif].results[1].probability and recipe[dif].results[1].probability == 0 then continue = true end
+    if #recipe[dif].results == 1 and recipe[dif].results[1].type=="item" then
+      if #recipe[dif].ingredients == 1 and recipe[dif].ingredients[1].type == "fluid" and
+      recipe[dif].results[1].probability and recipe[dif].results[1].probability == 0 then
+        continue = true
+        prefix = "concentrated-"
+      elseif #recipe[dif].ingredients == 1 and recipe[dif].ingredients[1].type == "item" then --no probability on solids?
+        continue = true
+      end
+    elseif string.find(recipe[dif].results[1].name,"void") or #recipe[dif].results ==0 then
+      --capture stragglers doing odd things
+      --double check fluid...
+      if recipe.normal.ingredients[1].type == "fluid" then
+        prefix = "concentrated-"
+      end
+      continue = true
+    end
 	end
-	if continue==true then
+	if continue == true then
 		local icons = omni.compression.add_overlay(recipe,"compress")
 		local new_cat = "crafting-compressed"
 		if recipe.normal.category then new_cat = recipe.normal.category.."-compressed" end
 		if recipe.normal.category and not data.raw["recipe-category"][recipe.normal.category.."-compressed"] then
-			data:extend({{type = "recipe-category",name = recipe.normal.category.."-compressed"}})
+			data:extend({{type = "recipe-category", name = recipe.normal.category.."-compressed"}})
 		elseif not data.raw["recipe-category"]["general-compressed"] then
-			data:extend({{type = "recipe-category",name = "general-compressed"}})
+			data:extend({{type = "recipe-category", name = "general-compressed"}})
 		end
-		local new_rc = table.deepcopy(recipe)
+    local new_rc = table.deepcopy(recipe)
 		new_rc.name = recipe.name.."-compression"
-		new_rc.category = new_cat
-		new_rc.normal.ingredients[1].name="compressed-"..new_rc.normal.ingredients[1].name
-		new_rc.expensive.ingredients[1].name="compressed-"..new_rc.expensive.ingredients[1].name
+    new_rc.category = new_cat
+		new_rc.normal.ingredients[1].name = prefix ..new_rc.normal.ingredients[1].name
+    new_rc.expensive.ingredients[1].name = prefix ..new_rc.expensive.ingredients[1].name
+    --new_rc.normal.results[1].probability = 0 --set to never actually give
+    --new_rc.expensive.results[1].probability = 0 --set to never actually give
 		return table.deepcopy(new_rc)
 	end
 	return nil
@@ -653,8 +672,14 @@ for _,recipe in pairs(data.raw.recipe) do
   if string.find(recipe.name,"compress") == nil and string.find(recipe.name,"concentrat") == nil then
     if not mods["omnimatter_marathon"] then omni.marathon.standardise(recipe) end --ensure standardised
     if recipe.subgroup ~= "y_personal_equip" then --exclude yuoki's personal equipment subgroup
+      --check for void and swap it to the void system in place of compression_recipe
       local rc = create_compression_recipe(recipe) --call create recipe
-      if not rc and string.find(recipe.name,"void") then rc = create_void(recipe) end
+      -- the main exclusions are added in that function since it is also called with the random recipes
+      if not rc and string.find(recipe.name,"void") then
+        --should create void recipes in place of non-void
+        rc = create_void(recipe)
+        log(serpent.block(rc))
+      end
       if rc then
         compress_based_recipe[#compress_based_recipe+1] = table.deepcopy(rc)
       else
