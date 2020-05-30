@@ -633,7 +633,7 @@ local create_void = function(recipe)
       elseif #recipe[dif].ingredients == 1 and recipe[dif].ingredients[1].type == "item" then --no probability on solids?
         continue = true
       end
-    elseif string.find(recipe[dif].results[1].name,"void") or #recipe[dif].results ==0 then
+    elseif #recipe[dif].results == 0 or (recipe[dif].results[1] and string.find(recipe[dif].results[1].name,"void")) then
       --capture stragglers doing odd things
       --double check fluid...
       if recipe.normal.ingredients[1].type == "fluid" then

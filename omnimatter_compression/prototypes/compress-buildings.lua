@@ -270,7 +270,7 @@ for _,kind in pairs(building_list) do --only building types
 							end
               item.subgroup = "compressor-"..item.subgroup.."-"..math.floor((i-1)/2)+1
             else --clean up item ordering
-              item.order = item.order.."-compressed" --should force it to match, but be after it under all circumstances
+              item.order = item.order or "z".."-compressed" --should force it to match, but be after it under all circumstances
 						end
             -------------------------------------------------------------------------------
             --[[Since running deepcopy, only need to override new props]]--
