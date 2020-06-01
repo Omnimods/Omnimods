@@ -1,3 +1,6 @@
+if not omni then omni={} end
+if not omni.compression then omni.compression={} end
+
 require("prototypes/item-groups")
 require("prototypes/recipe-categories")
 require("prototypes/technologies")

@@ -499,7 +499,9 @@ end
 function ItemGen:create(mod,name)
 	local m = nil
 	--if string.find(mod,"omnimatter") then m = "__"..mod.."__" end
-	--if mod == nil or mod == "omnimatter" then m = "__omnimatter__" end
+  --if mod == nil or mod == "omnimatter" then m = "__omnimatter__" end
+  local nm=name
+  if type(nm)~=string then nm="omni" end
 	local t = {
 		mod = mod,
 		name=name,
@@ -507,7 +509,7 @@ function ItemGen:create(mod,name)
 		loc_desc =  function(levels,grade) return nil end,
 		icons = function(levels,grade) return nil end,
 		flags = {},
-		order=function(levels,grade) return "y" end,
+		order=function(levels,grade) return "y["..nm.."]" end,
 		stack_size = 100,
 		subgroup = function(levels,grade) return "raw-resource" end,
 		fuel_value = nil,
@@ -660,7 +662,7 @@ function ItemGen:setIcons(icons,mod)
 	else
 		self.icons = icons
 	end
-	self.set_icon = true 
+	self.set_icon = true
 	return self
 end
 
@@ -3055,7 +3057,7 @@ function BuildGen:setBurner(efficiency,size)
 end
 function BuildGen:setSteam(efficiency,size)
 	-- Taken from Bob's steam assembling machine, might be a prereq...
-	self.energy_source = 
+	self.energy_source =
     {
       type = "fluid",
       effectivity = 1,
@@ -3407,8 +3409,8 @@ function BuildGen:generateBuilding()
 			end
 		end
 	end
-	if self.type=="furnace" then 
-		self.source_inventory_size = function(levels,grade) return 1 end 
+	if self.type=="furnace" then
+		self.source_inventory_size = function(levels,grade) return 1 end
 		self.result_inventory_size = function(levels,grade) return 1 end
 	end
 	local lname = {"entity-name."..self.name}
