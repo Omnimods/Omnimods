@@ -131,22 +131,24 @@ if mods["bobmining"] then
 end
 
 omni.lib.add_prerequisite("fast-inserter", "burner-filter")
-
 --Move All Electric Automation Recipes behind logistic science
-omni.lib.add_prerequisite("automation", "logistic-science-pack")
+if mods["angelsindustries"] and not angelsmods.industries.tech then
+  --skip if angels tech overhaul
+  omni.lib.add_prerequisite("automation", "logistic-science-pack")
 
-local incScience = {
-	"automation",
-    "electronics",
-	"fast-inserter",
-}
+  local incScience = {
+    "automation",
+      "electronics",
+    "fast-inserter",
+  }
 
-for _,tech in pairs(data.raw.technology) do 
-    for _,inctech in pairs(incScience) do
-        if tech.name == inctech  then
-            omni.lib.add_science_pack(tech.name,"logistic-science-pack")
-        end
-	end
+  for _,tech in pairs(data.raw.technology) do 
+      for _,inctech in pairs(incScience) do
+          if tech.name == inctech  then
+              omni.lib.add_science_pack(tech.name,"logistic-science-pack")
+          end
+    end
+  end
 end
 
 --Move the Basic Inserter to its own tech (Red Packs only) to avoid deadlocks
