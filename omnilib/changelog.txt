@@ -1,9 +1,13 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.11
-Date: 2020.XX.XX
+Date: 2020.06.09
   Bugfixes:
     - Fixed multi-result recipe localisations beeing broken in some cases
-    - Fixed setFuelCategory() not working for inserters
+    - Fixed setFuelCategory() not working for inserters #96
+    - Fix recipes that only have .normal set not being standardised before acessing .expensive
+    - More localisation fixes in recipe-generation
+    - Added more checks to improve standarisation consistency
+    - Cleaned up omniblock call script to only shor up if needed
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.10
 Date: 2020.05.01
