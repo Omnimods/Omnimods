@@ -75,21 +75,30 @@ end
 for _,tech in pairs(data.raw.technology) do --run always
 local lvl = string.match(tech.name,".*%-(%d*)") 
 local name = string.match(tech.name,"(.*)%-%d*")
-  if lvl ~="" and lvl ~=nil and containsOne(tech.unit.ingredients,alwaysSP) then
+if lvl == "" then --tweak to allow techs that start with no number
+   lvl = 1
+   name = tech.name
+end
+  if lvl ~="" and lvl ~= nil and containsOne(tech.unit.ingredients,alwaysSP) then
     if not tiered_tech[name] then
       tiered_tech[name] = tonumber(lvl)
     elseif tiered_tech[name] > tonumber(lvl) then --in case techs are added out of order, always add the lowest
       tiered_tech[name] = tonumber(lvl)
     end
   end
+  
 end
---log(serpent.block(tiered_tech))
+log(serpent.block(tiered_tech))
 --compare tech to the list created (tiered_tech) to include techs missing packs previously in the chain
 local include_techs = function(t)
   --extract name and level
   local lvl = string.match(t.name,".*%-(%d*)")
-  if lvl ~="" and lvl ~=nil then
-    local name = string.match(t.name,"(.*)%-%d*")
+  local name = string.match(t.name,"(.*)%-%d*")
+  if lvl == "" then --tweak to allow techs that start with no number
+    lvl = 1
+    name = t.name
+  end
+  if lvl ~= "" and lvl ~= nil then
     --check if in table and lvl > min lvl
     if tiered_tech[name] then
       if tonumber(lvl) >= tiered_tech[name] then
@@ -171,6 +180,7 @@ for _,tech in pairs(data.raw.technology) do
     end
 	end
 end
-
-data:extend(compressed_techs)
+if #compressed_techs >= 1 then --in case no tech is compressed
+  data:extend(compressed_techs)
+end
 log("end tech compression")

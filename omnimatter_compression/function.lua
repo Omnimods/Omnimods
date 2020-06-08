@@ -47,6 +47,16 @@ function omni.compression.is_hidden(obj)
   end
   return hidden
 end
+--finds if the object is stackable by flag
+function omni.compression.is_stackable(obj)
+  local stackable = true
+	for _, flag in ipairs(obj.flags or {}) do
+    if flag == "not-stackable" then
+      stackable = false
+    end
+  end
+  return stackable
+end
 -----------------------------------------------------------------------------
 -- ICON FUNCTIONS --
 -----------------------------------------------------------------------------

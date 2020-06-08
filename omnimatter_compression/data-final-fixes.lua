@@ -21,6 +21,7 @@ if mods["omnimatter_marathon"] or mods["omnimatter_science"] then
 	omni.lib.add_prerequisite("compression-nanite-buildings", "advanced-electronics-2")
 
 end
+require("prototypes/compress-items")
 require("prototypes/compress-recipes")
 require("prototypes/compress-random")
 require("prototypes/compress-technology")

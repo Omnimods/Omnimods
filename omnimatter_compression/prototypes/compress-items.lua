@@ -160,7 +160,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 	for _, item in pairs(data.raw[group]) do
 		--Check for hidden flag to skip later
     omni.compression.is_hidden(item) --check hidden
-    if item.stack_size >= 1 and item.stack_size <= max_stack_size_to_compress and
+    if item.stack_size >= 1 and item.stack_size <= max_stack_size_to_compress and omni.compression.is_stackable(item) and
       not (hidden or item.name:find("creative-mode")) then
       --stack size settings
       if omni.compression.stack_compensate and item.stack_size > 1 then --setting variable and stack size exclusion
