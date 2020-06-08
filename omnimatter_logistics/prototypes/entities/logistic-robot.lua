@@ -9,60 +9,23 @@ local bot = {}
 
 local costs= {circuit={},mechanical={},plate={}}
 
-local function flying_robot(volume)
-	return {
-		sound = {
-			{
-				filename = "__base__/sound/flying-robot-1.ogg", volume = volume
-			},
-			{
-				filename = "__base__/sound/flying-robot-2.ogg", volume = volume
-			},
-			{
-				filename = "__base__/sound/flying-robot-3.ogg", volume = volume
-			},
-			{
-				filename = "__base__/sound/flying-robot-4.ogg", volume = volume
-			},
-			{
-				filename = "__base__/sound/flying-robot-5.ogg", volume = volume
-			},
-			{
-				filename = "__base__/sound/flying-robot-6.ogg", volume = volume
-			},
-			{
-				filename = "__base__/sound/flying-robot-7.ogg", volume = volume
-			},
-			{
-				filename = "__base__/sound/flying-robot-8.ogg", volume = volume
-			},
-			{
-				filename = "__base__/sound/flying-robot-9.ogg", volume = volume
-			}
-		},
-		max_sounds_per_type = 5,
-		audible_distance_modifier = 1,
-		probability = 1 / (10 * 60) -- average pause between the sound is 10 seconds
-	}
-end
-
 costs.circuit[#costs.circuit+1] = {name = "electronic-circuit", quant={10,16}}
 if mods["angelsindustries"] then
 	costs.circuit[#costs.circuit+1] = {name = "circuit-red-loaded", quant={5,7,10}}
 elseif mods["bobelectronics"] then
 	costs.circuit[#costs.circuit+1] = {name = "basic-circuit-board", quant={5,7,10}}
 end
-if not mods["aai-industry"] then
-	costs.mechanical[#costs.mechanical+1]={name = "iron-gear-wheel", quant={5,7,10,15,20}}
-else
+if mods["aai-industry"] then
 	costs.mechanical[#costs.mechanical+1]={name = "motor", quant={5,8,12}}
-	costs.mechanical[#costs.mechanical+1]={name = "electric-motor", quant={7,7}}
-end
-if not mods["bobplates"] then
-	costs.plate[#costs.plate+1]={name = "steel-plate", quant={5,8,12,15,20}}
+  costs.mechanical[#costs.mechanical+1]={name = "electric-motor", quant={7,7}}
 else
-	costs.plate[#costs.plate+1]={name = "steel-plate", quant={8,12}}
+  costs.mechanical[#costs.mechanical+1]={name = "iron-gear-wheel", quant={5,7,10,15,20}}
+end
+if mods["bobplates"] then
+  costs.plate[#costs.plate+1]={name = "steel-plate", quant={8,12}}
 	costs.plate[#costs.plate+1]={name = "bronze-alloy", quant={7,10,15}}
+else
+  costs.plate[#costs.plate+1]={name = "steel-plate", quant={5,8,12,15,20}}
 end
   
 for i=1,nr_bots do

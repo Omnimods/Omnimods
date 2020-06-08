@@ -131,22 +131,24 @@ if mods["bobmining"] then
 end
 
 omni.lib.add_prerequisite("fast-inserter", "burner-filter")
-
 --Move All Electric Automation Recipes behind logistic science
-omni.lib.add_prerequisite("automation", "logistic-science-pack")
+if mods["angelsindustries"] and not angelsmods.industries.tech then
+  --skip if angels tech overhaul
+  omni.lib.add_prerequisite("automation", "logistic-science-pack")
 
-local incScience = {
-	"automation",
-    "electronics",
-	"fast-inserter",
-}
+  local incScience = {
+    "automation",
+      "electronics",
+    "fast-inserter",
+  }
 
-for _,tech in pairs(data.raw.technology) do 
-    for _,inctech in pairs(incScience) do
-        if tech.name == inctech  then
-            omni.lib.add_science_pack(tech.name,"logistic-science-pack")
-        end
-	end
+  for _,tech in pairs(data.raw.technology) do 
+      for _,inctech in pairs(incScience) do
+          if tech.name == inctech  then
+              omni.lib.add_science_pack(tech.name,"logistic-science-pack")
+          end
+    end
+  end
 end
 
 --Move the Basic Inserter to its own tech (Red Packs only) to avoid deadlocks
@@ -169,28 +171,42 @@ else
 		i=i+1
 	end
 
-	RecGen:importIf("burner-ore-crusher"):setIngredients({type="item", name="omnite-brick", amount=4},
-		{type="item", name="iron-plate", amount=4},
-		{type="item", name="omnitor", amount=1}):extend()
+	if mods["angelsrefining"] then
+		RecGen:import("burner-ore-crusher"):setIngredients({type="item", name="omnite-brick", amount=4},
+			{type="item", name="iron-plate", amount=4},
+			{type="item", name="omnitor", amount=1}):extend()
 		
-	RecGen:importIf("ore-sorting-facility"):setIngredients({type="item", name="omnite-brick", amount=30},
-		{type="item", name="iron-plate", amount=15},
-		{type="item", name="anbaric-omnitor", amount=5}):
-		setTechPrereq("anbaricity"):extend() --not working...
-		if mods["angelsrefining"] then
+		RecGen:import("ore-sorting-facility"):setIngredients({type="item", name="omnite-brick", amount=30},
+			{type="item", name="iron-plate", amount=15},
+			{type="item", name="anbaric-omnitor", amount=5}):
+			setTechPrereq("anbaricity"):extend() --not working...
+
 			omni.lib.add_prerequisite("ore-crushing", "anbaricity")
-		end
+	end
 end
 	  
 RecGen:import("basic-circuit-board"):setEnabled(false):setTechName("anbaricity"):extend()
 
-RecGen:import("lab"):setEnabled(false):
-	setTechName("anbaric-lab"):
-	addIngredients({"omnitor-lab",1}):
-	setTechCost(100):
-	setTechIcon("omnimatter_energy","anbaric-lab"):
-	setTechPacks(1):
-	setTechPrereq("anbaricity"):extend()
+--Check if the vanilla lab is locked behind a tech /disabled. If yes, modify the tech
+if data.raw.recipe["lab"].enabled == false then
+	RecGen:import("lab"):
+		setTechLocName("anbaric-lab"):
+		addIngredients({"omnitor-lab",1}):
+		setTechIcon("omnimatter_energy","anbaric-lab"):
+		setTechCost(100):extend()
+
+	omni.lib.add_prerequisite(omni.lib.get_tech_name("lab"), "anbaricity")
+else
+--Create a new tech
+	RecGen:import("lab"):setEnabled(false):
+		setTechName("anbaric-lab"):
+		setTechLocName("anbaric-lab"):
+		addIngredients({"omnitor-lab",1}):
+		setTechCost(100):
+		setTechIcon("omnimatter_energy","anbaric-lab"):
+		setTechPacks(1):
+		setTechPrereq("anbaricity"):extend()
+end
 
 --Stuff to manually remove from the Omnitor Lab
 local packs = {
@@ -217,6 +233,12 @@ if data.raw.technology["basic-transport-belt-beltbox"] then
 	TechGen:import("basic-transport-belt-beltbox"):
 	setPrereq("basic-splitter-logistics","basic-underground-logistics"):
 	extend()
+end
+
+--Miniloader compatibility
+--(The Chute recipe is based on basic belt ingredients (mostly just iron), so we need to add omnitors to that recipe aswell)
+if data.raw.recipe["chute-miniloader"] then
+	omni.lib.add_recipe_ingredient("chute-miniloader",{type = "item", name ="omnitor", amount = 2})
 end
 
 if data.raw.technology["logistics-0"] then

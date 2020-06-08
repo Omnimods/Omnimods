@@ -1,6 +1,6 @@
 {
 "name":"omnilib",
-"version":"3.18.10",
+"version":"3.18.11",
 "title":"Omnilibrary",
 "author":"EmperorZelos",
 "description":"A collection of functions that omni-series of mods are using.",
@@ -12,6 +12,6 @@
     "!fluid_permutations",
     "(?)angelsrefining",
     "(?)angelsindustries",
-	"?bobtechcolorsforomnilib"
+    "(?)bobtechcolorsforomnilib"
 ]
 }

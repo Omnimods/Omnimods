@@ -22,6 +22,7 @@ RecChain:create("omnimatter_chemistry","nitromni"):
 		end
 		return req
 	end):
+	setTechLocName("basic-nitromni-processing"):
 	setCategory("omnization"):
 	setIngredients(cost:ingredients()):
 	setResults(cost:results()):

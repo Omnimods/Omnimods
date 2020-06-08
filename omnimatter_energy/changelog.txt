@@ -1,9 +1,23 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.18.6
+Date: 2020.06.09
+  Features:
+    - Added Miniloader support
+  Changes:
+    - Added an item subgroup for each tier of omnified fuel
+    - Omnifurnace 2 now accepts chemical fuels
+  Bugfixes:
+    - Fixed that certain Omnified Fuels were not craftable
+    - Fixed bob placement of solar-road had an offset error, causing wire placements to fail
+    - Fix a crash when placing tiles with construction robots
+    - Fixed cyclic tech error with angelsindustries
+    - Fixed issue with vanilla lab being locked behind an inaccessible tech
+---------------------------------------------------------------------------------------------------
 Version: 1.18.5
 Date: 2020.05.01
   Bugfixes:
     - Fixed burner inserter beeing in the wrong item subgroup in some cases
-	- Fixed Changelog formatting
+    - Fixed Changelog formatting
 ---------------------------------------------------------------------------------------------------
 Version: 1.18.4
 Date: 2020.04.26

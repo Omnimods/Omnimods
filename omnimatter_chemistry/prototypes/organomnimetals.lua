@@ -10,6 +10,7 @@ RecChain:create("omnimatter_chemistry","omniaescene"):
 	setTechName("basic-omniganometallic-processing"):
 	setTechPacks(function(levels,grade) return math.floor(grade*4/omni.chem.levels)+1 end):
 	setTechIcon("omnimatter_chemistry","omniganometallic"):
+	setTechLocName("basic-omniganometallic-processing"):
 	setIcons("molten-bronze","angelssmelting"):
 	addSmallIcon("__omnimatter_chemistry__/graphics/icons/omniganometallic.png",3):
 	setTechPrereq(function(levels,grade)
