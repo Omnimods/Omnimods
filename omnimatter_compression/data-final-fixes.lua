@@ -22,9 +22,12 @@ if mods["omnimatter_marathon"] or mods["omnimatter_science"] then
 
 end
 require("prototypes/compress-items")
+require("prototypes/compress-buildings")
+require("prototypes/compress-ores")
 require("prototypes/compress-recipes")
 require("prototypes/compress-random")
 require("prototypes/compress-technology")
+
 
 --Extend compression items/recipes into the regular machines.
 for _,kind in pairs({"assembling-machine","furnace"}) do

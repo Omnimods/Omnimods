@@ -88,7 +88,7 @@ end
   end
   
 end
-log(serpent.block(tiered_tech))
+--log(serpent.block(tiered_tech))
 --compare tech to the list created (tiered_tech) to include techs missing packs previously in the chain
 local include_techs = function(t)
   --extract name and level
