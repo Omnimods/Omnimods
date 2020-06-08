@@ -321,7 +321,7 @@ function adjustOutput(recipe)
 			end
 			if div then
 				for _, ing in pairs(recipe[dif].ingredients) do
-					ing.amount = ing.amount/div
+          ing.amount = ing.amount/div
 				end
 				recipe[dif].energy_required=recipe[dif].energy_required/div
 			end
@@ -449,6 +449,7 @@ function create_compression_recipe(recipe)
                   end
                 end
               end
+
               ------------------------------------------
               -- **Check if compressed solids exist** --
               ------------------------------------------
@@ -668,8 +669,8 @@ end
 --call the recipe creation script, splitting off the randomised recipes and void recipes for further processing
 log("start recipe compression")
 for _,recipe in pairs(data.raw.recipe) do
-	--if not already compressed
-  if string.find(recipe.name,"compress") == nil and string.find(recipe.name,"concentrat") == nil then
+  --if not already compressed
+  if string.find(recipe.name,"compress") == nil and string.find(recipe.name,"concent") == nil then
     if not mods["omnimatter_marathon"] then omni.marathon.standardise(recipe) end --ensure standardised
     if recipe.subgroup ~= "y_personal_equip" then --exclude yuoki's personal equipment subgroup
       --check for void and swap it to the void system in place of compression_recipe

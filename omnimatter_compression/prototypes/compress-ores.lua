@@ -60,9 +60,9 @@ for name,ore in pairs(data.raw.resource) do
 				new.normal = math.max(new.normal/max_stacksize/3,1) --ensure at least 1
 				if new.maximum then new.maximum = new.maximum/max_stacksize/3 end
 			end
-			compressed=true
+			compressed = true
 			if new.minable.required_fluid and data.raw.fluid[new.minable.required_fluid] then
-				local ss=max_stacksize
+				local ss = math.max(max_stacksize,1) --stop this from throwing a 0
 				local t = "fluid"
 				local a = 10*ss
 				local n = new.minable.required_fluid
@@ -141,7 +141,7 @@ for name,ore in pairs(data.raw.resource) do
 				  --data.raw.recipe["uncompress-solid-"..new.minable.required_fluid] = nil
 				  concentrate = {
 					type = "recipe",
-					name = "concentrate-"..new.minable.required_fluid.."-compression",
+					name = "concentrated-"..new.minable.required_fluid.."-compression",
 					icons = data.raw.fluid[new.minable.required_fluid].icons,
 					icon = data.raw.fluid[new.minable.required_fluid].icon,
 					icon_size = 32,
@@ -163,7 +163,7 @@ for name,ore in pairs(data.raw.resource) do
         
 				local concentrate = {
 					type = "recipe",
-					name = "concentrate-"..new.minable.required_fluid,
+					name = "concentrated-"..new.minable.required_fluid,
 					icons = data.raw.fluid[new.minable.required_fluid].icons,
 					icon = data.raw.fluid[new.minable.required_fluid].icon,
 					icon_size = 32,
