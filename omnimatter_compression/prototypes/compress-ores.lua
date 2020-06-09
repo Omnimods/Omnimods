@@ -24,7 +24,16 @@ for name,ore in pairs(data.raw.resource) do
 	if not omni.lib.string_contained_list(name,blacklist) then
 		if (ore.category == nil or ore.category == "basic-solid" or ore.category == "basic-fluid") and ore.name then
 			local compressed = false
-			local new = table.deepcopy(ore)
+      local new = table.deepcopy(ore)
+      if new.minable.results and not new.minable.results.name then
+        new.minable.results = {{
+          amount_max = new.minable.results[2],
+          amount_min = new.minable.results[2],
+          name = new.minable.results[1],
+          probability = 1,
+          type = "item"
+        }}
+      end
       new.localised_name = {"entity-name.compressed-ore",{"entity-name."..new.name}}
       if new.category == "basic-fluid" then
         new.name = "concentrated-" ..new.name --no need for ore in name
@@ -35,21 +44,21 @@ for name,ore in pairs(data.raw.resource) do
       
 			if new.minable.result then
 				new.minable.results = {{
-					amount_max=1,
-					amount_min=1,
-					name=new.minable.result,
-					probability=1,
-					type="item"
+					amount_max = 1,
+					amount_min = 1,
+					name = new.minable.result,
+					probability = 1,
+					type = "item"
 				}}
 				new.minable.result=nil
 			end
 
       local max_stacksize = 0
       for i,drop in ipairs(new.minable.results) do
-        for _,comp in pairs({"compressed-","concentrated-"}) do
-          if omni.lib.is_in_table(comp .. drop.name,compressed_item_names) then
+        for _,comp in pairs({"compressed-", "concentrated-"}) do
+          if omni.lib.is_in_table(comp .. drop.name, compressed_item_names) then
             drop.name = comp .. drop.name
-            compressed=true
+            compressed = true
             max_stacksize = math.max(omni.lib.find_stacksize(drop.name),max_stacksize) --returns 50 for fluids
           end
         end
