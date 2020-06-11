@@ -300,9 +300,9 @@ function omni.marathon.standardise(recipe)
 	---------------------------------------------------------------------------
 	-- Subgroup setting
 	---------------------------------------------------------------------------
-	if not recipe.subgroup and recipe.main_product and recipe.main_product ~="" then
+	if not recipe.subgroup and recipe.normal.main_product and recipe.normal.main_product ~="" then
 		-- group based in main product settings
-		local it = omni.lib.find_prototype(recipe.main_product)
+		local it = omni.lib.find_prototype(recipe.normal.main_product)
 		if it then
 			if it.subgroup then
 				recipe.subgroup = it.subgroup
