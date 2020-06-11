@@ -31,56 +31,48 @@ local contains_omnipack = {}
 -- add omnipack to all techs above chemical science pack, and set pre-req to pack tech if needed
 function omni.science.tech_post_find_update()
   set_exclude()
-	--local post_find = true
-	--while post_find do
-		--post_find = false
-    for _,tech in pairs(data.raw.technology) do
-      --if has prerequisites and not excluded
-      if not omni.lib.is_in_table(tech.name,omni.science.exclude_tech) then
-        local techunits = {}
-        for _,ing in pairs(tech.unit.ingredients) do
-          techunits[#techunits+1]=ing[1]
-        end
-        if omni.lib.is_in_table("omni-pack",techunits) then
-          contains_omnipack[tech.name] = true
-          --post_find = true
-          break
-        else --not omni.lib.is_in_table("omni-pack",techunits) --if no omnipack do prereq check
-          --check has pre-requisites first
-          if tech.prerequisites and #tech.prerequisites >= 1 then
-            for _,req in pairs(tech.prerequisites) do --check if prereq has pack
-              if data.raw.technology[req] and contains_omnipack[req] == true then --shortcut for true, add pack
-                --post_find = true
-                omni.lib.add_science_pack(tech.name)
-                break --exit rereq loop, something found
-              elseif data.raw.technology[req] and contains_omnipack[req] == false then --not in prebuilt table
-                --nothing, basically skip this iteration
-              elseif data.raw.technology[req] then
-                local requnits={}
-                for _,ing in pairs(data.raw.technology[req].unit.ingredients) do
-                  requnits[#requnits+1]=ing[1]
-                end
-                if omni.lib.is_in_table("omni-pack",requnits)  then
-                  --post_find = true
-                  omni.lib.add_science_pack(tech.name)
-                  contains_omnipack[req] = true
-                  break
-                else
-                  --set prereq as false
-                  contains_omnipack[req] = false
-                end
-              else
-                log("the prerequisite "..req.." of "..tech.name.." does not exist")
+  for _,tech in pairs(data.raw.technology) do
+    --if has prerequisites and not excluded
+    if not omni.lib.is_in_table(tech.name,omni.science.exclude_tech) then
+      local techunits = {}
+      for _,ing in pairs(tech.unit.ingredients) do
+        techunits[#techunits+1]=ing[1]
+      end
+      if omni.lib.is_in_table("omni-pack",techunits) then
+        contains_omnipack[tech.name] = true
+        break
+      else --not omni.lib.is_in_table("omni-pack",techunits) --if no omnipack do prereq check
+        --check has pre-requisites first
+        if tech.prerequisites and #tech.prerequisites >= 1 then
+          for _,req in pairs(tech.prerequisites) do --check if prereq has pack
+            if data.raw.technology[req] and contains_omnipack[req] == true then --shortcut for true, add pack
+              omni.lib.add_science_pack(tech.name)
+              break --exit rereq loop, something found
+            elseif data.raw.technology[req] and contains_omnipack[req] == false then --not in prebuilt table
+              --nothing, basically skip this iteration
+            elseif data.raw.technology[req] then
+              local requnits={}
+              for _,ing in pairs(data.raw.technology[req].unit.ingredients) do
+                requnits[#requnits+1]=ing[1]
               end
+              if omni.lib.is_in_table("omni-pack",requnits)  then
+                omni.lib.add_science_pack(tech.name)
+                contains_omnipack[req] = true
+                break
+              else
+                --set prereq as false
+                contains_omnipack[req] = false
+              end
+            else
+              log("the prerequisite "..req.." of "..tech.name.." does not exist")
             end
           end
-          --post_find = true --continue while loop
         end
-        --log(serpent.block(contains_omnipack))
       end
+      --log(serpent.block(contains_omnipack))
     end
   end
---end
+end
 
 function omni.science.tech_updates()
 	local tech_list = {}
