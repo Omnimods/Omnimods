@@ -69,7 +69,8 @@ function omni.marathon.standardise(recipe)
 	if recipe == nil then return nil end
 	--Set table parts if they don't already exist
 	if not recipe.expensive then recipe.expensive={} end
-	if not recipe.normal then recipe.normal={} end
+  if not recipe.normal then recipe.normal={} end
+  if standardized_recipes[recipe.name] then return recipe end --stop all of the mods standarising in DFF
 
 	---------------------------------------------------------------------------
 	-- Ingredient Standarisation
@@ -278,7 +279,7 @@ function omni.marathon.standardise(recipe)
 				recipe.localised_name={"recipe-name."..recipe.name}--hail mary
 			end	
 		end
-		if next(it) then recipe.localised_name = set_loc_name(it) end
+		if type(it)=="table" and next(it) then recipe.localised_name = set_loc_name(it) end
 	end
 
 	---------------------------------------------------------------------------

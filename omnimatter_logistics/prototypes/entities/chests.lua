@@ -48,8 +48,8 @@ if not mods["angelsindustries"] then --no need to add duplicates
       height = 128,
       shift = {0, 0}
     },
-    circuit_wire_connection_point = circuit_connector_definitions["angels-big-chest"].points,
-    circuit_connector_sprites = circuit_connector_definitions["angels-big-chest"].sprites,
+    circuit_wire_connection_point = omni.logistics.circuit_connector_definitions["angels-big-chest"].points,
+    circuit_connector_sprites = omni.logistics.circuit_connector_definitions["angels-big-chest"].sprites,
     circuit_wire_max_distance = default_circuit_wire_max_distance
   }
   for _,type in pairs(logistic_list) do
@@ -106,8 +106,8 @@ if not mods["angelsindustries"] then --no need to add duplicates
         height = 128,
         shift = {0, 0}
       },
-      circuit_wire_connection_point = circuit_connector_definitions["angels-big-chest"].points,
-      circuit_connector_sprites = circuit_connector_definitions["angels-big-chest"].sprites,
+      circuit_wire_connection_point = omni.logistics.circuit_connector_definitions["angels-big-chest"].points,
+      circuit_connector_sprites = omni.logistics.circuit_connector_definitions["angels-big-chest"].sprites,
       circuit_wire_max_distance = default_circuit_wire_max_distance
     }
   end
