@@ -192,7 +192,9 @@ local run_entity_updates = function(new,kind,i)
     local eff = new_effect(new.energy_source.buffer_capacity,i)
     new.energy_source.buffer_capacity = string.sub(eff,1,string.len(eff)-1).."J"
     new.energy_source.input_flow_limit = new_effect(new.energy_source.input_flow_limit,i)
-    new.energy_source.output_flow_limit = new_effect(new.energy_source.output_flow_limit,i)
+    if new.energy_source.usage_priority == "tertiary" then
+      new.energy_source.output_flow_limit = new_effect(new.energy_source.output_flow_limit,i)
+    end
   end
   --[[Support type updates]]--
   --energy usage
@@ -283,7 +285,8 @@ for _,kind in pairs(building_list) do --only building types
             new.minable.mining_time = (new.minable.mining_time or 10) * i
             new.icons = omni.compression.add_overlay(build,"building",i)
 						new.icon_size = 32
-						new.icon = nil
+            new.icon = nil
+            
             run_entity_updates(new,kind,i)
 
             compressed_buildings[#compressed_buildings+1] = new --add entity to the list

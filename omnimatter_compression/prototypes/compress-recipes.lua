@@ -148,6 +148,7 @@ local not_random = function(recipe)
 	end
 	return true
 end
+
 --splits fluids and solids per "table"
 local seperate_fluid_solid = function(collection)
 	local fluid = {}
@@ -173,6 +174,7 @@ local seperate_fluid_solid = function(collection)
 	end
 	return {fluid = fluid,solid = solid}
 end
+
 --sort and clean up groups of ingredients and results for type processing
 function get_recipe_values(ingredients,results)
 	local parts={}
@@ -250,6 +252,7 @@ function get_recipe_values(ingredients,results)
 	end
 	return {ingredients = newing , results = newres}
 end
+
 local supremumTime = settings.startup["omnicompression_too_long_time"].value
 --output(results) adjustments
 function adjustOutput(recipe)
@@ -707,7 +710,7 @@ for name,fluid in pairs(generatorFluidRecipes) do
               new[dif].results[j].amount = new[dif].results[j].amount/ math.pow(multiplier,i)
               newFluid=table.deepcopy(data.raw.fluid[res.name])
               new[dif].results[j].name = res.name.."-concentrated-grade-"..i
-            elseif string.sub(res.name,string.len("concentrated-")+1,-1)==name then
+            elseif string.sub(res.name,string.len("concentrated-")+1,-1) == name then
               new[dif].results[j].amount = new[dif].results[j].amount/ math.pow(multiplier,i)*60
               newFluid=table.deepcopy(data.raw.fluid[string.sub(res.name,string.len("concentrated-")+1,-1)])
               new[dif].results[j].name = string.sub(res.name,string.len("concentrated-")+1,-1).."-concentrated-grade-"..i
@@ -717,18 +720,21 @@ for name,fluid in pairs(generatorFluidRecipes) do
 
         newFluid.localised_name={"fluid-name.compressed-fluid",{"fluid-name."..newFluid.name},i}
         newFluid.name = newFluid.name.."-concentrated-grade-"..i
+        if not newFluid.heat_capacity then
+          newFluid.heat_capacity = "1kJ"
+        end
         newFluid.heat_capacity = tonumber(string.sub(newFluid.heat_capacity,1,string.len(newFluid.heat_capacity)-2))*math.pow(multiplier,i)..string.sub(newFluid.heat_capacity,string.len(newFluid.heat_capacity)-1,string.len(newFluid.heat_capacity))
         if newFluid.fuel_value then
-          newFluid.fuel_value=tonumber(string.sub(newFluid.fuel_value,1,string.len(newFluid.fuel_value)-2))*math.pow(multiplier,i)..string.sub(newFluid.fuel_value,string.len(newFluid.fuel_value)-2,string.len(newFluid.fuel_value))
+          newFluid.fuel_value = tonumber(string.sub(newFluid.fuel_value,1,string.len(newFluid.fuel_value)-2))*math.pow(multiplier,i)..string.sub(newFluid.fuel_value,string.len(newFluid.fuel_value)-2,string.len(newFluid.fuel_value))
         end
         if newFluid.icon then
-          newFluid.icons = {{icon=newFluid.icon,icon_size=newFluid.icon_size or 32}}
+          newFluid.icons = {{icon = newFluid.icon, icon_size = newFluid.icon_size or 32}}
           newFluid.icon=nil
         end
-        table.insert(newFluid.icons,{icon="__omnilib__/graphics/lvl"..i..".png",icon_size=32})
+        table.insert(newFluid.icons, {icon = "__omnilib__/graphics/lvl"..i..".png", icon_size = 32})
         new.icons = table.deepcopy(newFluid.icons)
-        compress_recipes[#compress_recipes+1]=new
-        compress_recipes[#compress_recipes+1]=newFluid
+        compress_recipes[#compress_recipes+1] = new
+        compress_recipes[#compress_recipes+1] = newFluid
       end
     end
   end
