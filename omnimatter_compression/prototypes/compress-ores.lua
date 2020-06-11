@@ -40,9 +40,9 @@ for name,ore in pairs(data.raw.resource) do
             local resname = res[1]
             local resct = res[2] or 1
             tempresults[#tempresults+1] = {
-              amount_max = new.minable.results[2],
-              amount_min = new.minable.results[2],
-              name = new.minable.results[1],
+              amount_max = resct,
+              amount_min = resct,
+              name = resname,
               probability = 1,
               type = "item"
             }
@@ -64,7 +64,9 @@ for name,ore in pairs(data.raw.resource) do
 
       local max_stacksize = 0
       for i,drop in ipairs(new.minable.results) do
+        
         for _,comp in pairs({"compressed-", "concentrated-"}) do
+
           if omni.lib.is_in_table(comp .. drop.name, compressed_item_names) then
             drop.name = comp .. drop.name
             compressed = true
