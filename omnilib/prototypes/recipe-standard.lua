@@ -217,6 +217,12 @@ function omni.marathon.standardise(recipe)
 		recipe.result = nil
 		recipe.result_count = nil
 		recipe.results = nil
+
+		recipe.normal.result = nil
+		recipe.normal.result_count = nil
+
+		recipe.expensive.result = nil
+		recipe.expensive.result_count = nil
 	end
 
 	---------------------------------------------------------------------------
