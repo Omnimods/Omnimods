@@ -430,12 +430,12 @@ function create_compression_recipe(recipe)
                   if #recipe[dif][ingres] > 0 then
                     for _,component in pairs(recipe[dif][ingres]) do
                       --temp fix for non-standard stuff sneaking through
-                      if not component.amount then
-                        log(serpent.block(recipe.name .. "BEFORE"))
-                        
-                        component.name=component[1]
-                        component.amount=component[2]
-                        component.type="item"
+                      if not component.amount then --only basic stuff
+                        log(serpent.block(recipe.name .. ": BEFORE"))
+                        log(serpent.block(component))
+                        local name=component[1]
+                        local amount=component[2]
+                        component = {type = "item", name = name, amount = amount} --force standard if incorrect
                         log("AFTER")
                         log(serpent.block(component))
                       end
@@ -459,9 +459,9 @@ function create_compression_recipe(recipe)
                 for _,ingres in pairs({ing,res}) do
                   for _,component in pairs(ingres[dif]) do
                     if not component.amount then --duplicate of above, seems the fix is not parsing out
-                      component.name=component[1]
-                      component.amount=component[2]
-                      component.type="item"
+                      local name=component[1]
+                      local amount=component[2]
+                      component = {type = "item", name = name, amount = amount} --force standard if incorrect
                     end
                     component.amount=math.min(component.amount/gcd[dif],65535) --set max cap (in case something slips through)
                   end
