@@ -168,7 +168,7 @@ for j=1,nr_tiers do
 			end
 		end
 		--add tier icon
-		icons[#icons+1]={icon="__omnilib__/graphics/lvl"..j..".png",icon_size=32} --handles 0-8
+		icons[#icons+1]={icon="__omnilib__/graphics/icons/small/lvl"..j..".png",icon_size=32} --handles 0-8
 		--solar panel array item sets
 		sol[#sol+1]={
 			type = "item",

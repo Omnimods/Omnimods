@@ -751,7 +751,7 @@ for name,fluid in pairs(generatorFluidRecipes) do
           newFluid.icons = {{icon = newFluid.icon, icon_size = newFluid.icon_size or 32}}
           newFluid.icon=nil
         end
-        table.insert(newFluid.icons, {icon = "__omnilib__/graphics/lvl"..i..".png", icon_size = 32})
+        table.insert(newFluid.icons, {icon = "__omnilib__/graphics/icons/small/lvl"..i..".png", icon_size = 32})
         new.icons = table.deepcopy(newFluid.icons)
         compress_recipes[#compress_recipes+1] = new
         compress_recipes[#compress_recipes+1] = newFluid
