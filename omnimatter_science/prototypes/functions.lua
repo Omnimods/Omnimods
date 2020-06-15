@@ -177,9 +177,8 @@ function omni.science.tech_updates()
 
   -- select and update costings of techs in check_techs
 	local found = true --used to allow multi-pass calculations
-
   while #check_techs > 0 and found do
-		found = false
+    found = false
     for i,tech in pairs(check_techs) do
       local techno = data.raw.technology[tech] --set shortening of something used commonly
 			if all_pre_in_table(tech) and (techno.unit.count or techno.unit[2]) then
@@ -228,8 +227,7 @@ function omni.science.tech_updates()
 				end
 				table.insert(tech_list.cost,cost)
 				table.insert(tech_list.height,h+1)
-				table.remove(check_techs,i)
-				break
+        table.remove(check_techs,i)
 			end
 		end
 	end
@@ -241,19 +239,12 @@ function omni.science.tech_updates()
 		end
 	end
 
-	--[[local base = nil --why is this a thing, ExponBase is a double, so would only be a single number
-	for _,x in pairs(Set.ExponBase) do
-		base=x
-	end
-
-	if not base then base = Set.ExponBase end]]
-
 	if Set.ModAllCost then
 		for i,tech in pairs(tech_list.name) do
 			if Set.Cumul then
-				data.raw.technology[tech].unit.count = tech_list.cost[i]
+				data.raw.technology[tech].unit.count = math.ceil(tech_list.cost[i])
 			elseif Set.Expon then
-        data.raw.technology[tech].unit.count=Set.ExponInit*math.pow(Set.ExponBase,tech_list.height[i])
+        data.raw.technology[tech].unit.count = math.ceil(Set.ExponInit*math.pow(Set.ExponBase,tech_list.height[i]))
       else --no maths changing mode
         log("why bother with this mod if you don't want cumulative or exponential tech costs?")
 			end
