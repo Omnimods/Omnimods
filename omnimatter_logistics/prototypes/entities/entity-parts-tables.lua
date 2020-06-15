@@ -327,31 +327,31 @@ omni.logistics.zone_expander_parts={
     animation_speed = 0.5
   },
 	base_patch ={
-    filename = "__omnilib__/graphics/blank.png",
+    filename = "__omnilib__/graphics/icons/blank.png",
     width = 1,
     height = 1,
     frame_count = 1,
   },
 	door_animation ={
-    filename = "__omnilib__/graphics/blank.png",
+    filename = "__omnilib__/graphics/icons/blank.png",
     width = 1,
     height = 1,
     frame_count = 1,
   },
   door_animation_up ={
-    filename = "__omnilib__/graphics/blank.png",
+    filename = "__omnilib__/graphics/icons/blank.png",
     width = 1,
     height = 1,
     frame_count = 1,
   },
   door_animation_down ={
-    filename = "__omnilib__/graphics/blank.png",
+    filename = "__omnilib__/graphics/icons/blank.png",
     width = 1,
     height = 1,
     frame_count = 1,
   },
   recharging_animation ={
-    filename = "__omnilib__/graphics/blank.png",
+    filename = "__omnilib__/graphics/icons/blank.png",
     width = 1,
     height = 1,
     frame_count = 1,
@@ -378,7 +378,7 @@ omni.logistics.relay_station_parts = {
 	  animation_speed = 0.5
   },
 	base_patch ={
-    filename = "__omnilib__/graphics/blank.png",
+    filename = "__omnilib__/graphics/icons/blank.png",
     width = 1,
     height = 1,
     frame_count = 1,
@@ -428,7 +428,7 @@ omni.logistics.construction_port_parts={
     shift = {0, -0.75}
   },
   base_animation ={
-    filename = "__omnilib__/graphics/blank.png",
+    filename = "__omnilib__/graphics/icons/blank.png",
     priority = "medium",
     width = 1,
     height = 1,
@@ -499,7 +499,7 @@ omni.logistics.logistic_port_parts={
     shift = {0, -0.25}
   },
   base_animation ={
-    filename = "__omnilib__/graphics/blank.png",
+    filename = "__omnilib__/graphics/icons/blank.png",
     priority = "medium",
     width = 1,
     height = 1,

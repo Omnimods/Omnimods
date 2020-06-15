@@ -142,7 +142,7 @@ for _,tech in pairs(data.raw.technology) do
     for num,ing in pairs(t.unit.ingredients) do
       local nme="" --get name string prepped
       local amt="" --get amount sorted out
-      if ing.type then
+      if ing.name then
         nme=ing.name
         amt=ing.amount
       else

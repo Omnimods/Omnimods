@@ -301,7 +301,7 @@ for _,ore_tiers in pairs(omnisource) do
 		setTechPacks(math.max(1,t-1)):
 		setTechIcon("omnimatter","omnimatter"):
 		setIcons("omnite"):
-		addIcon({icon="__omnilib__/graphics/num_"..i..".png",
+		addIcon({icon="__omnilib__/graphics/icons/small/num_"..i..".png",
 			scale = 0.4375,
 			shift = {-10, -10}})
 		
@@ -343,7 +343,7 @@ for _,ore_tiers in pairs(omnisource) do
 				marathon()
 				
 				if #sp > 1 then
-					focused_ore:addIcon({icon="__omnilib__/graphics/num_"..j..".png",
+					focused_ore:addIcon({icon="__omnilib__/graphics/icons/small/num_"..j..".png",
 					scale = 0.6,
 					shift = {-10, -10}})
 				end

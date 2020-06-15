@@ -25,24 +25,33 @@ for name,ore in pairs(data.raw.resource) do
 		if (ore.category == nil or ore.category == "basic-solid" or ore.category == "basic-fluid") and ore.name then
 			local compressed = false
       local new = table.deepcopy(ore)
-      if new.minable.results and not new.minable.results.name then
-        new.minable.results = {{
-          amount_max = new.minable.results[2],
-          amount_min = new.minable.results[2],
-          name = new.minable.results[1],
-          probability = 1,
-          type = "item"
-        }}
-      end
+
       new.localised_name = {"entity-name.compressed-ore",{"entity-name."..new.name}}
+      new.name = "compressed-"..new.name.."-ore"
       if new.category == "basic-fluid" then
-        new.name = "concentrated-" ..new.name --no need for ore in name
-      else
-        new.name = "compressed-"..new.name.."-ore"
+        new.name = "concentrated-" ..new.name --no need for ore in name      
       end
-			if new.autoplace then new.autoplace = nil end
-      
-			if new.minable.result then
+      if new.autoplace then new.autoplace = nil end
+
+      if new.minable.results then
+        local tempresults={}
+        for _,res in pairs(new.minable.results) do
+          if res.name == nil then
+            local resname = res[1]
+            local resct = res[2] or 1
+            tempresults[#tempresults+1] = {
+              amount_max = resct,
+              amount_min = resct,
+              name = resname,
+              probability = 1,
+              type = "item"
+            }
+          else
+            tempresults[#tempresults+1] = res
+          end
+        end
+        new.minable.results = tempresults
+      elseif new.minable.result then
 				new.minable.results = {{
 					amount_max = 1,
 					amount_min = 1,
@@ -55,7 +64,9 @@ for name,ore in pairs(data.raw.resource) do
 
       local max_stacksize = 0
       for i,drop in ipairs(new.minable.results) do
+        
         for _,comp in pairs({"compressed-", "concentrated-"}) do
+
           if omni.lib.is_in_table(comp .. drop.name, compressed_item_names) then
             drop.name = comp .. drop.name
             compressed = true
@@ -109,63 +120,63 @@ for name,ore in pairs(data.raw.resource) do
 						stack_size = 50,
 						flags={}
 					}
-					compressed_ores[#compressed_ores+1]={
-					type = "recipe",
-					name = "liquify-"..r,
-					icon = cf.icon,
-					subgroup = "fluid-recipes",
-					category = "general-omni-boiler",
-					order = "g[hydromnic-acid]",
-					icon_size = 32,
-					energy_required = 3,
-					enabled = true,
-					ingredients =
-					{
-					  {type = "item", name = r, amount = 10},
-					},
-					results =
-					{
-					  {type = "fluid", name = "concentrated-"..new.minable.required_fluid, amount = 60*2.4},
-					},
+					compressed_ores[#compressed_ores+1] = {
+            type = "recipe",
+            name = "liquify-"..r,
+            icon = cf.icon,
+            subgroup = "fluid-recipes",
+            category = "general-omni-boiler",
+            order = "g[hydromnic-acid]",
+            icon_size = 32,
+            energy_required = 3,
+            enabled = true,
+            ingredients =
+            {
+              {type = "item", name = r, amount = 10},
+            },
+            results =
+            {
+              {type = "fluid", name = "concentrated-"..new.minable.required_fluid, amount = 60*2.4},
+            },
 				  }
 				  compressed_ores[#compressed_ores+1]={
-					type = "recipe",
-					name = "liquify-"..r.."-compression",
-					icon = cf.icon,
-					subgroup = "fluid-recipes",
-					category = "general-omni-boiler",
-					icon_size = 32,
-					order = "g[hydromnic-acid]",
-					energy_required = 3,
-					enabled = true,
-					ingredients =
-					{
-					  {type = "item", name = "compressed-"..r, amount = 10},
-					},
-					results =
-					{
-					  {type = "fluid", name = "concentrated-"..new.minable.required_fluid, amount = 3000*25/17.36*2.4},
-					},
+            type = "recipe",
+            name = "liquify-"..r.."-compression",
+            icon = cf.icon,
+            subgroup = "fluid-recipes",
+            category = "general-omni-boiler",
+            icon_size = 32,
+            order = "g[hydromnic-acid]",
+            energy_required = 3,
+            enabled = true,
+            ingredients =
+            {
+              {type = "item", name = "compressed-"..r, amount = 10},
+            },
+            results =
+            {
+              {type = "fluid", name = "concentrated-"..new.minable.required_fluid, amount = 3000*25/17.36*2.4},
+            },
 				  }
 				  --data.raw.recipe["uncompress-solid-"..new.minable.required_fluid] = nil
 				  concentrate = {
-					type = "recipe",
-					name = "concentrated-"..new.minable.required_fluid.."-compression",
-					icons = data.raw.fluid[new.minable.required_fluid].icons,
-					icon = data.raw.fluid[new.minable.required_fluid].icon,
-					icon_size = 32,
-					category = "fluid-concentration",
-					enabled = true,
-					hidden = true,
-					ingredients = {
-						{type = t,amount=a,name="compressed-"..n}
-					},
-					results ={
-						{type=t,amount=5*a/ss,name = "compressed-"..r}
-					},
-					energy_required = 0.01,
-				}
-        compressed_ores[#compressed_ores+1]=concentrate
+            type = "recipe",
+            name = "concentrated-"..new.minable.required_fluid.."-compression",
+            icons = data.raw.fluid[new.minable.required_fluid].icons,
+            icon = data.raw.fluid[new.minable.required_fluid].icon,
+            icon_size = 32,
+            category = "fluid-concentration",
+            enabled = true,
+            hidden = true,
+            ingredients = {
+              {type = t,amount=a,name="compressed-"..n}
+            },
+            results = {
+              {type=t,amount=5*a/ss,name = "compressed-"..r}
+            },
+            energy_required = 0.01,
+          }
+          compressed_ores[#compressed_ores+1]=concentrate
 				else
 					add_fluid_boxes=true
         end

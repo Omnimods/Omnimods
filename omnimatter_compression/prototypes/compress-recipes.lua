@@ -148,6 +148,7 @@ local not_random = function(recipe)
 	end
 	return true
 end
+
 --splits fluids and solids per "table"
 local seperate_fluid_solid = function(collection)
 	local fluid = {}
@@ -173,6 +174,7 @@ local seperate_fluid_solid = function(collection)
 	end
 	return {fluid = fluid,solid = solid}
 end
+
 --sort and clean up groups of ingredients and results for type processing
 function get_recipe_values(ingredients,results)
 	local parts={}
@@ -250,6 +252,7 @@ function get_recipe_values(ingredients,results)
 	end
 	return {ingredients = newing , results = newres}
 end
+
 local supremumTime = settings.startup["omnicompression_too_long_time"].value
 --output(results) adjustments
 function adjustOutput(recipe)
@@ -426,7 +429,17 @@ function create_compression_recipe(recipe)
                 for _,ingres in pairs({"ingredients","results"}) do
                   if #recipe[dif][ingres] > 0 then
                     for _,component in pairs(recipe[dif][ingres]) do
-                      if component.type ~= "fluid" then 
+                      --temp fix for non-standard stuff sneaking through
+                      if not component.amount then --only basic stuff
+                        log(serpent.block(recipe.name .. ": BEFORE"))
+                        log(serpent.block(component))
+                        local name=component[1]
+                        local amount=component[2]
+                        component = {type = "item", name = name, amount = amount} --force standard if incorrect
+                        log("AFTER")
+                        log(serpent.block(component))
+                      end
+                      if component.type ~= "fluid" then
                         local amount = math.max(math.floor(component.amount+0.5),1) --ensure no decimals on items
                         if gcd[dif] == 0 then
                           gcd[dif] = amount
@@ -445,6 +458,11 @@ function create_compression_recipe(recipe)
               for _,dif in pairs({"normal","expensive"}) do
                 for _,ingres in pairs({ing,res}) do
                   for _,component in pairs(ingres[dif]) do
+                    if not component.amount then --duplicate of above, seems the fix is not parsing out
+                      local name=component[1]
+                      local amount=component[2]
+                      component = {type = "item", name = name, amount = amount} --force standard if incorrect
+                    end
                     component.amount=math.min(component.amount/gcd[dif],65535) --set max cap (in case something slips through)
                   end
                 end
@@ -625,24 +643,26 @@ local create_void = function(recipe)
   local continue = false
   local prefix = "compressed-"
   --local prob = 1
-	for _, dif in pairs({"normal","expensive"}) do
-    if #recipe[dif].results == 1 and recipe[dif].results[1].type=="item" then
-      if #recipe[dif].ingredients == 1 and recipe[dif].ingredients[1].type == "fluid" and
-      recipe[dif].results[1].probability and recipe[dif].results[1].probability == 0 then
-        continue = true
-        prefix = "concentrated-"
-      elseif #recipe[dif].ingredients == 1 and recipe[dif].ingredients[1].type == "item" then --no probability on solids?
+  if not more_than_one(recipe) then --add in exclusion lists
+    for _, dif in pairs({"normal","expensive"}) do
+      if #recipe[dif].results == 1 and recipe[dif].results[1].type=="item" then
+        if #recipe[dif].ingredients == 1 and recipe[dif].ingredients[1].type == "fluid" and
+        recipe[dif].results[1].probability and recipe[dif].results[1].probability == 0 then
+          continue = true
+          prefix = "concentrated-"
+        elseif #recipe[dif].ingredients == 1 and recipe[dif].ingredients[1].type == "item" then --no probability on solids?
+          continue = true
+        end
+      elseif #recipe[dif].results == 0 or (recipe[dif].results[1] and string.find(recipe[dif].results[1].name,"void")) then
+        --capture stragglers doing odd things
+        --double check fluid...
+        if recipe.normal.ingredients[1].type == "fluid" then
+          prefix = "concentrated-"
+        end
         continue = true
       end
-    elseif #recipe[dif].results == 0 or (recipe[dif].results[1] and string.find(recipe[dif].results[1].name,"void")) then
-      --capture stragglers doing odd things
-      --double check fluid...
-      if recipe.normal.ingredients[1].type == "fluid" then
-        prefix = "concentrated-"
-      end
-      continue = true
     end
-	end
+  end
 	if continue == true then
 		local icons = omni.compression.add_overlay(recipe,"compress")
 		local new_cat = "crafting-compressed"
@@ -659,6 +679,9 @@ local create_void = function(recipe)
     new_rc.expensive.ingredients[1].name = prefix ..new_rc.expensive.ingredients[1].name
     --new_rc.normal.results[1].probability = 0 --set to never actually give
     --new_rc.expensive.results[1].probability = 0 --set to never actually give
+    if string.find(recipe.name,"car") then
+      log(serpent.block(new_rc))
+    end
 		return table.deepcopy(new_rc)
 	end
 	return nil
@@ -707,7 +730,7 @@ for name,fluid in pairs(generatorFluidRecipes) do
               new[dif].results[j].amount = new[dif].results[j].amount/ math.pow(multiplier,i)
               newFluid=table.deepcopy(data.raw.fluid[res.name])
               new[dif].results[j].name = res.name.."-concentrated-grade-"..i
-            elseif string.sub(res.name,string.len("concentrated-")+1,-1)==name then
+            elseif string.sub(res.name,string.len("concentrated-")+1,-1) == name then
               new[dif].results[j].amount = new[dif].results[j].amount/ math.pow(multiplier,i)*60
               newFluid=table.deepcopy(data.raw.fluid[string.sub(res.name,string.len("concentrated-")+1,-1)])
               new[dif].results[j].name = string.sub(res.name,string.len("concentrated-")+1,-1).."-concentrated-grade-"..i
@@ -717,18 +740,21 @@ for name,fluid in pairs(generatorFluidRecipes) do
 
         newFluid.localised_name={"fluid-name.compressed-fluid",{"fluid-name."..newFluid.name},i}
         newFluid.name = newFluid.name.."-concentrated-grade-"..i
+        if not newFluid.heat_capacity then
+          newFluid.heat_capacity = "1kJ"
+        end
         newFluid.heat_capacity = tonumber(string.sub(newFluid.heat_capacity,1,string.len(newFluid.heat_capacity)-2))*math.pow(multiplier,i)..string.sub(newFluid.heat_capacity,string.len(newFluid.heat_capacity)-1,string.len(newFluid.heat_capacity))
         if newFluid.fuel_value then
-          newFluid.fuel_value=tonumber(string.sub(newFluid.fuel_value,1,string.len(newFluid.fuel_value)-2))*math.pow(multiplier,i)..string.sub(newFluid.fuel_value,string.len(newFluid.fuel_value)-2,string.len(newFluid.fuel_value))
+          newFluid.fuel_value = tonumber(string.sub(newFluid.fuel_value,1,string.len(newFluid.fuel_value)-2))*math.pow(multiplier,i)..string.sub(newFluid.fuel_value,string.len(newFluid.fuel_value)-2,string.len(newFluid.fuel_value))
         end
         if newFluid.icon then
-          newFluid.icons = {{icon=newFluid.icon,icon_size=newFluid.icon_size or 32}}
+          newFluid.icons = {{icon = newFluid.icon, icon_size = newFluid.icon_size or 32}}
           newFluid.icon=nil
         end
-        table.insert(newFluid.icons,{icon="__omnilib__/graphics/lvl"..i..".png",icon_size=32})
+        table.insert(newFluid.icons, {icon = "__omnilib__/graphics/icons/small/lvl"..i..".png", icon_size = 32})
         new.icons = table.deepcopy(newFluid.icons)
-        compress_recipes[#compress_recipes+1]=new
-        compress_recipes[#compress_recipes+1]=newFluid
+        compress_recipes[#compress_recipes+1] = new
+        compress_recipes[#compress_recipes+1] = newFluid
       end
     end
   end
