@@ -5,9 +5,10 @@ local multiplier = settings.startup["omnicompression_multiplier"].value
 omni.compression.bld_lvls = settings.startup["omnicompression_building_levels"].value --kind of local
 omni.compression.one_list = settings.startup["omnicompression_one_list"].value
 local black_list = {"creative",{"burner","turbine"},{"crystal","reactor"},{"factory","port","marker"},{"biotech","biosolarpanel","solarpanel"},"bucketw"}
-local building_list = {"lab","assembling-machine","furnace","mining-drill","solar-panel","reactor","accumulator","transport-belt","loader","splitter","underground-belt","beacon","electric-pole","generator","offshore-pump"}
+local building_list = {"lab","assembling-machine","furnace","mining-drill","solar-panel","reactor","accumulator","transport-belt","loader","splitter","underground-belt","beacon","electric-pole","offshore-pump"}
 local not_energy_use = {"solar-panel","reactor","boiler","generator","accumulator","transport-belt","loader","splitter","underground-belt","electric-pole","offshore-pump"}
 if not mods["omnimatter_fluid"] then building_list[#building_list+1] = "boiler" end
+building_list[#building_list+1] = "generator" -- concentrated fluid generation in boiler type, so generator type needs to be after boiler
 
 local category = {} --category additions
 local compress_level = {"Compact","Nanite","Quantum","Singularity"}
@@ -148,7 +149,7 @@ local run_entity_updates = function(new,kind,i)
   end
   --[[Power type updates]]--
   --energy source
-  if new.energy_source and new.energy_source.emissions then new.energy_source.emissions = new.energy_source.emissions * math.pow(multiplier,i+1) end
+  if new.energy_source and new.energy_source.emissions_per_minute then new.energy_source.emissions_per_minute = new.energy_source.emissions_per_minute * math.pow(multiplier,i+1) end
   --power production tweaks
   if kind == "solar-panel" then
     new.production = new_effect_gain(new.production,i)
@@ -161,7 +162,7 @@ local run_entity_updates = function(new,kind,i)
   end
   --Boiler
   if kind == "boiler" then
-    --if new.energy_consumption then new.energy_consumption = new_effect(new.energy_consumption,i) end
+    -- if new.energy_consumption then new.energy_consumption = new_effect(new.energy_consumption,i) end
     if new.energy_source.fuel_inventory_size then new.energy_source.fuel_inventory_size = new.energy_source.fuel_inventory_size*(i+1) end
     --if new.energy_source.effectivity then new.energy_source.effectivity = math.pow(new.energy_source.effectivity,1/(i+1)) end
     if new.output_fluid_box and new.output_fluid_box.filter and not data.raw.fluid[new.output_fluid_box.filter.."-concentrated-grade-"..i] then
@@ -229,6 +230,10 @@ local run_entity_updates = function(new,kind,i)
   if kind == "electric-pole" then
     new.maximum_wire_distance = math.min(new.maximum_wire_distance*multiplier*i,64)
     new.supply_area_distance = math.min(new.supply_area_distance*(i+1),64)
+  end
+  --offshore pumps
+  if kind == "offshore-pump" then
+    new.fluid = "concentrated-"..new.fluid
   end
   return new
 end

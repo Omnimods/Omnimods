@@ -5,6 +5,9 @@ Date: 2020.##.#
     - Updated to omnilib 3.18.12
   Bugfixes:
       - Fixed a bug relating to compressed air not omni-compressing causing a non-starting error
+      - Fixed generators not taking concentrated fluid
+      - Fixed pollution values
+      - Fixed compressed offshore pumps not outputting compressed fluid 
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.6
 Date: 2020.06.09
