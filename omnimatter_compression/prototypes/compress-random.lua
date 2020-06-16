@@ -163,7 +163,9 @@ for _,recipe in pairs(check_recipes) do
         end
       end
     else
-      log("you fucked up big time with this recipe: "..rec.name)
+      if not string.find(recipe,"void") then --ignore void recipes
+        log("you fucked up big time with this recipe: "..rec.name)
+      end
     end
     if new_rec then
       new_rec.icon_size=32 --i should not need this, considering it is after a standardisation...

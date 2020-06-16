@@ -115,7 +115,7 @@ end
 
 RecGen:create("omnimatter_energy","heat"):
 	fluid():
-	setIcons("burner","omnilib"):
+	setIcons("__omnilib__/graphics/icons/small/burner.png"):
 	setBothColour(1,0,0):
 	setCategory("omnite-extraction-burner"):
 	setSubgroup("omnienergy-power"):
@@ -410,7 +410,7 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter-1"):
 	setIngredients({"burner-inserter",1},{"omnitor",2},{"omnicium-gear-wheel",2}):
 	setSubgroup("inserter"):
 	setIcons("burner-filter-inserter","omnimatter_energy"):
-	addIcon("__omnilib__/graphics/lvl1.png"):
+	addIcon("__omnilib__/graphics/icons/small/lvl1.png"):
 	setOrder("d"):
 	setTechName("burner-filter"):
 	setTechCost(100):
@@ -429,7 +429,7 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter-2"):
 	setIngredients({"burner-filter-inserter-1",1},{"omnicium-plate",2}):
 	setSubgroup("inserter"):
 	setIcons("burner-filter-inserter","omnimatter_energy"):
-	addIcon("__omnilib__/graphics/lvl2.png"):
+	addIcon("__omnilib__/graphics/icons/small/lvl2.png"):
 	setOrder("e"):
 	setFilter(1):
 	setSpeed(0.03, 0.014): --vanilla inserter speed
@@ -442,7 +442,7 @@ InsertGen:create("omnimatter_energy","burner-inserter-2"):
 	setIngredients({"burner-inserter",1},{"omnicium-plate",2}):
 	setSubgroup("inserter"):
 	setIcons("burner-inserter","base"):
-	addIcon("__omnilib__/graphics/lvl2.png"):
+	addIcon("__omnilib__/graphics/icons/small/lvl2.png"):
 	setOrder("c"):
 	setSpeed(0.03, 0.014): --vanilla inserter speed
 	setAnimation("burner-inserter"):
@@ -454,7 +454,7 @@ ItemGen:import("burner-inserter"):
 	addBurnerIcon():
 	setSubgroup("inserter"):
 	setOrder("b"):
-	addIcon("__omnilib__/graphics/lvl1.png"):
+	addIcon("__omnilib__/graphics/icons/small/lvl1.png"):
 	setLocName("entity-name.burner-inserter-1"):
 	setFuelCategory("omnite"):extend()
 	data.raw["inserter"]["burner-inserter"].energy_source.fuel_category = "omnite"

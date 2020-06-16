@@ -176,7 +176,7 @@ local run_entity_updates = function(new,kind,i)
         newFluid.icons = {{icon=newFluid.icon,icon_size=newFluid.icon_size or 32}}
         newFluid.icon = nil
       end
-      table.insert(newFluid.icons,{icon="__omnilib__/graphics/lvl"..i..".png",icon_size=32})
+      table.insert(newFluid.icons,{icon="__omnilib__/graphics/icons/small/lvl"..i..".png",icon_size=32})
       data:extend({newFluid})
     end
     new.output_fluid_box.filter = new.output_fluid_box.filter.."-concentrated-grade-"..i

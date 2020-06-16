@@ -718,7 +718,7 @@ function ItemGen:addMask(...)
 	return self
 end
 function ItemGen:addIconLevel(lvl)
-	self:addIcon({icon = "__omnilib__/graphics/lvl"..lvl..".png",icon_size=32})
+	self:addIcon({icon = "__omnilib__/graphics/icons/small/lvl"..lvl..".png",icon_size=32})
 	return self
 end
 function ItemGen:setName(lvl,mod)
@@ -727,14 +727,14 @@ function ItemGen:setName(lvl,mod)
 	return self
 end
 function ItemGen:addBurnerIcon()
-	self:addIcon({icon = "__omnilib__/graphics/burner.png",
+	self:addIcon({icon = "__omnilib__/graphics/icons/small/burner.png",
 	icon_size=32,
 		scale = 0.4375,
 		shift = {-10, 10}})
 	return self
 end
 function ItemGen:addElectricIcon()
-	self:addIcon({icon = "__omnilib__/graphics/electric.png",
+	self:addIcon({icon = "__omnilib__/graphics/icons/small/electric.png",
 	icon_size=32,
 		scale = 0.4375,
 		shift = {-10, 10}})
@@ -742,7 +742,7 @@ function ItemGen:addElectricIcon()
 end
 function ItemGen:addSteamIcon()
 	-- CC BY-NC 4.0 Licensed from http://getdrawings.com/get-icon#steam-icon-51.png
-	self:addIcon({icon = "__omnilib__/graphics/steam-icon-51-32x32.png",
+	self:addIcon({icon = "__omnilib__/graphics/icons/small/steam-icon-51-32x32.png",
 	icon_size=32,
 		scale = 0.4375,
 		shift = {-10, 10}})
@@ -771,11 +771,11 @@ function ItemGen:addSmallIcon(icon,nr)
 	return self
 end
 function ItemGen:addBlankIcon()
-	self:addIcon({icon = "__omnilib__/graphics/blank.png"})
+	self:addIcon({icon = "__omnilib__/graphics/icons/blank.png"})
 	return self
 end
 function ItemGen:nullIcon()
-	self:setIcons({icon = "__omnilib__/graphics/blank.png"})
+	self:setIcons({icon = "__omnilib__/graphics/icons/blank.png"})
 	return self
 end
 

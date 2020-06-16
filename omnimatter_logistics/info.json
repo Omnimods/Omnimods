@@ -5,5 +5,8 @@
 "author":"EmperorZelos",
 "description":"Adds early game logistics that is fuel heavy.",
 "factorio_version":"0.18",
-"dependencies":["base","omnilib >= 3.18.1","omnimatter >= 3.18.1"]
+"dependencies":[
+    "base",
+    "omnilib >= 3.18.13",
+    "omnimatter"]
 }

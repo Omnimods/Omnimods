@@ -146,7 +146,7 @@ omni.compression.add_overlay = function(it,overlay_type,level)
   it_icons = find_result_icon(it)
   --set up loop where we add a blank on the base and overlay on the top.
   if it_icons then --ensure it exists first
-    icons = {{icon = "__omnilib__/graphics/blank.png", icon_size = 32}} --set initial icon to set the size for auto-scaling purposes
+    icons = {{icon = "__omnilib__/graphics/icons/blank.png", icon_size = 32}} --set initial icon to set the size for auto-scaling purposes
     for i,icon in pairs(it_icons) do
       icons[#icons+1] = icon --add each icon to the list
     end
