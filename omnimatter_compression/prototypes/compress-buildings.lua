@@ -162,9 +162,9 @@ local run_entity_updates = function(new,kind,i)
   end
   --Boiler
   if kind == "boiler" then
-    -- if new.energy_consumption then new.energy_consumption = new_effect(new.energy_consumption,i) end
+    if new.energy_consumption then new.energy_consumption = new_effect(new.energy_consumption,i) end
     if new.energy_source.fuel_inventory_size then new.energy_source.fuel_inventory_size = new.energy_source.fuel_inventory_size*(i+1) end
-    --if new.energy_source.effectivity then new.energy_source.effectivity = math.pow(new.energy_source.effectivity,1/(i+1)) end
+    if new.energy_source.effectivity then new.energy_source.effectivity = math.pow(new.energy_source.effectivity,1/(i+1)) end
     if new.output_fluid_box and new.output_fluid_box.filter and not data.raw.fluid[new.output_fluid_box.filter.."-concentrated-grade-"..i] then
       local newFluid = table.deepcopy(data.raw.fluid[new.output_fluid_box.filter])
       newFluid.localised_name = {"fluid-name.compressed-fluid",{"fluid-name."..newFluid.name},i}
