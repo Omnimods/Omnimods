@@ -118,7 +118,6 @@ end
 --new fluids for boilers and generators
 local create_concentrated_fluid = function(fluid,tier)
   local newFluid = table.deepcopy(data.raw.fluid[fluid])
-  boiler_generator_fluids[#boiler_generator_fluids+1] = newFluid.name
 
   newFluid.localised_name = {"fluid-name.compressed-fluid",{"fluid-name."..newFluid.name},tier}
   newFluid.name = newFluid.name.."-concentrated-grade-"..tier
