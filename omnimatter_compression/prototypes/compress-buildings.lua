@@ -231,8 +231,12 @@ local run_entity_updates = function(new,kind,i)
   if kind == "boiler" then
     if new.energy_consumption then new.energy_consumption = new_effect(new.energy_consumption,i) end
     if new.energy_source.fuel_inventory_size then new.energy_source.fuel_inventory_size = new.energy_source.fuel_inventory_size*(i+1) end
+<<<<<<< HEAD
     --if new.energy_source.effectivity then new.energy_source.effectivity = math.pow(new.energy_source.effectivity,1/(i+1)) end
     local newFluids = {}
+=======
+    if new.energy_source.effectivity then new.energy_source.effectivity = math.pow(new.energy_source.effectivity,1/(i+1)) end
+>>>>>>> d50e0d1cc16e785db33d84aeb6b64b34b272f0bd
     if new.output_fluid_box and new.output_fluid_box.filter and not data.raw.fluid[new.output_fluid_box.filter.."-concentrated-grade-"..i] then
       create_concentrated_fluid(new.output_fluid_box.filter,i)
       new.output_fluid_box.filter = new.output_fluid_box.filter.."-concentrated-grade-"..i
