@@ -121,12 +121,12 @@ for _, group in pairs({"fluid"}) do
         category = "fluid-concentration",
         enabled = true,
         hidden = true,
+        order = fluid.order or "z".."[concentrated-"..fluid.name .."]",
         normal = {
           ingredients = {
             {name = "concentrated-"..fluid.name,type = "fluid", amount = sluid_contain_fluid}
           },
           subgroup = "compressor-out-fluids",
-          order = fluid.order or "z".."[concentrated-"..fluid.name .."]",
           results = {
             {name = fluid.name, type = "fluid", amount = sluid_contain_fluid*concentrationRatio}
           },
@@ -139,7 +139,6 @@ for _, group in pairs({"fluid"}) do
             {name = "concentrated-"..fluid.name, type = "fluid", amount = sluid_contain_fluid}
           },
           subgroup = "compressor-out-fluids",
-          order = fluid.order or "z".."[concentrated-"..fluid.name .."]",
           results = {
             {name = fluid.name,type="fluid", amount=sluid_contain_fluid*concentrationRatio}
           },

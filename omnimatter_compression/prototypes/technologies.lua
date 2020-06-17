@@ -10,7 +10,7 @@ local tech1 = {
     icon = "__omnimatter_compression__/graphics/compress-tech.png",
     icon_size = 128,
     order = "z",
-    effects = {{type = "unlock-recipe",recipe="auto-compressor"},{type = "unlock-recipe",recipe="auto-concentrator"}},
+    effects = {{type = "unlock-recipe",recipe="auto-compressor"},{type = "unlock-recipe",recipe="auto-concentrator"},{type = "unlock-recipe",recipe="auto-condensator"}},
     upgrade = true,
     prerequisites = {"logistics", "steel-processing"},
     unit =
