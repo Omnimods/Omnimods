@@ -169,6 +169,8 @@ function omni.science.tech_updates()
         tech_list.name[#tech_list.name+1] = tech.name
         tech_list.cost[#tech_list.cost+1] = tech.unit.count or tech.unit[2]
         tech_list.height[#tech_list.height+1] = 0
+      elseif omni.lib.start_with(tech.name,"omnitech") then
+        check_techs[#check_techs+1] = tech.name
       else
         log("what? ".. tech.name .." does not compute?")--this should NEVER show up :D
       end
