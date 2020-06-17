@@ -66,7 +66,7 @@ local function set_icons_tab(it) --pass item table to fish icons from
 end
 
 function omni.marathon.standardise(recipe)
-	if recipe == nil then return nil end
+  if recipe == nil then return nil end
 	--Set table parts if they don't already exist
 	if not recipe.expensive then recipe.expensive={} end
   if not recipe.normal then recipe.normal={} end
@@ -138,7 +138,6 @@ function omni.marathon.standardise(recipe)
 		--nil out non-standard ingredients
 		recipe.ingredients = nil
 	end
-
 	---------------------------------------------------------------------------
 	-- Results Standarisation
 	---------------------------------------------------------------------------
@@ -224,7 +223,6 @@ function omni.marathon.standardise(recipe)
 		recipe.expensive.result = nil
 		recipe.expensive.result_count = nil
 	end
-
 	---------------------------------------------------------------------------
 	-- Main Product Check
 	---------------------------------------------------------------------------
@@ -249,7 +247,6 @@ function omni.marathon.standardise(recipe)
 			recipe.expensive.main_product=nil
 		end
 	end
-
 	---------------------------------------------------------------------------
 	-- Localisation
 	---------------------------------------------------------------------------
@@ -287,7 +284,6 @@ function omni.marathon.standardise(recipe)
 		end
 		if type(it)=="table" and next(it) then recipe.localised_name = set_loc_name(it) end
 	end
-
 	---------------------------------------------------------------------------
 	-- Move Flags to difficulty zone
 	---------------------------------------------------------------------------
@@ -302,32 +298,31 @@ function omni.marathon.standardise(recipe)
 	-- remove settings outside of difficulty
 	recipe.hidden = nil
 	recipe.enabled = nil
-
 	---------------------------------------------------------------------------
 	-- Subgroup setting
 	---------------------------------------------------------------------------
-	if not recipe.subgroup and recipe.normal.main_product and recipe.normal.main_product ~="" then
-		-- group based in main product settings
-		local it = omni.lib.find_prototype(recipe.normal.main_product)
-		if it then
-			if it.subgroup then
-				recipe.subgroup = it.subgroup
-			elseif it.type=="fluid" then
-				recipe.subgroup="fluid-recipes"
-			end
-		end
-	elseif not recipe.subgroup and #recipe.normal.results == 1 then
-		-- group based on single result settings
-		local it = omni.lib.find_prototype(recipe.normal.results[1].name)
-		if it then
-			if it.subgroup then
-				recipe.subgroup = it.subgroup
-			elseif it.type=="fluid" then
-				recipe.subgroup="fluid-recipes"
-			end
-		end
-	end
-
+  if not recipe.subgroup then --add one
+    local it = {}
+    --find it based on main_product
+    if (recipe.main_product and recipe.main_product ~= "") or (recipe.normal.main_product and recipe.normal.main_product ~="") then
+      -- group based in main product settings
+      it = omni.lib.find_prototype(recipe.normal.main_product)
+    elseif #recipe.normal.results == 1 then
+      -- group based on single result settings
+      it = omni.lib.find_prototype(recipe.normal.results[1].name)
+    elseif recipe.normal.results then --pick first result -this may be silly...
+      it = omni.lib.find_prototype(recipe.normal.results[1].name)
+    end
+    if it then --set subgroup based on above selection
+      if it.subgroup then
+        recipe.subgroup = it.subgroup
+      elseif it.type=="fluid" then
+        recipe.subgroup="fluid-recipes"
+      end
+    else
+      recipe.subgroup="general"
+    end
+  end
 	---------------------------------------------------------------------------
 	-- Misc setting properties
 	---------------------------------------------------------------------------
@@ -337,7 +332,6 @@ function omni.marathon.standardise(recipe)
 	if recipe.normal.energy_required == nil then recipe.normal.energy_required = recipe.energy_required or 0.5 end
 	if recipe.expensive.energy_required == nil then recipe.expensive.energy_required = recipe.energy_required or 0.5 end
 	recipe.energy_required = nil
-
 	---------------------------------------------------------------------------
 	-- Icons standardisation
 	---------------------------------------------------------------------------
@@ -380,6 +374,6 @@ function omni.marathon.standardise(recipe)
 		end
 	end
 	-- nil out non-compliant
-	recipe.icon=nil
+  recipe.icon=nil
 	return table.deepcopy(recipe)
 end
