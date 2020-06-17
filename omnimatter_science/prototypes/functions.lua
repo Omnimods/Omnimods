@@ -149,7 +149,7 @@ function omni.science.tech_updates()
     if tech.unit.count then
       if not omni.lib.start_with(tech.name,"omnitech") or --non omnitechs
       (Set.ModOmCost and omni.lib.start_with(tech.name,"omnitech")) and
-      not omni.science.exclude_tech_from_maths(tech.name) then --omnitech with start-up setting
+      (#omni.science.exclude_tech_from_maths >=1) and not omni.science.exclude_tech_from_maths(tech.name) then --omnitech with start-up setting
         --check compliance before adding to table
         if data.raw.technology[tech.name] and data.raw.technology[tech.name].unit.count then
           if not data.raw.technology[tech.name].prerequisites or #data.raw.technology[tech.name].prerequisites == 0 or not hasLabIngredients(data.raw.technology[tech.name]) then
