@@ -2,7 +2,7 @@
 Version: 3.18.7
 Date: 2020.##.#
   Changes:
-    - Updated to omnilib 3.18.12
+      - Updated to omnilib 3.18.12
   Bugfixes:
       - Fixed a bug relating to compressed air not omni-compressing causing a non-starting error
       - Fixed compressed boilers and generators not working
