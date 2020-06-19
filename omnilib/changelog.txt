@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.13
-Date: 2020.XX.XX
+Date: 2020.06.19
   Bugfixes:
     - Fixed recipe.normal/expensive.result and .result_count not beeing nilled
     - Replaced old vanilla SP icons
