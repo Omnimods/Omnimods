@@ -1,6 +1,22 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.7
+Date: 2020.06.19
+  Changes:
+      - Updated to omnilib 3.18.12
+  Bugfixes:
+      - Fixed a bug relating to compressed air not omni-compressing causing a non-starting error
+      - Fixed compressed boilers and generators not working
+      - Fixed pollution values
+      - Fixed compressed offshore pumps not outputting compressed fluid 
+---------------------------------------------------------------------------------------------------
 Version: 3.18.6
 Date: 2020.06.09
+  Features:
+    - Added support for offshore pumps and compression of fluid patches (oil etc)
+    - Thermal water vents not currently supported
+    - Re-write of functions and consolidation of key functions such as icon finding
+    - De-linked item and recipe compression functions
+    - Added initial support for angels science packs (default setting)
   Bugfixes:
     - Fixed that some ores could not be compressed with the planner
     - Fixed that multi-level tech (and infinite tech) with compressed equivalents would try to complete all of them causing a crash in the case of infinite tech
@@ -10,17 +26,11 @@ Date: 2020.06.09
     - Fixed that science-pack-3 was being referenced in place of chemical-science-pack in settings
       - No migration has been added for this, so you may need to change this manually in your settings (sorry)
     - Fixed rounding errors on some recipes giving 0 outputs in some cases
-  Features:
-    - Added support for offshore pumps and compression of fluid patches (oil etc)
-      - Thermal water vents not currently supported
-    - Re-write of functions and consolidation of key functions such as icon finding
-    - De-linked item and recipe compression functions
-    - Added initial support for angels science packs (default setting)
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.5
 Date: 2020.05.01
   Changes:
-      - Add Advanced Electronics 2 as prereq to nanite buildings when marathon or science is active
+    - Add Advanced Electronics 2 as prereq to nanite buildings when marathon or science is active
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.4
 Date: 2020.04.26

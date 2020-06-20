@@ -73,20 +73,29 @@ for _, lab in pairs(data.raw.lab) do
 end
 --find lowest level in tiered techs that gets compressed to ensure chains are all compressed passed the first one
 for _,tech in pairs(data.raw.technology) do --run always
-local lvl = string.match(tech.name,".*%-(%d*)") 
-local name = string.match(tech.name,"(.*)%-%d*")
-if lvl == "" then --tweak to allow techs that start with no number
-   lvl = 1
-   name = tech.name
-end
-  if lvl ~="" and lvl ~= nil and containsOne(tech.unit.ingredients,alwaysSP) then
+  --log(tech.name)
+  local lvl = string.match(tech.name,".*%-(%d*)") 
+  local name = string.match(tech.name,"(.*)%-%d*")
+  if lvl == "" or lvl == nil then --tweak to allow techs that start with no number
+    lvl = 1
+    name = tech.name
+  end
+  --protect against pack removal
+  if containsOne(tech.unit.ingredients,alwaysSP) then
     if not tiered_tech[name] then
       tiered_tech[name] = tonumber(lvl)
     elseif tiered_tech[name] > tonumber(lvl) then --in case techs are added out of order, always add the lowest
       tiered_tech[name] = tonumber(lvl)
     end
   end
-  
+  --protect against cost drops
+  if tech.unit and ((tech.unit.count and type(tech.unit.count)=="number" and tech.unit.count > min_compress)) then
+    if not tiered_tech[name] then
+      tiered_tech[name] = tonumber(lvl)
+    elseif tiered_tech[name] > tonumber(lvl) then --in case techs are added out of order, always add the lowest
+      tiered_tech[name] = tonumber(lvl)
+    end    
+  end
 end
 --log(serpent.block(tiered_tech))
 --compare tech to the list created (tiered_tech) to include techs missing packs previously in the chain
@@ -94,16 +103,13 @@ local include_techs = function(t)
   --extract name and level
   local lvl = string.match(t.name,".*%-(%d*)")
   local name = string.match(t.name,"(.*)%-%d*")
-  if lvl == "" then --tweak to allow techs that start with no number
+  if lvl == "" or lvl == nil then --tweak to allow techs that start with no number
     lvl = 1
     name = t.name
   end
-  if lvl ~= "" and lvl ~= nil then
-    --check if in table and lvl > min lvl
-    if tiered_tech[name] then
-      if tonumber(lvl) >= tiered_tech[name] then
-        return true
-      end
+  if tiered_tech[name] then
+    if tonumber(lvl) >= tiered_tech[name] then
+      return true
     end
   end
   return false
@@ -113,10 +119,11 @@ end
 -------------------------------------------------------------------------------
 log("start tech compression")
 for _,tech in pairs(data.raw.technology) do
-  if tech.unit and ((tech.unit.count and type(tech.unit.count)=="number" and tech.unit.count > min_compress) or not tech.unit.count or containsOne(tech.unit.ingredients,alwaysSP) or include_techs(tech)) then
+  if (tech.unit and (tech.unit.count and type(tech.unit.count)=="number" and tech.unit.count > min_compress)) or
+  include_techs(tech) or containsOne(tech.unit.ingredients,alwaysSP) or not tech.unit.count then
     --fetch original
     local t = table.deepcopy(tech)
-    t.name="omnipressed-"..t.name
+    t.name = "omnipressed-"..t.name
     local loc_key = tech.localised_name --or {"technology-name.compressed", omni.compression.CleanName(tech.name)}
     --clean up localisation issues, or use name string
     if not loc_key then
@@ -142,7 +149,7 @@ for _,tech in pairs(data.raw.technology) do
     for num,ing in pairs(t.unit.ingredients) do
       local nme="" --get name string prepped
       local amt="" --get amount sorted out
-      if ing.type then
+      if ing.name then
         nme=ing.name
         amt=ing.amount
       else
