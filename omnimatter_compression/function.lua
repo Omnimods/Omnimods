@@ -80,7 +80,10 @@ local function find_result_icon(raw_item)
       local icons = table.deepcopy(raw_item.icons)
       for i, icon in pairs(icons) do-- Apply inherited attributes as explicit for each layer
         icon.icon_size = icon.icon_size or raw_item.icon_size
-        icon.icon_mipmaps = icon.icon_mipmaps or raw_item.icon_mipmaps
+        icon.icon_mipmaps = (icon.icon_mipmaps or raw_item.icon_mipmaps) or 1
+        if icon.icon_size%icon.icon_mipmaps and icon.icon_size%(icon.icon_mipmaps*2) ~=0 then --not a multiple of 8(for 4), so no mipmaps
+          icon.icon_mipmaps=1
+        end
       end
       return icons
     elseif raw_item.icon then
