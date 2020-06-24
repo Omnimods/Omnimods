@@ -316,9 +316,10 @@ local dont_remove = {}
 
 for _,pump in pairs(data.raw["offshore-pump"]) do
 	if not (mods["omnimatter_water"] and mods["aai-industry"]) then
-		if data.raw.recipe[pump.name] then
+		--Make sure that the pump is obtainable
+		local rec = omni.lib.find_recipe(pump.name)
+		if data.raw.item[pump.name] and rec then
 			local new={}
-
 			new[#new+1]={
 					type = "recipe-category",
 					name = "pump-fluid-source-"..pump.name,
@@ -352,15 +353,15 @@ for _,pump in pairs(data.raw["offshore-pump"]) do
 				new_item.localised_name = {"item-name.fluid-source", loc_key}
 			new[#new+1] = new_item
 
-			if standardized_recipes[pump.name] == nil then
-				omni.marathon.standardise(data.raw.recipe[pump.name])
+			if standardized_recipes[rec.name] == nil then
+				omni.marathon.standardise(rec)
 			end
 			dont_remove[pump.fluid]={true}
-			data.raw.recipe[pump.name].normal.results[1].name=pump.name.."-source"
-			data.raw.recipe[pump.name].normal.main_product=pump.name.."-source"
-			data.raw.recipe[pump.name].expensive.results[1].name=pump.name.."-source"
-			data.raw.recipe[pump.name].expensive.main_product=pump.name.."-source"
-			data.raw.recipe[pump.name].main_product=pump.name.."-source"
+			rec.normal.results[1].name=pump.name.."-source"
+			rec.normal.main_product=pump.name.."-source"
+			rec.expensive.results[1].name=pump.name.."-source"
+			rec.expensive.main_product=pump.name.."-source"
+			rec.main_product=pump.name.."-source"
 
 			pump.minable.result=pump.name.."-source"
 			new[#new+1] = {
@@ -478,7 +479,7 @@ for _,pump in pairs(data.raw["offshore-pump"]) do
 			data:extend(new)
 		end
 	else
-		data.raw.recipe[pump.name] = nil
+		data.raw.recipe[rec.name] = nil
 		omni.lib.remove_recipe_all_techs(pump.name)
 	end
 end
@@ -755,7 +756,7 @@ for _,recipe in pairs(data.raw.recipe) do
 end
 
 for _,f in pairs(temperature_fluids) do
-	log("pyc is shit")
+	--log("pyc is shit")
 	for _,r in pairs(f.recipes) do
 		if omni.lib.cardTable(f.used) > 1 and omni.lib.cardTable(f.temperatures) > 1 then
 			for _,ingres in pairs({"ingredients","results"}) do
@@ -824,7 +825,7 @@ for _,f in pairs(temperature_fluids) do
 end
 
 --Extra recipes for generators
-log("yuoki is a pain")
+--log("yuoki is a pain")
 for _, recipe in pairs(extra_fluid_rec) do
 	for _,tech in pairs(data.raw.technology) do
 		if tech.effects then
