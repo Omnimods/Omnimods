@@ -1,5 +1,11 @@
 ---------------------------------------------------------------------------------------------------
-Version: 3.18.4
+Version: 3.18.6
+Date: 2020.xx.xx
+  Bugfixes:
+    - Fixed pumps beeing invisible
+    - Fixed a crash when pump recipe names were different from the pump name
+---------------------------------------------------------------------------------------------------
+Version: 3.18.5
 Date: 2020.06.09
   Changes:
     - Added thermal water pump support when playing without omnimatter

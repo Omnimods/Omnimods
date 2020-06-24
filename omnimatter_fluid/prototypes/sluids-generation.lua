@@ -319,6 +319,7 @@ for _,pump in pairs(data.raw["offshore-pump"]) do
 		--Make sure that the pump is obtainable
 		local rec = omni.lib.find_recipe(pump.name)
 		if data.raw.item[pump.name] and rec then
+
 			local new={}
 			new[#new+1]={
 					type = "recipe-category",
@@ -362,120 +363,37 @@ for _,pump in pairs(data.raw["offshore-pump"]) do
 			rec.expensive.results[1].name=pump.name.."-source"
 			rec.expensive.main_product=pump.name.."-source"
 			rec.main_product=pump.name.."-source"
-
 			pump.minable.result=pump.name.."-source"
-			new[#new+1] = {
-				type = "assembling-machine",
-				name = pump.name.."-source",
-				icon_size = 32,
-				localised_name = {"entity-name.fluid-source", loc_key},
-				icon = pump.icon,
-				icons = pump.icons,
-				flags = {"placeable-neutral","placeable-player", "player-creation"},
-				minable = {hardness = 0.2, mining_time = 0.5, result = pump.name.."-source"},
-				max_health = 300,
-				corpse = "big-remnants",
-				dying_explosion = "medium-explosion",
-				collision_box = {{-0.9, -0.9}, {0.9, 0.9}},
-				selection_box = {{-1, -1}, {1, 1}},
-				picture = {
-					north = {
-						filename = "__base__/graphics/entity/offshore-pump/offshore-pump-north.png",
-   						priority = "high",
-  						shift = util.by_pixel(5, -18),
-  						width = 89,
-  						height = 69,
-  						hr_version = {
- 						    filename = "__base__/graphics/entity/offshore-pump/hr-offshore-pump-north.png",
-							priority = "high",
-  						    shift = util.by_pixel(5, -18),
-							width = 178,
-							height = 137,
-  						    scale = 0.5
- 						}
- 					},
- 					east = {
-						filename = "__base__/graphics/entity/offshore-pump/offshore-pump-east.png",
-						priority = "high",
-						shift = util.by_pixel(31, -5),
-						width = 94,
-						height = 78,
-						hr_version = {
-							filename = "__base__/graphics/entity/offshore-pump/hr-offshore-pump-east.png",
-							priority = "high",
-							shift = util.by_pixel(31, -5),
-							width = 188,
-							height = 156,
-							scale = 0.5
-						}
-					},
- 					south = {
-  						filename = "__base__/graphics/entity/offshore-pump/offshore-pump-south.png",
-   						priority = "high",
-   						shift = util.by_pixel(5, 22),
-  						width = 90,
-   						height = 76,
-   						hr_version = {
-    						filename = "__base__/graphics/entity/offshore-pump/hr-offshore-pump-south.png",
-    						priority = "high",
-							shift = util.by_pixel(5, 22),
-							width = 180,
-							height = 152,
-							scale = 0.5
-  						}
- 					},
-  					west = {
-  						filename = "__base__/graphics/entity/offshore-pump/offshore-pump-west.png",
-  						priority = "high",
-   						shift = util.by_pixel(-17, -7),
-  						width = 66,
-  						height = 75,
-  						hr_version = {
-							filename = "__base__/graphics/entity/offshore-pump/hr-offshore-pump-west.png",
-							priority = "high",
-							shift = util.by_pixel(-17, -7),
-  						    width = 132,
-  						    height = 149,
-							scale = 0.5
-  						}
- 					}
-				},
-				vehicle_impact_sound =  { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 },
-				working_sound =
-				{
-				  sound =
-				  {
-					{
-					  filename = "__base__/sound/chemical-plant.ogg",
-					  volume = 0.8
-					}
-				  },
-				  idle_sound = { filename = "__base__/sound/idle1.ogg", volume = 0.6 },
-				  apparent_volume = 1.5,
-				},
-				crafting_speed = 1,
-				energy_source =     {
-			  type = "burner",
-			  fuel_category = "chemical",
-				  effectivity = 1,
-			  fuel_inventory_size = 7,
-			  emissions = 0.00,
-			  smoke = nil
 
-			},
-				energy_usage = "1W",
-				ingredient_count = 4,
-				crafting_categories = {"pump-fluid-source-"..pump.name},
-				fluid_boxes =
+			local new_entity = table.deepcopy(data.raw["offshore-pump"][pump.name])
+				new_entity.type = "assembling-machine"
+				new_entity.name = pump.name.."-source"
+				new_entity.localised_name = {"entity-name.fluid-source", loc_key}
+				new_entity.crafting_speed = 1
+				new_entity.energy_source =
 				{
-				  {
-					production_type = "output",
-					pipe_covers = pipecoverspictures(),
-					base_level = 1,
-					pipe_connections = {{type = "output", position = {0, 1}}}
-				  }
+					type = "burner",
+				 	fuel_category = "chemical",
+				  	effectivity = 1,
+				  	fuel_inventory_size = 4,
+				  	emissions = 0.00,
+				  	smoke = nil
 				}
-			  }
+				new_entity.energy_usage = "1W"
+				new_entity.ingredient_count = 4
+				new_entity.crafting_categories = {"pump-fluid-source-"..pump.name}
+				new_entity.fluid_boxes =
+				{
+			  		{
+						production_type = "output",
+						pipe_covers = pipecoverspictures(),
+						base_level = 1,
+						pipe_connections = {{type = "output", position = {0, 1}}}
+			  		}
+				}
+				new_entity.animation = data.raw["offshore-pump"][pump.name].picture
+			new[#new+1] = new_entity
+
 			data:extend(new)
 		end
 	else
