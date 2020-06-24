@@ -141,6 +141,6 @@ omni.compression.add_overlay = function(it,overlay_type,level)
       icon = "__omnilib__/graphics/icons/blank.png",
       icon_size = 32 --set initial icon to set the size for auto-scaling purposes
     }}
-    return util.combine_icons(base_icon, icons, {})--add overlay at the end
+    return util.combine_icons(base_icon, icons, {})
   end
 end
