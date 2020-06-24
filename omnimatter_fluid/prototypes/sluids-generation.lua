@@ -316,7 +316,7 @@ local dont_remove = {}
 
 for _,pump in pairs(data.raw["offshore-pump"]) do
 	if not (mods["omnimatter_water"] and mods["aai-industry"]) then
-		if data.raw.item[pump.name] then
+		if data.raw.recipe[pump.name] then
 			local new={}
 
 			new[#new+1]={
