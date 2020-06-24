@@ -5,27 +5,27 @@ include_recipes = {}
 compress_entity = {}
 
 function omni.compression.exclude_recipe(recipe)
-	if not omni.lib.is_in_table(recipe,excluded_recipes) then
-		excluded_recipes[#excluded_recipes+1]=recipe
-	end
+  if not omni.lib.is_in_table(recipe,excluded_recipes) then
+    excluded_recipes[#excluded_recipes+1]=recipe
+  end
 end
 
 function omni.compression.include_recipe(recipe)
-	if not omni.lib.is_in_table(recipe,include_recipes) then
-		include_recipes[#include_recipes+1]=recipe
-	end
+  if not omni.lib.is_in_table(recipe,include_recipes) then
+    include_recipes[#include_recipes+1]=recipe
+  end
 end
 
 function omni.compression.exclude_entity(entity)
-	if not (compress_entity[entity] and compress_entity[entity].exclude == nil) then
-		compress_entity[entity]={exclude=true}
-	end
+  if not (compress_entity[entity] and compress_entity[entity].exclude == nil) then
+    compress_entity[entity]={exclude=true}
+  end
 end
 
 function omni.compression.include_entity(entity)
-	if not (compress_entity[entity] and compress_entity[entity].include == nil)then
-		compress_entity[entity]={include=true}
-	end
+  if not (compress_entity[entity] and compress_entity[entity].include == nil)then
+    compress_entity[entity]={include=true}
+  end
 end
 function omni.compression.CleanName(name)
   if type(name) == "table" then return name end
@@ -40,7 +40,7 @@ end
 --finds if the object is hidden by flag
 function omni.compression.is_hidden(obj)
   local hidden = false
-	for _, flag in ipairs(obj.flags or {}) do
+  for _, flag in ipairs(obj.flags or {}) do
     if flag == "hidden" then
       hidden = true
     end
@@ -50,7 +50,7 @@ end
 --finds if the object is stackable by flag
 function omni.compression.is_stackable(obj)
   local stackable = true
-	for _, flag in ipairs(obj.flags or {}) do
+  for _, flag in ipairs(obj.flags or {}) do
     if flag == "not-stackable" then
       stackable = false
     end
@@ -62,15 +62,15 @@ end
 -----------------------------------------------------------------------------
 --Find base icon
 local find_icon = function(item)
-	for _, p in pairs({"item","mining-tool","gun","ammo","armor","repair-tool","capsule","module","tool","rail-planner","item-with-entity-data","fluid"}) do
-		if data.raw[p][item] then
-			if data.raw[p][item].icons then
-				return data.raw[p][item].icons
-			else
-				return {{icon = data.raw[p][item].icon, icon_size = data.raw[p][item].icon_size or 32}}
-			end
-		end
-	end
+  for _, p in pairs({"item","mining-tool","gun","ammo","armor","repair-tool","capsule","module","tool","rail-planner","item-with-entity-data","fluid"}) do
+    if data.raw[p][item] then
+      if data.raw[p][item].icons then
+        return data.raw[p][item].icons
+      else
+        return {{icon = data.raw[p][item].icon, icon_size = data.raw[p][item].icon_size or 32}}
+      end
+    end
+  end
 end
 --really dig deep for the icon set
 local find_result_icon = function(it)
