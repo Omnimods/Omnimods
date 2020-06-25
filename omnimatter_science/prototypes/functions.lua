@@ -24,7 +24,9 @@ local set_exclude = function()
       end
     end
     -- if no pre-requisites
-    if tech.prerequisites and #tech.prerequisites > 0 then
+    if tech.prerequisites and #tech.prerequisites == 0 then
+      omni.science.exclude_tech[tech.name]=true
+    elseif not tech.prerequisites then
       omni.science.exclude_tech[tech.name]=true
     end
   end
@@ -96,7 +98,7 @@ end
 --check lab ingredients
 local hasLabIngredients = function(tech)
   for _,input in pairs(tech.unit.ingredients) do
-    if not labComponents[input[1]] then return false end
+    if not labComponents[input[1] or input.name] then return false end
   end
   return true
 end
@@ -184,7 +186,7 @@ function omni.science.tech_updates()
     for i,tech in pairs(check_techs) do
       local techno = data.raw.technology[tech] --set shortening of something used commonly
 			if all_pre_in_table(tech) and (techno.unit.count or techno.unit[2]) then
-				found = true
+				found = true --this re-initiates the loop, this prevents lockups if a loop fails to modify
 				table.insert(tech_list.name,tech)
         local cost = techno.unit.count or techno.unit[2]
 
@@ -195,7 +197,7 @@ function omni.science.tech_updates()
         end
         
 				local h = 0
-				local add = 0
+        local add = 0
         for _,pre in pairs(techno.prerequisites) do
           h = math.max(h,get_height(pre)) -- set this for all conditions
           if Set.Cumul then
@@ -211,8 +213,8 @@ function omni.science.tech_updates()
           end
         end
         cost=cost+add*Set.OmMaxConst --add==0 if not cumulative mode, so this line does nothing in exp mode
-        
-				if #techno.prerequisites == 1 and Set.Cumul then
+
+        if #techno.prerequisites == 1 and Set.Cumul then
 					local c = Set.CumulOmConst
 					local chain = Set.ChainConst
 					if omni.lib.start_with(tech,"omnitech") then
@@ -220,15 +222,15 @@ function omni.science.tech_updates()
 					else
 						local ln = 1
 						local t = techno.prerequisites[1]
-						while data.raw.technology[t].prerequisites and #data.raw.technology[t].prerequisites == 1 do
+						while data.raw.technology[t].prerequisites and #data.raw.technology[t].prerequisites >= 1 do
 							ln = ln+1
 							t = data.raw.technology[t].prerequisites[1]
 						end
 						cost = cost*(math.pow(1+chain*c/(c+1),1+ln/(ln+1)))
 					end
 				end
-				table.insert(tech_list.cost,cost)
-				table.insert(tech_list.height,h+1)
+        table.insert(tech_list.cost,cost)
+        table.insert(tech_list.height,h+1)
         table.remove(check_techs,i)
 			end
 		end
@@ -242,10 +244,10 @@ function omni.science.tech_updates()
 	end
 
 	if Set.ModAllCost then
-		for i,tech in pairs(tech_list.name) do
-			if Set.Cumul then
+    for i,tech in pairs(tech_list.name) do
+      if Set.Cumul then
 				data.raw.technology[tech].unit.count = math.ceil(tech_list.cost[i])
-			elseif Set.Expon then
+      elseif Set.Expon then
         data.raw.technology[tech].unit.count = math.ceil(Set.ExponInit*math.pow(Set.ExponBase,tech_list.height[i]))
       else --no maths changing mode
         log("why bother with this mod if you don't want cumulative or exponential tech costs?")
