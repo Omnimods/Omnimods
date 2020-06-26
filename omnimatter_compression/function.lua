@@ -89,7 +89,8 @@ local function find_result_icon(raw_item)
     elseif raw_item.icon then
       return {{
         icon = raw_item.icon,
-        icon_size = raw_item.icon_size
+        icon_size = raw_item.icon_size,
+        icon_mipmaps = raw_item.icon_mipmaps
       }}
     else
       local result = (-- recipe.result, first entry in recipe.results or either of the previous two within normal and expensive recipe blocks
