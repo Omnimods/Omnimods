@@ -325,7 +325,7 @@ for _,pump in pairs(data.raw["offshore-pump"]) do
 					type = "recipe-category",
 					name = "pump-fluid-source-"..pump.name,
 				}
-
+			--Create new fluid recipes
 			new[#new+1]={
 				type = "recipe",
 				name = pump.name.."-fluid-production",
@@ -336,18 +336,26 @@ for _,pump in pairs(data.raw["offshore-pump"]) do
 				order = "g[hydromnic-acid]",
 				energy_required = 0.5,
 				icon_size = 32,
-				enabled = true,
-				main_product= pump.fluid,
-				ingredients =
+				normal = 
 				{
-				},
-				results =
-				{
-				  {type = "item", name = "solid-"..pump.fluid, amount = 20},
-				},
+					enabled = rec.normal.enabled,
+					main_product= pump.fluid,
+					ingredients ={},
+					results =
+					{
+				  		{type = "item", name = "solid-"..pump.fluid, amount = 20},
+					},
+				}
 			  }
 			local loc_key={"entity-name."..pump.name}
 
+			--If the pump recipe is not enabled by default, unlock the sluid recipe with the same tech
+			local sluidtech = omni.lib.get_tech_name(rec.name)
+			if sluidtech and not rec.normal.enabled then
+				omni.lib.add_unlock_recipe(omni.lib.get_tech_name(rec.name), new[2].name)
+			end
+
+			--Create new pump Item
 			local new_item = table.deepcopy(data.raw.item[pump.name])
 				new_item.name = pump.name.."-source"
 				new_item.place_result = pump.name.."-source"
@@ -358,6 +366,8 @@ for _,pump in pairs(data.raw["offshore-pump"]) do
 				omni.marathon.standardise(rec)
 			end
 			dont_remove[pump.fluid]={true}
+			
+			--Change the old pump recipe to output the sluid pump
 			rec.normal.results[1].name=pump.name.."-source"
 			rec.normal.main_product=pump.name.."-source"
 			rec.expensive.results[1].name=pump.name.."-source"
@@ -365,6 +375,7 @@ for _,pump in pairs(data.raw["offshore-pump"]) do
 			rec.main_product=pump.name.."-source"
 			pump.minable.result=pump.name.."-source"
 
+			--Create new pump entity
 			local new_entity = table.deepcopy(data.raw["offshore-pump"][pump.name])
 				new_entity.type = "assembling-machine"
 				new_entity.name = pump.name.."-source"

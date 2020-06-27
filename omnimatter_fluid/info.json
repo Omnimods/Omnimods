@@ -8,14 +8,15 @@
 "dependencies":
 [
 	"base",
-	"?omnimatter",
 	"omnilib >= 3.18.5",
-	"?aai-industry",
+	"?omnimatter",
+	"?omnimatter_water",
 	"?omnimatter_crystal",
 	"?omnimatter_science",
+	"?omnimatter_research",
+	"?aai-industry",
 	"?angelssmelting",
 	"?Thaumaturgic-Machinations",
-	"?omnimatter_research",
 	"?ScienceCostTweakerM",
 	"?angelsindustries"
 ]

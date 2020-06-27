@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.6
 Date: 2020.xx.xx
+  Changes:
+    - Sluid Pump recipes now unlock with the same tech the pump unlocks with
   Bugfixes:
     - Fixed pumps beeing invisible
     - Fixed a crash when pump recipe names were different from the pump name
