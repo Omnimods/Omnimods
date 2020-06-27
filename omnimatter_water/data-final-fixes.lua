@@ -22,3 +22,13 @@ if mods["aai-industry"] then
 	data.raw["burner-generator"]["burner-turbine"].energy_source.effectivity=0.9/3
 end
 
+--Disable all Pump recipes
+for _,pump in pairs(data.raw["offshore-pump"]) do
+	--Find recipes
+	local rec = omni.lib.find_recipe(pump.name)
+	--Remove recipe from Techs and disable it
+	omni.lib.remove_recipe_all_techs(rec.name)
+	if rec.enabled then rec.enabled = false end
+	if rec.normal.enabled then rec.normal.enabled = false end
+	if rec.expensive.enabled then rec.expensive.enabled = false end
+end
