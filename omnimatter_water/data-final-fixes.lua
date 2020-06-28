@@ -28,7 +28,11 @@ for _,pump in pairs(data.raw["offshore-pump"]) do
 	local rec = omni.lib.find_recipe(pump.name)
 	--Remove recipe from Techs and disable it
 	omni.lib.remove_recipe_all_techs(rec.name)
-	if rec.enabled then rec.enabled = false end
-	if rec.normal.enabled then rec.normal.enabled = false end
-	if rec.expensive.enabled then rec.expensive.enabled = false end
+
+	if rec.normal or rec.expensive then
+		rec.normal.enabled = false
+		rec.expensive.enabled = false
+	else
+		rec.enabled = false
+	end
 end
