@@ -96,7 +96,7 @@ local find_result_icon = function(it)
           else
             if it.results then
               process = find_icon(it.results[1].name)
-            else
+            elseif it.normal and it.normal.results then
               process = find_icon(it.normal.results[1].name)
             end
           end
