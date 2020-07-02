@@ -1,17 +1,12 @@
 ---------------------------------------------------------------------------------------------------
-Version: 1.18.9
+Version: 1.18.8
 Date: 2020.07.02
   Changes:
+    - Updated to work with Bob´s internal name changes
     - QoL: moved all techs that unlock entities which require electricity behind abaricity
   Bugfixes:
-    - Fixed that automation no longer had any prerequisites
----------------------------------------------------------------------------------------------------
-Version: 1.18.8
-Date: 2020.06.30
-  Changes:
-    - Updated to work with Bob´s internal name chnages
-  Bugfixes:
     - Fixed power poles making assembler sounds
+    - Fixed that automation no longer had any prerequisites
 ---------------------------------------------------------------------------------------------------
 Version: 1.18.7
 Date: 2020.06.19
