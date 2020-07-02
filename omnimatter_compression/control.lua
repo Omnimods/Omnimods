@@ -72,11 +72,14 @@ script.on_event(defines.events.on_research_finished, function(event)
 			end
 		end
 	end
-	for _,kind in pairs({"compact","nanite","quantum","singularity"}) do
+	for k,kind in pairs({"compact","nanite","quantum","singularity"}) do
 		if tech.name == "compression-"..kind.."-buildings" then
 			for _,r in pairs(tech.force.recipes) do
 				if r.enabled and not_already_compressed(r.name) and tech.force.recipes[r.name.."-compressed-"..kind] then
 					tech.force.recipes[r.name.."-compressed-"..kind].enabled = true
+				end
+				if string.find(r.name,"concentrated") and string.find(r.name,"grade") and string.sub(r.name,string.len(r.name)) == ""..k then
+                    tech.force.recipes[r.name].enabled = true
 				end
 			end
 		elseif tech.force.technologies["compression-"..kind.."-buildings"].researched then

@@ -5,9 +5,10 @@ local multiplier = settings.startup["omnicompression_multiplier"].value
 omni.compression.bld_lvls = settings.startup["omnicompression_building_levels"].value --kind of local
 omni.compression.one_list = settings.startup["omnicompression_one_list"].value
 local black_list = {"creative",{"burner","turbine"},{"crystal","reactor"},{"factory","port","marker"},{"biotech","biosolarpanel","solarpanel"},"bucketw"}
-local building_list = {"lab","assembling-machine","furnace","mining-drill","solar-panel","reactor","accumulator","transport-belt","loader","splitter","underground-belt","beacon","electric-pole","generator","offshore-pump"}
+local building_list = {"lab","assembling-machine","furnace","mining-drill","solar-panel","reactor","accumulator","transport-belt","loader","splitter","underground-belt","beacon","electric-pole","offshore-pump"}
 local not_energy_use = {"solar-panel","reactor","boiler","generator","accumulator","transport-belt","loader","splitter","underground-belt","electric-pole","offshore-pump"}
 if not mods["omnimatter_fluid"] then building_list[#building_list+1] = "boiler" end
+building_list[#building_list+1] = "generator" -- concentrated fluid generation in boiler type, so generator type needs to be after boiler
 
 local category = {} --category additions
 local compress_level = {"Compact","Nanite","Quantum","Singularity"}
@@ -113,6 +114,72 @@ local new_effect_gain = function(effect,level,linear,constant)
   end
   return eff..value.."W"
 end
+
+--new fluids for boilers and generators
+local create_concentrated_fluid = function(fluid,tier)
+  local newFluid = table.deepcopy(data.raw.fluid[fluid])
+
+  newFluid.localised_name = {"fluid-name.compressed-fluid",{"fluid-name."..newFluid.name},tier}
+  newFluid.name = newFluid.name.."-concentrated-grade-"..tier
+  newFluid.heat_capacity = tonumber(string.sub(newFluid.heat_capacity,1,string.len(newFluid.heat_capacity)-2))*math.pow(multiplier,tier)..string.sub(newFluid.heat_capacity,string.len(newFluid.heat_capacity)-1,string.len(newFluid.heat_capacity))
+  if newFluid.fuel_value then
+    newFluid.fuel_value = tonumber(string.sub(newFluid.fuel_value,1,string.len(newFluid.fuel_value)-2))*math.pow(multiplier,tier)..string.sub(newFluid.fuel_value,string.len(newFluid.fuel_value)-2,string.len(newFluid.fuel_value))
+  end
+  if newFluid.icon then
+    newFluid.icons = {{icon=newFluid.icon,icon_size=newFluid.icon_size or 32}}
+    newFluid.icon = nil
+  end
+  table.insert(newFluid.icons,{icon="__omnilib__/graphics/icons/small/lvl"..tier..".png",icon_size=32})
+  data:extend{newFluid}
+
+  
+  local loc_key = newFluid.localised_name or {"fluid-name."..newFluid.name}
+
+  local baseFluid = fluid
+  if tier > 1 then baseFluid = baseFluid.."-concentrated-grade-"..(tier-1) end
+  local baseFluidData = {{name = baseFluid, type = "fluid", amount = sluid_contain_fluid*multiplier}}
+  local compressFluidData = {{name = fluid.."-concentrated-grade-"..tier, type = "fluid", amount = sluid_contain_fluid}}
+  local compressRecipeData = {
+    subgroup = "concentrator-fluids",
+    energy_required = multiplier/10,
+    enabled = false,
+  }
+  local uncompressRecipeData = table.deepcopy(compressRecipeData)
+  compressRecipeData.ingredients = baseFluidData
+  compressRecipeData.results = compressFluidData
+  uncompressRecipeData.ingredients = table.deepcopy(compressFluidData)
+  uncompressRecipeData.results = table.deepcopy(baseFluidData)
+
+  local compress = {
+    type = "recipe",
+    name = fluid.."-concentrated-grade-"..tier,
+    localised_name = {"recipe-name.concentrate-fluid", loc_key},
+    localised_description = {"recipe-description.concentrate-fluid", loc_key},
+    category = "fluid-condensation",
+    enabled = false,
+    icons = newFluid.icons,
+    order = newFluid.order or "z".."[condensed-"..fluid.name .."]"
+  }
+  local uncompress = {
+    type = "recipe",
+    name = "uncompress-"..fluid.."-concentrated-grade-"..tier,
+    localised_name = {"recipe-name.deconcentrate-fluid", loc_key},
+    localised_description = {"recipe-description.deconcentrate-fluid", loc_key},
+    icons = omni.compression.add_overlay(fluid,"uncompress"),
+    icon_size = 32,
+    category = "fluid-condensation",
+    enabled = false,
+    order = newFluid.order or "z".."[condensed-"..fluid .."]",
+  }
+
+  compress.normal = compressRecipeData
+  compress.expensive = table.deepcopy(compressRecipeData)
+  uncompress.normal = uncompressRecipeData
+  uncompress.expensive = table.deepcopy(uncompressRecipeData)
+
+  data:extend{compress,uncompress}
+end
+
 -------------------------------------------------------------------------------
 --[[Entity Type Specific Properties]]--
 -------------------------------------------------------------------------------
@@ -148,7 +215,7 @@ local run_entity_updates = function(new,kind,i)
   end
   --[[Power type updates]]--
   --energy source
-  if new.energy_source and new.energy_source.emissions then new.energy_source.emissions = new.energy_source.emissions * math.pow(multiplier,i+1) end
+  if new.energy_source and new.energy_source.emissions_per_minute then new.energy_source.emissions_per_minute = new.energy_source.emissions_per_minute * math.pow(multiplier,i+1) end
   --power production tweaks
   if kind == "solar-panel" then
     new.production = new_effect_gain(new.production,i)
@@ -161,29 +228,21 @@ local run_entity_updates = function(new,kind,i)
   end
   --Boiler
   if kind == "boiler" then
-    --if new.energy_consumption then new.energy_consumption = new_effect(new.energy_consumption,i) end
+    if new.energy_consumption then new.energy_consumption = new_effect(new.energy_consumption,i) end
     if new.energy_source.fuel_inventory_size then new.energy_source.fuel_inventory_size = new.energy_source.fuel_inventory_size*(i+1) end
-    --if new.energy_source.effectivity then new.energy_source.effectivity = math.pow(new.energy_source.effectivity,1/(i+1)) end
+    if new.energy_source.effectivity then new.energy_source.effectivity = math.pow(new.energy_source.effectivity,1/(i+1)) end
     if new.output_fluid_box and new.output_fluid_box.filter and not data.raw.fluid[new.output_fluid_box.filter.."-concentrated-grade-"..i] then
-      local newFluid = table.deepcopy(data.raw.fluid[new.output_fluid_box.filter])
-      newFluid.localised_name = {"fluid-name.compressed-fluid",{"fluid-name."..newFluid.name},i}
-      newFluid.name = newFluid.name.."-concentrated-grade-"..i
-      newFluid.heat_capacity = tonumber(string.sub(newFluid.heat_capacity,1,string.len(newFluid.heat_capacity)-2))*math.pow(multiplier,i)..string.sub(newFluid.heat_capacity,string.len(newFluid.heat_capacity)-1,string.len(newFluid.heat_capacity))
-      if newFluid.fuel_value then
-        newFluid.fuel_value = tonumber(string.sub(newFluid.fuel_value,1,string.len(newFluid.fuel_value)-2))*math.pow(multiplier,i)..string.sub(newFluid.fuel_value,string.len(newFluid.fuel_value)-2,string.len(newFluid.fuel_value))
-      end
-      if newFluid.icon then
-        newFluid.icons = {{icon=newFluid.icon,icon_size=newFluid.icon_size or 32}}
-        newFluid.icon = nil
-      end
-      table.insert(newFluid.icons,{icon="__omnilib__/graphics/icons/small/lvl"..i..".png",icon_size=32})
-      data:extend({newFluid})
+      create_concentrated_fluid(new.output_fluid_box.filter,i)
+      new.output_fluid_box.filter = new.output_fluid_box.filter.."-concentrated-grade-"..i
     end
-    new.output_fluid_box.filter = new.output_fluid_box.filter.."-concentrated-grade-"..i
+    if new.fluid_box and new.fluid_box.filter and not data.raw.fluid[new.fluid_box.filter.."-concentrated-grade-"..i] then
+      create_concentrated_fluid(new.fluid_box.filter,i)
+      new.fluid_box.filter = new.fluid_box.filter.."-concentrated-grade-"..i
+    end
   end
   --Generator
   if kind == "generator" and new.fluid_box and new.fluid_box.filter and  data.raw.fluid[new.fluid_box.filter.."-concentrated-grade-"..i] then
-    --new.fluid_usage_per_tick = new.fluid_usage_per_tick*math.pow(multiplier,i)
+    new.fluid_usage_per_tick = new.fluid_usage_per_tick*math.pow((multiplier+1)/multiplier,i)
     new.fluid_box.filter = new.fluid_box.filter.."-concentrated-grade-"..i
     --new.effectivity = new.effectivity*math.pow(multiplier,i)
   end
@@ -229,6 +288,10 @@ local run_entity_updates = function(new,kind,i)
   if kind == "electric-pole" then
     new.maximum_wire_distance = math.min(new.maximum_wire_distance*multiplier*i,64)
     new.supply_area_distance = math.min(new.supply_area_distance*(i+1),64)
+  end
+  --offshore pumps
+  if kind == "offshore-pump" then
+    new.fluid = "concentrated-"..new.fluid
   end
   return new
 end

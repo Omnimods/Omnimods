@@ -194,6 +194,7 @@ if mods["angelsindustries"] and angelsmods.industries.components then
 end
 
 RecGen:import("small-electric-pole"):setEnabled(false):setTechName("anbaricity"):extend()
+
 BuildGen:import("small-electric-pole"):
 	setName("small-iron-electric-pole"):
 	setIngredients({"iron-plate", 1},{"copper-cable", 1}):
@@ -223,6 +224,10 @@ BuildGen:import("small-electric-pole"):
 	}):
 	setEnabled(false):
 	setTechName("anbaricity"):extend()
+
+	--Temp sound fix until lib is fixed
+	data.raw["electric-pole"]["small-iron-electric-pole"].working_sound = nil
+	data.raw["electric-pole"]["small-omnicium-electric-pole"].working_sound = nil
 
 local ings = {}
 if mods["angelsindustries"] and angelsmods.industries.components then

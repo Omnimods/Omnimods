@@ -1,10 +1,18 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.8
+Date: 2020.xx.xx
+  Bugfixes:
+      - Fixed compression recipe icon size and mipmap issues
+---------------------------------------------------------------------------------------------------
 Version: 3.18.7
-Date: 2020.##.#
+Date: 2020.06.19
   Changes:
-    - Updated to omnilib 3.18.12
+      - Updated to omnilib 3.18.12
   Bugfixes:
       - Fixed a bug relating to compressed air not omni-compressing causing a non-starting error
+      - Fixed compressed boilers and generators not working
+      - Fixed pollution values
+      - Fixed compressed offshore pumps not outputting compressed fluid 
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.6
 Date: 2020.06.09

@@ -1,12 +1,13 @@
 {
 "name":"omnimatter_compression",
-"version": "3.18.7",
+"version": "3.18.8",
 "title":"Omnicompression",
 "author":"EmperorZelos",
 "description":"Adds compressed items, buildings and recipes that uses compressed items.",
 "factorio_version":"0.18",
-"dependencies":["base",
-  "omnilib >= 3.18.12",
+"dependencies":[
+  "base",
+  "omnilib >= 3.18.13",
   "?omnimatter",
   "?omnimatter_science",
 	"?angelsrefining",
@@ -28,5 +29,6 @@
   "(?)DeepMine",
   "(?)bobrevamp",
   "(?)space-exploration-postprocess",
-  "(?)space-exploration"]
+  "(?)space-exploration"
+]
 }

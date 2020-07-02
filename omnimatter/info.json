@@ -7,7 +7,7 @@
 "factorio_version":"0.18",
 "dependencies":[
   "base",
-  "omnilib >= 3.18.12",
+  "omnilib >= 3.18.13",
   "?bobores",
   "?angelspetrochem",
   "?only-smelting",

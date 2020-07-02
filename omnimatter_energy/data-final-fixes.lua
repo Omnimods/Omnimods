@@ -18,10 +18,9 @@ local burnerEntities = {
 	"burner-omnitractor",
 	"burner-omniplant",
 	"burner-ore-crusher",
-	"mixing-furnace",
-  "chemical-boiler", --old bobs
-  "stone-chemical-furnace", --new bobs
-	"stone-furnace",
+  "stone-furnace",
+	"stone-mixing-furnace",
+	"stone-chemical-furnace",
 	"burner-assembling-machine",
 	"burner-mining-drill"
 }
