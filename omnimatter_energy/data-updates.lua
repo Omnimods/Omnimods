@@ -18,11 +18,20 @@ omni.lib.add_recipe_ingredient("electric-furnace", {"steel-furnace", 1})
 
 RecGen:import("burner-inserter"):setIngredients({"omnitor",1},{"iron-plate",1}):setTechName("basic-automation"):extend()
 
-RecGen:import("inserter"):setIngredients({"burner-inserter",1},{"omnitor",1}):
+--Move the Basic Inserter to its own tech (Red Packs only) to avoid deadlocks
+RecGen:import("inserter"):
+	setIngredients({"burner-inserter",1},{"omnitor",1}):
 	setEnabled(false):
-	setTechName("automation"):extend()
+	setTechName("anbaric-inserter"):
+	setTechCost(60):
+	setTechIcon("__base__/graphics/technology/demo/electric-inserter.png"):
+	setTechPacks(1):
+	setTechPrereq("anbaricity"):extend()
 
-RecGen:import("boiler"):setTechName("steam-power"):
+	omni.lib.add_prerequisite("logistic-science-pack", "anbaric-inserter")
+
+RecGen:import("boiler"):
+	setTechName("steam-power"):
 	setTechCost(120):
 	addIngredients("burner-omnitractor"):
 	setTechLocName("steam-power"):
@@ -76,7 +85,9 @@ end
 if mods["bobassembly"] and settings.startup["bobmods-assembly-burner"].value then
 	omni.lib.add_prerequisite("basic-automation", "simple-automation")
 	omni.lib.remove_prerequisite("automation", "basic-automation")
-	BuildGen:import("omnitor-assembling-machine"):setSpeed(0.1):setFuelCategory("omnite"):extend()
+	BuildGen:import("omnitor-assembling-machine"):
+		setSpeed(0.1):
+		setFuelCategory("omnite"):extend()
 	if mods["angelsindustries"] and angelsmods.industries.components then
 		RecGen:import("burner-assembling-machine"):
 			setTechCost(15):extend()
@@ -95,10 +106,11 @@ if mods["bobassembly"] and settings.startup["bobmods-assembly-burner"].value the
 			addIngredients({type="item", name="omnitor", amount=1},{type="item", name="omnitor-assembling-machine", amount=1}):
 			setTechCost(15):extend()
 
-		RecGen:import("assembling-machine-1"):setIngredients(
-			{type="item", name="iron-gear-wheel", amount=4},
-			{type="item", name="anbaric-omnitor", amount=1},
-			{type="item", name="burner-assembling-machine", amount=1}):
+		RecGen:import("assembling-machine-1"):
+			setIngredients(
+				{type="item", name="iron-gear-wheel", amount=4},
+				{type="item", name="anbaric-omnitor", amount=1},
+				{type="item", name="burner-assembling-machine", amount=1}):
 			setEnabled(false):
 			setTechName("automation"):
 			setTechCost(20):extend()
@@ -110,10 +122,11 @@ else
 			setTechName("automation"):
 			setTechCost(15):extend()
 	else
-		RecGen:import("assembling-machine-1"):setIngredients(
-			{type="item", name="iron-gear-wheel", amount=4},
-			{type="item", name="anbaric-omnitor", amount=1},
-			{type="item", name="omnitor-assembling-machine", amount=1}):
+		RecGen:import("assembling-machine-1"):
+			setIngredients(
+				{type="item", name="iron-gear-wheel", amount=4},
+				{type="item", name="anbaric-omnitor", amount=1},
+				{type="item", name="omnitor-assembling-machine", amount=1}):
 			setEnabled(false):
 			setTechName("automation"):
 			setTechCost(15):extend()
@@ -131,39 +144,29 @@ if mods["bobmining"] then
 end
 
 omni.lib.add_prerequisite("fast-inserter", "burner-filter")
---Move All Electric Automation Recipes behind logistic science
-if mods["angelsindustries"] and not angelsmods.industries.tech then
-  --skip if angels tech overhaul
-  omni.lib.add_prerequisite("automation", "logistic-science-pack")
 
-  local incScience = {
-    "automation",
-      "electronics",
-    "fast-inserter",
-  }
+--Move All Electric Automation Recipes behind logistic science / anbaricity
+if mods["angelsindustries"] and angelsmods.industries.tech then
+	--skip if angels tech overhaul
+else
+	--Low tier techs, early needed, just needs electricity
+	local logsp = {
+    	"automation",
+    	"electronics",
+    	"fast-inserter"
+  	}
 
-  for _,tech in pairs(data.raw.technology) do 
-      for _,inctech in pairs(incScience) do
-          if tech.name == inctech  then
-              omni.lib.add_science_pack(tech.name,"logistic-science-pack")
-          end
-    end
-  end
+  	for _,tech in pairs(data.raw.technology) do 
+		for _,inctech in pairs(logsp) do
+			if tech.name == inctech  then
+				omni.lib.add_science_pack(tech.name,"logistic-science-pack")
+		 	end
+	 	end	
+	end
 end
 
---Move the Basic Inserter to its own tech (Red Packs only) to avoid deadlocks
-RecGen:import("inserter"):setEnabled(false):
-	setTechName("anbaric-inserter"):
-	setTechCost(60):
-	setTechIcon("__base__/graphics/technology/demo/electric-inserter.png"):
-	setTechPacks(1):
-	setTechPrereq("anbaricity"):extend()
-
-	omni.lib.remove_unlock_recipe("automation", "inserter")
-	omni.lib.add_prerequisite("logistic-science-pack", "anbaric-inserter")
-
 if mods["angelsindustries"] and angelsmods.industries.components then
-
+	--skip if angels components
 else
 	local i=2
 	while data.raw.recipe["assembling-machine-"..i] do
@@ -183,6 +186,10 @@ else
 
 			omni.lib.add_prerequisite("ore-crushing", "anbaricity")
 	end
+
+	if mods["angelssmelting"] then
+		omni.lib.add_prerequisite("angels-metallurgy-1", "steam-power")
+	end	
 end
 	  
 RecGen:import("basic-circuit-board"):setEnabled(false):setTechName("anbaricity"):extend()

@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.18.9
+Date: 2020.07.02
+  Changes:
+    - QoL: moved all techs that unlock entities which require electricity behind abaricity
+  Bugfixes:
+    - Fixed that automation no longer had any prerequisites
+---------------------------------------------------------------------------------------------------
 Version: 1.18.8
 Date: 2020.06.30
   Changes:
