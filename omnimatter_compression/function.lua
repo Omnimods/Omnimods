@@ -5,27 +5,27 @@ include_recipes = {}
 compress_entity = {}
 
 function omni.compression.exclude_recipe(recipe)
-	if not omni.lib.is_in_table(recipe,excluded_recipes) then
-		excluded_recipes[#excluded_recipes+1]=recipe
-	end
+  if not omni.lib.is_in_table(recipe,excluded_recipes) then
+    excluded_recipes[#excluded_recipes+1]=recipe
+  end
 end
 
 function omni.compression.include_recipe(recipe)
-	if not omni.lib.is_in_table(recipe,include_recipes) then
-		include_recipes[#include_recipes+1]=recipe
-	end
+  if not omni.lib.is_in_table(recipe,include_recipes) then
+    include_recipes[#include_recipes+1]=recipe
+  end
 end
 
 function omni.compression.exclude_entity(entity)
-	if not (compress_entity[entity] and compress_entity[entity].exclude == nil) then
-		compress_entity[entity]={exclude=true}
-	end
+  if not (compress_entity[entity] and compress_entity[entity].exclude == nil) then
+    compress_entity[entity]={exclude=true}
+  end
 end
 
 function omni.compression.include_entity(entity)
-	if not (compress_entity[entity] and compress_entity[entity].include == nil)then
-		compress_entity[entity]={include=true}
-	end
+  if not (compress_entity[entity] and compress_entity[entity].include == nil)then
+    compress_entity[entity]={include=true}
+  end
 end
 function omni.compression.CleanName(name)
   if type(name) == "table" then return name end
@@ -40,7 +40,7 @@ end
 --finds if the object is hidden by flag
 function omni.compression.is_hidden(obj)
   local hidden = false
-	for _, flag in ipairs(obj.flags or {}) do
+  for _, flag in ipairs(obj.flags or {}) do
     if flag == "hidden" then
       hidden = true
     end
@@ -50,7 +50,7 @@ end
 --finds if the object is stackable by flag
 function omni.compression.is_stackable(obj)
   local stackable = true
-	for _, flag in ipairs(obj.flags or {}) do
+  for _, flag in ipairs(obj.flags or {}) do
     if flag == "not-stackable" then
       stackable = false
     end
@@ -60,61 +60,52 @@ end
 -----------------------------------------------------------------------------
 -- ICON FUNCTIONS --
 -----------------------------------------------------------------------------
---Find base icon
+--If our prototype doesn't have an icon, we need to find one that does
 local find_icon = function(item)
-	for _, p in pairs({"item","mining-tool","gun","ammo","armor","repair-tool","capsule","module","tool","rail-planner","item-with-entity-data","fluid"}) do
-		if data.raw[p][item] then
-			if data.raw[p][item].icons then
-				return data.raw[p][item].icons
-			else
-				return {{icon = data.raw[p][item].icon, icon_size = data.raw[p][item].icon_size or 32}}
-			end
-		end
-	end
+  for _, p in pairs({"item","mining-tool","gun","ammo","armor","repair-tool","capsule","module","tool","rail-planner","item-with-entity-data","fluid"}) do
+    if data.raw[p][item] then
+      if data.raw[p][item].icons or data.raw[p][item].icon then
+        return data.raw[p][item]
+      end
+    end
+  end
 end
 --really dig deep for the icon set
-local find_result_icon = function(it)
-  if type(it) == "table" then
-    if it then --search for the icon in its various hiding places
-      if it.icons then
-        icons=table.deepcopy(it.icons)
-        if it.icon_size and not it.icons[1].icon_size then
-          icons[1].icon_size=it.icon_size or 32
-        end
-        return icons
-      else
-        if it.icon then
-          return  {{icon = it.icon, icon_size = it.icon_size or 32}}
-        else
-          local process = {}
-          if it.result or (it.normal and it.normal.result) then
-            if it.result then
-              process = find_icon(it.result)
-            else
-              process = find_icon(it.normal.result)
-            end
-          else
-            if it.results then
-              process = find_icon(it.results[1].name)
-            else
-              process = find_icon(it.normal.results[1].name)
-            end
-          end
-          if process ~= nil then
-            if process[1] and process[1].icon then
-              if it.icon_size and not process[1].icon_size then
-                process[1].icon_size=it.icon_size or 32
-              end
-            end
-            return process
-          else
-            return {{icon = "__omnimatter_compression__/graphics/compress-out-arrow-32.png", icon_size = 32}} --should be using blank, but for testing...
-          end
+local function find_result_icon(raw_item)
+  if raw_item then
+    if type(raw_item) ~= "table" then
+      raw_item = find_icon(raw_item) --Find a matching prototype if possible
+      return find_result_icon(raw_item)
+    elseif raw_item.icons then
+      local icons = table.deepcopy(raw_item.icons)
+      for i, icon in pairs(icons) do-- Apply inherited attributes as explicit for each layer
+        icon.icon_size = icon.icon_size or raw_item.icon_size
+        icon.icon_mipmaps = (icon.icon_mipmaps or raw_item.icon_mipmaps) or 1
+        if icon.icon_size%icon.icon_mipmaps and icon.icon_size%(icon.icon_mipmaps*2) ~=0 then --not a multiple of 8(for 4), so no mipmaps
+          icon.icon_mipmaps=1
         end
       end
+      return icons
+    elseif raw_item.icon then
+      return {{
+        icon = raw_item.icon,
+        icon_size = raw_item.icon_size,
+        icon_mipmaps = raw_item.icon_mipmaps
+      }}
     else
-      return {{icon = "__omnimatter_compression__/graphics/compress-out-arrow-32.png", icon_size = 32}} --should be using blank, but for testing...
+      local result = (-- recipe.result, first entry in recipe.results or either of the previous two within normal and expensive recipe blocks
+        (raw_item.result) or
+        (raw_item.results and raw_item.results[1].name) or
+        (raw_item.normal and (raw_item.normal.result or raw_item.normal.results[1].name)) or
+        (raw_item.expensive and (raw_item.expensive.result or raw_item.expensive.results[1].name)) 
+      )
+      return find_result_icon(result)
     end
+  else
+    return {{
+      icon = "__core__/graphics/too-far.png",--ERROR
+      icon_size = 32,
+    }}
   end
 end
 
@@ -129,32 +120,28 @@ omni.compression.add_overlay = function(it,overlay_type,level)
   if type(it) == "string" then --parsed whole table not the name...
     it = omni.lib.find_prototype(it)
   end
-  --set overlay icon
-  if overlay_type == "building" and level ~= nil then
-    overlay = {icon = "__omnimatter_compression__/graphics/compress-"..level.."-32.png", icon_size = 32, scale=1}
-    if it.icons then
-      it_icons=it.icons
-    else
-      it_icons={{icon = it.icon, icon_size = it.icon_size or 32}}
-    end
-  elseif overlay_type == "compress" then
-    overlay = {icon = "__omnimatter_compression__/graphics/compress-32.png", icon_size = 32}
-  elseif overlay_type == "uncompress" then
-    overlay = {icon = "__omnimatter_compression__/graphics/compress-out-arrow-32.png", icon_size = 32}
-  end
-  --set icons table
-  it_icons = find_result_icon(it)
-  --set up loop where we add a blank on the base and overlay on the top.
-  if it_icons then --ensure it exists first
-    icons = {{icon = "__omnilib__/graphics/icons/blank.png", icon_size = 32}} --set initial icon to set the size for auto-scaling purposes
-    for i,icon in pairs(it_icons) do
-      icons[#icons+1] = icon --add each icon to the list
-    end
-    --add overlay at the end
-    icons[#icons+1] = overlay
-  else
-    icons = {{icon = "__omnimatter_compression__/graphics/compress-out-arrow-32.png", icon_size = 32}} --error
-  end
-  return icons
-end
 
+  local overlay = {}
+  if overlay_type == "building" and level ~= nil then
+    overlay.icon = "__omnimatter_compression__/graphics/compress-"..level.."-32.png"
+  elseif overlay_type == "compress" then
+    overlay.icon = "__omnimatter_compression__/graphics/compress-32.png"
+  elseif overlay_type == "uncompress" then
+    overlay.icon = "__omnimatter_compression__/graphics/compress-out-arrow-32.png"
+  end
+  
+  local icons = find_result_icon(it)
+  if icons then --ensure it exists first
+    -- Do we require an overlay? This will be placed at the end of the list and thus on top
+    if overlay.icon then
+      overlay.icon_size = 32
+      icons = util.combine_icons(icons, {overlay}, {})
+    end
+    -- This is the first table entry on which the others are built
+    local base_icon = {{
+      icon = "__omnilib__/graphics/icons/blank.png",
+      icon_size = 32 --set initial icon to set the size for auto-scaling purposes
+    }}
+    return util.combine_icons(base_icon, icons, {})
+  end
+end
