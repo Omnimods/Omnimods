@@ -5,15 +5,14 @@
 "author":"EmperorZelos",
 "description":"Start with limited access to fuel and research better refining methods up to renewable energy",
 "factorio_version":"0.18",
-"dependencies":
-        	[
-                "base",
-                "omnilib >= 3.18.13",
-                "omnimatter",
-                "omnimatter_crystal",
-                "(?)bobplates",
-                "?boblogistics",
-                "(?)deadlock-integrations",
-                "?bobassembly"
-            ]
+"dependencies":[
+    "base",
+    "omnilib >= 3.18.13",
+    "omnimatter",
+    "omnimatter_crystal",
+    "(?)bobplates",
+    "?boblogistics",
+    "(?)deadlock-integrations",
+    "?bobassembly"
+]
 }

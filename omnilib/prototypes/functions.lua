@@ -1148,22 +1148,64 @@ function omni.lib.find_stacksize(item)
 	log("Could not find "..item.."'s stack size, check it's type.")
 end
 
+local itemproto = {
+	"item",
+	"mining-tool",
+	"gun",
+	"ammo",
+	"armor",
+	"repair-tool",
+	"capsule",
+	"module",
+	"tool",
+	"rail-planner",
+	"selection-tool",
+	"item-with-entity-data",
+	"fluid",
+	"selection-tool",
+	"item-with-inventory",
+	"item-with-tags"
+}
 function omni.lib.find_prototype(item)
 	if type(item)=="table" then return item elseif type(item)~="string" then return nil end
-	for _, p in pairs({"item","mining-tool","gun","ammo","armor","repair-tool","capsule","module","tool","rail-planner","selection-tool","item-with-entity-data","fluid","selection-tool","item-with-inventory","item-with-tags"}) do
+	for _, p in pairs(itemproto) do
 		if data.raw[p][item] then return data.raw[p][item] end
 	end
 	--log("Could not find "..item.."'s prototype, check it's type.")
 	return nil
 end
+
+local entproto = {
+	"accumulator",
+	"assembling-machine",
+	"beacon",
+	"beam",
+	"boiler",
+	"arithmetic-combinator",
+	"decider-combinator",
+	"electric-pole",
+	"furnace",
+	"generator",
+	"lab",
+	"lamp",
+	"loader",
+	"locomotive",
+	"logistic-container",
+	"mining-drill",
+	"offshore-pump",
+	"pump",
+	"solar-panel",
+	"turret"
+}
 function omni.lib.find_entity_prototype(item)
 	if type(item)=="table" then return item elseif type(item)~="string" then return nil end
-	for _, p in pairs({"assembling-machine","furnace","mining-drill","boiler","generator","lab","locomotive","beacon","logistic-container","electric-pole"}) do
+	for _, p in pairs(entproto) do
 		if data.raw[p][item] then return data.raw[p][item] end
 	end
 	--log("Could not find "..item.."'s entity prototype, check it's type.")
 	return nil
 end
+
 function omni.lib.find_recipe(item)
 	if type(item)=="table" then return item elseif type(item)~="string" then return nil end
 	for _, p in pairs(data.raw.recipe) do
