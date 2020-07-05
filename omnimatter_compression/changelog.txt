@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.9
+Date: ????
+  Bugfixes:
+    - Fixed compressed generators taking uncompressed fluid when omnifluid is enabled 
+---------------------------------------------------------------------------------------------------
 Version: 3.18.8
 Date: 2020.07.02
   Bugfixes:
