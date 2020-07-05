@@ -712,7 +712,7 @@ for _,recipe in pairs(data.raw.recipe) do
   end
 end
 -------------------------------------------------------------------------------
---[[DEAL WITH GENERATOR FLUIDS]]-- not sure if actually redundant at this point
+--[[DEAL WITH GENERATOR FLUIDS]]-- needed for omnifluid
 -------------------------------------------------------------------------------
 local multiplier = settings.startup["omnicompression_multiplier"].value
 
