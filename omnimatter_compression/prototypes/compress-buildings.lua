@@ -8,7 +8,7 @@ local black_list = {"creative",{"burner","turbine"},{"crystal","reactor"},{"fact
 local building_list = {"lab","assembling-machine","furnace","mining-drill","solar-panel","reactor","accumulator","transport-belt","loader","splitter","underground-belt","beacon","electric-pole","offshore-pump"}
 local not_energy_use = {"solar-panel","reactor","boiler","generator","accumulator","transport-belt","loader","splitter","underground-belt","electric-pole","offshore-pump"}
 if not mods["omnimatter_fluid"] then building_list[#building_list+1] = "boiler" end
-building_list[#building_list+1] = "generator" -- concentrated fluid generation in boiler type, so generator type needs to be after boiler
+building_list[#building_list+1] = "generator" 
 
 local category = {} --category additions
 local compress_level = {"Compact","Nanite","Quantum","Singularity"}
@@ -96,6 +96,7 @@ end
 local new_effect_gain = function(effect,level,linear,constant)
   local eff = string.sub(effect,1,string.len(effect)-2)
   local value = string.sub(effect,string.len(effect)-1,string.len(effect)-1)
+  local unit = string.sub(effect,string.len(effect))
   if string.len(effect) == 2 then
     eff = string.sub(effect,1,1)
     value = ""
@@ -112,7 +113,7 @@ local new_effect_gain = function(effect,level,linear,constant)
     eff=eff/1000
     if value == "k" then value = "M" elseif value == "M" then value = "G" elseif value=="G" then value="T" end
   end
-  return eff..value.."W"
+  return eff..value..unit
 end
 
 --new fluids for boilers and generators
@@ -121,9 +122,10 @@ local create_concentrated_fluid = function(fluid,tier)
 
   newFluid.localised_name = {"fluid-name.compressed-fluid",{"fluid-name."..newFluid.name},tier}
   newFluid.name = newFluid.name.."-concentrated-grade-"..tier
-  newFluid.heat_capacity = tonumber(string.sub(newFluid.heat_capacity,1,string.len(newFluid.heat_capacity)-2))*math.pow(multiplier,tier)..string.sub(newFluid.heat_capacity,string.len(newFluid.heat_capacity)-1,string.len(newFluid.heat_capacity))
+  newFluid.heat_capacity = new_effect_gain(newFluid.heat_capacity,tier)
+  
   if newFluid.fuel_value then
-    newFluid.fuel_value = tonumber(string.sub(newFluid.fuel_value,1,string.len(newFluid.fuel_value)-2))*math.pow(multiplier,tier)..string.sub(newFluid.fuel_value,string.len(newFluid.fuel_value)-2,string.len(newFluid.fuel_value))
+    newFluid.fuel_value = new_effect_gain(newFluid.fuel_value,tier)
   end
   if newFluid.icon then
     newFluid.icons = {{icon=newFluid.icon,icon_size=newFluid.icon_size or 32}}
@@ -245,7 +247,10 @@ local run_entity_updates = function(new,kind,i)
     end
   end
   --Generator
-  if kind == "generator" and new.fluid_box and new.fluid_box.filter and (data.raw.fluid[new.fluid_box.filter.."-concentrated-grade-"..i] or mods["omnimatter_fluid"]) then
+  if kind == "generator" and new.fluid_box and new.fluid_box.filter then
+    if (not data.raw.fluid[new.fluid_box.filter.."-concentrated-grade-"..i] or mods["omnimatter_fluid"]) then
+      create_concentrated_fluid(new.fluid_box.filter,i)
+    end
     new.fluid_usage_per_tick = new.fluid_usage_per_tick*math.pow((multiplier+1)/multiplier,i)
     new.fluid_box.filter = new.fluid_box.filter.."-concentrated-grade-"..i
     --new.effectivity = new.effectivity*math.pow(multiplier,i)
