@@ -231,12 +231,16 @@ local run_entity_updates = function(new,kind,i)
     if new.energy_consumption then new.energy_consumption = new_effect(new.energy_consumption,i) end
     if new.energy_source.fuel_inventory_size then new.energy_source.fuel_inventory_size = new.energy_source.fuel_inventory_size*(i+1) end
     if new.energy_source.effectivity then new.energy_source.effectivity = math.pow(new.energy_source.effectivity,1/(i+1)) end
-    if new.output_fluid_box and new.output_fluid_box.filter and not data.raw.fluid[new.output_fluid_box.filter.."-concentrated-grade-"..i] then
-      create_concentrated_fluid(new.output_fluid_box.filter,i)
+    if new.output_fluid_box and new.output_fluid_box.filter then
+      if not data.raw.fluid[new.output_fluid_box.filter.."-concentrated-grade-"..i] then 
+        create_concentrated_fluid(new.output_fluid_box.filter,i)
+      end
       new.output_fluid_box.filter = new.output_fluid_box.filter.."-concentrated-grade-"..i
     end
-    if new.fluid_box and new.fluid_box.filter and not data.raw.fluid[new.fluid_box.filter.."-concentrated-grade-"..i] then
-      create_concentrated_fluid(new.fluid_box.filter,i)
+    if new.fluid_box and new.fluid_box.filter then
+      if not data.raw.fluid[new.fluid_box.filter.."-concentrated-grade-"..i] then
+        create_concentrated_fluid(new.fluid_box.filter,i)
+      end
       new.fluid_box.filter = new.fluid_box.filter.."-concentrated-grade-"..i
     end
   end
