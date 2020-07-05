@@ -241,7 +241,7 @@ local run_entity_updates = function(new,kind,i)
     end
   end
   --Generator
-  if kind == "generator" and new.fluid_box and new.fluid_box.filter and  data.raw.fluid[new.fluid_box.filter.."-concentrated-grade-"..i] then
+  if kind == "generator" and new.fluid_box and new.fluid_box.filter and (data.raw.fluid[new.fluid_box.filter.."-concentrated-grade-"..i] or mods["omnimatter_fluid"]) then
     new.fluid_usage_per_tick = new.fluid_usage_per_tick*math.pow((multiplier+1)/multiplier,i)
     new.fluid_box.filter = new.fluid_box.filter.."-concentrated-grade-"..i
     --new.effectivity = new.effectivity*math.pow(multiplier,i)
@@ -349,7 +349,7 @@ for _,kind in pairs(building_list) do --only building types
             new.icons = omni.compression.add_overlay(build,"building",i)
 						new.icon_size = 32
             new.icon = nil
-            
+
             run_entity_updates(new,kind,i)
 
             compressed_buildings[#compressed_buildings+1] = new --add entity to the list
