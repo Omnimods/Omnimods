@@ -35,15 +35,11 @@ RecGen:import("boiler"):
 	setTechCost(120):
 	addIngredients("burner-omnitractor"):
 	setTechLocName("steam-power"):
-	setTechPrereq("logistic-science-pack"):
+	setTechPrereq("logistic-science-pack","basic-omnium-power"):
 	setTechIcon("omnimatter_energy","steam-power"):
 	equalize("burner-omnitractor"):
 	setEnabled(false):
 	setTechPacks(2):extend()
-	
-omni.lib.add_unlock_recipe("steam-power", "purified-omnite")
-omni.lib.add_unlock_recipe("steam-power", "burner-filter-inserter-2")
-omni.lib.add_unlock_recipe("steam-power", "burner-inserter-2")
 	
 if mods["angelsindustries"] and angelsmods.industries.components then
 	RecGen:import("steam-engine"):
@@ -160,6 +156,7 @@ else
 		for _,inctech in pairs(logsp) do
 			if tech.name == inctech  then
 				omni.lib.add_science_pack(tech.name,"logistic-science-pack")
+				omni.lib.add_prerequisite(tech.name, "logistic-science-pack")
 		 	end
 	 	end	
 	end
@@ -188,7 +185,7 @@ else
 	end
 
 	if mods["angelssmelting"] then
-		omni.lib.add_prerequisite("angels-metallurgy-1", "steam-power")
+		omni.lib.add_prerequisite("angels-metallurgy-1", "basic-omnium-power")
 	end	
 end
 	  

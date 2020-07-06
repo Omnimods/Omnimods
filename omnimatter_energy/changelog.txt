@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.18.9
+Date: 2020.07.xx
+  Changes:
+    - Purified Omnite now unlocks with its own Tech (Red sp only) after anbaricity
+    - Burner Inserter Mk 2 unlock with their own Tech aswell
+    - Moved Metallurgy and Burner Inserters Mk2 behind anbaricity
+    - Omnified Fuel refining 1 now requires logistic science packs
+---------------------------------------------------------------------------------------------------
 Version: 1.18.8
 Date: 2020.07.02
   Changes:

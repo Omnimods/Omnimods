@@ -125,7 +125,7 @@ RecGen:create("omnimatter_energy","heat"):
 	setFuelCategory("thermo"):
 	setCapacity(1):
 	setTechName("anbaricity"):
-	setTechCost(50):
+	setTechCost(40):
 	setTechIcon("base","electric-engine"):
 	setTechPrereq():
 	ifAddTechPrereq(settings.startup["bobmods-logistics-beltoverhaul"] and settings.startup["bobmods-logistics-beltoverhaul"].value,
@@ -417,12 +417,12 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter-1"):
 	setIcons("burner-filter-inserter","omnimatter_energy"):
 	addIcon("__omnilib__/graphics/icons/small/lvl1.png"):
 	setOrder("d"):
-	setTechName("burner-filter"):
-	setTechCost(100):
+	setTechName("burner-filter-1"):
+	setTechPacks(1):
+	setTechCost(50):
 	setTechIcon("burner-filter"):
 	ifAddTechPrereq(data.raw.technology["basic-belt-logistics"], "basic-belt-logistics"):
 	ifAddTechPrereq(data.raw.technology["belt-logistics"], "belt-logistics"):
-	setTechPacks(1):
 	setFilter(1):
 	setSpeed(0.0214, 0.01): --vanilla burner inserter speed
 	setAnimation("burner-filter-inserter"):
@@ -436,6 +436,11 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter-2"):
 	setIcons("burner-filter-inserter","omnimatter_energy"):
 	addIcon("__omnilib__/graphics/icons/small/lvl2.png"):
 	setOrder("e"):
+	setTechName("burner-filter-2"):
+	setTechPacks(1):
+	setTechCost(50):
+	setTechIcon("burner-filter"):
+	setTechPrereq("burner-filter-1"):
 	setFilter(1):
 	setSpeed(0.03, 0.014): --vanilla inserter speed
 	setAnimation("burner-filter-inserter"):
@@ -449,6 +454,7 @@ InsertGen:create("omnimatter_energy","burner-inserter-2"):
 	setIcons("burner-inserter","base"):
 	addIcon("__omnilib__/graphics/icons/small/lvl2.png"):
 	setOrder("c"):
+	setTechName("burner-filter-2"):
 	setSpeed(0.03, 0.014): --vanilla inserter speed
 	setAnimation("burner-inserter"):
 	setEnabled(false):
