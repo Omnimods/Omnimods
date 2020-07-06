@@ -25,9 +25,6 @@ local omniwater_prereq = function(levels,grade,element,tier)
 	return req
 end
 
-local cat = "chemistry"
-if mods["omnimatter_crystal"] then cat = "omniplant" end
-
 function omniwateradd(element,gain,tier,const,input,t1_enabled)
 	local cost = OmniGen:create():
 		setInputAmount(12*(input or 1)):
@@ -43,9 +40,9 @@ function omniwateradd(element,gain,tier,const,input,t1_enabled)
 		setIcons(element):
 		setIngredients(cost:ingredients()):
 		setResults(cost:results()):
-		setEnabled(false):
+		--setEnabled(false):
 		setEnabled(function(levels,grade) if ((grade == 1) and (t1_enabled==true)) then return true else return false end end):
-		setCategory(cat):
+		setCategory("omniphlog"):
 		setSubgroup("omni-fluids"):
 		setLocName("recipe-name.water-waste-omnitraction",{"fluid-name."..element}):
 		setLevel(water_levels):
