@@ -42,7 +42,7 @@ function omniwateradd(element,gain,tier,const,input,t1_enabled)
 		setResults(cost:results()):
 		--setEnabled(false):
 		setEnabled(function(levels,grade) if ((grade == 1) and (t1_enabled==true)) then return true else return false end end):
-		setCategory("omniphlog"):
+		setCategory("omnite-extraction-both"):
 		setSubgroup("omni-fluids"):
 		setLocName("recipe-name.water-waste-omnitraction",{"fluid-name."..element}):
 		setLevel(water_levels):

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.18.9
-Date: 2020.07.xx
+Date: 2020.07.07
   Changes:
     - Purified Omnite now unlocks with its own Tech (Red sp only) after anbaricity
     - Burner Inserter Mk 2 unlock with their own Tech aswell

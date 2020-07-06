@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.9
-Date: ????
+Date: 2020.07.07
   Bugfixes:
     - Fixed compressed generators taking uncompressed fluid when omnifluid is enabled
     - Fixed fuel-burning generators not working with omnifluid enabled 
