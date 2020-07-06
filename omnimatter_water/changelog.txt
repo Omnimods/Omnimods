@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.3
+Date: 2020.07.xx
+  Changes:
+    - Omnic water extraction 1 is now unlocked from the start to avoid getting stuck in tech
+    - Recipes that used removed pumps as their ingredient now use vanilla pumps
+---------------------------------------------------------------------------------------------------
 Version: 3.18.2
 Date: 2020.07.02
   Changes:
