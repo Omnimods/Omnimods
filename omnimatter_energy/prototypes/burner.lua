@@ -418,6 +418,7 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter-1"):
 	addIcon("__omnilib__/graphics/icons/small/lvl1.png"):
 	setOrder("d"):
 	setTechName("burner-filter-1"):
+	setTechLocName("burner-filter-1"):
 	setTechPacks(1):
 	setTechCost(50):
 	setTechIcon("burner-filter"):
@@ -437,6 +438,7 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter-2"):
 	addIcon("__omnilib__/graphics/icons/small/lvl2.png"):
 	setOrder("e"):
 	setTechName("burner-filter-2"):
+	setTechLocName("burner-filter-2"):
 	setTechPacks(1):
 	setTechCost(50):
 	setTechIcon("burner-filter"):
