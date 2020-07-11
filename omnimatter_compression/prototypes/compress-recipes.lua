@@ -65,7 +65,7 @@ local more_than_one = function(recipe)
 				else 
 					return omni.lib.find_stacksize(recipe.results[1]) > 1
 				end
-			elseif recipe.normal.results
+			elseif recipe.normal.results then
 				if type(recipe.normal.results[1])=="table" then
 					if recipe.normal.results[1][1] then
 						return omni.lib.find_stacksize(recipe.normal.results[1][1]) > 1
