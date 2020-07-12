@@ -51,27 +51,38 @@ local more_than_one = function(recipe)
 			else return omni.lib.find_stacksize(recipe.normal.result) > 1
 			end
 		end
-	elseif recipe.results or (recipe.normal and recipe.normal.results) then
-		if (recipe.results and #recipe.results > 1) or (recipe.normal and recipe.normal.results and #recipe.normal.results>1) then return true
+	else
+		if (recipe.results and #recipe.results > 1) or (recipe.normal and recipe.normal.results and #recipe.normal.results>1) then 
+			return true
 		else
 			if recipe.results then
 				if type(recipe.results[1])=="table" then
-					if recipe.results[1][1] then return omni.lib.find_stacksize(recipe.results[1][1]) > 1
-					else return omni.lib.find_stacksize(recipe.results[1].name) > 1
+					if recipe.results[1][1] then 
+						return omni.lib.find_stacksize(recipe.results[1][1]) > 1
+					else 
+						return omni.lib.find_stacksize(recipe.results[1].name) > 1
 					end
-				else return omni.lib.find_stacksize(recipe.results[1]) > 1
+				else 
+					return omni.lib.find_stacksize(recipe.results[1]) > 1
 				end
-			else
+			elseif recipe.normal.results then
 				if type(recipe.normal.results[1])=="table" then
-					if recipe.normal.results[1][1] then return omni.lib.find_stacksize(recipe.normal.results[1][1]) > 1
-					elseif omni.lib.find_stacksize(recipe.normal.results[1].name) then return omni.lib.find_stacksize(recipe.normal.results[1].name) > 1
-					else return false
+					if recipe.normal.results[1][1] then
+						return omni.lib.find_stacksize(recipe.normal.results[1][1]) > 1
+					elseif omni.lib.find_stacksize(recipe.normal.results[1].name) then 
+						return omni.lib.find_stacksize(recipe.normal.results[1].name) > 1
+					else 
+						return false
 					end
 				else
-					if omni.lib.find_stacksize(recipe.normal.results[1].name) then return omni.lib.find_stacksize(recipe.normal.results[1].name) > 1
-					else return false	--log("Something is not right, item  "..recipe.normal.results[1].name.." has no stacksize.")
+					if omni.lib.find_stacksize(recipe.normal.results[1].name) then 
+						return omni.lib.find_stacksize(recipe.normal.results[1].name) > 1
+					else 
+						return false	--log("Something is not right, item  "..recipe.normal.results[1].name.." has no stacksize.")
 					end
 				end
+			else
+				return false
 			end
 		end
 	end
