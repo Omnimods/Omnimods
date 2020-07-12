@@ -349,7 +349,7 @@ end
 local is_void = function(recipe)
   if string.find(recipe.name, "void") or string.find(recipe.name, "flaring") or string.find(recipe.name, "incineration")then
     return true
-  elseif recipe.normal.results and (string.find(recipe.normal.results[1].name, "void") or string.find(recipe.normal.results[1].name, "flaring") or string.find(recipe.normal.results[1].name, "incineration"))then
+  elseif recipe.normal.results and string.find(recipe.normal.results[1].name, "void") then
     return true
   end
   return false
