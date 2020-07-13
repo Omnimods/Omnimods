@@ -1,5 +1,7 @@
 --check setting has actually been forced off
-settings.startup["bobmods-tech-colorupdate"].value = false
+if mods["bobtech"] then
+  settings.startup["bobmods-tech-colorupdate"].value = false
+end
 
 require("prototypes.override-angels-tech")
 
