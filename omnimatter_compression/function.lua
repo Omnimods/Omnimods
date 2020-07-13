@@ -27,6 +27,7 @@ function omni.compression.include_entity(entity)
     compress_entity[entity]={include=true}
   end
 end
+
 function omni.compression.CleanName(name)
   if type(name) == "table" then return name end
   local str = "" --clear each time

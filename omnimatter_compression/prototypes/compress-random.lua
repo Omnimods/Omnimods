@@ -1,6 +1,6 @@
 ----log(serpent.block(random_recipes))
 
-local exclusion_list = {"void"}
+local exclusion_list = {"void","flaring","incineration"}
 
 local check_recipes = random_recipes
 
