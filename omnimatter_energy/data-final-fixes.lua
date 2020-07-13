@@ -18,13 +18,12 @@ local burnerEntities = {
 	"burner-omnitractor",
 	"burner-omniplant",
 	"burner-ore-crusher",
-	"mixing-furnace",
-	"chemical-boiler",
-	"stone-furnace",
+  	"stone-furnace",
+	"stone-mixing-furnace",
+	"stone-chemical-furnace",
 	"burner-assembling-machine",
 	"burner-mining-drill"
 }
-
 
 for _,entity in pairs(burnerEntities) do
 	BuildGen:importIf(entity):setFuelCategory("omnite"):extend()
@@ -32,3 +31,18 @@ end
 
 --Overwrite the localised name of the Burner inserter
 data.raw.recipe["burner-inserter"].localised_name = {"entity-name.burner-inserter-1"}
+
+--Find all remaining Techs that unlock entities that require electricity and move them behind anbaricity
+for _,tech in pairs(data.raw.technology) do 
+	local ent
+	if tech.effects and (tech.prerequisites == nil or next(tech.prerequisites) == nil) then
+		for _,eff in pairs(tech.effects) do
+			if eff.type == "unlock-recipe" then
+				ent = omni.lib.find_entity_prototype(eff.recipe)
+				if ent and ent.energy_source and ent.energy_source.type == "electric" then
+					omni.lib.add_prerequisite(tech.name, "anbaricity")
+				end
+			end
+		end
+	end
+end

@@ -27,22 +27,25 @@ local initilizing = false
 function omni_update(game)
 	initilizing = true
 	log("running through omnidate")
-	for _, force in pairs(game.forces) do
-		log("researching compressed techs where the standard is done.")
-		for _,tech in pairs(force.technologies) do
-			if not end_with(tech.name,"omnipressed") and tech.force.technologies[tech.name.."-omnipressed"] then
-				tech.force.technologies[tech.name.."-omnipressed"].researched = tech.researched
-			end
-		end
+  for _, force in pairs(game.forces) do
+    log("researching compressed techs where the standard is done.")
+    for _,tech in pairs(force.technologies) do
+			if not start_with(tech.name,"omnipressed-") and tech.force.technologies["omnipressed-" .. tech.name] then
+				tech.force.technologies["omnipressed-" .. tech.name].researched = tech.researched
+      elseif start_with(tech.name,"omnipressed-") and tech.force.technologies[string.sub(tech.name,13)] then
+        tech.force.technologies[string.sub(tech.name,13)].researched = tech.researched
+      end
+    end
+    
 		if force.technologies["compression-recipes"] and force.technologies["compression-recipes"].researched then
 			log("enabling compressed recipes of researched techs")
-			for _, rec in pairs(force.recipes) do
+      for _, rec in pairs(force.recipes) do
 				if not string.find(rec.name,"compression") and rec.enabled then
 					local compressCheck = rec.name.."-compression"
 					if string.find(rec.name,"omniperm") then
 						local b=string.find(rec.name,"omniperm")
-						compressCheck=string.sub(rec.name,1,b-1).."compression-"..string.sub(rec.name,b,-1)
-					end
+            compressCheck=string.sub(rec.name,1,b-1).."compression-"..string.sub(rec.name,b,-1)
+          end
 					if force.recipes[compressCheck] then
 						force.recipes[compressCheck].enabled = true
 						local z=1
@@ -55,7 +58,7 @@ function omni_update(game)
 			end
 		elseif force.technologies["compression-recipes"] then
 			log("disabling compressed recipes cause it is not researched")
-			for _, rec in pairs(force.recipes) do
+      for _, rec in pairs(force.recipes) do
 				if end_with(rec.name,"-compression") and rec.enabled and force.recipes[rec.name] then
 					force.recipes[rec.name].enabled = false
 				end
@@ -65,7 +68,6 @@ function omni_update(game)
 		log("sorting all omnitech recipes")
 		for _, tech in pairs(force.technologies) do
 			if start_with(tech.name,"omnitech") and tech.researched then
-				local tech_level = tonumber(string.sub(tech.name,string.len(tech.name)-1,string.len(tech.name)-1)) or tonumber(string.sub(tech.name,string.len(tech.name)-string.len("-omnipressed")-1,string.len(tech.name)-string.len("-omnipressed")-1))
 				for _, eff in pairs(tech.effects) do
 					if eff.type=="unlock-recipe" and start_with(eff.recipe,"omnirec") then
 						local rec = force.recipes[eff.recipe]
@@ -266,7 +268,7 @@ script.on_event(defines.events.on_research_finished, function(event)
 					if string.find(eff.recipe,"omniperm") then
 						local b=string.find(eff.recipe,"omniperm")
 						compressCheck=string.sub(eff.recipe,1,b-1).."compression-"..string.sub(eff.recipe,b,-1)
-					end
+          end
 					if tech.force.recipes[compressCheck] then
 						tech.force.recipes[compressCheck].enabled=true
 						local z=1
@@ -296,7 +298,7 @@ script.on_event(defines.events.on_research_finished, function(event)
 					end
 				end
 			end
-		elseif start_with(tech.name,"omnitech") and not end_with(tech.name,"omnipressed") then
+		elseif start_with(tech.name,"omnitech") and not start_with(tech.name,"omnipressed") then
 			local tech_recs = {}
 			local omniperm={}
 			local tDif = 0
@@ -304,8 +306,8 @@ script.on_event(defines.events.on_research_finished, function(event)
 			local catRec = {}
 
 			local work_name = tech.name
-			if end_with(tech.name,"omnipressed") then
-				work_name=string.sub(tech.name,1,string.len(tech.name)-12)
+			if start_with(tech.name,"omnipressed-") then
+        work_name=string.sub(tech.name,12)
 			end
 
 			local niva = 0

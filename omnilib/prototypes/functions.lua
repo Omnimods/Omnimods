@@ -376,6 +376,18 @@ function omni.lib.change_icon_tint(item, tint)
 	data.raw.item[item].icons = icons
 end
 
+function omni.lib.get_tech_name(recipename)
+	for _,tech in pairs(data.raw.technology) do
+		if tech.effects then
+			for _,eff in pairs(tech.effects) do
+				if eff.type == "unlock-recipe" and eff.recipe ==recipename then
+					return tech.name
+				end
+			end
+		end
+	end
+end
+
 function omni.lib.remove_recipe_all_techs(name)
 	for _,tech in pairs(data.raw.technology) do
 		if tech.effects then
@@ -430,44 +442,46 @@ function omni.lib.set_recipe_ingredients(recipe,...)
 		end
 	end
 end
-function omni.lib.replace_recipe_ingredient(recipe, ingredient,replacement)
-	if not data.raw.recipe[recipe] then
-		--log("could not find "..recipe)
 
-	end
-	if data.raw.recipe[recipe].ingredient or data.raw.recipe[recipe].ingredients then
-		omni.marathon.standardise(data.raw.recipe[recipe])
-	end
-	for _,dif in pairs({"normal","expensive"}) do
-		for i,ing in pairs(data.raw.recipe[recipe][dif].ingredients) do
-			if ing.name==ingredient then
-				if type(replacement)=="table" then
-					if replacement[1] == nil then
-						data.raw.recipe[recipe][dif].ingredients[i]=replacement
+function omni.lib.replace_recipe_ingredient(recipe, ingredient, replacement)
+	if data.raw.recipe[recipe] then
+		if data.raw.recipe[recipe].ingredient or data.raw.recipe[recipe].ingredients or not data.raw.recipe[recipe].expensive then
+			omni.marathon.standardise(data.raw.recipe[recipe])
+		end
+		for _,dif in pairs({"normal","expensive"}) do
+			for i,ing in pairs(data.raw.recipe[recipe][dif].ingredients) do
+				if ing.name==ingredient then
+					if type(replacement)=="table" then
+						if replacement[1] == nil then
+							data.raw.recipe[recipe][dif].ingredients[i]=replacement
+						else
+							ing.name=replacement[1]
+							ing.amount=replacement[2]
+						end
 					else
-						ing.name=replacement[1]
-						ing.amount=replacement[2]
+						ing.name=replacement
 					end
-				else
-					ing.name=replacement
 				end
 			end
 		end
 	end
 end
 
-function omni.lib.replace_recipe_result(recipe,result,replacement)
-	omni.marathon.standardise(data.raw.recipe[recipe])
-	--log(recipe)
-	for _,dif in pairs({"normal","expensive"}) do
-		for i,res in pairs(data.raw.recipe[recipe][dif].results) do
-			if not res[1] then
-				if res.name==result then
-					if type(replacement)=="table" then
-						res.name=replacement[1]
-						res.amount=replacement[2]
-					else
-						res.name=replacement
+function omni.lib.replace_recipe_result(recipe, result, replacement)
+	if data.raw.recipe[recipe] then
+		if data.raw.recipe[recipe].result or data.raw.recipe[recipe].results or not data.raw.recipe[recipe].expensive then
+			omni.marathon.standardise(data.raw.recipe[recipe])
+		end
+		for _,dif in pairs({"normal","expensive"}) do
+			for i,res in pairs(data.raw.recipe[recipe][dif].results) do
+				if not res[1] then
+					if res.name==result then
+						if type(replacement)=="table" then
+							res.name=replacement[1]
+							res.amount=replacement[2]
+						else
+							res.name=replacement
+						end
 					end
 				end
 			end
@@ -1134,22 +1148,64 @@ function omni.lib.find_stacksize(item)
 	log("Could not find "..item.."'s stack size, check it's type.")
 end
 
+local itemproto = {
+	"item",
+	"mining-tool",
+	"gun",
+	"ammo",
+	"armor",
+	"repair-tool",
+	"capsule",
+	"module",
+	"tool",
+	"rail-planner",
+	"selection-tool",
+	"item-with-entity-data",
+	"fluid",
+	"selection-tool",
+	"item-with-inventory",
+	"item-with-tags"
+}
 function omni.lib.find_prototype(item)
 	if type(item)=="table" then return item elseif type(item)~="string" then return nil end
-	for _, p in pairs({"item","mining-tool","gun","ammo","armor","repair-tool","capsule","module","tool","rail-planner","selection-tool","item-with-entity-data","fluid","selection-tool","item-with-inventory","item-with-tags"}) do
+	for _, p in pairs(itemproto) do
 		if data.raw[p][item] then return data.raw[p][item] end
 	end
 	--log("Could not find "..item.."'s prototype, check it's type.")
 	return nil
 end
+
+local entproto = {
+	"accumulator",
+	"assembling-machine",
+	"beacon",
+	"beam",
+	"boiler",
+	"arithmetic-combinator",
+	"decider-combinator",
+	"electric-pole",
+	"furnace",
+	"generator",
+	"lab",
+	"lamp",
+	"loader",
+	"locomotive",
+	"logistic-container",
+	"mining-drill",
+	"offshore-pump",
+	"pump",
+	"solar-panel",
+	"turret"
+}
 function omni.lib.find_entity_prototype(item)
 	if type(item)=="table" then return item elseif type(item)~="string" then return nil end
-	for _, p in pairs({"assembling-machine","furnace","mining-drill","boiler","generator","lab","locomotive","beacon","logistic-container","electric-pole"}) do
+	for _, p in pairs(entproto) do
 		if data.raw[p][item] then return data.raw[p][item] end
 	end
 	--log("Could not find "..item.."'s entity prototype, check it's type.")
 	return nil
 end
+
 function omni.lib.find_recipe(item)
 	if type(item)=="table" then return item elseif type(item)~="string" then return nil end
 	for _, p in pairs(data.raw.recipe) do

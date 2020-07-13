@@ -1,4 +1,21 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.3
+Date: 2020.07.07
+  Changes:
+    - Omnic water extraction 1 is now unlocked from the start to avoid getting stuck in tech
+    - Omnic water extractions are now made in the Omnitractor
+    - Recipes that used removed pumps as their ingredient now use vanilla pumps
+---------------------------------------------------------------------------------------------------
+Version: 3.18.2
+Date: 2020.07.02
+  Changes:
+    - Omniwater now disables all Pump recipes (Use extractions to get fluids)
+---------------------------------------------------------------------------------------------------
+Version: 3.18.1
+Date: 2020.06.09
+  Bugfixes:
+    - Fixed issue with AAI-industry's burner generator
+---------------------------------------------------------------------------------------------------
 Version: 3.18.0
 Date: 2020.04.02
   Features:

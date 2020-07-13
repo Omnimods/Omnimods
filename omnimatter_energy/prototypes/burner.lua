@@ -115,7 +115,7 @@ end
 
 RecGen:create("omnimatter_energy","heat"):
 	fluid():
-	setIcons("burner","omnilib"):
+	setIcons("__omnilib__/graphics/icons/small/burner.png"):
 	setBothColour(1,0,0):
 	setCategory("omnite-extraction-burner"):
 	setSubgroup("omnienergy-power"):
@@ -125,7 +125,7 @@ RecGen:create("omnimatter_energy","heat"):
 	setFuelCategory("thermo"):
 	setCapacity(1):
 	setTechName("anbaricity"):
-	setTechCost(50):
+	setTechCost(40):
 	setTechIcon("base","electric-engine"):
 	setTechPrereq():
 	ifAddTechPrereq(settings.startup["bobmods-logistics-beltoverhaul"] and settings.startup["bobmods-logistics-beltoverhaul"].value,
@@ -194,6 +194,7 @@ if mods["angelsindustries"] and angelsmods.industries.components then
 end
 
 RecGen:import("small-electric-pole"):setEnabled(false):setTechName("anbaricity"):extend()
+
 BuildGen:import("small-electric-pole"):
 	setName("small-iron-electric-pole"):
 	setIngredients({"iron-plate", 1},{"copper-cable", 1}):
@@ -223,6 +224,10 @@ BuildGen:import("small-electric-pole"):
 	}):
 	setEnabled(false):
 	setTechName("anbaricity"):extend()
+
+	--Temp sound fix until lib is fixed
+	data.raw["electric-pole"]["small-iron-electric-pole"].working_sound = nil
+	data.raw["electric-pole"]["small-omnicium-electric-pole"].working_sound = nil
 
 local ings = {}
 if mods["angelsindustries"] and angelsmods.industries.components then
@@ -410,14 +415,15 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter-1"):
 	setIngredients({"burner-inserter",1},{"omnitor",2},{"omnicium-gear-wheel",2}):
 	setSubgroup("inserter"):
 	setIcons("burner-filter-inserter","omnimatter_energy"):
-	addIcon("__omnilib__/graphics/lvl1.png"):
+	addIcon("__omnilib__/graphics/icons/small/lvl1.png"):
 	setOrder("d"):
-	setTechName("burner-filter"):
-	setTechCost(100):
+	setTechName("burner-filter-1"):
+	setTechLocName("burner-filter-1"):
+	setTechPacks(1):
+	setTechCost(50):
 	setTechIcon("burner-filter"):
 	ifAddTechPrereq(data.raw.technology["basic-belt-logistics"], "basic-belt-logistics"):
 	ifAddTechPrereq(data.raw.technology["belt-logistics"], "belt-logistics"):
-	setTechPacks(1):
 	setFilter(1):
 	setSpeed(0.0214, 0.01): --vanilla burner inserter speed
 	setAnimation("burner-filter-inserter"):
@@ -429,8 +435,14 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter-2"):
 	setIngredients({"burner-filter-inserter-1",1},{"omnicium-plate",2}):
 	setSubgroup("inserter"):
 	setIcons("burner-filter-inserter","omnimatter_energy"):
-	addIcon("__omnilib__/graphics/lvl2.png"):
+	addIcon("__omnilib__/graphics/icons/small/lvl2.png"):
 	setOrder("e"):
+	setTechName("burner-filter-2"):
+	setTechLocName("burner-filter-2"):
+	setTechPacks(1):
+	setTechCost(50):
+	setTechIcon("burner-filter"):
+	setTechPrereq("burner-filter-1"):
 	setFilter(1):
 	setSpeed(0.03, 0.014): --vanilla inserter speed
 	setAnimation("burner-filter-inserter"):
@@ -442,8 +454,9 @@ InsertGen:create("omnimatter_energy","burner-inserter-2"):
 	setIngredients({"burner-inserter",1},{"omnicium-plate",2}):
 	setSubgroup("inserter"):
 	setIcons("burner-inserter","base"):
-	addIcon("__omnilib__/graphics/lvl2.png"):
+	addIcon("__omnilib__/graphics/icons/small/lvl2.png"):
 	setOrder("c"):
+	setTechName("burner-filter-2"):
 	setSpeed(0.03, 0.014): --vanilla inserter speed
 	setAnimation("burner-inserter"):
 	setEnabled(false):
@@ -454,7 +467,7 @@ ItemGen:import("burner-inserter"):
 	addBurnerIcon():
 	setSubgroup("inserter"):
 	setOrder("b"):
-	addIcon("__omnilib__/graphics/lvl1.png"):
+	addIcon("__omnilib__/graphics/icons/small/lvl1.png"):
 	setLocName("entity-name.burner-inserter-1"):
 	setFuelCategory("omnite"):extend()
 	data.raw["inserter"]["burner-inserter"].energy_source.fuel_category = "omnite"

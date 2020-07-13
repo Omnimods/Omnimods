@@ -499,7 +499,9 @@ end
 function ItemGen:create(mod,name)
 	local m = nil
 	--if string.find(mod,"omnimatter") then m = "__"..mod.."__" end
-	--if mod == nil or mod == "omnimatter" then m = "__omnimatter__" end
+  --if mod == nil or mod == "omnimatter" then m = "__omnimatter__" end
+  local nm=name
+  if type(nm)~=string then nm="omni" end
 	local t = {
 		mod = mod,
 		name=name,
@@ -507,7 +509,7 @@ function ItemGen:create(mod,name)
 		loc_desc =  function(levels,grade) return nil end,
 		icons = function(levels,grade) return nil end,
 		flags = {},
-		order=function(levels,grade) return "y" end,
+		order=function(levels,grade) return "y["..nm.."]" end,
 		stack_size = 100,
 		subgroup = function(levels,grade) return "raw-resource" end,
 		fuel_value = nil,
@@ -660,7 +662,7 @@ function ItemGen:setIcons(icons,mod)
 	else
 		self.icons = icons
 	end
-	self.set_icon = true 
+	self.set_icon = true
 	return self
 end
 
@@ -716,7 +718,7 @@ function ItemGen:addMask(...)
 	return self
 end
 function ItemGen:addIconLevel(lvl)
-	self:addIcon({icon = "__omnilib__/graphics/lvl"..lvl..".png",icon_size=32})
+	self:addIcon({icon = "__omnilib__/graphics/icons/small/lvl"..lvl..".png",icon_size=32})
 	return self
 end
 function ItemGen:setName(lvl,mod)
@@ -725,14 +727,14 @@ function ItemGen:setName(lvl,mod)
 	return self
 end
 function ItemGen:addBurnerIcon()
-	self:addIcon({icon = "__omnilib__/graphics/burner.png",
+	self:addIcon({icon = "__omnilib__/graphics/icons/small/burner.png",
 	icon_size=32,
 		scale = 0.4375,
 		shift = {-10, 10}})
 	return self
 end
 function ItemGen:addElectricIcon()
-	self:addIcon({icon = "__omnilib__/graphics/electric.png",
+	self:addIcon({icon = "__omnilib__/graphics/icons/small/electric.png",
 	icon_size=32,
 		scale = 0.4375,
 		shift = {-10, 10}})
@@ -740,7 +742,7 @@ function ItemGen:addElectricIcon()
 end
 function ItemGen:addSteamIcon()
 	-- CC BY-NC 4.0 Licensed from http://getdrawings.com/get-icon#steam-icon-51.png
-	self:addIcon({icon = "__omnilib__/graphics/steam-icon-51-32x32.png",
+	self:addIcon({icon = "__omnilib__/graphics/icons/small/steam-icon-51-32x32.png",
 	icon_size=32,
 		scale = 0.4375,
 		shift = {-10, 10}})
@@ -769,11 +771,11 @@ function ItemGen:addSmallIcon(icon,nr)
 	return self
 end
 function ItemGen:addBlankIcon()
-	self:addIcon({icon = "__omnilib__/graphics/blank.png"})
+	self:addIcon({icon = "__omnilib__/graphics/icons/blank.png"})
 	return self
 end
 function ItemGen:nullIcon()
-	self:setIcons({icon = "__omnilib__/graphics/blank.png"})
+	self:setIcons({icon = "__omnilib__/graphics/icons/blank.png"})
 	return self
 end
 
@@ -2031,6 +2033,7 @@ function RecGen:setTechName(name)
 	end
 	return self
 end
+
 function RecGen:setTechEffects(...)
 	local name = {...}
 	if type(name[1])=="function" then
@@ -2040,6 +2043,7 @@ function RecGen:setTechEffects(...)
 	end
 	return self
 end
+
 function RecGen:setTechLocName(inname,...)
 	local arg = {...}
 	local rtn = {}
@@ -2048,15 +2052,19 @@ function RecGen:setTechLocName(inname,...)
 	elseif type(inname)=="table" and inname["grade-1"] then
 		rtn[1] = function(levels,grade) return inname["grade-"..grade] end
 	elseif type(inname)=="table" and #arg == 0 then
-		for _, part in pairs(inname) do
-			if type(part) == "function" then
-				rtn[#rtn+1] = part
-			elseif type(part)=="table" and not #part == 1 then
-				rtn[#rtn+1] = function(levels,grade) return inname[grade] end
-			elseif type(part)=="string" and string.find(part,".") and (string.find(part,"name") or string.find(part,"description")) then
-				rtn[#rtn+1] = function(levels,grade) return {part} end
-			else
-				rtn[#rtn+1]=function(levels,grade) return part end
+		if #inname ==1 then
+			rtn[#rtn+1]=function(levels,grade) return inname[1] end
+		else
+			for _, part in pairs(inname) do
+				if type(part) == "function" then
+					rtn[#rtn+1] = part
+				elseif type(part)=="table" and not #part == 1 then
+					rtn[#rtn+1] = function(levels,grade) return inname[grade] end
+				elseif type(part)=="string" and string.find(part,".") and (string.find(part,"name") or string.find(part,"description")) then
+					rtn[#rtn+1] = function(levels,grade) return {part} end
+				else
+					rtn[#rtn+1]=function(levels,grade) return part end
+				end
 			end
 		end
 	else
@@ -2082,6 +2090,7 @@ function RecGen:setTechLocName(inname,...)
 	end
 	return self
 end
+
 function RecGen:addTechLocName(key)
 	local a = clone_function(self.tech.loc_name)
 	local b = function(levels,grade) return {key} end
@@ -3048,7 +3057,7 @@ function BuildGen:setBurner(efficiency,size)
 end
 function BuildGen:setSteam(efficiency,size)
 	-- Taken from Bob's steam assembling machine, might be a prereq...
-	self.energy_source = 
+	self.energy_source =
     {
       type = "fluid",
       effectivity = 1,
@@ -3400,8 +3409,8 @@ function BuildGen:generateBuilding()
 			end
 		end
 	end
-	if self.type=="furnace" then 
-		self.source_inventory_size = function(levels,grade) return 1 end 
+	if self.type=="furnace" then
+		self.source_inventory_size = function(levels,grade) return 1 end
 		self.result_inventory_size = function(levels,grade) return 1 end
 	end
 	local lname = {"entity-name."..self.name}

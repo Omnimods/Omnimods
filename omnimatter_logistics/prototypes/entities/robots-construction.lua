@@ -114,8 +114,8 @@ for i=1,nr_bots do
       direction_count = 16,
       y = 128
     },
-    shadow_idle = construction_bot_parts.shadow_idle,
-    shadow_in_motion = construction_bot_parts.shadow_in_motion,
+    shadow_idle = omni.logistics.construction_bot_parts.shadow_idle,
+    shadow_in_motion = omni.logistics.construction_bot_parts.shadow_in_motion,
     working ={
       filename = "__omnimatter_logistics__/graphics/entity/construction-robot/construction-robot-working-"..i..".png",
       priority = "high",
@@ -128,10 +128,10 @@ for i=1,nr_bots do
       direction_count = 16,
       animation_speed = 0.3,
     },
-    shadow_working = construction_bot_parts.shadow_working,
-    smoke = construction_bot_parts.smoke,
-    sparks = construction_bot_parts.sparks,
-    working_sound = flying_robot(0.5),
+    shadow_working = omni.logistics.construction_bot_parts.shadow_working,
+    smoke = omni.logistics.construction_bot_parts.smoke,
+    sparks = omni.logistics.construction_bot_parts.sparks,
+    working_sound = omni.logistics.flying_robot(0.5),
     cargo_centered = {0.0, 0.2},
     construction_vector = {0.30, 0.22},
   }

@@ -1,5 +1,7 @@
+--check declared correctly
+if not omni.logistics then omni.logistics={} end
 --flying sounds
-function flying_robot(volume)
+function omni.logistics.flying_robot(volume)
 	return {
 		sound = {
 			{filename = "__base__/sound/flying-robot-1.ogg", volume = volume},
@@ -18,7 +20,7 @@ function flying_robot(volume)
 	}
 end
 --cargo robot parts
-cargo_bot_images={
+omni.logistics.cargo_bot_images={
   idle ={
     filename = "__omnimatter_logistics__/graphics/entity/cargo-robot/cargo-robot.png",
     priority = "high",
@@ -111,7 +113,7 @@ cargo_bot_images={
   },
 }
 --construction bot parts
-construction_bot_parts={
+omni.logistics.construction_bot_parts={
 
   shadow_idle ={
     filename = "__omnimatter_logistics__/graphics/entity/construction-robot/construction-robot-shadow.png",
@@ -223,7 +225,7 @@ construction_bot_parts={
   },
 }
 --vanilla roboports
-roboport_parts={
+omni.logistics.roboport_parts={
   charging_offsets =
   {
     {-1.5, -0.5}, {1.5, -0.5}, {1.5, 1.5}, {-1.5, 1.5},
@@ -305,7 +307,7 @@ roboport_parts={
   }
 }
 --zone expanders
-zone_expander_parts={
+omni.logistics.zone_expander_parts={
   base ={
     filename = "__omnimatter_logistics__/graphics/entity/zone-expander/zone-expander-base.png",
     width = 128,
@@ -325,38 +327,38 @@ zone_expander_parts={
     animation_speed = 0.5
   },
 	base_patch ={
-    filename = "__omnilib__/graphics/blank.png",
+    filename = "__omnilib__/graphics/icons/blank.png",
     width = 1,
     height = 1,
     frame_count = 1,
   },
 	door_animation ={
-    filename = "__omnilib__/graphics/blank.png",
+    filename = "__omnilib__/graphics/icons/blank.png",
     width = 1,
     height = 1,
     frame_count = 1,
   },
   door_animation_up ={
-    filename = "__omnilib__/graphics/blank.png",
+    filename = "__omnilib__/graphics/icons/blank.png",
     width = 1,
     height = 1,
     frame_count = 1,
   },
   door_animation_down ={
-    filename = "__omnilib__/graphics/blank.png",
+    filename = "__omnilib__/graphics/icons/blank.png",
     width = 1,
     height = 1,
     frame_count = 1,
   },
   recharging_animation ={
-    filename = "__omnilib__/graphics/blank.png",
+    filename = "__omnilib__/graphics/icons/blank.png",
     width = 1,
     height = 1,
     frame_count = 1,
   },
 }
 --relay stations
-relay_station_parts = {
+omni.logistics.relay_station_parts = {
   base ={
     filename = "__omnimatter_logistics__/graphics/entity/relay-station/relay-station-base.png",
     width = 128,
@@ -376,7 +378,7 @@ relay_station_parts = {
 	  animation_speed = 0.5
   },
 	base_patch ={
-    filename = "__omnilib__/graphics/blank.png",
+    filename = "__omnilib__/graphics/icons/blank.png",
     width = 1,
     height = 1,
     frame_count = 1,
@@ -407,7 +409,7 @@ relay_station_parts = {
   }
 }
 --construction roboport
-construction_port_parts={
+omni.logistics.construction_port_parts={
   charging_offsets ={
     {-1.5, -2.5}, {1.5, -2.5},
   },
@@ -426,7 +428,7 @@ construction_port_parts={
     shift = {0, -0.75}
   },
   base_animation ={
-    filename = "__omnilib__/graphics/blank.png",
+    filename = "__omnilib__/graphics/icons/blank.png",
     priority = "medium",
     width = 1,
     height = 1,
@@ -478,7 +480,7 @@ construction_port_parts={
   },
 }
 --logistic roboport
-logistic_port_parts={
+omni.logistics.logistic_port_parts={
   charging_offsets ={
     {-3, -1}, {3, -1}, {1.5, 1}, {-1.5, 1}, {1.5, -3}, {-1.5, -3},
   },
@@ -497,7 +499,7 @@ logistic_port_parts={
     shift = {0, -0.25}
   },
   base_animation ={
-    filename = "__omnilib__/graphics/blank.png",
+    filename = "__omnilib__/graphics/icons/blank.png",
     priority = "medium",
     width = 1,
     height = 1,
@@ -549,7 +551,7 @@ logistic_port_parts={
   },
 }
 --circuit connector offsets per entity
-circuit_connector_definitions={
+omni.logistics.circuit_connector_definitions={
   ["roboport"]=circuit_connector_definitions.create(universal_connector_template,{
       { variation = 26, main_offset = util.by_pixel(0, 64), shadow_offset = util.by_pixel(2, 78), show_shadow = false },
     }

@@ -113,4 +113,11 @@ RecGen:create("omnimatter_energy","purified-omnite"):
 	setFuelCategory("chemical"):
 	setFuelValue(2.4):
     setEnergy(2.0):
-    setEnabled(false):extend()
+    setEnabled(false):
+    setTechName("basic-omnium-power"):
+	setTechCost(55):
+	setTechIcon("omnimatter_energy","purified-omnite"):
+    setTechPrereq("anbaricity"):extend()
+  
+omni.lib.add_prerequisite("burner-filter-2","basic-omnium-power")
+omni.lib.add_prerequisite("omnium-power-1","basic-omnium-power")

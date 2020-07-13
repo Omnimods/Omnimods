@@ -41,9 +41,10 @@ if not mods["omnimatter_crystal"] then
 else
 	costs.efficiency.plate[#costs.efficiency.plate+1]={name = "steel-plate", quant={5,5,10}}
 	costs.efficiency.plate[#costs.efficiency.plate+1]={name = "iron-ore-crystal", quant={5,5,10}}
-	
-	costs.slots.plate[#costs.slots.plate+1]={name = "bronze-alloy", quant={5,5,10}}
-	costs.slots.plate[#costs.slots.plate+1]={name = "invar-alloy", quant={5,5,10}}
+	if mods["bobplates"] then
+	  costs.slots.plate[#costs.slots.plate+1]={name = "bronze-alloy", quant={5,5,10}}
+    costs.slots.plate[#costs.slots.plate+1]={name = "invar-alloy", quant={5,5,10}}
+  end
 end
 
 for efficiency=1,nr_reactors do

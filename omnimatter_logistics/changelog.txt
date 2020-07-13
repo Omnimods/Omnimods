@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.18.0
-Date: ????
+Date: 2020.xx.xx
   Features:
     - Adds early omni based logistics and construction systems for inherently long games
     - Adds early "power armour" which gives burner generators and primitive bot capabilities
@@ -11,3 +11,4 @@ Date: ????
     - Compatible with angels industries
     - Compatible with bobs logistics
     - Some cost balancing by Szentigrad3
+    - Had a structural problem in Omnilogistics coding overriding a base global table #177

@@ -23,7 +23,7 @@ local function On_Remove(event)
 end
 
 local function Player_Tile_Built(event)
-
+  log("player_tile_built")
 	local player = game.players[event.player_index]
 	local surface = player and player.surface
 
@@ -87,24 +87,24 @@ local function Robot_Tile_Built(event)
 	end
 	
 	for i, vv in ipairs(event.tiles) do
-	local position = vv.position
+		local position = vv.position
 		local currentTilename = surface.get_tile(position.x,position.y).name
 		
-		if currentTilename == "bi-solar-mat" then
-			writeDebug("Solar Mat has been built")
-			
-			local force = event.force
+		if currentTilename == "omni-solar-road" then			
+      writeDebug("Solar Mat has been built")
+      local force = event.force
 			local solar_mat = surface.get_tile(position.x,position.y)
-			local sm_pole_name = "omni-solar-road-pole" 
-			local sm_panel_name = "omni-solar-road-panel" 
+			local sm_pole_name = "omni-solar-road-pole"  
+			local sm_panel_name = "omni-solar-road-panel"  
 			  
-			local create_sm_pole = surface.create_entity({name = sm_pole_name, position = position, force = force})
-			local create_sm_panel = surface.create_entity({name = sm_panel_name, position = position, force = force})
+			local create_sm_pole = surface.create_entity({name = sm_pole_name, position = {position.x + 0.5, position.y + 0.5}, force = force})
+			local create_sm_panel = surface.create_entity({name = sm_panel_name, position = {position.x + 0.5, position.y + 0.5}, force = force})
 			  
 			create_sm_pole.minable = false
 			create_sm_pole.destructible = false
 			create_sm_panel.minable = false
 			create_sm_panel.destructible = false
+		
 		else
 			local radius = 0.5
 			local area = {{position.x - radius, position.y - radius}, {position.x + radius, position.y + radius}}
@@ -137,77 +137,6 @@ local function Robot_Tile_Built(event)
 	end			
 end
 	
-local function Robot_Tile_Built(event)
-
-
-	local robot = event.robot
-	local surface = robot.surface
-	local position = event.positions
-	
-	-- fix #2 Error while running event Bio_Industries::on_robot_built_tile
-	if surface == nil then
-		return
-	end
-	
-	for i, position in ipairs(position) do
-		local currentTilename = surface.get_tile(position.x,position.y).name
-		
-		if currentTilename == "omni-solar-road" then
-			writeDebug("Solar Mat has been built")
-			
-			local force = event.force
-			local solar_mat = surface.get_tile(position.x,position.y)
-			local sm_pole_name = "omni-solar-road-pole"  
-			local sm_panel_name = "omni-solar-road-panel"  
-			  
-			local create_sm_pole = surface.create_entity({name = sm_pole_name, position = position, force = force})
-			local create_sm_panel = surface.create_entity({name = sm_panel_name, position = position, force = force})
-			  
-			create_sm_pole.minable = false
-			create_sm_pole.destructible = false
-			create_sm_panel.minable = false
-			create_sm_panel.destructible = false
-		
-		else
-		
-				
-			local radius = 0.5
-			local area = {{position.x - radius, position.y - radius}, {position.x + radius, position.y + radius}}
-			writeDebug("NOT Solar Mat")
-			local entities = surface.find_entities(area)
-			local entity1 = entities[1]
-			entity1 = surface.find_entities_filtered{area=area, name="omni-solar-road-pole", limit=1}
-				
-			if entity1 then 		
-			
-				for _, o in pairs(surface.find_entities_filtered({area = area, name = "omni-solar-road-pole"})) do o.destroy() end	
-
-				writeDebug("omni-solar-road-pole Removed")
-			else
-				writeDebug("omni-solar-road-pole not found")				
-			end
-				
-			--- Remove the Hidden Solar Panel		
-			local entity2 = entities[1]
-			entity2 = surface.find_entities_filtered{area=area, name="omni-solar-road-panel", limit=1}	
-			
-			if entity2 then 
-					
-				for _, o in pairs(surface.find_entities_filtered({area = area, name = "omni-solar-road-panel"})) do o.destroy() end	
-
-				writeDebug("omni-solar-road-panel Removed")
-			else
-				writeDebug("omni-solar-road-panel not found")				
-			end
-
-
-		
-		end
-	end	
-		
-end
-
-
 --------------------------------------------------------------------
 local function solar_mat_removed_at(surface, position)
    local radius = 0.5
