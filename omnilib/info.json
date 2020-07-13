@@ -15,6 +15,7 @@
     "(?)angelsindustries",
     "(?)pyalienlife",
     "(?)pypetroleumhandling",
-    "(?)pyrawores"
+    "(?)pyrawores",
+    "!player-count-based-research-speed"
 ]
 }
