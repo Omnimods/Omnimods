@@ -7,7 +7,9 @@ Date: 2020.07.15
     - Patched that compressed tech versions were not unlocking correctly on research completed
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.9
-Date: 2020.07.07
+Date: 2020.07.14
+  Features:
+    - Added support for the Flare Stack mod
   Bugfixes:
     - Fixed compressed generators taking uncompressed fluid when omnifluid is enabled
     - Fixed fuel-burning generators not working with omnifluid enabled 
