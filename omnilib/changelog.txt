@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.15
+Date: 2020.07.14
+  Changes:
+    - Added logging functions to give better feedback when loading up mods with broken recipes
+---------------------------------------------------------------------------------------------------
 Version: 3.18.14
 Date: 2020.07.02
   Bugfixes:
