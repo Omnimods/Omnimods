@@ -65,7 +65,7 @@ local more_than_one = function(recipe)
 				else 
 					return omni.lib.find_stacksize(recipe.results[1]) > 1
 				end
-			elseif recipe.normal.results then
+			elseif recipe.normal.results and #recipe.normal.results > 0 then
 				if type(recipe.normal.results[1])=="table" then
 					if recipe.normal.results[1][1] then
 						return omni.lib.find_stacksize(recipe.normal.results[1][1]) > 1
@@ -347,9 +347,9 @@ end
 -- IS VOID? check for the word void in recipe name or products --
 -----------------------------------------------------------------
 local is_void = function(recipe)
-  if string.find(recipe.name, "void") then
+  if string.find(recipe.name, "void") or string.find(recipe.name, "flaring") or string.find(recipe.name, "incineration")then
     return true
-  elseif string.find(recipe.normal.results[1].name, "void") then
+  elseif recipe.normal.results and string.find(recipe.normal.results[1].name, "void") then
     return true
   end
   return false
@@ -666,6 +666,7 @@ local create_void = function(recipe)
   local continue = false
   local prefix = "compressed-"
   --local prob = 1
+  if not omni.lib.is_in_table(recipe.name,excluded_recipes) then --not excluded
   if not more_than_one(recipe) then --add in exclusion lists
     for _, dif in pairs({"normal","expensive"}) do
       if #recipe[dif].results == 1 and recipe[dif].results[1].type=="item" then
@@ -708,6 +709,7 @@ local create_void = function(recipe)
 		return table.deepcopy(new_rc)
 	end
 	return nil
+end
 end
 -------------------------------------------------------------------------------
 --[[CALL FUNCTION FOR GENERAL RECIPES]]--

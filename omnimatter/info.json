@@ -1,6 +1,6 @@
 {
 "name":"omnimatter",
-"version": "3.18.8",
+"version": "3.18.9",
 "title":"Omnimatter",
 "author":"EmperorZelos",
 "description":"This mod condenses all ores into a single ore from which everything is extracted.",
@@ -14,7 +14,6 @@
   "?angelsrefining",
   "?bobtech",
   "?angelssmelting",
-  "(?)Flare Stack",
   "(?)bobassembly"
 ]
 }
