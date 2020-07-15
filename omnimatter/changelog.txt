@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.9
 Date: 2020.07.14
+  Features:
+    - Added Upgrade Planner support to omni buildings
   Changes:
     - Removed Flare Stack as optional dependency to avoid compressed recipes not beeing generated
 ---------------------------------------------------------------------------------------------------

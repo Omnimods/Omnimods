@@ -125,6 +125,7 @@ BuildChain:create("omnimatter_crystal","omniplant"):
 	setUsage(function(level,grade) return "750kW" end):
 	--setTechName("omnitractor-electric-1"): --Done in final-fixes for now
 	setReplace("omniplant"):
+	setNextUpgrade("omniplant-1"):
 	setStacksize(20):
 	setSize(5):
 	setCrafting({"omniplant"}):
