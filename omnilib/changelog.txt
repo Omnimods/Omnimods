@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.15
+Date: 2020.07.15
+  Features:
+    - Added BuildGen:setNextUpgrade()
+  Changes:
+    - Added logging functions to give better feedback when loading up mods with broken recipes
+    - Tweaked the science pack colour override script to be less heavy handed
+    - Updated some of the omnidate scripts to reflect updates to compression tech naming 
+---------------------------------------------------------------------------------------------------
 Version: 3.18.14
 Date: 2020.07.02
   Bugfixes:

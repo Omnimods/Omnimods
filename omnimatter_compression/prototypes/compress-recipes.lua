@@ -52,26 +52,37 @@ local more_than_one = function(recipe)
 			end
 		end
 	else
-		if (recipe.results and #recipe.results > 1) or (recipe.normal and recipe.normal.results and #recipe.normal.results>1) then return true
+		if (recipe.results and #recipe.results > 1) or (recipe.normal and recipe.normal.results and #recipe.normal.results>1) then 
+			return true
 		else
 			if recipe.results then
 				if type(recipe.results[1])=="table" then
-					if recipe.results[1][1] then return omni.lib.find_stacksize(recipe.results[1][1]) > 1
-					else return omni.lib.find_stacksize(recipe.results[1].name) > 1
+					if recipe.results[1][1] then 
+						return omni.lib.find_stacksize(recipe.results[1][1]) > 1
+					else 
+						return omni.lib.find_stacksize(recipe.results[1].name) > 1
 					end
-				else return omni.lib.find_stacksize(recipe.results[1]) > 1
+				else 
+					return omni.lib.find_stacksize(recipe.results[1]) > 1
 				end
-			else
+			elseif recipe.normal.results and #recipe.normal.results > 0 then
 				if type(recipe.normal.results[1])=="table" then
-					if recipe.normal.results[1][1] then return omni.lib.find_stacksize(recipe.normal.results[1][1]) > 1
-					elseif omni.lib.find_stacksize(recipe.normal.results[1].name) then return omni.lib.find_stacksize(recipe.normal.results[1].name) > 1
-					else return false
+					if recipe.normal.results[1][1] then
+						return omni.lib.find_stacksize(recipe.normal.results[1][1]) > 1
+					elseif omni.lib.find_stacksize(recipe.normal.results[1].name) then 
+						return omni.lib.find_stacksize(recipe.normal.results[1].name) > 1
+					else 
+						return false
 					end
 				else
-					if omni.lib.find_stacksize(recipe.normal.results[1].name) then return omni.lib.find_stacksize(recipe.normal.results[1].name) > 1
-					else return false	--log("Something is not right, item  "..recipe.normal.results[1].name.." has no stacksize.")
+					if omni.lib.find_stacksize(recipe.normal.results[1].name) then 
+						return omni.lib.find_stacksize(recipe.normal.results[1].name) > 1
+					else 
+						return false	--log("Something is not right, item  "..recipe.normal.results[1].name.." has no stacksize.")
 					end
 				end
+			else
+				return false
 			end
 		end
 	end
@@ -332,6 +343,18 @@ function adjustOutput(recipe)
   end
 	return recipe
 end
+-----------------------------------------------------------------
+-- IS VOID? check for the word void in recipe name or products --
+-----------------------------------------------------------------
+local is_void = function(recipe)
+  if string.find(recipe.name, "void") or string.find(recipe.name, "flaring") or string.find(recipe.name, "incineration")then
+    return true
+  elseif recipe.normal.results and recipe.normal.results[1] and string.find(recipe.normal.results[1].name, "void") then
+    return true
+  end
+  return false
+end
+
 ----------------------------------
 -- GENERATOR FLUID: duplicates? --
 ----------------------------------
@@ -354,7 +377,7 @@ end
 -------------------------------------------------------------------------------
 function create_compression_recipe(recipe)
   if not omni.lib.is_in_table(recipe.name,excluded_recipes) then --not excluded
-    if not string.find(recipe.name,"creative") and not string.find(recipe.name, "void") then --not creative mod or void
+    if not string.find(recipe.name,"creative") and not is_void(recipe) then --not creative mod or void
       if (recipe.normal.results and #recipe.normal.results > 0) then --ingredients.normal.results and 1+
         if (more_than_one(recipe) or omni.lib.is_in_table(recipe.name,include_recipes)) then --stack size>1 or include anyway?
           local comrec={} --set basis to zero
@@ -643,6 +666,7 @@ local create_void = function(recipe)
   local continue = false
   local prefix = "compressed-"
   --local prob = 1
+  if not omni.lib.is_in_table(recipe.name,excluded_recipes) then --not excluded
   if not more_than_one(recipe) then --add in exclusion lists
     for _, dif in pairs({"normal","expensive"}) do
       if #recipe[dif].results == 1 and recipe[dif].results[1].type=="item" then
@@ -686,6 +710,7 @@ local create_void = function(recipe)
 	end
 	return nil
 end
+end
 -------------------------------------------------------------------------------
 --[[CALL FUNCTION FOR GENERAL RECIPES]]--
 -------------------------------------------------------------------------------
@@ -699,7 +724,7 @@ for _,recipe in pairs(data.raw.recipe) do
       --check for void and swap it to the void system in place of compression_recipe
       local rc = create_compression_recipe(recipe) --call create recipe
       -- the main exclusions are added in that function since it is also called with the random recipes
-      if not rc and string.find(recipe.name,"void") then
+      if not rc and is_void(recipe) then
         --should create void recipes in place of non-void
         rc = create_void(recipe)
       end

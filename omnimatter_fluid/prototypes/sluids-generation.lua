@@ -315,9 +315,9 @@ local dont_remove = {}
 
 
 for _,pump in pairs(data.raw["offshore-pump"]) do
+	local rec = omni.lib.find_recipe(pump.name)
 	if not (mods["omnimatter_water"] and mods["aai-industry"]) then
 		--Make sure that the pump is obtainable
-		local rec = omni.lib.find_recipe(pump.name)
 		if data.raw.item[pump.name] and rec then
 
 			local new={}

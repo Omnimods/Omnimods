@@ -125,7 +125,7 @@ RecGen:create("omnimatter_energy","heat"):
 	setFuelCategory("thermo"):
 	setCapacity(1):
 	setTechName("anbaricity"):
-	setTechCost(50):
+	setTechCost(40):
 	setTechIcon("base","electric-engine"):
 	setTechPrereq():
 	ifAddTechPrereq(settings.startup["bobmods-logistics-beltoverhaul"] and settings.startup["bobmods-logistics-beltoverhaul"].value,
@@ -162,7 +162,8 @@ BuildGen:import("steam-turbine"):
 	setTechName("anbaricity"):
 	setFluidConsumption(1):
 	setEffectivity(2/13.5/2):
-	setMaxTemp(250):extend()
+	setMaxTemp(250):
+	setNextUpgrade():extend()
 
 RecGen:create("omnimatter_energy","omnitor"):
 	setStacksize(100):
@@ -272,7 +273,7 @@ BuildGen:import("assembling-machine-1"):
 	  }
 	}}}
 	):
-	extend()
+	setNextUpgrade("assembling-machine-1"):extend()
 
 if mods["angelsindustries"] and angelsmods.industries.components then
 	regular_cost = {{"block-omni-0", 4}, {"cable-harness-1", 5}, {"omnite-brick", 5}}
@@ -291,6 +292,7 @@ BuildGen:import("lab"):
 	setFuelCategory("omnite"):
 	setNormalIngredients(regular_cost):
 	setExpensiveIngredients(expensive_cost):
+	setNextUpgrade("lab"):
 	setOnAnimation({
   layers =
   {
@@ -417,17 +419,19 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter-1"):
 	setIcons("burner-filter-inserter","omnimatter_energy"):
 	addIcon("__omnilib__/graphics/icons/small/lvl1.png"):
 	setOrder("d"):
-	setTechName("burner-filter"):
-	setTechCost(100):
+	setTechName("burner-filter-1"):
+	setTechLocName("burner-filter-1"):
+	setTechPacks(1):
+	setTechCost(50):
 	setTechIcon("burner-filter"):
 	ifAddTechPrereq(data.raw.technology["basic-belt-logistics"], "basic-belt-logistics"):
 	ifAddTechPrereq(data.raw.technology["belt-logistics"], "belt-logistics"):
-	setTechPacks(1):
 	setFilter(1):
 	setSpeed(0.0214, 0.01): --vanilla burner inserter speed
 	setAnimation("burner-filter-inserter"):
 	setFuelCategory("omnite"): --not working...
-	setBurner(0.75,1):extend()
+	setBurner(0.75,1):
+	setNextUpgrade("burner-filter-inserter-2"):extend()
 
 --Create a second tier filter and normal burner inserter that accepts omnified fuel
 InsertGen:create("omnimatter_energy","burner-filter-inserter-2"):
@@ -436,12 +440,19 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter-2"):
 	setIcons("burner-filter-inserter","omnimatter_energy"):
 	addIcon("__omnilib__/graphics/icons/small/lvl2.png"):
 	setOrder("e"):
+	setTechName("burner-filter-2"):
+	setTechLocName("burner-filter-2"):
+	setTechPacks(1):
+	setTechCost(50):
+	setTechIcon("burner-filter"):
+	setTechPrereq("burner-filter-1"):
 	setFilter(1):
 	setSpeed(0.03, 0.014): --vanilla inserter speed
 	setAnimation("burner-filter-inserter"):
 	setEnabled(false):
 	setFuelCategory("chemical"):
-	setBurner(0.75,1):extend()
+	setBurner(0.75,1):
+	setNextUpgrade("filter-inserter"):extend()
 
 InsertGen:create("omnimatter_energy","burner-inserter-2"):
 	setIngredients({"burner-inserter",1},{"omnicium-plate",2}):
@@ -449,11 +460,13 @@ InsertGen:create("omnimatter_energy","burner-inserter-2"):
 	setIcons("burner-inserter","base"):
 	addIcon("__omnilib__/graphics/icons/small/lvl2.png"):
 	setOrder("c"):
+	setTechName("burner-filter-2"):
 	setSpeed(0.03, 0.014): --vanilla inserter speed
 	setAnimation("burner-inserter"):
 	setEnabled(false):
 	setFuelCategory("chemical"):
-	setBurner(0.75,1):extend()
+	setBurner(0.75,1):
+	setNextUpgrade("inserter"):extend()
 
 ItemGen:import("burner-inserter"):
 	addBurnerIcon():
@@ -463,3 +476,4 @@ ItemGen:import("burner-inserter"):
 	setLocName("entity-name.burner-inserter-1"):
 	setFuelCategory("omnite"):extend()
 	data.raw["inserter"]["burner-inserter"].energy_source.fuel_category = "omnite"
+	data.raw["inserter"]["burner-inserter"].next_upgrade= "burner-inserter-2"

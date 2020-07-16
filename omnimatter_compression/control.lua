@@ -49,8 +49,10 @@ end)
 
 script.on_event(defines.events.on_research_finished, function(event)
   local tech = event.research
+  local level = tech.level
   --local name = string.match(tech.name,"(.*)%-%d*")
-  if tech.level then
+  --log(serpent.block(tech.max_level))
+  if tech.level and tech.upgrade then --this is meant to activate ONLY for multi-level tech
     if start_with(tech.name,"omnipressed-") then
       if tech.force.technologies[string.sub(tech.name,13,string.len(tech.name))].level < tech.level then
         tech.force.technologies[string.sub(tech.name,13,string.len(tech.name))].researched = true

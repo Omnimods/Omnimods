@@ -6,6 +6,7 @@ local compress_recipes, uncompress_recipes, compress_items = {}, {}, {}
 compressed_item_names = {}  --global?
 local item_count = 0
 local concentrationRatio = sluid_contain_fluid --set in omnilib
+local excluded_items = {}
 --Config variables
 local compressed_item_stack_size = 120 -- stack size for compressed items (not the items returned that is dynamic)
 local max_stack_size_to_compress = 2000 -- Don't compress items over this stack size
@@ -157,9 +158,9 @@ end
 --[[Create Dynamic Recipes from Items]]--
 -------------------------------------------------------------------------------
 for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", "capsule", "mining-tool", "tool","gun","armor"}) do
-	for _, item in pairs(data.raw[group]) do
+  for _, item in pairs(data.raw[group]) do
 		--Check for hidden flag to skip later
-    omni.compression.is_hidden(item) --check hidden
+    local hidden = omni.compression.is_hidden(item) --check hidden
     if item.stack_size >= 1 and item.stack_size <= max_stack_size_to_compress and omni.compression.is_stackable(item) and
       not (hidden or item.name:find("creative-mode")) then--and
       --string.find(item.name,"compress") ==nil and string.find(item.name,"concentrat") ==nil then --not already compressed
@@ -294,8 +295,22 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
       --omni.marathon.standardise(uncompress)
       standardized_recipes["uncompress-"..item.name] = true
 			uncompress_recipes[#uncompress_recipes+1] = uncompress
-		end
+    else--exclude item
+      excluded_items[item.name] = true
+    end
 	end
+end
+--log(serpent.block(excluded_items))
+
+for _, rec in pairs(data.raw.recipe) do
+  for _, dif in pairs({"normal", "expensive"}) do
+    for _, ing in pairs(rec[dif].ingredients) do
+      if excluded_items[ing.name] then
+        log("Excluded recipe '"..rec.name.."' due to '"..ing.name.."' being on the blacklist")
+        omni.compression.exclude_recipe(rec.name)
+      end
+    end
+  end
 end
 
 data:extend(compress_items)

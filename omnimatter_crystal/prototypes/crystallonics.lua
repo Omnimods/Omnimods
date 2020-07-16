@@ -117,15 +117,15 @@ BuildChain:create("omnimatter_crystal","omniplant"):
 		burner_ings = {{pipe,15},{"omnicium-plate",5},{electronic,5},{"omnite-brick",10},{"iron-gear-wheel",10}}
 	end
 	BuildGen:create("omnimatter_crystal","omniplant"):
+	setBurner(0.75,2):
 	setSubgroup("omniplant"):
-	setLocName("omniplant-burner"):
 	setIcons("omniplant","omnimatter_crystal"):
 	setIngredients(burner_ings):
-	setBurner(0.75,2):
 	setEnergy(5):
 	setUsage(function(level,grade) return "750kW" end):
 	--setTechName("omnitractor-electric-1"): --Done in final-fixes for now
 	setReplace("omniplant"):
+	setNextUpgrade("omniplant-1"):
 	setStacksize(20):
 	setSize(5):
 	setCrafting({"omniplant"}):

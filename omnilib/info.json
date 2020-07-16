@@ -1,6 +1,6 @@
 {
 "name":"omnilib",
-"version":"3.18.14",
+"version":"3.18.15",
 "title":"Omnilibrary",
 "author":"EmperorZelos",
 "description":"A collection of functions that omni-series of mods are using.",
@@ -15,6 +15,7 @@
     "(?)angelsindustries",
     "(?)pyalienlife",
     "(?)pypetroleumhandling",
-    "(?)pyrawores"
+    "(?)pyrawores",
+    "!player-count-based-research-speed"
 ]
 }

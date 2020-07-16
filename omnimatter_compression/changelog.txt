@@ -1,8 +1,18 @@
 ---------------------------------------------------------------------------------------------------
-Version: 3.18.9
-Date: ????
+Version: 3.18.10
+Date: 2020.07.15
+  Features:
+    - Updated void handling (to work better with flare-stack, Pyanodon and K2)
   Bugfixes:
-    - Fixed compressed generators taking uncompressed fluid when omnifluid is enabled 
+    - Patched that compressed tech versions were not unlocking correctly on research completed
+---------------------------------------------------------------------------------------------------
+Version: 3.18.9
+Date: 2020.07.14
+  Features:
+    - Added support for the Flare Stack mod
+  Bugfixes:
+    - Fixed compressed generators taking uncompressed fluid when omnifluid is enabled
+    - Fixed fuel-burning generators not working with omnifluid enabled 
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.8
 Date: 2020.07.02

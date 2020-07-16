@@ -84,6 +84,7 @@ function omni.marathon.standardise(recipe)
 			if ingred and ingred.name == nil then ingpass = false end
 		end
 	end
+
 	if ingpass == false then
 		local norm={}
 		local expens={}
@@ -99,7 +100,7 @@ function omni.marathon.standardise(recipe)
 					norm[i] = {type="item" ,name = ingred[1], amount = ingred[2] or 1}
 				end
 			end
-		else
+		elseif recipe.ingredients then
 			for i,ingred in pairs(recipe.ingredients) do
 				--name tag exists
 				if ingred.name and ingred.amount then
@@ -109,7 +110,10 @@ function omni.marathon.standardise(recipe)
 					norm[i] = {type="item" ,name = ingred[1], amount = ingred[2] or 1}
 				end
 			end
+		else
+			error("Error: Corrupted recipe '"..recipe.name.."' has no ingredients set")	
 		end
+
 		if recipe.expensive.ingredients then
 			expens = table.deepcopy(recipe.expensive.ingredients)
 		else --if recipe.ingredients
@@ -172,7 +176,7 @@ function omni.marathon.standardise(recipe)
 		elseif recipe.result then
 			norm = {{type="item" ,name = recipe.result, amount = recipe.result_count or 1}}
 			--recipe.results only choice left
-		else
+		elseif recipe.results then
 			for i,res in pairs(recipe.results) do
 				--name tag exists
 				if res.name and (res.amount or res.amount_min or res.amount_max) and #res == 0 then
@@ -182,6 +186,8 @@ function omni.marathon.standardise(recipe)
 					norm[i] = {type="item" ,name = res[1], amount = res[2] or 1}
 				end
 			end
+		else
+			error("Error: Corrupted recipe '"..recipe.name.."' has no result(s) set")
 		end
 
 		if recipe.expensive.results then
