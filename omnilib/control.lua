@@ -2,68 +2,80 @@ require("controlFunctions")
 
 local omni = {tech = {},rec={}}
 
-
-
-
-script.on_event(defines.events.on_player_joined_game, function(event)
-
-end)
-
-local string_contained_list = function(str, list)
-	for i=1, #list do
-		if type(list[i])=="table" then
-			local found_it = true
-			for _,words in pairs(list[i]) do
-				found_it = found_it and string.find(str,words)
+local function updateForce(force)
+	log("Syncing compressed and standard tech research states")
+	local techs = force.technologies
+	local omni_categories = {}
+	for _, tech in pairs(techs) do
+		local omnipressed = techs["omnipressed"-tech.name] or {}
+		-- Handle compressed techs
+		if tech.researched or omnipressed.researched then
+			tech.researched, omnipressed.researched = true
+			-- Handle Omnitech
+			if tech.name:find("^omnitech") then
+				for _, effect in pairs(tech.effects) do
+					if effect.type == "unlock-recipe" and effect.recipe:find("^omnirec") then
+						local recipe = force.recipes[effect.recipe]
+						local name = recipe.name
+						if not omni_categories[recipe.category] then
+							omni_categories[recipe.category] = {}
+						end
+						-- Normalize names for omniperm recipes
+						local prefix, suffix = name:match("^(.-)%-omniperm%-(.-)$")
+						if prefix then
+							name = prefix
+						end
+						-- Prefix is name -1 char for some reason I don't understand
+						prefix = name:sub(1,-2)
+						suffix = suffix
+						-- Get alphabet position of last letter in name
+						local grade = name:sub(-1):byte()-96
+						if grade > 26 or grade < 1 then
+							grade = 0
+						end
+						-- Enter the data into our categories
+						omni_categories[recipe.category][prefix] = omni_categories[recipe.category][prefix] or {
+							level = grade,
+							suffixes = {""}
+						}
+						if grade > omni_categories[recipe.category][prefix].level then
+							omni_categories[recipe.category][prefix].level = grade
+						end
+						if suffix and not omni_categories[recipe.category][prefix].level then
+						end
+					end
+				end
 			end
-			if found_it then return true end
-		else
-			if string.find(str,list[i]) then return true end
 		end
 	end
-	return false
+
+	log("Setting enabled flag on compressed recipes according to research")
+	local toggle = not not (force.technologies["compression-recipes"] or {}).researched--Cast as bool
+	local recipes = force.recipes
+	for _, recipe in recipes do
+		local name = recipe.name
+		if not string.find(recipe.category, "-compressed") and not string.find(name, "concentrated") then
+			-- Handle both compressed and permuted recipes.
+			(recipes[name.."-compression"] or recipes[name:gsub("omniperm","compression-omniperm")] or {}).enabled = toggle
+			local compressed_recipe
+			-- Deal with generator variants
+			for tier=1, math.huge do
+				compressed_recipe = recipes[name.."-concentrated-grade-"..tier]
+				if compressed_recipe then
+					compressed_recipe.enabled = toggle
+				else
+					break
+				end
+			end
+		end
+	end
 end
+
 local initilizing = false
 function omni_update(game)
 	initilizing = true
 	log("running through omnidate")
   for _, force in pairs(game.forces) do
-    log("researching compressed techs where the standard is done.")
-    for _,tech in pairs(force.technologies) do
-			if not start_with(tech.name,"omnipressed-") and tech.force.technologies["omnipressed-" .. tech.name] then
-				tech.force.technologies["omnipressed-" .. tech.name].researched = tech.researched
-      elseif start_with(tech.name,"omnipressed-") and tech.force.technologies[string.sub(tech.name,13)] then
-        tech.force.technologies[string.sub(tech.name,13)].researched = tech.researched
-      end
-    end
-    
-		if force.technologies["compression-recipes"] and force.technologies["compression-recipes"].researched then
-			log("enabling compressed recipes of researched techs")
-      for _, rec in pairs(force.recipes) do
-				if not string.find(rec.name,"compression") and rec.enabled then
-					local compressCheck = rec.name.."-compression"
-					if string.find(rec.name,"omniperm") then
-						local b=string.find(rec.name,"omniperm")
-            compressCheck=string.sub(rec.name,1,b-1).."compression-"..string.sub(rec.name,b,-1)
-          end
-					if force.recipes[compressCheck] then
-						force.recipes[compressCheck].enabled = true
-						local z=1
-						while force.recipes[rec.name.."-compression-grade-"..z] do
-							force.recipes[rec.name.."-compression-grade-"..z].enabled=true
-							z=z+1
-						end
-					end
-				end
-			end
-		elseif force.technologies["compression-recipes"] then
-			log("disabling compressed recipes cause it is not researched")
-      for _, rec in pairs(force.recipes) do
-				if end_with(rec.name,"-compression") and rec.enabled and force.recipes[rec.name] then
-					force.recipes[rec.name].enabled = false
-				end
-			end
-		end
 		local catrec = {}
 		log("sorting all omnitech recipes")
 		for _, tech in pairs(force.technologies) do
@@ -71,9 +83,6 @@ function omni_update(game)
 				for _, eff in pairs(tech.effects) do
 					if eff.type=="unlock-recipe" and start_with(eff.recipe,"omnirec") then
 						local rec = force.recipes[eff.recipe]
-						if not catrec[rec.category] then
-							catrec[rec.category] = {}
-						end
 
 						local grade = 0
 						local name = eff.recipe
@@ -84,7 +93,7 @@ function omni_update(game)
 							suffix = string.sub(rec.name,e+2,string.len(rec.name))
 						end
 						local prefix = string.sub(name,1,string.len(name)-1)
-						grade = invOrd(string.sub(name,string.len(name),string.len(name)))
+						
 
 
 						if not catrec[rec.category][prefix] then

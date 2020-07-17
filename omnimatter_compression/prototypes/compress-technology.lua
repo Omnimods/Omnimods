@@ -41,6 +41,12 @@ local containsOne = function(t,d)
 	end
 	return false
 end
+
+local splitTech = function(tech)
+  local level = string.match(tech, "-(%d+)")
+  tech = string.gsub(tech, "-(%d+)", "")
+  return tech, level
+end
 -------------------------------------------------------------------------------
 --[[Set-up loops]]--
 -------------------------------------------------------------------------------
@@ -74,8 +80,7 @@ end
 --find lowest level in tiered techs that gets compressed to ensure chains are all compressed passed the first one
 for _,tech in pairs(data.raw.technology) do --run always
   --log(tech.name)
-  local lvl = string.match(tech.name,".*%-(%d*)") 
-  local name = string.match(tech.name,"(.*)%-%d*")
+  local name, lvl = splitTech(tech.name)
   if lvl == "" or lvl == nil then --tweak to allow techs that start with no number
     lvl = 1
     name = tech.name
@@ -101,8 +106,7 @@ end
 --compare tech to the list created (tiered_tech) to include techs missing packs previously in the chain
 local include_techs = function(t)
   --extract name and level
-  local lvl = string.match(t.name,".*%-(%d*)")
-  local name = string.match(t.name,"(.*)%-%d*")
+  local name, lvl = splitTech(t.name)
   if lvl == "" or lvl == nil then --tweak to allow techs that start with no number
     lvl = 1
     name = t.name
@@ -124,19 +128,34 @@ for _,tech in pairs(data.raw.technology) do
     --fetch original
     local t = table.deepcopy(tech)
     t.name = "omnipressed-"..t.name
-    local loc_key = tech.localised_name --or {"technology-name.compressed", omni.compression.CleanName(tech.name)}
-    --clean up localisation issues, or use name string
-    if not loc_key then
-      local name=""
-      if t.max_level then --tiered techs
-        name = string.match(tech.name,"(.*)%-%d*")
-      else
-        name = tech.name
-      end
-      loc_key = {"technology-name.compressed",omni.compression.CleanName(name)}
+    local class, tier = splitTech(tech.name)
+    if tier then
+      t.localised_name = {
+        "technology-name.compressed",
+        tech.localised_name or
+        {"technology-name."..class},
+        tier
+      }
+      t.localised_description = {
+        "technology-description.compressed-tiered",
+        tech.localised_name or
+        {"technology-name."..class},
+        tier
+      }
+    else
+      t.localised_name = {
+        "technology-name.compressed",
+        tech.localised_name or
+        {"technology-name."..class}
+      }
+      t.localised_description = {
+        "technology-description.compressed",
+        tech.localised_name or
+        {"technology-name."..class}
+      }
     end
-    t.localised_name = loc_key
-    
+    --Handle icons
+    t.icons = omni.compression.add_overlay(t, "technology")
     --lowest common multiple for the packs
 		local lcm = 1
     for _, ings in pairs(t.unit.ingredients) do

@@ -27,7 +27,6 @@ function omni.compression.include_entity(entity)
     compress_entity[entity]={include=true}
   end
 end
-
 function omni.compression.CleanName(name)
   if type(name) == "table" then return name end
   local str = "" --clear each time
@@ -63,7 +62,7 @@ end
 -----------------------------------------------------------------------------
 --If our prototype doesn't have an icon, we need to find one that does
 local find_icon = function(item)
-  for _, p in pairs({"item","mining-tool","gun","ammo","armor","repair-tool","capsule","module","tool","rail-planner","item-with-entity-data","fluid"}) do
+  for _, p in pairs({"item","mining-tool","gun","ammo","armor","repair-tool","capsule","module","tool","rail-planner","item-with-entity-data","fluid","technology"}) do
     if data.raw[p][item] then
       if data.raw[p][item].icons or data.raw[p][item].icon then
         return data.raw[p][item]
@@ -116,7 +115,9 @@ omni.compression.add_overlay = function(it,overlay_type,level)
     -- "compress" for compressed item/recipe
     -- "uncompress" for decompression recipe
     -- "building" for compressed buildings
-    -- level is required for building type and should be a number, optional for others
+    -- "compress-fluid" is for tiered compressed fluids
+    -- "technology" for compressed techs
+    -- level is required for building type and compress-fluid and should be a number, optional for others
   --check if it is correct, if not fix it
   if type(it) == "string" then --parsed whole table not the name...
     it = omni.lib.find_prototype(it)
@@ -129,13 +130,23 @@ omni.compression.add_overlay = function(it,overlay_type,level)
     overlay.icon = "__omnimatter_compression__/graphics/compress-32.png"
   elseif overlay_type == "uncompress" then
     overlay.icon = "__omnimatter_compression__/graphics/compress-out-arrow-32.png"
+  elseif overlay_type == "compress-fluid" and level ~= nil then
+    overlay.icon = "__omnilib__/graphics/icons/small/lvl"..level..".png"
+  elseif overlay_type == "technology" then
+    overlay = {
+      icon = "__omnimatter_compression__/graphics/compress-tech-128.png",
+      icon_size = 128,
+      scale=0.5,
+      shift={-16,16},
+      tint={r=1,g=1,b=1,a=0.75}
+    }
   end
   
   local icons = find_result_icon(it)
   if icons then --ensure it exists first
     -- Do we require an overlay? This will be placed at the end of the list and thus on top
     if overlay.icon then
-      overlay.icon_size = 32
+      overlay.icon_size = overlay.icon_size or 32
       icons = util.combine_icons(icons, {overlay}, {})
     end
     -- This is the first table entry on which the others are built
@@ -144,5 +155,41 @@ omni.compression.add_overlay = function(it,overlay_type,level)
       icon_size = 32 --set initial icon to set the size for auto-scaling purposes
     }}
     return util.combine_icons(base_icon, icons, {})
+  end
+end
+
+local locale = require "__rusty-locale__.locale"
+
+omni.compression.set_localisation = function(old_prototype, new_prototype, name_key, description_key, class_override)--class_override format: "type-%s.prototype.name"
+  old_locale = locale.of(old_prototype)
+  if name_key then
+    if old_prototype.localised_name then
+      new_prototype.localised_name = {
+        new_prototype.type.."-name."..name_key,
+        old_prototype.localised_name
+      }
+    else
+      new_prototype.localised_name = {
+        new_prototype.type.."-name."..name_key,
+        class_override and string.format(class_override, "name") or
+        old_locale.name or
+        old_prototype.type.."-name."..old_prototype.name
+      }
+    end
+  end
+  if description_key then
+    if old_prototype.localised_description then
+      new_prototype.localised_description = {
+        new_prototype.type .."-description."..description_key, 
+        old_prototype.localised_description
+      }
+    else
+      new_prototype.localised_description = {
+        new_prototype.type.."-description."..description_key,
+        class_override and string.format(class_override, "description") or
+        old_locale.description or
+        old_prototype.type.."-description."..old_prototype.name
+      }
+    end
   end
 end

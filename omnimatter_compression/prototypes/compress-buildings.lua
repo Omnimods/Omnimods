@@ -120,7 +120,8 @@ end
 local create_concentrated_fluid = function(fluid,tier)
   local newFluid = table.deepcopy(data.raw.fluid[fluid])
 
-  newFluid.localised_name = {"fluid-name.compressed-fluid",{"fluid-name."..newFluid.name},tier}
+  omni.compression.set_localisation(newFluid, newFluid, "compressed-fluid")
+  table.insert(newFluid.localised_name, tier)
   newFluid.name = newFluid.name.."-concentrated-grade-"..tier
   newFluid.heat_capacity = new_effect_gain(newFluid.heat_capacity,tier)
   
@@ -133,9 +134,6 @@ local create_concentrated_fluid = function(fluid,tier)
   end
   table.insert(newFluid.icons,{icon="__omnilib__/graphics/icons/small/lvl"..tier..".png",icon_size=32})
   data:extend{newFluid}
-
-  
-  local loc_key = newFluid.localised_name or {"fluid-name."..newFluid.name}
 
   local baseFluid = fluid
   if tier > 1 then baseFluid = baseFluid.."-concentrated-grade-"..(tier-1) end
@@ -155,24 +153,22 @@ local create_concentrated_fluid = function(fluid,tier)
   local compress = {
     type = "recipe",
     name = fluid.."-concentrated-grade-"..tier,
-    localised_name = {"recipe-name.concentrate-fluid", loc_key},
-    localised_description = {"recipe-description.concentrate-fluid", loc_key},
     category = "fluid-condensation",
     enabled = false,
     icons = newFluid.icons,
     order = newFluid.order or "z".."[condensed-"..fluid.name .."]"
   }
+  omni.compression.set_localisation(data.raw.fluid[fluid], compress, 'concentrate-fluid')
   local uncompress = {
     type = "recipe",
     name = "uncompress-"..fluid.."-concentrated-grade-"..tier,
-    localised_name = {"recipe-name.deconcentrate-fluid", loc_key},
-    localised_description = {"recipe-description.deconcentrate-fluid", loc_key},
     icons = omni.compression.add_overlay(fluid,"uncompress"),
     icon_size = 32,
     category = "fluid-condensation",
     enabled = false,
     order = newFluid.order or "z".."[condensed-"..fluid .."]",
   }
+  omni.compression.set_localisation(data.raw.fluid[fluid], compress, 'deconcentrate-fluid')
 
   compress.normal = compressRecipeData
   compress.expensive = table.deepcopy(compressRecipeData)
@@ -329,8 +325,8 @@ for _,kind in pairs(building_list) do --only building types
             --[[Set Specific Properties]]--
             -------------------------------------------------------------------------------
             --localised name
-            local loc = {"entity-name."..build.name}
-            if build.localised_name then loc = build.localised_name end
+            --local loc = {"entity-name."..build.name}
+            --if build.localised_name then loc = build.localised_name end
             --recipe/item subgrouping
             if omni.compression.one_list then --if not the same as the base item
 							if not data.raw["item-subgroup"]["compressor-"..item.subgroup.."-"..math.floor((i-1)/2)+1] then
@@ -351,7 +347,7 @@ for _,kind in pairs(building_list) do --only building types
             -------------------------------------------------------------------------------
             --[[ENTITY CREATION]]--
             new.name = new.name.."-compressed-"..string.lower(compress_level[i])
-            new.localised_name = {"entity-name.compressed_building",loc,compress_level[i]}
+            new.localised_name = {"entity-name.compressed-building", b.localised_name or {"entity-name."..b.name}, compress_level[i]}
             new.max_health = new.max_health*math.pow(multiplier,i)
             new.minable.result = new.name
             new.minable.mining_time = (new.minable.mining_time or 10) * i
@@ -364,7 +360,7 @@ for _,kind in pairs(building_list) do --only building types
             compressed_buildings[#compressed_buildings+1] = new --add entity to the list
             --[[ITEM CREATION]]--
             item.localised_name = new.localised_name
-						item.name = new.name
+            item.name = new.name
 						item.place_result = new.name
 						item.stack_size = 5
 						if kind == "transport-belt" or kind=="loader" or kind== "splitter" or kind=="underground-belt" then
@@ -389,15 +385,15 @@ for _,kind in pairs(building_list) do --only building types
               result = new.name,
 							energy_required = 5*math.floor(math.pow(multiplier,i/2)),
 							enabled = false,
-						}
+            }
 
 						compressed_buildings[#compressed_buildings+1] = recipe
 
 						local uncompress = {
 							type = "recipe",
 							name = "uncompress-"..string.lower(compress_level[i]).."-"..rc.name,
-							localised_name = {"recipe-name.uncompress-item", loc_key},
-							localised_description = {"recipe-description.uncompress-item", loc_key},
+							--localised_name = {"recipe-name.uncompress-item", loc_key},
+							--localised_description = {"recipe-description.uncompress-item", loc_key},
 							icons = omni.compression.add_overlay(build,"uncompress"),
 							icon_size = 32,
 							subgroup = data.raw.item[build.minable.result].subgroup,
@@ -411,6 +407,7 @@ for _,kind in pairs(building_list) do --only building types
 							inter_item_count = item_count,
 							energy_required = 5*math.floor(math.pow(multiplier,i/2)),
             }
+            omni.compression.set_localisation(build, uncompress, 'uncompress-item', 'uncompress-item')
             
             compressed_buildings[#compressed_buildings+1] = uncompress
           end

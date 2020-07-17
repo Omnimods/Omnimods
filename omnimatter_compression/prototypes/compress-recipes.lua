@@ -382,30 +382,7 @@ function create_compression_recipe(recipe)
         if (more_than_one(recipe) or omni.lib.is_in_table(recipe.name,include_recipes)) then --stack size>1 or include anyway?
           local comrec={} --set basis to zero
           local new_cat = set_category(recipe) or "crafting-compressed" --fallback should not be needed
-          local icons = omni.compression.add_overlay(recipe,"compress")
-          ------------------------------------
-          -- **Localisation** --
-            -- CLEARLY BROKEN
-          ------------------------------------
-          local loc = omni.compression.CleanName(recipe.name) --set default
-          if recipe.localised_name then
-            loc = recipe.localised_name
-          elseif recipe.main_product then --other cases?
-            item = omni.lib.find_prototype(recipe.main_product)
-            if item and item.localised_name then
-              loc = item.localised_name
-            else
-              loc = omni.compression.CleanName(item.name)
-            end
-          elseif recipe.normal.main_product then
-            item=omni.lib.find_prototype(recipe.normal.main_product)
-            if item and item.localised_name then
-              loc = item.localised_name 
-            else
-              loc=omni.compression.CleanName(item.name)
-            end              
-          end
-          
+          local icons = omni.compression.add_overlay(recipe,"compress")         
           --subgroup check--already standardised, there should be no subgroup in its own
           local subgr = {regular = {}}
           if recipe.subgroup or recipe.normal.subgroup then --already standardised, there should be no subgroup in its own
@@ -529,7 +506,6 @@ function create_compression_recipe(recipe)
                   icons = icons,
                   icon_size = 32, -- should always be 32 with the icon_overlay script
                   name = recipe.name.."-compression",
-                  localised_name = {"recipe-name.compressed-recipe",loc},
                   enabled = false,
                   hidden = recipe.hidden,
                   normal = {
@@ -548,6 +524,7 @@ function create_compression_recipe(recipe)
                   subgroup = subgr.regular,
                   order = recipe.order,
                 }
+                omni.compression.set_localisation(recipe, r, 'compressed-recipe')
                 -------------------------------------------
                 -- **Normalised stack building setting** --
                 -------------------------------------------
@@ -611,10 +588,8 @@ function create_compression_recipe(recipe)
               local r = table.deepcopy(recipe)
 
               r.name = r.name.."-compression"
-              r.localised_name = {"recipe-name.compressed-recipe",loc}
-              r.icon = nil
+              omni.compression.set_localisation(recipe, r, 'compressed-recipe')
               r.icons = icons
-              r.icon_size=32
               for _, dif in pairs({"normal","expensive"}) do
                 r[dif].category=new_cat
                 r[dif].energy_required = concentrationRatio*r[dif].energy_required
@@ -762,9 +737,10 @@ for name,fluid in pairs(generatorFluidRecipes) do
             end
           end
         end
-
-        newFluid.localised_name={"fluid-name.compressed-fluid",{"fluid-name."..newFluid.name},i}
+        
         newFluid.name = newFluid.name.."-concentrated-grade-"..i
+        omni.compression.set_localisation(data.raw.fluid[name], newFluid, 'compressed-fluid')
+        table.insert(newFluid.localised_name, i)
         if not newFluid.heat_capacity then
           newFluid.heat_capacity = "1kJ"
         end
@@ -772,12 +748,12 @@ for name,fluid in pairs(generatorFluidRecipes) do
         if newFluid.fuel_value then
           newFluid.fuel_value = tonumber(string.sub(newFluid.fuel_value,1,string.len(newFluid.fuel_value)-2))*math.pow(multiplier,i)..string.sub(newFluid.fuel_value,string.len(newFluid.fuel_value)-2,string.len(newFluid.fuel_value))
         end
-        if newFluid.icon then
-          newFluid.icons = {{icon = newFluid.icon, icon_size = newFluid.icon_size or 32}}
-          newFluid.icon=nil
-        end
-        table.insert(newFluid.icons, {icon = "__omnilib__/graphics/icons/small/lvl"..i..".png", icon_size = 32})
-        new.icons = table.deepcopy(newFluid.icons)
+        newFluid.icons = omni.compression.add_overlay(
+          newFluid,
+          "compress-fluid",
+          i
+        )
+        newFluid.icon = nil
         compress_recipes[#compress_recipes+1] = new
         compress_recipes[#compress_recipes+1] = newFluid
       end

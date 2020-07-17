@@ -158,7 +158,7 @@ end
 --[[Create Dynamic Recipes from Items]]--
 -------------------------------------------------------------------------------
 for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", "capsule", "mining-tool", "tool","gun","armor"}) do
-  for _, item in pairs(data.raw[group]) do
+	for _, item in pairs(data.raw[group]) do
 		--Check for hidden flag to skip later
     local hidden = omni.compression.is_hidden(item) --check hidden
     if item.stack_size >= 1 and item.stack_size <= max_stack_size_to_compress and omni.compression.is_stackable(item) and
@@ -189,9 +189,6 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
         order = item.normal.order
       end
       order = order .."[concentrated-"..item.name .."]"
-      --set type
-			local it_type = "item"
-			if is_science(item) then it_type = "tool" end
       --set up new item
 			local new_item = {
 				type = it_type,
@@ -218,8 +215,6 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 			local compress = {
 				type = "recipe",
 				name = "compress-"..item.name,
-				localised_name = {"recipe-name.compress-item", loc_key},
-				localised_description = {"recipe-description.compress-item", loc_key},
 				category = "compression",
 				enabled = true,
         hidden = true,
@@ -259,8 +254,6 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 			local uncompress = {
 				type = "recipe",
 				name = "uncompress-"..item.name,
-				localised_name = {"recipe-name.uncompress-item", loc_key},
-				localised_description = {"recipe-description.uncompress-item", loc_key},
 				icons = omni.compression.add_overlay(item.name,"uncompress"),
 				icon_size = 32,
 				category = "compression",
