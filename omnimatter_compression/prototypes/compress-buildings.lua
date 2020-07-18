@@ -122,7 +122,9 @@ local create_concentrated_fluid = function(fluid,tier)
 
   newFluid.localised_name = {"fluid-name.compressed-fluid",{"fluid-name."..newFluid.name},tier}
   newFluid.name = newFluid.name.."-concentrated-grade-"..tier
-  newFluid.heat_capacity = new_effect_gain(newFluid.heat_capacity,tier)
+  if newFluid.heat_capacity then
+    newFluid.heat_capacity = new_effect_gain(newFluid.heat_capacity,tier)
+  end
   
   if newFluid.fuel_value then
     newFluid.fuel_value = new_effect_gain(newFluid.fuel_value,tier)
