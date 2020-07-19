@@ -9,10 +9,6 @@ function omni.logistics.flying_robot(volume)
 			{filename = "__base__/sound/flying-robot-3.ogg", volume = volume},
 			{filename = "__base__/sound/flying-robot-4.ogg", volume = volume},
 			{filename = "__base__/sound/flying-robot-5.ogg", volume = volume},
-			{filename = "__base__/sound/flying-robot-6.ogg", volume = volume},
-			{filename = "__base__/sound/flying-robot-7.ogg", volume = volume},
-			{filename = "__base__/sound/flying-robot-8.ogg", volume = volume},
-			{filename = "__base__/sound/flying-robot-9.ogg", volume = volume}
 		},
 		max_sounds_per_type = 5,
 		audible_distance_modifier = 1,

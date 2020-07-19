@@ -292,6 +292,7 @@ BuildGen:import("lab"):
 	setFuelCategory("omnite"):
 	setNormalIngredients(regular_cost):
 	setExpensiveIngredients(expensive_cost):
+	setReplace("lab"):
 	setNextUpgrade("lab"):
 	setOnAnimation({
   layers =
@@ -412,6 +413,11 @@ BuildGen:import("lab"):
     }
   }
 }):extend()
+
+--Set fast replaceable group for the vanilla lab
+if data.raw["lab"]["lab"] then
+	data.raw["lab"]["lab"].fast_replaceable_group = "lab"
+end
 
 InsertGen:create("omnimatter_energy","burner-filter-inserter-1"):
 	setIngredients({"burner-inserter",1},{"omnitor",2},{"omnicium-gear-wheel",2}):
