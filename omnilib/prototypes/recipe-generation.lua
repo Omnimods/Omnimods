@@ -2703,6 +2703,7 @@ function setBuildingParameters(b,subpart)
 	b.mining_power = function(levels,grade) return 3 end
 	b.overlay={}
 	b.place_result = function(levels,grade) return b.name end
+	b.next_upgrade = function(levels,grade) return nil end
     --b.resource_searching_radius = function(levels,grade) return 2.49 end
     b.vector_to_place_result = function(levels,grade) return {0, -1.85} end
 	b.crafting_categories = function(levels,grade) return nil end
@@ -2749,6 +2750,7 @@ function BuildGen:import(name)
 		setEnergySource(build.energy_source):
 		setInventory(math.max(build.source_inventory_size or 3,build.ingredient_count or 3)):
 		setResultInventory(math.max(build.result_inventory_size or 3,build.result_count or 3)):
+		setNextUpgrade(build.next_upgrade):
 		setUsage(build.energy_usage):
 		setAnimation(build.animation):
 		setAnimations(build.animations):
@@ -2893,6 +2895,14 @@ function BuildGen:setElectricPole()
 end
 function BuildGen:setType(t)
 	self.type = t
+	return self
+end
+function BuildGen:setNextUpgrade(t)
+	if type(t)=="function" then
+		self.next_upgrade = t
+	else
+		self.next_upgrade = function(levels,grade) return t end
+	end
 	return self
 end
 function BuildGen:setLight(t)
@@ -3448,6 +3458,7 @@ function BuildGen:generateBuilding()
 		crafting_speed = self.crafting_speed(0,0),
 		source_inventory_size = self.source_inventory_size(0,0),
 		result_inventory_size = self.result_inventory_size(0,0),
+		next_upgrade = self.next_upgrade(0,0),
 		energy_source = source,
 		smoke = self.smoke,
 		energy_usage = self.energy_usage(0,0),
@@ -3581,6 +3592,13 @@ function BuildChain:generate_building_chain()
 			if i-d > 1 then prevtname = temptname.."-"..i-d-1 end
 		end
 
+		local nextname
+		if i < levels then
+			nextname = self.name.."-"..i+1
+		else
+			nextname = nil
+		end
+
 		--Must fix so this can adapt to fit normal and expensive
 		local ingnorm,ingexp = self.ingredients(levels,i,0),self.ingredients(levels,i,1)
 		if i>1 and not omni.lib.is_in_table(self.name.."-"..i,ingnorm) then ingnorm[#ingnorm+1]={name=self.name.."-"..i-1,amount=1,type="item"} end
@@ -3611,6 +3629,7 @@ function BuildChain:generate_building_chain()
 		setSize(function(levels,grade) return self.size(self.levels,i) end):
 		setTechName(tname):
 		setReplace(self.fast_replaceable_group(levels,i)):
+		setNextUpgrade(function(levels,grade) return nextname end):
 		setTechUpgrade(self.tech.upgrade(levels,i)):
 		setTechCost(self.tech.cost(levels,i)):
 		setTechIcon(self.tech.icon(levels,i)):
@@ -4087,7 +4106,8 @@ function InsertGen:create(mod,name)
       type = "electric",
       usage_priority = "secondary-output"
     }
-	b.fast_replaceable_group=function(levels,grade) return "inserter" end
+	b.fast_replaceable_group = function(levels,grade) return "inserter" end
+	b.next_upgrade = function(levels,grade) return nil end
 	b.max_health = function(levels,grade) return 150 end
 	b.mining_time = function(levels,grade) return 0.1 end
 	b.flags={"placeable-neutral", "placeable-player", "player-creation"}
@@ -4472,6 +4492,7 @@ function InsertGen:generateInserter()
     flags = self.flags,
 	minable = {mining_time = self.mining_time(0,0), result = self.name},
 	fast_replaceable_group = self.fast_replaceable_group(0,0),
+	next_upgrade = self.next_upgrade(0,0),
 	max_health = self.max_health(0,0),
 	corpse = self.corpse,
     resistances =

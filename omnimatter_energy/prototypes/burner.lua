@@ -162,7 +162,8 @@ BuildGen:import("steam-turbine"):
 	setTechName("anbaricity"):
 	setFluidConsumption(1):
 	setEffectivity(2/13.5/2):
-	setMaxTemp(250):extend()
+	setMaxTemp(250):
+	setNextUpgrade():extend()
 
 RecGen:create("omnimatter_energy","omnitor"):
 	setStacksize(100):
@@ -272,7 +273,7 @@ BuildGen:import("assembling-machine-1"):
 	  }
 	}}}
 	):
-	extend()
+	setNextUpgrade("assembling-machine-1"):extend()
 
 if mods["angelsindustries"] and angelsmods.industries.components then
 	regular_cost = {{"block-omni-0", 4}, {"cable-harness-1", 5}, {"omnite-brick", 5}}
@@ -291,6 +292,8 @@ BuildGen:import("lab"):
 	setFuelCategory("omnite"):
 	setNormalIngredients(regular_cost):
 	setExpensiveIngredients(expensive_cost):
+	setReplace("lab"):
+	setNextUpgrade("lab"):
 	setOnAnimation({
   layers =
   {
@@ -411,6 +414,11 @@ BuildGen:import("lab"):
   }
 }):extend()
 
+--Set fast replaceable group for the vanilla lab
+if data.raw["lab"]["lab"] then
+	data.raw["lab"]["lab"].fast_replaceable_group = "lab"
+end
+
 InsertGen:create("omnimatter_energy","burner-filter-inserter-1"):
 	setIngredients({"burner-inserter",1},{"omnitor",2},{"omnicium-gear-wheel",2}):
 	setSubgroup("inserter"):
@@ -428,7 +436,8 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter-1"):
 	setSpeed(0.0214, 0.01): --vanilla burner inserter speed
 	setAnimation("burner-filter-inserter"):
 	setFuelCategory("omnite"): --not working...
-	setBurner(0.75,1):extend()
+	setBurner(0.75,1):
+	setNextUpgrade("burner-filter-inserter-2"):extend()
 
 --Create a second tier filter and normal burner inserter that accepts omnified fuel
 InsertGen:create("omnimatter_energy","burner-filter-inserter-2"):
@@ -448,7 +457,8 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter-2"):
 	setAnimation("burner-filter-inserter"):
 	setEnabled(false):
 	setFuelCategory("chemical"):
-	setBurner(0.75,1):extend()
+	setBurner(0.75,1):
+	setNextUpgrade("filter-inserter"):extend()
 
 InsertGen:create("omnimatter_energy","burner-inserter-2"):
 	setIngredients({"burner-inserter",1},{"omnicium-plate",2}):
@@ -461,7 +471,8 @@ InsertGen:create("omnimatter_energy","burner-inserter-2"):
 	setAnimation("burner-inserter"):
 	setEnabled(false):
 	setFuelCategory("chemical"):
-	setBurner(0.75,1):extend()
+	setBurner(0.75,1):
+	setNextUpgrade("inserter"):extend()
 
 ItemGen:import("burner-inserter"):
 	addBurnerIcon():
@@ -471,3 +482,4 @@ ItemGen:import("burner-inserter"):
 	setLocName("entity-name.burner-inserter-1"):
 	setFuelCategory("omnite"):extend()
 	data.raw["inserter"]["burner-inserter"].energy_source.fuel_category = "omnite"
+	data.raw["inserter"]["burner-inserter"].next_upgrade= "burner-inserter-2"

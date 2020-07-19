@@ -53,8 +53,8 @@ if not mods["angelsrefining"] then
 			local metal = ""
 			local plate = ""
 			if ore == "quartz" then
-				plate = "quartz"
-				metal=plate
+				plate = "silicon"
+				metal= "silicon-plate"
 			elseif ore == "bauxite-ore" then
 				plate = "aluminium-plate"
 				metal="aluminium"

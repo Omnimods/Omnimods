@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.3
-Date: 2020.07.14
+Date: 2020.07.16
   Changes:
     - Omnic water extraction 1 is now unlocked from the start to avoid getting stuck in tech
     - Omnic water extractions are now made in the Omnitractor

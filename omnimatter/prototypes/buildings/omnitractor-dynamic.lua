@@ -19,6 +19,7 @@ BuildGen:create("omnimatter","omnitractor"):
 	setUsage(100):
 	setEnabled():
 	setReplace("omnitractor"):
+	setNextUpgrade("omnitractor-1"):
 	setStacksize(10):
 	setSize(3):
 	setCrafting({"omnite-extraction-both","omnite-extraction-burner"}):

@@ -20,6 +20,7 @@ setBurner(0.75,1):
 setStacksize(10):
 setSubgroup("omniphlog"):
 setReplace("omniphlog"):
+setNextUpgrade("omniphlog-1"):
 setSize(3):
 setCrafting("omniphlog"):
 setFluidBox("XWX.XXX.XKX"):
