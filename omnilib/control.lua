@@ -93,15 +93,9 @@ local function updateBuildingRecipes()
 			if recipe then
 				local new_recipe = get_last_tier(recipe.name, entity.force, true)
 				if new_recipe and new_recipe ~= recipe.name and settings.global["omnilib-autoupdate"].value then-- Let's follow the user's preference :^)
+					local ingredients
 					if entity.is_crafting() then
-						local ingredients = {}
-						table.insert(recipe_deficit,{
-							entity = entity,
-							ingredients = recipe.ingredients or {}
-						})
-						if #ingredients > 0 then
-							log("Salvaged " .. #ingredients .. " ingredients when switching recipes")
-						end
+						ingredients = recipe.ingredients or {}
 					end
 					entity.set_recipe(new_recipe)
 					for _, ingredient in pairs(ingredients) do
@@ -229,63 +223,6 @@ script.on_event(defines.events.on_tick, function(event)
 	elseif global.omni.update_buildings then
 		updateBuildingRecipes()
 		global.omni.update_buildings = false
-	end
-end)
-script.on_nth_tick(30,function(conf)
-	if #recipe_deficit > 0 then
-		local current_index, running_cost = 1, 0
-		repeat
-			local entity = recipe_deficit[current_index].entity
-			if entity.valid then
-				for key, ingredient in pairs(recipe_deficit[current_index].ingredients) do
-					if ingredient.type == "item" then
-						local item_stack = {
-							name = ingredient.name,
-							count = 1
-						}
-						local entity_inventory = entity.get_inventory(defines.inventory.assembling_machine_input)
-						if entity_inventory.can_insert(item_stack) then
-							entity.insert(item_stack)
-							running_cost = running_cost + 8 -- We've succeeded
-							log("Restored 1 of " .. ingredient.name .. " to " .. entity.name)
-							ingredient.amount = ingredient.amount - 1
-							if ingredient.amount == 0 then
-								table.remove(ingredients, key)
-							end
-							break
-						end
-					elseif ingredient.type == "fluid" then
-						for tank_index, tank in pairs(entity.fluidbox) do
-							local prototype = entity.fluidbox.get_prototype(tank_index)
-							if prototype.production_type == "input" or prototype.production_type == "input-output" then
-								if not prototype.filter or prototype.filter and prototype.filter.name == ingredient.name then
-									local insert_amount = math.min(ingredient.amount, 100)
-									insert_amount = math.min(insert_amount, prototype.volume - (tank.amount or 0))-- Make sure we don't overfill and waste
-									entity.insert_fluid({
-										name = ingredient.name,
-										amount = insert_amount
-									})
-									running_cost = running_cost + 8 -- We've succeeded
-									log("Restored " .. insert_amount .. " of " .. ingredient.name .. " to " .. entity.name)
-									ingredient.amount = ingredient.amount - insert_amount
-									if ingredient.amount < 1 then-- Fluid rounding fuc- fun
-										table.remove(ingredients, key)
-									end
-									break
-								end
-							end
-						end
-					end
-				end		
-				if #recipe_deficit[current_index].ingredients == 0 then
-					table.remove(recipe_deficit[current_index], key)
-				end
-				current_index = current_index + 1
-			else
-				table.remove(recipe_deficit, current_index)
-			end
-			running_cost = running_cost + 2
-		until current_index > #recipe_deficit or running_cost >= 100
 	end
 end)
 
