@@ -12,12 +12,6 @@ local function get_last_tier(index, force, disable_obsolete)
 	end
 end
 
--- TODO: move to lib
-string.increment = function(str, inc)
-    str = str:byte() + (inc or 1)
-    return string.char(str)
-end
-
 local function updateRecipe(recipe)
 	if not recipe.valid then return end
 	local enabled_status = not not (recipe.force.technologies["compression-recipes"] or {}).researched--Cast as bool
@@ -88,7 +82,6 @@ local function updateForce(force)
 	end
 end
 
-local recipe_deficit = {}
 local function updateBuildingRecipes()
 	log("Updating buildings that use tiered recipes")
 	-- Make sure every entity using a tiered recipe (i.e. omnitraction) is up to the current tier
@@ -109,6 +102,19 @@ local function updateBuildingRecipes()
 						end
 					end
 					entity.set_recipe(new_recipe)
+					for _, ingredient in pairs(ingredients) do
+						if type == "item" then
+							entity.insert({
+								name = ingredient.name,
+								count = ingredient.amount
+							})
+						elseif type == "fluid" then
+							entity.insert_fluid({
+								name = ingredient.name,
+								amount = ingredient.amount
+							})
+						end
+					end
 					log("Set " .. entity.name .. " from recipe \"" .. recipe.name .. "\" to \"" .. new_recipe .. "\"")
 				end
 			end
