@@ -4,7 +4,9 @@ local function get_last_tier(index, force, disable_obsolete)
 	local next_rec = global.omni.recipes[index]
 	if next_rec and force.recipes[next_rec] and force.recipes[next_rec].enabled then
 		if disable_obsolete then
-			force.recipes[index].enabled = false
+			if #force.recipes[index].products == #force.recipes[next_rec].products then -- Make sure we keep old recipes if they have different outputs
+				force.recipes[index].enabled = false
+			end
 		end
 		return get_last_tier(next_rec, force, disable_obsolete)
 	else
