@@ -293,25 +293,36 @@ function omni.lib.remove_recipe_result(recipename, result)
 	if not rec.result and not rec.normal.result then
 		if rec.results then
 			for i,res in pairs(rec.results) do
-				if res.name == ingredient then
-					table.remove(rec.results,i)
-					break
-				end
+				if res.name == result then
+                    table.remove(rec.results,i)
+                    if rec.normal.main_product and rec.normal.main_product == result then
+                        rec.normal.main_product = nil
+                    end
+                    break
+                end   
             end
         end
 		if rec.normal and rec.normal.results then
 			for i,res in pairs(rec.normal.results) do
-				if res.name == ingredient then
-					table.remove(rec.normal.results,i)
+				if res.name == result then
+                    table.remove(rec.normal.results,i)
+                    if rec.normal.main_product and rec.normal.main_product == result then
+                        rec.normal.main_product = nil
+                    end
+                    break
 				end
             end
         end
         if rec.expensive and rec.expensive.results then
 			for i,res in pairs(rec.expensive.results) do
-				if res.name == ingredient then
-					table.remove(rec.expensive.results,i)
-				end
-			end
+				if res.name == result then
+                    table.remove(rec.expensive.results,i)
+                    if rec.expensive.main_product and rec.expensive.main_product == result then
+                        rec.expensive.main_product = nil
+                    end
+                    break
+                end
+            end
 		end
 	else
 		log("Attempted to remove the only result that recipe "..recipename.." has. Cannot be done")
@@ -357,6 +368,9 @@ function omni.lib.replace_recipe_result(recipename, result, replacement)
                     break
                 end
             end
+            if rec.main_product and rec.main_product == result then
+                rec.main_product = replacement
+            end
         end
         --rec.normal.results
         if rec.normal and rec.normal.results then
@@ -375,7 +389,10 @@ function omni.lib.replace_recipe_result(recipename, result, replacement)
                     res[2] = amount or res[2]
                     break
                 end
-           end
+            end
+            if rec.normal.main_product and rec.normal.main_product == result then
+                rec.normal.main_product = replacement
+            end
         end
         --rec.expensive.results
         if rec.expensive and rec.expensive.results then
@@ -394,8 +411,11 @@ function omni.lib.replace_recipe_result(recipename, result, replacement)
                     res[2] = amount or res[2]
                     break
                 end
-           end
-        end   
+            end
+            if rec.expensive.main_product and rec.expensive.main_product == result then
+                rec.expensive.main_product = replacement
+            end
+        end
 	end
 end
 
