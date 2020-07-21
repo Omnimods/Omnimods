@@ -546,25 +546,50 @@ function omni.lib.change_recipe_category(recipe, category)
 end
 
 --Checks if a recipe contains a specific material as result
-function omni.lib.recipe_result_contains(recipename, item)
-	if data.raw.recipe[recipename] and data.raw.recipe[recipename].results then
-		for _,res in pairs(data.raw.recipe[recipename].results) do
-			local r = {}
-			if res.name then
-				r=res
-			else
-				r={type="item",name=res[1],amount=res[2]}
-			end
-			if type(item) == "table" then
-				if omni.lib.is_in_table(r.name,item) then return true end
-			else
-				if r.name==item then return true end
-			end
+function omni.lib.recipe_result_contains(recipename, itemname)
+    local rec = data.raw.recipe[recipename]
+    if rec then
+        -- Single result
+        if rec.result and rec.result == itemname then
+            return true
+        end
+        if rec.normal and rec.normal.result and rec.normal.result == itemname then
+            return true
+        end
+        if rec.expensive and rec.expensive.result and rec.expensive.result == itemname then
+            return true
+        end
+        --rec.results
+        if rec.results then
+            for i,res in pairs(rec.results) do
+                if omni.lib.is_in_table(itemname, res) then return true end
+            end
+        end
+        --rec.normal.results
+        if rec.normal and rec.normal.results then
+            for i,res in pairs(rec.normal.results) do
+                if omni.lib.is_in_table(itemname, res) then return true end
+           end
+        end
+        --rec.expensive.results
+        if rec.expensive and rec.expensive.results then
+            for i,res in pairs(rec.expensive.results) do
+                if omni.lib.is_in_table(itemname, res) then return true end
+           end
+        end 
+        return nil
+    end
+end
+
+function omni.lib.find_recipe(itemname)
+	if type(itemname)=="table" then return itemname elseif type(itemname)~="string" then return nil end
+	for _, rec in pairs(data.raw.recipe) do
+        if omni.lib.recipe_result_contains(rec.name,itemname) then
+			return rec
 		end
-		return false
-	else
-		log(recipename.." does not have any results to scan.")
 	end
+	--log("Could not find "..item.."'s recipe prototype, check it's type.")
+	return nil
 end
 
 function omni.lib.get_tech_name(recipename)

@@ -1,4 +1,3 @@
-
 local ord={"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r"}
 
 omni.sciencepacks = {"automation-science-pack","logistic-science-pack","chemical-science-pack","military-science-pack", "production-science-pack","utility-science-pack"}
@@ -755,18 +754,6 @@ function omni.lib.find_entity_prototype(item)
 		if data.raw[p][item] then return data.raw[p][item] end
 	end
 	--log("Could not find "..item.."'s entity prototype, check it's type.")
-	return nil
-end
-
-function omni.lib.find_recipe(item)
-	if type(item)=="table" then return item elseif type(item)~="string" then return nil end
-	for _, p in pairs(data.raw.recipe) do
-		if standardized_recipes[p.name] == nil then omni.marathon.standardise(p) end
-		for _,r in pairs(p.normal.results) do
-			if r.name == item then return p end
-		end
-	end
-	--log("Could not find "..item.."'s recipe prototype, check it's type.")
 	return nil
 end
 
