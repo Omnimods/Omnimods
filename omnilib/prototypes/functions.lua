@@ -17,8 +17,47 @@ for i=2,#omni.lib.primes do
 		omni.lib.prime_range[j]=i
 	end
 end
-
 --log(serpent.block(omni.lib.primeRound))
+
+omni.lib.ore_tints = {--can add to the tint table with table.insert(omni.lib.ore_tints,["ore-name"]={tints})
+  ["iron"]      = {r = 0, g = 0, b = 0, a = 1},
+  ["copper"]    = {r = 0, g = 0, b = 0, a = 1},
+  ["tin"]       = {r = 0, g = 0, b = 0, a = 1},
+  ["lead"]      = {r = 0, g = 0, b = 0, a = 1},
+  ["titanium"]  = {r = 0, g = 0, b = 0, a = 1},
+  ["silicon"]   = {r = 0, g = 0, b = 0, a = 1},
+  ["nickel"]    = {r = 0, g = 0, b = 0, a = 1},
+  ["zinc"]      = {r = 0, g = 0, b = 0, a = 1},
+  ["silver"]    = {r = 0, g = 0, b = 0, a = 1},
+  ["gold"]      = {r = 0, g = 0, b = 0, a = 1},
+  ["tungsten"]  = {r = 0, g = 0, b = 0, a = 1},
+  ["manganese"] = {r = 0, g = 0, b = 0, a = 1},
+  ["chrome"]    = {r = 0, g = 0, b = 0, a = 1},
+  ["platinum"]  = {r = 0, g = 0, b = 0, a = 1},
+  ["uranium"]   = {r = 0, g = 0, b = 0, a = 1},
+  ["thorium"]   = {r = 0, g = 0, b = 0, a = 1},
+  ["cobalt"]    = {r = 0, g = 0, b = 0, a = 1},
+  ["aluminium"] = {r = 0, g = 0, b = 0, a = 1},
+  ["coal"]      = {r = 0, g = 0, b = 0, a = 1},
+}
+
+function omni.lib.AddOreTint(icon,ore_name) --should work for a specific icon or icons table
+  if type(icon) == "table" then --should be a row regardless
+    --get tint
+    local tint = omni.lib.ore_tints.ore_name or {r = 0, g = 0, b = 0, a = 1} --add default if not in table
+    for _,ic in pairs(icon) do
+      if ic.tint then --if it exists, add to it? 
+        r2 = ic.tint[1] or ic.tint.r
+        g2 = ic.tint[2] or ic.tint.g
+        b2 = ic.tint[3] or ic.tint.b
+        a1 = (ic.tint[4] or ic.tint.a) or 1
+        tint={r=(tint.r+r2)/2,g=(tint.g+g2)/2,b=(tint.b+b2)/2,a=(tint.a+a2)/2} --this "should" be doing colour blending
+        --^assumes the tint table and the icoming pre-tint is of the same scale (0-1 or 0-255) mixing is not accounted for
+      end
+      ic.tint = tint 
+    end
+  end
+end
 
 function omni.lib.cardTable(tab)
 	local count = 0
