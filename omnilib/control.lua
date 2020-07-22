@@ -27,12 +27,12 @@ local function update_last_tier(recipe, full_refresh)
 	if not metadata then
 		return
 	end
-	local recipe_tree = global.omni.force_recipes[recipe.force.name][metadata.parent]
+	local recipe_tree = global.omni.force_recipes[recipe.force.name][metadata.base]
 	if not recipe_tree then
 		return
 	end
 	-- We're the top of the tree!
-	if recipe_tree and not recipe_tree[recipe.variant] and recipe_tree.active_tier < metadata.tier then
+	if recipe_tree and not recipe_tree[metadata.tier][metadata.variant] and recipe_tree.active_tier < metadata.tier then
 		local I = full_refresh and 97 or recipe_tree.active_tier
 		local research_status = not not (recipe.force.technologies["compression-recipes"] or {}).researched
 		repeat
@@ -52,7 +52,9 @@ local function update_last_tier(recipe, full_refresh)
 end
 
 local function update_recipe(recipe, enabled_override)
-	if not recipe.valid then return end
+	if not recipe.valid then
+		return
+	end
 	local name = recipe.name
 	if enabled_override ~= nil then
 		recipe.enabled = enabled_override
@@ -75,7 +77,6 @@ local function update_recipe(recipe, enabled_override)
 		end
 	end
 	if recipe.enabled then
-		log("Updating with:" .. recipe.name)
 		update_last_tier(recipe)
 	end
 end
@@ -118,8 +119,17 @@ local function update_force(force)
 	for _, tech in pairs(force.technologies) do
 		update_tech(tech)
 	end
+	log("\tHandling obsolete recipes")
+	for name, objects in pairs(global.omni.force_recipes[force.name]) do
+		if objects.active_tier > 97 then
+			for I=97, objects.active_tier-1 do
+				for _, recipe_name in pairs(objects[I]) do
+					force.recipes[recipe_name].enabled = false
+				end
+			end
+		end
+	end
 	--[[
-	log("\tSetting enabled flag on compressed recipes when applicable")
 	for _, recipe in pairs(force.recipes) do
 		update_recipe(recipe)
 	end]]
@@ -133,7 +143,7 @@ local function update_building_recipes()
 			local recipe = entity.get_recipe()
 			if recipe then
 				local metadata = global.omni.recipes[recipe_name]
-				local recipe_table = metadata and global.omni.force_recipes[recipe.force.name][metadata.parent]
+				local recipe_table = metadata and global.omni.force_recipes[recipe.force.name][metadata.base]
 				local new_recipe_name = recipe_table and recipe_table[recipe_table.active_tier][metadata.variant]
 				local new_recipe = new_recipe_name and recipe.force.recipes[new_recipe_name]
 				if new_recipe and
