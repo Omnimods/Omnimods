@@ -19,10 +19,7 @@ require("controlFunctions")
     --
 --
 
-local function update_last_tier(recipe, full_refresh)
-	if not recipe.enabled then
-		return
-	end
+local function get_recipe_family(recipe)
 	local metadata = global.omni.recipes[recipe.name]
 	if not metadata then
 		return
@@ -31,8 +28,19 @@ local function update_last_tier(recipe, full_refresh)
 	if not recipe_tree then
 		return
 	end
+	return recipe_tree, metadata
+end
+
+local function update_last_tier(recipe, full_refresh)
+	if not recipe.enabled then
+		return
+	end
+	local recipe_tree, metadata = get_recipe_family(recipe)
+	if not recipe_tree then
+		return
+	end
 	-- We're the top of the tree!
-	if recipe_tree and not recipe_tree[metadata.tier][metadata.variant] and recipe_tree.active_tier < metadata.tier then
+	if recipe_tree and metadata.variant == "" and recipe_tree.active_tier < metadata.tier then
 		local I = full_refresh and 97 or recipe_tree.active_tier
 		local research_status = not not (recipe.force.technologies["compression-recipes"] or {}).researched
 		repeat
@@ -41,7 +49,8 @@ local function update_last_tier(recipe, full_refresh)
 				local is_compressed = global.omni.recipes[recipe.name].compressed
 				local desired_status = is_compressed and research_status or (I == metadata.tier) -- True if we're on the final tier, false otherwise
 				if force_recipe.enabled ~= desired_status then
-					log((desired_status and "Enabled" or "Disabled") .. " recipe: " .. force_recipe.name)
+					--log((desired_status and "Enabled" or "Disabled") .. " recipe: " .. force_recipe.name)
+					force_recipe.enabled = desired_status
 				end
 			end
 			I = I + 1
@@ -51,11 +60,29 @@ local function update_last_tier(recipe, full_refresh)
 	end
 end
 
+
+
+local function get_last_tier(recipe)
+	local recipe_tree, metadata = get_recipe_family(recipe)
+	if not recipe_tree then
+		return
+	end
+	local active_recipe = recipe_tree[recipe_tree.active_tier][metadata.variant]
+	if not active_recipe then
+		return
+	end
+	return recipe.force.recipes[active_recipe]
+end
+
 local function update_recipe(recipe, enabled_override)
 	if not recipe.valid then
 		return
 	end
 	local name = recipe.name
+	local recipe_tree, metadata = get_recipe_family(recipe)
+	if recipe_tree and metadata.tier < recipe_tree.active_tier then-- Irrelevant recipe!
+		enabled_override = false
+	end
 	if enabled_override ~= nil then
 		recipe.enabled = enabled_override
 	end
@@ -114,11 +141,12 @@ end
 
 local function update_force(force)
 	if not force.valid then return end
-	log("Updating force: " .. force.name)
-	log("\tSyncing compressed and standard tech research states")
+	--log("Updating force: " .. force.name)
+	--log("\tSyncing compressed and standard tech research states")
 	for _, tech in pairs(force.technologies) do
 		update_tech(tech)
 	end
+	--[[
 	log("\tHandling obsolete recipes")
 	for name, objects in pairs(global.omni.force_recipes[force.name]) do
 		if objects.active_tier > 97 then
@@ -128,7 +156,7 @@ local function update_force(force)
 				end
 			end
 		end
-	end
+	end]]
 	--[[
 	for _, recipe in pairs(force.recipes) do
 		update_recipe(recipe)
@@ -136,16 +164,13 @@ local function update_force(force)
 end
 
 local function update_building_recipes()
-	log("Updating buildings that use tiered recipes")
+	--log("Updating buildings that use tiered recipes")
 	-- Make sure every entity using a tiered recipe (i.e. omnitraction) is up to the current tier
 	for _, surface in pairs(game.surfaces) do
 		for _, entity in pairs(surface.find_entities_filtered({type="assembling-machine"})) do
 			local recipe = entity.get_recipe()
 			if recipe then
-				local metadata = global.omni.recipes[recipe_name]
-				local recipe_table = metadata and global.omni.force_recipes[recipe.force.name][metadata.base]
-				local new_recipe_name = recipe_table and recipe_table[recipe_table.active_tier][metadata.variant]
-				local new_recipe = new_recipe_name and recipe.force.recipes[new_recipe_name]
+				local new_recipe = get_last_tier(recipe)
 				if new_recipe and
 					(new_recipe.name ~= recipe.name) and
 					settings.global["omnilib-autoupdate"].value -- Let's follow the user's preference :^)
@@ -173,19 +198,17 @@ local function update_building_recipes()
 					if updated_ingredients ~= 0 then
 						log("\t\tMigrated " .. updated_ingredients .. " ingredients")
 					end
-				else
-					log("\tSkipped updating " .. entity.name .. " with recipe " .. new_recipe.name .. " from " .. recipe.name)
 				end
 			end
 		end
 	end
-	log("Building update complete")
+	--log("Building update complete")
 end
 
 local initializing = false
 function omni_update(game, silent)
 	initializing = true
-	log("Beginning omnidate")
+	--log("Beginning omnidate")
 	local profiler = game.create_profiler()
 	for _, force in pairs(game.forces) do
 		update_force(force)
@@ -239,10 +262,8 @@ function acquire_data(game)
 				}
 				recipe_map[base] = recipe_map[base] or {}
 				recipe_map[base].active_tier = math.min(97, recipe_map[base].active_tier or tier)
-				recipe_map[base][tier] = recipe_map[base][tier] or {}
-				if index > 1 then -- Any compressed or permuted recipes					
-					recipe_map[base][tier][variant] = name
-				end
+				recipe_map[base][tier] = recipe_map[base][tier] or {}				
+				recipe_map[base][tier][variant] = name
 				break
 			end
 		end
@@ -285,7 +306,7 @@ script.on_event(defines.events.on_research_finished, function(event)
 		local tech = event.research
 		update_tech(tech, true)
 		if tech.name == "compression-recipes" then
-			global.omni.need_update = true
+			--global.omni.need_update = true
 		elseif tech.name:find("^omnitech") and not tech.name:find("^omnipressed") then
 			global.omni.update_buildings = true
 		end
