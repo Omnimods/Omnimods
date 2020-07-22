@@ -46,54 +46,6 @@ script.on_event("decompress-stack", function(event)
 	end
 end)
 
-
-script.on_event(defines.events.on_research_finished, function(event)
-  local tech = event.research
-  local level = tech.level
-  --local name = string.match(tech.name,"(.*)%-%d*")
-  --log(serpent.block(tech.max_level))
-  if tech.level and tech.upgrade then --this is meant to activate ONLY for multi-level tech
-    if start_with(tech.name,"omnipressed-") then
-      if tech.force.technologies[string.sub(tech.name,13,string.len(tech.name))].level < tech.level then
-        tech.force.technologies[string.sub(tech.name,13,string.len(tech.name))].researched = true
-      end
-    elseif tech.force.technologies["omnipressed-"..tech.name] and tech.force.technologies["omnipressed-"..tech.name].level < tech.level then
-        tech.force.technologies["omnipressed-"..tech.name].researched = true
-    end
-  else
-    if start_with(tech.name,"omnipressed-") then
-	  	tech.force.technologies[string.sub(tech.name,13,string.len(tech.name))].researched = true
-	  elseif tech.force.technologies["omnipressed-"..tech.name] then
-		  tech.force.technologies["omnipressed-"..tech.name].researched = true
-    end
-  end
-	if tech.name == "compression-recipes" then
-		for _,r in pairs(tech.force.recipes) do
-			if r.enabled and tech.force.recipes[r.name.."-compression"] then
-				tech.force.recipes[r.name.."-compression"].enabled = true
-			end
-		end
-	end
-	for k,kind in pairs({"compact","nanite","quantum","singularity"}) do
-		if tech.name == "compression-"..kind.."-buildings" then
-			for _,r in pairs(tech.force.recipes) do
-				if r.enabled and not_already_compressed(r.name) and tech.force.recipes[r.name.."-compressed-"..kind] then
-					tech.force.recipes[r.name.."-compressed-"..kind].enabled = true
-				end
-				if string.find(r.name,"concentrated") and string.find(r.name,"grade") and string.sub(r.name,string.len(r.name)) == ""..k then
-                    tech.force.recipes[r.name].enabled = true
-				end
-			end
-		elseif tech.force.technologies["compression-"..kind.."-buildings"].researched then
-			for _,eff in pairs(tech.effects) do
-				if eff.type == "unlock-recipe" and not_already_compressed(eff.recipe) and tech.force.recipes[eff.recipe.."-compressed-"..kind] then
-					tech.force.recipes[eff.recipe.."-compressed-"..kind].enabled = true
-				end
-			end
-		end
-	end
-end)
-
 script.on_event(defines.events.on_player_alt_selected_area, function(event)
 
 end)

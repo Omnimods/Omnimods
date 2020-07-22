@@ -1,9 +1,5 @@
 if not omni then omni={} end
-
-string.increment = function(str, inc)
-    str = str:byte() + (inc or 1)
-    return string.char(str)
-end
+require("util")
 
 function split(inputstr, sep)
         if sep == nil then
