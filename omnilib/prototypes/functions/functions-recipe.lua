@@ -1,21 +1,22 @@
 function omni.lib.set_recipe_ingredients(recipename,...)
-	local arg = {...}
-	local rec = data.raw.recipe[recipename]
-	local ing = {}
-	for i,v in pairs(arg) do
-		local tmp = {}
-		if type(v)=="string" then
-			tmp = {{name=v,type="item", amount=1}}
-		elseif type(v)=="table" then
-			if type(v[1]) == "string" then
-				tmp = {{name=v[1],type="item", amount=v[2]}}
-			elseif v.name then
-				tmp = {{name=v.name,type=v.type or "item", amount=v.amount,probability = v.probability, amount_min = v.amount_min, amount_max=v.amount_max}}
-			end
-		end
-		ing = omni.lib.union(ing,tmp)
-	end
+    local rec = data.raw.recipe[recipename]
     if rec then
+        local arg = {...}
+	    local ing = {}
+	    for i,v in pairs(arg) do
+	    	local tmp = {}
+	    	if type(v)=="string" then
+	    		tmp = {{name=v,type="item", amount=1}}
+	    	elseif type(v)=="table" then
+	    		if type(v[1]) == "string" then
+	    			tmp = {{name=v[1],type="item", amount=v[2]}}
+	    		elseif v.name then
+	    			tmp = {{name=v.name,type=v.type or "item", amount=v.amount,probability = v.probability, amount_min = v.amount_min, amount_max=v.amount_max}}
+	    		end
+	    	end
+	    	ing = omni.lib.union(ing,tmp)
+	    end
+
         if rec.ingredients then
             rec.ingredients = ing
         end
@@ -29,23 +30,23 @@ function omni.lib.set_recipe_ingredients(recipename,...)
 end
 
 function omni.lib.set_recipe_results(recipename,...)
-	local arg = {...}
-	local rec = data.raw.recipe[recipename]
-	local res = {}
-	for i,v in pairs(arg) do
-		local tmp = {}
-		if type(v)=="string" then
-			tmp = {{name=v,type="item", amount=1}}
-		elseif type(v)=="table" then
-			if type(v[1]) == "string" then
-				tmp = {{name=v[1],type="item", amount=v[2]}}
-			elseif v.name then
-				tmp = {{name=v.name,type=v.type or "item", amount=v.amount,probability = v.probability, amount_min = v.amount_min, amount_max=v.amount_max}}
-			end
-		end
-		res = omni.lib.union(res,tmp)
-	end
+    local rec = data.raw.recipe[recipename]
     if rec then
+        local arg = {...}
+	    local res = {}
+	    for i,v in pairs(arg) do
+	    	local tmp = {}
+	    	if type(v)=="string" then
+		    	tmp = {{name=v,type="item", amount=1}}
+		    elseif type(v)=="table" then
+		    	if type(v[1]) == "string" then
+		    		tmp = {{name=v[1],type="item", amount=v[2]}}
+		    	elseif v.name then
+		    		tmp = {{name=v.name,type=v.type or "item", amount=v.amount,probability = v.probability, amount_min = v.amount_min, amount_max=v.amount_max}}
+		    	end
+		    end
+		    res = omni.lib.union(res,tmp)
+	    end
         if rec.result then
             rec.result = nil
             if not rec.results then
@@ -430,7 +431,6 @@ function omni.lib.replace_recipe_ingredient(recipename, ingredient, replacement)
             amount = replacement.amount
             itype = replacement.type
         end
-
         --rec.ingredients
         if rec.ingredients then
             found = false
@@ -621,7 +621,8 @@ function omni.lib.get_tech_name(recipename)
 				end
 			end
 		end
-	end
+    end
+    return nil
 end
 
 function omni.lib.remove_recipe_all_techs(recipename)
