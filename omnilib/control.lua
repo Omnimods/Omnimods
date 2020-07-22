@@ -105,7 +105,7 @@ local function update_tech(tech)
 						break -- Tiers in order, don't continue once we hit one that's locked
 					end
 				end
-				update_recipe(effect.recipe, true)
+				update_recipe(tech.force.recipes[effect.recipe], true)
 			end
 		end
 	end
