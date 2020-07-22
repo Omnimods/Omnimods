@@ -1,4 +1,48 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.7
+Date: 2020.07.16
+  Bugfixes:
+    - Less aggressive replacement of science pack icons.
+---------------------------------------------------------------------------------------------------
+Version: 3.18.6
+Date: 2020.07.02
+  Bugfixes:
+    - Fixed that angels tech was not being analysed correctly
+    - Sped up starting analysis time (should be noticable)
+    - Prepared for some tweaks in future
+---------------------------------------------------------------------------------------------------
+Version: 3.18.5
+Date: 2020.04.26
+  Bugfixes:
+    - Fixed omnipack not being added in when Alien SP is present
+---------------------------------------------------------------------------------------------------
+Version: 3.18.4
+Date: 2020.04.19
+  Features:
+    - Rebalanced omnipack tech replacements
+  Bugfixes:
+    - Omnipack is no longer added to tech requiring Bob's Golden SP requiring Alien Tech
+    - Cement Processing 3 was not being replaced with omnipack
+---------------------------------------------------------------------------------------------------
+Version: 3.18.3
+Date: 2020.04.13
+  Bugfixes:
+    - A variety of fixes aimed to make your experience somewhat more tolerable.
+---------------------------------------------------------------------------------------------------
+Version: 3.18.2
+Date: 2020.04.04
+  Bugfixes:
+    - Fixed some Tech science costs not being affected.
+---------------------------------------------------------------------------------------------------
+Version: 3.18.1
+Date: 2020.04.03
+  Features:
+    - Added localization strings
+    - Updated ordering
+  Bugfixes:
+    - Fixed the omnipack registering multiple times.
+    - Fixed icon issues with production science pack
+---------------------------------------------------------------------------------------------------
 Version: 3.18.0
 Date: 2020.04.02
   Features:

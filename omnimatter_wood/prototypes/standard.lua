@@ -1,10 +1,22 @@
-local b = BuildGen:create("omnimatter_wood","omnimutator"):
-	setSubgroup("omnitractor"):
-	setIngredients({
+local mutator_cost = {}
+if mods["angelsindustries"] and angelsmods.industries.components then
+	mutator_cost = {
+		{name="block-construction-2", amount=5},
+		{name="block-electronics-1", amount=3},
+		{name="block-fluidbox-1", amount=2},
+		{name="block-omni-1", amount=5}
+	}
+else
+	mutator_cost = {
       {type = "item", name = "omnicium-plate", amount = 10},
       {type = "item", name = "iron-plate", amount = 5},
       {type = "item", name = "copper-plate", amount = 5},
-      {type = "item", name = "burner-omniphlog", amount = 1},}):
+      {type = "item", name = "burner-omniphlog", amount = 1},}
+end
+
+local b = BuildGen:create("omnimatter_wood","omnimutator"):
+	setSubgroup("omnitractor"):
+	setIngredients(mutator_cost):
 	setEnergy(10):
 	setUsage(250):
 	setReplace("omnimutator"):
@@ -55,6 +67,7 @@ RecGen:create("omnimatter_wood","wasteMutation"):
 	setEnabled():extend()
 
 RecGen:create("omnimatter_wood","wood-omnitraction"):
+	setIcons("wood"):
 	setEnergy(2):
 	setEnabled():
 	setSubgroup("omnimutator-items"):
@@ -81,6 +94,7 @@ RecGen:create("omnimatter_wood","basic-wood-mutation"):
     }):
 	setReqNoneMods("bobgreenhouse","angelsbioprocessing"):
 	setTechName("omnimutator"):extend()
+	
 	RecGen:create("omnimatter_wood","omniseedling"):
 	setFuelValue(1):
 	setSubgroup("omnimutator-items"):

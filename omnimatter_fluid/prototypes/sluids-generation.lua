@@ -25,7 +25,6 @@ for _,boiler in pairs(data.raw.boiler) do
 
 	if not forbidden_boilers[boiler.name] and data.raw.fluid[boiler.fluid_box.filter] and data.raw.fluid[boiler.fluid_box.filter].heat_capacity and boiler.minable then
 		local rec = omni.lib.find_recipe(boiler.minable.result)
-		--log(boiler.name)
 		new_boiler[#new_boiler+1]={
 			type = "recipe-category",
 			name = "boiler-omnifluid-"..boiler.name,
@@ -58,7 +57,7 @@ for _,boiler in pairs(data.raw.boiler) do
 		new_boiler[#new_boiler+1]={
 		type = "recipe",
 		name = boiler.name.."-boiling-steam-"..boiler.target_temperature,
-		icons = {{icon="__base__/graphics/icons/fluid/steam.png",icon_size=32}},
+		icons = {{icon="__base__/graphics/icons/fluid/steam.png",icon_size=64}},
 		subgroup = "fluid-recipes",
 		category = "boiler-omnifluid-"..boiler.name,
 		order = "g[hydromnic-acid]",
@@ -78,7 +77,7 @@ for _,boiler in pairs(data.raw.boiler) do
 		new_boiler[#new_boiler+1]={
 		type = "recipe",
 		name = boiler.name.."-boiling-solid-steam-"..boiler.target_temperature,
-		icons = {{icon="__base__/graphics/icons/fluid/steam.png", icon_size=32}},
+		icons = {{icon="__base__/graphics/icons/fluid/steam.png", icon_size=64}},
 		subgroup = "fluid-recipes",
 		category = "boiler-omnifluid-"..boiler.name,
 		order = "g[hydromnic-acid]",
@@ -316,15 +315,17 @@ local dont_remove = {}
 
 
 for _,pump in pairs(data.raw["offshore-pump"]) do
+	local rec = omni.lib.find_recipe(pump.name)
 	if not (mods["omnimatter_water"] and mods["aai-industry"]) then
-		if data.raw.item[pump.name] then
-			local new={}
+		--Make sure that the pump is obtainable
+		if data.raw.item[pump.name] and rec then
 
+			local new={}
 			new[#new+1]={
 					type = "recipe-category",
 					name = "pump-fluid-source-"..pump.name,
 				}
-
+			--Create new fluid recipes
 			new[#new+1]={
 				type = "recipe",
 				name = pump.name.."-fluid-production",
@@ -335,151 +336,79 @@ for _,pump in pairs(data.raw["offshore-pump"]) do
 				order = "g[hydromnic-acid]",
 				energy_required = 0.5,
 				icon_size = 32,
-				enabled = true,
-				main_product= pump.fluid,
-				ingredients =
+				normal = 
 				{
-				},
-				results =
-				{
-				  {type = "item", name = "solid-"..pump.fluid, amount = 20},
-				},
+					enabled = rec.normal.enabled,
+					main_product= pump.fluid,
+					ingredients ={},
+					results =
+					{
+				  		{type = "item", name = "solid-"..pump.fluid, amount = 20},
+					},
+				}
 			  }
 			local loc_key={"entity-name."..pump.name}
 
+			--If the pump recipe is not enabled by default, unlock the sluid recipe with the same tech
+			local sluidtech = omni.lib.get_tech_name(rec.name)
+			if sluidtech and not rec.normal.enabled then
+				omni.lib.add_unlock_recipe(omni.lib.get_tech_name(rec.name), new[2].name)
+			end
+
+			--Create new pump Item
 			local new_item = table.deepcopy(data.raw.item[pump.name])
 				new_item.name = pump.name.."-source"
 				new_item.place_result = pump.name.."-source"
 				new_item.localised_name = {"item-name.fluid-source", loc_key}
 			new[#new+1] = new_item
 
-			if standardized_recipes[pump.name] == nil then
-				omni.marathon.standardise(data.raw.recipe[pump.name])
+			if standardized_recipes[rec.name] == nil then
+				omni.marathon.standardise(rec)
 			end
 			dont_remove[pump.fluid]={true}
-			data.raw.recipe[pump.name].normal.results[1].name=pump.name.."-source"
-			data.raw.recipe[pump.name].normal.main_product=pump.name.."-source"
-			data.raw.recipe[pump.name].expensive.results[1].name=pump.name.."-source"
-			data.raw.recipe[pump.name].expensive.main_product=pump.name.."-source"
-			data.raw.recipe[pump.name].main_product=pump.name.."-source"
-
+			
+			--Change the old pump recipe to output the sluid pump
+			rec.normal.results[1].name=pump.name.."-source"
+			rec.normal.main_product=pump.name.."-source"
+			rec.expensive.results[1].name=pump.name.."-source"
+			rec.expensive.main_product=pump.name.."-source"
+			rec.main_product=pump.name.."-source"
 			pump.minable.result=pump.name.."-source"
-			new[#new+1] = {
-				type = "assembling-machine",
-				name = pump.name.."-source",
-				icon_size = 32,
-				localised_name = {"entity-name.fluid-source", loc_key},
-				icon = pump.icon,
-				icons = pump.icons,
-				flags = {"placeable-neutral","placeable-player", "player-creation"},
-				minable = {hardness = 0.2, mining_time = 0.5, result = pump.name.."-source"},
-				max_health = 300,
-				corpse = "big-remnants",
-				dying_explosion = "medium-explosion",
-				collision_box = {{-0.9, -0.9}, {0.9, 0.9}},
-				selection_box = {{-1, -1}, {1, 1}},
-				picture = {
-					north = {
-						filename = "__base__/graphics/entity/offshore-pump/offshore-pump-north.png",
-   						priority = "high",
-  						shift = util.by_pixel(5, -18),
-  						width = 89,
-  						height = 69,
-  						hr_version = {
- 						    filename = "__base__/graphics/entity/offshore-pump/hr-offshore-pump-north.png",
-							priority = "high",
-  						    shift = util.by_pixel(5, -18),
-							width = 178,
-							height = 137,
-  						    scale = 0.5
- 						}
- 					},
- 					east = {
-						filename = "__base__/graphics/entity/offshore-pump/offshore-pump-east.png",
-						priority = "high",
-						shift = util.by_pixel(31, -5),
-						width = 94,
-						height = 78,
-						hr_version = {
-							filename = "__base__/graphics/entity/offshore-pump/hr-offshore-pump-east.png",
-							priority = "high",
-							shift = util.by_pixel(31, -5),
-							width = 188,
-							height = 156,
-							scale = 0.5
-						}
-					},
- 					south = {
-  						filename = "__base__/graphics/entity/offshore-pump/offshore-pump-south.png",
-   						priority = "high",
-   						shift = util.by_pixel(5, 22),
-  						width = 90,
-   						height = 76,
-   						hr_version = {
-    						filename = "__base__/graphics/entity/offshore-pump/hr-offshore-pump-south.png",
-    						priority = "high",
-							shift = util.by_pixel(5, 22),
-							width = 180,
-							height = 152,
-							scale = 0.5
-  						}
- 					},
-  					west = {
-  						filename = "__base__/graphics/entity/offshore-pump/offshore-pump-west.png",
-  						priority = "high",
-   						shift = util.by_pixel(-17, -7),
-  						width = 66,
-  						height = 75,
-  						hr_version = {
-							filename = "__base__/graphics/entity/offshore-pump/hr-offshore-pump-west.png",
-							priority = "high",
-							shift = util.by_pixel(-17, -7),
-  						    width = 132,
-  						    height = 149,
-							scale = 0.5
-  						}
- 					}
-				},
-				vehicle_impact_sound =  { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 },
-				working_sound =
-				{
-				  sound =
-				  {
-					{
-					  filename = "__base__/sound/chemical-plant.ogg",
-					  volume = 0.8
-					}
-				  },
-				  idle_sound = { filename = "__base__/sound/idle1.ogg", volume = 0.6 },
-				  apparent_volume = 1.5,
-				},
-				crafting_speed = 1,
-				energy_source =     {
-			  type = "burner",
-			  fuel_category = "chemical",
-				  effectivity = 1,
-			  fuel_inventory_size = 7,
-			  emissions = 0.00,
-			  smoke = nil
 
-			},
-				energy_usage = "1W",
-				ingredient_count = 4,
-				crafting_categories = {"pump-fluid-source-"..pump.name},
-				fluid_boxes =
+			--Create new pump entity
+			local new_entity = table.deepcopy(data.raw["offshore-pump"][pump.name])
+				new_entity.type = "assembling-machine"
+				new_entity.name = pump.name.."-source"
+				new_entity.localised_name = {"entity-name.fluid-source", loc_key}
+				new_entity.crafting_speed = 1
+				new_entity.energy_source =
 				{
-				  {
-					production_type = "output",
-					pipe_covers = pipecoverspictures(),
-					base_level = 1,
-					pipe_connections = {{type = "output", position = {0, 1}}}
-				  }
+					type = "burner",
+				 	fuel_category = "chemical",
+				  	effectivity = 1,
+				  	fuel_inventory_size = 4,
+				  	emissions = 0.00,
+				  	smoke = nil
 				}
-			  }
+				new_entity.energy_usage = "1W"
+				new_entity.ingredient_count = 4
+				new_entity.crafting_categories = {"pump-fluid-source-"..pump.name}
+				new_entity.fluid_boxes =
+				{
+			  		{
+						production_type = "output",
+						pipe_covers = pipecoverspictures(),
+						base_level = 1,
+						pipe_connections = {{type = "output", position = {0, 1}}}
+			  		}
+				}
+				new_entity.animation = data.raw["offshore-pump"][pump.name].picture
+			new[#new+1] = new_entity
+
 			data:extend(new)
 		end
 	else
-		data.raw.recipe[pump.name] = nil
+		data.raw.recipe[rec.name] = nil
 		omni.lib.remove_recipe_all_techs(pump.name)
 	end
 end
@@ -515,7 +444,6 @@ end
 
 
 local resource_fluid = {}
-log("resource fluid")
 for _,resource in pairs(data.raw.resource) do
 	local auto = resource.minable.result
 	--and data.raw["autoplace-control"][auto]
@@ -554,10 +482,13 @@ if #resource_fluid > 0 then
 end
 
 for _, jack in pairs(data.raw["mining-drill"]) do
-	if string.find(jack.name, "jack") then
-		if jack.output_fluid_box then jack.output_fluid_box=nil end
-		jack.vector_to_place_result = {0, -1.85}
-	end
+  if string.find(jack.name, "jack") then
+      if jack.output_fluid_box then jack.output_fluid_box=nil end
+      jack.vector_to_place_result = {0, -1.85}
+  elseif string.find(jack.name, "thermal") then 
+      if jack.output_fluid_box then jack.output_fluid_box=nil end
+      jack.vector_to_place_result = {-3, 5}
+  end
 end
 
 
@@ -736,10 +667,14 @@ for _,recipe in pairs(data.raw.recipe) do
 						if component.temperature then component.temperature=nil end
 					else
 						if component.amount then
-							component.amount=omni.lib.round(component.amount*mult[dif])
+							component.amount=math.min(omni.lib.round(component.amount*mult[dif]),65535)
 						else
-							if component.amount_min then component.amount_min=omni.lib.round(component.amount_min*mult[dif]) end
-							if component.amount_max then component.amount_max=omni.lib.round(component.amount_max*mult[dif]) end
+							if component.amount_min then 
+								component.amount_min=math.min(omni.lib.round(component.amount_min*mult[dif]),65535) 
+							end
+							if component.amount_max then 
+								component.amount_max=math.min(omni.lib.round(component.amount_max*mult[dif]),65535) 
+							end
 						end
 					end
 				end
@@ -749,8 +684,8 @@ for _,recipe in pairs(data.raw.recipe) do
 	end
 end
 
-log("pyc is shit")
 for _,f in pairs(temperature_fluids) do
+	--log("pyc is shit")
 	for _,r in pairs(f.recipes) do
 		if omni.lib.cardTable(f.used) > 1 and omni.lib.cardTable(f.temperatures) > 1 then
 			for _,ingres in pairs({"ingredients","results"}) do
@@ -819,7 +754,7 @@ for _,f in pairs(temperature_fluids) do
 end
 
 --Extra recipes for generators
-log("yuoki is a pain")
+--log("yuoki is a pain")
 for _, recipe in pairs(extra_fluid_rec) do
 	for _,tech in pairs(data.raw.technology) do
 		if tech.effects then
@@ -841,7 +776,13 @@ for _, recipe in pairs(extra_fluid_rec) do
 		for _,ingres in pairs({"ingredients","results"}) do
 			for j,component in pairs(recipe[dif][ingres]) do
 				if component.type == "fluid" and not generator_fluid[component.name]  then
-					fluids[dif][ingres][j] = {name=component.name,amount=omni.fluid.round_fluid(component.amount)}
+					local amnt=component.amount
+					if component.amount_max then
+						if component.amount_min then
+							amnt=(component.amount_max+component.amount_min)/2 --average, not great, but meh
+						end
+					end
+					fluids[dif][ingres][j] = {name=component.name,amount=omni.fluid.round_fluid(amnt)}
 					mult[dif]=omni.lib.lcm(omni.lib.lcm(sluid_contain_fluid,fluids[dif][ingres][j].amount)/fluids[dif][ingres][j].amount,mult[dif])
 					primes[dif][ingres][j]=omni.lib.factorize(fluids[dif][ingres][j].amount)
 				end
@@ -872,9 +813,9 @@ for _, recipe in pairs(extra_fluid_rec) do
 			local multPrimes = omni.lib.factorize(mult[dif])
 			local addPrimes = {}
 			local checkPrimes = mult[dif]
-			for i = 0,multPrimes["2"] do
-				for j = 0,multPrimes["3"] do
-					for k = 0,multPrimes["5"] do
+			for i = 0,(multPrimes["2"] or 0) do
+				for j = 0,(multPrimes["3"] or 0) do
+					for k = 0,(multPrimes["5"] or 0) do
 						local c = math.pow(2,i)*math.pow(3,j)*math.pow(5,k)
 						if c > modMult and c < checkPrimes then
 							checkPrimes = c
@@ -946,7 +887,6 @@ for _, recipe in pairs(extra_fluid_rec) do
 						else
 							temperature_fluids[component.name].used={}
 						end
-						log(new_name)
 					end
 					if ingres ~= "ingredients" and recipe[dif].main_product==component.name then
 						recipe[dif].main_product=new_name
@@ -990,7 +930,13 @@ for _, recipe in pairs(energy_fluid) do
 		for _,ingres in pairs({"ingredients","results"}) do
 			for j,component in pairs(recipe[dif][ingres]) do
 				if component.type == "fluid" and not fuel_fluid[component.name]  then
-					fluids[dif][ingres][j] = {name=component.name,amount=omni.fluid.round_fluid(component.amount)}
+					local amnt=component.amount
+					if component.amount_max then
+						if component.amount_min then
+							amnt=(component.amount_max+component.amount_min)/2 --average, not great, but meh
+						end
+					end
+					fluids[dif][ingres][j] = {name=component.name,amount=omni.fluid.round_fluid(amnt)}
 					mult=omni.lib.lcm(omni.lib.lcm(sluid_contain_fluid,fluids[dif][ingres][j].amount)/fluids[dif][ingres][j].amount,mult)
 				end
 			end
@@ -1065,10 +1011,10 @@ for _,fix in pairs(data.raw.recipe) do
 			end
 		end
 	end
+	omni.marathon.standardise(fix)
 end
 
 
-log(serpent.block(data.raw.recipe["omni-pack"]))
 if #extra_fluid_rec > 0 then
 	data:extend(extra_fluid_rec)
 end

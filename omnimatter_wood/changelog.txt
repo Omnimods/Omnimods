@@ -1,4 +1,30 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.5
+Date: 2020.06.19
+  Bugfixes:
+    - Fixed a crash with BioProcessing due to icon updates
+---------------------------------------------------------------------------------------------------
+Version: 3.18.4
+Date: 2020.04.26
+  Bugfixes:
+    - Fixed the small icon of the wood sawing recipe
+---------------------------------------------------------------------------------------------------
+Version: 3.18.3
+Date: 2020.04.13
+  Bugfixes:
+    - Fixed the integration with Angel's bio
+---------------------------------------------------------------------------------------------------
+Version: 3.18.2
+Date: 2020.04.13
+  Features:
+    - Now supports Angel's Industry components
+---------------------------------------------------------------------------------------------------
+Version: 3.18.1
+Date: 2020.04.03
+  Features:
+    - Bob's Burner Lab now requires omnifused wood
+    - Angel's Bioprocessing slothful green algae recipe removed
+---------------------------------------------------------------------------------------------------
 Version: 3.18.0
 Date: 2020.04.02
   Info:

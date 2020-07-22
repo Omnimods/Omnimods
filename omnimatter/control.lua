@@ -1,7 +1,8 @@
 script.on_event(defines.events.on_player_created, function(event)
     local player = game.players[event.player_index]
     if player.controller_type ~= defines.controllers.god then
-        player.insert{name = "burner-omnitractor", count = 1}
+		player.insert{name = "burner-omnitractor", count = 1}
+		player.insert{name = "burner-mining-drill", count = 1}
 		local noAAII = true
 		for name, version in pairs(game.active_mods) do
 			if name=="aai-industry" then

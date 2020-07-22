@@ -1,4 +1,76 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.10
+Date: 2020.xx.xx
+  Bugfixes:
+    - Fix bobs ground water not beeing removed with certain mod setups
+---------------------------------------------------------------------------------------------------
+Version: 3.18.9
+Date: 2020.07.14
+  Features:
+    - Added Upgrade Planner support to omni buildings
+  Changes:
+    - Removed Flare Stack as optional dependency to avoid compressed recipes not beeing generated
+---------------------------------------------------------------------------------------------------
+Version: 3.18.8
+Date: 2020.06.19
+  Changes:
+    - Updated to omnilib 3.18.12
+---------------------------------------------------------------------------------------------------
+Version: 3.18.7
+Date: 2020.05.01
+  Changes:
+    - The basic omnicium plate recipe takes now 25 seconds. Don't use it beyond what you must!
+---------------------------------------------------------------------------------------------------
+Version: 3.18.6
+Date: 2020.04.26
+  Features:
+    - Added steam omnitractor and omniphlog if Bob's burner phase is enabled
+    - Updated ore capture and replace script to have increased functionality
+  Changes:
+    - Changed Omnicium Plate stack size from 400 to 200
+    - Changed Omnite Brick stack size from 100 to 200
+  Bugfixes:
+    - Should not have other ores showing up on map generation screen
+    - Improved readability of generation scripts
+---------------------------------------------------------------------------------------------------
+Version: 3.18.5
+Date: 2020.04.19
+  Bugfixes:
+    - Fixed not having copper in basic omnitraction when playing vanilla omni
+---------------------------------------------------------------------------------------------------
+Version: 3.18.4
+Date: 2020.04.19
+  Features:
+    - Added Omnicium Gear Casting to casting machines
+  Changes:
+    - Changed the omnicium plate to gear ratio from 3:2 to 1:1
+    - Players now start with 2 Burner Mining Drills
+    - Moved the omnicium and brick recipe Subgroup into the Omnimatter category
+    - Internal Code Refactoring
+  Bugfixes:
+    - Fixed mising localisation for Omnicium Sheet Coils
+    - Fixed some recipes being in Angel's Casting that should be in the Induction Smelter
+---------------------------------------------------------------------------------------------------
+Version: 3.18.3
+Date: 2020.04.16
+  Bugfixes:
+    - Bob´s steam SP recipe overwrite not working properly
+    - Fixed Omnifluid distillation localisation
+---------------------------------------------------------------------------------------------------
+Version: 3.18.2
+Date: 2020.04.13
+  Changes:
+    - Very early game made a tad easier
+  Features:
+    - Omnitractors and omniphlogs support now Angel's Industry components
+---------------------------------------------------------------------------------------------------
+Version: 3.18.1
+Date: 2020.04.03
+  Features:
+    - Added locale strings
+  Bugfixes:
+    - Omnitractor tech tree fixed
+---------------------------------------------------------------------------------------------------
 Version: 3.18.0
 Date: 2020.04.02
   Features:

@@ -499,7 +499,9 @@ end
 function ItemGen:create(mod,name)
 	local m = nil
 	--if string.find(mod,"omnimatter") then m = "__"..mod.."__" end
-	--if mod == nil or mod == "omnimatter" then m = "__omnimatter__" end
+  --if mod == nil or mod == "omnimatter" then m = "__omnimatter__" end
+  local nm=name
+  if type(nm)~=string then nm="omni" end
 	local t = {
 		mod = mod,
 		name=name,
@@ -507,7 +509,7 @@ function ItemGen:create(mod,name)
 		loc_desc =  function(levels,grade) return nil end,
 		icons = function(levels,grade) return nil end,
 		flags = {},
-		order=function(levels,grade) return "a" end,
+		order=function(levels,grade) return "y["..nm.."]" end,
 		stack_size = 100,
 		subgroup = function(levels,grade) return "raw-resource" end,
 		fuel_value = nil,
@@ -593,7 +595,7 @@ function ItemGen:setIcons(icons,mod)
 			local ic = {}
 			local ic_sz=32
 			for _, c in pairs(icons) do
-				if c.icon_size then	ic_sz=c.icon_size	end
+				if c.icon_size then	ic_sz=c.icon_size end
 				if type(icons)=="table" then
 					ic[#ic+1]={icon = "__"..(mod or self.mod).."__/graphics/icons/"..c.name..".png",
 					icon_size=ic_sz,
@@ -638,14 +640,21 @@ function ItemGen:setIcons(icons,mod)
 			end
 		end
 		if type(icons)=="string" and string.match(icons, "%_%_(.-)%_%_") then
-			self.icons = function(levels,grade) return {{icon = icons, icon_size=ic_sz}} end
+			name=string.match(icons,".*%/(.-).png")
+			proto = omni.lib.find_prototype(name)
+			if proto then
+				setup={{icon=proto.icon,icon_size=proto.icon_size,mipmaps=proto.mipmaps or nil}}
+			else
+				setup={{icon = icons, icon_size=ic_sz}}
+			end
+			self.icons = function(levels,grade)	return setup end
 		elseif type(icons) == "string" and not proto and (mod or self.mod) then
 			self.icons = function(levels,grade) return {{icon = "__"..(mod or self.mod).."__/graphics/icons/"..icons..".png",icon_size=ic_sz}} end
 		elseif proto then
 			if proto.icons then
 				self.icons=function(levels,grade) return proto.icons end
 			else
-				self.icons=function(levels,grade) return {{icon=proto.icon,icon_size=proto.icon_size}} end
+				self.icons=function(levels,grade) return {{icon=proto.icon,icon_size=proto.icon_size,mipmaps=proto.mipmaps or nil}} end
 			end
 		else
 			self.icons = function(levels,grade) return icons end
@@ -709,7 +718,7 @@ function ItemGen:addMask(...)
 	return self
 end
 function ItemGen:addIconLevel(lvl)
-	self:addIcon({icon = "__omnilib__/graphics/lvl"..lvl..".png",icon_size=32})
+	self:addIcon({icon = "__omnilib__/graphics/icons/small/lvl"..lvl..".png",icon_size=32})
 	return self
 end
 function ItemGen:setName(lvl,mod)
@@ -718,14 +727,22 @@ function ItemGen:setName(lvl,mod)
 	return self
 end
 function ItemGen:addBurnerIcon()
-	self:addIcon({icon = "__omnilib__/graphics/burner.png",
+	self:addIcon({icon = "__omnilib__/graphics/icons/small/burner.png",
 	icon_size=32,
 		scale = 0.4375,
 		shift = {-10, 10}})
 	return self
 end
 function ItemGen:addElectricIcon()
-	self:addIcon({icon = "__omnilib__/graphics/electric.png",
+	self:addIcon({icon = "__omnilib__/graphics/icons/small/electric.png",
+	icon_size=32,
+		scale = 0.4375,
+		shift = {-10, 10}})
+	return self
+end
+function ItemGen:addSteamIcon()
+	-- CC BY-NC 4.0 Licensed from http://getdrawings.com/get-icon#steam-icon-51.png
+	self:addIcon({icon = "__omnilib__/graphics/icons/small/steam-icon-51-32x32.png",
 	icon_size=32,
 		scale = 0.4375,
 		shift = {-10, 10}})
@@ -735,32 +752,30 @@ function ItemGen:addSmallIcon(icon,nr)
 	local quad = {{10, -10},{-10, -10},{-10, 10},{10, 10}}
 	local icons = prototype_icon(icon)
 	local ic_sz=32
-	if icons and icons.icon_size then
-		ic_sz=icons.icon_size
-	end
 	if icons then
-		if icons.icon_size then ic_sz=icons.icon_size	end
+		if icons.icon_size then ic_sz=icons.icon_size end
 		for _,ic in pairs(icons) do
 			if ic.icon_size then ic_sz=ic.icon_size	end
 			self:addIcon({icon = ic.icon,
 			icon_size=ic_sz,
 				scale = 0.4375*(ic.scale or 32/ic_sz),
-				shift = quad[nr or 1]})
+				shift = quad[nr or 1], --currently "centres" the icon if it was already offset, may need to math that out
+				tint = ic.tint or nil})
 		end
 	else
 		local ic = icon
 		self:addIcon({icon = icon,
 			scale = 0.4375,
-			shift = quad[nr or 1]})
+			shift = quad[nr or 1]}) --currently "centres" the icon if it was already offset, may need to math that out
 	end
 	return self
 end
 function ItemGen:addBlankIcon()
-	self:addIcon({icon = "__omnilib__/graphics/blank.png"})
+	self:addIcon({icon = "__omnilib__/graphics/icons/blank.png"})
 	return self
 end
 function ItemGen:nullIcon()
-	self:setIcons({icon = "__omnilib__/graphics/blank.png"})
+	self:setIcons({icon = "__omnilib__/graphics/icons/blank.png"})
 	return self
 end
 
@@ -1094,7 +1109,7 @@ function ItemGen:generate_item()
 		fuel_category = self.fuel_category,
 		subgroup = self.subgroup(0,0),
 		order = self.order(0,0),
-		icon_size = 32,
+		icon_size =self.icon_size or 32,
 		stack_size = self.stack_size,
 		default_temperature = self.default_temperature,
 		heat_capacity=self.heat_capacity,
@@ -2018,6 +2033,7 @@ function RecGen:setTechName(name)
 	end
 	return self
 end
+
 function RecGen:setTechEffects(...)
 	local name = {...}
 	if type(name[1])=="function" then
@@ -2027,6 +2043,7 @@ function RecGen:setTechEffects(...)
 	end
 	return self
 end
+
 function RecGen:setTechLocName(inname,...)
 	local arg = {...}
 	local rtn = {}
@@ -2035,15 +2052,19 @@ function RecGen:setTechLocName(inname,...)
 	elseif type(inname)=="table" and inname["grade-1"] then
 		rtn[1] = function(levels,grade) return inname["grade-"..grade] end
 	elseif type(inname)=="table" and #arg == 0 then
-		for _, part in pairs(inname) do
-			if type(part) == "function" then
-				rtn[#rtn+1] = part
-			elseif type(part)=="table" and not #part == 1 then
-				rtn[#rtn+1] = function(levels,grade) return inname[grade] end
-			elseif type(part)=="string" and string.find(part,".") and (string.find(part,"name") or string.find(part,"description")) then
-				rtn[#rtn+1] = function(levels,grade) return {part} end
-			else
-				rtn[#rtn+1]=function(levels,grade) return part end
+		if #inname ==1 then
+			rtn[#rtn+1]=function(levels,grade) return inname[1] end
+		else
+			for _, part in pairs(inname) do
+				if type(part) == "function" then
+					rtn[#rtn+1] = part
+				elseif type(part)=="table" and not #part == 1 then
+					rtn[#rtn+1] = function(levels,grade) return inname[grade] end
+				elseif type(part)=="string" and string.find(part,".") and (string.find(part,"name") or string.find(part,"description")) then
+					rtn[#rtn+1] = function(levels,grade) return {part} end
+				else
+					rtn[#rtn+1]=function(levels,grade) return part end
+				end
 			end
 		end
 	else
@@ -2069,6 +2090,7 @@ function RecGen:setTechLocName(inname,...)
 	end
 	return self
 end
+
 function RecGen:addTechLocName(key)
 	local a = clone_function(self.tech.loc_name)
 	local b = function(levels,grade) return {key} end
@@ -2615,7 +2637,9 @@ function TechGen:generate_tech()
 			self.loc_name[1]="technology-name."..self.loc_name[1]
 		end
 		tech.localised_name = self.loc_name
-		tech.localised_name[1]="technology-name."..tech.localised_name[1]
+		if self.loc_name[1] then
+			tech.localised_name[1]="technology-name."..tech.localised_name[1]
+		end
 	end
 	if self.loc_desc and self.loc_desc then tech.localised_description = {"technology-description."..self.loc_desc,self.loc_desc_keys} end
 	self.rtn[#self.rtn+1] = tech
@@ -2644,6 +2668,7 @@ function setBuildingParameters(b,subpart)
     }
 	b.crafting_speed=function(levels,grade) return 1 end
 	b.source_inventory_size = function(levels,grade) return 7 end
+	b.result_inventory_size = function(levels,grade) return 7 end
 	b.ingredient_count = function(levels,grade) return 7 end
 	b.energy_source =
     {
@@ -2678,6 +2703,7 @@ function setBuildingParameters(b,subpart)
 	b.mining_power = function(levels,grade) return 3 end
 	b.overlay={}
 	b.place_result = function(levels,grade) return b.name end
+	b.next_upgrade = function(levels,grade) return nil end
     --b.resource_searching_radius = function(levels,grade) return 2.49 end
     b.vector_to_place_result = function(levels,grade) return {0, -1.85} end
 	b.crafting_categories = function(levels,grade) return nil end
@@ -2723,6 +2749,8 @@ function BuildGen:import(name)
 		setSpeed(build.crafting_speed):
 		setEnergySource(build.energy_source):
 		setInventory(math.max(build.source_inventory_size or 3,build.ingredient_count or 3)):
+		setResultInventory(math.max(build.result_inventory_size or 3,build.result_count or 3)):
+		setNextUpgrade(build.next_upgrade):
 		setUsage(build.energy_usage):
 		setAnimation(build.animation):
 		setAnimations(build.animations):
@@ -2763,18 +2791,19 @@ function BuildGen:import(name)
 
 		--if build.energy_source and build.energy_source.fuel_category then b:setFuelCategory(build.energy_source.fuel_category) end
 
-	local rec = name
-	for _,r in pairs(data.raw.recipe) do
-		omni.marathon.standardise(r)
-		for _,res in pairs(r.normal.results) do
-			if res.name == name then
-				rec = res.name
-				break
-			end
-		end
-	end
+	--local rec = name
+	-- for _,r in pairs(data.raw.recipe) do
+	-- 	omni.marathon.standardise(r)
+	-- 	for _,res in pairs(r.normal.results) do
+	-- 		if res.name == name then
+	-- 			rec = res.name
+	-- 			break
+	-- 		end
+	-- 	end
+	-- end
 
-	local r = RecGen:import(rec)
+	--local r = RecGen:import(rec)
+	local r = RecGen:import(name)
 
 	local notFields = {}
 	for name,data in pairs(r) do
@@ -2866,6 +2895,14 @@ function BuildGen:setElectricPole()
 end
 function BuildGen:setType(t)
 	self.type = t
+	return self
+end
+function BuildGen:setNextUpgrade(t)
+	if type(t)=="function" then
+		self.next_upgrade = t
+	else
+		self.next_upgrade = function(levels,grade) return t end
+	end
 	return self
 end
 function BuildGen:setLight(t)
@@ -2996,6 +3033,16 @@ function BuildGen:setInventory(h)
 	end
 	return self
 end
+function BuildGen:setResultInventory(h)
+	if type(h) == "function" then
+		self.result_inventory_size = h
+		self.result_count=h
+	else
+		self.result_inventory_size = function(levels,grade) return h end
+		self.result_count=function(levels,grade) return h end
+	end
+	return self
+end
 function BuildGen:setBurner(efficiency,size)
 	self.energy_source = {type = "burner",
       effectivity = efficiency or 0.5,
@@ -3012,7 +3059,53 @@ function BuildGen:setBurner(efficiency,size)
           starting_frame_deviation = 60
         }
       }}
-	self:addBurnerIcon():setName("burner-"..self.name)
+	self:addBurnerIcon()
+	if not string.find(self.name,"burner-") then
+		self:setName("burner-"..self.name)
+	end
+	return self
+end
+function BuildGen:setSteam(efficiency,size)
+	-- Taken from Bob's steam assembling machine, might be a prereq...
+	self.energy_source =
+    {
+      type = "fluid",
+      effectivity = 1,
+      emissions_per_minute = 10, --fairly sure this scales, so it would be 2 at level 1 speed.
+      fluid_box =
+      {
+        base_area = 1,
+        height = 2,
+        base_level = -1,
+        pipe_connections =
+        {
+          {type = "input-output", position = { 2, 0}},
+          {type = "input-output", position = {-2, 0}}
+        },
+        pipe_covers = pipecoverspictures(),
+        pipe_picture = assembler2pipepictures(),
+        production_type = "input-output",
+        filter = "steam"
+      },
+      burns_fluid = false,
+      scale_fluid_usage = false,
+      fluid_usage_per_tick = (2/60),
+      maximum_temperature = 765,
+      smoke =
+      {
+        {
+          name = "light-smoke",
+          frequency = 10 / 32,
+          starting_vertical_speed = 0.08,
+          slow_down_factor = 1,
+          starting_frame_deviation = 60
+        }
+      }
+    }
+	self:addSteamIcon()
+	if not string.find(self.name,"steam-") then
+		self:setName("steam-"..self.name)
+	end
 	return self
 end
 function BuildGen:setEnergySupply()
@@ -3326,7 +3419,10 @@ function BuildGen:generateBuilding()
 			end
 		end
 	end
-	if self.type=="furnace" then self.source_inventory_size = function(levels,grade) return 1 end end
+	if self.type=="furnace" then
+		self.source_inventory_size = function(levels,grade) return 1 end
+		self.result_inventory_size = function(levels,grade) return 1 end
+	end
 	local lname = {"entity-name."..self.name}
 	if self.loc_name(0,0) and type(self.loc_name(0,0))=="table" then
 		lname = self.loc_name(0,0)
@@ -3361,6 +3457,8 @@ function BuildGen:generateBuilding()
 		crafting_categories = craftcat,
 		crafting_speed = self.crafting_speed(0,0),
 		source_inventory_size = self.source_inventory_size(0,0),
+		result_inventory_size = self.result_inventory_size(0,0),
+		next_upgrade = self.next_upgrade(0,0),
 		energy_source = source,
 		smoke = self.smoke,
 		energy_usage = self.energy_usage(0,0),
@@ -3373,7 +3471,6 @@ function BuildGen:generateBuilding()
 		working_sound =self:returnSound(0,0),
 		burns_fluid=self.burns_fluid(0,0),
 		fluid_boxes = self.fluid_boxes(0,0),
-		result_inventory_size = 7,
 		effectivity = self.effectivity(0,0),
 		fluid_usage_per_tick = self.fluid_usage_per_tick(0,0),
 		vertical_animation = self.vertical_animation(0,0),
@@ -3495,6 +3592,13 @@ function BuildChain:generate_building_chain()
 			if i-d > 1 then prevtname = temptname.."-"..i-d-1 end
 		end
 
+		local nextname
+		if i < levels then
+			nextname = self.name.."-"..i+1
+		else
+			nextname = nil
+		end
+
 		--Must fix so this can adapt to fit normal and expensive
 		local ingnorm,ingexp = self.ingredients(levels,i,0),self.ingredients(levels,i,1)
 		if i>1 and not omni.lib.is_in_table(self.name.."-"..i,ingnorm) then ingnorm[#ingnorm+1]={name=self.name.."-"..i-1,amount=1,type="item"} end
@@ -3525,6 +3629,7 @@ function BuildChain:generate_building_chain()
 		setSize(function(levels,grade) return self.size(self.levels,i) end):
 		setTechName(tname):
 		setReplace(self.fast_replaceable_group(levels,i)):
+		setNextUpgrade(function(levels,grade) return nextname end):
 		setTechUpgrade(self.tech.upgrade(levels,i)):
 		setTechCost(self.tech.cost(levels,i)):
 		setTechIcon(self.tech.icon(levels,i)):
@@ -4001,7 +4106,8 @@ function InsertGen:create(mod,name)
       type = "electric",
       usage_priority = "secondary-output"
     }
-	b.fast_replaceable_group=function(levels,grade) return "inserter" end
+	b.fast_replaceable_group = function(levels,grade) return "inserter" end
+	b.next_upgrade = function(levels,grade) return nil end
 	b.max_health = function(levels,grade) return 150 end
 	b.mining_time = function(levels,grade) return 0.1 end
 	b.flags={"placeable-neutral", "placeable-player", "player-creation"}
@@ -4015,23 +4121,23 @@ function InsertGen:create(mod,name)
       {
         {
           filename = "__base__/sound/inserter-basic-1.ogg",
-          volume = 0.75
+          volume = 0.3
         },
         {
           filename = "__base__/sound/inserter-basic-2.ogg",
-          volume = 0.75
+          volume = 0.3
         },
         {
           filename = "__base__/sound/inserter-basic-3.ogg",
-          volume = 0.75
+          volume = 0.3
         },
         {
           filename = "__base__/sound/inserter-basic-4.ogg",
-          volume = 0.75
+          volume = 0.3
         },
         {
           filename = "__base__/sound/inserter-basic-5.ogg",
-          volume = 0.75
+          volume = 0.3
         }
       }
     } end
@@ -4386,6 +4492,7 @@ function InsertGen:generateInserter()
     flags = self.flags,
 	minable = {mining_time = self.mining_time(0,0), result = self.name},
 	fast_replaceable_group = self.fast_replaceable_group(0,0),
+	next_upgrade = self.next_upgrade(0,0),
 	max_health = self.max_health(0,0),
 	corpse = self.corpse,
     resistances =
@@ -4415,23 +4522,23 @@ function InsertGen:generateInserter()
       {
         {
           filename = "__base__/sound/inserter-basic-1.ogg",
-          volume = 0.75
+          volume = 0.3
         },
         {
           filename = "__base__/sound/inserter-basic-2.ogg",
-          volume = 0.75
+          volume = 0.3
         },
         {
           filename = "__base__/sound/inserter-basic-3.ogg",
-          volume = 0.75
+          volume = 0.3
         },
         {
           filename = "__base__/sound/inserter-basic-4.ogg",
-          volume = 0.75
+          volume = 0.3
         },
         {
           filename = "__base__/sound/inserter-basic-5.ogg",
-          volume = 0.75
+          volume = 0.3
         }
       }
     },
@@ -4447,6 +4554,7 @@ function InsertGen:generateInserter()
     circuit_wire_max_distance = inserter_circuit_wire_max_distance,
     default_stack_control_input_signal = inserter_default_stack_control_input_signal
   }
+  if self.fuel_category then self.rtn[#self.rtn].energy_source.fuel_category = self.fuel_category end
 
 	local stuff = RecGen:create(self.mod,self.name):
 	setIngredients(self.ingredients):

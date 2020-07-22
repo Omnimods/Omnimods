@@ -17,8 +17,47 @@ for i=2,#omni.lib.primes do
 		omni.lib.prime_range[j]=i
 	end
 end
-
 --log(serpent.block(omni.lib.primeRound))
+
+omni.lib.ore_tints = {--can add to the tint table with table.insert(omni.lib.ore_tints,["ore-name"]={tints})
+  ["iron"]      = {r = 0, g = 0, b = 0, a = 1},
+  ["copper"]    = {r = 0, g = 0, b = 0, a = 1},
+  ["tin"]       = {r = 0, g = 0, b = 0, a = 1},
+  ["lead"]      = {r = 0, g = 0, b = 0, a = 1},
+  ["titanium"]  = {r = 0, g = 0, b = 0, a = 1},
+  ["silicon"]   = {r = 0, g = 0, b = 0, a = 1},
+  ["nickel"]    = {r = 0, g = 0, b = 0, a = 1},
+  ["zinc"]      = {r = 0, g = 0, b = 0, a = 1},
+  ["silver"]    = {r = 0, g = 0, b = 0, a = 1},
+  ["gold"]      = {r = 0, g = 0, b = 0, a = 1},
+  ["tungsten"]  = {r = 0, g = 0, b = 0, a = 1},
+  ["manganese"] = {r = 0, g = 0, b = 0, a = 1},
+  ["chrome"]    = {r = 0, g = 0, b = 0, a = 1},
+  ["platinum"]  = {r = 0, g = 0, b = 0, a = 1},
+  ["uranium"]   = {r = 0, g = 0, b = 0, a = 1},
+  ["thorium"]   = {r = 0, g = 0, b = 0, a = 1},
+  ["cobalt"]    = {r = 0, g = 0, b = 0, a = 1},
+  ["aluminium"] = {r = 0, g = 0, b = 0, a = 1},
+  ["coal"]      = {r = 0, g = 0, b = 0, a = 1},
+}
+
+function omni.lib.AddOreTint(icon,ore_name) --should work for a specific icon or icons table
+  if type(icon) == "table" then --should be a row regardless
+    --get tint
+    local tint = omni.lib.ore_tints.ore_name or {r = 0, g = 0, b = 0, a = 1} --add default if not in table
+    for _,ic in pairs(icon) do
+      if ic.tint then --if it exists, add to it? 
+        r2 = ic.tint[1] or ic.tint.r
+        g2 = ic.tint[2] or ic.tint.g
+        b2 = ic.tint[3] or ic.tint.b
+        a1 = (ic.tint[4] or ic.tint.a) or 1
+        tint={r=(tint.r+r2)/2,g=(tint.g+g2)/2,b=(tint.b+b2)/2,a=(tint.a+a2)/2} --this "should" be doing colour blending
+        --^assumes the tint table and the icoming pre-tint is of the same scale (0-1 or 0-255) mixing is not accounted for
+      end
+      ic.tint = tint 
+    end
+  end
+end
 
 function omni.lib.cardTable(tab)
 	local count = 0
@@ -376,6 +415,18 @@ function omni.lib.change_icon_tint(item, tint)
 	data.raw.item[item].icons = icons
 end
 
+function omni.lib.get_tech_name(recipename)
+	for _,tech in pairs(data.raw.technology) do
+		if tech.effects then
+			for _,eff in pairs(tech.effects) do
+				if eff.type == "unlock-recipe" and eff.recipe ==recipename then
+					return tech.name
+				end
+			end
+		end
+	end
+end
+
 function omni.lib.remove_recipe_all_techs(name)
 	for _,tech in pairs(data.raw.technology) do
 		if tech.effects then
@@ -430,42 +481,46 @@ function omni.lib.set_recipe_ingredients(recipe,...)
 		end
 	end
 end
-function omni.lib.replace_recipe_ingredient(recipe, ingredient,replacement)
-	if not data.raw.recipe[recipe] then
-		--log("could not find "..recipe)
 
-	end
-	omni.marathon.standardise(data.raw.recipe[recipe])
-	for _,dif in pairs({"normal","expensive"}) do
-		for i,ing in pairs(data.raw.recipe[recipe][dif].ingredients) do
-			if ing.name==ingredient then
-				if type(replacement)=="table" then
-					if replacement[1] == nil then
-						data.raw.recipe[recipe][dif].ingredients[i]=replacement
+function omni.lib.replace_recipe_ingredient(recipe, ingredient, replacement)
+	if data.raw.recipe[recipe] then
+		if data.raw.recipe[recipe].ingredient or data.raw.recipe[recipe].ingredients or not data.raw.recipe[recipe].expensive then
+			omni.marathon.standardise(data.raw.recipe[recipe])
+		end
+		for _,dif in pairs({"normal","expensive"}) do
+			for i,ing in pairs(data.raw.recipe[recipe][dif].ingredients) do
+				if ing.name==ingredient then
+					if type(replacement)=="table" then
+						if replacement[1] == nil then
+							data.raw.recipe[recipe][dif].ingredients[i]=replacement
+						else
+							ing.name=replacement[1]
+							ing.amount=replacement[2]
+						end
 					else
-						ing.name=replacement[1]
-						ing.amount=replacement[2]
+						ing.name=replacement
 					end
-				else
-					ing.name=replacement
 				end
 			end
 		end
 	end
 end
 
-function omni.lib.replace_recipe_result(recipe,result,replacement)
-	omni.marathon.standardise(data.raw.recipe[recipe])
-	--log(recipe)
-	for _,dif in pairs({"normal","expensive"}) do
-		for i,res in pairs(data.raw.recipe[recipe][dif].results) do
-			if not res[1] then
-				if res.name==result then
-					if type(replacement)=="table" then
-						res.name=replacement[1]
-						res.amount=replacement[2]
-					else
-						res.name=replacement
+function omni.lib.replace_recipe_result(recipe, result, replacement)
+	if data.raw.recipe[recipe] then
+		if data.raw.recipe[recipe].result or data.raw.recipe[recipe].results or not data.raw.recipe[recipe].expensive then
+			omni.marathon.standardise(data.raw.recipe[recipe])
+		end
+		for _,dif in pairs({"normal","expensive"}) do
+			for i,res in pairs(data.raw.recipe[recipe][dif].results) do
+				if not res[1] then
+					if res.name==result then
+						if type(replacement)=="table" then
+							res.name=replacement[1]
+							res.amount=replacement[2]
+						else
+							res.name=replacement
+						end
 					end
 				end
 			end
@@ -475,24 +530,38 @@ end
 
 function omni.lib.add_recipe_ingredient(recipe, ingredient)
 	if data.raw.recipe[recipe] then
+		local norm = {}
+		local expens = {}
 		omni.marathon.standardise(data.raw.recipe[recipe])
 		if not ingredient.name then
 			if type(ingredient)=="string" then
-					table.insert(data.raw.recipe[recipe].normal.ingredients,table.deepcopy({type="item",name=ingredient,amount=1}))
-					table.insert(data.raw.recipe[recipe].expensive.ingredients,table.deepcopy({type="item",name=ingredient,amount=1}))
+				norm = table.deepcopy({type="item",name=ingredient,amount=1})
+				expens = table.deepcopy({type="item",name=ingredient,amount=1})
 			elseif ingredient.normal then
-				table.insert(data.raw.recipe[recipe].normal.ingredients,table.deepcopy(ingredient.normal))
-				table.insert(data.raw.recipe[recipe].expensive.ingredients,table.deepcopy(ingredient.expensive))
+				norm = table.deepcopy(ingredient.normal)
+				expens = table.deepcopy(ingredient.expensive)
 			elseif ingredient[1].name then
-				table.insert(data.raw.recipe[recipe].normal.ingredients,table.deepcopy(ingredient[1]))
-				table.insert(data.raw.recipe[recipe].expensive.ingredients,table.deepcopy(ingredient[2]))
+				norm = table.deepcopy(ingredient[1])
+				expens = table.deepcopy(ingredient[2])
 			elseif type(ingredient[1])=="string" then
-				table.insert(data.raw.recipe[recipe].normal.ingredients,table.deepcopy({type="item",name=ingredient[1],amount=ingredient[2]}))
-				table.insert(data.raw.recipe[recipe].expensive.ingredients,table.deepcopy({type="item",name=ingredient[1],amount=ingredient[2]}))
+				norm = table.deepcopy({type="item",name=ingredient[1],amount=ingredient[2]})
+				expens = table.deepcopy({type="item",name=ingredient[1],amount=ingredient[2]})
 			end
 		else
-			table.insert(data.raw.recipe[recipe].normal.ingredients,table.deepcopy(ingredient))
-			table.insert(data.raw.recipe[recipe].expensive.ingredients,table.deepcopy(ingredient))
+			norm = table.deepcopy(ingredient)
+			expens = table.deepcopy(ingredient)
+		end
+		local found = false
+		for i, diff in pairs({"normal","expensive"}) do
+			for _, ing in pairs(data.raw.recipe[recipe][diff].ingredients) do
+				if ing == norm or ing == expens then
+					found = true
+				end
+			end
+		end
+		if found == false then
+			table.insert(data.raw.recipe[recipe].normal.ingredients,norm)
+			table.insert(data.raw.recipe[recipe].expensive.ingredients,expens)
 		end
 	else
 		--log(recipe.." does not exist.")
@@ -644,14 +713,24 @@ end
 
 function omni.lib.add_science_pack(tech,pack)
 	if data.raw.technology[tech] then
-		if type(pack) == "table" then
-			table.insert(data.raw.technology[tech].unit.ingredients,pack)
-		elseif type(pack) == "string" then
-			table.insert(data.raw.technology[tech].unit.ingredients,{pack,1})
-		elseif type(pack)=="number" then
-			table.insert(data.raw.technology[tech].unit.ingredients,{"omni-pack",pack})
+		local found = false
+		for __,sp in pairs(data.raw.technology[tech].unit.ingredients) do
+			for __,ing in pairs(sp) do
+				if ing == pack then found=true end
+			end
+		end
+		if not found then
+			if type(pack) == "table" then
+				table.insert(data.raw.technology[tech].unit.ingredients,pack)
+			elseif type(pack) == "string" then
+				table.insert(data.raw.technology[tech].unit.ingredients,{pack,1})
+			elseif type(pack)=="number" then
+				table.insert(data.raw.technology[tech].unit.ingredients,{"omni-pack",pack})
+			else
+				table.insert(data.raw.technology[tech].unit.ingredients,{"omni-pack",1})
+			end
 		else
-			table.insert(data.raw.technology[tech].unit.ingredients,{"omni-pack",1})
+			log("Ingredient "..pack.." already exists.")
 		end
 	else
 		log("Cannot find "..tech..", ignoring it.")
@@ -711,15 +790,39 @@ function omni.lib.set_prerequisite(tech, req)
 end
 
 function omni.lib.add_prerequisite(tech, req)
+	local found = nil
+	--check that the table exists, or create a blank one
+	if data.raw.technology[tech] then
+		if not data.raw.technology[tech].prerequisites then
+			data.raw.technology[tech].prerequisites = {}
+		end
+	end
 	if type(req) == "table" then
 		for _,r in pairs(req) do
-			table.insert(data.raw.technology[tech].prerequisites,r)
+			if data.raw.technology[r] then
+				for i,prereq in pairs(data.raw.technology[tech].prerequisites) do
+					if prereq == r then found = 1 end
+				end
+				if not found then
+					table.insert(data.raw.technology[tech].prerequisites,r)
+				else
+					log("Prerequisite"..r.."already exists")
+				end
+				found = nil
+			end
 		end
-	elseif req then
+	elseif req and data.raw.technology[req] then
 		if data.raw.technology[tech] then
-			table.insert(data.raw.technology[tech].prerequisites,req)
+			for i,prereq in pairs(data.raw.technology[tech].prerequisites) do
+				if prereq == req then found = 1 end
+			end
+			if not found then
+				table.insert(data.raw.technology[tech].prerequisites,req)
+			else
+				log("Prerequisite"..req.."already exists")
+			end
 		else
-			error(tech.." does not exist, please check spelling.")
+			log(tech.." does not exist, please check spelling.")
 		end
 	else
 		log("There is no prerequisities to add to "..tech)
@@ -1084,22 +1187,64 @@ function omni.lib.find_stacksize(item)
 	log("Could not find "..item.."'s stack size, check it's type.")
 end
 
+local itemproto = {
+	"item",
+	"mining-tool",
+	"gun",
+	"ammo",
+	"armor",
+	"repair-tool",
+	"capsule",
+	"module",
+	"tool",
+	"rail-planner",
+	"selection-tool",
+	"item-with-entity-data",
+	"fluid",
+	"selection-tool",
+	"item-with-inventory",
+	"item-with-tags"
+}
 function omni.lib.find_prototype(item)
 	if type(item)=="table" then return item elseif type(item)~="string" then return nil end
-	for _, p in pairs({"item","mining-tool","gun","ammo","armor","repair-tool","capsule","module","tool","rail-planner","selection-tool","item-with-entity-data","fluid","selection-tool","item-with-inventory"}) do
+	for _, p in pairs(itemproto) do
 		if data.raw[p][item] then return data.raw[p][item] end
 	end
 	--log("Could not find "..item.."'s prototype, check it's type.")
 	return nil
 end
+
+local entproto = {
+	"accumulator",
+	"assembling-machine",
+	"beacon",
+	"beam",
+	"boiler",
+	"arithmetic-combinator",
+	"decider-combinator",
+	"electric-pole",
+	"furnace",
+	"generator",
+	"lab",
+	"lamp",
+	"loader",
+	"locomotive",
+	"logistic-container",
+	"mining-drill",
+	"offshore-pump",
+	"pump",
+	"solar-panel",
+	"turret"
+}
 function omni.lib.find_entity_prototype(item)
 	if type(item)=="table" then return item elseif type(item)~="string" then return nil end
-	for _, p in pairs({"assembling-machine","furnace","mining-drill","boiler","generator","lab","locomotive","beacon","logistic-container","electric-pole"}) do
+	for _, p in pairs(entproto) do
 		if data.raw[p][item] then return data.raw[p][item] end
 	end
 	--log("Could not find "..item.."'s entity prototype, check it's type.")
 	return nil
 end
+
 function omni.lib.find_recipe(item)
 	if type(item)=="table" then return item elseif type(item)~="string" then return nil end
 	for _, p in pairs(data.raw.recipe) do

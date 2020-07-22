@@ -1,12 +1,15 @@
 {
-"name":"omnimatter_chemistry",
-"version":"0.2.14",
-"title":"Omnichem",
-"author":"EmperorZelos",
-"description":"Petrochem a la omni",
-"factorio_version":"0.18",
-"dependencies":["base",
-	"omnimatter",
-	"omnilib >= 2.0.10",
-	"?omnimatter_water"]
-}
+	"name":"omnimatter_chemistry",
+	"version":"3.18.0",
+	"title":"Omnichem",
+	"author":"EmperorZelos",
+	"description":"Petrochem a la omni",
+	"factorio_version":"0.18",
+	"dependencies":["base",
+		"omnimatter >= 3.18.0",
+		"omnilib >= 3.18.0",
+		"angelssmelting",
+		"omnimatter_wood >= 3.18.0",
+		"?omnimatter_water"]
+	}
+	

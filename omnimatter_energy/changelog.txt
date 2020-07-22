@@ -1,4 +1,98 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.18.9
+Date: 2020.07.14
+  Features:
+    - Added Upgrade Planner support
+  Changes:
+    - Purified Omnite now unlocks with its own Tech (Red sp only) after anbaricity
+    - Burner Inserter Mk 2 unlock with their own Tech aswell
+    - Moved Metallurgy and Burner Inserters Mk2 behind anbaricity
+    - Omnified Fuel refining 1 now requires logistic science packs
+---------------------------------------------------------------------------------------------------
+Version: 1.18.8
+Date: 2020.07.02
+  Changes:
+    - Updated to work with Bob´s internal name changes
+    - QoL: moved all techs that unlock entities which require electricity behind abaricity
+  Bugfixes:
+    - Fixed power poles making assembler sounds
+    - Fixed that automation no longer had any prerequisites
+---------------------------------------------------------------------------------------------------
+Version: 1.18.7
+Date: 2020.06.19
+  Changes:
+    - Updated to omnilib 3.18.12
+---------------------------------------------------------------------------------------------------
+Version: 1.18.6
+Date: 2020.06.09
+  Features:
+    - Added Miniloader support
+  Changes:
+    - Added an item subgroup for each tier of omnified fuel
+    - Omnifurnace 2 now accepts chemical fuels
+  Bugfixes:
+    - Fixed that certain Omnified Fuels were not craftable
+    - Fixed bob placement of solar-road had an offset error, causing wire placements to fail
+    - Fix a crash when placing tiles with construction robots
+    - Fixed cyclic tech error with angelsindustries
+    - Fixed issue with vanilla lab being locked behind an inaccessible tech
+---------------------------------------------------------------------------------------------------
+Version: 1.18.5
+Date: 2020.05.01
+  Bugfixes:
+    - Fixed burner inserter beeing in the wrong item subgroup in some cases
+    - Fixed Changelog formatting
+---------------------------------------------------------------------------------------------------
+Version: 1.18.4
+Date: 2020.04.26
+  Features:
+    - Added Burner inserter Mk2 and burner filter-inserter Mk2 that accept Omnified Fuel
+    - Added tech description for Omnified Fuel 1-5
+  Changes:
+    - Moved Omnium-power behind steam-power research
+    - Changed Omnitor stack size from 50 to 100
+---------------------------------------------------------------------------------------------------
+Version: 1.18.3
+Date: 2020.04.17
+  Changes:
+    - Change the Subgroup Icon to the Thumbnail
+    - Increase the crafting time of Purified Omnite to 2s
+---------------------------------------------------------------------------------------------------
+Version: 1.18.2
+Date: 2020.04.19
+  Changes:
+    - Reorganised Item-Subgroups
+    - Steel Furnaces accept Omnified Fuel
+    - Disabled Bob´s burner generator
+    - Buff Omnitor Assembler speed when playing without Bob´s assembly
+    - Lower Omnitor Omnicium cost
+  Bugfixes:
+    - Fixed Omni Furnaces not beeing fast replacable
+    - Fixed Furnaces having 7 Output slots in some cases
+    - Fixed logistics Tech having hidden prerequisites in some cases
+---------------------------------------------------------------------------------------------------
+Version: 1.18.1
+Date: 2020.04.17
+  Bugfixes:
+    - Fixed logistics tech dead end. Might have some empty techs left in some cases.
+    - Fixed crashes if Bob's assembers are on without steam machines
+---------------------------------------------------------------------------------------------------
+Version: 1.18.0
+Date: 2020.04.13
+  Features:
+    - First public release
+    - Added Crystal Solar Panels (Max Size & Tier configurable)
+    - Added Solar Road (Tiles that produce & distribute energy)
+    - Added Omnified Fuel, Omnified Fuel has a boosted Fuel value. 
+      All available Fuels have to be Omnified before they can be used
+    - Lowered the crafting Speed of the Omnitor Assembling Machine
+    - Added 2 new Omnifurnace Tiers
+    - Starter Burner Entities only accept (crushed-) Omnite as fuel
+    - Overhauled the early game Tech Tree
+    - Added Support for Bob´s Burnerphase
+  Bugfixes:
+    - Fixed / Added missing localisations
+---------------------------------------------------------------------------------------------------
 Version: 0.2.2
 Date: 2020.02.24
   Changes:

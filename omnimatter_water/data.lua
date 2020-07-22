@@ -25,10 +25,7 @@ local omniwater_prereq = function(levels,grade,element,tier)
 	return req
 end
 
-local cat = "chemistry"
-if mods["omnimatter_crystal"] then cat = "omniplant" end
-
-function omniwateradd(element,gain,tier,const,input)
+function omniwateradd(element,gain,tier,const,input,t1_enabled)
 	local cost = OmniGen:create():
 		setInputAmount(12*(input or 1)):
 		setYield(element):
@@ -43,8 +40,9 @@ function omniwateradd(element,gain,tier,const,input)
 		setIcons(element):
 		setIngredients(cost:ingredients()):
 		setResults(cost:results()):
-		setEnabled(false):
-		setCategory(cat):
+		--setEnabled(false):
+		setEnabled(function(levels,grade) if ((grade == 1) and (t1_enabled==true)) then return true else return false end end):
+		setCategory("omnite-extraction-both"):
 		setSubgroup("omni-fluids"):
 		setLocName("recipe-name.water-waste-omnitraction",{"fluid-name."..element}):
 		setLevel(water_levels):
@@ -60,13 +58,13 @@ function omniwateradd(element,gain,tier,const,input)
 end
 local c = 1
 if mods["omnimatter_compression"] then c = 1/3 end
-omniwateradd("omnic-water",1728*2*c,1,72,c)
+omniwateradd("omnic-water",1728*2*c,1,72,c,true)
 
 if mods["angelsrefining"] then
-	omniwateradd("water-viscous-mud",1728/2,1,144)
+	omniwateradd("water-viscous-mud",1728/2,1,144,false)
 	for _,fluid in pairs(data.raw.fluid) do
 		if omni.lib.start_with(fluid.name,"water") and omni.lib.end_with(fluid.name,"waste") then
-			omniwateradd(fluid.name,1728/6,2,288)
+			omniwateradd(fluid.name,1728/6,2,288,false)
 		end
 	end
 end

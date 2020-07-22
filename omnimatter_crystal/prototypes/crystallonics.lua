@@ -21,21 +21,41 @@ RecGen:create("omnimatter_crystal","hydromnic-acid"):
 local dif = 1
 if not mods["bobelectronics"] then dif=0 end
 
-local cost = OmniGen:create():
+local cost_plant = OmniGen:create():
 	building():
-	setMissConstant(3):
-	setQuant("pipe",15,2):
+	setMissConstant(3)
+local cost_omnizer = OmniGen:create():
+	building():
+	setMissConstant(3)
+if mods["angelsindustries"] and angelsmods.industries.components then
+	cost_plant:setQuant("construction-block",5):
+	setQuant("electric-block",2):
+	setQuant("fluid-block",5):
+	setQuant("energy-block",1):
+	setQuant("omni-block",1)
+	cost_omnizer:setQuant("construction-block",5):
+	setQuant("electric-block",2):
+	setQuant("fluid-block",5):
+	setQuant("enhancement-block",1):
+	setQuant("omni-block",1)
+else
+	cost_plant:setQuant("pipe",15,2):
 	setQuant("omniplate",10):
 	setQuant("gear-wheel",10):
 	setQuant("circuit",5,dif)
+	cost_omnizer:setQuant("pipe",15,2):
+	setQuant("omniplate",10):
+	setQuant("gear-wheel",10):
+	setQuant("circuit",5,dif)
+end
 
 --Omniplant
 BuildChain:create("omnimatter_crystal","omniplant"):
 	setSubgroup("omniplant"):
 	setLocName("omniplant"):
 	setIcons("omniplant","omnimatter_crystal"):
-	setIngredients(cost:ingredients()):
-	setEnergy(25):
+	setIngredients(cost_plant:ingredients()):
+	setEnergy(5):
 	setUsage(function(level,grade) return (200+50*grade).."kW" end):
 	setTechPrereq(get_pure_req):
 	addElectricIcon():
@@ -85,16 +105,27 @@ BuildChain:create("omnimatter_crystal","omniplant"):
 	if mods["boblogistics"] then pipe="copper-pipe" end
 	if mods["bobelectronics"] then electronic="basic-circuit-board" end
 
+    local burner_ings = {}
+	if mods["angelsindustries"] and angelsmods.industries.components then
+		burner_ings = {
+		{name="block-construction-1", amount=5},
+		{name="block-electronics-0", amount=3},
+		{name="block-fluidbox-1", amount=5},
+		{name="block-omni-0", amount=5}
+		}
+	else
+		burner_ings = {{pipe,15},{"omnicium-plate",5},{electronic,5},{"omnite-brick",10},{"iron-gear-wheel",10}}
+	end
 	BuildGen:create("omnimatter_crystal","omniplant"):
-	setSubgroup("omniplant"):
-	setLocName("omniplant-burner"):
-	setIcons("omniplant","omnimatter_crystal"):
-	setIngredients({pipe,15},{"omnicium-plate",5},{electronic,5},{"omnite-brick",10},{"iron-gear-wheel",10}):
 	setBurner(0.75,2):
-	setEnergy(25):
+	setSubgroup("omniplant"):
+	setIcons("omniplant","omnimatter_crystal"):
+	setIngredients(burner_ings):
+	setEnergy(5):
 	setUsage(function(level,grade) return "750kW" end):
 	--setTechName("omnitractor-electric-1"): --Done in final-fixes for now
 	setReplace("omniplant"):
+	setNextUpgrade("omniplant-1"):
 	setStacksize(20):
 	setSize(5):
 	setCrafting({"omniplant"}):
@@ -127,8 +158,8 @@ BuildChain:create("omnimatter_crystal","crystallomnizer"):
 	setSubgroup("crystallomnizer"):
 	setIcons("crystallomnizer","omnimatter_crystal"):
 	setLocName("crystallomnizer"):
-	setIngredients(cost:ingredients()):
-	setEnergy(25):
+	setIngredients(cost_omnizer:ingredients()):
+	setEnergy(5):
 	setUsage(function(level,grade) return (200+50*grade).."kW" end):
 	setTechPrereq(get_pure_req):
 	addElectricIcon():
@@ -172,6 +203,18 @@ BuildChain:create("omnimatter_crystal","crystallomnizer"):
 	}):
 	setFluidBox("XWX.XXX.XKX"):
 	extend()
+
+if mods["angelsindustries"] and angelsmods.industries.components then
+	for i=1,settings.startup["omnimatter-max-tier"].value do
+		-- Remove previous tier buildings from the recipes
+		if i == 1 then
+			omni.lib.remove_recipe_ingredient("omniplant-1", "burner-omniplant")
+		else
+			omni.lib.remove_recipe_ingredient("omniplant-"..i, "omniplant-"..i-1)
+			omni.lib.remove_recipe_ingredient("crystallomnizer-"..i, "crystallomnizer-"..i-1)
+		end
+	end
+end
 
 --[[                         ]]
 --[[         Omnine          ]]

@@ -1,4 +1,44 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.7
+Date: 2020.xx.xx
+  Bugfixes:
+    - Fixed quartz crystals omnitraction outputting quarz instead of silicon plates with pure Bob
+---------------------------------------------------------------------------------------------------
+Version: 3.18.6
+Date: 2020.07.15
+  Features:
+    - Added Upgrade Planner support
+  Bugfixes:
+    - Fixed Burner Omniplant localisation
+---------------------------------------------------------------------------------------------------
+Version: 3.18.5
+Date: 2020.05.01
+  Bugfixes:
+    - Fixed Plac Extraction grade levels not showing in tech tree
+  Changes:
+    - Reduced building time of Omniplants and crystallomnizer
+---------------------------------------------------------------------------------------------------
+Version: 3.18.4
+Date: 2020.04.26
+  Features:
+    - Updated the ore capture method for angels ores
+    - Improved sorting recipe unlock times (so you get access to them when needed)
+---------------------------------------------------------------------------------------------------
+Version: 3.18.3
+Date: 2020.04.16
+  Features:
+    - Added better support for Bob´s Burner phase
+---------------------------------------------------------------------------------------------------
+Version: 3.18.2
+Date: 2020.04.13
+  Features:
+    - Now supports Angel's Industry components
+---------------------------------------------------------------------------------------------------
+Version: 3.18.1
+Date: 2020.04.03
+  Bugfixes:
+    - Updated to work better with Angel's Industry
+---------------------------------------------------------------------------------------------------
 Version: 3.18.0
 Date: 2020.04.02
   Features:

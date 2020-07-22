@@ -1,9 +1,21 @@
 {
 "name":"omnilib",
-"version":"3.18.0",
+"version":"3.18.15",
 "title":"Omnilibrary",
 "author":"EmperorZelos",
 "description":"A collection of functions that omni-series of mods are using.",
 "factorio_version":"0.18",
-"dependencies":["base","?bobmodules","!GDIW","!fluid_permutations","!asphalt","(?)angelsrefining","(?)angelsindustries"]
+"dependencies":[
+    "base",
+    "?bobmodules",
+    "!GDIW",
+    "!fluid_permutations",
+    "!bobtechcolorsforomnilib",
+    "(?)angelsrefining",
+    "(?)angelsindustries",
+    "(?)pyalienlife",
+    "(?)pypetroleumhandling",
+    "(?)pyrawores",
+    "!player-count-based-research-speed"
+]
 }

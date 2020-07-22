@@ -14,7 +14,7 @@ data:extend(
     default_value = 2,
 	min_value = 1,
 	max_value = 4,
-	order=a
+	order=b
   },
     {
     type = "int-setting",
@@ -23,14 +23,14 @@ data:extend(
     default_value = 4,
 	min_value = 2,
 	max_value = 10,
-	order=a
+	order=c
   },
    {
     type = "bool-setting",
     name = "omnicompression_final_building",
     setting_type = "startup",
     default_value = false,
-	order=a
+	order=d
   },
    {
     type = "int-setting",
@@ -39,37 +39,37 @@ data:extend(
     default_value = 11000,
 	min_value = 1200,
 	max_value = 72000,
-	order=a
+	order=e
   },
    {
     type = "bool-setting",
     name = "omnicompression_compensate_stacksizes",
     setting_type = "startup",
     default_value = false,
-	order=a
+	order=f
   },
    {
     type = "bool-setting",
     name = "omnicompression_normalize_stacked_buildings",
     setting_type = "startup",
     default_value = false,
-	order=a
+	order=g
   },
    {
     type = "int-setting",
     name = "omnicompression_compressed_tech_min",
 	setting_type = "startup",
-    default_value = 15000,
+    default_value = 2000, --space science pack size
 	min_value = 0,
 	max_value = 250000000,
-	order=a
+	order=h
   },
    {
     type = "string-setting",
     name = "omnicompression_always_compress_sp",
 	setting_type = "startup",
-    default_value = "science-pack-3,high-tech-science-pack,production-science-pack,military-science-pack,space-science-pack",
-	order=a
+    default_value = "chemical-science-pack,high-tech-science-pack,production-science-pack,military-science-pack,space-science-pack,datacore-war-1,angels-science-pack-orange,angels-science-pack-blue,angels-science-pack-yellow,angels-science-pack-white,datacore-exploration-1",
+	order=i
   },
 }
 )
