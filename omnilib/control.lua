@@ -87,14 +87,22 @@ local function update_recipe(recipe, enabled_override)
 		recipe.enabled = enabled_override
 	end
 	-- Update according to compression research status
-	if recipe.force.technologies["compression-recipes"] and
+	if not recipe_tree and 
+		recipe.force.technologies["compression-recipes"] and
 		recipe.force.technologies["compression-recipes"].researched and 
 		not recipe.category:find("-compressed", nil, true) and 
 		not name:find("concentrated", nil, true) then
-
 		local recipes = recipe.force.recipes
+		-- Handle both compressed and permuted recipes.
+		local compressed, permuted_compressed = recipes[name.."-compression"], recipes[name:gsub("omniperm","compression-omniperm")]
+		if compressed then
+			compressed.enabled = true
+		end
+		if permuted_compressed then
+			permuted_compressed.enabled = true
+		end
 		-- Deal with generator variants
-		for tier=1, 10 do
+		for tier=1, math.huge do
 			local compressed_recipe = recipes[name.."-concentrated-grade-"..tier]
 			if compressed_recipe then
 				compressed_recipe.enabled = true
@@ -146,21 +154,6 @@ local function update_force(force)
 	for _, tech in pairs(force.technologies) do
 		update_tech(tech)
 	end
-	--[[
-	log("\tHandling obsolete recipes")
-	for name, objects in pairs(global.omni.force_recipes[force.name]) do
-		if objects.active_tier > 97 then
-			for I=97, objects.active_tier-1 do
-				for _, recipe_name in pairs(objects[I]) do
-					force.recipes[recipe_name].enabled = false
-				end
-			end
-		end
-	end]]
-	--[[
-	for _, recipe in pairs(force.recipes) do
-		update_recipe(recipe)
-	end]]
 end
 
 local function update_building_recipes()
@@ -306,7 +299,7 @@ script.on_event(defines.events.on_research_finished, function(event)
 		local tech = event.research
 		update_tech(tech, true)
 		if tech.name == "compression-recipes" then
-			--global.omni.need_update = true
+			global.omni.need_update = true
 		elseif tech.name:find("^omnitech") and not tech.name:find("^omnipressed") then
 			global.omni.update_buildings = true
 		end
