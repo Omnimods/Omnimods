@@ -16,6 +16,7 @@
     "(?)pyalienlife",
     "(?)pypetroleumhandling",
     "(?)pyrawores",
-    "!player-count-based-research-speed"
+    "!player-count-based-research-speed",
+    "rusty-locale"
 ]
 }
