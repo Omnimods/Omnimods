@@ -71,6 +71,31 @@ data:extend(
     default_value = "chemical-science-pack,high-tech-science-pack,production-science-pack,military-science-pack,space-science-pack,datacore-war-1,angels-science-pack-orange,angels-science-pack-blue,angels-science-pack-yellow,angels-science-pack-white,datacore-exploration-1",
 	order=i
   },
+  {
+    type = "bool-setting",
+    name = "omnicompression_1x1_buildings",
+    setting_type = "startup",
+    default_value = false,
+	order=j
+  },
+  {
+    type = "int-setting",
+    name = "omnicompression_energy_mult",
+  	setting_type = "startup",
+    default_value = 1,
+    min_value = 0,
+    max_value = 5,
+    order=k
+  },
+  {
+    type = "int-setting",
+    name = "omnicompression_cost_mult",
+  	setting_type = "startup",
+    default_value = 1,
+    min_value = 0,
+    max_value = 5,
+    order=l
+  }
 }
 )
 
