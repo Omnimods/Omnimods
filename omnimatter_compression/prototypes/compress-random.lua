@@ -44,27 +44,7 @@ for _,recipe in pairs(check_recipes) do
     --local store = data.raw.recipe[recipe]
     local rec = table.deepcopy(data.raw.recipe[recipe])
     --grab localisation before standardisation
-    local loc=""
-    if rec.name then --check it exists before setting it as fallback
-      loc={"recipe-name.compressed-recipe",omni.compression.CleanName(rec.name)}
-    end
-    if rec.localised_name then
-      loc = rec.localised_name
-    elseif recipe.main_product then --other cases?
-      item=omni.lib.find_prototype(recipe.main_product)
-      if item and item.localised_name then
-        loc = item.localised_name
-      else
-        loc={"recipe-name.compressed-recipe",omni.compression.CleanName(recipe.main_product)}
-      end
-    elseif recipe.normal and recipe.normal.main_product then
-      item=omni.lib.find_prototype(recipe.normal.main_product)
-      if item and item.normal.localised_name then
-        loc = item.localised_name
-      else
-        loc={"recipe-name.compressed-recipe",omni.compression.CleanName(recipe.normal.main_product)}
-      end
-    end
+    local loc= omni.compression.set_localisation(recipe, rec, "compressed-recipe")
     --standardise
     if not mods["omnimatter_marathon"] then omni.marathon.standardise(rec) end
     --double check shenanigans are not happening
@@ -168,7 +148,6 @@ for _,recipe in pairs(check_recipes) do
       end
     end
     if new_rec then
-      new_rec.icon_size=32 --i should not need this, considering it is after a standardisation...
       new_rec.localised_name=new_rec.localised_name or loc
       data:extend({new_rec})
     end

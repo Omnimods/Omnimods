@@ -109,6 +109,8 @@ local function find_result_icon(raw_item)
   end
 end
 
+omni.compression.find_result_icon = find_result_icon
+
 omni.compression.add_overlay = function(it,overlay_type,level) 
   -- `it` is the item/recipe table, not the name (can search for it if wrong)
   -- overlay_type is a string for type:

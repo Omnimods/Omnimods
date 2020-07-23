@@ -4,21 +4,8 @@ local blacklist = {{"creative","mode"}}--{"stone",{"creative","mode"}}
 
 local add_fluid_boxes = false
 
-local get_icons = function(item)
-    --Build the icons table
-    local icons = {}
-    if item.icons then
-        for _ , icon in pairs(item.icons) do
-            local shrink = icon
-			--local scale = icon.scale or 1
-            --shrink.scale = scale*0.65
-            icons[#icons+1] = shrink
-        end
-    else
-        icons[#icons+1] = {icon = item.icon,icon_size=item.icon_size or 32}
-    end
-    return icons
-end
+local get_icons = omni.compression.find_result_icon
+
 local compensation_c = 500/120
 for name,ore in pairs(data.raw.resource) do
 	if not omni.lib.string_contained_list(name,blacklist) then
@@ -103,7 +90,6 @@ for name,ore in pairs(data.raw.resource) do
 						name = r,
 						localised_name = {"item-name.solid-fluid", {"fluid-name."..new.minable.required_fluid}},
 						icons = get_icons(data.raw.fluid[new.minable.required_fluid]),
-						icon_size = 32,
 						subgroup = "omni-solid-fluids",
 						order = "a",
 						stack_size = 200,
@@ -114,7 +100,6 @@ for name,ore in pairs(data.raw.resource) do
 						name = "compressed-"..r,
 						localised_name = {"item-name.compressed-sluid", {"fluid-name."..new.minable.required_fluid}},
 						icons = get_icons(data.raw.fluid[new.minable.required_fluid]),
-						icon_size = 32,
 						subgroup = "omni-solid-fluids",
 						order = "a",
 						stack_size = 50,
@@ -127,7 +112,6 @@ for name,ore in pairs(data.raw.resource) do
             subgroup = "fluid-recipes",
             category = "general-omni-boiler",
             order = "g[hydromnic-acid]",
-            icon_size = 32,
             energy_required = 3,
             enabled = true,
             ingredients =
@@ -145,7 +129,6 @@ for name,ore in pairs(data.raw.resource) do
             icon = cf.icon,
             subgroup = "fluid-recipes",
             category = "general-omni-boiler",
-            icon_size = 32,
             order = "g[hydromnic-acid]",
             energy_required = 3,
             enabled = true,
@@ -162,9 +145,7 @@ for name,ore in pairs(data.raw.resource) do
 				  concentrate = {
             type = "recipe",
             name = "concentrated-"..new.minable.required_fluid.."-compression",
-            icons = data.raw.fluid[new.minable.required_fluid].icons,
-            icon = data.raw.fluid[new.minable.required_fluid].icon,
-            icon_size = 32,
+            icons = get_icons(data.raw.fluid[new.minable.required_fluid]),
             category = "fluid-concentration",
             enabled = true,
             hidden = true,
@@ -184,9 +165,7 @@ for name,ore in pairs(data.raw.resource) do
 				local concentrate = {
 					type = "recipe",
 					name = "concentrated-"..new.minable.required_fluid,
-					icons = data.raw.fluid[new.minable.required_fluid].icons,
-					icon = data.raw.fluid[new.minable.required_fluid].icon,
-					icon_size = 32,
+					icons = get_icons(data.raw.fluid[new.minable.required_fluid]),
 					category = "fluid-concentration",
 					enabled = true,
 					hidden = true,

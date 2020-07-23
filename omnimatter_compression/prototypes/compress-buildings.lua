@@ -130,11 +130,8 @@ local create_concentrated_fluid = function(fluid,tier)
   if newFluid.fuel_value then
     newFluid.fuel_value = new_effect_gain(newFluid.fuel_value,tier)
   end
-  if newFluid.icon then
-    newFluid.icons = {{icon=newFluid.icon,icon_size=newFluid.icon_size or 32}}
-    newFluid.icon = nil
-  end
-  table.insert(newFluid.icons,{icon="__omnilib__/graphics/icons/small/lvl"..tier..".png",icon_size=32})
+  newFluid.icons = omni.compression.add_overlay(newFluid, "compress-fluid", tier)
+  newFluid.icon = nil
   data:extend{newFluid}
 
   local baseFluid = fluid
@@ -165,7 +162,6 @@ local create_concentrated_fluid = function(fluid,tier)
     type = "recipe",
     name = "uncompress-"..fluid.."-concentrated-grade-"..tier,
     icons = omni.compression.add_overlay(fluid,"uncompress"),
-    icon_size = 32,
     category = "fluid-condensation",
     enabled = false,
     order = newFluid.order or "z".."[condensed-"..fluid .."]",
@@ -354,7 +350,6 @@ for _,kind in pairs(building_list) do --only building types
             new.minable.result = new.name
             new.minable.mining_time = (new.minable.mining_time or 10) * i
             new.icons = omni.compression.add_overlay(build,"building",i)
-						new.icon_size = 32
             new.icon = nil
 
             run_entity_updates(new,kind,i)
@@ -372,7 +367,6 @@ for _,kind in pairs(building_list) do --only building types
 						end
 						item.icons = omni.compression.add_overlay(build,"building",i)
             item.icon = nil
-            item.icon_size = 32
 
 						compressed_buildings[#compressed_buildings+1] = item
             --[[COMPRESSION/DE-COMPRESSION RECIPE CREATION]]--
@@ -383,7 +377,6 @@ for _,kind in pairs(building_list) do --only building types
               localised_name = new.localised_name,
               ingredients = ing,
               icons = omni.compression.add_overlay(build,"building",i),
-							icon_size = 32,
               result = new.name,
 							energy_required = 5*math.floor(math.pow(multiplier,i/2)),
 							enabled = false,
@@ -397,7 +390,6 @@ for _,kind in pairs(building_list) do --only building types
 							--localised_name = {"recipe-name.uncompress-item", loc_key},
 							--localised_description = {"recipe-description.uncompress-item", loc_key},
 							icons = omni.compression.add_overlay(build,"uncompress"),
-							icon_size = 32,
 							subgroup = data.raw.item[build.minable.result].subgroup,
 							category = "compression",
 							enabled = true,
