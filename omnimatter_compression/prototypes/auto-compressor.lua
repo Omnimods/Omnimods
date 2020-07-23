@@ -100,7 +100,7 @@ local b = BuildGen:create("omnimatter_compression","auto-compressor"):
 	setSpeed(3):
 	setFurnace():
 	setSize(minify(1, 3)):
-	setFluidBox("XWX.XXX.XKX"):
+	setFluidBox(fluidbox):
 	setCrafting({"fluid-concentration"}):
 	setAnimation({
 		filename = "__omnimatter_compression__/graphics/liquifier.png",
@@ -126,7 +126,7 @@ local b = BuildGen:create("omnimatter_compression","auto-compressor"):
 	setSpeed(3):	
 	setIcons("auto-concentrator"):
 	setSize(minify(1, 3)):
-	setFluidBox("XWX.XXX.XKX"):
+	setFluidBox(fluidbox):
 	setCrafting({"fluid-condensation"}):
 	setAnimation({
       filename = "__omnimatter_compression__/graphics/liquifier.png",
