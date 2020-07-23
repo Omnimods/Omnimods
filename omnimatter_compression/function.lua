@@ -162,7 +162,8 @@ omni.compression.set_localisation = function(old_prototype, new_prototype, name_
   if name_key then
     if old_prototype.localised_name then
       new_prototype.localised_name = {
-        new_prototype.type.."-name."..name_key.."-custom",
+        --new_prototype.type.."-name."..name_key.."-custom",
+        new_prototype.type.."-name."..name_key,
         old_prototype.localised_name
       }
     else
@@ -175,7 +176,7 @@ omni.compression.set_localisation = function(old_prototype, new_prototype, name_
   if description_key then
     new_prototype.localised_description = {
       new_prototype.type.."-description."..description_key,
-      locale.of(old_prototype).description
+      old_prototype.localised_description or locale.of(old_prototype).description
     }
   end
 end

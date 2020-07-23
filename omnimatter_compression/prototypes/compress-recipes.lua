@@ -504,7 +504,6 @@ function create_compression_recipe(recipe)
                 local r = {
                   type = "recipe",
                   icons = icons,
-                  icon_size = 32, -- should always be 32 with the icon_overlay script
                   name = recipe.name.."-compression",
                   enabled = false,
                   hidden = recipe.hidden,

@@ -43,9 +43,14 @@ local containsOne = function(t,d)
 end
 
 local splitTech = function(tech)
-  local level = string.match(tech, "-(%d+)")
-  tech = string.gsub(tech, "-(%d+)", "")
-  return tech, level
+  local match = select(3, tech:find("()%-%d+$"))
+  if match then
+    local level = tech:sub(match)
+    local name = tech:sub(1, match-1)
+    return name, level
+  else
+    return tech
+  end
 end
 -------------------------------------------------------------------------------
 --[[Set-up loops]]--
