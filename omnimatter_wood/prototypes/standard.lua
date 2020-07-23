@@ -94,6 +94,7 @@ RecGen:create("omnimatter_wood","basic-wood-mutation"):
     }):
 	setReqNoneMods("bobgreenhouse","angelsbioprocessing"):
 	setTechName("omnimutator"):extend()
+	
 	RecGen:create("omnimatter_wood","omniseedling"):
 	setFuelValue(1):
 	setSubgroup("omnimutator-items"):
