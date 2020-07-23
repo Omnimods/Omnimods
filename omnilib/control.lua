@@ -35,6 +35,7 @@ local function update_last_tier(recipe, full_refresh)
 	if not recipe.enabled then
 		return
 	end
+	full_refresh = full_refresh or global.omni.need_update
 	local recipe_tree, metadata = get_recipe_family(recipe)
 	if not recipe_tree then
 		return
@@ -142,6 +143,13 @@ local function update_tech(tech)
 					end
 				end
 				update_recipe(tech.force.recipes[effect.recipe], true)
+			end
+		end
+		if tech.name == "compression-recipes" then -- Generator fluids
+			for name in pairs(game.get_filtered_recipe_prototypes({{filter = "category", category = "fluid-condensation"}})) do
+				if tech.force.recipes[name] and not tech.force.recipes[name].enabled then
+					tech.force.recipes[name].enabled = true
+				end
 			end
 		end
 	end
@@ -297,11 +305,13 @@ end)
 script.on_event(defines.events.on_research_finished, function(event)
 	if not initializing then
 		local tech = event.research
-		update_tech(tech, true)
 		if tech.name == "compression-recipes" then
 			global.omni.need_update = true
-		elseif tech.name:find("^omnitech") and not tech.name:find("^omnipressed") then
-			global.omni.update_buildings = true
+		elseif not global.omni.need_update then -- If we need_update we'll be iterating everything anyway.
+			update_tech(tech, true)
+			if tech.name:find("^omnitech") and not tech.name:find("^omnipressed") then
+				global.omni.update_buildings = true
+			end
 		end
 	end
 end)
