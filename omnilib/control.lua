@@ -157,6 +157,9 @@ end
 
 local function update_force(force)
 	if not force.valid then return end
+	if not global.omni.force_recipes[force.name] then
+		global.omni.force_recipes[force.name] = util.copy(global.omni.recipe_map)
+	end
 	--log("Updating force: " .. force.name)
 	--log("\tSyncing compressed and standard tech research states")
 	for _, tech in pairs(force.technologies) do
@@ -316,6 +319,24 @@ script.on_event(defines.events.on_research_finished, function(event)
 	end
 end)
 
+script.on_event(defines.events.on_technology_effects_reset, function(event)
+	global.omni.need_update = true
+end)
+
+script.on_event(defines.events.on_force_created, function(event)
+	global.omni.force_recipes[event.force.name] = util.copy(global.omni.recipe_map)
+	global.omni.need_update = true
+end)
+script.on_event(defines.events.on_forces_merged, function(event)
+	global.omni.force_recipes[event.source_name] = nil
+	global.omni.force_recipes[event.destination.name] = util.copy(global.omni.recipe_map)
+	global.omni.need_update = true
+end)
+
+script.on_event(defines.events.on_force_reset, function(event)
+	global.omni.force_recipes[event.force.name] = util.copy(global.omni.recipe_map)
+	global.omni.need_update = true
+end)
 
 script.on_event(defines.events.on_player_created, function(event)
 	game.players[event.player_index].print{"message.omni-difficulty"}
