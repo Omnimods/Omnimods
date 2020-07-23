@@ -59,7 +59,8 @@ for _, group in pairs({"fluid"}) do
       new_fluid.name = "concentrated-"..new_fluid.name
 			new_fluid.sub_group = "fluids"
 			new_fluid.order = fluid.order or "z".."[concentrated-"..fluid.name .."]"
-			new_fluid.icons = omni.compression.add_overlay(fluid.name,"compress")
+      new_fluid.icons = omni.compression.add_overlay(fluid.name,"compress")
+      new_fluid.icon = nil
       omni.compression.set_localisation(fluid, new_fluid, 'concentrated-fluid')
       --new_fluid.localised_name = {"fluid-name.concentrated-fluid", loc_key}
       --new_fluid.localised_description = {"fluid-description.concentrated-fluid", loc_key}
@@ -73,13 +74,12 @@ for _, group in pairs({"fluid"}) do
       local compress = {
         type = "recipe",
         name = "compress-"..fluid.name,
-        --localised_name = {"recipe-name.concentrate-fluid", loc_key},
-        --localised_description = {"recipe-description.concentrate-fluid", loc_key},
         category = "fluid-concentration",
         enabled = true,
         hidden = true,
         icons = omni.compression.add_overlay(fluid.name,"compress"),
         order = fluid.order or "z".."[concentrated-"..fluid.name .."]",
+        subgroup = "concentrator-fluids",
         normal = {
           ingredients = {
             {name = fluid.name, type = "fluid", amount = sluid_contain_fluid*concentrationRatio}
@@ -115,8 +115,6 @@ for _, group in pairs({"fluid"}) do
       local uncompress = {
         type = "recipe",
         name = "uncompress-"..fluid.name,
-        --localised_name = {"recipe-name.deconcentrate-fluid", loc_key},
-        --localised_description = {"recipe-description.deconcentrate-fluid", loc_key},
         icons = omni.compression.add_overlay(fluid.name,"uncompress"),
         category = "fluid-concentration",
         enabled = true,
@@ -173,12 +171,13 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 				end
       end
       --localisation (thse 4 seem to work)
+      --[[
 			local class = "item-%s."..item.name
 			if item.place_result then
 				class = "entity-%s."..item.place_result
 			elseif item.placed_as_equipment_result then
 				class = "equipment-%s."..item.placed_as_equipment_result
-      end
+      end]]
       --recipe/item order
       local order = "z"
       if item.order then
@@ -205,7 +204,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 				durability = item.durability
       }
       -- Set up our inheritance, starting with item name/desc
-      omni.compression.set_localisation(item, new_item, 'compressed-item', 'compressed-item', class)
+      omni.compression.set_localisation(item, new_item, 'compressed-item', 'compressed-item')
       -- Add after locale so the category is correct
       if is_science(item) then new_item.type = "tool" end
 

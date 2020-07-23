@@ -1,6 +1,6 @@
 if not omni then omni={} end
 if not omni.marathon then omni.marathon={} end
-
+local locale = require '__rusty-locale__.locale'
 standardized_recipes={}
 
 local function set_loc_name(item) --pass full table
@@ -257,6 +257,8 @@ function omni.marathon.standardise(recipe)
 	-- Localisation
 	---------------------------------------------------------------------------
 	--Update loc. name if there is no localised name or no main product set
+	recipe.localised_name = recipe.localised_name or locale.of(recipe).name
+	--[[
 	if (type(recipe.localised_name) ~= "table" and recipe.localised_name == nil) or (not recipe.main_product and not recipe.normal.main_product and loc_name_is_result(recipe.localised_name, recipe.normal.results)) then
 		local it={}
 		---------------------------------------------------------------------------
@@ -289,7 +291,7 @@ function omni.marathon.standardise(recipe)
 			end	
 		end
 		if type(it)=="table" and next(it) then recipe.localised_name = set_loc_name(it) end
-	end
+	end]]
 	---------------------------------------------------------------------------
 	-- Move Flags to difficulty zone
 	---------------------------------------------------------------------------

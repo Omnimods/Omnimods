@@ -44,7 +44,7 @@ for _,recipe in pairs(check_recipes) do
     --local store = data.raw.recipe[recipe]
     local rec = table.deepcopy(data.raw.recipe[recipe])
     --grab localisation before standardisation
-    local loc= omni.compression.set_localisation(recipe, rec, "compressed-recipe")
+    local loc = omni.compression.set_localisation(data.raw.recipe[recipe], rec, "compressed-recipe")
     --standardise
     if not mods["omnimatter_marathon"] then omni.marathon.standardise(rec) end
     --double check shenanigans are not happening

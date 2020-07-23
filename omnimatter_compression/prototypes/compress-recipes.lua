@@ -589,6 +589,7 @@ function create_compression_recipe(recipe)
               r.name = r.name.."-compression"
               omni.compression.set_localisation(recipe, r, 'compressed-recipe')
               r.icons = icons
+              r.icon = nil
               for _, dif in pairs({"normal","expensive"}) do
                 r[dif].category=new_cat
                 r[dif].energy_required = concentrationRatio*r[dif].energy_required

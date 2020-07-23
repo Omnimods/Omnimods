@@ -45,7 +45,7 @@ end
 local splitTech = function(tech)
   local match = select(3, tech:find("()%-%d+$"))
   if match then
-    local level = tech:sub(match)
+    local level = tech:sub(match+1)
     local name = tech:sub(1, match-1)
     return name, level
   else
@@ -136,7 +136,7 @@ for _,tech in pairs(data.raw.technology) do
     local class, tier = splitTech(tech.name)
     if tier then
       t.localised_name = {
-        "technology-name.compressed",
+        "technology-name.compressed-tiered",
         tech.localised_name or
         {"technology-name."..class},
         tier
@@ -161,6 +161,7 @@ for _,tech in pairs(data.raw.technology) do
     end
     --Handle icons
     t.icons = omni.compression.add_overlay(t, "technology")
+    t.icon = nil
     --lowest common multiple for the packs
 		local lcm = 1
     for _, ings in pairs(t.unit.ingredients) do

@@ -162,18 +162,10 @@ end
 local locale = require '__rusty-locale__.locale'
 omni.compression.set_localisation = function(old_prototype, new_prototype, name_key, description_key)--class_override format: "type-%s.prototype.name"
   if name_key then
-    if old_prototype.localised_name then
-      new_prototype.localised_name = {
-        --new_prototype.type.."-name."..name_key.."-custom",
-        new_prototype.type.."-name."..name_key,
-        old_prototype.localised_name
-      }
-    else
-      new_prototype.localised_name = {
-        new_prototype.type.."-name."..name_key,
-        locale.of(old_prototype).name--locale.of(old_prototype).name
-      }
-    end
+    new_prototype.localised_name = {
+      new_prototype.type.."-name."..name_key,
+      old_prototype.localised_name or locale.of(old_prototype).name--locale.of(old_prototype).name
+    }
   end
   if description_key then
     new_prototype.localised_description = {
@@ -182,37 +174,3 @@ omni.compression.set_localisation = function(old_prototype, new_prototype, name_
     }
   end
 end
---[[
-omni.compression.set_localisation = function(old_prototype, new_prototype, name_key, description_key, class_override)--class_override format: "type-%s.prototype.name"
-  old_locale = locale.of(old_prototype)
-  if name_key then
-    if old_prototype.localised_name then
-      new_prototype.localised_name = {
-        new_prototype.type.."-name."..name_key,
-        old_prototype.localised_name
-      }
-    else
-      new_prototype.localised_name = {
-        new_prototype.type.."-name."..name_key,
-        class_override and string.format(class_override, "name") or
-        old_locale.name or
-        old_prototype.type.."-name."..old_prototype.name
-      }
-    end
-  end
-  if description_key then
-    if old_prototype.localised_description then
-      new_prototype.localised_description = {
-        new_prototype.type .."-description."..description_key, 
-        old_prototype.localised_description
-      }
-    else
-      new_prototype.localised_description = {
-        new_prototype.type.."-description."..description_key,
-        class_override and string.format(class_override, "description") or
-        old_locale.description or
-        old_prototype.type.."-description."..old_prototype.name
-      }
-    end
-  end
-end]]
