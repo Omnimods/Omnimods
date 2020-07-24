@@ -131,7 +131,7 @@ omni.compression.add_overlay = function(it,overlay_type,level)
   elseif overlay_type == "compress" then
     overlay = {
       icon = "__omnimatter_compression__/graphics/compress-32.png",
-      tint = {r=0.8, g=1, b=0.8, a=0.25},
+      tint = {1,0,0,1},
       scale = 1.5,
       shift = {-8, 8}
     }
