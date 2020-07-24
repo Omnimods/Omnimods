@@ -1,3 +1,4 @@
 [submodule "rusty-locale"]
 	path = omnilib/lib
 	url = https://github.com/theRustyKnife/rusty-locale.git
+	ignore = untracked
