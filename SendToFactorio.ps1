@@ -15,3 +15,8 @@ $DIRS = @(
 $DIRS | %{
     Copy-Item -Path $_ -Destination $BASE\$MODS -Recurse -Force
 }
+
+$PROG = (Get-Content $BASE\factorio-current.log -TotalCount 3)[2]
+$PROG = ($PROG -split "`"")[1]
+
+Start-Process -FilePath $PROG -ArgumentList "--mod-directory `"$BASE$MODS`"" -WorkingDirectory (Split-Path $PROG -Parent) -Wait -NoNewWindow
