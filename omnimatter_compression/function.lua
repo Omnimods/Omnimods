@@ -129,7 +129,12 @@ omni.compression.add_overlay = function(it,overlay_type,level)
   if overlay_type == "building" and level ~= nil then
     overlay.icon = "__omnimatter_compression__/graphics/compress-"..level.."-32.png"
   elseif overlay_type == "compress" then
-    overlay.icon = "__omnimatter_compression__/graphics/compress-32.png"
+    overlay = {
+      icon = "__omnimatter_compression__/graphics/compress-32.png",
+      tint = {r=0.8, g=1, b=0.8, a=0.25},
+      scale = 1.5,
+      shift = {-8, 8}
+    }
   elseif overlay_type == "uncompress" then
     overlay.icon = "__omnimatter_compression__/graphics/compress-out-arrow-32.png"
   elseif overlay_type == "compress-fluid" and level ~= nil then
@@ -152,11 +157,13 @@ omni.compression.add_overlay = function(it,overlay_type,level)
       icons = util.combine_icons(icons, {overlay}, {})
     end
     -- This is the first table entry on which the others are built
+    --[[
     local base_icon = {{
       icon = "__omnilib__/graphics/icons/blank.png",
       icon_size = 32 --set initial icon to set the size for auto-scaling purposes
     }}
-    return util.combine_icons(base_icon, icons, {})
+    return util.combine_icons(base_icon, icons, {})]]
+    return icons
   end
 end
 local locale = omni.locale
