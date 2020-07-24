@@ -72,7 +72,7 @@ else
 			end
 		end
 		omni.add_resource("gem-ore",3)
-		omni.add_fluid("lithia-water",2,3/4)
+		omni.add_fluid("lithia-water",2,1)
 	end
 	--remove stone from mining
 	for _, gen in pairs(data.raw["resource"]) do
