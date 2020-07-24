@@ -1,6 +1,5 @@
 if not omni then omni={} end
 if not omni.marathon then omni.marathon={} end
-local locale = require '__rusty-locale__.locale'
 standardized_recipes={}
 
 local function set_loc_name(item) --pass full table
@@ -257,41 +256,7 @@ function omni.marathon.standardise(recipe)
 	-- Localisation
 	---------------------------------------------------------------------------
 	--Update loc. name if there is no localised name or no main product set
-	recipe.localised_name = recipe.localised_name or locale.of(recipe).name
-	--[[
-	if (type(recipe.localised_name) ~= "table" and recipe.localised_name == nil) or (not recipe.main_product and not recipe.normal.main_product and loc_name_is_result(recipe.localised_name, recipe.normal.results)) then
-		local it={}
-		---------------------------------------------------------------------------
-		-- Multiple Results
-		---------------------------------------------------------------------------
-		if (recipe.results and #recipe.results > 1) or (recipe.normal.results and #recipe.normal.results > 1) then
-			--use the main product name if it exists
-			if recipe.main_product and recipe.main_product~="" then
-				it = omni.lib.find_prototype(recipe.main_product)
-			elseif recipe.normal.main_product and recipe.normal.main_product~="" then
-				it = omni.lib.find_prototype(recipe.normal.main_product)
-			--else use the recipe name
-			else
-				recipe.localised_name={"recipe-name."..recipe.name}
-			end
-		---------------------------------------------------------------------------
-		-- Single Result
-		---------------------------------------------------------------------------
-		elseif (recipe.results and #recipe.results == 1) or (recipe.normal.results and #recipe.normal.results == 1) then
-			--use the main product name if it exists
-			if recipe.main_product and recipe.main_product~="" then
-				it = omni.lib.find_prototype(recipe.main_product)
-			elseif recipe.normal.main_product and recipe.normal.main_product~="" then
-				it = omni.lib.find_prototype(recipe.normal.main_product)
-			elseif #recipe.normal.results>=1 then
-				it = omni.lib.find_prototype(recipe.normal.results[1].name)
-			--if not find result 1 or main product
-			else
-				recipe.localised_name={"recipe-name."..recipe.name}--hail mary
-			end	
-		end
-		if type(it)=="table" and next(it) then recipe.localised_name = set_loc_name(it) end
-	end]]
+	recipe.localised_name = recipe.localised_name or omni.locale.of(recipe).name
 	---------------------------------------------------------------------------
 	-- Move Flags to difficulty zone
 	---------------------------------------------------------------------------

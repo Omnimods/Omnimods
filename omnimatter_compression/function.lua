@@ -159,7 +159,7 @@ omni.compression.add_overlay = function(it,overlay_type,level)
     return util.combine_icons(base_icon, icons, {})
   end
 end
-local locale = require '__rusty-locale__.locale'
+local locale = omni.locale
 omni.compression.set_localisation = function(old_prototype, new_prototype, name_key, description_key)--class_override format: "type-%s.prototype.name"
   if name_key then
     new_prototype.localised_name = {
