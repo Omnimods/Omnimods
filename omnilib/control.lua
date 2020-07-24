@@ -165,6 +165,12 @@ local function update_force(force)
 	for _, tech in pairs(force.technologies) do
 		update_tech(tech)
 	end
+	--log("Updating any default recipes")
+	for recipe_name in pairs(global.omni.stock_recipes) do
+		if force.recipes[recipe_name] then
+			update_recipe(force.recipes[recipe_name])
+		end
+	end
 end
 
 local function update_building_recipes()
@@ -278,6 +284,14 @@ function acquire_data(game)
 	end
 	global.omni.recipe_map = recipe_map
 	global.omni.recipes = recipes
+	global.omni.stock_recipes = {}
+	for recipe_name in pairs(game.get_filtered_recipe_prototypes({
+		{
+			filter = "enabled"
+		}
+	})) do
+		global.omni.stock_recipes[recipe_name] = true
+	end
 end
 
 script.on_configuration_changed( function(conf)
