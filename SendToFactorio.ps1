@@ -19,4 +19,4 @@ $DIRS | %{
 $PROG = (Get-Content $BASE\factorio-current.log -TotalCount 3)[2]
 $PROG = ($PROG -split "`"")[1]
 
-Start-Process -FilePath $PROG -ArgumentList "--mod-directory `"$BASE$MODS`"" -WorkingDirectory (Split-Path $PROG -Parent) -Wait -NoNewWindow
+Start-Process -FilePath $PROG -ArgumentList "--mod-directory `"$BASE$MODS`" --load-game `"$BASE`saves\Test-2.zip" -WorkingDirectory (Split-Path $PROG -Parent) -Wait -NoNewWindow

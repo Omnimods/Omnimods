@@ -6,8 +6,14 @@ local whitelist = {
   ["basic-solid"] = "base",
   ["basic-fluid"] = "base",
   ["kr-quarry"] = "krastorio2",
-  ["ore"] = "krastorio2"
+  ["oil"] = "krastorio2"
 }
+
+local fluid_cats = {
+  ["basic-fluid"] = true,
+  ["oil"] = true
+}
+
 
 local add_fluid_boxes = false
 
@@ -25,9 +31,11 @@ for name,ore in pairs(data.raw.resource) do
         ore.localised_name or
         {"entity-name." .. ore.name}
       }
-      new.name = "compressed-"..new.name.."-ore"
-      if new.category == "basic-fluid" then
+      if fluid_cats[new.category] then
         new.name = "concentrated-" ..new.name --no need for ore in name      
+      else
+        new.name = "compressed-"..new.name.."-ore"
+        new.name = new.name:gsub("ore%-ore", "ore")
       end
       if new.autoplace then new.autoplace = nil end
 
@@ -193,6 +201,14 @@ for name,ore in pairs(data.raw.resource) do
 			end
 			if compressed and max_stacksize > 0 then
         compressed_ores[#compressed_ores+1]=new
+        --[[ Migrating to future properly named ores! hurray technical debt ]]--
+        local new_copy = table.deepcopy(new)
+        new_copy.name = ore.name
+        new_copy.name = "compressed-"..new_copy.name.."-ore"
+        if new.category == "basic-fluid" then
+          new_copy.name = "concentrated-" ..new_copy.name --no need for ore in name      
+        end
+        compressed_ores[#compressed_ores+1] = new_copy
 			end
 		end
 	end
