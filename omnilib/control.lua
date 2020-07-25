@@ -127,8 +127,12 @@ local building_tiers = {
 local function update_tech(tech)
 	local variant = tech.force.technologies["omnipressed-" .. tech.name] or tech.force.technologies[tech.name:gsub("^omnipressed%-", "")] or {}
 	-- Handle compressed techs
-	if tech.researched or variant.researched then
-		tech.researched, variant.researched = true, true
+	if tech.researched or variant.researched or tech.level then
+		if tech.level then
+			variant.level = tech.level
+		else
+			tech.researched, variant.researched = true, true
+		end
 		for _, effect in pairs(tech.effects) do
 			if effect.type == "unlock-recipe" then
 				for _, tier in pairs(building_tiers) do
