@@ -148,9 +148,11 @@ local function update_tech(tech)
 				if tiered_buildings[effect.recipe] then					
 					for tier, tech_name in pairs(building_tiers) do
 						if force_techs[tech_name] and force_techs[tech_name].researched then
-							update_recipe(force_recs[effect.recipe], true)
+							local recipe_name = string.format("%s-compressed-%s", effect.recipe, tier)
+							update_recipe(force_recs[recipe_name], true)
+						else
+							break -- Tiers in order, don't continue once we hit one that's locked
 						end
-						break -- Tiers in order, don't continue once we hit one that's locked
 					end
 				end
 				update_recipe(force_recs[effect.recipe], true)
