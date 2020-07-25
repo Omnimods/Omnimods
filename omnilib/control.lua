@@ -32,7 +32,7 @@ local function get_recipe_family(recipe)
 end
 
 local function update_last_tier(recipe, full_refresh)
-	if not recipe.enabled then
+	if not recipe.valid or not recipe.enabled then
 		return
 	end
 	full_refresh = full_refresh or global.omni.need_update
@@ -61,8 +61,6 @@ local function update_last_tier(recipe, full_refresh)
 	end
 end
 
-
-
 local function get_last_tier(recipe)
 	local recipe_tree, metadata = get_recipe_family(recipe)
 	if not recipe_tree then
@@ -80,22 +78,26 @@ local function update_recipe(recipe, enabled_override)
 		return
 	end
 	local name = recipe.name
+	local force_techs = recipe.force.technologies
 	local recipe_tree, metadata = get_recipe_family(recipe)
-	if recipe_tree and metadata.tier < recipe_tree.active_tier then-- Irrelevant recipe!
+	if recipe.enabled and recipe_tree and metadata.tier < recipe_tree.active_tier then-- Irrelevant recipe!
 		enabled_override = false
 	end
 	if enabled_override ~= nil then
 		recipe.enabled = enabled_override
+		if not recipe.enabled then -- Nothing further to do if we killed it
+			return
+		end
 	end
 	-- Update according to compression research status
 	if not recipe_tree and 
-		recipe.force.technologies["compression-recipes"] and
-		recipe.force.technologies["compression-recipes"].researched and 
+		force_techs["compression-recipes"] and
+		force_techs["compression-recipes"].researched and 
 		not recipe.category:find("-compressed", nil, true) and 
 		not name:find("concentrated", nil, true) then
 		local recipes = recipe.force.recipes
 		-- Handle both compressed and permuted recipes.
-		local compressed, permuted_compressed = recipes[name.."-compression"], recipes[name:gsub("omniperm","compression-omniperm")]
+		local compressed, permuted_compressed = recipes[string.format("%s-compression",name)], recipes[name:gsub("omniperm","compression-omniperm")]
 		if compressed then
 			compressed.enabled = true
 		end
@@ -104,7 +106,7 @@ local function update_recipe(recipe, enabled_override)
 		end
 		-- Deal with generator variants
 		for tier=1, math.huge do
-			local compressed_recipe = recipes[name.."-concentrated-grade-"..tier]
+			local compressed_recipe = recipes[string.format("%s-concentrated-grade-%i", name, tier)]
 			if compressed_recipe then
 				compressed_recipe.enabled = true
 			else
@@ -118,14 +120,20 @@ local function update_recipe(recipe, enabled_override)
 end
 
 local building_tiers = {
-	"compact",
-	"nanite",
-	"quantum",
-	"singularity"
+	compact = "compression-compact-buildings",
+	nanite = "compression-nanite-buildings",
+	quantum = "compression-quantum-buildings",
+	singularity = "compression-singularity-buildings"
 }
 
 local function update_tech(tech)
-	local variant = tech.force.technologies["omnipressed-" .. tech.name] or tech.force.technologies[tech.name:gsub("^omnipressed%-", "")] or {}
+	local force_recs, tiered_buildings
+	local force_techs = tech.force.technologies
+	local variant = (
+		force_techs[string.format("omnipressed-%s", tech.name)] or 
+		force_techs[tech.name:gsub("^omnipressed%-", "")] or 
+		{}
+	)
 	-- Handle compressed techs
 	if tech.researched or variant.researched or tech.level then
 		if tech.level then
@@ -133,41 +141,54 @@ local function update_tech(tech)
 		else
 			tech.researched, variant.researched = true, true
 		end
+		force_recs = tech.force.recipes
+		tiered_buildings = global.omni.tiered_buildings
 		for _, effect in pairs(tech.effects) do
 			if effect.type == "unlock-recipe" then
-				for _, tier in pairs(building_tiers) do
-					local tier_tech = tech.force.technologies[string.format("compression-%s-buildings", tier)]
-					if tier_tech and tier_tech.researched then
-						local recipe_name = string.format("%s-compressed-%s", effect.recipe, tier)
-						if tech.force.recipes[recipe_name] then
-							update_recipe(tech.force.recipes[recipe_name], true)
+				if tiered_buildings[effect.recipe] then					
+					for tier, tech_name in pairs(building_tiers) do
+						if force_techs[tech_name] and force_techs[tech_name].researched then
+							update_recipe(force_recs[effect.recipe], true)
 						end
-					else
 						break -- Tiers in order, don't continue once we hit one that's locked
 					end
 				end
-				update_recipe(tech.force.recipes[effect.recipe], true)
+				update_recipe(force_recs[effect.recipe], true)
 			end
 		end
 		if tech.name == "compression-recipes" then -- Generator fluids
-			for name in pairs(game.get_filtered_recipe_prototypes({{filter = "category", category = "fluid-condensation"}})) do
-				if tech.force.recipes[name] and not tech.force.recipes[name].enabled then
-					tech.force.recipes[name].enabled = true
+			for name in pairs(global.omni.stock_fluids) do
+				if force_recs[name] and not force_recs[name].enabled then
+					force_recs[name].enabled = true
 				end
 			end
 		end
 	end
 end
 
-local function update_force(force)
+local function update_force(force, silent)
 	if not force.valid then return end
+	if #force.players == 0 then return end
 	if not global.omni.force_recipes[force.name] then
 		global.omni.force_recipes[force.name] = util.copy(global.omni.recipe_map)
 	end
+	local profiler = not silent and game.create_profiler()
 	--log("Updating force: " .. force.name)
 	--log("\tSyncing compressed and standard tech research states")
 	for _, tech in pairs(force.technologies) do
 		update_tech(tech)
+	end
+	if profiler then
+		game.print({
+			"",
+			string.format(
+				"%s for force \"%s\" updated. ",	
+				"Technologies", 
+				force.name
+			),
+			profiler
+		})
+		profiler:reset()
 	end
 	--log("Updating any default recipes")
 	for recipe_name in pairs(global.omni.stock_recipes) do
@@ -175,11 +196,23 @@ local function update_force(force)
 			update_recipe(force.recipes[recipe_name])
 		end
 	end
+	if profiler then
+		game.print({
+			"",
+			string.format(
+				"%s for force \"%s\" updated. ",	
+				"Recipes", 
+				force.name
+			),
+			profiler
+		})
+	end
 end
 
-local function update_building_recipes()
+local function update_building_recipes(silent)
 	--log("Updating buildings that use tiered recipes")
 	-- Make sure every entity using a tiered recipe (i.e. omnitraction) is up to the current tier
+	local profiler = not silent and game.create_profiler()
 	for _, surface in pairs(game.surfaces) do
 		for _, entity in pairs(surface.find_entities_filtered({type="assembling-machine"})) do
 			local recipe = entity.get_recipe()
@@ -215,6 +248,19 @@ local function update_building_recipes()
 				end
 			end
 		end
+		if profiler then
+			logstr = 
+			game.print({
+				"",
+				string.format(
+					"%s for surface \"%s\" updated. ",
+					"Building recipes",
+					surface.name
+				),
+				profiler
+			})
+			profiler:reset()
+		end
 	end
 	--log("Building update complete")
 end
@@ -225,23 +271,16 @@ function omni_update(game, silent)
 	--log("Beginning omnidate")
 	local profiler = game.create_profiler()
 	for _, force in pairs(game.forces) do
-		update_force(force)
-	end
-	update_building_recipes()
-	if not silent then
-		game.print({
-			"",
-			"Omnidate completed. ",
-			profiler
-		})
-	else
-		log({
-			"",
-			"Omnidate completed. ",
-			profiler
-		})
-	end
-	initializing = false
+		update_force(force, silent)
+	end	
+	update_building_recipes(silent)
+	local printer = silent and log or game.print
+	printer({
+		"",
+		"Omnidate completed. ",
+		profiler
+	})
+initializing = false
 end
 
 script.on_event(defines.events.on_console_chat, function(event)
@@ -261,6 +300,9 @@ function acquire_data(game)
 	-- Recipe tier map
 	local recipes = {}
 	local recipe_map = {}
+	local stock_recipes = {}
+	local stock_fluids = {}
+	local tiered_buildings = {}
 	for name, recipe in pairs(game.recipe_prototypes) do
 		for index, pattern in pairs(patterns) do
 			local match = select(3,name:find(pattern))-- We only care about match position, denoted by ()
@@ -281,6 +323,20 @@ function acquire_data(game)
 				break
 			end
 		end
+		-- Comes unlocked
+		if recipe.enabled then
+			stock_recipes[name] = true
+		end
+		-- Generator variant
+		if recipe.category == "fluid-condensation" then
+			stock_fluids[name] = true
+		end
+		-- Compact, nanite, etc buildings. Doing this work now makes it much faster when onidate is triggered.
+		if name:find("-compressed%-") then		
+			local base_building = name:gsub("-compressed%-%a+", "")
+			tiered_buildings[base_building] = tiered_buildings[base_building] or {}
+			tiered_buildings[base_building][name:gsub(".+compressed%-", "")] = name
+		end
 	end
 	global.omni.force_recipes = {}
 	for name in pairs(game.forces) do
@@ -288,14 +344,10 @@ function acquire_data(game)
 	end
 	global.omni.recipe_map = recipe_map
 	global.omni.recipes = recipes
-	global.omni.stock_recipes = {}
-	for recipe_name in pairs(game.get_filtered_recipe_prototypes({
-		{
-			filter = "enabled"
-		}
-	})) do
-		global.omni.stock_recipes[recipe_name] = true
-	end
+	global.omni.stock_recipes = stock_recipes
+	global.omni.stock_fluids = stock_fluids
+	global.omni.tiered_buildings = tiered_buildings
+
 end
 
 script.on_configuration_changed( function(conf)
@@ -329,7 +381,7 @@ script.on_event(defines.events.on_research_finished, function(event)
 		if tech.name == "compression-recipes" then
 			global.omni.need_update = true
 		elseif not global.omni.need_update then -- If we need_update we'll be iterating everything anyway.
-			update_tech(tech, true)
+			update_tech(tech)
 			if tech.name:find("^omnitech") and not tech.name:find("^omnipressed") then
 				global.omni.update_buildings = true
 			end
@@ -345,6 +397,7 @@ script.on_event(defines.events.on_force_created, function(event)
 	global.omni.force_recipes[event.force.name] = util.copy(global.omni.recipe_map)
 	global.omni.need_update = true
 end)
+
 script.on_event(defines.events.on_forces_merged, function(event)
 	global.omni.force_recipes[event.source_name] = nil
 	global.omni.force_recipes[event.destination.name] = util.copy(global.omni.recipe_map)
@@ -353,6 +406,10 @@ end)
 
 script.on_event(defines.events.on_force_reset, function(event)
 	global.omni.force_recipes[event.force.name] = util.copy(global.omni.recipe_map)
+	global.omni.need_update = true
+end)
+
+script.on_event(defines.events.on_player_changed_force, function(event)
 	global.omni.need_update = true
 end)
 
