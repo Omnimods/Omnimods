@@ -475,20 +475,6 @@ function OmniGen:wasteYieldResults()
 	return clone_function(f)
 end
 
-function prototype_icon(proto)
-	local item = omni.lib.find_prototype(proto)
-	local icons = {}
-	if item ~= nil then
-		if item.icon then
-			icons = {icon = item.icon}
-		else
-			icons = item.icons
-		end
-	end
-	if #icons == 0 or icons == {} then icons = nil end
-	return icons
-end
-
 function linear_gen(start, final, levels, grade)
 	return start + (final-start)*(grade-1)/(levels-1)
 end
@@ -497,19 +483,20 @@ function standard_linear(levels,grade)
 end
 
 function ItemGen:create(mod,name)
-	local m = nil
 	--if string.find(mod,"omnimatter") then m = "__"..mod.."__" end
-  --if mod == nil or mod == "omnimatter" then m = "__omnimatter__" end
-  local nm=name
-  if type(nm)~=string then nm="omni" end
+	--if mod == nil or mod == "omnimatter" then m = "__omnimatter__" end
+	local new_name = name
+	if type(new_name) ~= "string" then
+		new_name = "omni" 
+	end
 	local t = {
 		mod = mod,
-		name=name,
-		loc_name=function(levels,grade) return nil end,
+		name = name,
+		loc_name = function(levels,grade) return nil end,
 		loc_desc =  function(levels,grade) return nil end,
 		icons = function(levels,grade) return nil end,
 		flags = {},
-		order=function(levels,grade) return "y["..nm.."]" end,
+		order = function(levels,grade) return "y["..new_name.."]" end,
 		stack_size = 100,
 		subgroup = function(levels,grade) return "raw-resource" end,
 		fuel_value = nil,
@@ -522,8 +509,8 @@ function ItemGen:create(mod,name)
 		force = false,
 	}
 	if mod then
-		m="__"..mod.."__"
-		t.icons = function(levels,grade) return {{icon = m.."/graphics/icons/"..name..".png"}} end
+		mod = "__"..mod.."__"
+		t.icons = function(levels,grade) return {{icon = mod.."/graphics/icons/"..name..".png"}} end
 	end
 	return setmetatable(t,ItemGen)
 end
@@ -750,7 +737,7 @@ function ItemGen:addSteamIcon()
 end
 function ItemGen:addSmallIcon(icon,nr)
 	local quad = {{10, -10},{-10, -10},{-10, 10},{10, 10}}
-	local icons = prototype_icon(icon)
+	local icons = omni.lib.find_result_icon(icon)
 	local ic_sz=32
 	if icons then
 		if icons.icon_size then ic_sz=icons.icon_size end
