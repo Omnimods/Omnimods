@@ -4,7 +4,7 @@ local blacklist = {{"creative","mode"}}--{"stone",{"creative","mode"}}
 
 local add_fluid_boxes = false
 
-local get_icons = omni.compression.find_result_icon
+local get_icons = omni.lib.find_result_icon
 log("start ore compression")
 local compensation_c = 500/120
 for name,ore in pairs(data.raw.resource) do
