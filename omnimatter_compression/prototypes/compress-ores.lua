@@ -2,28 +2,14 @@ local compressed_ores = {}
 
 local blacklist = {{"creative","mode"}}--{"stone",{"creative","mode"}}
 
-local whitelist = {
-  ["basic-solid"] = "base",
-  ["basic-fluid"] = "base",
-  ["kr-quarry"] = "krastorio2",
-  ["oil"] = "krastorio2"
-}
-
-local fluid_cats = {
-  ["basic-fluid"] = true,
-  ["oil"] = true
-}
-
-
 local add_fluid_boxes = false
 
 local get_icons = omni.compression.find_result_icon
-
+log("start ore compression")
 local compensation_c = 500/120
 for name,ore in pairs(data.raw.resource) do
-  local source_mod = whitelist[ore.category] and mods[whitelist[ore.category]]
   if not omni.lib.string_contained_list(name,blacklist) then
-    if (mods[source_mod] or not category) and ore.name then
+    if ore.name then
 			local compressed = false
       local new = table.deepcopy(ore)
       new.localised_name = {
@@ -31,48 +17,46 @@ for name,ore in pairs(data.raw.resource) do
         ore.localised_name or
         {"entity-name." .. ore.name}
       }
-      if fluid_cats[new.category] then
-        new.name = "concentrated-" ..new.name --no need for ore in name      
-      else
-        new.name = "compressed-"..new.name.."-ore"
-        new.name = new.name:gsub("ore%-ore", "ore")
-      end
       if new.autoplace then new.autoplace = nil end
-
+      local minable_type = "item"
       if new.minable.results then
-        local tempresults={}
-        for _,res in pairs(new.minable.results) do
-          if res.name == nil then
-            local resname = res[1]
-            local resct = res[2] or 1
+        local minable_results = {}
+        for _, result in pairs(new.minable.results) do
+          if result.name == nil then
+            local result_name = result[1]
+            local result_count = result[2] or 1
             tempresults[#tempresults+1] = {
-              amount_max = resct,
-              amount_min = resct,
-              name = resname,
+              amount_max = result_count,
+              amount_min = result_count,
+              name = result_name,
               probability = 1,
               type = "item"
             }
           else
-            tempresults[#tempresults+1] = res
+            minable_type = result.type
+            minable_results[#minable_results+1] = result
           end
         end
-        new.minable.results = tempresults
+        new.minable.results = minable_results
       elseif new.minable.result then
 				new.minable.results = {{
-					amount_max = 1,
-					amount_min = 1,
+					amount_max = new.minable.count or 1,
+					amount_min = new.minable.count or 1,
 					name = new.minable.result,
 					probability = 1,
 					type = "item"
 				}}
 				new.minable.result=nil
-			end
+      end
+      if minable_type == "fluid" then
+        new.name = "concentrated-resource-" ..new.name --no need for ore in name      
+      else
+        new.name = "compressed-resource-"..new.name
+      end
 
       local max_stacksize = 0
-      for i,drop in ipairs(new.minable.results) do
-        
+      for i,drop in ipairs(new.minable.results) do        
         for _,comp in pairs({"compressed-", "concentrated-"}) do
-
           if omni.lib.is_in_table(comp .. drop.name, compressed_item_names) then
             drop.name = comp .. drop.name
             compressed = true

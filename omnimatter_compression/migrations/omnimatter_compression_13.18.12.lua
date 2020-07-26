@@ -7,7 +7,7 @@ for _, surface in pairs(game.surfaces) do
 			local oldname = entity.prototype.name
 			local newname = oldname:gsub("compressed%-concentrated%-", "")
 			newname = newname:gsub("compressed%-", "")
-			newname = newname:gsub("ore%-ore", "ore")
+			newname = newname:gsub("-ore$", ""):gsub("-ore$", "")
 
 			local attribs = {
 				position = entity.position,
@@ -17,8 +17,8 @@ for _, surface in pairs(game.surfaces) do
 			}
 			--log("compressed-" .. newname)
 			--log("concentrated-" .. newname:gsub("-ore", ""))
-			attribs.name = (game.entity_prototypes["compressed-" .. newname] or {}).name
-			attribs.name = attribs.name or (game.entity_prototypes["concentrated-" .. newname:gsub("-ore", "")] or {}).name
+			attribs.name = (game.entity_prototypes["compressed-resource-" .. newname] or {}).name
+			attribs.name = attribs.name or (game.entity_prototypes["concentrated-resource-" .. newname] or {}).name
 
 			if attribs.name and attribs.name ~= oldname then
 				upgrades[oldname] = upgrades[oldname] or {
