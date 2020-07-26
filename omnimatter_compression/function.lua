@@ -65,7 +65,7 @@ local find_result_icon = omni.lib.find_result_icon
 
 omni.compression.add_overlay = function(it,overlay_type,level) 
   -- `it` is the item/recipe table, not the name (can search for it if wrong)
-  -- overlay_type is a string for type:
+  -- overlay_type is a string for type or an iconspecification table:
     -- "compress" for compressed item/recipe
     -- "uncompress" for decompression recipe
     -- "building" for compressed buildings
@@ -78,27 +78,31 @@ omni.compression.add_overlay = function(it,overlay_type,level)
   end
 
   local overlay = {}
-  if overlay_type == "building" and level ~= nil then
-    overlay.icon = "__omnimatter_compression__/graphics/compress-"..level.."-32.png"
-  elseif overlay_type == "compress" then
-    overlay = {
-      icon = "__omnimatter_compression__/graphics/compress-32.png",
-      tint = {1,0,0,1},
-      scale = 1.5,
-      shift = {-8, 8}
-    }
-  elseif overlay_type == "uncompress" then
-    overlay.icon = "__omnimatter_compression__/graphics/compress-out-arrow-32.png"
-  elseif overlay_type == "compress-fluid" and level ~= nil then
-    overlay.icon = "__omnilib__/graphics/icons/small/lvl"..level..".png"
-  elseif overlay_type == "technology" then
-    overlay = {
-      icon = "__omnimatter_compression__/graphics/compress-tech-128.png",
-      icon_size = 128,
-      scale=0.5,
-      shift={-16,16},
-      tint={r=1,g=1,b=1,a=0.75}
-    }
+  if type(overlay_type) == "string" then
+    if overlay_type == "building" and level ~= nil then
+      overlay.icon = "__omnimatter_compression__/graphics/compress-"..level.."-32.png"
+    elseif overlay_type == "compress" then
+      overlay = {
+        icon = "__omnimatter_compression__/graphics/compress-32.png",
+        tint = {1,0,0,1},
+        scale = 1.5,
+        shift = {-8, 8}
+      }
+    elseif overlay_type == "uncompress" then
+      overlay.icon = "__omnimatter_compression__/graphics/compress-out-arrow-32.png"
+    elseif overlay_type == "compress-fluid" and level ~= nil then
+      overlay.icon = "__omnilib__/graphics/icons/small/lvl"..level..".png"
+    elseif overlay_type == "technology" then
+      overlay = {
+        icon = "__omnimatter_compression__/graphics/compress-tech-128.png",
+        icon_size = 128,
+        scale=0.5,
+        shift={-16,16},
+        tint={r=1,g=1,b=1,a=0.75}
+      }
+    end
+  else
+    overlay = overlay_type
   end
   
   local icons = find_result_icon(it)
