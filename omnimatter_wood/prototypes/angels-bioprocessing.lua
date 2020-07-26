@@ -13,6 +13,7 @@ if mods["angelsbioprocessing"] then
 		omni.marathon.standardise(rec)
 		for _,dif in pairs({"normal","expensive"}) do
 			rec[dif].results[1].name="omniwood"
+			rec[dif].main_product = "omniwood"
 		end
 		rec.icons[1].icon = data.raw.item["omniwood"].icons[1].icon
 		rec.icons[1].icon_size = data.raw.item["omniwood"].icons[1].icon_size
