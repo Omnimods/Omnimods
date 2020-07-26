@@ -510,7 +510,11 @@ function ItemGen:create(mod,name)
 	}
 	if mod then
 		mod = "__"..mod.."__"
-		t.icons = function(levels,grade) return {{icon = mod.."/graphics/icons/"..name..".png"}} end
+		t.icons = function(levels,grade)
+			return {{
+				icon = mod.."/graphics/icons/"..name..".png"
+			}}
+		end
 	end
 	return setmetatable(t,ItemGen)
 end
@@ -529,7 +533,7 @@ function ItemGen:import(item)
 		setPlace(proto.place_result):
 		setSubgroup(proto.subgroup):
 		setFuelCategory(proto.fuel_category):
-		setIcons(proto.icons or proto.icon):
+		setIcons(find_result_icon(proto)):
 		setFuelValue(proto.fuel_value)
 		if item.type == "fluid" then
 			it:fluid():
@@ -1180,7 +1184,7 @@ function RecGen:import(recipe)
 			setPlace(proto.place_result):
 			setSubgroup(proto.subgroup):
 			setFuelCategory(proto.fuel_category):
-			setIcons(proto.icons or proto.icon):
+			setIcons(find_result_icon(proto)):
 			setFuelValue(proto.fuel_value)
 			if proto.place_as_tile then r:tile():setPlace(proto.place_as_tile.result) end
 			if proto.type == "fluid" then
@@ -1200,7 +1204,7 @@ function RecGen:import(recipe)
 		setEnergy(recipe.energy_required or recipe.normal.energy_required):
 		setCategory(recipe.category):
 		setSubgroup(recipe.subgroup or r.subgroup(0,0)):
-		setIcons(r.icons(0,0) or recipe.icons):
+		setIcons(r.icons(0,0) or find_result_icon(recipe)):
 		setHidden(recipe.hidden or false):
 		setName(recipe.name)
 
@@ -2797,7 +2801,7 @@ function BuildGen:import(name)
 		b[name]=table.deepcopy(data)
 	end
 	--if build.energy_source.type=="burner" then b:setBurner(self.energy_source.effectivity,self.energy_source.fuel_inventory_size) end
-	return b:setType(build.type):setFlags(build.flags):setIcons(build.icons or build.icon)
+	return b:setType(build.type):setFlags(build.flags):setIcons(find_result_icon(build))
 end
 function BuildGen:importIf(name)
 	local build = omni.lib.find_entity_prototype(name) or omni.lib.find_entity_prototype("burner-"..name)

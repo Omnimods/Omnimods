@@ -1322,8 +1322,9 @@ local function find_result_icon(raw_item)
 		end
 	else
 		return {{
-		icon = "__core__/graphics/too-far.png",--ERROR
-		icon_size = 32,
+			icon = "__core__/graphics/too-far.png",--ERROR
+			icon_size = 32,
+			icon_mipmaps = 0
 		}}
 	end
 end
@@ -1339,55 +1340,74 @@ omni.lib.add_overlay = function(it,overlay_type,level)
     -- "compress-fluid" is for tiered compressed fluids
     -- "technology" for compressed techs
     -- level is required for building type and compress-fluid and should be a number, optional for others
-  --check if it is correct, if not fix it
-  if type(it) == "string" then --parsed whole table not the name...
-    it = omni.lib.find_prototype(it)
-  end
-
-  local overlay = {}
-  if type(overlay_type) == "string" then
-	if overlay_type == "building" and level ~= nil then
-		overlay.icon = "__omnimatter_compression__/graphics/compress-"..level.."-32.png"
-	elseif overlay_type == "compress" then
-		overlay = {
-		icon = "__omnimatter_compression__/graphics/compress-32.png",
-		tint = {1,0,0,1},
-		scale = 1.5,
-		shift = {-8, 8}
-		}
-	elseif overlay_type == "uncompress" then
-		overlay.icon = "__omnimatter_compression__/graphics/compress-out-arrow-32.png"
-	elseif overlay_type == "compress-fluid" and level ~= nil then
-		overlay.icon = "__omnilib__/graphics/icons/small/lvl"..level..".png"
-	elseif overlay_type == "technology" then
-		overlay = {
-		icon = "__omnimatter_compression__/graphics/compress-tech-128.png",
-		icon_size = 128,
-		scale=0.5,
-		shift={-16,16},
-		tint={r=1,g=1,b=1,a=0.75}
-		}
+	--check if it is correct, if not fix it
+	if type(it) == "string" then --parsed whole table not the name...
+		it = omni.lib.find_prototype(it)
 	end
-  else
-    overlay = overlay_type
-  end
+
+	local overlay = {}
+	if type(overlay_type) == "string" then
+		if overlay_type == "building" and level ~= nil then
+			overlay = {
+				icon = "__omnimatter_compression__/graphics/compress-"..level.."-32.png"
+			}
+		elseif overlay_type == "compress" then
+			overlay = {
+				icon = "__omnimatter_compression__/graphics/compress-32.png",
+				tint = {
+					r = 1,
+					g = 0,
+					b = 0,
+					a = 1
+				},
+				scale = 1.5,
+				shift = {-8, 8}
+			}
+		elseif overlay_type == "uncompress" then
+			overlay = {
+				icon = "__omnimatter_compression__/graphics/compress-out-arrow-32.png"
+			}
+		elseif overlay_type == "compress-fluid" and level ~= nil then
+			overlay = {
+				icon = "__omnilib__/graphics/icons/small/lvl"..level..".png"
+			}
+		elseif overlay_type == "technology" then
+			overlay = {
+				icon = "__omnimatter_compression__/graphics/compress-tech-128.png",
+				icon_size = 128,
+				scale=0.5,
+				shift={-16,16},
+				tint={
+					r = 1,
+					g = 1,
+					b = 1,
+					a = 0.75
+				}
+			}
+		end
+	elseif type(overlay_type) == "table" then
+		overlay = overlay_type
+	else
+		error("add_overlay: invalid overlay_type specified")
+	end
   
-  local icons = find_result_icon(it)
-  if icons then --ensure it exists first
-    -- Do we require an overlay? This will be placed at the end of the list and thus on top
-    if overlay.icon then
-      overlay.icon_size = overlay.icon_size or 32
-      icons = util.combine_icons(icons, {overlay}, {})
-    end
-    -- This is the first table entry on which the others are built
-    --[[
-    local base_icon = {{
-      icon = "__omnilib__/graphics/icons/blank.png",
-      icon_size = 32 --set initial icon to set the size for auto-scaling purposes
-    }}
-    return util.combine_icons(base_icon, icons, {})]]
-    return icons
-  end
+	local icons = find_result_icon(it)
+	if icons then --ensure it exists first
+		-- Do we require an overlay? This will be placed at the end of the list and thus on top
+		if overlay.icon then
+			overlay.icon_size = overlay.icon_size or 32
+			overlay.icon_mipmaps = normalize_mipmaps(overlay.icon_mipmaps, overlay.icon_size)
+			icons = util.combine_icons(icons, {overlay}, {})
+		end
+		-- This is the first table entry on which the others are built
+		--[[
+		local base_icon = {{
+		icon = "__omnilib__/graphics/icons/blank.png",
+		icon_size = 32 --set initial icon to set the size for auto-scaling purposes
+		}}
+		return util.combine_icons(base_icon, icons, {})]]
+		return icons
+	end
 end
 
 local c=0.9
