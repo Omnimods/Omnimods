@@ -1,0 +1,11 @@
+{
+"name":"omni_debug",
+"version":"0.0.1",
+"title":"Omnidebug",
+"author":"EmperorZelos",
+"description":"Trigger omni-internal debug messages. Internal use Only!",
+"factorio_version":"0.18",
+"dependencies":[
+    "base"
+]
+}

@@ -26,6 +26,8 @@ function omni.lib.set_recipe_ingredients(recipename,...)
         if rec.expensive.ingredients then
             rec.expensive.ingredients = ing
         end
+    else
+		log("Could not set ingredients, "..recipename.." does not exist.") 
 	end
 end
 
@@ -63,6 +65,8 @@ function omni.lib.set_recipe_results(recipename,...)
         if rec.expensive and rec.expensive.results then
             rec.expensive.results = res
         end
+    else
+		log("Could not set results, "..recipename.." does not exist.")
 	end
 end
 
@@ -155,7 +159,7 @@ function omni.lib.add_recipe_ingredient(recipename, ingredient)
            end
         end
 	else
-		--log(recipe.." does not exist.")
+		log("Could not add ingredients, "..recipename.." does not exist.")
 	end
 end
 
@@ -260,7 +264,7 @@ function omni.lib.add_recipe_result(recipename, result)
            end
         end   
 	else
-		--log(recipe.." does not exist.")
+		log("Could not add results, "..recipename.." does not exist.")
 	end
 end
 
@@ -602,14 +606,16 @@ function omni.lib.recipe_result_contains(recipename, itemname)
 end
 
 function omni.lib.find_recipe(itemname)
-	if type(itemname)=="table" then return itemname elseif type(itemname)~="string" then return nil end
-	for _, rec in pairs(data.raw.recipe) do
+    if type(itemname)=="table" then return itemname elseif type(itemname)~="string" then return nil end
+    for _, rec in pairs(data.raw.recipe) do
         if omni.lib.recipe_result_contains(rec.name,itemname) then
-			return rec
-		end
-	end
-	--log("Could not find "..item.."'s recipe prototype, check it's type.")
-	return nil
+            return rec
+        end
+    end
+    if omni.lib.debug_mode then
+        log("Could not find "..itemname.."'s recipe prototype, check it's type.")
+    end
+    return nil
 end
 
 function omni.lib.get_tech_name(recipename)
@@ -621,6 +627,9 @@ function omni.lib.get_tech_name(recipename)
 				end
 			end
 		end
+    end
+    if omni.lib.debug_mode then
+        log("Could not find "..recipename.."'s tech.")
     end
     return nil
 end
