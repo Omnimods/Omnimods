@@ -408,11 +408,23 @@ function omni.lib.set_item_icon(item,icon, tint)
 end
 
 function omni.lib.change_icon_tint(item, tint)
-	local t = {}
-	if tint.r then t=tint else t={r=tint[1],g=tint[2],b=tint[3]} end
-	local icons = {{icon = data.raw.item[item].icon, tint=t}}
-	--data.raw.item[item].icon = icons
+	local tint_table = {}
+	if tint.r then 
+		tint_table = tint 
+	else 
+		tint_table = {
+			r = tint[1],
+			g = tint[2],
+			b = tint[3],
+			a = tint[4]
+		}
+	end
+	local icons = find_result_icon(item)
+	for i, layer in pais(icons) do
+		layer.tint = tint_table
+	end
 	data.raw.item[item].icons = icons
+	data.raw.item[item].icon = nil
 end
 
 function omni.lib.get_tech_name(recipename)
@@ -1281,29 +1293,29 @@ end
 local function find_result_icon(raw_item)
 	if raw_item then
 		if type(raw_item) ~= "table" then
-		raw_item = find_icon(raw_item) --Find a matching prototype if possible
-		return find_result_icon(raw_item)
+			raw_item = find_icon(raw_item) --Find a matching prototype if possible
+			return find_result_icon(raw_item)
 		elseif raw_item.icons then
-		local icons = table.deepcopy(raw_item.icons)
-		for i, icon in pairs(icons) do-- Apply inherited attributes as explicit for each layer
-			icon.icon_size = icon.icon_size or raw_item.icon_size
-			icon.icon_mipmaps = normalize_mipmaps(icon.icon_mipmaps or raw_item.icon_mipmaps, icon.icon_size)
-		end
-		return icons
+			local icons = table.deepcopy(raw_item.icons)
+			for i, icon in pairs(icons) do-- Apply inherited attributes as explicit for each layer
+				icon.icon_size = icon.icon_size or raw_item.icon_size
+				icon.icon_mipmaps = normalize_mipmaps(icon.icon_mipmaps or raw_item.icon_mipmaps, icon.icon_size)
+			end
+			return icons
 		elseif raw_item.icon then
-		return {{
-			icon = raw_item.icon,
-			icon_size = raw_item.icon_size,
-			icon_mipmaps = normalize_mipmaps(raw_item.icon_mipmaps, raw_item.icon_size)
-		}}
+			return {{
+				icon = raw_item.icon,
+				icon_size = raw_item.icon_size,
+				icon_mipmaps = normalize_mipmaps(raw_item.icon_mipmaps, raw_item.icon_size)
+			}}
 		else
-		local result = (-- recipe.result, first entry in recipe.results or either of the previous two within normal and expensive recipe blocks
-			(raw_item.result) or
-			(raw_item.results and raw_item.results[1].name) or
-			(raw_item.normal and (raw_item.normal.result or raw_item.normal.results[1].name)) or
-			(raw_item.expensive and (raw_item.expensive.result or raw_item.expensive.results[1].name)) 
-		)
-		return find_result_icon(result)
+			local result = (-- recipe.result, first entry in recipe.results or either of the previous two within normal and expensive recipe blocks
+				(raw_item.result) or
+				(raw_item.results and raw_item.results[1].name) or
+				(raw_item.normal and (raw_item.normal.result or raw_item.normal.results[1].name)) or
+				(raw_item.expensive and (raw_item.expensive.result or raw_item.expensive.results[1].name)) 
+			)
+			return find_result_icon(result)
 		end
 	else
 		return {{
