@@ -132,6 +132,7 @@ local create_concentrated_fluid = function(fluid,tier)
   end
   newFluid.icons = omni.compression.add_overlay(newFluid, "compress-fluid", tier)
   newFluid.icon = nil
+  newFluid.mipmap_count = nil
   data:extend{newFluid}
 
   local baseFluid = fluid
@@ -351,6 +352,7 @@ for _,kind in pairs(building_list) do --only building types
             new.minable.mining_time = (new.minable.mining_time or 10) * i
             new.icons = omni.compression.add_overlay(build,"building",i)
             new.icon = nil
+            new.mipmap_count = nil
 
             run_entity_updates(new,kind,i)
 
@@ -367,6 +369,7 @@ for _,kind in pairs(building_list) do --only building types
 						end
 						item.icons = omni.compression.add_overlay(build,"building",i)
             item.icon = nil
+            item.mipmap_count = nil
 
 						compressed_buildings[#compressed_buildings+1] = item
             --[[COMPRESSION/DE-COMPRESSION RECIPE CREATION]]--

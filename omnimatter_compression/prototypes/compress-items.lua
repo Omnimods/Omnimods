@@ -61,6 +61,7 @@ for _, group in pairs({"fluid"}) do
 			new_fluid.order = fluid.order or "z".."[concentrated-"..fluid.name .."]"
       new_fluid.icons = omni.compression.add_overlay(fluid.name,"compress")
       new_fluid.icon = nil
+      new_fluid.mipmap_count = nil
       omni.compression.set_localisation(fluid, new_fluid, 'concentrated-fluid')
       --new_fluid.localised_name = {"fluid-name.concentrated-fluid", loc_key}
       --new_fluid.localised_description = {"fluid-description.concentrated-fluid", loc_key}
@@ -288,7 +289,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
           hidden = true,
         },
       }
-      omni.compression.set_localisation(item, uncompress, 'uncompress-item', 'unccompress-item', class)
+      omni.compression.set_localisation(item, uncompress, 'uncompress-item', 'uncompress-item', class)
       --omni.marathon.standardise(uncompress)
       standardized_recipes["uncompress-"..item.name] = true
 			uncompress_recipes[#uncompress_recipes+1] = uncompress

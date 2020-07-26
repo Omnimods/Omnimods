@@ -162,6 +162,7 @@ for _,tech in pairs(data.raw.technology) do
     --Handle icons
     t.icons = omni.compression.add_overlay(t, "technology")
     t.icon = nil
+    t.mipmap_count = nil
     --lowest common multiple for the packs
 		local lcm = 1
     for _, ings in pairs(t.unit.ingredients) do
