@@ -1,4 +1,4 @@
-require("controlFunctions")
+require("control-functions")
 --
     --
         --
