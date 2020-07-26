@@ -1278,7 +1278,7 @@ local function normalize_mipmaps(mipmap_count, icon_size)
 	end
 end
 --really dig deep for the icon set
-function omni.lib.find_result_icon(raw_item)
+local function find_result_icon(raw_item)
 	if raw_item then
 		if type(raw_item) ~= "table" then
 		raw_item = find_icon(raw_item) --Find a matching prototype if possible
@@ -1312,6 +1312,8 @@ function omni.lib.find_result_icon(raw_item)
 		}}
 	end
 end
+
+omni.lib.find_result_icon = find_result_icon
 
 local c=0.9
 local dir={W={0,-c},S={0,c},A={-c,0},D={c,0},I={0,-c},K={0,c},J={-c,0},L={c,0},T={0,-c},G={0,c},F={-c,0},H={c,0}}
