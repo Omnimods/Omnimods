@@ -628,9 +628,6 @@ function omni.lib.get_tech_name(recipename)
 			end
 		end
     end
-    if omni.lib.debug_mode then
-        log("Could not find "..recipename.."'s tech.")
-    end
     return nil
 end
 
