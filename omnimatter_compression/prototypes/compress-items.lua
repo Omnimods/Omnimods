@@ -59,7 +59,7 @@ for _, group in pairs({"fluid"}) do
       new_fluid.name = "concentrated-"..new_fluid.name
 			new_fluid.sub_group = "fluids"
 			new_fluid.order = fluid.order or "z".."[concentrated-"..fluid.name .."]"
-      new_fluid.icons = omni.compression.add_overlay(fluid.name,"compress")
+      new_fluid.icons = omni.lib.add_overlay(fluid.name,"compress")
       new_fluid.icon = nil
       new_fluid.mipmap_count = nil
       omni.compression.set_localisation(fluid, new_fluid, 'concentrated-fluid')
@@ -78,7 +78,7 @@ for _, group in pairs({"fluid"}) do
         category = "fluid-concentration",
         enabled = true,
         hidden = true,
-        icons = omni.compression.add_overlay(fluid.name,"compress"),
+        icons = omni.lib.add_overlay(fluid.name,"compress"),
         order = fluid.order or "z".."[concentrated-"..fluid.name .."]",
         subgroup = "concentrator-fluids",
         normal = {
@@ -116,7 +116,7 @@ for _, group in pairs({"fluid"}) do
       local uncompress = {
         type = "recipe",
         name = "uncompress-"..fluid.name,
-        icons = omni.compression.add_overlay(fluid.name,"uncompress"),
+        icons = omni.lib.add_overlay(fluid.name,"uncompress"),
         category = "fluid-concentration",
         enabled = true,
         hidden = true,
@@ -194,7 +194,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 				--localised_name = {"item-name.compressed-item", loc_key},
 				--localised_description = {"item-description.compressed-item", loc_key},
 				flags = item.flags,
-				icons = omni.compression.add_overlay(item.name,"compress"),
+				icons = omni.lib.add_overlay(item.name,"compress"),
 				subgroup = item.subgroup,
 				order = order,
 				stack_size = compressed_item_stack_size,
@@ -221,7 +221,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 				category = "compression",
 				enabled = true,
         hidden = true,
-        icons=omni.compression.add_overlay(item.name,"compress"),
+        icons=omni.lib.add_overlay(item.name,"compress"),
         order = order,
         normal = {
           ingredients = {
@@ -259,7 +259,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 				name = "uncompress-"..item.name,
 				--localised_name = {"recipe-name.uncompress-item", loc_key},
 				--localised_description = {"recipe-description.uncompress-item", loc_key},
-				icons = omni.compression.add_overlay(item.name,"uncompress"),
+				icons = omni.lib.add_overlay(item.name,"uncompress"),
 				category = "compression",
 				enabled = true,
         hidden = true,

@@ -382,7 +382,7 @@ function create_compression_recipe(recipe)
         if (more_than_one(recipe) or omni.lib.is_in_table(recipe.name,include_recipes)) then --stack size>1 or include anyway?
           local comrec={} --set basis to zero
           local new_cat = set_category(recipe) or "crafting-compressed" --fallback should not be needed
-          local icons = omni.compression.add_overlay(recipe,"compress")         
+          local icons = omni.lib.add_overlay(recipe,"compress")         
           --subgroup check--already standardised, there should be no subgroup in its own
           local subgr = {regular = {}}
           if recipe.subgroup or recipe.normal.subgroup then --already standardised, there should be no subgroup in its own
@@ -664,7 +664,7 @@ local create_void = function(recipe)
     end
   end
 	if continue == true then
-		local icons = omni.compression.add_overlay(recipe,"compress")
+		local icons = omni.lib.add_overlay(recipe,"compress")
 		local new_cat = "crafting-compressed"
 		if recipe.normal.category then new_cat = recipe.normal.category.."-compressed" end
 		if recipe.normal.category and not data.raw["recipe-category"][recipe.normal.category.."-compressed"] then
@@ -749,7 +749,7 @@ for name,fluid in pairs(generatorFluidRecipes) do
         if newFluid.fuel_value then
           newFluid.fuel_value = tonumber(string.sub(newFluid.fuel_value,1,string.len(newFluid.fuel_value)-2))*math.pow(multiplier,i)..string.sub(newFluid.fuel_value,string.len(newFluid.fuel_value)-2,string.len(newFluid.fuel_value))
         end
-        newFluid.icons = omni.compression.add_overlay(
+        newFluid.icons = omni.lib.add_overlay(
           newFluid,
           "compress-fluid",
           i

@@ -160,7 +160,7 @@ for _,tech in pairs(data.raw.technology) do
       }
     end
     --Handle icons
-    t.icons = omni.compression.add_overlay(t, "technology")
+    t.icons = omni.lib.add_overlay(t, "technology")
     t.icon = nil
     t.mipmap_count = nil
     --lowest common multiple for the packs
