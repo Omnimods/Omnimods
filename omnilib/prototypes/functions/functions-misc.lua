@@ -55,6 +55,18 @@ function omni.lib.add_ore_tint(icon,ore_name) --should work for a specific icon 
   return icon
 end
 
+omni.lib.debug_mode = false
+if mods["omni_debug"] then omni.lib.debug_mode = true end
+
+--Log a string. force == true: log always, force == false: only log in debug mode
+function omni.lib.log(string, force)
+	if force then
+		log(string)
+	elseif omni.lib.debug_mode then
+		log("DEBUG: "..string)
+	end
+end
+
 function omni.lib.cardTable(tab)
 	local count = 0
 	if type(tab)=="table" then

@@ -77,8 +77,9 @@ local more_than_one = function(recipe)
 				else
 					if omni.lib.find_stacksize(recipe.normal.results[1].name) then 
 						return omni.lib.find_stacksize(recipe.normal.results[1].name) > 1
-					else 
-						return false	--log("Something is not right, item  "..recipe.normal.results[1].name.." has no stacksize.")
+          else 
+            omni.lib.log("Something is not right, item  "..recipe.normal.results[1].name.." has no stacksize.", false)
+						return false
 					end
 				end
 			else
@@ -444,8 +445,6 @@ function create_compression_recipe(recipe)
               --set ingredient and result tables from recipe
               ing={normal=table.deepcopy(recipe.normal.ingredients),expensive=table.deepcopy(recipe.expensive.ingredients)}
               res={normal=table.deepcopy(recipe.normal.results),expensive=table.deepcopy(recipe.expensive.results)}
-              --log(serpent.block(ing))
-              --log(serpent.block(res))
               --GCD checks for each recipe
                 --iterates through each ingredient to find the 2 gcd variables {gcd[norm],gcd[exp]} these are calculated across both ingredients and results            
               for _,dif in pairs({"normal","expensive"}) do
@@ -454,13 +453,9 @@ function create_compression_recipe(recipe)
                     for _,component in pairs(recipe[dif][ingres]) do
                       --temp fix for non-standard stuff sneaking through
                       if not component.amount then --only basic stuff
-                        log(serpent.block(recipe.name .. ": BEFORE"))
-                        log(serpent.block(component))
                         local name=component[1]
                         local amount=component[2]
                         component = {type = "item", name = name, amount = amount} --force standard if incorrect
-                        log("AFTER")
-                        log(serpent.block(component))
                       end
                       if component.type ~= "fluid" then
                         local amount = math.max(math.floor(component.amount+0.5),1) --ensure no decimals on items
@@ -823,5 +818,4 @@ if #compress_based_recipe ~= 0 then
   data:extend(compress_based_recipe)
 end
 module_limits()
---log("Finished compressing recipes")
 log("end recipe compression")
