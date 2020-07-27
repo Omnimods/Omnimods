@@ -161,6 +161,8 @@ setmetatable(BuildChain, {
 	end
 })
 
+local find_result_icon = omni.lib.find_result_icon
+
 local ord={"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"}
 --[[
 	Takes an input and checks if is of the a table and then
@@ -483,8 +485,6 @@ function standard_linear(levels,grade)
 end
 
 function ItemGen:create(mod,name)
-	--if string.find(mod,"omnimatter") then m = "__"..mod.."__" end
-	--if mod == nil or mod == "omnimatter" then m = "__omnimatter__" end
 	local new_name = name
 	if type(new_name) ~= "string" then
 		new_name = "omni" 

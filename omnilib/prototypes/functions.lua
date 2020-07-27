@@ -393,31 +393,17 @@ function omni.lib.chain_omnite_cost(item,chain)
 	return cost
 end
 
-
---Modifications
-function omni.lib.add_number_item(item, val)
-	if data.raw.item[item] then
-		data.raw.item[item].icons={{icon=data.raw.item[item].icon},{icon = "__omnimatter__/graphics/icons/extraction-"..val..".png"}}
-		data.raw.item[item].icon=nil
-	end
-end
-
-function omni.lib.set_item_icon(item,icon, tint)
-	data.raw.item[item].icon = icon
-	if tint then omni.lib.change_icon_tint(item,tint) end
-end
-
 function omni.lib.change_icon_tint(item, tint)
 	local tint_table = {}
-	if tint.r then 
-		tint_table = tint 
-	else 
+	if tint[1] then
 		tint_table = {
 			r = tint[1],
 			g = tint[2],
 			b = tint[3],
 			a = tint[4]
 		}
+	else 
+		tint_table = tint 
 	end
 	local icons = find_result_icon(item)
 	for i, layer in pais(icons) do
@@ -1332,59 +1318,54 @@ end
 omni.lib.find_result_icon = find_result_icon
 
 omni.lib.add_overlay = function(it,overlay_type,level) 
-  -- `it` is the item/recipe table, not the name (can search for it if wrong)
-  -- overlay_type is a string for type or an iconspecification table:
-    -- "compress" for compressed item/recipe
-    -- "uncompress" for decompression recipe
-    -- "building" for compressed buildings
-    -- "compress-fluid" is for tiered compressed fluids
-    -- "technology" for compressed techs
-    -- level is required for building type and compress-fluid and should be a number, optional for others
-	--check if it is correct, if not fix it
+	-- `it` is the item/recipe table, not the name (can search for it if wrong)
+	-- overlay_type is a string for type or an iconspecification table
+	-- level is required for extraction, building and compress-fluid and should be a number	
 	if type(it) == "string" then --parsed whole table not the name...
 		it = omni.lib.find_prototype(it)
 	end
+	level = level or "" -- So we can build our table
+	local overlays = { -- Since we normalize for 32px/no mipmap icons below, we only need to set those properties for exceptions
+		extraction = { -- omnimatter tiered extraction
+			icon = "__omnimatter__/graphics/icons/extraction-"..level..".png"
+		},
+		building = {
+			icon = "__omnimatter_compression__/graphics/compress-"..level.."-32.png"
+		},
+		compress = { -- compressed item/recipe
+			icon = "__omnimatter_compression__/graphics/compress-32.png",
+			tint = {
+				r = 1,
+				g = 0,
+				b = 0,
+				a = 1
+			},
+			scale = 1.5,
+			shift = {-8, 8}
+		},
+		uncompress = { -- decompression recipe
+			icon = "__omnimatter_compression__/graphics/compress-out-arrow-32.png"
+		},
+		["compress-fluid"] = { -- tiered compressed fluids (generator fluids)
+			icon = "__omnilib__/graphics/icons/small/lvl"..level..".png"
+		},
+		technology = { -- compressed techs
+			icon = "__omnimatter_compression__/graphics/compress-tech-128.png",
+			icon_size = 128,
+			scale=0.5,
+			shift={-16,16},
+			tint={
+				r = 1,
+				g = 1,
+				b = 1,
+				a = 0.75
+			}
+		}
+	}
 
-	local overlay = {}
+	local overlay
 	if type(overlay_type) == "string" then
-		if overlay_type == "building" and level ~= nil then
-			overlay = {
-				icon = "__omnimatter_compression__/graphics/compress-"..level.."-32.png"
-			}
-		elseif overlay_type == "compress" then
-			overlay = {
-				icon = "__omnimatter_compression__/graphics/compress-32.png",
-				tint = {
-					r = 1,
-					g = 0,
-					b = 0,
-					a = 1
-				},
-				scale = 1.5,
-				shift = {-8, 8}
-			}
-		elseif overlay_type == "uncompress" then
-			overlay = {
-				icon = "__omnimatter_compression__/graphics/compress-out-arrow-32.png"
-			}
-		elseif overlay_type == "compress-fluid" and level ~= nil then
-			overlay = {
-				icon = "__omnilib__/graphics/icons/small/lvl"..level..".png"
-			}
-		elseif overlay_type == "technology" then
-			overlay = {
-				icon = "__omnimatter_compression__/graphics/compress-tech-128.png",
-				icon_size = 128,
-				scale=0.5,
-				shift={-16,16},
-				tint={
-					r = 1,
-					g = 1,
-					b = 1,
-					a = 0.75
-				}
-			}
-		end
+		overlay = overlays[overlay_type]
 	elseif type(overlay_type) == "table" then
 		overlay = overlay_type
 	else
@@ -1399,13 +1380,6 @@ omni.lib.add_overlay = function(it,overlay_type,level)
 			overlay.icon_mipmaps = normalize_mipmaps(overlay.icon_mipmaps, overlay.icon_size)
 			icons = util.combine_icons(icons, {overlay}, {})
 		end
-		-- This is the first table entry on which the others are built
-		--[[
-		local base_icon = {{
-		icon = "__omnilib__/graphics/icons/blank.png",
-		icon_size = 32 --set initial icon to set the size for auto-scaling purposes
-		}}
-		return util.combine_icons(base_icon, icons, {})]]
 		return icons
 	end
 end
