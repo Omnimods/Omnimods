@@ -68,7 +68,7 @@ function omni.lib.log(string, force)
 	if force then
 		log(string)
 	elseif omni.lib.debug_mode then
-		log("DEBUG: "string)
+		log("DEBUG: "..string)
 	end
 end
 
