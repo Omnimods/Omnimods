@@ -89,7 +89,8 @@ for _,fuelitem in pairs(data.raw.item) do
         --fuelitem.fuel_value = "1kJ" not needed since the fuel category is changed
         fuelitem.fuel_category = "omni-0"
 
-        omni.lib.log("Created Omnified "..fuelitem.name, false)
+
+       log("Created Omnified "..fuelitem.name)
       -- log(serpent.block(data.raw["item"]["omni-energy-"..fuelitem.name]))
     end
 ::continue::
