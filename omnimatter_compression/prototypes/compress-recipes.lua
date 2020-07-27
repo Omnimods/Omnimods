@@ -78,9 +78,7 @@ local more_than_one = function(recipe)
 					if omni.lib.find_stacksize(recipe.normal.results[1].name) then 
 						return omni.lib.find_stacksize(recipe.normal.results[1].name) > 1
           else 
-            if omni.lib.debug_mode then 
-              log("Something is not right, item  "..recipe.normal.results[1].name.." has no stacksize.")
-            end
+            omni.lib.log("Something is not right, item  "..recipe.normal.results[1].name.." has no stacksize.", false)
 						return false
 					end
 				end

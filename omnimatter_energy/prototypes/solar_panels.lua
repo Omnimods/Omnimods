@@ -3,9 +3,7 @@ for _, sol in pairs(data.raw["solar-panel"]) do
 	if sol.minable then
 		local recipe = omni.lib.find_recipe(sol.minable.result)
 		omni.lib.remove_recipe_all_techs(recipe.name)
-		if omni.lib.debug_mode then 
-        	log("Removed Solar Panel: "..sol.name)
-        end
+        omni.lib.log("Removed Solar Panel: "..sol.name, false)
 	end
 end
 

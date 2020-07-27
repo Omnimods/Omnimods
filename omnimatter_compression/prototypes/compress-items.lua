@@ -306,9 +306,7 @@ for _, rec in pairs(data.raw.recipe) do
   for _, dif in pairs({"normal", "expensive"}) do
     for _, ing in pairs(rec[dif].ingredients) do
       if excluded_items[ing.name] then
-        if omni.lib.debug_mode then 
-          log("Excluded recipe '"..rec.name.."' due to '"..ing.name.."' being on the blacklist")
-        end
+        omni.lib.log("Excluded recipe '"..rec.name.."' due to '"..ing.name.."' being on the blacklist", false)
         omni.compression.exclude_recipe(rec.name)
       end
     end

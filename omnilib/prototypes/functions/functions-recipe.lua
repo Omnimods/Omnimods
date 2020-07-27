@@ -27,7 +27,7 @@ function omni.lib.set_recipe_ingredients(recipename,...)
             rec.expensive.ingredients = ing
         end
     else
-		log("Could not set ingredients, "..recipename.." does not exist.") 
+		omni.lib.log("Could not set ingredients, "..recipename.." does not exist.", true) 
 	end
 end
 
@@ -66,7 +66,7 @@ function omni.lib.set_recipe_results(recipename,...)
             rec.expensive.results = res
         end
     else
-		log("Could not set results, "..recipename.." does not exist.")
+		omni.lib.log("Could not set results, "..recipename.." does not exist.", true)
 	end
 end
 
@@ -159,7 +159,7 @@ function omni.lib.add_recipe_ingredient(recipename, ingredient)
            end
         end
 	else
-		log("Could not add ingredients, "..recipename.." does not exist.")
+		omni.lib.log("Could not add ingredients, "..recipename.." does not exist.", true)
 	end
 end
 
@@ -264,7 +264,7 @@ function omni.lib.add_recipe_result(recipename, result)
            end
         end   
 	else
-		log("Could not add results, "..recipename.." does not exist.")
+		omni.lib.log("Could not add results, "..recipename.." does not exist.", true)
 	end
 end
 
@@ -330,7 +330,7 @@ function omni.lib.remove_recipe_result(recipename, result)
             end
 		end
 	else
-		log("Attempted to remove the only result that recipe "..recipename.." has. Cannot be done")
+		omni.lib.log("Attempted to remove the only result that recipe "..recipename.." has. Cannot be done", true)
 	end
 end
 
@@ -612,9 +612,7 @@ function omni.lib.find_recipe(itemname)
             return rec
         end
     end
-    if omni.lib.debug_mode then
-        log("Could not find "..itemname.."'s recipe prototype, check it's type.")
-    end
+    omni.lib.log("Could not find "..itemname.."'s recipe prototype, check it's type.", false)
     return nil
 end
 
