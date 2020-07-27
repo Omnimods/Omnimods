@@ -56,9 +56,9 @@ function omni.science.omnipack_tech_post_update()
   while next(omni.science.remaining_techs) do
 
     index = index +1
-    omni.lib.log("Looping through the internal tech list for the "..index.." time", false)
+    --log("Looping through the internal tech list for the "..index.." time")
     if index > 50 then
-      omni.lib.log("WARNING: Max amount of tech list loops exceeded!", true)
+      log("WARNING: Max amount of tech list loops exceeded!")
       break 
     end
 
