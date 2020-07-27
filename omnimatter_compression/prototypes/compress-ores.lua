@@ -12,11 +12,7 @@ for name,ore in pairs(data.raw.resource) do
     if ore.name then
 			local compressed = false
       local new = table.deepcopy(ore)
-      new.localised_name = {
-        "entity-name.compressed-ore",
-        ore.localised_name or
-        {"entity-name." .. ore.name}
-      }
+      new.localised_name = omni.locale.custom_name(ore, "compressed-ore")
       if new.autoplace then new.autoplace = nil end
       local minable_type = "item"
       if new.minable.results then

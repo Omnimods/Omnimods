@@ -57,19 +57,3 @@ function omni.compression.is_stackable(obj)
   end
   return stackable
 end
-
-local locale = omni.locale
-omni.compression.set_localisation = function(old_prototype, new_prototype, name_key, description_key)--class_override format: "type-%s.prototype.name"
-  if name_key then
-    new_prototype.localised_name = {
-      new_prototype.type.."-name."..name_key,
-      old_prototype.localised_name or locale.of(old_prototype).name--locale.of(old_prototype).name
-    }
-  end
-  if description_key then
-    new_prototype.localised_description = {
-      new_prototype.type.."-description."..description_key,
-      old_prototype.localised_description or locale.of(old_prototype).description
-    }
-  end
-end

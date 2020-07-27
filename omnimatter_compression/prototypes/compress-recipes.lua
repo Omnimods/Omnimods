@@ -505,6 +505,7 @@ function create_compression_recipe(recipe)
                   type = "recipe",
                   icons = icons,
                   name = recipe.name.."-compression",
+                  localised_name = omni.locale.custom_name(recipe, 'compressed-recipe'),
                   enabled = false,
                   hidden = recipe.hidden,
                   normal = {
@@ -523,7 +524,6 @@ function create_compression_recipe(recipe)
                   subgroup = subgr.regular,
                   order = recipe.order,
                 }
-                omni.compression.set_localisation(recipe, r, 'compressed-recipe')
                 -------------------------------------------
                 -- **Normalised stack building setting** --
                 -------------------------------------------
@@ -587,7 +587,7 @@ function create_compression_recipe(recipe)
               local r = table.deepcopy(recipe)
 
               r.name = r.name.."-compression"
-              omni.compression.set_localisation(recipe, r, 'compressed-recipe')
+              r.localised_name = omni.locale.custom_name(recipe, 'compressed-recipe')
               r.icons = icons
               r.icon = nil
               r.mipmap_count = nil
@@ -740,8 +740,7 @@ for name,fluid in pairs(generatorFluidRecipes) do
         end
         
         newFluid.name = newFluid.name.."-concentrated-grade-"..i
-        omni.compression.set_localisation(data.raw.fluid[name], newFluid, 'compressed-fluid')
-        table.insert(newFluid.localised_name, i)
+        newFluid.localised_name = omni.locale.custom_name(data.raw.fluid[name], 'compressed-fluid', i)
         if not newFluid.heat_capacity then
           newFluid.heat_capacity = "1kJ"
         end

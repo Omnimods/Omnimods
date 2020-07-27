@@ -57,14 +57,12 @@ for _, group in pairs({"fluid"}) do
 
       --Create the item
       new_fluid.name = "concentrated-"..new_fluid.name
+      new_fluid.localised_name = omni.locale.custom_name(fluid, 'concentrated-fluid')
 			new_fluid.sub_group = "fluids"
 			new_fluid.order = fluid.order or "z".."[concentrated-"..fluid.name .."]"
       new_fluid.icons = omni.lib.add_overlay(fluid.name,"compress")
       new_fluid.icon = nil
       new_fluid.mipmap_count = nil
-      omni.compression.set_localisation(fluid, new_fluid, 'concentrated-fluid')
-      --new_fluid.localised_name = {"fluid-name.concentrated-fluid", loc_key}
-      --new_fluid.localised_description = {"fluid-description.concentrated-fluid", loc_key}
       new_fluid.heat_capacity = new_fuel_value(new_fluid.heat_capacity,concentrationRatio)
       new_fluid.fuel_value = new_fuel_value(new_fluid.fuel_value,concentrationRatio)
 
@@ -75,6 +73,7 @@ for _, group in pairs({"fluid"}) do
       local compress = {
         type = "recipe",
         name = "compress-"..fluid.name,
+        localised_name = omni.locale.custom_name(fluid, 'recipe-name.concentrate-fluid'),
         category = "fluid-concentration",
         enabled = true,
         hidden = true,
@@ -106,8 +105,6 @@ for _, group in pairs({"fluid"}) do
           hidden = true,
         }
       }
-      -- If we have an existing recipe for said fluid
-      omni.compression.set_localisation(data.raw.recipe[fluid.name] or data.raw.fluid[fluid.name], compress, 'concentrate-fluid')
       --omni.marathon.standardise(compress)
       standardized_recipes["compress-"..fluid.name] = true
       compress_recipes[#compress_recipes+1] = compress
@@ -116,6 +113,7 @@ for _, group in pairs({"fluid"}) do
       local uncompress = {
         type = "recipe",
         name = "uncompress-"..fluid.name,
+        localised_name = omni.locale.custom_name(fluid, 'recipe-name.deconcentrate-fluid'),
         icons = omni.lib.add_overlay(fluid.name,"uncompress"),
         category = "fluid-concentration",
         enabled = true,
@@ -146,7 +144,6 @@ for _, group in pairs({"fluid"}) do
           energy_required = concentrationRatio / speed_div,
         },
       }
-      omni.compression.set_localisation(data.raw.recipe[fluid.name] or data.raw.fluid[fluid.name], uncompress, 'deconcentrate-fluid')
       --omni.marathon.standardise(uncompress)
       standardized_recipes["uncompress-"..fluid.name] = true
 			uncompress_recipes[#uncompress_recipes+1] = uncompress
@@ -191,8 +188,8 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 			local new_item = {
 				type = "item",
 				name = "compressed-"..item.name,
-				--localised_name = {"item-name.compressed-item", loc_key},
-				--localised_description = {"item-description.compressed-item", loc_key},
+				localised_name = omni.locale.custom_name(item, 'compressed-item'),
+				localised_description = omni.locale.custom_name(item, 'compressed-item'),
 				flags = item.flags,
 				icons = omni.lib.add_overlay(item.name,"compress"),
 				subgroup = item.subgroup,
@@ -204,9 +201,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 				fuel_top_speed_multiplier = item.fuel_top_speed_multiplier,
 				durability = item.durability
       }
-      -- Set up our inheritance, starting with item name/desc
-      omni.compression.set_localisation(item, new_item, 'compressed-item', 'compressed-item')
-      -- Add after locale so the category is correct
+
       if is_science(item) then new_item.type = "tool" end
 
       compressed_item_names[#compressed_item_names+1] = new_item.name
@@ -216,8 +211,8 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 			local compress = {
 				type = "recipe",
 				name = "compress-"..item.name,
-				--localised_name = {"recipe-name.compress-item", new_item.localised_name},
-				--localised_description = {"recipe-description.compress-item", loc_key},
+				localised_name = omni.locale.custom_name(item, 'recipe-name.compress-item', class),
+				localised_description = omni.locale.custom_description(item, 'recipe-description.compress-item', class),
 				category = "compression",
 				enabled = true,
         hidden = true,
@@ -248,7 +243,6 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
           hidden = true,
         },
       }
-      omni.compression.set_localisation(item, compress, 'compress-item', 'compress-item', class)
 
       --omni.marathon.standardise(compress)
       standardized_recipes["compress-"..item.name] = true
@@ -257,8 +251,8 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 			local uncompress = {
 				type = "recipe",
 				name = "uncompress-"..item.name,
-				--localised_name = {"recipe-name.uncompress-item", loc_key},
-				--localised_description = {"recipe-description.uncompress-item", loc_key},
+				localised_name = omni.locale.custom_name(item, 'recipe-name.uncompress-item', class),
+				localised_description = omni.locale.custom_description(item, 'recipe-description.uncompress-item', class),
 				icons = omni.lib.add_overlay(item.name,"uncompress"),
 				category = "compression",
 				enabled = true,
@@ -289,7 +283,6 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
           hidden = true,
         },
       }
-      omni.compression.set_localisation(item, uncompress, 'uncompress-item', 'uncompress-item', class)
       --omni.marathon.standardise(uncompress)
       standardized_recipes["uncompress-"..item.name] = true
 			uncompress_recipes[#uncompress_recipes+1] = uncompress

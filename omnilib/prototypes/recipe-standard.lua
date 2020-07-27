@@ -2,47 +2,6 @@ if not omni then omni={} end
 if not omni.marathon then omni.marathon={} end
 standardized_recipes={}
 
-local function set_loc_name(item) --pass full table
-	if item then
-		if item.localised_name then
-			loc_name = table.deepcopy(item.localised_name)
-		--elseif item.type == "entity" and item.place_result then
-		--	loc_name = {"entity-name."..item.place_result}
-		elseif item.place_result then
-			loc_name = {"entity-name."..item.name}
-		elseif item.type == "fluid" then
-			loc_name = {"fluid-name."..item.name}
-		elseif string.find(item.name,"equipment") then
-			loc_name = {"equipment-name."..item.name}
-		else --should cover items, tools, capsules etc...
-			loc_name = {"item-name."..item.name}
- 		end
-	end
-return loc_name
-end
-
-local function loc_name_is_result(localised_name, results)
-	local name
-	if type(localised_name) == "string" then
-		name = localised_name
-	elseif type(localised_name) == "table" then
-		name = localised_name[1]
-	end
-	--substract localisation string
-	i,j = string.find(name,"-name.")
-	if j then
-	name = string.sub(name,j+1)
-	end
-	-- look for it in the result list
-	local found = false
-	if results then
-		for _,res in pairs(results) do
-			if res.name == name then found = true break end
-		end
-	end
-	return found
-end
-
 local function set_icons_tab(it) --pass item table to fish icons from
 	local ics={}--set icons table as 0
 	--icon only

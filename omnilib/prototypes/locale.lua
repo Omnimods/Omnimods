@@ -1,4 +1,4 @@
-local hierarchy = require('__omnilib__.prototypes.locale-hierarchy')
+local hierarchy = require('locale-hierarchy')
 
 local lib = { -- We'll return this as omni.locale
     partial = {}
@@ -196,7 +196,7 @@ local function remove_trailing_level(prototype_name)
 	return prototype_name:gsub("-%d+$", "")
 end
 
-local function key_of(prototype, prototype_type, locale_type)
+local function key_of(prototype, key_type, locale_type)
 -- Get the default locale key for the given prototype and key type (name or description).
     if not locale_type then 
         locale_type = lib.inherits(prototype.type, lib.localised_types) -- If we don't have our type overridden, find one
@@ -206,12 +206,12 @@ local function key_of(prototype, prototype_type, locale_type)
 		prototype_name = remove_trailing_level(prototype_name)
 	end 
 	return {-- category-thing.key, as table because localised string
-        string.format('%s-%s.%s', locale_type, prototype_type, prototype_name)
+        string.format('%s-%s.%s', locale_type, key_type, prototype_name)
     }
 end
 
 
--- These are the types that support locale (including all of their descendants).
+-- These are the base types that support locale
 lib.localised_types = {}
 for prototype_type in pairs(lib.descendants('prototype-base')) do -- Working downwards through the tree
     lib.localised_types[prototype_type] = true
@@ -319,5 +319,27 @@ function lib.of(prototype, prototype_type)
     )
     local resolver = custom_resolvers[locale_type] or lib.of_generic-- Either pass to our resolver, or use the generic function
     return resolver(prototype, locale_type)
+end
+
+lib.custom_name = function(prototype, name_key, ...)
+    if not name_key:find("%.") then
+        name_key = lib.inherits(prototype.type, lib.localised_types).."-name."..name_key
+    end
+    return {
+        name_key,
+        lib.of(prototype).name,
+        ...
+    }
+end
+
+lib.custom_description = function(prototype, desc_key, ...)
+    if not desc_key:find("%.") then
+        desc_key = lib.inherits(prototype.type, lib.localised_types).."-description."..desc_key
+    end
+    return {
+        desc_key,
+        lib.of(prototype).description,
+        ...
+    }
 end
 omni.locale = lib

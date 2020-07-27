@@ -120,8 +120,7 @@ end
 local create_concentrated_fluid = function(fluid,tier)
   local newFluid = table.deepcopy(data.raw.fluid[fluid])
 
-  omni.compression.set_localisation(newFluid, newFluid, "compressed-fluid")
-  table.insert(newFluid.localised_name, tier)
+  newFluid.localised_name = omni.locale.custom_name(newFluid, "compressed-fluid", tier)
   newFluid.name = newFluid.name.."-concentrated-grade-"..tier
   if newFluid.heat_capacity then
     newFluid.heat_capacity = new_effect_gain(newFluid.heat_capacity,tier)
@@ -153,21 +152,21 @@ local create_concentrated_fluid = function(fluid,tier)
   local compress = {
     type = "recipe",
     name = fluid.."-concentrated-grade-"..tier,
+    localised_name = omni.locale.custom_name(data.raw.fluid[fluid], 'recipe-name.concentrate-fluid', tier),
     category = "fluid-condensation",
     enabled = false,
     icons = newFluid.icons,
     order = newFluid.order or "z".."[condensed-"..fluid.name .."]"
   }
-  omni.compression.set_localisation(data.raw.fluid[fluid], compress, 'concentrate-fluid')
   local uncompress = {
     type = "recipe",
     name = "uncompress-"..fluid.."-concentrated-grade-"..tier,
+    localised_name = omni.locale.custom_name(data.raw.fluid[fluid], 'recipe-name.deconcentrate-fluid', tier),
     icons = omni.lib.add_overlay(fluid,"uncompress"),
     category = "fluid-condensation",
     enabled = false,
     order = newFluid.order or "z".."[condensed-"..fluid .."]",
   }
-  omni.compression.set_localisation(data.raw.fluid[fluid], compress, 'deconcentrate-fluid')
 
   compress.normal = compressRecipeData
   compress.expensive = table.deepcopy(compressRecipeData)
@@ -346,7 +345,7 @@ for _,kind in pairs(building_list) do --only building types
             -------------------------------------------------------------------------------
             --[[ENTITY CREATION]]--
             new.name = new.name.."-compressed-"..string.lower(compress_level[i])
-            new.localised_name = {"entity-name.compressed-building", b.localised_name or {"entity-name."..b.name}, compress_level[i]}
+            new.localised_name = omni.locale.custom_name(b, "compressed-building", compress_level[i])
             new.max_health = new.max_health*math.pow(multiplier,i)
             new.minable.result = new.name
             new.minable.mining_time = (new.minable.mining_time or 10) * i
@@ -373,7 +372,15 @@ for _,kind in pairs(building_list) do --only building types
 
 						compressed_buildings[#compressed_buildings+1] = item
             --[[COMPRESSION/DE-COMPRESSION RECIPE CREATION]]--
-            if i == 1 then ing={{build.name,multiplier}} else ing={{build.name.."-compressed-"..string.lower(compress_level[i-1]),multiplier}} end
+            if i == 1 then ing  = {{
+              build.name,
+              multiplier
+            }} else
+              ing = {{
+                build.name.."-compressed-"..string.lower(compress_level[i-1]),
+                multiplier
+              }}
+            end
 						local recipe = {
 							type = "recipe",
               name = rc.name.."-compressed-"..string.lower(compress_level[i]),
@@ -390,8 +397,8 @@ for _,kind in pairs(building_list) do --only building types
 						local uncompress = {
 							type = "recipe",
 							name = "uncompress-"..string.lower(compress_level[i]).."-"..rc.name,
-							--localised_name = {"recipe-name.uncompress-item", loc_key},
-							--localised_description = {"recipe-description.uncompress-item", loc_key},
+							localised_name = omni.locale.custom_name(build, 'recipe-name.uncompress-item'),
+							localised_description = omni.locale.custom_description(build, 'recipe-description.uncompress-item'),
 							icons = omni.lib.add_overlay(build,"uncompress"),
 							subgroup = data.raw.item[build.minable.result].subgroup,
 							category = "compression",
@@ -404,7 +411,6 @@ for _,kind in pairs(building_list) do --only building types
 							inter_item_count = item_count,
 							energy_required = 5*math.floor(math.pow(multiplier,i/2)),
             }
-            omni.compression.set_localisation(build, uncompress, 'uncompress-item', 'uncompress-item')
             
             compressed_buildings[#compressed_buildings+1] = uncompress
           end
