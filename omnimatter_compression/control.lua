@@ -46,90 +46,75 @@ script.on_event("decompress-stack", function(event)
 	end
 end)
 
-script.on_event(defines.events.on_player_alt_selected_area, function(event)
+local function compression_planner(event, log_only)
+	if event.item == "compression-planner" then
+		local player = game.players[event.player_index]
+		local surface = player.surface
+		local entities = game.entity_prototypes
+		local items = game.item_prototypes
+		local remainder = 0
+		for _, entity in pairs(event.entities) do
+			if entity.valid and
+			entity.type == "resource" and
+			#entity.prototype.mineable_properties.products > 0 and
+			not (
+				entity.name:find("^compressed")
+				or entity.name:find("^concentrated")
+			)
+			then
+				local results = entity.prototype.mineable_properties.products
+				local result = results[1]
+				local size
+				-- For later
+				local ent = {
+					position = entity.position,
+					force = entity.force
+				}
 
-end)
+				local min, max, amount = entity.initial_amount, results.amount_max or 1, entity.amount
+				-- if initial amount, =(min*max)/min/100, else entity.amount
+				local output_amount = (min and (min * max) or entity.amount) / (min and 100 or 1)
+				if result.type == "item" and entities["compressed-resource-"..entity.name] then
+					size = items[result.name].stack_size
+					ent.name = "compressed-resource-" .. entity.name
+					if not min then
+						output_amount = output_amount + remainder -- Add our previous remainder
+						remainder = 1 - output_amount % 1 -- New remainder
+					end
+				elseif result.type == "fluid" and entities["concentrated-resource-"..entity.name] then
+					size = 50
+					ent.name = "concentrated-resource-" .. entity.name
+				end
 
-local round = function(nr)
-	local dec = nr-math.floor(nr)
-	if dec >= 0.5 then
-		return math.floor(nr)+1
-	else
-		return math.floor(nr)
+				if size then
+					-- Do our final division
+					output_amount = output_amount / size
+					-- Ceil our actual output
+					output_amount = math.ceil(output_amount)
+					-- Apply to infinite or non-infinite respectively
+					ent.initial_amount = min and output_amount
+					ent.amount = amount and output_amount
+					if not log_only then-- Actually do the thing
+						entity.destroy()
+						surface.create_entity(ent)
+					else
+						player.print(string.format(
+							"[img=entity.%s](%d)->[img=entity.%s](%d).",
+							result.name,
+							amount,
+							ent.name,
+							ent.amount or ent.initial_amount
+						))
+					end
+				end
+			end
+		end
 	end
 end
 
-script.on_event(defines.events.on_player_selected_area, function(event)
-	if event.item == "compression-planner" then
-		local player = game.players[event.player_index]
-		local surface = player.surface
-		local miscount = 0
-		local resource = ""
-		for _,entity in pairs(event.entities) do
-      if entity.type == "resource" and (game.entity_prototypes[entity.name].resource_category == "basic-solid" or game.entity_prototypes[entity.name].resource_category == "basic-fluid") and entity.name ~= "stone" and not (start_with(entity.name,"compressed") or start_with(entity.name,"concentrated-")) then
-        --check fluid/solid split
-        local typ = ""
-        if game.entity_prototypes[entity.name].resource_category == "basic-solid" then
-          typ="item"
-        elseif game.entity_prototypes[entity.name].resource_category == "basic-fluid" then
-          typ="fluid"
-        end
-				local results = entity.prototype.mineable_properties.products 
-        local size = 0
-        for _, res in pairs(results) do
-          if typ=="item" and game.item_prototypes["compressed-"..res.name] then
-            size = size + game.item_prototypes[res.name].stack_size
-          elseif typ=="fluid" then
-            if game.fluid_prototypes["concentrated-"..res.name] then
-            size = size + 50 --default fluid "stack" is 50
-            end
-          end
-          resource=res.name
-				end
-				size=size/#results
-        local quant=entity.amount
-				if entity.initial_amount == nil then
-          quant = round((entity.amount+miscount)/size)
-					miscount = math.floor((entity.amount+miscount)-quant*size)
-        elseif entity.initial_amount then
-          amt=entity.initial_amount*(results.amount_max or 1)--cap at 200
-          quant = math.max(round((amt+miscount)/size/100,2),1)--infinite yield reduction, always assume a minimum of 1
-          --miscount = math.floor((entity.initial_amount+miscount)/90-quant*size) --ignore miscount for infinites and fluids
-        else
-          quant = quant/50
-				end
-				local extra = entity
-				local surf = extra.surface
-				local pos = extra.position
-				local force = extra.force
-				local name = extra.name
-				extra.destroy()
-							
-				if quant > 0 and typ =="item" then
-          surf.create_entity({name = "compressed-"..name.."-ore" , position = pos, force = force, amount = quant})
-        elseif quant > 0 then
-          surf.create_entity({name = "concentrated-"..name , position = pos, force = force, initial_amount = quant})
-				end
-			else
-			end
-		end
-		if miscount > 0 then
-			player.insert({name = resource, count = miscount})
-		end
-	end
-end)
+script.on_event(defines.events.on_player_selected_area, compression_planner)
 
 script.on_event(defines.events.on_player_alt_selected_area, function(event)
-	if event.item == "compression-planner" then
-		local player = game.players[event.player_index]
-		local surface = player.surface
-		local miscount = 0
-		local resource = ""
-		for _,entity in pairs(event.entities) do
-			if entity.type == "resource" and game.entity_prototypes[entity.name].resource_category == "basic-solid"  then
-				--entity.amount = entity.amount+50
-			end
-		end
-	end
+	compression_planner(event, true)
 end)
 
