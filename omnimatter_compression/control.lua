@@ -64,20 +64,24 @@ local function compression_planner(event, log_only)
 			then
 				local results = entity.prototype.mineable_properties.products
 				local result = results[1]
-				local size
-				-- For later
+				-- Store the relevant entity properties, we'll add to this table as we calculate
 				local ent = {
 					position = entity.position,
 					force = entity.force
 				}
-
+				local size
 				local min, max, amount = entity.initial_amount, results.amount_max or 1, entity.amount
 				-- if initial amount, =(min*max)/min/100, else entity.amount
-				local output_amount = (min and (min * max) or entity.amount) / (min and 100 or 1)
+				local output_amount
+				if min then
+					output_amount = (min * max) / 100 -- Infinites are divided by 100
+				else
+					output_amount = entity.amount -- Otherwise we just give ore contents
+				end
 				if result.type == "item" and entities["compressed-resource-"..entity.name] then
 					size = items[result.name].stack_size
 					ent.name = "compressed-resource-" .. entity.name
-					if not min then
+					if not min then -- If not infinite, we'll add to our remainder.
 						output_amount = output_amount + remainder -- Add our previous remainder
 						remainder = 1 - output_amount % 1 -- New remainder
 					end
@@ -86,7 +90,7 @@ local function compression_planner(event, log_only)
 					ent.name = "concentrated-resource-" .. entity.name
 				end
 
-				if size then
+				if size then -- We have valid output, continue
 					-- Do our final division
 					output_amount = output_amount / size
 					-- Ceil our actual output
@@ -97,13 +101,14 @@ local function compression_planner(event, log_only)
 					if not log_only then-- Actually do the thing
 						entity.destroy()
 						surface.create_entity(ent)
-					else
+					else -- Or don't do the thing
 						player.print(string.format(
-							"[img=entity.%s](%d)->[img=entity.%s](%d).",
+							"[img=entity.%s](%d)->[img=item.%s](%d), ratio is %d:1.",
 							result.name,
 							amount,
-							ent.name,
-							ent.amount or ent.initial_amount
+							"compressed-"..result.name,
+							ent.amount or ent.initial_amount,
+							items[result.name].stack_size
 						))
 					end
 				end
