@@ -1285,9 +1285,9 @@ local find_icon = function(item)
 end
 local function normalize_mipmaps(mipmap_count, icon_size)
 	if not mipmap_count or not icon_size then
-		return mipmap_count or 0
+		return mipmap_count or 1
 	elseif icon_size%mipmap_count and icon_size%(mipmap_count*2) ~=0 then --not a multiple of 8(for 4), so no mipmaps
-		return 0
+		return 1
 	else
 		return mipmap_count
 	end
@@ -1324,7 +1324,7 @@ local function find_result_icon(raw_item)
 		return {{
 			icon = "__core__/graphics/too-far.png",--ERROR
 			icon_size = 32,
-			icon_mipmaps = 0
+			icon_mipmaps = 1
 		}}
 	end
 end
