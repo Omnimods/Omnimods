@@ -484,14 +484,14 @@ function standard_linear(levels,grade)
 	return linear_gen(6,12,levels,grade)
 end
 
-function ItemGen:create(mod,name)
-	local new_name = name
+function ItemGen:create(mod_name, item_name)
+	local new_name = item_name
 	if type(new_name) ~= "string" then
 		new_name = "omni" 
 	end
 	local t = {
-		mod = mod,
-		name = name,
+		mod = mod_name,
+		name = item_name,
 		loc_name = function(levels,grade) return nil end,
 		loc_desc =  function(levels,grade) return nil end,
 		icons = function(levels,grade) return nil end,
@@ -508,11 +508,11 @@ function ItemGen:create(mod,name)
 		type="item",
 		force = false,
 	}
-	if mod then
-		mod = "__"..mod.."__"
+	if mod_name then
+		mod_name = "__" .. mod_name .. "__"
 		t.icons = function(levels,grade)
 			return {{
-				icon = mod.."/graphics/icons/"..name..".png"
+				icon = mod_name.."/graphics/icons/"..item_name..".png"
 			}}
 		end
 	end
