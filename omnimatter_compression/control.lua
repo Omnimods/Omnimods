@@ -16,30 +16,69 @@ end
 local get_ore_stack = function(game, item)
 	return
 end
+local tiers = {"compact","nanite","quantum","singularity"}
+local items_per_tier = settings.startup["omnicompression-multiplier"] and settings.startup["omnicompression-multiplier"].value or 4
 local not_already_compressed=function(recipe)
-	local str={"compact","nanite","quantum","singularity"}
-	for _,com in pairs(str) do
-		if string.find(recipe,com) then return false end
+	for _, tier in pairs(tiers) do
+		if string.find(recipe, tier) then
+			return false
+		end
 	end
 	return true
 end
 
+local function find_tier(class_name)
+	for index, tier in pairs(tiers) do
+		if class_name:find(tier .. "$") then -- Only look at end
+			return index, tier
+		end
+	end
+end
+
+local function flying_text(entity, say_string)
+	entity.surface.create_entity{
+		name = "tutorial-flying-text",
+		position = entity.position,
+		text = say_string
+	}
+end
 
 script.on_event("decompress-stack", function(event)
 	local player = game.players[event.player_index]
 	if player.force.technologies["compression-hand"].researched == true then
 		if player.cursor_stack and player.cursor_stack.valid_for_read then
 			local item = player.cursor_stack 
-			if start_with(item.name,"compressed-") then
-				local n = string.sub(item.name,string.len("compressed-")+1,string.len(item.name))
-				local decompressed = n
+			if item.name:find("^compressed%-") then
+				local decompressed = item.name:gsub("^compressed%-", "")
 				if player.can_insert(decompressed) then
+					flying_text(player, "+[img=item."..decompressed.."]")
+					--flying_text(player, "-[img=item."..item.name.."]")
 					if item.count > 1 then
 						item.count=item.count-1
 					else
 						item.clear()
 					end
-					player.insert(decompressed)
+					player.insert({
+						name = decompressed
+					})-- Defaults to a stack?
+					return -- Don't bother continuing
+				end
+			end
+			local tier_num, tier_name = find_tier(item.name)
+			if tier_num and tiers[tier_num-1] then-- Remove tier, repl with previous tier
+				local decompressed = item.name:gsub(tier_name .. "$", tiers[tier_num-1])
+				if player.can_insert(decompressed) then
+					flying_text(player, "+[img=item."..decompressed.."]")
+					--flying_text(player, "-[img=item."..item.name.."]")
+					if item.count > 1 then
+						item.count=item.count-1
+					else
+						item.clear()
+					end
+					player.insert({
+						name = decompressed,
+						count = items_per_tier
+					})-- Defaults to a stack?
 				end
 			end
 		end
