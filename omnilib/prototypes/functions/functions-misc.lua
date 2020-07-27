@@ -21,43 +21,38 @@ for i=2,#omni.lib.primes do
 end
 
 omni.lib.ore_tints = {--can add to the tint table with table.insert(omni.lib.ore_tints,["ore-name"]={tints})
-  ["iron"]      = {r = 0, g = 0, b = 0, a = 1},
-  ["copper"]    = {r = 0, g = 0, b = 0, a = 1},
-  ["tin"]       = {r = 0, g = 0, b = 0, a = 1},
-  ["lead"]      = {r = 0, g = 0, b = 0, a = 1},
-  ["titanium"]  = {r = 0, g = 0, b = 0, a = 1},
-  ["silicon"]   = {r = 0, g = 0, b = 0, a = 1},
-  ["nickel"]    = {r = 0, g = 0, b = 0, a = 1},
-  ["zinc"]      = {r = 0, g = 0, b = 0, a = 1},
-  ["silver"]    = {r = 0, g = 0, b = 0, a = 1},
-  ["gold"]      = {r = 0, g = 0, b = 0, a = 1},
-  ["tungsten"]  = {r = 0, g = 0, b = 0, a = 1},
-  ["manganese"] = {r = 0, g = 0, b = 0, a = 1},
-  ["chrome"]    = {r = 0, g = 0, b = 0, a = 1},
-  ["platinum"]  = {r = 0, g = 0, b = 0, a = 1},
-  ["uranium"]   = {r = 0, g = 0, b = 0, a = 1},
-  ["thorium"]   = {r = 0, g = 0, b = 0, a = 1},
-  ["cobalt"]    = {r = 0, g = 0, b = 0, a = 1},
-  ["aluminium"] = {r = 0, g = 0, b = 0, a = 1},
-  ["coal"]      = {r = 0, g = 0, b = 0, a = 1},
+--based on tint
+  ["iron"]      = {r = 0.415, g = 0.525, b = 0.580}, -- vanilla
+  ["copper"]    = {r = 0.803, g = 0.388, b = 0.215}, -- vanilla
+  ["tin"]       = {r = 0.95 , g = 0.95 , b = 0.95 }, --map_color = {r = 0.600, g = 0.600, b = 0.600}
+  ["lead"]      = {r = 0.5  , g = 0.5  , b = 0.5  }, --map_color = {r=0.0, g=0.0, b=0.50}
+  ["titanium"]  = {r = 0.8  , g = 0.55 , b = 0.7  }, --map_color = {r=0.610, g=0.325, b=0.500}
+  ["silicon"]   = {r = 1    , g = 1    , b = 1    }, --map_color = {r = 1, g = 1, b = 1}
+  ["nickel"]    = {r = 0.54 , g = 0.8  , b = 0.75 }, --map_color = {r=0.4, g=0.8, b=0.6}
+  ["zinc"]      = {r = 0.34 , g = 0.9  , b = 0.81 }, --map_color = {r=0.5, g=1, b=1}
+  ["silver"]    = {r = 0.875, g = 0.975, b = 1    }, --map_color = {r=0.7, g=0.9, b=0.9}
+  ["gold"]      = {r = 1    , g = 0.75 , b = 0    }, --map_color = {r=1, g=0.7, b=0}
+  ["tungsten"]  = {r = 0.75 , g = 0.5  , b = 0.25 }, --map_color = {r = 0.5, g = 0.0, b = 0.0}
+  ["manganese"] = {r = 1    , g = 1    , b = 1    , a = 1},
+  ["chrome"]    = {r = 1    , g = 1    , b = 1    , a = 1},
+  ["platinum"]  = {r = 1    , g = 1    , b = 1    , a = 1},
+  ["uranium"]   = {r = 0    , g = 0.7  , b = 0    }, -- vanilla
+  ["thorium"]   = {r = 1    , g = 1    , b = 0.25 }, --map_color = {r = 0.75, g = 1, b = 0.25}
+  ["cobalt"]    = {r = 0.3  , g = 0.53 , b = 0.77 }, --map_color = {r=0.18, g=0.35, b=0.53}
+  ["aluminium"] = {r = 0.777, g = 0.7  , b = 0.333}, --map_color = {r=0.777, g=0.7, b=0.333}
+  ["coal"]      = {r = 0    , g = 0    , b = 0    }, -- vanilla
+  ["sulfur"]    = {r = 0.8  , g = 0.75 , b = 0.1  }, --map_color = {r=1, g=1, b=0}
+  ["gems"]      = {r = 0.25 , g = 1    , b = 0.25 }, --<-- map_color only
+  ["stone"]     = {r = 0.690, g = 0.611, b = 0.427} -- vanilla
 }
 
-function omni.lib.AddOreTint(icon,ore_name) --should work for a specific icon or icons table
+function omni.lib.add_ore_tint(icon,ore_name) --should work for a specific icon or icons table
   if type(icon) == "table" then --should be a row regardless
     --get tint
-    local tint = omni.lib.ore_tints.ore_name or {r = 0, g = 0, b = 0, a = 1} --add default if not in table
-    for _,ic in pairs(icon) do
-      if ic.tint then --if it exists, add to it? 
-        r2 = ic.tint[1] or ic.tint.r
-        g2 = ic.tint[2] or ic.tint.g
-        b2 = ic.tint[3] or ic.tint.b
-        a1 = (ic.tint[4] or ic.tint.a) or 1
-        tint={r=(tint.r+r2)/2,g=(tint.g+g2)/2,b=(tint.b+b2)/2,a=(tint.a+a2)/2} --this "should" be doing colour blending
-        --^assumes the tint table and the icoming pre-tint is of the same scale (0-1 or 0-255) mixing is not accounted for
-      end
-      ic.tint = tint 
-    end
+    local tint = omni.lib.ore_tints.ore_name or {r = 1, g = 1, b = 1, a = 1} --add default of white if not in table
+    change_icons_tint(icon,tint) --icons tint, not icon tint...
   end
+  return icon
 end
 
 function omni.lib.cardTable(tab)
@@ -404,6 +399,25 @@ function omni.lib.change_icon_tint(item, tint)
 	local t = {}
 	if tint.r then t=tint else t={r=tint[1],g=tint[2],b=tint[3]} end
 	local icons = {{icon = data.raw.item[item].icon, tint=t}}
+	--data.raw.item[item].icon = icons
+	data.raw.item[item].icons = icons
+end
+
+function omni.lib.change_icons_tint(item, tint) --for changing a table of icons, not just a single icon
+  --BEST USED before adding small icon(s) or overlays, as this will tint everything
+  local t = {}
+  local icons=data.raw.item[item].icons
+	if tint.r then t=tint else t={r=tint[1],g=tint[2],b=tint[3],a=tint[4] or 1} end
+  for i,icon in pairs(icons) do
+    if icons[i].tint then
+      if icons[i].tint.r then tnt=icons[i].tint else tnt={r=tint[1],g=tint[2],b=tint[3],a=tint[4] or 1or 1} end
+      tint={r=(tint.r+tnt.r)/2,g=(tint.g+tnt.g)/2,b=(tint.b+tnt.b)/2,a=(tint.a+tnt.a)/2} --average tint blending, may need to expand this to alpha channel blending
+      icons[i].tint=tint 
+    else
+      icons[i].tint=tint
+    end
+  end
+  local icon = {{icon = data.raw.item[item].icons, tint=t}}
 	--data.raw.item[item].icon = icons
 	data.raw.item[item].icons = icons
 end
