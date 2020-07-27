@@ -1565,5 +1565,3 @@ end
 function omni.lib.addProductivity(recipe)
 
 end
-
-omni.locale = require("__omnilib__.lib.rusty-locale.locale")
