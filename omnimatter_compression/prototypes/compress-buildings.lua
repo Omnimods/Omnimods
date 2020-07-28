@@ -4,6 +4,8 @@
 local multiplier = settings.startup["omnicompression_multiplier"].value
 omni.compression.bld_lvls = settings.startup["omnicompression_building_levels"].value --kind of local
 omni.compression.one_list = settings.startup["omnicompression_one_list"].value
+local cost_multiplier = settings.startup["omnicompression_cost_mult"].value
+local energy_multiplier = settings.startup["omnicompression_energy_mult"].value
 local black_list = {"creative",{"burner","turbine"},{"crystal","reactor"},{"factory","port","marker"},{"biotech","biosolarpanel","solarpanel"},"bucketw"}
 local building_list = {"lab","assembling-machine","furnace","mining-drill","solar-panel","reactor","accumulator","transport-belt","loader","splitter","underground-belt","beacon","electric-pole","offshore-pump"}
 local not_energy_use = {"solar-panel","reactor","boiler","generator","accumulator","transport-belt","loader","splitter","underground-belt","electric-pole","offshore-pump"}
@@ -70,27 +72,38 @@ local find_recipe = function(product)
 	end
 	return nil
 end
---effect updates
-local new_effect = function(effect,level,linear,constant)
-  local eff = string.sub(effect,1,string.len(effect)-2)
-  local value = string.sub(effect,string.len(effect)-1,string.len(effect)-1)
-  if string.len(effect) == 2 then
-    eff = string.sub(effect,1,1)
-    value = ""
-  end
-  eff = tonumber(eff)
+--energy effect updates
+local energy_tiers = {
+  W = "k",
+  K = "M",
+  k = "M",
+  M = "G",
+  G = "T",
+  T = "P",
+  P = "E",
+  E = "Z",
+  Z = "Y"
+  --Y
+}
+
+local new_effect = function(effect, level, linear, constant)
+  local value = effect:gsub("[kKMGTPEZY]?[WJ]$", "") -- 100
+  value = tonumber(value)
+  local unit = effect:gsub("^[%d%.]*", "") -- kW
   if linear then
-    eff = eff*(level+1)
+    value = value * (level + 1)
   elseif constant then
-    eff = eff*(constant)
+    value = value * (constant)
   else
-    eff = eff*math.pow(multiplier+1,level)
+    value = value * math.pow(multiplier+1,level)
   end
-  if eff > 1000 then
-    eff=eff/1000
-    if value == "k" then value = "M" elseif value == "M" then value = "G" end
+  if value > 1000 and not unit:find("Y") then
+    value = value/1000
+    local current_tier = unit:match("[kKMGTPEZW]")
+    unit:gsub(current_tier, energy_tiers[current_tier])--Step up one
   end
-  return eff..value.."W"
+  log({"", effect, "->", value..unit})
+  return value..unit
 end
 
 local new_effect_gain = function(effect,level,linear,constant)
@@ -274,7 +287,7 @@ local run_entity_updates = function(new,kind,i)
     new.resource_searching_radius = new.resource_searching_radius *(i+1)
   end
   --belts
-  if kind == "transport-belt" or kind == "loader" or kind == "splitter" or kind == "underground-belt" then
+  if kind == "transport-belt" or kind == "loader" or kind == "splitter" or kind == "underground-belt" or kind == "loader-1x1" then
     if new.animation_speed_coefficient then new.animation_speed_coefficient = new.animation_speed_coefficient*(i+2) end
     new.speed = new.speed*(i+2)
   end
@@ -322,9 +335,6 @@ for _,kind in pairs(building_list) do --only building types
             -------------------------------------------------------------------------------
             --[[Set Specific Properties]]--
             -------------------------------------------------------------------------------
-            --localised name
-            --local loc = {"entity-name."..build.name}
-            --if build.localised_name then loc = build.localised_name end
             --recipe/item subgrouping
             if omni.compression.one_list then --if not the same as the base item
 							if not data.raw["item-subgroup"]["compressor-"..item.subgroup.."-"..math.floor((i-1)/2)+1] then
@@ -372,13 +382,14 @@ for _,kind in pairs(building_list) do --only building types
 
 						compressed_buildings[#compressed_buildings+1] = item
             --[[COMPRESSION/DE-COMPRESSION RECIPE CREATION]]--
+            local input_mult = settings.startup['']
             if i == 1 then ing  = {{
               build.name,
-              multiplier
+              multiplier * cost_multiplier
             }} else
               ing = {{
                 build.name.."-compressed-"..string.lower(compress_level[i-1]),
-                multiplier
+                multiplier * cost_multiplier
               }}
             end
 						local recipe = {
