@@ -92,6 +92,7 @@ local function compression_planner(event, log_only)
 		local entities = game.entity_prototypes
 		local items = game.item_prototypes
 		local remainder = 0
+		local result_table = {}
 		for _, entity in pairs(event.entities) do
 			if entity.valid and
 			entity.type == "resource" and
@@ -115,15 +116,11 @@ local function compression_planner(event, log_only)
 				if min then
 					output_amount = (min * max) / 100 -- Infinites are divided by 100
 				else
-					output_amount = entity.amount -- Otherwise we just give ore contents
+					output_amount = amount -- Otherwise we just give ore contents
 				end
 				if result.type == "item" and entities["compressed-resource-"..entity.name] then
 					size = items[result.name].stack_size
 					ent.name = "compressed-resource-" .. entity.name
-					if not min then -- If not infinite, we'll add to our remainder.
-						output_amount = output_amount + remainder -- Add our previous remainder
-						remainder = 1 - output_amount % 1 -- New remainder
-					end
 				elseif result.type == "fluid" and entities["concentrated-resource-"..entity.name] then
 					size = 50
 					ent.name = "concentrated-resource-" .. entity.name
@@ -132,24 +129,50 @@ local function compression_planner(event, log_only)
 				if size then -- We have valid output, continue
 					-- Do our final division
 					output_amount = output_amount / size
-					-- Ceil our actual output
-					output_amount = math.ceil(output_amount)
+					if not min and result.type == "item" then -- If not infinite, we'll add to our remainder.
+						remainder = remainder + (output_amount % 1) -- New remainder, add what floor removes
+						if remainder > 1 then -- We'll add if we're greater than 1
+							output_amount = output_amount + 1
+							remainder = remainder - 1
+						end
+					end
+					-- Floor our actual output
+					output_amount = math.floor(output_amount)
 					-- Apply to infinite or non-infinite respectively
 					ent.initial_amount = min and output_amount
 					ent.amount = amount and output_amount
-					if not log_only then-- Actually do the thing
-						entity.destroy()
-						surface.create_entity(ent)
-					else -- Or don't do the thing
-						player.print(string.format(
-							"[img=entity.%s](%d)->[img=item.%s](%d), ratio is %d:1.",
-							result.name,
-							amount,
-							"compressed-"..result.name,
-							ent.amount or ent.initial_amount,
-							items[result.name].stack_size
-						))
+					if amount >= 1 then
+						if not log_only then-- Actually do the thing
+							entity.destroy()
+							surface.create_entity(ent)
+						else -- Or don't do the thing
+							result_table[result.name] = result_table[result.name] or {}
+							-- Alias and store
+							local res_table = result_table[result.name]
+							res_table.source_amount = (res_table.source_amount or 0) + (entity.amount or entity.initial_amount)
+							res_table.dest_name = (
+								result.type == "item" and "compressed-" .. result.name or
+								"concentrated-" .. result.name
+							)
+							res_table.dest_amount = (res_table.dest_amount or 0) + (ent.amount or ent.initial_amount)
+							res_table.type = result.type
+						end
 					end
+				end
+			end
+		end
+		if log_only then
+			for source_name, properties in pairs(result_table) do
+				if properties.dest_amount >= 1 then
+					player.print(string.format(
+						"[img=entity.%s](%d)->[img=%s.%s](%d), ratio is %d:1.",
+						source_name,
+						properties.source_amount,
+						properties.type,
+						properties.dest_name,
+						properties.dest_amount,
+						math.floor(properties.source_amount/properties.dest_amount+0.5)--Equiv to rounding
+					))
 				end
 			end
 		end
