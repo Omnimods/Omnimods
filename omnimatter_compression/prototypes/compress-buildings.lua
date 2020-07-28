@@ -7,8 +7,8 @@ omni.compression.one_list = settings.startup["omnicompression_one_list"].value
 local cost_multiplier = settings.startup["omnicompression_cost_mult"].value
 local energy_multiplier = settings.startup["omnicompression_energy_mult"].value
 local black_list = {"creative",{"burner","turbine"},{"crystal","reactor"},{"factory","port","marker"},{"biotech","biosolarpanel","solarpanel"},"bucketw"}
-local building_list = {"lab","assembling-machine","furnace","mining-drill","solar-panel","reactor","accumulator","transport-belt","loader","splitter","underground-belt","beacon","electric-pole","offshore-pump"}
-local not_energy_use = {"solar-panel","reactor","boiler","generator","accumulator","transport-belt","loader","splitter","underground-belt","electric-pole","offshore-pump"}
+local building_list = {"lab","assembling-machine","furnace","mining-drill","solar-panel","reactor","accumulator","transport-belt","loader","splitter","underground-belt","beacon","electric-pole","offshore-pump","loader-1x1"}
+local not_energy_use = {"solar-panel","reactor","boiler","generator","accumulator","transport-belt","loader","splitter","underground-belt","electric-pole","offshore-pump","loader-1x1"}
 if not mods["omnimatter_fluid"] then building_list[#building_list+1] = "boiler" end
 building_list[#building_list+1] = "generator" 
 
@@ -187,7 +187,7 @@ end
 -------------------------------------------------------------------------------
 --[[Entity Type Specific Properties]]--
 -------------------------------------------------------------------------------
-local run_entity_updates = function(new,kind,i)
+local run_entity_updates = function(new, kind, i)
   --[[assembly type updates]]--
   --module slots
   if new.module_specification then new.module_specification.module_slots = new.module_specification.module_slots * (i+1) end
@@ -206,7 +206,7 @@ local run_entity_updates = function(new,kind,i)
       new_cat[#new_cat+1] = "general-compressed"
     end
     new.crafting_categories = new_cat
-    new.crafting_speed = new.crafting_speed* math.pow(multiplier,i)
+    new.crafting_speed = new.crafting_speed * math.pow(multiplier,i)
   end
   --lab vial slot update (may want to move this to recipe update since tools/items are done later...)
   if kind == "lab" then
@@ -358,7 +358,7 @@ for _,kind in pairs(building_list) do --only building types
             new.icon = nil
             new.mipmap_count = nil
 
-            run_entity_updates(new,kind,i)
+            run_entity_updates(new, kind, i)
 
             compressed_buildings[#compressed_buildings+1] = new --add entity to the list
             --[[ITEM CREATION]]--
@@ -366,7 +366,7 @@ for _,kind in pairs(building_list) do --only building types
             item.name = new.name
 						item.place_result = new.name
 						item.stack_size = 5
-						if kind == "transport-belt" or kind=="loader" or kind== "splitter" or kind=="underground-belt" then
+						if kind == "transport-belt" or kind=="loader" or kind== "splitter" or kind=="underground-belt" or kind=="loader-1x1" then
 							item.stack_size = 10
 						else
 							item.stack_size = 5
