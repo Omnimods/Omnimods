@@ -1333,11 +1333,11 @@ omni.lib.add_overlay = function(it,overlay_type,level)
 			icon = "__omnimatter_compression__/graphics/compress-"..level.."-32.png"
 		},
 		compress = { -- compressed item/recipe
-			icon = "__omnimatter_compression__/graphics/compress-32.png",
+			icon = "__omnimatter_compression__/graphics/compress-blank-32.png",
 			tint = {
 				r = 1,
 				g = 0,
-				b = 0,
+				b = 1,
 				a = 1
 			},
 			scale = 1.5,
