@@ -91,16 +91,16 @@ end
 --Calc dynamic tech packs
 local get_distillation_tech_packs = function(grade,tier)
 	local packs = {}
-	local pack_tier = math.floor((grade/omni.fluid_levels_per_tier)+0.5) + tier
+	local pack_tier = math.floor((grade/omni.fluid_levels_per_tier)+0.5) + tier-1
 	for i=1,pack_tier do
 		  packs[#packs+1] = {omni.sciencepacks[i],1}
 	  end
 	  return packs
   end
 
-local get_solvation_tech_cost = function(lvl)
+local get_solvation_tech_packs = function(grade)
 	local c = {}
-	local size = 2+((lvl-1)-(lvl-1)%omni.fluid_levels_per_tier)/omni.fluid_levels_per_tier
+	local size = 1+((grade-1)-(grade-1)%omni.fluid_levels_per_tier)/omni.fluid_levels_per_tier
 	local length = math.min(size,#omni.sciencepacks)
 	for l=1,length do
 		local q = 0
@@ -158,7 +158,7 @@ local omniston = RecChain:create("omnimatter","omniston"):
 		setTechPrefix("solvation"):
 		setTechIcon("omnimatter","omniston-tech"):
 		setTechCost(function(levels,grade) return 25*get_tier_mult(levels,grade,1) end):
-		setTechPacks(function(levels,grade) return get_solvation_tech_cost(grade) end):
+		setTechPacks(function(levels,grade) return get_solvation_tech_packs(grade) end):
 		setTechPrereq(function(levels,grade) return get_omniston_req(grade)  end):
 		setTechTime(15):
 		setTechLocName("omniston_solvation"):
