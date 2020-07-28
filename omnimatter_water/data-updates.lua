@@ -18,7 +18,12 @@ end
 
 --Calc dynamic tech packs
 local get_omniwater_tech_packs = function(grade,tier)
-  return math.floor((grade/tier_levels)+0.5) + tier-1
+  local packs = {}
+  local pack_tier = math.floor((grade/tier_levels)+0.5) + tier-1
+  for i=1,pack_tier do
+		packs[#packs+1] = {omni.sciencepacks[i],1}
+	end
+	return packs
 end
 
 function omniwateradd(element,gain,tier,const,input,t1_enabled)
