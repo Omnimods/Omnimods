@@ -44,7 +44,7 @@ for _,kind in pairs({"assembling-machine","furnace"}) do
 			elseif cat:find("compressed$") and not categories[cat] then
 				local old_cat = cat:gsub("-compressed$", "")
 				if data.raw["recipe-category"][old_cat] then
-					log("Reverting category " .. cat .. " to " .. old_cat)
+					log({"","Reverting category ", cat, " to ", old_cat, " on the building ", build.name})
 					build.crafting_categories[i] = old_cat
 				end
 			end
