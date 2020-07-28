@@ -67,6 +67,9 @@ function omniwateradd(element,gain,tier,const,input,starter_recipe)
 		end
   end
   
+  --Add the last tier as prereq for the rocket silo
+  omni.lib.add_prerequisite("rocket-silo", "omnitech-"..element.."-omnitraction-"..water_levels)
+
   --Add starter recipe with lower yield if enabled
   if starter_recipe == true then
     RecGen:create("omnimatter_water",element):
