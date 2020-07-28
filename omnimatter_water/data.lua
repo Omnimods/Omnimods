@@ -56,6 +56,7 @@ function omniwateradd(element,gain,tier,const,input,t1_enabled)
 		setTechLocName("water-based-omnitraction",{"fluid-name."..element}):
 		extend()
 end
+
 local c = 1
 if mods["omnimatter_compression"] then c = 1/3 end
 omniwateradd("omnic-water",1728*2*c,1,72,c,true)
