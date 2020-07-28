@@ -88,6 +88,16 @@ local get_distillation_req=function(tier,item, level)
 	return req
 end
 
+--Calc dynamic tech packs
+local get_distillation_tech_packs = function(grade,tier)
+	local packs = {}
+	local pack_tier = math.floor((grade/omni.fluid_levels_per_tier)+0.5) + tier
+	for i=1,pack_tier do
+		  packs[#packs+1] = {omni.sciencepacks[i],1}
+	  end
+	  return packs
+  end
+
 local get_solvation_tech_cost = function(lvl)
 	local c = {}
 	local size = 2+((lvl-1)-(lvl-1)%omni.fluid_levels_per_tier)/omni.fluid_levels_per_tier
@@ -217,7 +227,7 @@ for _,tier in pairs(omnifluid) do
 			setEnergy(function(levels,grade) return 5 end):
 			setTechIcon(fluid.mod or "omnimatter",fluid.name):
 			setTechCost(function(levels,grade) return 25*get_tier_mult(levels,grade,1) end):
-			setTechPacks(function(levels,grade) return get_acid_tech_cost(grade) end):
+			setTechPacks(function(levels,grade) return get_distillation_tech_packs(grade, fluid.tier) end):
 			setTechPrereq(function(levels,grade) return get_distillation_req(fluid.tier,fluid.name, grade)  end):
 			setTechLocName("omnistillation",{"fluid-name."..fluid.name}):
 			setTechTime(15):
