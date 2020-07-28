@@ -95,38 +95,33 @@ local new_effect = function(effect, level, linear, constant)
   elseif constant then
     value = value * (constant)
   else
-    value = value * math.pow(multiplier+1,level)
+    value = value * math.pow(multiplier + 1, level)
   end
   if value > 1000 and not unit:find("Y") then
-    value = value/1000
+    value = value / 1000
     local current_tier = unit:match("[kKMGTPEZW]")
     unit:gsub(current_tier, energy_tiers[current_tier])--Step up one
   end
-  log({"", effect, "->", value..unit})
-  return value..unit
+  return value .. unit
 end
 
-local new_effect_gain = function(effect,level,linear,constant)
-  local eff = string.sub(effect,1,string.len(effect)-2)
-  local value = string.sub(effect,string.len(effect)-1,string.len(effect)-1)
-  local unit = string.sub(effect,string.len(effect))
-  if string.len(effect) == 2 then
-    eff = string.sub(effect,1,1)
-    value = ""
-  end
-  eff = tonumber(eff)
+local new_effect_gain = function(effect, level, linear, constant)
+  local value = effect:gsub("[kKMGTPEZY]?[WJ]$", "") -- 100
+  value = tonumber(value)
+  local unit = effect:gsub("^[%d%.]*", "") -- kW
   if linear then
-    eff = eff*(level+1)
+    value = value * (level + 1)
   elseif constant then
-    eff = eff*(constant)
+    value = value * (constant)
   else
-    eff = eff*math.pow(multiplier,level)
+    value = value * math.pow(multiplier + 1, level)
   end
-  if eff > 1000 then
-    eff=eff/1000
-    if value == "k" then value = "M" elseif value == "M" then value = "G" elseif value=="G" then value="T" end
+  if value > 1000 and not unit:find("Y") then
+    value = value / 1000
+    local current_tier = unit:match("[kKMGTPEZW]")
+    unit:gsub(current_tier, energy_tiers[current_tier])--Step up one
   end
-  return eff..value..unit
+  return value .. unit
 end
 
 --new fluids for boilers and generators
@@ -389,7 +384,7 @@ for _,kind in pairs(building_list) do --only building types
             }} else
               ing = {{
                 build.name.."-compressed-"..string.lower(compress_level[i-1]),
-                multiplier * cost_multiplier
+                multiplier
               }}
             end
 						local recipe = {
