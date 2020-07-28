@@ -26,7 +26,7 @@ local get_omniwater_tech_packs = function(grade,tier)
 	return packs
 end
 
-function omniwateradd(element,gain,tier,const,input,t1_enabled)
+function omniwateradd(element,gain,tier,const,input,starter_recipe)
 	local cost = OmniGen:create():
 		setInputAmount(12*(input or 1)):
 		setYield(element):
@@ -41,7 +41,7 @@ function omniwateradd(element,gain,tier,const,input,t1_enabled)
 		setIcons(element):
 		setIngredients(cost:ingredients()):
 		setResults(cost:results()):
-		--setEnabled(false):
+		setEnabled(false):
 		--setEnabled(function(levels,grade) if ((grade == 1) and (t1_enabled==true)) then return true else return false end end):
 		setCategory("omnite-extraction-both"):
 		setSubgroup("omni-fluids"):
@@ -57,14 +57,32 @@ function omniwateradd(element,gain,tier,const,input,t1_enabled)
 		setTechLocName("water-based-omnitraction",{"fluid-name."..element}):
 		extend()
 
-    --Add the last tech before a tier jump as prereq for the next omnitractor tech
-		for i= 1, water_levels, 1 do
-      if i>1 and (i%tier_levels == 0) then
-        local tractor_lvl = (i / tier_levels) + tier - 1
-				if tractor_lvl <= omni.max_tier then 
-          omni.lib.add_prerequisite("omnitractor-electric-"..tractor_lvl, "omnitech-"..element.."-omnitraction-"..i)
-				end
+  --Add the last tech before a tier jump as prereq for the next omnitractor tech
+	for i= 1, water_levels, 1 do
+    if i>1 and (i%tier_levels == 0) then
+       local tractor_lvl = (i / tier_levels) + tier - 1
+			if tractor_lvl <= omni.max_tier then 
+        omni.lib.add_prerequisite("omnitractor-electric-"..tractor_lvl, "omnitech-"..element.."-omnitraction-"..i)
 			end
+		end
+  end
+  
+  --Add starter recipe with lower yield if enabled
+  if starter_recipe == true then
+    RecGen:create("omnimatter_water",element):
+      setIcons(element):
+      addSmallIcon("__omnilib__/graphics/icons/small/num_1.png", 1):
+      setIngredients({type = "item", name = "omnite", amount = 12}):
+      setResults({
+        {type = "fluid", name = element, amount = gain*0.5},
+        {type = "fluid", name = "omnic-waste", amount = gain*2}}):
+      setSubgroup("omni-fluids"):
+      setOrder("aaa"):
+      setCategory("omnite-extraction-both"):
+      setLocName("recipe-name.basic-water-waste-omnitraction",{"fluid-name."..element}):
+      setEnergy(5):
+      setEnabled(true):
+      extend()
     end
 end
 
