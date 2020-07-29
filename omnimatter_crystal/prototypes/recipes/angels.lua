@@ -94,8 +94,8 @@ end
 
 
 if angelsmods and angelsmods.refining then
-  spec_vanilla=true --set else case of no bobs or overhaul
-  if mods["bobplates"] then
+  	spec_vanilla=true --set else case of no bobs or overhaul
+  	if mods["bobplates"] then
 		spec_vanilla=false
 	elseif mods["angelsindustries"] and angelsmods.industries.overhaul then
 		spec_vanilla=false

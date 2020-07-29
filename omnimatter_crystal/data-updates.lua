@@ -72,8 +72,9 @@ if not mods["angelsrefining"] then
 				metal = string.sub(ore,1,string.len(ore)-string.len("-ore"))
 			end
 			rec.normal.results[1].name=plate
-			rec.icon=data.raw.item[plate].icon
-			rec.icon_size=data.raw.item[plate].icon_size
+			rec.icon=nil
+			rec.icon_size=nil
+			rec.icons = {{icon =data.raw.item[plate].icon, icon_size = data.raw.item[plate].icon_size}}
 			rec.localised_name = {"recipe-name.item", {"item-name."..plate}}
 			local tier = 1
 			for i,t in pairs(omnisource) do
