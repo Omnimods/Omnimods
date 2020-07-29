@@ -6,7 +6,6 @@ if data.raw.item["zinc-ore"] then	omni.crystal.add_crystal("zinc-ore","Zinc") en
 if data.raw.item["silver-ore"] then	omni.crystal.add_crystal("silver-ore","Silver") end
 if data.raw.item["rutile-ore"] then	omni.crystal.add_crystal("rutile-ore","Rutile") end
 if data.raw.item["gold-ore"] then	omni.crystal.add_crystal("gold-ore","Gold") end
-if data.raw.item["cobalt-ore"] then	omni.crystal.add_crystal("cobalt-ore","Cobalt") end
 if data.raw.item["nickel-ore"] then	omni.crystal.add_crystal("nickel-ore","Nickel") end
 if data.raw.item["tungsten-ore"] then	omni.crystal.add_crystal("tungsten-ore","Wolfram") end
 if data.raw.item["platinum-ore"] then	omni.crystal.add_crystal("platinum-ore","Platinum") end
