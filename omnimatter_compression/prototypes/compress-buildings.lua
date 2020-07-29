@@ -100,7 +100,7 @@ local new_effect = function(effect, level, linear, constant)
   if value > 1000 and not unit:find("Y") then
     value = value / 1000
     local current_tier = unit:match("[kKMGTPEZW]")
-    unit:gsub(current_tier, energy_tiers[current_tier])--Step up one
+    unit = unit:gsub(current_tier, energy_tiers[current_tier])--Step up one
   end
   return value .. unit
 end
@@ -119,7 +119,7 @@ local new_effect_gain = function(effect, level, linear, constant)
   if value > 1000 and not unit:find("Y") then
     value = value / 1000
     local current_tier = unit:match("[kKMGTPEZW]")
-    unit:gsub(current_tier, energy_tiers[current_tier])--Step up one
+    unit = unit:gsub(current_tier, energy_tiers[current_tier])--Step up one
   end
   return value .. unit
 end
@@ -272,7 +272,10 @@ local run_entity_updates = function(new, kind, i)
     if omni.lib.string_contained_list(new.name,{"boiler","omnifluid"}) then
       new.energy_usage = new_effect_gain(new.energy_usage,i)
     else
-      new.energy_usage = new_effect(new.energy_usage,i)
+      new.energy_usage = new_effect(new.energy_usage, i)
+      if i==1 then -- Account for our multiplier, we apply to the first tier only
+        new.energy_usage = new_effect(new.energy_usage, nil, nil, energy_multiplier)
+      end
     end
   end
   --mining speed and radius update
