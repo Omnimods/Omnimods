@@ -48,6 +48,7 @@ local not_energy_use = {
   "loader-1x1",
   "inserter"
 }
+
 if not mods["omnimatter_fluid"] then building_list[#building_list+1] = "boiler" end
 building_list[#building_list+1] = "generator" 
 
@@ -103,12 +104,12 @@ local find_placing_item = function(build)
 end
 --find recipe
 local find_recipe = function(product)
-	for _,recipe in pairs(data.raw.recipe) do
-		omni.marathon.standardise(recipe)
-		if #recipe.normal.results == 1 and recipe.normal.results[1].name == product then
-			return recipe
-		end
-	end
+  for _,recipe in pairs(data.raw.recipe) do
+    omni.marathon.standardise(recipe)
+    if #recipe.normal.results == 1 and recipe.normal.results[1].name == product then
+      return recipe
+    end
+  end
 	return nil
 end
 --energy effect updates
@@ -359,7 +360,14 @@ for _,kind in pairs(building_list) do --only building types
   for _,b in pairs(data.raw[kind]) do -- for each
     if not omni.lib.string_contained_list(b.name,black_list) and --not on exclusion list
     not omni.compression.is_hidden(b) and --not hidden
-    (not compress_entity[b] or (compress_entity[b] and (not compress_entity[b].exclude or compress_entity[b].include))) then --check already on the compressed list?
+    (
+      not compress_entity[b] or (
+        compress_entity[b] and 
+          (
+            not compress_entity[b].exclude or compress_entity[b].include
+          )
+        )
+      ) then --check already on the compressed list?
       local build = find_top_tier(b,kind)
       --category check and create if not
       category_exists(build)
