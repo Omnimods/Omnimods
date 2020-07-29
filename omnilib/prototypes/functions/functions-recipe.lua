@@ -653,7 +653,7 @@ function omni.lib.disable_recipe(recipename)
     local rec = data.raw.recipe[recipename]
     if rec then
         --in some cases rec.enabled does not exist at all...
-        if rec.enabled or not (rec.normal and rec.expensive) then
+        if rec.enabled or not (rec.normal or rec.expensive) then
             rec.enabled = false
         end
         if rec.normal then
