@@ -319,13 +319,13 @@ end
 -- IS VOID? check for the word void in recipe name or products --
 -----------------------------------------------------------------
 local is_void = function(recipe)
-  local product = omni.locale.get_main_product(recipe) 
   if recipe.name:find("void") or 
     recipe.name:find("flaring") or 
     recipe.name:find("incineration")
   then
     return true
   end
+  local product = omni.locale.get_main_product(recipe) 
   if product and (product.name:find("void") or product.amount == 0) then
     return true
   end

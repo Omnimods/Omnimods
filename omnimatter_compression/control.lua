@@ -141,7 +141,7 @@ local function compression_planner(event, log_only)
 					-- Apply to infinite or non-infinite respectively
 					ent.initial_amount = min and output_amount
 					ent.amount = amount and output_amount
-					if amount >= 1 then
+					if (ent.amount and ent.amount >= 1) or (ent.initial_amount and ent.initial_amount >= 1) then
 						if not log_only then-- Actually do the thing
 							entity.destroy()
 							surface.create_entity(ent)
