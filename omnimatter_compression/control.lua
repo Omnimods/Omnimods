@@ -17,7 +17,7 @@ local get_ore_stack = function(game, item)
 	return
 end
 local tiers = {"compact","nanite","quantum","singularity"}
-local items_per_tier = settings.startup["omnicompression-multiplier"].value
+local items_per_tier = settings.startup["omnicompression_multiplier"].value
 local not_already_compressed=function(recipe)
 	for _, tier in pairs(tiers) do
 		if string.find(recipe, tier) then

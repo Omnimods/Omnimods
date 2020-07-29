@@ -7,9 +7,47 @@ omni.compression.one_list = settings.startup["omnicompression_one_list"].value
 omni.compression.hide_handcraft =  settings.startup["omnicompression_hide_handcraft"].value or nil
 local cost_multiplier = settings.startup["omnicompression_cost_mult"].value
 local energy_multiplier = settings.startup["omnicompression_energy_mult"].value
-local black_list = {"creative",{"burner","turbine"},{"crystal","reactor"},{"factory","port","marker"},{"biotech","biosolarpanel","solarpanel"},"bucketw"}
-local building_list = {"lab","assembling-machine","furnace","mining-drill","solar-panel","reactor","accumulator","transport-belt","loader","splitter","underground-belt","beacon","electric-pole","offshore-pump","loader-1x1"}
-local not_energy_use = {"solar-panel","reactor","boiler","generator","accumulator","transport-belt","loader","splitter","underground-belt","electric-pole","offshore-pump","loader-1x1"}
+local black_list = {
+  "creative",
+  {"burner","turbine"},
+  {"crystal","reactor"},
+  {"factory","port","marker"},
+  {"biotech","biosolarpanel","solarpanel"},
+  "bucketw"
+}
+local building_list = {
+  "lab",
+  "assembling-machine",
+  "furnace",
+  "mining-drill",
+  "solar-panel",
+  "reactor",
+  "accumulator",
+  "transport-belt",
+  "loader",
+  "splitter",
+  "underground-belt",
+  "beacon",
+  "electric-pole",
+  "offshore-pump",
+  "loader-1x1",
+  "inserter"
+}
+local not_energy_use = {
+  "solar-panel",
+  "reactor",
+  "boiler",
+  "generator",
+  "accumulator",
+  "transport-belt",
+  "loader",
+  "splitter",
+  "underground-belt",
+  "electric-pole",
+  "offshore-pump",
+  "loader-1x1",
+  "inserter"
+}
 if not mods["omnimatter_fluid"] then building_list[#building_list+1] = "boiler" end
 building_list[#building_list+1] = "generator" 
 
