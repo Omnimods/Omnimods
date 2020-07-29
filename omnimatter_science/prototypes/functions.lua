@@ -94,6 +94,7 @@ function omni.science.omnipack_tech_post_update()
               break
             end
           end
+          if found == true then break end
         end
       end
       if found == true then
