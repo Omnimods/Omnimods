@@ -58,9 +58,7 @@ script.on_event("decompress-stack", function(event)
 					else
 						item.clear()
 					end
-					player.insert({
-						name = decompressed
-					})-- Defaults to a stack?
+					player.insert(decompressed)-- Defaults to a stack?
 					return -- Don't bother continuing
 				end
 			end
