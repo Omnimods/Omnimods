@@ -49,18 +49,26 @@ function omni.lib.set_recipe_results(recipename,...)
 	    end
         if rec.result then
             rec.result = nil
+            rec.result_count = nil
             if not rec.results then
-                rec.normal.results = {}
                 rec.normal.results = {}
             end
         end
         if rec.results then
             rec.results = res
         end
-        if rec.normal and rec.normal.results then
+        if rec.normal then
+            if rec.normal.result then
+                rec.normal.result = nil
+                rec.normal.result_count = nil
+            end
             rec.normal.results = res
         end
-        if rec.expensive and rec.expensive.results then
+        if rec.expensive then
+            if rec.expensive.result then
+                rec.expensive.result = nil
+                rec.expensive.result_count = nil
+            end
             rec.expensive.results = res
         end
 	end
@@ -187,14 +195,17 @@ function omni.lib.add_recipe_result(recipename, result)
         if rec.result then
             rec.results = {type ="item", name = rec.result, amount = 1}
             rec.result = nil
+            rec.result_count = nil
         end
         if rec.normal.result then
             rec.normal.results = {type ="item", name = rec.result, amount = 1}
             rec.normal.result = nil
+            rec.normal.result_count = nil
         end
         if rec.expensive.result then
             rec.expensive.results = {type ="item", name = rec.result, amount = 1}
             rec.expensive.result = nil
+            rec.expensive.result_count = nil
         end
         --rec.results
         if rec.results then
@@ -498,14 +509,17 @@ function omni.lib.multiply_recipe_result(recipename, result, mult)
         if rec.result and rec.result == result then
             rec.results = {type = "item", name = rec.result, amount = 1}
             rec.result = nil
+            rec.result_count = nil
         end
         if rec.normal and rec.normal.result and rec.normal.result == result then
             rec.normal.results = {type = "item", name = rec.normal.result, amount = 1}
             rec.normal.result = nil
+            rec.normal.result_count = nil
         end
         if rec.expensive and rec.expensive.result and rec.expensive.result == result then
             rec.expensive.results = {type = "item", name = rec.expensive.result, amount = 1}
             rec.expensive.result = nil
+            rec.expensive.result_count = nil
         end
         --rec.results
         if rec.results then
@@ -647,4 +661,20 @@ function omni.lib.replace_recipe_all_techs(recipename,replacement)
 			end
 		end
 	end
+end
+
+function omni.lib.disable_recipe(recipename)
+    local rec = data.raw.recipe[recipename]
+    if rec then
+        --in some cases rec.enabled does not exist at all...
+        if rec.enabled or not (rec.normal or rec.expensive) then
+            rec.enabled = false
+        end
+        if rec.normal then
+            rec.normal.enabled = false
+        end
+        if rec.expensive then
+            rec.expensive.enabled = false
+        end
+    end
 end
