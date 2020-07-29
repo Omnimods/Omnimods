@@ -1,9 +1,11 @@
-
 local ord={"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r"}
+
 omni.sciencepacks = {"automation-science-pack","logistic-science-pack","chemical-science-pack","military-science-pack", "production-science-pack","utility-science-pack"}
+
 if mods["omnimatter_crystal"] and mods["omnimatter_science"] then
 	table.insert(omni.sciencepacks,3,"omni-pack")
 end
+
 if mods["bobtech"] then
 	table.insert(omni.sciencepacks,7,"advanced-logistic-science-pack")
 end
@@ -17,46 +19,40 @@ for i=2,#omni.lib.primes do
 		omni.lib.prime_range[j]=i
 	end
 end
---log(serpent.block(omni.lib.primeRound))
 
 omni.lib.ore_tints = {--can add to the tint table with table.insert(omni.lib.ore_tints,["ore-name"]={tints})
-  ["iron"]      = {r = 0, g = 0, b = 0, a = 1},
-  ["copper"]    = {r = 0, g = 0, b = 0, a = 1},
-  ["tin"]       = {r = 0, g = 0, b = 0, a = 1},
-  ["lead"]      = {r = 0, g = 0, b = 0, a = 1},
-  ["titanium"]  = {r = 0, g = 0, b = 0, a = 1},
-  ["silicon"]   = {r = 0, g = 0, b = 0, a = 1},
-  ["nickel"]    = {r = 0, g = 0, b = 0, a = 1},
-  ["zinc"]      = {r = 0, g = 0, b = 0, a = 1},
-  ["silver"]    = {r = 0, g = 0, b = 0, a = 1},
-  ["gold"]      = {r = 0, g = 0, b = 0, a = 1},
-  ["tungsten"]  = {r = 0, g = 0, b = 0, a = 1},
-  ["manganese"] = {r = 0, g = 0, b = 0, a = 1},
-  ["chrome"]    = {r = 0, g = 0, b = 0, a = 1},
-  ["platinum"]  = {r = 0, g = 0, b = 0, a = 1},
-  ["uranium"]   = {r = 0, g = 0, b = 0, a = 1},
-  ["thorium"]   = {r = 0, g = 0, b = 0, a = 1},
-  ["cobalt"]    = {r = 0, g = 0, b = 0, a = 1},
-  ["aluminium"] = {r = 0, g = 0, b = 0, a = 1},
-  ["coal"]      = {r = 0, g = 0, b = 0, a = 1},
+--based on tint
+  ["iron"]      = {r = 0.415, g = 0.525, b = 0.580}, -- vanilla
+  ["copper"]    = {r = 0.803, g = 0.388, b = 0.215}, -- vanilla
+  ["tin"]       = {r = 0.95 , g = 0.95 , b = 0.95 }, --map_color = {r = 0.600, g = 0.600, b = 0.600}
+  ["lead"]      = {r = 0.5  , g = 0.5  , b = 0.5  }, --map_color = {r=0.0, g=0.0, b=0.50}
+  ["titanium"]  = {r = 0.8  , g = 0.55 , b = 0.7  }, --map_color = {r=0.610, g=0.325, b=0.500}
+  ["silicon"]   = {r = 1    , g = 1    , b = 1    }, --map_color = {r = 1, g = 1, b = 1}
+  ["nickel"]    = {r = 0.54 , g = 0.8  , b = 0.75 }, --map_color = {r=0.4, g=0.8, b=0.6}
+  ["zinc"]      = {r = 0.34 , g = 0.9  , b = 0.81 }, --map_color = {r=0.5, g=1, b=1}
+  ["silver"]    = {r = 0.875, g = 0.975, b = 1    }, --map_color = {r=0.7, g=0.9, b=0.9}
+  ["gold"]      = {r = 1    , g = 0.75 , b = 0    }, --map_color = {r=1, g=0.7, b=0}
+  ["tungsten"]  = {r = 0.75 , g = 0.5  , b = 0.25 }, --map_color = {r = 0.5, g = 0.0, b = 0.0}
+  ["manganese"] = {r = 1    , g = 1    , b = 1    , a = 1},
+  ["chrome"]    = {r = 1    , g = 1    , b = 1    , a = 1},
+  ["platinum"]  = {r = 1    , g = 1    , b = 1    , a = 1},
+  ["uranium"]   = {r = 0    , g = 0.7  , b = 0    }, -- vanilla
+  ["thorium"]   = {r = 1    , g = 1    , b = 0.25 }, --map_color = {r = 0.75, g = 1, b = 0.25}
+  ["cobalt"]    = {r = 0.3  , g = 0.53 , b = 0.77 }, --map_color = {r=0.18, g=0.35, b=0.53}
+  ["aluminium"] = {r = 0.777, g = 0.7  , b = 0.333}, --map_color = {r=0.777, g=0.7, b=0.333}
+  ["coal"]      = {r = 0    , g = 0    , b = 0    }, -- vanilla
+  ["sulfur"]    = {r = 0.8  , g = 0.75 , b = 0.1  }, --map_color = {r=1, g=1, b=0}
+  ["gems"]      = {r = 0.25 , g = 1    , b = 0.25 }, --<-- map_color only
+  ["stone"]     = {r = 0.690, g = 0.611, b = 0.427} -- vanilla
 }
 
-function omni.lib.AddOreTint(icon,ore_name) --should work for a specific icon or icons table
+function omni.lib.add_ore_tint(icon,ore_name) --should work for a specific icon or icons table
   if type(icon) == "table" then --should be a row regardless
     --get tint
-    local tint = omni.lib.ore_tints.ore_name or {r = 0, g = 0, b = 0, a = 1} --add default if not in table
-    for _,ic in pairs(icon) do
-      if ic.tint then --if it exists, add to it? 
-        r2 = ic.tint[1] or ic.tint.r
-        g2 = ic.tint[2] or ic.tint.g
-        b2 = ic.tint[3] or ic.tint.b
-        a1 = (ic.tint[4] or ic.tint.a) or 1
-        tint={r=(tint.r+r2)/2,g=(tint.g+g2)/2,b=(tint.b+b2)/2,a=(tint.a+a2)/2} --this "should" be doing colour blending
-        --^assumes the tint table and the icoming pre-tint is of the same scale (0-1 or 0-255) mixing is not accounted for
-      end
-      ic.tint = tint 
-    end
+    local tint = omni.lib.ore_tints.ore_name or {r = 1, g = 1, b = 1, a = 1} --add default of white if not in table
+    change_icons_tint(icon,tint) --icons tint, not icon tint...
   end
+  return icon
 end
 
 function omni.lib.cardTable(tab)
@@ -295,12 +291,6 @@ function omni.lib.omni_recipe_fluid_change_category(fluid, category)
 		end
 	end
 end
-function omni.lib.lowest_omnite_cost(item)
-	for _,recipe in pairs(data.raw.recipe) do
-
-	end
-end
-
 
 local fit_ingredients = function(ingredients,multiple)
 	local substance = {}
@@ -311,6 +301,7 @@ local fit_ingredients = function(ingredients,multiple)
 	end
 	return {name=substance,amount=amount}
 end
+
 local sort_dependency = function(list)
 	local l = {}
 	l[1] = list[1]
@@ -341,7 +332,6 @@ function omni.lib.achain_omnite_cost(item,chain)
 			break
 		end
 	end
-
 	required_ingredients=data.raw.recipe[chain[1]].ingredients
 	required_ingredients=fit_ingredients(required_ingredients,target_amount)
 	local list = chain--sort_dependency(chain)
@@ -356,7 +346,6 @@ function omni.lib.achain_omnite_cost(item,chain)
 			end
 		end
 	end
-
 	return cost
 end
 
@@ -393,6 +382,19 @@ function omni.lib.chain_omnite_cost(item,chain)
 	return cost
 end
 
+--Modifications
+function omni.lib.add_number_item(item, val)
+	if data.raw.item[item] then
+		data.raw.item[item].icons={{icon=data.raw.item[item].icon},{icon = "__omnimatter__/graphics/icons/extraction-"..val..".png"}}
+		data.raw.item[item].icon=nil
+	end
+end
+
+function omni.lib.set_item_icon(item,icon, tint)
+	data.raw.item[item].icon = icon
+	if tint then omni.lib.change_icon_tint(item,tint) end
+end
+
 function omni.lib.change_icon_tint(item, tint)
 	local tint_table = {}
 	if tint[1] then
@@ -413,347 +415,25 @@ function omni.lib.change_icon_tint(item, tint)
 	data.raw.item[item].icon = nil
 end
 
-function omni.lib.get_tech_name(recipename)
-	for _,tech in pairs(data.raw.technology) do
-		if tech.effects then
-			for _,eff in pairs(tech.effects) do
-				if eff.type == "unlock-recipe" and eff.recipe ==recipename then
-					return tech.name
-				end
-			end
-		end
-	end
+function omni.lib.change_icons_tint(item, tint) --for changing a table of icons, not just a single icon
+  --BEST USED before adding small icon(s) or overlays, as this will tint everything
+  local t = {}
+  local icons=data.raw.item[item].icons
+	if tint.r then t=tint else t={r=tint[1],g=tint[2],b=tint[3],a=tint[4] or 1} end
+  for i,icon in pairs(icons) do
+    if icons[i].tint then
+      if icons[i].tint.r then tnt=icons[i].tint else tnt={r=tint[1],g=tint[2],b=tint[3],a=tint[4] or 1or 1} end
+      tint={r=(tint.r+tnt.r)/2,g=(tint.g+tnt.g)/2,b=(tint.b+tnt.b)/2,a=(tint.a+tnt.a)/2} --average tint blending, may need to expand this to alpha channel blending
+      icons[i].tint=tint 
+    else
+      icons[i].tint=tint
+    end
+  end
+  local icon = {{icon = data.raw.item[item].icons, tint=t}}
+	--data.raw.item[item].icon = icons
+	data.raw.item[item].icons = icons
 end
 
-function omni.lib.remove_recipe_all_techs(name)
-	for _,tech in pairs(data.raw.technology) do
-		if tech.effects then
-			for i,eff in pairs(tech.effects) do
-				if eff.type == "unlock-recipe" and eff.recipe == name then
-					table.remove(data.raw.technology[tech.name].effects,i)
-				end
-			end
-		end
-	end
-end
-
-function omni.lib.replace_recipe_all_techs(name,replacement)
-	for _,tech in pairs(data.raw.technology) do
-		if tech.effects then
-			for i,eff in pairs(tech.effects) do
-				if eff.type == "unlock-recipe" and eff.recipe == name then
-					eff.recipe=replacement
-				end
-			end
-		end
-	end
-end
-
-function omni.lib.replace_all_ingredient(ingredient,replacement)
-	for _,recipe in pairs(data.raw.recipe) do
-		omni.lib.replace_recipe_ingredient(recipe.name, ingredient,replacement)
-	end
-end
-
-function omni.lib.set_recipe_ingredients(recipe,...)
-	local arg = {...}
-	local rec = data.raw.recipe[recipe]
-	omni.marathon.standardise(rec)
-	local ing = {}
-	for i,v in pairs(arg) do
-		local tmp = {}
-		if type(v)=="string" then
-			tmp = {{name=v,type="item", amount=1}}
-		elseif type(v)=="table" then
-			if type(v[1]) == "string" then
-				tmp = {{name=v[1],type="item", amount=v[2]}}
-			elseif v.name then
-				tmp = {{name=v.name,type=v.type or "item", amount=v.amount,probability = v.probability, amount_min = v.amount_min, amount_max=v.amount_max}}
-			end
-		end
-		ing = omni.lib.union(ing,tmp)
-	end
-	if rec then
-		for _, dif in pairs({"normal","expensive"}) do
-			rec[dif].ingredients = ing
-		end
-	end
-end
-
-function omni.lib.replace_recipe_ingredient(recipe, ingredient, replacement)
-	if data.raw.recipe[recipe] then
-		if data.raw.recipe[recipe].ingredient or data.raw.recipe[recipe].ingredients or not data.raw.recipe[recipe].expensive then
-			omni.marathon.standardise(data.raw.recipe[recipe])
-		end
-		for _,dif in pairs({"normal","expensive"}) do
-			for i,ing in pairs(data.raw.recipe[recipe][dif].ingredients) do
-				if ing.name==ingredient then
-					if type(replacement)=="table" then
-						if replacement[1] == nil then
-							data.raw.recipe[recipe][dif].ingredients[i]=replacement
-						else
-							ing.name=replacement[1]
-							ing.amount=replacement[2]
-						end
-					else
-						ing.name=replacement
-					end
-				end
-			end
-		end
-	end
-end
-
-function omni.lib.replace_recipe_result(recipe, result, replacement)
-	if data.raw.recipe[recipe] then
-		if data.raw.recipe[recipe].result or data.raw.recipe[recipe].results or not data.raw.recipe[recipe].expensive then
-			omni.marathon.standardise(data.raw.recipe[recipe])
-		end
-		for _,dif in pairs({"normal","expensive"}) do
-			for i,res in pairs(data.raw.recipe[recipe][dif].results) do
-				if not res[1] then
-					if res.name==result then
-						if type(replacement)=="table" then
-							res.name=replacement[1]
-							res.amount=replacement[2]
-						else
-							res.name=replacement
-						end
-					end
-				end
-			end
-		end
-	end
-end
-
-function omni.lib.add_recipe_ingredient(recipe, ingredient)
-	if data.raw.recipe[recipe] then
-		local norm = {}
-		local expens = {}
-		omni.marathon.standardise(data.raw.recipe[recipe])
-		if not ingredient.name then
-			if type(ingredient)=="string" then
-				norm = table.deepcopy({type="item",name=ingredient,amount=1})
-				expens = table.deepcopy({type="item",name=ingredient,amount=1})
-			elseif ingredient.normal then
-				norm = table.deepcopy(ingredient.normal)
-				expens = table.deepcopy(ingredient.expensive)
-			elseif ingredient[1].name then
-				norm = table.deepcopy(ingredient[1])
-				expens = table.deepcopy(ingredient[2])
-			elseif type(ingredient[1])=="string" then
-				norm = table.deepcopy({type="item",name=ingredient[1],amount=ingredient[2]})
-				expens = table.deepcopy({type="item",name=ingredient[1],amount=ingredient[2]})
-			end
-		else
-			norm = table.deepcopy(ingredient)
-			expens = table.deepcopy(ingredient)
-		end
-		local found = false
-		for i, diff in pairs({"normal","expensive"}) do
-			for _, ing in pairs(data.raw.recipe[recipe][diff].ingredients) do
-				if ing == norm or ing == expens then
-					found = true
-				end
-			end
-		end
-		if found == false then
-			table.insert(data.raw.recipe[recipe].normal.ingredients,norm)
-			table.insert(data.raw.recipe[recipe].expensive.ingredients,expens)
-		end
-	else
-		--log(recipe.." does not exist.")
-	end
-end
-
-function omni.lib.add_recipe_result(recipe, result)
-	if data.raw.recipe[recipe] then
-		if data.raw.recipe[recipe].result then
-			data.raw.recipe[recipe].results={{type="item",amount=1,name=data.raw.recipe[recipe].result}}
-			data.raw.recipe[recipe].result=nil
-			table.insert(data.raw.recipe[recipe].results,result)
-		elseif data.raw.recipe[recipe].results then
-			table.insert(data.raw.recipe[recipe].results,result)
-		elseif data.raw.recipe[recipe].normal.results then
-			table.insert(data.raw.recipe[recipe].normal.results,result)
-			table.insert(data.raw.recipe[recipe].expensive.results,result)
-		end
-	else
-		--log(recipe.." does not exist.")
-	end
-end
-
-function omni.lib.remove_recipe_ingredient(recipe, ingredient)
-	if data.raw.recipe[recipe].ingredients then
-		for i,ing in pairs(data.raw.recipe[recipe].ingredients) do
-			if ing.name == ingredient then
-				table.remove(data.raw.recipe[recipe].ingredients,i)
-			end
-		end
-	elseif data.raw.recipe[recipe].normal.ingredients then
-		for i,ing in pairs(data.raw.recipe[recipe].normal.ingredients) do
-			if ing.name == ingredient then
-				table.remove(data.raw.recipe[recipe].normal.ingredients,i)
-			end
-		end
-		for i,ing in pairs(data.raw.recipe[recipe].expensive.ingredients) do
-			if ing.name == ingredient then
-				table.remove(data.raw.recipe[recipe].expensive.ingredients,i)
-			end
-		end
-	end
-end
-
-function omni.lib.remove_recipe_result(recipe, result)
-	if not data.raw.recipe[recipe].result and not data.raw.recipe[recipe].normal.result then
-		if data.raw.recipe[recipe].results then
-			for i,ing in pairs(data.raw.recipe[recipe].results) do
-				if ing.name == ingredient then
-					table.remove(data.raw.recipe[recipe].results,i)
-					break
-				end
-			end
-		elseif data.raw.recipe[recipe].normal.results then
-			for i,ing in pairs(data.raw.recipe[recipe].normal.results) do
-				if ing.name == ingredient then
-					table.remove(data.raw.recipe[recipe].normal.results,i)
-				end
-			end
-			for i,ing in pairs(data.raw.recipe[recipe].expensive.results) do
-				if ing.name == ingredient then
-					table.remove(data.raw.recipe[recipe].expensive.results,i)
-				end
-			end
-		end
-	else
-		log("Attempted to remove the only result that recipe "..recipe.." has. Cannot be done")
-	end
-end
-
-function omni.lib.multiply_recipe_result(recipe, result, mult)
-	--result_count
-	omni.marathon.standardise(data.raw.recipe[recipe])
-	if mult==nil then
-		for _,dif in pairs({"normal","expensive"}) do
-			for _, res in pairs(data.raw.recipe[recipe][dif].results) do
-				res.amount=res.amount*result
-			end
-		end
-	else
-		for _,dif in pairs({"normal","expensive"}) do
-			for _, res in pairs(data.raw.recipe[recipe][dif].results) do
-				if res.name == result then
-					res.amount=res.amount*result
-					break
-				end
-			end
-		end
-	end
-end
-
-function omni.lib.add_unlock_recipe(tech, recipe,force)
-	local found = false
-	if data.raw.technology[tech] then
-		if data.raw.technology[tech].effects then
-			for _,eff in pairs(data.raw.technology[tech].effects) do
-				if eff.type == "unlock-recipe" and eff.recipe == recipe then
-					found = true
-					break
-				end
-			end
-		else
-			data.raw.technology[tech].effects = {}
-		end
-		if not found then table.insert(data.raw.technology[tech].effects,{type="unlock-recipe",recipe = recipe}) end
-	else
-		--log("cannot add recipe to "..tech.." as it doesn't exist")
-	end
-end
-function omni.lib.remove_unlock_recipe(tech, recipe)
-	local res = {}
-	if tech then
-		for _,eff in pairs(data.raw.technology[tech].effects or {}) do
-			if eff.type == "unlock-recipe" and eff.recipe ~= recipe then
-				res[#res+1]=eff
-			end
-		end
-		data.raw.technology[tech].effects=res
-	end
-end
-function omni.lib.replace_unlock_recipe(tech, recipe,new)
-	local res = {}
-	for _,eff in pairs(data.raw.technology[tech].effects) do
-		if eff.type == "unlock-recipe" and eff.recipe == recipe then
-			eff.recipe=new
-		end
-	end
-	--data.raw.technology[tech].effects=res
-end
-
-function omni.lib.change_recipe_category(recipe, category)
-	data.raw.recipe[recipe].category=category
-end
-
-function omni.lib.replace_science_pack(tech,old, new)
-	local r = new
-	if not r then r = "omni-pack" end
-	if data.raw.technology[tech] then
-		for i,ing in pairs(data.raw.technology[tech].unit.ingredients) do
-			if ing[1]==old then
-				data.raw.technology[tech].unit.ingredients[i][1]=r
-			end
-		end
-	else
-		log(tech.." cannot be found, replacement of "..old.." with "..r.." has failed.")
-	end
-end
-
-
-function omni.lib.add_science_pack(tech,pack)
-	if data.raw.technology[tech] then
-		local found = false
-		for __,sp in pairs(data.raw.technology[tech].unit.ingredients) do
-			for __,ing in pairs(sp) do
-				if ing == pack then found=true end
-			end
-		end
-		if not found then
-			if type(pack) == "table" then
-				table.insert(data.raw.technology[tech].unit.ingredients,pack)
-			elseif type(pack) == "string" then
-				table.insert(data.raw.technology[tech].unit.ingredients,{pack,1})
-			elseif type(pack)=="number" then
-				table.insert(data.raw.technology[tech].unit.ingredients,{"omni-pack",pack})
-			else
-				table.insert(data.raw.technology[tech].unit.ingredients,{"omni-pack",1})
-			end
-		else
-			log("Ingredient "..pack.." already exists.")
-		end
-	else
-		log("Cannot find "..tech..", ignoring it.")
-	end
-end
-
-function omni.lib.remove_science_pack(tech,pack)
-	if data.raw.technology[tech] then
-		for i,ing in pairs(data.raw.technology[tech].unit.ingredients) do
-			if ing[1]==pack then
-				table.remove(data.raw.technology[tech].unit.ingredients,i)
-			end
-		end
-	else
-		log(tech.." does not seem to exist, check spelling and mods.")
-	end
-end
-
-function omni.lib.replace_prerequisite(tech,old, new)
-	for i,req in pairs(data.raw.technology[tech].prerequisites) do
-		if req==old then
-			data.raw.technology[tech].prerequisites[i]=new
-		end
-	end
-end
 function clone_function(fn)
   local dumped = string.dump(fn)
   local cloned = loadstring(dumped)
@@ -767,64 +447,6 @@ function clone_function(fn)
     i = i + 1
   end
   return cloned
-end
-
-function omni.lib.remove_prerequisite(tech,prereq)
-	local pr={}
-	for i,req in pairs(data.raw.technology[tech].prerequisites) do
-		if req~=prereq then
-			pr[#pr+1]=req
-		end
-	end
-	data.raw.technology[tech].prerequisites=pr
-end
-
-function omni.lib.set_prerequisite(tech, req)
-	if type(req) == "table" then
-		data.raw.technology[tech].prerequisites = req
-	else
-		data.raw.technology[tech].prerequisites = {req}
-	end
-end
-
-function omni.lib.add_prerequisite(tech, req)
-	local found = nil
-	--check that the table exists, or create a blank one
-	if data.raw.technology[tech] then
-		if not data.raw.technology[tech].prerequisites then
-			data.raw.technology[tech].prerequisites = {}
-		end
-	end
-	if type(req) == "table" then
-		for _,r in pairs(req) do
-			if data.raw.technology[r] then
-				for i,prereq in pairs(data.raw.technology[tech].prerequisites) do
-					if prereq == r then found = 1 end
-				end
-				if not found then
-					table.insert(data.raw.technology[tech].prerequisites,r)
-				else
-					log("Prerequisite"..r.."already exists")
-				end
-				found = nil
-			end
-		end
-	elseif req and data.raw.technology[req] then
-		if data.raw.technology[tech] then
-			for i,prereq in pairs(data.raw.technology[tech].prerequisites) do
-				if prereq == req then found = 1 end
-			end
-			if not found then
-				table.insert(data.raw.technology[tech].prerequisites,req)
-			else
-				log("Prerequisite"..req.."already exists")
-			end
-		else
-			log(tech.." does not exist, please check spelling.")
-		end
-	else
-		log("There is no prerequisities to add to "..tech)
-	end
 end
 
 function omni.lib.capitalize(str)
@@ -868,34 +490,8 @@ end
 function omni.lib.is_number(str)
 	return tonumber(str) ~= nil
 end
---[[
-Checks a recipe contains a specific material as the result
-]]
-function omni.lib.recipe_result_contains(recipe, item)
-	if data.raw.recipe[recipe] and data.raw.recipe[recipe].results then
-		for _,res in pairs(data.raw.recipe[recipe].results) do
-			local r = {}
-			if res.name then
-				r=res
-			else
-				r={type="item",name=res[1],amount=res[2]}
-			end
-			if type(item) == "table" then
-				if omni.lib.is_in_table(r.name,item) then return true end
-			else
-				if r.name==item then return true end
-			end
-		end
-		return false
-	else
-		log(recipe.." does not have any results to scan.")
-	end
-end
 
---String
---[[
-Checks if a string contains anything within the provided list
-]]
+--Checks if a string contains anything within the provided list
 function omni.lib.string_contained_list(str, list)
 	for i=1, #list do
 		if type(list[i])=="table" then
@@ -937,10 +533,7 @@ function omni.lib.split(inputstr, sep)
         return t
 end
 
---Set theoretical
---[[
-Checks if a table contains a specific element
-]]
+--Checks if a table contains a specific element
 function omni.lib.is_in_table(element, tab)
 	if tab then
 		for _, t in pairs(tab) do
@@ -949,9 +542,8 @@ function omni.lib.is_in_table(element, tab)
 	end
 	return false
 end
---[[
-A function that takes two tables and gives out the elements they have in common
-]]
+
+--A function that takes two tables and gives out the elements they have in common
 function omni.lib.table_intersection(t, d)
 	local inter={}
 	for i=1,#t do
@@ -960,9 +552,7 @@ function omni.lib.table_intersection(t, d)
 	if #inter > 0 then return inter else return nil end
 end
 
---[[
-Check if tabels are the same
-]]
+--Check if tabels are the same
 function omni.lib.tables_equal(t, d)
 	local inter={}
 	for i=1,#t do
@@ -971,9 +561,7 @@ function omni.lib.tables_equal(t, d)
 	return true
 end
 
---[[
-Check if tabels are the same
-]]
+--Check if tabels are the same
 function omni.lib.sub_table_of(t, d)
 	local inter={}
 	for i=1,#t do
@@ -989,10 +577,7 @@ function omni.lib.sub_table_of(t, d)
 	return true
 end
 
---[[
-Checks if object exists
-]]
-
+--Checks if object exists
 function omni.lib.does_exist(item)
 	for _, p in pairs({"item","mining-tool","gun","ammo","armor","repair-tool","capsule","module","tool","rail-planner","selection-tool","item-with-entity-data","fluid","recipe","technology"}) do
 		if data.raw[p][item] then
@@ -1004,10 +589,7 @@ function omni.lib.does_exist(item)
 	return false
 end
 
---[[
-Add barrels for fluid that are late.
-]]
-
+--Add barrels for fluid that are late.
 function omni.lib.create_barrel(fluid)
 	if type(fluid)=="string" then fluid = data.raw.fluid[fluid] end
 
@@ -1112,8 +694,6 @@ function omni.lib.create_barrel(fluid)
   side_tint.a = side_alpha
   top_hoop_tint = util.table.deepcopy(fluid.flow_color)
   top_hoop_tint.a = top_hoop_alpha
-
-
   icons={
     {
       icon = "__base__/graphics/icons/fluid/barreling/barrel-empty.png"
@@ -1422,10 +1002,6 @@ function omni.lib.assemblingFluidBox(str,hide)
 	return box
 end
 
---[[
-Name code
-(), Optional depth
-]]
 function omni.lib.replaceValue(tab,name,val,flags)
 	if tab==nil then return val end
 	local t= table.deepcopy(tab)
@@ -1465,44 +1041,7 @@ function omni.lib.replaceValue(tab,name,val,flags)
 	end
 	return t
 end
---[[
-{ Generator
-      base_area = 1,
-      height = 2,
-      base_level = -1,
-      pipe_covers = pipecoverspictures(),
-      pipe_connections =
-      {
-        { type = "input-output", position = {0, 3} },
-        { type = "input-output", position = {0, -3} }
-      },
-      production_type = "input-output",
-      filter = "steam",
-      minimum_temperature = 100.0
-    }
 
-{ ASsembling machine
-      {
-        production_type = "input",
-        pipe_picture = assembler2pipepictures(),
-        pipe_covers = pipecoverspictures(),
-        base_area = 10,
-        base_level = -1,
-        pipe_connections = {{ type="input", position = {0, -2} }},
-        secondary_draw_orders = { north = -1 }
-      },
-      {
-        production_type = "output",
-        pipe_picture = assembler2pipepictures(),
-        pipe_covers = pipecoverspictures(),
-        base_area = 10,
-        base_level = 1,
-        pipe_connections = {{ type="output", position = {0, 2} }},
-        secondary_draw_orders = { north = -1 }
-      },
-      off_when_no_fluid_recipe = true
-    }
-]]
 function omni.lib.generatorFluidBox(str,filter,tmp)
 	if str==nil then return nil end
 	local code=omni.lib.split(str,".")
@@ -1560,8 +1099,4 @@ function omni.lib.fluid_box_conversion(kind,str,hide,tmp)
 		end
 	end
 	return box
-end
-
-function omni.lib.addProductivity(recipe)
-
 end
