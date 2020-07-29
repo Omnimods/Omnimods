@@ -1,29 +1,3 @@
---[[data:extend({
-  {
-    type = "tool",
-    name = "omni-pack",
-    icon = "__base__/graphics/icons/production-science-pack.png",
-    flags = {"goes-to-main-inventory"},
-    subgroup = "science-pack",
-    order = "a[science-pack-1]",
-	icon_size = 32,
-    stack_size = 200,
-    durability = 1,
-    durability_description_key = "description.science-pack-remaining-amount"
-  },
-  {
-	type = "recipe",
-	name = "omni-pack",
-	enabled = false,
-	ingredients = {
-	},
-	order = "a[angelsore1-crushed]",
-	icon = "__base__/graphics/icons/production-science-pack.png",
-	results = {{type = "item", name = "omni-pack", amount=1}},
-	energy_required = 5,
-	icon_size = 32,
-	},
-})]]
 if mods["omnimatter_crystal"] then
 	RecGen:create("omnimatter_science","omni-pack"):
 		tool():
@@ -33,6 +7,14 @@ if mods["omnimatter_crystal"] then
 		setDurabilityDesc("description.science-pack-remaining-amount"):
 		setEnergy(5):
 		addProductivity():
+		setIngredients({
+			{type = "item", name = "fast-transport-belt", amount = 1},
+			{type = "item", name = "iron-ore-crystal", amount = 2},
+			{type = "fluid", name = "omniston", amount = 50}
+		}):
+		setSubgroup("science-pack"):
+		setCategory("crafting-with-fluid"):
+		setOrder("ca[omni-science-pack]"):
 		setTechName("omnipack-technology"):
 		setTechCost(150):
 		setTechIcon("omnipack-tech"):
@@ -42,4 +24,12 @@ if mods["omnimatter_crystal"] then
 		extend()
 		
 	TechGen:import("chemical-science-pack"):addPrereq("omnipack-technology"):extend()
+
+	if data.raw.tool["production-science-pack"].icon == "__base__/graphics/icons/production-science-pack.png" then --only replace if vanilla icon?
+	  data.raw.tool["production-science-pack"].icon = "__omnilib__/graphics/icons/science-pack/production-science-pack.png"
+	  data.raw.technology["production-science-pack"].icon = "__omnilib__/graphics/technology/production-science-pack.png"
+	  data.raw.tool["production-science-pack"].icon_size=64
+	  data.raw.recipe["production-science-pack"].icon_size=64
+	  data.raw.tool["omni-pack"].icon_size=64
+	end
 end
