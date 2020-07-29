@@ -4,6 +4,7 @@
 local multiplier = settings.startup["omnicompression_multiplier"].value
 omni.compression.bld_lvls = settings.startup["omnicompression_building_levels"].value --kind of local
 omni.compression.one_list = settings.startup["omnicompression_one_list"].value
+omni.compression.hide_handcraft =  settings.startup["omnicompression_hide_handcraft"].value or nil
 local cost_multiplier = settings.startup["omnicompression_cost_mult"].value
 local energy_multiplier = settings.startup["omnicompression_energy_mult"].value
 local black_list = {"creative",{"burner","turbine"},{"crystal","reactor"},{"factory","port","marker"},{"biotech","biosolarpanel","solarpanel"},"bucketw"}
@@ -150,6 +151,7 @@ local create_concentrated_fluid = function(fluid,tier)
     subgroup = "concentrator-fluids",
     energy_required = multiplier/10,
     enabled = false,
+    hide_from_player_crafting = omni.compression.hide_handcraft
   }
   local uncompressRecipeData = table.deepcopy(compressRecipeData)
   compressRecipeData.ingredients = baseFluidData
@@ -160,20 +162,22 @@ local create_concentrated_fluid = function(fluid,tier)
   local compress = {
     type = "recipe",
     name = fluid.."-concentrated-grade-"..tier,
-    localised_name = omni.locale.custom_name(data.raw.fluid[fluid], 'recipe-name.concentrate-fluid', tier),
+    --localised_name = omni.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
     category = "fluid-condensation",
     enabled = false,
     icons = newFluid.icons,
-    order = newFluid.order or "z".."[condensed-"..fluid.name .."]"
+    order = newFluid.order or "z".."[condensed-"..fluid.name .."]",
+    hide_from_player_crafting = omni.compression.hide_handcraft
   }
   local uncompress = {
     type = "recipe",
     name = "uncompress-"..fluid.."-concentrated-grade-"..tier,
-    localised_name = omni.locale.custom_name(data.raw.fluid[fluid], 'recipe-name.deconcentrate-fluid', tier),
+    --localised_name = omni.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
     icons = omni.lib.add_overlay(fluid,"uncompress"),
     category = "fluid-condensation",
     enabled = false,
     order = newFluid.order or "z".."[condensed-"..fluid .."]",
+    hide_from_player_crafting = omni.compression.hide_handcraft
   }
 
   compress.normal = compressRecipeData
@@ -347,7 +351,8 @@ for _,kind in pairs(building_list) do --only building types
               item.subgroup = "compressor-"..item.subgroup.."-"..math.floor((i-1)/2)+1
             else --clean up item ordering
               item.order = item.order or "z".."-compressed" --should force it to match, but be after it under all circumstances
-						end
+            end
+
             -------------------------------------------------------------------------------
             --[[Since running deepcopy, only need to override new props]]--
             -------------------------------------------------------------------------------
@@ -398,7 +403,8 @@ for _,kind in pairs(building_list) do --only building types
               icons = omni.lib.add_overlay(build,"building",i),
               result = new.name,
 							energy_required = 5*math.floor(math.pow(multiplier,i/2)),
-							enabled = false,
+              enabled = false,
+              hide_from_player_crafting = omni.compression.hide_handcraft
             }
 
 						compressed_buildings[#compressed_buildings+1] = recipe
@@ -418,7 +424,8 @@ for _,kind in pairs(building_list) do --only building types
 							},
 							results = ing,
 							inter_item_count = item_count,
-							energy_required = 5*math.floor(math.pow(multiplier,i/2)),
+              energy_required = 5*math.floor(math.pow(multiplier,i/2)),
+              hide_from_player_crafting =  omni.compression.hide_handcraft
             }
             
             compressed_buildings[#compressed_buildings+1] = uncompress

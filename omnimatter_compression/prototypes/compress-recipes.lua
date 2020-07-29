@@ -597,6 +597,7 @@ function create_compression_recipe(recipe)
               comrec.enabled=false
               comrec.category=new_cat
               comrec.main_product = nil
+              comrec.hide_from_player_crafting = comrec.hide_from_player_crafting or settings.startup["omnicompression_hide_handcraft"].value
               return comrec
             else
               return nil --should not

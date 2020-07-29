@@ -21,9 +21,9 @@ data:extend(
     name = "omnicompression_multiplier",
     setting_type = "startup",
     default_value = 4,
-	min_value = 2,
-	max_value = 10,
-	order=c
+    min_value = 2,
+    max_value = 10,
+    order=c
   },
    {
     type = "bool-setting",
@@ -95,7 +95,14 @@ data:extend(
     min_value = 1,
     max_value = 5,
     order=l
-  }
+  },
+  {
+    type = "bool-setting",
+    name = "omnicompression_hide_handcraft",
+    setting_type = "startup",
+    default_value = false,
+    order=aa
+  },
 }
 )
 
