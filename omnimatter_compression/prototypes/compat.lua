@@ -1,14 +1,12 @@
 --[[ Mod compatibility fixes ]]--
 
 
-
 local categories = {}
--- Revert machines with empty compressed categories back to their base categories
 for recipe_name, prototype in pairs(data.raw.recipe) do
 	categories[prototype.category or "crafting"] = (categories[prototype.category or "crafting"] or 0) + 1
 end
 
---Extend compression items/recipes into the regular machines.
+--Extend compression items/recipes into the regular machines, revert machines with empty compressed categories back to their base categories
 for _,kind in pairs({"assembling-machine","furnace"}) do
 	for _,build in pairs(data.raw[kind]) do
 		for i,cat in pairs(build.crafting_categories) do

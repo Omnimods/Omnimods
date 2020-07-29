@@ -188,6 +188,70 @@ function lib.get_main_product(recipe)
     end -- See if we were fed a partial recipe
     return lib.partial.get_main_product(recipe.normal or recipe.expensive or recipe)
 end
+
+function lib.parse_ingredient(ingredient)
+-- Get the given ingredient in the `{name = ..., type = ..., ...}` format.
+    local ingredient = table.deepcopy(ingredient)
+    -- With either strings or tables, default is still item
+    if not ingredient.type then
+        ingredient.type = 'item'
+    end
+
+    if not ingredient.name then
+        ingredient.name = ingredient[1] -- Array instead of table, we'll fix before returning.
+    end
+    if not ingredient.amount then
+        ingredient.amount = ingredient[2]
+    end
+    -- No longer necessary
+    ingredient[1] = nil
+    ingredient[2] = nil
+    
+    return ingredient
+end
+
+function lib.partial.find_ingredient(recipe, name)
+-- Get the full ingredient definition for a ingredient with the given name from the given recipe part.
+    if recipe.ingredients then
+        for _, ingredient in pairs(recipe.ingredients) do
+            local parsed_ingredient = lib.parse_ingredient(ingredient) -- Format and standardise, return if applicable
+            if parsed_ingredient.name == name then
+                return parsed_ingredient
+            end
+        end
+    end
+    return nil
+end
+
+function lib.partial.get_main_ingredient(recipe)
+-- Get the main ingredient of the given recipe part.
+    if recipe.ingredients then -- We actually have ingredients
+        if table_size(recipe.ingredients) == 1 then -- Not actually
+            return lib.parse_ingredient(recipe.ingredients[1])
+        else -- Multi-results with no primary!
+            return nil
+        end
+    end
+    return nil
+end
+
+
+function lib.get_main_ingredient(recipe)
+-- Get the main ingredient of the given recipe.
+-- For normal+expensive definitions, the ingredient is only returned if it's the same for both.
+    if recipe.normal and recipe.expensive then
+        local normal = lib.partial.get_main_ingredient(recipe.normal)
+        local expensive = lib.partial.get_main_ingredient(recipe.expensive)
+        if normal and expensive and -- Expensive does have same ingredients
+        normal.name == expensive.name and 
+        normal.type == expensive.type then 
+            return normal
+        else -- Or it doesn't
+            return nil
+        end
+    end -- See if we were fed a partial recipe
+    return lib.partial.get_main_ingredient(recipe.normal or recipe.expensive or recipe)
+end
     
 
 

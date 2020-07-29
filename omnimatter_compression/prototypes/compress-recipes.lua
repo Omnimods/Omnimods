@@ -35,59 +35,31 @@ end
 
 --stack size of more than 1 function
 local more_than_one = function(recipe)
-	if recipe.result or (recipe.normal and recipe.normal.result) then
-		if recipe.result then
-			if type(recipe.result)=="table" then
-				if recipe.result[1] then return omni.lib.find_stacksize(recipe.result[1]) > 1
-        else return omni.lib.find_stacksize(recipe.result.name) > 1
-        end
-			else return omni.lib.find_stacksize(recipe.result) > 1
-			end
-		else
-			if type(recipe.normal.result)=="table" then
-				if recipe.normal.result[1] then return omni.lib.find_stacksize(recipe.normal.result[1]) > 1
-				else return omni.lib.find_stacksize(recipe.normal.result.name) > 1
-				end
-			else return omni.lib.find_stacksize(recipe.normal.result) > 1
-			end
-		end
-	else
-		if (recipe.results and #recipe.results > 1) or (recipe.normal and recipe.normal.results and #recipe.normal.results>1) then 
-			return true
-		else
-			if recipe.results then
-				if type(recipe.results[1])=="table" then
-					if recipe.results[1][1] then 
-						return omni.lib.find_stacksize(recipe.results[1][1]) > 1
-					else 
-						return omni.lib.find_stacksize(recipe.results[1].name) > 1
-					end
-				else 
-					return omni.lib.find_stacksize(recipe.results[1]) > 1
-				end
-			elseif recipe.normal.results and #recipe.normal.results > 0 then
-				if type(recipe.normal.results[1])=="table" then
-					if recipe.normal.results[1][1] then
-						return omni.lib.find_stacksize(recipe.normal.results[1][1]) > 1
-					elseif omni.lib.find_stacksize(recipe.normal.results[1].name) then 
-						return omni.lib.find_stacksize(recipe.normal.results[1].name) > 1
-					else 
-						return false
-					end
-				else
-					if omni.lib.find_stacksize(recipe.normal.results[1].name) then 
-						return omni.lib.find_stacksize(recipe.normal.results[1].name) > 1
-					else 
-						return false	--log("Something is not right, item  "..recipe.normal.results[1].name.." has no stacksize.")
-					end
-				end
-			else
-				return false
-			end
-		end
-	end
+  -- Multi-result
+  local results = recipe.results or recipe.normal and recipe.normal.results
+  -- Sanity checks, huzzah
+  if not results then
+    return false
+  end
+  -- Multi result
+  if #results > 1 then
+    return true
+  end
+  local product = omni.locale.get_main_product(recipe)
+  -- ???
+  if not product then
+    return false
+  end
+  -- Valid but we're returning nothing
+  if product.amount == 0 then
+    return false
+  end
+  -- Main product is >1, this covers cases of .result as well
+  if omni.lib.find_stacksize(product.name) > 1 then
+    return true
+  end
+  return false
 end
-
 --category set
 local set_category = function(recipe)
   if recipe.normal.category then
@@ -347,9 +319,14 @@ end
 -- IS VOID? check for the word void in recipe name or products --
 -----------------------------------------------------------------
 local is_void = function(recipe)
-  if string.find(recipe.name, "void") or string.find(recipe.name, "flaring") or string.find(recipe.name, "incineration")then
+  local product = omni.locale.get_main_product(recipe) 
+  if recipe.name:find("void") or 
+    recipe.name:find("flaring") or 
+    recipe.name:find("incineration")
+  then
     return true
-  elseif recipe.normal.results and recipe.normal.results[1] and string.find(recipe.normal.results[1].name, "void") then
+  end
+  if product and (product.name:find("void") or product.amount == 0) then
     return true
   end
   return false
@@ -641,51 +618,56 @@ end
 local create_void = function(recipe)
   local continue = false
   local prefix = "compressed-"
+  local product = omni.locale.get_main_product(recipe)
+  local ingredient = omni.locale.get_main_ingredient(recipe)
   --local prob = 1
-  if not omni.lib.is_in_table(recipe.name,excluded_recipes) then --not excluded
-  if not more_than_one(recipe) then --add in exclusion lists
-    for _, dif in pairs({"normal","expensive"}) do
-      if #recipe[dif].results == 1 and recipe[dif].results[1].type=="item" then
-        if #recipe[dif].ingredients == 1 and recipe[dif].ingredients[1].type == "fluid" and
-        recipe[dif].results[1].probability and recipe[dif].results[1].probability == 0 then
-          continue = true
-          prefix = "concentrated-"
-        elseif #recipe[dif].ingredients == 1 and recipe[dif].ingredients[1].type == "item" then --no probability on solids?
-          continue = true
+  if not omni.lib.is_in_table(recipe.name, excluded_recipes) then --not excluded
+    if not more_than_one(recipe) then -- Verify products
+      if ingredient then
+        if not product or (product.count == 0) or (product.probability == 0) or product.name:find("void") then
+          if ingredient.type == "fluid" then
+            prefix = "concentrated-"
+          end
+          if data.raw[ingredient.type][ingredient.name] then-- Don't make recipes for items that don't exist
+            continue = true
+          end
         end
-      elseif #recipe[dif].results == 0 or (recipe[dif].results[1] and string.find(recipe[dif].results[1].name,"void")) then
-        --capture stragglers doing odd things
-        --double check fluid...
-        if recipe.normal.ingredients[1].type == "fluid" then
-          prefix = "concentrated-"
-        end
-        continue = true
       end
     end
-  end
-	if continue == true then
-		local icons = omni.lib.add_overlay(recipe,"compress")
-		local new_cat = "crafting-compressed"
-		if recipe.normal.category then new_cat = recipe.normal.category.."-compressed" end
-		if recipe.normal.category and not data.raw["recipe-category"][recipe.normal.category.."-compressed"] then
-			data:extend({{type = "recipe-category", name = recipe.normal.category.."-compressed"}})
-		elseif not data.raw["recipe-category"]["general-compressed"] then
-			data:extend({{type = "recipe-category", name = "general-compressed"}})
-		end
-    local new_rc = table.deepcopy(recipe)
-		new_rc.name = recipe.name.."-compression"
-    new_rc.category = new_cat
-		new_rc.normal.ingredients[1].name = prefix ..new_rc.normal.ingredients[1].name
-    new_rc.expensive.ingredients[1].name = prefix ..new_rc.expensive.ingredients[1].name
-    --new_rc.normal.results[1].probability = 0 --set to never actually give
-    --new_rc.expensive.results[1].probability = 0 --set to never actually give
-    if string.find(recipe.name,"car") then
-      log(serpent.block(new_rc))
+    if continue == true then
+      local icons = omni.lib.add_overlay(recipe, "compress")
+      local new_cat = "crafting-compressed"
+      if recipe.normal.category then
+        new_cat = recipe.normal.category.."-compressed"
+        if not data.raw["recipe-category"] then
+          data:extend({{
+            type = "recipe-category",
+            name = new_cat
+          }})
+        end
+      end
+      if not data.raw["recipe-category"]["general-compressed"] then
+        data:extend({{
+          type = "recipe-category",
+          name = "general-compressed"
+        }})
+      end
+      local new_rc = table.deepcopy(recipe)
+      new_rc.name = recipe.name.."-compression"
+      new_rc.localised_name = omni.locale.custom_name(new_rc, 'recipe-name.compressed-recipe')
+      new_rc.icons = icons
+      new_rc.category = new_cat
+      new_rc.normal.ingredients[1].name = prefix .. ingredient.name
+      new_rc.expensive.ingredients[1].name = prefix .. ingredient.name
+      --new_rc.normal.results[1].probability = 0 --set to never actually give
+      --new_rc.expensive.results[1].probability = 0 --set to never actually give
+      if string.find(recipe.name,"%-car$") then
+        log(serpent.block(new_rc))
+      end
+      return table.deepcopy(new_rc)
     end
-		return table.deepcopy(new_rc)
-	end
-	return nil
-end
+    return nil    
+  end
 end
 -------------------------------------------------------------------------------
 --[[CALL FUNCTION FOR GENERAL RECIPES]]--
@@ -706,8 +688,8 @@ for _,recipe in pairs(data.raw.recipe) do
       end
       if rc then
         compress_based_recipe[#compress_based_recipe+1] = table.deepcopy(rc)
-      else
-        if not not_random(recipe) then random_recipes[#random_recipes+1] = recipe.name end
+      elseif not not_random(recipe) then
+        random_recipes[#random_recipes+1] = recipe.name
       end
     end
   end
