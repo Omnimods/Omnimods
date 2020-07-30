@@ -194,7 +194,9 @@ function omni.marathon.standardise(recipe)
 	-- Localisation
 	---------------------------------------------------------------------------
 	--Update loc. name if there is no localised name or no main product set
-	recipe.localised_name = recipe.localised_name or omni.locale.of(recipe).name
+	if not recipe.localised_name and not omni.locale.get_main_product(recipe) then
+		recipe.localised_name = recipe.localised_name or omni.locale.of(recipe).name
+	end
 	---------------------------------------------------------------------------
 	-- Move Flags to difficulty zone
 	---------------------------------------------------------------------------
