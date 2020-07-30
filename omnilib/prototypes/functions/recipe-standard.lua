@@ -252,6 +252,8 @@ function omni.marathon.standardise(recipe)
 		recipe.icons = omni.lib.find_result_icon(recipe)
 		-- nil out non-compliant
 		recipe.icon = nil
+		recipe.icon_size = nil
+		recipe.icon_mipmaps = nil
 	end
 	return table.deepcopy(recipe)
 end
