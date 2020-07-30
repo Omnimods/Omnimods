@@ -138,7 +138,8 @@ local function update_tech(tech)
 	if tech.researched or variant.researched or tech.level then
 		if tech.level then
 			variant.level = tech.level
-		else
+		end
+		if not tech.prototype.max_level then
 			tech.researched, variant.researched = true, true
 		end
 		force_recs = tech.force.recipes
