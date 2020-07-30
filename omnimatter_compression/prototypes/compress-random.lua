@@ -142,14 +142,12 @@ for _,recipe in pairs(check_recipes) do
           end
         end
       end
+      new_rec.localised_name = new_rec.localised_name or loc
+      data:extend({new_rec})
     else
       if not string.find(recipe,"void") then --ignore void recipes
         --log("you fucked up big time with this recipe: "..rec.name)
       end
-    end
-    if new_rec then
-      new_rec.localised_name=new_rec.localised_name or loc
-      data:extend({new_rec})
     end
   end
 end
