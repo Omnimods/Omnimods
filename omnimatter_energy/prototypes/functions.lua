@@ -33,20 +33,6 @@ function omni.lib.getFuelNumberInMJ(fv)
     end
 end
 
--- find the tech name of a recipe
-function omni.lib.find_tech_name(recipename)
-	for _,tech in pairs(data.raw.technology) do
-		if tech.effects then
-			for i,eff in pairs(tech.effects) do
-                if eff.type == "unlock-recipe" and eff.recipe == recipename then
-                    log("FOUND1"..recipename.."TECH: "..tech.name)
-                    return tech.name
-                end
-			end
-		end
-	end
-end
-
 -- Tried to make it work for multi-recipe items like solid fuel
 --Not logging all tech unlocks for some reason, also a HUGE performance hook
 -- 	for _,tech in pairs(data.raw.technology) do

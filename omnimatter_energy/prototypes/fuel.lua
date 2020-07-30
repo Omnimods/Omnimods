@@ -69,14 +69,14 @@ for _,fuelitem in pairs(data.raw.item) do
             setCategory(props_add.cat):
             setEnergy(props_add.time):
             setTechName(props_add.tech):
-            addTechPrereq(omni.lib.find_tech_name(fuelitem.name)):
+            addTechPrereq(omni.lib.get_tech_name(fuelitem.name)):
             setEnabled(false):
             setStacksize(fuelitem.stack_size):
             setOrder("b"):
             setFuelCategory(fuelitem.fuel_category):
             setFuelValue(omni.lib.multFuelValue(fuelitem.fuel_value, props_add.fuelmult)):
             extend()
-            omni.lib.add_prerequisite(props_add.tech,omni.lib.find_tech_name(fuelitem.name))
+            omni.lib.add_prerequisite(props_add.tech,omni.lib.get_tech_name(fuelitem.name))
 
         --Copy over fuel related values
         data.raw.item["omnified-"..fuelitem.name].fuel_acceleration = fuelitem.fuel_acceleration
