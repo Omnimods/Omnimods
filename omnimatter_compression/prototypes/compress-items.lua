@@ -62,7 +62,6 @@ for _, group in pairs({"fluid"}) do
 			new_fluid.order = fluid.order or "z".."[concentrated-"..fluid.name .."]"
       new_fluid.icons = omni.lib.add_overlay(fluid.name,"compress")
       new_fluid.icon = nil
-      new_fluid.mipmap_count = nil
       new_fluid.heat_capacity = new_fuel_value(new_fluid.heat_capacity,concentrationRatio)
       new_fluid.fuel_value = new_fuel_value(new_fluid.fuel_value,concentrationRatio)
 

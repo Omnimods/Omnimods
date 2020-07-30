@@ -849,15 +849,7 @@ local find_icon = function(item)
 		end
 	end
 end
-local function normalize_mipmaps(mipmap_count, icon_size)
-	if not mipmap_count or not icon_size then
-		return mipmap_count or 1
-	elseif icon_size%mipmap_count and icon_size%(mipmap_count*2) ~=0 then --not a multiple of 8(for 4), so no mipmaps
-		return 1
-	else
-		return mipmap_count
-	end
-end
+
 --really dig deep for the icon set
 local function find_result_icon(raw_item)
 	if raw_item then
@@ -868,14 +860,13 @@ local function find_result_icon(raw_item)
 			local icons = table.deepcopy(raw_item.icons)
 			for i, icon in pairs(icons) do-- Apply inherited attributes as explicit for each layer
 				icon.icon_size = icon.icon_size or raw_item.icon_size
-				icon.icon_mipmaps = normalize_mipmaps(icon.icon_mipmaps or raw_item.icon_mipmaps, icon.icon_size)
 			end
 			return icons
 		elseif raw_item.icon then
 			return {{
 				icon = raw_item.icon,
 				icon_size = raw_item.icon_size,
-				icon_mipmaps = normalize_mipmaps(raw_item.icon_mipmaps, raw_item.icon_size)
+				icon_mipmaps = raw_item.icon_mipmaps-- or nil
 			}}
 		else
 			local result = (-- recipe.result, first entry in recipe.results or either of the previous two within normal and expensive recipe blocks
@@ -957,7 +948,6 @@ omni.lib.add_overlay = function(it,overlay_type,level)
 		-- Do we require an overlay? This will be placed at the end of the list and thus on top
 		if overlay.icon then
 			overlay.icon_size = overlay.icon_size or 32
-			overlay.icon_mipmaps = normalize_mipmaps(overlay.icon_mipmaps, overlay.icon_size)
 			icons = util.combine_icons(icons, {overlay}, {})
 		end
 		return icons

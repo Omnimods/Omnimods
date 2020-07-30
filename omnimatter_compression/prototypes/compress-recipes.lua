@@ -567,7 +567,6 @@ function create_compression_recipe(recipe)
               r.localised_name = omni.locale.custom_name(recipe, 'compressed-recipe')
               r.icons = icons
               r.icon = nil
-              r.mipmap_count = nil
               for _, dif in pairs({"normal","expensive"}) do
                 r[dif].category=new_cat
                 r[dif].energy_required = concentrationRatio*r[dif].energy_required
@@ -737,7 +736,6 @@ for name,fluid in pairs(generatorFluidRecipes) do
           i
         )
         newFluid.icon = nil
-        newFluid.mipmap_count = nil
         compress_recipes[#compress_recipes+1] = new
         compress_recipes[#compress_recipes+1] = newFluid
       end
