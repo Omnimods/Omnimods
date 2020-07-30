@@ -74,7 +74,7 @@ local function get_last_tier(recipe)
 end
 
 local function update_recipe(recipe, enabled_override)
-	if not recipe.valid then
+	if not recipe or not recipe.valid then
 		return
 	end
 	local name = recipe.name
@@ -139,7 +139,7 @@ local function update_tech(tech)
 		if tech.level then
 			variant.level = tech.level
 		end
-		if not tech.prototype.max_level then
+		if not tech.level or tech.prototype.max_level then
 			tech.researched, variant.researched = true, true
 		end
 		force_recs = tech.force.recipes
