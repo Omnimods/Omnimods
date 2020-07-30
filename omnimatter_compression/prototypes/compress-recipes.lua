@@ -591,7 +591,6 @@ function create_compression_recipe(recipe)
                 subgroup =  subgroup and subgroup.group and data.raw["item-group"][subgroup.group]  
                 subgroup = subgroup and subgroup.order 
                 subgroup = "compressed-" .. (subgroup or "crafting") .. "-" .. (comrec.subgroup or "general")
-                log(subgroup)
                 if not data.raw["item-subgroup"][subgroup] then
                   local item_cat = {
                     type = "item-subgroup",
