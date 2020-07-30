@@ -950,7 +950,7 @@ end
 
 --Fuel functions
 
-local fuel_units = {
+local fuel_units_joule = {
 	{unit = "J", mult = 1},
 	{unit = "kJ", mult = 10^3},
 	{unit = "MJ", mult = 10^6},
@@ -960,6 +960,18 @@ local fuel_units = {
 	{unit = "EJ", mult = 10^18},
 	{unit = "ZJ", mult = 10^21},
 	{unit = "YJ", mult = 10^24},
+}
+
+local fuel_units_watt = {
+	{unit = "W", mult = 1},
+	{unit = "kW", mult = 10^3},
+	{unit = "MW", mult = 10^6},
+	{unit = "GW", mult = 10^9},
+	{unit = "TW", mult = 10^12},
+	{unit = "PW", mult = 10^15},
+	{unit = "EW", mult = 10^18},
+	{unit = "ZW", mult = 10^21},
+	{unit = "YW", mult = 10^24},
 }
 
 --returns the fuel value unit
@@ -973,13 +985,26 @@ function omni.lib.get_fuel_number(fv)
 	return util.parse_energy(fv)
 end
 
---Multiplies the fuel value with mult
+--Multiplies the fuel value with mult and returns a formatted value in J
 function omni.lib.mult_fuel_value(fv,mult)
+	if not mult then mult = 1 end
 	local fuelnumber = omni.lib.get_fuel_number(fv) * mult
 	local unit_index = 1
-	while (fuelnumber >= 1000 and unit_index < #fuel_units) do
+	while (fuelnumber >= 1000 and unit_index < #fuel_units_joule) do
 		unit_index = unit_index + 1
 		fuelnumber = fuelnumber / 1000
 	end
-	return (fuelnumber..fuel_units[unit_index].unit)
+	return (fuelnumber..fuel_units_joule[unit_index].unit)
+end
+
+--Converts and formats a value from Joule into Watts with an optional multiplier
+function omni.lib.conv_j_to_w(value, mult)
+	if not mult then mult = 1 end
+	local fuelnumber = omni.lib.get_fuel_number(fv) * mult / 60
+	local unit_index = 1
+	while (fuelnumber >= 1000 and unit_index < #fuel_units_watt) do
+		unit_index = unit_index + 1
+		fuelnumber = fuelnumber / 1000
+	end
+	return (fuelnumber..fuel_units_watt[unit_index].unit)
 end
