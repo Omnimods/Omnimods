@@ -384,18 +384,18 @@ for _,kind in pairs(building_list) do --only building types
             -------------------------------------------------------------------------------
             --recipe/item subgrouping
             if omni.compression.one_list then --if not the same as the base item
-							if not data.raw["item-subgroup"]["compressor-"..item.subgroup.."-"..math.floor((i-1)/2)+1] then
+							if not data.raw["item-subgroup"]["compressor-"..item.subgroup.."-"..build.type] then
 								local item_cat = {
 									type = "item-subgroup",
-									name = "compressor-"..item.subgroup.."-"..math.floor((i-1)/2)+1,
+									name = "compressor-"..item.subgroup.."-"..build.type,
 									group = "compressor-buildings",
-									order = "a[compressor-"..item.subgroup.."-"..math.floor((i-1)/2)+1 .."]" --maintain some semblance of order
+									order = "a[compressor-"..item.subgroup.."-".. build.type .."]" --maintain some semblance of order
 								}
 								data:extend({item_cat}) --create it if it didn't already exist
 							end
-              item.subgroup = "compressor-"..item.subgroup.."-"..math.floor((i-1)/2)+1
+              item.subgroup = "compressor-"..item.subgroup.."-"..build.type
             else --clean up item ordering
-              item.order = item.order or "z".."-compressed" --should force it to match, but be after it under all circumstances
+              item.order = item.order or "z"..i.."-compressed" --should force it to match, but be after it under all circumstances
             end
 
             -------------------------------------------------------------------------------
