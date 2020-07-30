@@ -138,7 +138,8 @@ local function update_tech(tech)
 	if tech.researched or variant.researched or tech.level then
 		if tech.level then
 			variant.level = tech.level
-		else
+		end
+		if not tech.prototype.max_level then
 			tech.researched, variant.researched = true, true
 		end
 		force_recs = tech.force.recipes
@@ -372,7 +373,7 @@ script.on_event(defines.events.on_tick, function(event)
 		global.omni.need_update = false
 		global.omni.update_buildings = false
 	elseif global.omni.update_buildings then
-		update_building_recipes()
+		update_building_recipes(true)
 		global.omni.update_buildings = false
 	end
 end)
