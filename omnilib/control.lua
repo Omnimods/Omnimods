@@ -372,7 +372,7 @@ script.on_event(defines.events.on_tick, function(event)
 		global.omni.need_update = false
 		global.omni.update_buildings = false
 	elseif global.omni.update_buildings then
-		update_building_recipes()
+		update_building_recipes(true)
 		global.omni.update_buildings = false
 	end
 end)
