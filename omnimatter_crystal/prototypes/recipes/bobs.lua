@@ -11,3 +11,15 @@ if data.raw.item["tungsten-ore"] then	omni.crystal.add_crystal("tungsten-ore","W
 if data.raw.item["platinum-ore"] then	omni.crystal.add_crystal("platinum-ore","Platinum") end
 if data.raw.item["quartz"] then	omni.crystal.add_crystal("quartz","Quartz") end
 if data.raw.item["thorium-ore"] then	omni.crystal.add_crystal("thorium-ore","Thorium") end
+
+--add cobalt crystal recipes with AB or pure Bob + settings
+if data.raw.item["cobalt-ore"] and mods["bobores"] then
+    if mods["angelsrefining"] then
+        omni.crystal.add_crystal("cobalt-ore","Cobalt")
+    elseif settings.startup["bobmods-ores-enablecobaltore"] and settings.startup["bobmods-ores-enablecobaltore"].value == true then
+        omni.crystal.add_crystal("cobalt-ore","Cobalt")
+    elseif settings.startup["bobmods-ores-nickelgivescobalt"] and settings.startup["bobmods-ores-nickelgivescobalt"].value == true then
+        omni.crystal.add_crystal("cobalt-ore","Cobalt")
+    end
+end
+

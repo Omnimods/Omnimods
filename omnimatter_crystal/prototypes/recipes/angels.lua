@@ -112,7 +112,6 @@ if angelsmods and angelsmods.refining then
 		omni.crystal.add_crystal("angels-copper-slag","Copper slag")
 	end
 	if angelsmods.petrochem then omni.crystal.add_crystal("fluorite-ore","Fluorite") end
-	if mods["bobores"] and data.raw.item["cobalt-ore"] then	omni.crystal.add_crystal("cobalt-ore","Cobalt") end
 	omni.crystal.add_crystal("manganese-ore","Manganese") -- do these show up in special vanilla?
 	omni.crystal.add_crystal("chrome-ore","Chrome")
 
