@@ -23,7 +23,7 @@ for _,fuelitem in pairs(data.raw.item) do
 
     for _,blockeditem in pairs(ignore) do
         if fuelitem.name == blockeditem then
-            fuelitem.fuel_value = omni.lib.multFuelValue(fuelitem.fuel_value, 0.9)
+            fuelitem.fuel_value = omni.lib.mult_fuel_value(fuelitem.fuel_value, 0.9)
             goto continue 
         end
     end
@@ -40,7 +40,8 @@ for _,fuelitem in pairs(data.raw.item) do
     if fuelitem.fuel_category == "chemical" and fuelitem.fuel_value and not string.find(fuelitem.subgroup, "omnienergy-fuel", 1, true) then
 
         --lets define the variables first, then jump in and create it all in one go:
-        local FV=omni.lib.getFuelNumberInMJ(fuelitem.fuel_value)
+        --Get fuel number in MJ (divide by 10^6)
+        local FV=omni.lib.get_fuel_number(fuelitem.fuel_value)/10^6
         local props={
             [5]={ing_add={"crushed-omnite",2}, cat="crafting", sub="omnienergy-fuel-1", time=1.0, tech="omnium-power-1", fuelmult = 1.30},
             [10]={ing_add={"pulverized-omnite",4}, cat="omnite-extraction", sub="omnienergy-fuel-2", time=2.0,tech="omnium-power-2", fuelmult = 1.25},
@@ -74,7 +75,7 @@ for _,fuelitem in pairs(data.raw.item) do
             setStacksize(fuelitem.stack_size):
             setOrder("b"):
             setFuelCategory(fuelitem.fuel_category):
-            setFuelValue(omni.lib.multFuelValue(fuelitem.fuel_value, props_add.fuelmult)):
+            setFuelValue(omni.lib.mult_fuel_value(fuelitem.fuel_value, props_add.fuelmult)):
             extend()
             omni.lib.add_prerequisite(props_add.tech,omni.lib.get_tech_name(fuelitem.name))
 
