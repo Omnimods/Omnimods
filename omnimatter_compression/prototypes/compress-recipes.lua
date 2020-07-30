@@ -582,11 +582,28 @@ function create_compression_recipe(recipe)
             --final adjustments--
               --tags, categories, grouping
             -------------------------------------------------------------------------------
-            if comrec and comrec.name and comrec.type =="recipe" then
+            if comrec and comrec.name and comrec.type == "recipe" then
               if settings.startup["omnicompression_one_list"].value then
-                comrec.subgroup = "compressor-".."items"
-                if comrec.normal then comrec.normal.subgroup = "compressor-".."items" end
-                if comrec.expensive then comrec.expensive.subgroup = "compressor-".."items" end
+                local subgroup = (
+                  comrec.subgroup and 
+                  data.raw["item-subgroup"][comrec.subgroup]
+                )
+                subgroup =  subgroup and subgroup.group and data.raw["item-group"][subgroup.group]  
+                subgroup = subgroup and subgroup.order 
+                subgroup = "compressed-" .. (subgroup or "crafting") .. "-" .. (comrec.subgroup or "general")
+                log(subgroup)
+                if not data.raw["item-subgroup"][subgroup] then
+                  local item_cat = {
+                    type = "item-subgroup",
+                    name = subgroup,
+                    group = "compressor-compress",
+                    order = "a["..subgroup.."]" --maintain some semblance of order
+                  }
+                  data:extend({item_cat}) --create it if it didn't already exist
+                end
+                comrec.subgroup = subgroup
+                if comrec.normal then comrec.normal.subgroup = subgroup end
+                if comrec.expensive then comrec.expensive.subgroup = subgroup end
               end
               comrec.normal.hidden = recipe.normal.hidden
               comrec.normal.enabled = false
