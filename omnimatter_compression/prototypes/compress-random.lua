@@ -144,7 +144,7 @@ for _,recipe in pairs(check_recipes) do
       end
     else
       if not string.find(recipe,"void") then --ignore void recipes
-        log("you fucked up big time with this recipe: "..rec.name)
+        --log("you fucked up big time with this recipe: "..rec.name)
       end
     end
     if new_rec then
