@@ -94,12 +94,13 @@ end
 
 
 if angelsmods and angelsmods.refining then
-  spec_vanilla=true --set else case of no bobs or overhaul
-  if mods["bobplates"] then
+  	spec_vanilla=true --set else case of no bobs or overhaul
+  	if mods["bobplates"] then
 		spec_vanilla=false
 	elseif mods["angelsindustries"] and angelsmods.industries.overhaul then
 		spec_vanilla=false
 	end
+
 	if spec_vanilla==true then
 		log("angels-special-vanilla-case")
 		--find angels refining special case
@@ -111,6 +112,8 @@ if angelsmods and angelsmods.refining then
 		omni.crystal.add_crystal("angels-copper-slag","Copper slag")
 	end
 	if angelsmods.petrochem then omni.crystal.add_crystal("fluorite-ore","Fluorite") end
+	--Force cobalt omnitraction with AB since cobalt is not spawning by default with pure Bob
+	if data.raw.item["cobalt-ore"] then omni.crystal.add_crystal("cobalt-ore","Cobalt") end
 	omni.crystal.add_crystal("manganese-ore","Manganese") -- do these show up in special vanilla?
 	omni.crystal.add_crystal("chrome-ore","Chrome")
 

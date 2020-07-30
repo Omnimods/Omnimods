@@ -54,13 +54,13 @@ for name,ore in pairs(data.raw.resource) do
       for i,drop in ipairs(new.minable.results) do        
         for _,comp in pairs({"compressed-", "concentrated-"}) do
           if omni.lib.is_in_table(comp .. drop.name, compressed_item_names) then
+            max_stacksize = math.max(omni.lib.find_stacksize(drop.name),max_stacksize) --returns 50 for fluids
             drop.name = comp .. drop.name
             compressed = true
-            max_stacksize = math.max(omni.lib.find_stacksize(drop.name),max_stacksize) --returns 50 for fluids
           end
         end
-			end
-			new.minable.mining_time = tonumber(compensation_c*new.minable.mining_time*max_stacksize)
+      end
+			new.minable.mining_time = tonumber(new.minable.mining_time*max_stacksize)
       if new.infinite then --just flat out clobber it by dropping yield by a factor of 3
 				new.minimum = math.max(new.minimum/max_stacksize/3,1) --ensure at least 1
 				new.normal = math.max(new.normal/max_stacksize/3,1) --ensure at least 1
