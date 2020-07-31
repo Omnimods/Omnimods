@@ -1129,7 +1129,10 @@ local energy_chars =
 function omni.lib.mult_fuel_value(fv, mult)
 	local unit = fv:match("%a+$")
 	mult = (mult or 1) * (energy_chars[unit:sub(1,1)] or 1)
-	fv = tonumber(fv:match("^%d+"))
+	fv = tonumber(fv:match("^[%d%.]+"))
+	if fv == 0 then
+		return fv .. unit
+	end
 	fv = math.log10(fv * mult)
 	return table.concat({
 		10^(fv%3),
