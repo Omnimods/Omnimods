@@ -1140,3 +1140,4 @@ function omni.lib.mult_fuel_value(fv, mult)
 		unit:sub(-1)
 	})
 end
+
