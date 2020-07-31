@@ -54,8 +54,9 @@ local more_than_one = function(recipe)
   if product.amount == 0 then
     return false
   end
+  product = omni.locale.find(product.name, product.type, true)
   -- Main product is >1, this covers cases of .result as well
-  if omni.lib.find_stacksize(product.name) > 1 then
+  if product and omni.lib.find_stacksize(product) > 1 then
     return true
   end
   return false
