@@ -135,7 +135,9 @@ for _,tech in pairs(data.raw.technology) do
     t.name = "omnipressed-"..t.name
     local class, tier = splitTech(tech.name)
     local locale = omni.locale.of(tech).name
-    if tier and tonumber(locale[#locale]) == nil then-- If the last key is a number, it's already tiered.
+    if tier and 
+    tonumber(locale[#locale]) == nil
+    and tech.level == tech.max_level then-- If the last key is a number, or there's multiple levels, it's already tiered.
       t.localised_name = omni.locale.custom_name(tech, "compressed-tiered", tier)
       t.localised_description = {
         "technology-description.compressed-tiered",
