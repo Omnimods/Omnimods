@@ -1,9 +1,10 @@
 --[[ Mod compatibility fixes ]]--
 
-
+rec_count = 0
 local categories = {}
 for recipe_name, prototype in pairs(data.raw.recipe) do
 	categories[prototype.category or "crafting"] = (categories[prototype.category or "crafting"] or 0) + 1
+	rec_count = rec_count + 1
 end
 
 --Extend compression items/recipes into the regular machines, revert machines with empty compressed categories back to their base categories
@@ -28,3 +29,5 @@ for _,kind in pairs({"assembling-machine","furnace"}) do
 		  end
     end
 end
+
+log("Compression finished, data.raw has " .. rec_count .. " recipes.")
