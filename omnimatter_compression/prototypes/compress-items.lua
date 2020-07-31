@@ -15,23 +15,6 @@ local speed_div = 8 --Recipe speed is stack_size/speed_div
 -------------------------------------------------------------------------------
 --[[Item Functions]]--
 -------------------------------------------------------------------------------
-
---set new fuel value
-local new_fuel_value = function(effect,stack)
-	if not effect then return nil end
-	local eff = string.sub(effect,1,string.len(effect)-2)
-	local value = string.sub(effect,string.len(effect)-1,string.len(effect)-1)
-	if string.len(effect) == 2 then
-		eff = string.sub(effect,1,1)
-		value = ""
-	end
-	eff = tonumber(eff)*stack
-	if eff > 1000 then
-		eff = eff/1000
-		if value == "k" then value = "M" elseif value == "M" then value = "G" end
-	end
-	return eff..value.."J"
-end
 --update science packs in labs
 local is_science = function(item)
 	for _, lab in pairs(data.raw.lab) do
@@ -63,8 +46,8 @@ for _, group in pairs({"fluid"}) do
 			new_fluid.order = fluid.order or "z".."[concentrated-"..fluid.name .."]"
       new_fluid.icons = omni.lib.add_overlay(fluid.name,"compress")
       new_fluid.icon = nil
-      new_fluid.heat_capacity = new_fuel_value(new_fluid.heat_capacity,concentrationRatio)
-      new_fluid.fuel_value = new_fuel_value(new_fluid.fuel_value,concentrationRatio)
+      new_fluid.heat_capacity = new_fluid.heat_capacity and omni.lib.mult_fuel_value(new_fluid.heat_capacity, concentrationRatio)
+      new_fluid.fuel_value = new_fluid.fuel_value and omni.lib.mult_fuel_value(new_fluid.fuel_value, concentrationRatio)
 
       compressed_item_names[#compressed_item_names+1] = new_fluid.name
       compress_items[#compress_items+1] = new_fluid
@@ -191,7 +174,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 				subgroup = item.subgroup,
 				order = order,
 				stack_size = compressed_item_stack_size,
-				fuel_value = new_fuel_value(item.fuel_value,item.stack_size),
+				fuel_value = item.fuel_value and omni.lib.mult_fuel_value(item.fuel_value,item.stack_size),
 				fuel_category = item.fuel_category,
 				fuel_acceleration_multiplier = item.fuel_acceleration_multiplier,
 				fuel_top_speed_multiplier = item.fuel_top_speed_multiplier,
