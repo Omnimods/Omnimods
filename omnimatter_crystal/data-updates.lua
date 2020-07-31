@@ -71,50 +71,50 @@ if not mods["angelsrefining"] then
 				plate = string.sub(ore,1,string.len(ore)-string.len("-ore")).."-plate"
 				metal = string.sub(ore,1,string.len(ore)-string.len("-ore"))
 			end
-			rec.normal.results[1].name=plate
-			rec.icon=nil
-			rec.icon_size=nil
-			rec.icons = {{icon =data.raw.item[plate].icon, icon_size = data.raw.item[plate].icon_size}}
-			rec.localised_name = {"recipe-name.item", {"item-name."..plate}}
-			local tier = 1
-			for i,t in pairs(omnisource) do
-				for _,o in pairs(t) do
-					if o.name == ore then
-						tier = o.tier
+			if data.raw.item[plate] then
+				rec.normal.results[1].name=plate
+				rec.icon=nil
+				rec.icon_size=nil
+				rec.icons = {{icon =data.raw.item[plate].icon, icon_size = data.raw.item[plate].icon_size}}
+				rec.localised_name = {"recipe-name.item", {"item-name."..plate}}
+				local tier = 1
+				for i,t in pairs(omnisource) do
+					for _,o in pairs(t) do
+						if o.name == ore then
+							tier = o.tier
+						end
 					end
 				end
+				--omni.lib.add_unlock_recipe("crystallology-"..tier, rec.name)
+				local ic = salt_omnide_icon(ore)
+				local solution = {
+					type = "recipe",
+					name = ore.."-salting",
+					localised_name = {"recipe-name.omnide-salting", {"item-name."..ore}},
+					localised_description = {"recipe-description.pure_extraction", {"item-name."..ore}},
+					category = "omniplant",
+					subgroup = "salting",
+					enabled = false,
+					ingredients = {
+						{type="item",name=ore,amount=1},
+						{type="fluid",name="hydromnic-acid",amount=120},
+					},
+					order = "a[angelsore1-crushed]",
+					icons = ic,
+					icon_size = omni.crystal.get_ore_ic_size(ore),--32,
+					results = {
+						{type="item",name=ore.."-omnide-salt",amount=1},
+					},
+					energy_required = 5,
+				}
+
+				crystalines[#crystalines+1]=solution
+				omni.lib.add_unlock_recipe("crystallology-"..tier, ore.."-salting")
+				omni.lib.add_unlock_recipe("crystallology-"..tier, ore.."-omnide-solution")
+				omni.lib.add_unlock_recipe("crystallology-"..tier, ore.."-crystal-omnitraction")
+				omni.lib.add_unlock_recipe("crystallology-"..tier, ore.."-crystal")
 			end
-			--omni.lib.add_unlock_recipe("crystallology-"..tier, rec.name)
-			local ic = salt_omnide_icon(ore)
-			local solution = {
-				type = "recipe",
-				name = ore.."-salting",
-				localised_name = {"recipe-name.omnide-salting", {"item-name."..ore}},
-				localised_description = {"recipe-description.pure_extraction", {"item-name."..ore}},
-				category = "omniplant",
-				subgroup = "salting",
-				enabled = false,
-				ingredients = {
-				{type="item",name=ore,amount=1},
-				{type="fluid",name="hydromnic-acid",amount=120},
-				},
-				order = "a[angelsore1-crushed]",
-				icons = ic,
-				icon_size = omni.crystal.get_ore_ic_size(ore),--32,
-				results = {
-				{type="item",name=ore.."-omnide-salt",amount=1},
-				},
-				energy_required = 5,
-			}
-
-			crystalines[#crystalines+1]=solution
-			omni.lib.add_unlock_recipe("crystallology-"..tier, ore.."-salting")
-			omni.lib.add_unlock_recipe("crystallology-"..tier, ore.."-omnide-solution")
-			omni.lib.add_unlock_recipe("crystallology-"..tier, ore.."-crystal-omnitraction")
-			omni.lib.add_unlock_recipe("crystallology-"..tier, ore.."-crystal")
-
 		end
 	end
 	data:extend(crystalines)
-	--data.raw.technology["crystallology-4"].enabled=false
 end

@@ -2,7 +2,7 @@ if bobmods and bobmods.ores then
     local products={		
         ["lead-ore"]="Lead",
         ["tin-ore"]="Tin",
-        ["quartz"]="silicon-ore",
+        ["quartz"]="Silicon",
         ["zinc-ore"]="Zinc",
         ["nickel-ore"]="Nickel",
         ["bauxite-ore"]="Bauxite",
