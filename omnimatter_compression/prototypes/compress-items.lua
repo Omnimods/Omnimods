@@ -2,6 +2,7 @@
 --[[Initialisation and Config Variables]]--
 -------------------------------------------------------------------------------
 omni.compression.stack_compensate = settings.startup["omnicompression_compensate_stacksizes"].value --kind of local
+omni.compression.hide_handcraft =  settings.startup["omnicompression_hide_handcraft"].value or nil--Don't override to false
 local compress_recipes, uncompress_recipes, compress_items = {}, {}, {}
 compressed_item_names = {}  --global?
 local item_count = 0
@@ -90,6 +91,7 @@ for _, group in pairs({"fluid"}) do
           energy_required = sluid_contain_fluid / speed_div,
           enabled = true,
           hidden = true,
+          hide_from_player_crafting = omni.compression.hide_handcraft
         },
         expensive={
           ingredients = {
@@ -102,6 +104,7 @@ for _, group in pairs({"fluid"}) do
           energy_required = sluid_contain_fluid / speed_div,
           enabled = true,
           hidden = true,
+          hide_from_player_crafting = omni.compression.hide_handcraft
         }
       }
       --omni.marathon.standardise(compress)
@@ -128,6 +131,7 @@ for _, group in pairs({"fluid"}) do
           },
           enabled = true,
           hidden = true,
+          hide_from_player_crafting = omni.compression.hide_handcraft,
           energy_required = concentrationRatio / speed_div,
         },
         expensive = {
@@ -140,6 +144,7 @@ for _, group in pairs({"fluid"}) do
           },
           enabled = true,
           hidden = true,
+          hide_from_player_crafting = omni.compression.hide_handcraft,
           energy_required = concentrationRatio / speed_div,
         },
       }
@@ -167,14 +172,6 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 					item.stack_size = omni.lib.round_up(item.stack_size/6)*6
 				end
       end
-      --localisation (thse 4 seem to work)
-      --[[
-			local class = "item-%s."..item.name
-			if item.place_result then
-				class = "entity-%s."..item.place_result
-			elseif item.placed_as_equipment_result then
-				class = "equipment-%s."..item.placed_as_equipment_result
-      end]]
       --recipe/item order
       local order = "z"
       if item.order then
@@ -215,7 +212,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 				category = "compression",
 				enabled = true,
         hidden = true,
-        icons=omni.lib.add_overlay(item.name,"compress"),
+        icons = omni.lib.add_overlay(item.name,"compress"),
         order = order,
         normal = {
           ingredients = {
@@ -228,6 +225,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
           energy_required = item.stack_size / speed_div,
           enabled = true,
           hidden = true,
+          hide_from_player_crafting = omni.compression.hide_handcraft
         },
         expensive = {
           ingredients = {
@@ -240,6 +238,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
           energy_required = item.stack_size / speed_div,
           enabled = true,
           hidden = true,
+          hide_from_player_crafting = omni.compression.hide_handcraft
         },
       }
 
@@ -256,6 +255,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 				category = "compression",
 				enabled = true,
         hidden = true,
+        hide_from_player_crafting = omni.compression.hide_handcraft,
         order = order,
         normal = {
           ingredients = {
@@ -268,6 +268,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
           energy_required = item.stack_size / speed_div,
           enabled = true,
           hidden = true,
+          hide_from_player_crafting = omni.compression.hide_handcraft
         },
         expensive = {
           ingredients = {
@@ -280,6 +281,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
           energy_required = item.stack_size / speed_div,
           enabled = true,
           hidden = true,
+          hide_from_player_crafting = omni.compression.hide_handcraft
         },
       }
       --omni.marathon.standardise(uncompress)

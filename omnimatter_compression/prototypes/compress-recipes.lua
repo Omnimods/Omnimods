@@ -489,13 +489,15 @@ function create_compression_recipe(recipe)
                     ingredients = new_val_norm.ingredients,
                     results = new_val_norm.results,
                     energy_required = tid.normal,
-                    subgroup = subgr.normal
+                    subgroup = subgr.normal,
+                    hide_from_player_crafting = recipe.normal.hide_from_player_crafting or omni.compression.hide_handcraft
                   },
                   expensive = {
                     ingredients = new_val_exp.ingredients,
                     results = new_val_exp.results,
                     energy_required = tid.expensive,
-                    subgroup = subgr.expensive
+                    subgroup = subgr.expensive,
+                    hide_from_player_crafting = recipe.expensive.hide_from_player_crafting or omni.compression.hide_handcraft
                   },
                   category = new_cat,
                   subgroup = subgr.regular,
@@ -570,6 +572,7 @@ function create_compression_recipe(recipe)
               for _, dif in pairs({"normal","expensive"}) do
                 r[dif].category=new_cat
                 r[dif].energy_required = concentrationRatio*r[dif].energy_required
+                r[dif].hide_from_player_crafting = r[dif].hide_from_player_crafting or omni.compression.hide_handcraft
                 for _,ingres in pairs({"ingredients","results"}) do
                   for i,item in pairs(r[dif][ingres]) do
                     r[dif][ingres][i].name="concentrated-"..r[dif][ingres][i].name

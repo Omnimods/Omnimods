@@ -4,7 +4,7 @@
 local multiplier = settings.startup["omnicompression_multiplier"].value
 omni.compression.bld_lvls = settings.startup["omnicompression_building_levels"].value --kind of local
 omni.compression.one_list = settings.startup["omnicompression_one_list"].value
-omni.compression.hide_handcraft =  settings.startup["omnicompression_hide_handcraft"].value or nil
+omni.compression.hide_handcraft =  settings.startup["omnicompression_hide_handcraft"].value or nil--Don't override to false
 local cost_multiplier = settings.startup["omnicompression_cost_mult"].value
 local energy_multiplier = settings.startup["omnicompression_energy_mult"].value
 local black_list = {--By name
@@ -14,9 +14,6 @@ local black_list = {--By name
   {"factory","port","marker"},
   {"biotech","biosolarpanel","solarpanel"},
   "bucketw"
-}
-local white_list = {--Proto names
-  ""
 }
 local building_list = {--Types
   "lab",
@@ -34,7 +31,8 @@ local building_list = {--Types
   "electric-pole",
   "offshore-pump",
   "loader-1x1",
-  "inserter"
+  "inserter",
+  "burner-generator"
 }
 local not_energy_use = {--Types
   "solar-panel",
@@ -49,7 +47,8 @@ local not_energy_use = {--Types
   "electric-pole",
   "offshore-pump",
   "loader-1x1",
-  "inserter"
+  "inserter",
+  "burner-generator"
 }
 
 if not mods["omnimatter_fluid"] then building_list[#building_list+1] = "boiler" end
@@ -453,7 +452,7 @@ for _,kind in pairs(building_list) do --only building types
               result = new.name,
 							energy_required = 5*math.floor(math.pow(multiplier,i/2)),
               enabled = false,
-              hide_from_player_crafting = omni.compression.hide_handcraft
+              hide_from_player_crafting = rc.hide_from_player_crafting or omni.compression.hide_handcraft
             }
 
 						compressed_buildings[#compressed_buildings+1] = recipe
@@ -474,7 +473,7 @@ for _,kind in pairs(building_list) do --only building types
 							results = ing,
 							inter_item_count = item_count,
               energy_required = 5*math.floor(math.pow(multiplier,i/2)),
-              hide_from_player_crafting =  omni.compression.hide_handcraft
+              hide_from_player_crafting = rc.hide_from_player_crafting or omni.compression.hide_handcraft
             }
             
             compressed_buildings[#compressed_buildings+1] = uncompress
