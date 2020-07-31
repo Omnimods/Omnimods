@@ -62,7 +62,7 @@ local compressed_buildings = {}
 --[[Compression Specific Support Functions]]--
 -------------------------------------------------------------------------------
 --set naming convention
-local find_top_tier = function(build,kind)
+local find_top_tier = function(build, kind)
 	local name = build.name
 	if not settings.startup["omnicompression_final_building"].value then
 		return build
@@ -129,41 +129,12 @@ local energy_tiers = {
 }
 
 local new_effect = function(effect, level, linear, constant)
-  local value = effect:gsub("[kKMGTPEZY]?[WJ]$", "") -- 100
-  value = tonumber(value)
-  local unit = effect:gsub("^[%d%.]*", "") -- kW
-  if linear then
-    value = value * (level + 1)
-  elseif constant then
-    value = value * (constant)
-  else
-    value = value * math.pow(multiplier + 1, level)
-  end
-  if value > 1000 and not unit:find("Y") then
-    value = value / 1000
-    local current_tier = unit:match("[kKMGTPEZW]")
-    unit = unit:gsub(current_tier, energy_tiers[current_tier])--Step up one
-  end
-  return value .. unit
-end
-
-local new_effect_gain = function(effect, level, linear, constant)
-  local value = effect:gsub("[kKMGTPEZY]?[WJ]$", "") -- 100
-  value = tonumber(value)
-  local unit = effect:gsub("^[%d%.]*", "") -- kW
-  if linear then
-    value = value * (level + 1)
-  elseif constant then
-    value = value * (constant)
-  else
-    value = value * math.pow(multiplier + 1, level)
-  end
-  if value > 1000 and not unit:find("Y") then
-    value = value / 1000
-    local current_tier = unit:match("[kKMGTPEZW]")
-    unit = unit:gsub(current_tier, energy_tiers[current_tier])--Step up one
-  end
-  return value .. unit
+  local mult = (
+    (linear and level + 1)
+    or constant or
+    math.pow(multiplier + 1, level)
+  )
+  return omni.lib.mult_fuel_value(effect, mult)
 end
 
 --new fluids for boilers and generators
@@ -173,11 +144,11 @@ local create_concentrated_fluid = function(fluid,tier)
   newFluid.localised_name = omni.locale.custom_name(newFluid, "compressed-fluid", tier)
   newFluid.name = newFluid.name.."-concentrated-grade-"..tier
   if newFluid.heat_capacity then
-    newFluid.heat_capacity = new_effect_gain(newFluid.heat_capacity,tier)
+    newFluid.heat_capacity = new_effect(newFluid.heat_capacity, tier)
   end
   
   if newFluid.fuel_value then
-    newFluid.fuel_value = new_effect_gain(newFluid.fuel_value,tier)
+    newFluid.fuel_value = new_effect(newFluid.fuel_value, tier)
   end
   newFluid.icons = omni.lib.add_overlay(newFluid, "compress-fluid", tier)
   newFluid.icon = nil
@@ -266,7 +237,7 @@ local run_entity_updates = function(new, kind, i)
   if new.energy_source and new.energy_source.emissions_per_minute then new.energy_source.emissions_per_minute = new.energy_source.emissions_per_minute * math.pow(multiplier,i+1) end
   --power production tweaks
   if kind == "solar-panel" then
-    new.production = new_effect_gain(new.production,i)
+    new.production = new_effect(new.production,i)
   elseif kind == "reactor" then
     new.consumption = new_effect(new.consumption,i)
     if new.heatbuffer then
@@ -312,9 +283,9 @@ local run_entity_updates = function(new, kind, i)
   end
   --[[Support type updates]]--
   --energy usage
-  if not omni.lib.is_in_table(kind,not_energy_use) then
+  if not omni.lib.is_in_table(kind,not_energy_use) and new.energy_usage then
     if omni.lib.string_contained_list(new.name,{"boiler","omnifluid"}) then
-      new.energy_usage = new_effect_gain(new.energy_usage,i)
+      new.energy_usage = new_effect(new.energy_usage, i)
     else
       new.energy_usage = new_effect(new.energy_usage, i)
       if i==1 then -- Account for our multiplier, we apply to the first tier only
@@ -353,6 +324,13 @@ local run_entity_updates = function(new, kind, i)
   end
   --Inserters!
   if kind == "inserter" then
+    new.extension_speed = new.extension_speed *(i + 2)
+    new.rotation_speed = new.rotation_speed * (i + 2)
+  end
+  --Generators!
+  if kind == "burner-generator" then
+    new.max_power_output = new_effect(new.max_power_output, i)
+    new.burner.emissions_per_minute = (new.burner.emissions_per_minute or 0) * math.pow(multiplier,i+1)
   end
   return new
 end
