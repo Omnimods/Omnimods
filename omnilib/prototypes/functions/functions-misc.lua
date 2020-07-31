@@ -950,30 +950,6 @@ end
 
 --Fuel functions
 
-local fuel_units_joule = {
-	{unit = "J", mult = 1},
-	{unit = "kJ", mult = 10^3},
-	{unit = "MJ", mult = 10^6},
-	{unit = "GJ", mult = 10^9},
-	{unit = "TJ", mult = 10^12},
-	{unit = "PJ", mult = 10^15},
-	{unit = "EJ", mult = 10^18},
-	{unit = "ZJ", mult = 10^21},
-	{unit = "YJ", mult = 10^24},
-}
-
-local fuel_units_watt = {
-	{unit = "W", mult = 1},
-	{unit = "kW", mult = 10^3},
-	{unit = "MW", mult = 10^6},
-	{unit = "GW", mult = 10^9},
-	{unit = "TW", mult = 10^12},
-	{unit = "PW", mult = 10^15},
-	{unit = "EW", mult = 10^18},
-	{unit = "ZW", mult = 10^21},
-	{unit = "YW", mult = 10^24},
-}
-
 --returns the fuel value unit
 function omni.lib.get_fuel_unit(fv)
     return string.match(fv, "%a+")
@@ -985,26 +961,36 @@ function omni.lib.get_fuel_number(fv)
 	return util.parse_energy(fv)
 end
 
---Multiplies the fuel value with mult and returns a formatted value in J
-function omni.lib.mult_fuel_value(fv,mult)
-	if not mult then mult = 1 end
-	local fuelnumber = omni.lib.get_fuel_number(fv) * mult
-	local unit_index = 1
-	while (fuelnumber >= 1000 and unit_index < #fuel_units_joule) do
-		unit_index = unit_index + 1
-		fuelnumber = fuelnumber / 1000
-	end
-	return (fuelnumber..fuel_units_joule[unit_index].unit)
-end
+local energy_chars =
+{
+  k = 10^3,
+  K = 10^3,
+  M = 10^6,
+  G = 10^9,
+  T = 10^12,
+  P = 10^15,
+  E = 10^18,
+  Z = 10^21,
+  Y = 10^24,
+  "k",
+  "M",
+  "G",
+  "T",
+  "P",
+  "E",
+  "Z",
+  "Y"
+}
 
---Converts and formats a value from Joule into Watts with an optional multiplier
-function omni.lib.conv_j_to_w(value, mult)
-	if not mult then mult = 1 end
-	local fuelnumber = omni.lib.get_fuel_number(fv) * mult / 60
-	local unit_index = 1
-	while (fuelnumber >= 1000 and unit_index < #fuel_units_watt) do
-		unit_index = unit_index + 1
-		fuelnumber = fuelnumber / 1000
-	end
-	return (fuelnumber..fuel_units_watt[unit_index].unit)
+--Multiplies the fuel value with mult and returns a formatted value in J or W as applicable
+function omni.lib.mult_fuel_value(fv, mult)
+	local unit = fv:match("%a+$")
+	mult = (mult or 1) * (energy_chars[unit:sub(1,1)] or 1)
+	fv = tonumber(fv:match("^%d+"))
+	fv = math.log10(fv * mult)
+	return table.concat({
+		10^(fv%3),
+		energy_chars[math.floor(fv/3)] or "",
+		unit:sub(-1)
+	})
 end
