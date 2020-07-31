@@ -134,12 +134,13 @@ local function update_tech(tech)
 		force_techs[tech.name:gsub("^omnipressed%-", "")] or 
 		{}
 	)
+	-- Infinites/tiered
+	if tech.level then
+		variant.level = tech.level
+	end
 	-- Handle compressed techs
-	if tech.researched or variant.researched or tech.level then
-		if tech.level then
-			variant.level = tech.level
-		end
-		if not tech.level or tech.prototype.max_level then
+	if tech.researched or variant.researched then
+		if tech.prototype.max_level or tech.level then
 			tech.researched, variant.researched = true, true
 		end
 		force_recs = tech.force.recipes
