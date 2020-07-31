@@ -134,7 +134,7 @@ for _,tech in pairs(data.raw.technology) do
     local t = table.deepcopy(tech)
     t.name = "omnipressed-"..t.name
     local class, tier = splitTech(tech.name)
-    if tier then
+    if tier and not tech.max_level then
       t.localised_name = {
         "technology-name.compressed-tiered",
         tech.localised_name or

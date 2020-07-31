@@ -7,7 +7,7 @@ omni.compression.one_list = settings.startup["omnicompression_one_list"].value
 omni.compression.hide_handcraft =  settings.startup["omnicompression_hide_handcraft"].value or nil
 local cost_multiplier = settings.startup["omnicompression_cost_mult"].value
 local energy_multiplier = settings.startup["omnicompression_energy_mult"].value
-local black_list = {
+local black_list = {--By name
   "creative",
   {"burner","turbine"},
   {"crystal","reactor"},
@@ -15,7 +15,10 @@ local black_list = {
   {"biotech","biosolarpanel","solarpanel"},
   "bucketw"
 }
-local building_list = {
+local white_list = {--Proto names
+  ""
+}
+local building_list = {--Types
   "lab",
   "assembling-machine",
   "furnace",
@@ -33,7 +36,7 @@ local building_list = {
   "loader-1x1",
   "inserter"
 }
-local not_energy_use = {
+local not_energy_use = {--Types
   "solar-panel",
   "reactor",
   "boiler",
@@ -348,6 +351,9 @@ local run_entity_updates = function(new, kind, i)
   --offshore pumps
   if kind == "offshore-pump" then
     new.fluid = "concentrated-"..new.fluid
+  end
+  --Inserters!
+  if kind == "inserter" then
   end
   return new
 end
