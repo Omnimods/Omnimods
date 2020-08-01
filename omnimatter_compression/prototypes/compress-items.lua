@@ -24,6 +24,9 @@ local is_science = function(item)
 	end
 	return false
 end
+for _, item in pairs(data.raw["tool"]) do
+  science_list[item.name] = true
+end
 -------------------------------------------------------------------------------
 --[[Create Dynamic Recipes from fluids]]--
 -------------------------------------------------------------------------------
@@ -140,45 +143,59 @@ end
 -------------------------------------------------------------------------------
 --[[Create Dynamic Recipes from Items]]--
 -------------------------------------------------------------------------------
-for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", "capsule", "mining-tool", "tool","gun","armor"}) do
-	for _, item in pairs(data.raw[group]) do
-		--Check for hidden flag to skip later
-    local hidden = omni.compression.is_hidden(item) --check hidden
-    if item.stack_size >= 1 and item.stack_size <= max_stack_size_to_compress and omni.compression.is_stackable(item) and
-      not (hidden or item.name:find("creative-mode")) then--and
-      --string.find(item.name,"compress") ==nil and string.find(item.name,"concentrat") ==nil then --not already compressed
-      --stack size settings
-      if omni.compression.stack_compensate and item.stack_size > 1 then --setting variable and stack size exclusion
-				if not item.place_result or omni.lib.find_entity_prototype(item.place_result) == nil then
-					item.stack_size = omni.lib.round_up(item.stack_size/60)*60
-				else
-					item.stack_size = omni.lib.round_up(item.stack_size/6)*6
-				end
-      end
-      --recipe/item order
-      local order = "z"
-      if item.order then
-        order = item.order
-      elseif item.normal and item.normal.order then
-        order = item.normal.order
-      end
-      order = order .."[concentrated-"..item.name .."]"
-      --set up new item
-			local new_item = {
-				type = "item",
-				name = "compressed-"..item.name,
-				localised_name = omni.locale.custom_name(item, 'item-name.compressed-item'),
-				localised_description = omni.locale.custom_name(item, 'item-description.compressed-item'),
-				flags = item.flags,
-				icons = omni.lib.add_overlay(item.name,"compress"),
-				subgroup = item.subgroup,
-				order = order,
-				stack_size = compressed_item_stack_size,
-				fuel_value = item.fuel_value and omni.lib.mult_fuel_value(item.fuel_value,item.stack_size),
-				fuel_category = item.fuel_category,
-				fuel_acceleration_multiplier = item.fuel_acceleration_multiplier,
-				fuel_top_speed_multiplier = item.fuel_top_speed_multiplier,
-				durability = item.durability
+local function generate_compressed_item(item, norecipe)
+  local place_result = omni.locale.find(item.place_result, "entity", true)
+  if omni.compression.stack_compensate and item.stack_size > 1 then --setting variable and stack size exclusion
+    if not item.place_result or place_result == nil then
+      item.stack_size = omni.lib.round_up(item.stack_size/60)*60
+    else
+      item.stack_size = omni.lib.round_up(item.stack_size/6)*6
+    end
+  end
+  -- Rockets and whatnot
+  if place_result and place_result.fixed_recipe and data.raw["recipe"][place_result.fixed_recipe] then
+    local old_recipe = omni.locale.get_main_product(omni.locale.find(place_result.fixed_recipe, "recipe"))
+    if old_recipe then
+      generate_compressed_item(
+        omni.locale.find(old_recipe.name, "item")
+      )
+      omni.compression.include_recipes = omni.compression.include_recipes or {}
+      omni.compression.include_recipes[#omni.compression.include_recipes+1] = place_result.fixed_recipe
+    end
+  end
+  --recipe/item order
+  local order = "z"
+  if item.order then
+    order = item.order
+  elseif item.normal and item.normal.order then
+    order = item.normal.order
+  end
+  order = order .."[concentrated-"..item.name .."]"
+  --set up new item
+  local new_item = {
+    type = "item",
+    name = "compressed-"..item.name,
+    localised_name = omni.locale.custom_name(item, 'compressed-item'),
+    localised_description = omni.locale.custom_name(item, 'compressed-item'),
+    flags = item.flags,
+    icons = omni.lib.add_overlay(item.name,"compress"),
+    subgroup = item.subgroup,
+    order = order,
+    stack_size = compressed_item_stack_size,
+    fuel_value = item.fuel_value and omni.lib.mult_fuel_value(item.fuel_value,item.stack_size),
+    fuel_category = item.fuel_category,
+    fuel_acceleration_multiplier = item.fuel_acceleration_multiplier,
+    fuel_top_speed_multiplier = item.fuel_top_speed_multiplier,
+    durability = item.durability
+  }
+
+  if science_list[item.name] then new_item.type = "tool" end
+  local base_product = item.rocket_launch_product and item.rocket_launch_product[1]
+  if base_product and not base_product:find("^compressed%-") then
+    if data.raw["item"][base_product] then
+      new_item.rocket_launch_product = {
+        "compressed-" .. item.rocket_launch_product[1],
+        item.rocket_launch_product[2] 
       }
 
       if is_science(item) then new_item.type = "tool" end
@@ -266,11 +283,79 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
           hidden = true,
           hide_from_player_crafting = omni.compression.hide_handcraft
         },
+<<<<<<< HEAD
       }
       --omni.marathon.standardise(uncompress)
       standardized_recipes["uncompress-"..item.name] = true
 			uncompress_recipes[#uncompress_recipes+1] = uncompress
     else--exclude item
+=======
+        energy_required = item.stack_size / speed_div,
+        enabled = true,
+        hidden = true,
+        hide_from_player_crafting = omni.compression.hide_handcraft
+      },
+    }
+
+    --omni.marathon.standardise(compress)
+    standardized_recipes["compress-"..item.name] = true
+    compress_recipes[#compress_recipes+1] = compress
+  end
+  --The uncompress recipe
+  local uncompress = {
+    type = "recipe",
+    name = "uncompress-"..item.name,
+    localised_name = omni.locale.custom_name(item, 'recipe-name.uncompress-item', class),
+    localised_description = omni.locale.custom_description(item, 'recipe-description.uncompress-item', class),
+    icons = omni.lib.add_overlay(item.name,"uncompress"),
+    category = "compression",
+    enabled = true,
+    hidden = true,
+    hide_from_player_crafting = omni.compression.hide_handcraft,
+    order = order,
+    normal = {
+      ingredients = {
+        {type = "item", name = "compressed-"..item.name, amount = 1}
+      },
+      subgroup = "compressor-out-items",
+      results = {
+        {type = "item", name = item.name, amount = item.stack_size}
+      },
+      energy_required = item.stack_size / speed_div,
+      enabled = true,
+      hidden = true,
+      hide_from_player_crafting = omni.compression.hide_handcraft
+    },
+    expensive = {
+      ingredients = {
+        {type = "item", name = "compressed-"..item.name, amount = 1}
+      },
+      subgroup = "compressor-out-items",
+      results = {
+        {type = "item", name = item.name, amount = item.stack_size}
+      },
+      energy_required = item.stack_size / speed_div,
+      enabled = true,
+      hidden = true,
+      hide_from_player_crafting = omni.compression.hide_handcraft
+    },
+  }
+  --omni.marathon.standardise(uncompress)
+  standardized_recipes["uncompress-"..item.name] = true
+  uncompress_recipes[#uncompress_recipes+1] = uncompress
+end
+for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", "capsule", "mining-tool", "tool","gun","armor"}) do
+  for _, item in pairs(data.raw[group]) do
+		--Check for hidden flag to skip later
+    local hidden = omni.compression.is_hidden(item) --check hidden
+    if item.stack_size >= 1 and
+      (item.stack_size <= max_stack_size_to_compress or science_list[item.name]) and
+      omni.compression.is_stackable(item) and
+      not (hidden or item.name:find("creative-mode"))
+    then
+      generate_compressed_item(item)
+    elseif not data.raw["item"]["compressed-"..item.name] then--exclude item
+>>>>>>> a1f5280... More improvements (paving)
       excluded_items[item.name] = true
     end
 	end
@@ -280,7 +365,7 @@ end
 for _, rec in pairs(data.raw.recipe) do
   for _, dif in pairs({"normal", "expensive"}) do
     for _, ing in pairs(rec[dif].ingredients) do
-      if excluded_items[ing.name] then
+      if excluded_items[ing.name] and not data.raw.item["compressed-" .. ing.name] then
         --log("Excluded recipe '"..rec.name.."' due to '"..ing.name.."' being on the blacklist")
         omni.compression.exclude_recipe(rec.name)
       end
