@@ -94,12 +94,12 @@ if not mods["angelsrefining"] then
 					localised_description = {"recipe-description.pure_extraction", {"item-name."..ore}},
 					category = "omniplant",
 					subgroup = "salting",
+					order = "a[omnide-salting]"..ore,
 					enabled = false,
 					ingredients = {
 						{type="item",name=ore,amount=1},
 						{type="fluid",name="hydromnic-acid",amount=120},
 					},
-					order = "a[angelsore1-crushed]",
 					icons = ic,
 					icon_size = omni.crystal.get_ore_ic_size(ore),--32,
 					results = {
