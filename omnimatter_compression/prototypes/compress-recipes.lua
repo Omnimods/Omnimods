@@ -141,7 +141,7 @@ local seperate_fluid_solid = function(collection)
 end
 
 --sort and clean up groups of ingredients and results for type processing
-function get_recipe_values(ingredients, results, single_stack)
+function get_recipe_values(ingredients, results)
 	local parts={}
 	local lng = {0,0}
 
@@ -153,71 +153,66 @@ function get_recipe_values(ingredients, results, single_stack)
 			parts[#parts+1]={name=resing.name,amount=resing.amount}
 		end
   end
-  local new = {}
-  local total_mult
-  if not single_stack then
-    local lcm_rec = 1
-    local gcd_rec = 0
-    local mult_rec = 1
-    local lcm_stack = 1
-    local gcd_stack = 0
-    local mult_stack = 1
-    --calculate lcm of the parts and stacks
-    for _, p in pairs(parts) do
-      if gcd_rec == 0 then gcd_rec=p.amount
-      else gcd_rec = omni.lib.gcd(gcd_rec,p.amount)
-      end
-      lcm_rec = omni.lib.lcm(lcm_rec,p.amount)
-      mult_rec = mult_rec*p.amount
-      
-      local stacksize = omni.lib.find_stacksize(p.name)
-      if gcd_stack == 0 then gcd_stack=stacksize
-      else gcd_stack = omni.lib.gcd(gcd_stack,stacksize)
-      end
-      lcm_stack = omni.lib.lcm(lcm_stack,stacksize)
-      mult_stack = mult_stack*stacksize
+  local lcm_rec = 1
+  local gcd_rec = 0
+  local mult_rec = 1
+  local lcm_stack = 1
+  local gcd_stack = 0
+  local mult_stack = 1
+  --calculate lcm of the parts and stacks
+  for _, p in pairs(parts) do
+    if gcd_rec == 0 then gcd_rec = p.amount
+    else gcd_rec = omni.lib.gcd(gcd_rec, p.amount)
     end
-    --lcm_rec = mult_rec/gcd_rec
-    --lcm_stack = mult_stack/gcd_stack
-    local new_parts = {}
-    local new_stacks = {}
-    for i, p in pairs(parts) do
-      new_parts[i]={name = p.name, amount = lcm_rec/p.amount}
-      local stacksize = omni.lib.find_stacksize(p.name)
-      new_stacks[i]={name = p.name, amount = lcm_stack/stacksize}
+    lcm_rec = omni.lib.lcm(lcm_rec,p.amount)
+    mult_rec = mult_rec*p.amount
+    
+    local stacksize = omni.lib.find_stacksize(p.name)
+    if gcd_stack == 0 then gcd_stack=stacksize
+    else gcd_stack = omni.lib.gcd(gcd_stack,stacksize)
     end
-    local new_gcd = 0
-    local new_lcm = lcm_rec*lcm_stack--rec_max*stack_max/omni.lib.gcd(rec_max,stack_max)
-    for i,p in pairs(new_parts) do
-      new[i]=new_lcm*new_stacks[i].amount/new_parts[i].amount
-      new[i]=math.max(math.floor(new[i]+0.5),1) --round and assume at least 1
-      if new_gcd == 0 then
-        new_gcd = new[i]
-      else
-        new_gcd=omni.lib.gcd(new_gcd,new[i])
-      end
-    end
-    for i,p in pairs(new_parts) do
-      new[i]=new[i]/new_gcd
-    end
-    total_mult = new[1]*omni.lib.find_stacksize(parts[1].name)/parts[1].amount
+    lcm_stack = omni.lib.lcm(lcm_stack,stacksize)
+    mult_stack = mult_stack*stacksize
   end
+  --lcm_rec = mult_rec/gcd_rec
+  --lcm_stack = mult_stack/gcd_stack
+  local new_parts = {}
+  local new_stacks = {}
+  for i, p in pairs(parts) do
+    new_parts[i]={name = p.name, amount = lcm_rec/p.amount}
+    local stacksize = omni.lib.find_stacksize(p.name)
+    new_stacks[i]={name = p.name, amount = lcm_stack/stacksize}
+  end
+  local new_gcd = 0
+  local new_lcm = lcm_rec*lcm_stack--rec_max*stack_max/omni.lib.gcd(rec_max,stack_max)
+  local new = {}
+  for i,p in pairs(new_parts) do
+    new[i]=new_lcm*new_stacks[i].amount/new_parts[i].amount
+    new[i]=math.max(math.floor(new[i]+0.5),1) --round and assume at least 1
+    if new_gcd == 0 then
+      new_gcd = new[i]
+    else
+      new_gcd=omni.lib.gcd(new_gcd,new[i])
+    end
+  end
+  for i,p in pairs(new_parts) do
+    new[i]=new[i] / new_gcd
+  end
+  local total_mult = new[1]*omni.lib.find_stacksize(parts[1].name)/parts[1].amount
 
 	local newing = {}
 	for i, s in pairs(all_ing.solid) do
 		newing[#newing + 1] = {
       type = "item",
       name = "compressed-" .. parts[i].name,
-      amount = single_stack and s.amount 
-        or new[i]
+      amount = new[i]
     }
 	end
 	for _,f in pairs(all_ing.fluid) do
 		newing[#newing + 1] = {
       type = "fluid",
       name = "concentrated-" .. f.name,
-      amount = single_stack and f.amount or
-        f.amount * total_mult / concentrationRatio,
+      amount = f.amount * total_mult / concentrationRatio,
       minimum_temperature = f.minimum_temperature,
       maximum_temperature = f.maximum_temperature
     }
@@ -227,16 +222,14 @@ function get_recipe_values(ingredients, results, single_stack)
 		newres[#newres + 1] = {
       type = "item",
       name = "compressed-" .. parts[#all_ing.solid + i].name,
-      amount = single_stack and s.amount or 
-        new[#all_ing.solid + i]
+      amount = new[#all_ing.solid + i]
     }
 	end
 	for _,f in pairs(all_res.fluid) do
 		newres[#newres + 1] = {
       type = "fluid",
       name = "concentrated-" .. f.name,
-      amount = single_stack and f.amount or
-        f.amount * total_mult / concentrationRatio,
+      amount = f.amount * total_mult / concentrationRatio,
       temperature = f.temperature
     }
 	end
@@ -458,8 +451,9 @@ function create_compression_recipe(recipe)
               --log(serpent.block(check))
               -- Scope
               if not missing_solids then
-                new_val_norm = get_recipe_values(ing.normal, res.normal, single_stack)
-                new_val_exp = get_recipe_values(ing.expensive, res.expensive, single_stack)
+                new_val_norm = get_recipe_values(ing.normal, res.normal)
+                new_val_exp = get_recipe_values(ing.expensive, res.expensive)
+                local mult
                 if parts.solid[1][1][1] and parts.solid[2][1][1] then
                   mult = {
                     normal = (
@@ -498,12 +492,20 @@ function create_compression_recipe(recipe)
                 --new crafting time calculations
                 local tid = {}
                 if recipe.normal and recipe.normal.energy_required then
-                  tid = {normal = recipe.normal.energy_required*mult.normal,expensive = recipe.expensive.energy_required*mult.expensive}
+                  tid = {
+                    normal = recipe.normal.energy_required * mult.normal,
+                    expensive = recipe.expensive.energy_required * mult.expensive
+                  }
                 else
-                  tid = {normal = mult.normal,expensive = mult.expensive}
+                  tid = {
+                    normal = mult.normal,
+                    expensive = mult.expensive
+                  }
                 end
-                tid.normal = tid.normal/gcd.normal
-                tid.expensive = tid.expensive/gcd.expensive
+                if not single_stack then
+                  tid.normal = tid.normal/gcd.normal
+                  tid.expensive = tid.expensive/gcd.expensive
+                end
                 --------------------------------------
                 -- **set up basics for new recipe** --
                 --------------------------------------
