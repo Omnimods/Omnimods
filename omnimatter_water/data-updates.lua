@@ -1,17 +1,20 @@
 local water_levels = settings.startup["water-levels"].value
-local tier_levels = settings.startup["omnimatter-fluid-lvl-per-tier"].value
 
 --Calc dynamic prereqs
 local get_omniwater_prereq = function(grade,element,tier)
   local req = {}
-  local tractor_lvl = ((grade-1)/tier_levels)+tier-1 
+  local tractor_lvl = ((grade-1)/omni.fluid_levels_per_tier)+tier-1 
   --Add previous tech as prereq if its in the same tier
-	if grade > 1 and grade%tier_levels~=1 then
+	if grade > 1 and grade%omni.fluid_levels_per_tier~=1 then
 		req[#req+1]="omnitech-"..element.."-omnitraction-"..(grade-1)
   end
   --Add an electric omnitractor tech as prereq if this is the first tech of a new tier
-  if grade%tier_levels == 1 and (tractor_lvl <=omni.max_tier) and (tractor_lvl >= 1)then
+  if grade%omni.fluid_levels_per_tier == 1 and (tractor_lvl <=omni.max_tier) and (tractor_lvl >= 1)then
     req[#req+1]="omnitractor-electric-"..tractor_lvl
+    --Add the last tech as prereq for this omnitractor tech
+	  if (grade-1) > 0 then
+      omni.lib.add_prerequisite("omnitractor-electric-"..tractor_lvl, "omnitech-"..element.."-omnitraction-"..(grade-1), true)
+    end
   end
 	return req
 end
@@ -19,7 +22,7 @@ end
 --Calc dynamic tech packs
 local get_omniwater_tech_packs = function(grade,tier)
   local packs = {}
-  local pack_tier = math.floor((grade/tier_levels)+0.5) + tier-1
+  local pack_tier = math.floor((grade/omni.fluid_levels_per_tier)+0.5) + tier-1
   for i=1,pack_tier do
 		packs[#packs+1] = {omni.sciencepacks[i],1}
 	end
@@ -57,24 +60,14 @@ function omniwateradd(element,gain,tier,const,input,starter_recipe)
 		setTechLocName("water-based-omnitraction",{"fluid-name."..element}):
 		extend()
 
-  --Add the last tech before a tier jump as prereq for the next omnitractor tech
-	for i= 1, water_levels, 1 do
-    if i>1 and (i%tier_levels == 0) then
-       local tractor_lvl = (i / tier_levels) + tier - 1
-			if tractor_lvl <= omni.max_tier then 
-        omni.lib.add_prerequisite("omnitractor-electric-"..tractor_lvl, "omnitech-"..element.."-omnitraction-"..i)
-			end
-		end
-  end
-  
   --Add the last tier as prereq for the rocket silo
   omni.lib.add_prerequisite("rocket-silo", "omnitech-"..element.."-omnitraction-"..water_levels)
 
   --Add starter recipe with lower yield if enabled
   if starter_recipe == true then
-    RecGen:create("omnimatter_water",element):
+    RecGen:create("omnimatter_water","basic-"..element.."-omnitraction"):
       setIcons(element):
-      addSmallIcon("__omnilib__/graphics/icons/small/num_1.png", 1):
+      addSmallIcon("__omnilib__/graphics/icons/small/num_1.png", 2):
       setIngredients({type = "item", name = "omnite", amount = 12}):
       setResults({
         {type = "fluid", name = element, amount = gain*0.5},
