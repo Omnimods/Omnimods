@@ -167,9 +167,9 @@ if angelsmods and angelsmods.refining then
 						localised_description = {"recipe-description.pure_extraction", loc_key},
 						category = "omniplant",
 						subgroup = recipe.subgroup.."-omnide",
+						order = recipe.order.."salting",
 						enabled = false,
 						ingredients = ing,
-						order = "a[angelsore1-crushed]",
 						icons = ic,
 						icon_size=32,--just in case
 						results = res,
