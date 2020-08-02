@@ -53,7 +53,7 @@ for name,ore in pairs(data.raw.resource) do
       local max_stacksize = 0
       for i,drop in ipairs(new.minable.results) do        
         for _,comp in pairs({"compressed-", "concentrated-"}) do
-          if omni.lib.is_in_table(comp .. drop.name, compressed_item_names) then
+          if compressed_item_names[comp .. drop.name] then
             max_stacksize = math.max(omni.lib.find_stacksize(drop.name),max_stacksize) --returns 50 for fluids
             drop.name = comp .. drop.name
             compressed = true

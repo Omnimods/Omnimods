@@ -361,6 +361,20 @@ local run_entity_updates = function(new, kind, i)
     new.max_power_output = new_effect(new.max_power_output, i)
     new.burner.emissions_per_minute = (new.burner.emissions_per_minute or 0) * math.pow(multiplier,i+1)
   end
+  -- Rockets!
+  if kind == "rocket-silo" then
+    new.door_opening_speed = new.door_opening_speed * math.pow(multiplier, i)
+    new.rocket_result_inventory_size = 1 + i
+    new.fixed_recipe = new.fixed_recipe .. "-compression"
+    local rocket = table.deepcopy(data.raw["rocket-silo-rocket"][new.rocket_entity])
+    rocket.name = "compressed-" .. rocket.name
+    new.rocket_entity = rocket.name
+    rocket.rising_speed = rocket.rising_speed * math.pow(multiplier, i)
+    rocket.engine_starting_speed = rocket.engine_starting_speed * math.pow(multiplier, i)
+    rocket.flying_speed = rocket.flying_speed * math.pow(multiplier, i)
+    rocket.flying_acceleration = rocket.flying_acceleration * math.pow(multiplier, i)
+    data:extend({rocket})
+  end
   return new
 end
 log("start building compression")

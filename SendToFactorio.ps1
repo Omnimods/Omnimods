@@ -6,10 +6,8 @@ $DIRS = @(
 ".\omnilib",
 ".\omnimatter",
 ".\omnimatter_compression",
-".\omnimatter_crystal",
 ".\omnimatter_permutation",
-".\omnimatter_water",
-".\omnimatter_wood"
+".\omnimatter_water"
 )
 
 $DIRS | %{

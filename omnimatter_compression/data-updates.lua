@@ -1,4 +1,4 @@
-omni.compression.exclude_recipe("satellite")
+
 omni.compression.exclude_recipe("vehicle-fusion-reactor")
 omni.compression.exclude_recipe("vehicle-fusion-reactor-1")
 omni.compression.exclude_recipe("vehicle-fusion-reactor-2")
