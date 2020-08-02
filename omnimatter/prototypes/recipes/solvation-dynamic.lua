@@ -133,18 +133,18 @@ end
 
 --Add starter water-omnitraction recipe
 RecGen:create("omnimatter_water","basic-water-omnitraction"):
-	  setIcons("water"):
-      addSmallIcon("__omnilib__/graphics/icons/small/num_1.png", 2):
-      setIngredients({type="fluid",name="omnic-water",amount=720}):
-      setResults({
-        {type = "fluid", name = "water", amount = 180},
-        {type = "fluid", name = "omnic-waste", amount = 540}}):
-      setSubgroup("omni-fluids"):
-	  setOrder("aab"):
-      setCategory("omnite-extraction-both"):
-      setEnergy(5):
-      setEnabled(true):
-      extend()
+	setIcons("water"):
+	addSmallIcon("__omnilib__/graphics/icons/small/num_1.png", 2):
+	setIngredients({type="fluid",name="omnic-water",amount=720}):
+	setResults({
+		{type = "fluid", name = "water", amount = 180},
+		{type = "fluid", name = "omnic-waste", amount = 540}}):
+	setSubgroup("omni-fluid-basic"):
+	setOrder("a[basic-water-omnitraction]"):
+	setCategory("omnite-extraction-both"):
+	setEnergy(5):
+	setEnabled(true):
+	extend()
 
 
 local quant = 24
@@ -156,12 +156,13 @@ local cost = OmniGen:create():
 		yieldQuant(function(levels,grade) return 360+(grade-1)*360/(levels-1) end ):
 		wasteQuant(function(levels,grade) return 360-(grade-1)*360/(levels-1) end)
 local omniston = RecChain:create("omnimatter","water-omnitraction"):
-		setLocName("recipe-name.water-omnitraction"):
+		setLocName("fluid-name.water"):
 		setIngredients(cost:ingredients()):
 		setCategory("omnite-extraction-both"):
 		setIcons("water"):
 		setResults(cost:results()):
-		setSubgroup("omni-fluids"):
+		setSubgroup("omni-fluid-extraction"):
+		setOrder("a[water-omnitraction]"):
 		setLevel(omni.fluid_levels):
 		setEnergy(function(levels,grade) return 1 end):
 		setEnabled(false):

@@ -1,6 +1,5 @@
 data:extend(
 {
-  
   {
     type = "item-group",
     name = "omnimatter",
@@ -9,6 +8,7 @@ data:extend(
     icon = "__omnimatter__/graphics/technology/omnimatter-category.png",
     icon_size = 128,
   },
+  
   {
     type = "item-subgroup",
     name = "omnitractor",
@@ -80,6 +80,18 @@ data:extend(
     name = "omni-pure",
     group = "omnimatter",
     order = "al",
+  },
+  {
+    type = "item-subgroup",
+    name = "omni-fluid-basic",
+    group = "omnimatter",
+    order = "am",
+  },
+  {
+    type = "item-subgroup",
+    name = "omni-fluid-extraction",
+    group = "omnimatter",
+    order = "an",
   },
 }
 )
