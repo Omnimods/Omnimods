@@ -47,7 +47,7 @@ function omniwateradd(element,gain,tier,const,input,starter_recipe)
 		setEnabled(false):
 		setCategory("omnite-extraction-both"):
     setSubgroup("omni-fluid-extraction"):
-    setOrder("z[water-waste-omnitraction"..element):
+    setOrder("z[water-waste-omnitraction-"..element):
 		setLocName("recipe-name.water-waste-omnitraction",{"fluid-name."..element}):
 		setLevel(water_levels):
 		setEnergy(5*(input or 1)):
@@ -73,7 +73,7 @@ function omniwateradd(element,gain,tier,const,input,starter_recipe)
         {type = "fluid", name = element, amount = gain*0.5},
         {type = "fluid", name = "omnic-waste", amount = gain*2}}):
       setSubgroup("omni-fluid-basic"):
-      setOrder("a[basic-"..element.."-omnitraction]"):
+      setOrder("b[basic-"..element.."-omnitraction]"):
       setCategory("omnite-extraction-both"):
       setLocName("recipe-name.basic-water-waste-omnitraction",{"fluid-name."..element}):
       setEnergy(5):

@@ -2347,6 +2347,8 @@ function RecChain:generate_chain()
 		setLocDesc(self.loc_desc(m,actualTier)):
 		setIcons(self.icons(m,i)):
 		setEnabled(self.enabled(m,i)):
+		setSubgroup(self.subgroup(0,0)):
+		setOrder(self.order(0,0)):
 		setEnergy(self.energy_required(self.levels,i)):
 		setTechCost(omni.lib.round(self.tech.cost(self.levels,i))):
 		setTechTime(omni.lib.round(self.tech.time(self.levels,i))):
