@@ -159,8 +159,7 @@ local omniston = RecChain:create("omnimatter","water-omnitraction"):
 		setLocName("recipe-name.water-omnitraction"):
 		setIngredients(cost:ingredients()):
 		setCategory("omnite-extraction-both"):
-		setIcons({{icon ="__base__/graphics/icons/fluid/water.png", icon_size = 64}}):
-		setMain("water"):
+		setIcons("water"):
 		setResults(cost:results()):
 		setSubgroup("omni-fluids"):
 		setLevel(omni.fluid_levels):
