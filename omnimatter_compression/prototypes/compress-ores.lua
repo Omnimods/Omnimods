@@ -21,7 +21,7 @@ for name,ore in pairs(data.raw.resource) do
           if result.name == nil then
             local result_name = result[1]
             local result_count = result[2] or 1
-            tempresults[#tempresults+1] = {
+            minable_results[#minable_results+1] = {
               amount_max = result_count,
               amount_min = result_count,
               name = result_name,
