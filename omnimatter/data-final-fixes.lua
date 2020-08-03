@@ -34,7 +34,7 @@ for _, fluid in pairs(data.raw.fluid) do
 		setEnabled(fluid.name=="omnic-waste"):
 		setSubgroup(fluid.subgroup):
 		--Same subgroup & order, but put the omnic water block behind all other recipes in that subgroup
-		setOrder("zzz"..fluid.order):
+		setOrder("zzz"..(fluid.order or "")):
 		extend()
 		fluids[#fluids+1] = {new ="omniflush-"..fluid.name, old=fluid.name}
 	end

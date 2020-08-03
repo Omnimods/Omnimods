@@ -1,6 +1,13 @@
-
 {
     "entity":
+    [
+      ["burner-filter-inserter", "burner-filter-inserter-1"]
+    ],
+    "item":
+    [
+      ["burner-filter-inserter", "burner-filter-inserter-1"]
+    ],
+    "recipe":
     [
       ["burner-filter-inserter", "burner-filter-inserter-1"]
     ]
