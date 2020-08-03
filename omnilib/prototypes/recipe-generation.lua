@@ -2886,6 +2886,10 @@ function BuildGen:setFurnace()
 	self.type = "furnace"
 	return self
 end
+function BuildGen:setAssembler()
+	self.type = "assembling-machine"
+	return self
+end
 function BuildGen:setGenerator()
 	self.type = "generator"
 	return self

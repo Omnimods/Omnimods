@@ -1,0 +1,17 @@
+{
+    "entity":
+    [
+      ["burner-omni-furnace-2", "omni-furnace-2"],
+      ["burner-omni-furnace-3", "omni-furnace-3"]
+    ],
+    "item":
+    [
+      ["burner-omni-furnace-2", "omni-furnace-2"],
+      ["burner-omni-furnace-3", "omni-furnace-3"]
+    ],
+    "recipe":
+    [
+      ["burner-omni-furnace-2", "omni-furnace-2"],
+      ["burner-omni-furnace-3", "omni-furnace-3"]
+    ]
+  }
