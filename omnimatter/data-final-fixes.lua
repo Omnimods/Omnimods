@@ -25,6 +25,8 @@ omni.lib.add_unlock_recipe("base-impure-extraction","pulver-omnic-waste")
 local fluids = {}
 for _, fluid in pairs(data.raw.fluid) do
 	if fluid.name ~= "heat" and fluid.name ~= "omnic-water" then
+		local order
+		if fluid.order then order = "zzz"..fluid.order else order = "zzz" end
 		RecGen:create("omnimatter","omniflush-"..fluid.name):
 		setIngredients({type="fluid",amount=360,name=fluid.name}):
 		setResults({type="fluid",amount=60,name="omnic-water"}):
@@ -34,7 +36,7 @@ for _, fluid in pairs(data.raw.fluid) do
 		setEnabled(fluid.name=="omnic-waste"):
 		setSubgroup(fluid.subgroup):
 		--Same subgroup & order, but put the omnic water block behind all other recipes in that subgroup
-		setOrder("zzz"..fluid.order):
+		setOrder(order):
 		extend()
 		fluids[#fluids+1] = {new ="omniflush-"..fluid.name, old=fluid.name}
 	end
