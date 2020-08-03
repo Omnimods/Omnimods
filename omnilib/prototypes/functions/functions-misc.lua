@@ -852,7 +852,7 @@ end
 -----------------------------------------------------------------------------
 
 --If our prototype doesn't have an icon, we need to find one that does
-local find_icon = function(item)
+local find_item_with_icon = function(item)
 	for _, p in pairs({"item","mining-tool","gun","ammo","armor","repair-tool","capsule","module","tool","rail-planner","item-with-entity-data","fluid","technology"}) do
 		if data.raw[p][item] then
 			if data.raw[p][item].icons or data.raw[p][item].icon then
@@ -866,7 +866,7 @@ end
 local function find_result_icon(raw_item)
 	if raw_item then
 		if type(raw_item) ~= "table" then
-			raw_item = find_icon(raw_item) --Find a matching prototype if possible
+			raw_item = find_item_with_icon(raw_item) --Find a matching prototype if possible
 			return find_result_icon(raw_item)
 		elseif raw_item.icons then
 			local icons = table.deepcopy(raw_item.icons)
