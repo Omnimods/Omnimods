@@ -1,86 +1,127 @@
 -----------------------
 -- Variable Trimming --
 -----------------------
-local Set=omni.science.triggers
+local Set = omni.science.triggers
 omni.science.exclude_tech_from_maths = {} --build this in the override file, this is to exclude stuff in "angels tech archive" etc
 --not sure if i should also exclude the modules/alien stuff from bobs while im at it
 ----------------------------------
 -- set omni-pack exclusion list --
 ----------------------------------
+
 omni.science.exclude_tech = {}
+omni.science.remaining_techs = {}
 --add techs to omni-pack exclusion list (this is to simplify the below tech_post_find_update function)
-local set_exclude = function()
+local build_tech_list = function()
   for _,tech in pairs(data.raw.technology) do
   -- if modules
     if string.find(tech.name,"module") or tech.name=="modules" then
       omni.science.exclude_tech[tech.name]=true
+      goto continue 
     end
     -- if alien science (gold pack)
     for _,ing in pairs(tech.unit.ingredients) do
       for _,sub_ing in pairs(ing) do
         if string.find(sub_ing, "science%-pack%-gold") then 
           omni.science.exclude_tech[tech.name]=true
+          goto continue 
         end
       end
     end
     -- if no pre-requisites
     if tech.prerequisites and #tech.prerequisites == 0 then
       omni.science.exclude_tech[tech.name]=true
+      goto continue 
     elseif not tech.prerequisites then
       omni.science.exclude_tech[tech.name]=true
+      goto continue 
     end
+    --Add Tech to the list of remaining techs to update
+    omni.science.remaining_techs[#omni.science.remaining_techs+1] = tech.name
+    ::continue::
   end
 end
+
 ---------------------------------------------------------------
 -- Add omnipack to pre-requisites and tech if conditions met --
 -- this is relatively slow as it will go through the whole tree
 ---------------------------------------------------------------
 local contains_omnipack = {}
+
 -- add omnipack to all techs above chemical science pack, and set pre-req to pack tech if needed
-function omni.science.tech_post_find_update()
-  set_exclude()
-  for _,tech in pairs(data.raw.technology) do
-    --if has prerequisites and not excluded
-    if not omni.lib.is_in_table(tech.name,omni.science.exclude_tech) then
-      local techunits = {}
+function omni.science.omnipack_tech_post_update()
+  build_tech_list()
+
+  local index = 0
+  --Repeat looping through omni.science.remaining_tech until its empty
+  while next(omni.science.remaining_techs) do
+
+    index = index +1
+    --log("Looping through the internal tech list for the "..index.." time")
+    --log("Number of techs to loop through: "..#omni.science.remaining_techs)
+    if index > 50 then
+      log("WARNING: Max amount of tech list loops exceeded!")
+      break 
+    end
+
+    for _,techname in pairs(omni.science.remaining_techs) do
+      local tech = data.raw.technology[techname]
+
+      --Check if tech already contains omnipacks
+      local contains = false
       for _,ing in pairs(tech.unit.ingredients) do
-        techunits[#techunits+1]=ing[1]
-      end
-      if omni.lib.is_in_table("omni-pack",techunits) then
-        contains_omnipack[tech.name] = true
-        break
-      else --not omni.lib.is_in_table("omni-pack",techunits) --if no omnipack do prereq check
-        --check has pre-requisites first
-        if tech.prerequisites and #tech.prerequisites >= 1 then
-          for _,req in pairs(tech.prerequisites) do --check if prereq has pack
-            if data.raw.technology[req] and contains_omnipack[req] == true then --shortcut for true, add pack
-              omni.lib.add_science_pack(tech.name)
-              break --exit rereq loop, something found
-            elseif data.raw.technology[req] and contains_omnipack[req] == false then --not in prebuilt table
-              --nothing, basically skip this iteration
-            elseif data.raw.technology[req] then
-              local requnits={}
-              for _,ing in pairs(data.raw.technology[req].unit.ingredients) do
-                requnits[#requnits+1]=ing[1]
-              end
-              if omni.lib.is_in_table("omni-pack",requnits) then
-                omni.lib.add_science_pack(tech.name)
-                contains_omnipack[req] = true
-                break
-              else
-                --set prereq as false
-                contains_omnipack[req] = false
-              end
-            else
-              log("the prerequisite "..req.." of "..tech.name.." does not exist")
-            end
-          end
+        --techunits[#techunits+1]=ing[1]
+        if omni.lib.is_in_table("omni-pack", ing) then
+          contains_omnipack[techname] = true
+          omni.lib.remove_from_table(techname, omni.science.remaining_techs)
+          contains = true
+          break
         end
       end
-      --log(serpent.block(contains_omnipack))
+      if contains == true then goto continue end
+
+      --Check if prereqs contains omnipacks
+      local found = false
+      for _,prereq in pairs(tech.prerequisites) do
+        if contains_omnipack[prereq] then
+          found = true
+          break
+        else
+          for _,ing in pairs(data.raw.technology[prereq].unit.ingredients) do
+            if omni.lib.is_in_table("omni-pack", ing) then
+              contains_omnipack[prereq] = true
+              omni.lib.remove_from_table(prereq, omni.science.remaining_techs)
+              found = true
+              break
+            end
+          end
+          if found == true then break end
+        end
+      end
+      if found == true then
+        omni.lib.add_science_pack(techname)
+        contains_omnipack[techname] = true
+        omni.lib.remove_from_table(techname, omni.science.remaining_techs)
+        goto continue 
+      end
+
+      --Check if prereqs still need to be checked, if all prereqs are checked, this tech is done aswell
+      local reqs_done = true
+      for _,prereq in pairs(tech.prerequisites) do
+        if omni.lib.is_in_table(prereq, omni.science.remaining_techs) then
+          reqs_done = false
+          break
+        end
+      end
+      if reqs_done == true then
+        omni.lib.remove_from_table(techname, omni.science.remaining_techs)
+      end
+
+      ::continue::
     end
   end
 end
+
+
 -----------------------
 -- Support Functions --
 -----------------------

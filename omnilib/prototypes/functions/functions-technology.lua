@@ -115,7 +115,8 @@ function omni.lib.set_prerequisite(tech, req)
 	end
 end
 
-function omni.lib.add_prerequisite(tech, req)
+--Add a prerequisite to a tech, force will jump checks if that prereq exists
+function omni.lib.add_prerequisite(tech, req, force)
 	local found = nil
 	--check that the table exists, or create a blank one
 	if data.raw.technology[tech] then
@@ -125,7 +126,7 @@ function omni.lib.add_prerequisite(tech, req)
 	end
 	if type(req) == "table" then
 		for _,r in pairs(req) do
-			if data.raw.technology[r] then
+			if data.raw.technology[r] or force then
 				for i,prereq in pairs(data.raw.technology[tech].prerequisites) do
 					if prereq == r then found = 1 end
 				end
@@ -137,7 +138,7 @@ function omni.lib.add_prerequisite(tech, req)
 				found = nil
 			end
 		end
-	elseif req and data.raw.technology[req] then
+	elseif req and (data.raw.technology[req] or force) then
 		if data.raw.technology[tech] then
 			for i,prereq in pairs(data.raw.technology[tech].prerequisites) do
 				if prereq == req then found = 1 end

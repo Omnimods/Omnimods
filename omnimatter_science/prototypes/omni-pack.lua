@@ -22,8 +22,6 @@ if mods["omnimatter_crystal"] then
 		setTechPrereq("omnitractor-electric-2"):
 		setTechTime(20):
 		extend()
-		
-	TechGen:import("chemical-science-pack"):addPrereq("omnipack-technology"):extend()
 
 	if data.raw.tool["production-science-pack"].icon == "__base__/graphics/icons/production-science-pack.png" then --only replace if vanilla icon?
 	  data.raw.tool["production-science-pack"].icon = "__omnilib__/graphics/icons/science-pack/production-science-pack.png"

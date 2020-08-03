@@ -2323,20 +2323,23 @@ function RecChain:generate_chain()
 			techDifEnabled=techDifEnabled+1
 		end
 		techDifEnabled=techDifEnabled-1
-		local lname = omni.lib.union(self.loc_name(m,i),{})
-		if self.loc_name(m,i) == nil then
+		local actualTier = i - techDifEnabled
+		local lname = omni.lib.union(self.loc_name(m,actualTier),{})
+		if self.loc_name(m,actualTier) == nil then
 			local prefixType = "item"
 			if self.type=="fluid" then prefixType = "fluid" end
-			lname = {self.name,i}
+			lname = {self.name,actualTier}
 		end
 		--if self.loc_desc(m,i) == nil and self.main_product then lname=nil end
 		local r = RecGen:create(self.mod,"omnirec-"..self.name.."-"..ord[i]):
 		setCategory(self.category):
 		setSubgroup(self.subgroup(self.levels,i)):
 		setLocName(lname):
-		setLocDesc(self.loc_desc(m,i)):
+		setLocDesc(self.loc_desc(m,actualTier)):
 		setIcons(self.icons(m,i)):
 		setEnabled(self.enabled(m,i)):
+		setSubgroup(self.subgroup(0,0)):
+		setOrder(self.order(0,0)):
 		setEnergy(self.energy_required(self.levels,i)):
 		setTechCost(omni.lib.round(self.tech.cost(self.levels,i))):
 		setTechTime(omni.lib.round(self.tech.time(self.levels,i))):
@@ -2356,8 +2359,8 @@ function RecChain:generate_chain()
 			r:addProductivity()
 		end
 		if self.isTile then r:tile() end
-		if self.loc_name(m,i)~= nil then r:addLocName(i) end
-		if self.tech.loc_name(levels,grade) ~= nil then r:addTechLocName(i) end
+		if self.loc_name(m,actualTier)~= nil then r:addLocName(actualTier) end
+		if self.tech.loc_name(levels,grade) ~= nil then r:addTechLocName(actualTier) end
 
 		local prq = self.tech.prerequisites(m,i)
 		if (not prq or #prq == 0) and i-techDifEnabled > 1 then

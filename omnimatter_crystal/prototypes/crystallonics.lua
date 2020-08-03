@@ -8,7 +8,7 @@ RecGen:create("omnimatter_crystal","hydromnic-acid"):
 	setEnergy(1):
 	marathon():
 	setCategory("omniplant"):
-	setSubgroup("omni-fluids"):
+	setSubgroup("crystal-fluids"):
 	setTechName("omnitech-omnic-acid-hydrolyzation-1"):
 	setIngredients({
       {type = "item", name = "omnite", amount = 1},

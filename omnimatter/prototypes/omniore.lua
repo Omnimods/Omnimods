@@ -131,7 +131,7 @@ setBothColour(0.41,0.34,0.49):extend()
 
 	
 RecGen:create("omnimatter","pulver-omnic-waste"):
-	setSubgroup("omni-solids"):
+	setSubgroup("omni-fluids"):
 	setCategory("omniphlog"):
 	setIcons("omnic-waste"):
 	marathon():
