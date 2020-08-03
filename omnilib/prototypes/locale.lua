@@ -37,13 +37,13 @@ function lib.descendants(prototype_type)-- Get the tree of descendants, rooted a
 	return lib.descendants(hierarchy.top_down[prototype_type])[prototype_type]
 end
 
-local function inherits(prototype_type, bases)
+function lib.inherits(prototype_type, bases)
     -- Check if type is a descendant either a single base prototype or any of several prototypes provided as a table {string: boolean}.
     -- This returns the type that matched, or nil of none did.
     if prototype_type == nil then
         return nil
     elseif type(bases) ~= 'table' then -- Fixup input formats if needed
-        return inherits(prototype_type, {
+        return lib.inherits(prototype_type, {
             [bases] = true -- Make sure our initial input is accounted for in the next check
         })
     elseif bases[prototype_type] then
@@ -52,10 +52,8 @@ local function inherits(prototype_type, bases)
     if not is_known(prototype_type) then -- If our table doesn't have this we should be a bit concerned.
         log(("lib.inherits: Checking inheritance of unknown type `%s`!"):format(prototype_type))
     end
-	return inherits(hierarchy.top_down[prototype_type], bases) -- One step further down in the table
+	return lib.inherits(hierarchy.top_down[prototype_type], bases) -- One step further down in the table
 end
-
-lib.inherits = inherits -- So we can tail call
 
 function lib.find(input_name, input_type, silent)
 -- Find the prototype with the given name, whose type inherits from the given type, or nil if it doesn't exist.
