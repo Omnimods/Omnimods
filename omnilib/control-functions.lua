@@ -1,5 +1,6 @@
-ord={"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"}
 if not omni then omni={} end
+require("util")
+
 function split(inputstr, sep)
         if sep == nil then
                 sep = "%s"
@@ -10,13 +11,6 @@ function split(inputstr, sep)
                 i = i + 1
         end
         return t
-end
-
-function invOrd(l)
-	for j,i in pairs(ord) do
-		if l==i then return j end
-	end
-	return nil
 end
 
 function start_with(a,b)
