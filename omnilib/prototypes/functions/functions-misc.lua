@@ -531,6 +531,18 @@ function omni.lib.is_in_table(element, tab)
 	return false
 end
 
+--Remove an element from a table by string
+function omni.lib.remove_from_table(element, tab)
+	if tab and element then
+		for i, t in pairs(tab) do
+			if omni.lib.equal(t,element) then 
+				table.remove(tab,i)
+				break
+			end
+		end
+	end
+end
+
 --A function that takes two tables and gives out the elements they have in common
 function omni.lib.table_intersection(t, d)
 	local inter={}
