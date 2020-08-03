@@ -161,8 +161,6 @@ setmetatable(BuildChain, {
 	end
 })
 
-local find_result_icon = omni.lib.find_result_icon
-
 local ord={"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"}
 --[[
 	Takes an input and checks if is of the a table and then
@@ -533,7 +531,7 @@ function ItemGen:import(item)
 		setPlace(proto.place_result):
 		setSubgroup(proto.subgroup):
 		setFuelCategory(proto.fuel_category):
-		setIcons(find_result_icon(proto)):
+		setIcons(proto.icon or proto.icons):
 		setFuelValue(proto.fuel_value)
 		if item.type == "fluid" then
 			it:fluid():
@@ -739,14 +737,17 @@ function ItemGen:addSteamIcon()
 		shift = {-10, 10}})
 	return self
 end
-function ItemGen:addSmallIcon(icon,nr)
+function ItemGen:addSmallIcon(icon, nr)
 	local quad = {{10, -10},{-10, -10},{-10, 10},{10, 10}}
-	local icons = omni.lib.find_result_icon(icon)
+	log(serpent.block(icon))
+	local icons = omni.icon.of(icon, true)
 	local ic_sz=32
 	if icons then
-		if icons.icon_size then ic_sz=icons.icon_size end
-		for _,ic in pairs(icons) do
-			if ic.icon_size then ic_sz=ic.icon_size	end
+		ic_sz = icons.icon_size or ic_sz
+		for _, ic in pairs(icons) do
+			if ic.icon_size then
+				ic_sz = ic.icon_size
+			end
 			self:addIcon({icon = ic.icon,
 			icon_size=ic_sz,
 				scale = 0.4375*(ic.scale or 32/ic_sz),
@@ -1184,7 +1185,7 @@ function RecGen:import(recipe)
 			setPlace(proto.place_result):
 			setSubgroup(proto.subgroup):
 			setFuelCategory(proto.fuel_category):
-			setIcons(find_result_icon(proto)):
+			setIcons(proto.icon or proto.icons):
 			setFuelValue(proto.fuel_value)
 			if proto.place_as_tile then r:tile():setPlace(proto.place_as_tile.result) end
 			if proto.type == "fluid" then
@@ -1204,7 +1205,7 @@ function RecGen:import(recipe)
 		setEnergy(recipe.energy_required or recipe.normal.energy_required):
 		setCategory(recipe.category):
 		setSubgroup(recipe.subgroup or r.subgroup(0,0)):
-		setIcons(r.icons(0,0) or find_result_icon(recipe)):
+		setIcons(r.icons(0,0) or recipe.icon or recipe.icons):
 		setHidden(recipe.hidden or false):
 		setName(recipe.name)
 
@@ -2804,7 +2805,7 @@ function BuildGen:import(name)
 		b[name]=table.deepcopy(data)
 	end
 	--if build.energy_source.type=="burner" then b:setBurner(self.energy_source.effectivity,self.energy_source.fuel_inventory_size) end
-	return b:setType(build.type):setFlags(build.flags):setIcons(find_result_icon(build))
+	return b:setType(build.type):setFlags(build.flags):setIcons(build.icon or build.icons)
 end
 function BuildGen:importIf(name)
 	local build = omni.lib.find_entity_prototype(name) or omni.lib.find_entity_prototype("burner-"..name)

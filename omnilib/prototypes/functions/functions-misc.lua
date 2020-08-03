@@ -407,7 +407,7 @@ function omni.lib.change_icon_tint(item, tint)
 	else 
 		tint_table = tint 
 	end
-	local icons = find_result_icon(item)
+	local icons = omni.icon.of(item)
 	for i, layer in pais(icons) do
 		layer.tint = tint_table
 	end
@@ -851,55 +851,6 @@ end
 -- ICON FUNCTIONS --
 -----------------------------------------------------------------------------
 
---If our prototype doesn't have an icon, we need to find one that does
-local find_item_with_icon = function(item)
-	for _, p in pairs({"item","mining-tool","gun","ammo","armor","repair-tool","capsule","module","tool","rail-planner","item-with-entity-data","fluid","technology"}) do
-		if data.raw[p][item] then
-			if data.raw[p][item].icons or data.raw[p][item].icon then
-				return data.raw[p][item]
-			end
-		end
-	end
-end
-
---really dig deep for the icon set
-local function find_result_icon(raw_item)
-	if raw_item then
-		if type(raw_item) ~= "table" then
-			raw_item = find_item_with_icon(raw_item) --Find a matching prototype if possible
-			return find_result_icon(raw_item)
-		elseif raw_item.icons then
-			local icons = table.deepcopy(raw_item.icons)
-			for i, icon in pairs(icons) do-- Apply inherited attributes as explicit for each layer
-				icon.icon_size = icon.icon_size or raw_item.icon_size
-			end
-			return icons
-		elseif raw_item.icon then
-			return {{
-				icon = raw_item.icon,
-				icon_size = raw_item.icon_size,
-				icon_mipmaps = raw_item.icon_mipmaps-- or nil
-			}}
-		else
-			local result = (-- recipe.result, first entry in recipe.results or either of the previous two within normal and expensive recipe blocks
-				(raw_item.result) or
-				(raw_item.results and raw_item.results[1].name) or
-				(raw_item.normal and (raw_item.normal.result or raw_item.normal.results[1].name)) or
-				(raw_item.expensive and (raw_item.expensive.result or raw_item.expensive.results[1].name)) 
-			)
-			return find_result_icon(result)
-		end
-	else
-		return {{
-			icon = "__core__/graphics/too-far.png",--ERROR
-			icon_size = 32,
-			icon_mipmaps = 1
-		}}
-	end
-end
-
-omni.lib.find_result_icon = find_result_icon
-
 omni.lib.add_overlay = function(it,overlay_type,level) 
 	-- `it` is the item/recipe table, not the name (can search for it if wrong)
 	-- overlay_type is a string for type or an iconspecification table
@@ -955,7 +906,7 @@ omni.lib.add_overlay = function(it,overlay_type,level)
 		error("add_overlay: invalid overlay_type specified")
 	end
   
-	local icons = find_result_icon(it)
+	local icons = omni.icon.of(it, true)
 	if icons then --ensure it exists first
 		-- Do we require an overlay? This will be placed at the end of the list and thus on top
 		if overlay.icon then
