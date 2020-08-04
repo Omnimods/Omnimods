@@ -50,7 +50,6 @@ local function update_last_tier(recipe, full_refresh)
 				local is_compressed = global.omni.recipes[recipe.name].compressed
 				local desired_status = is_compressed and research_status or (I == metadata.tier) -- True if we're on the final tier, false otherwise
 				if force_recipe.enabled ~= desired_status then
-					--log((desired_status and "Enabled" or "Disabled") .. " recipe: " .. force_recipe.name)
 					force_recipe.enabled = desired_status
 				end
 			end
@@ -77,18 +76,16 @@ local function update_recipe(recipe, enabled_override)
 	if not recipe or not recipe.valid then
 		return
 	end
+	enabled_override = not not enabled_override
 	local name = recipe.name
 	local force_techs = recipe.force.technologies
 	local recipe_tree, metadata = get_recipe_family(recipe)
-	if recipe.enabled and recipe_tree and metadata.tier < recipe_tree.active_tier then-- Irrelevant recipe!
+
+	if recipe_tree and metadata.tier < recipe_tree.active_tier then-- Irrelevant recipe!
 		enabled_override = false
 	end
-	if enabled_override ~= nil then
-		recipe.enabled = enabled_override
-		if not recipe.enabled then -- Nothing further to do if we killed it
-			return
-		end
-	end
+	
+	recipe.enabled = enabled_override
 	-- Update according to compression research status
 	if not recipe_tree and 
 		force_techs["compression-recipes"] and
@@ -99,16 +96,16 @@ local function update_recipe(recipe, enabled_override)
 		-- Handle both compressed and permuted recipes.
 		local compressed, permuted_compressed = recipes[string.format("%s-compression",name)], recipes[name:gsub("omniperm","compression-omniperm")]
 		if compressed then
-			compressed.enabled = true
+			compressed.enabled = enabled_override
 		end
 		if permuted_compressed then
-			permuted_compressed.enabled = true
+			permuted_compressed.enabled = enabled_override
 		end
 		-- Deal with generator variants
 		for tier=1, math.huge do
 			local compressed_recipe = recipes[string.format("%s-concentrated-grade-%i", name, tier)]
 			if compressed_recipe then
-				compressed_recipe.enabled = true
+				compressed_recipe.enabled = enabled_override
 			else
 				break
 			end
@@ -310,7 +307,7 @@ function acquire_data(game)
 	for name, recipe in pairs(game.recipe_prototypes) do
 		for index, pattern in pairs(patterns) do
 			local match = select(3,name:find(pattern))-- We only care about match position, denoted by ()
-			if match and recipe.category and recipe.category:find("omni") then-- KR2 recipe names will screw us otherwise
+			if match and ( (recipe.category and recipe.category:find("omni")) or (name:find("^omni")) ) then-- KR2 recipe names will screw us otherwise
 				local base = name:sub(1, match-1)
 				local tier = name:sub(match, match):byte()
 				local variant = name:sub(match+1)
@@ -351,7 +348,6 @@ function acquire_data(game)
 	global.omni.stock_recipes = stock_recipes
 	global.omni.stock_fluids = stock_fluids
 	global.omni.tiered_buildings = tiered_buildings
-
 end
 
 script.on_configuration_changed( function(conf)
