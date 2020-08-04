@@ -371,15 +371,6 @@ for build_name, values in pairs(recipe_results) do
     for _, details in pairs(values) do --only building types
       --category check and create if not
       local build = details.building
-      --[[log({
-        "",
-        build and "Y|" or "N|",
-        details.item and "Y|" or "N|",
-        details.recipe and "Y|" or "N|",
-        build.minable and "Y|" or "N|",
-        build.minable and build.minable.result and "Y|" or "N|",
-        build.minable and build.minable.result and data.raw.item[build.minable.result] and "Y|" or "N|"
-      })]]
       if build 
         and details.item 
         and details.recipe
