@@ -76,7 +76,7 @@ local function update_recipe(recipe, enabled_override)
 	if not recipe or not recipe.valid then
 		return
 	end
-	enabled_override = not not enabled_override
+
 	local name = recipe.name
 	local force_techs = recipe.force.technologies
 	local recipe_tree, metadata = get_recipe_family(recipe)
@@ -85,7 +85,12 @@ local function update_recipe(recipe, enabled_override)
 		enabled_override = false
 	end
 	
-	recipe.enabled = enabled_override
+	if enabled_override ~= nil and enabled_override == false then
+		recipe.enabled = false
+		return
+	else
+		recipe.enabled = true
+	end
 	-- Update according to compression research status
 	if not recipe_tree and 
 		force_techs["compression-recipes"] and
@@ -94,18 +99,19 @@ local function update_recipe(recipe, enabled_override)
 		not name:find("concentrated", nil, true) then
 		local recipes = recipe.force.recipes
 		-- Handle both compressed and permuted recipes.
-		local compressed, permuted_compressed = recipes[string.format("%s-compression",name)], recipes[name:gsub("omniperm","compression-omniperm")]
+		local compressed = recipes[string.format("%s-compression",name)]
+		local permuted_compressed = name:find("omniperm") and name:gsub("omniperm","compression-omniperm")
 		if compressed then
-			compressed.enabled = enabled_override
+			compressed.enabled = true
 		end
 		if permuted_compressed then
-			permuted_compressed.enabled = enabled_override
+			permuted_compressed.enabled = true
 		end
 		-- Deal with generator variants
 		for tier=1, math.huge do
 			local compressed_recipe = recipes[string.format("%s-concentrated-grade-%i", name, tier)]
 			if compressed_recipe then
-				compressed_recipe.enabled = enabled_override
+				compressed_recipe.enabled = true
 			else
 				break
 			end
@@ -194,7 +200,7 @@ local function update_force(force, silent)
 	--log("Updating any default recipes")
 	for recipe_name in pairs(global.omni.stock_recipes) do
 		if force.recipes[recipe_name] then
-			update_recipe(force.recipes[recipe_name])
+			update_recipe(force.recipes[recipe_name], true)
 		end
 	end
 	if profiler then
