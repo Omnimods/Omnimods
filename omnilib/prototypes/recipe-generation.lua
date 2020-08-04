@@ -739,7 +739,6 @@ function ItemGen:addSteamIcon()
 end
 function ItemGen:addSmallIcon(icon, nr)
 	local quad = {{10, -10},{-10, -10},{-10, 10},{10, 10}}
-	log(serpent.block(icon))
 	local icons = omni.icon.of(icon, true)
 	local ic_sz=32
 	if icons then
