@@ -110,8 +110,8 @@ for _, recipe in pairs(data.raw.recipe) do
     place_result = place_result and omni.locale.find(place_result, 'entity', true)
     if place_result and -- Valid
     building_list[place_result.type] and
-    not omni.lib.string_contained_list(place_result.name, black_list) and --not on exclusion list
-    not omni.compression.is_hidden(place_result) and (--Not hidden
+    not (omni.lib.string_contained_list(place_result.name, black_list) or --not on exclusion list
+    not omni.compression.is_hidden(place_result)) and (--Not hidden
       not compress_entity[place_result] or (
         compress_entity[place_result] and (
           not compress_entity[place_result].exclude or compress_entity[place_result].include
