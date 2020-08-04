@@ -412,6 +412,12 @@ for build_name, values in pairs(recipe_results) do
           --[[ENTITY CREATION]]--
           new.name = new.name.."-compressed-"..string.lower(compress_level[i])
           new.localised_name = omni.locale.custom_name(details.base, "compressed-building", compress_level[i])
+          new.localised_description = omni.locale.custom_name(
+            details.base,
+            "entity-description.compressed-building",
+            multiplier^i,
+            {"description-modifier." .. i}
+          )
           new.max_health = new.max_health*math.pow(multiplier,i)
           new.minable.result = new.name
           new.minable.mining_time = (new.minable.mining_time or 10) * i
