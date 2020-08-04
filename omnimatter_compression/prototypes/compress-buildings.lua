@@ -436,7 +436,7 @@ for build_name, values in pairs(recipe_results) do
           else
             item.stack_size = 5
           end
-          item.icons = omni.lib.add_overlay(build,"building",i)
+          item.icons = omni.lib.add_overlay(item,"building",i)
           item.icon = nil
 
           compressed_buildings[#compressed_buildings+1] = item
@@ -457,12 +457,13 @@ for build_name, values in pairs(recipe_results) do
             name = rc.name.."-compressed-"..string.lower(compress_level[i]),
             localised_name = new.localised_name,
             ingredients = ing,
-            icons = omni.lib.add_overlay(build,"building",i),
+            icons = omni.lib.add_overlay(rc,"building",i),
             result = new.name,
             energy_required = 5*math.floor(math.pow(multiplier,i/2)),
             enabled = false,
             subgroup = rc.subgroup,
             order = (rc.order or details.item.order or "") .. "-compressed",
+            subgroup = rc.subgroup,
             hide_from_player_crafting = rc.hide_from_player_crafting or omni.compression.hide_handcraft
           }
 
@@ -472,7 +473,7 @@ for build_name, values in pairs(recipe_results) do
             name = "uncompress-"..string.lower(compress_level[i]).."-"..rc.name,
             localised_name = omni.locale.custom_name(build, 'recipe-name.uncompress-item'),
             localised_description = omni.locale.custom_description(build, 'recipe-description.uncompress-item'),
-            icons = omni.lib.add_overlay(build,"uncompress"),
+            icons = omni.lib.add_overlay(rc,"uncompress"),
             subgroup = rc.subgroup,
             order = (rc.order or details.item.order or "") .. "-compressed",
             category = "compression",
