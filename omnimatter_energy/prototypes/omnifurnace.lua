@@ -1,6 +1,7 @@
 BuildGen:import("burner-omni-furnace"):
 setLocName("entity-name.omni-furnace-1"):
 addIcon("__omnilib__/graphics/icons/small/lvl1.png"):
+setOrder("a[omni-furnace-1]"):
 setFuelCategory("omnite"):
 setNextUpgrade("omni-furnace-2"):
 setReplace("furnace"):
@@ -9,6 +10,7 @@ extend()
 RecGen:import("burner-omni-furnace"):
 setLocName("entity-name.omni-furnace-1"):
 addIcon("__omnilib__/graphics/icons/small/lvl1.png"):
+setOrder("a[omni-furnace-1]"):
 extend()
 
 ItemGen:import("burner-omni-furnace"):
@@ -20,6 +22,7 @@ BuildGen:import("burner-omni-furnace"):
 setName("omni-furnace-2","omnimatter_energy"):
 addIcon("__omnilib__/graphics/icons/small/lvl2.png"):
 setSpeed(2.0):
+setOrder("a[omni-furnace-2]"):
 setFuelCategory("chemical"):
 setIngredients({"burner-omni-furnace",1},{"omnicium-iron-alloy",15},{"iron-plate",20},{"omnicium-iron-gear-box",60}):
 setEnabled(false):
@@ -37,6 +40,7 @@ setSpeed(3.0):
 setUsage(160):
 setStacksize(20):
 setSubgroup("omni-buildings"):
+setOrder("a[omni-furnace-3]"):
 setCrafting("smelting","omnifurnace"):
 setIngredients({"omni-furnace-2",1},{"omnicium-steel-alloy",25},{"steel-plate",30},{"omnicium-iron-gear-box",150}):
 setEnabled(false):
