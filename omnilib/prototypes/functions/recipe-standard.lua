@@ -248,12 +248,10 @@ function omni.marathon.standardise(recipe)
 	---------------------------------------------------------------------------
 	-- Icons standardisation
 	---------------------------------------------------------------------------
-	if recipe.icons or recipe.icon then -- case both, replace icons with icon (assume icon is new)
-		recipe.icons = omni.icon.of(recipe)
-		-- nil out non-compliant
-		recipe.icon = nil
-		recipe.icon_size = nil
-		recipe.icon_mipmaps = nil
-	end
+	-- case both, replace icon with icons. Case none, we set the icon.
+	recipe.icons = omni.icon.icon_of(recipe)
+	-- nil out non-compliant
+	recipe.icon = nil
+	recipe.icon_size = nil
 	return table.deepcopy(recipe)
 end
