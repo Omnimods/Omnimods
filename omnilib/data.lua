@@ -8,8 +8,8 @@ if mods["bobtech"] then
   settings.startup["bobmods-tech-colorupdate"].value = false
 end
 
-require("prototypes.locale")
-require("prototypes.icon")
+require("prototypes.functions.locale")
+require("prototypes.functions.icon")
 require("prototypes.functions.functions-misc")
 require("prototypes.functions.functions-recipe")
 require("prototypes.functions.functions-technology")
