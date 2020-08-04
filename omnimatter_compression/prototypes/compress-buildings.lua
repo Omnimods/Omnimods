@@ -461,6 +461,7 @@ for build_name, values in pairs(recipe_results) do
             result = new.name,
             energy_required = 5*math.floor(math.pow(multiplier,i/2)),
             enabled = false,
+            subgroup = rc.subgroup,
             order = (rc.order or details.item.order or "") .. "-compressed",
             hide_from_player_crafting = rc.hide_from_player_crafting or omni.compression.hide_handcraft
           }
@@ -472,7 +473,8 @@ for build_name, values in pairs(recipe_results) do
             localised_name = omni.locale.custom_name(build, 'recipe-name.uncompress-item'),
             localised_description = omni.locale.custom_description(build, 'recipe-description.uncompress-item'),
             icons = omni.lib.add_overlay(build,"uncompress"),
-            subgroup = data.raw.item[build.minable.result].subgroup,
+            subgroup = rc.subgroup,
+            order = (rc.order or details.item.order or "") .. "-compressed",
             category = "compression",
             enabled = true,
             hidden = true,
