@@ -9,6 +9,7 @@ if mods["bobtech"] then
 end
 
 require("prototypes.locale")
+require("prototypes.icon")
 require("prototypes.functions.functions-misc")
 require("prototypes.functions.functions-recipe")
 require("prototypes.functions.functions-technology")
