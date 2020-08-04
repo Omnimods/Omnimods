@@ -55,7 +55,7 @@ local not_energy_use = {--Types
 if mods["omnimatter_fluid"] then building_list["boiler"] = nil end
 building_list["generator"] = true
 
-local category = {} --category additions
+local recipe_category = {} --category additions
 local compress_level = {"Compact","Nanite","Quantum","Singularity"}
 local already_compressed = {}
 local compressed_buildings = {}
@@ -92,8 +92,8 @@ local category_exists = function(build)
 	if build.crafting_categories then --no crafting_categories, don't loop
     for i, cat in pairs(build.crafting_categories) do --check crafting_categories and add compressed version if does not already exist
       if not data.raw["recipe-category"][cat.."-compressed"] then
-        if not omni.lib.is_in_table(cat.."-compressed",category) then --check not already in table (in case of data:extend being done right at the end)
-          category[#category+1] = {type = "recipe-category",name = cat.."-compressed"}
+        if not omni.lib.is_in_table(cat.."-compressed", recipe_category) then --check not already in table (in case of data:extend being done right at the end)
+          recipe_category[#recipe_category+1] = {type = "recipe-category",name = cat.."-compressed"}
         end
       end
     end
@@ -110,8 +110,8 @@ for _, recipe in pairs(data.raw.recipe) do
     place_result = place_result and omni.locale.find(place_result, 'entity', true)
     if place_result and -- Valid
     building_list[place_result.type] and
-    not (omni.lib.string_contained_list(place_result.name, black_list) or --not on exclusion list
-    not omni.compression.is_hidden(place_result)) and (--Not hidden
+    not omni.lib.string_contained_list(place_result.name, black_list) and --not on exclusion list
+    not omni.compression.is_hidden(place_result) and (--Not hidden
       not compress_entity[place_result] or (
         compress_entity[place_result] and (
           not compress_entity[place_result].exclude or compress_entity[place_result].include
@@ -252,8 +252,8 @@ local run_entity_updates = function(new, kind, i)
     local new_cat = {} --clear each time
     for j, cat in pairs(new.crafting_categories) do
       if not data.raw["recipe-category"][cat.."-compressed"] then --check if category exists
-        if not omni.lib.is_in_table(cat.."-compressed",category) then --check not already in the to-expand table
-          category[#category+1] = {type = "recipe-category",name = cat.."-compressed"}
+        if not omni.lib.is_in_table(cat.."-compressed", recipe_category) then --check not already in the to-expand table
+          recipe_category[#recipe_category+1] = {type = "recipe-category",name = cat.."-compressed"}
         end
       end
       new_cat[#new_cat+1] = cat.."-compressed" --add cat
@@ -490,7 +490,7 @@ for build_name, values in pairs(recipe_results) do
     end
 end
 --extend new categories
-data:extend(category)
+data:extend(recipe_category)
 --extend new buildings
 data:extend(compressed_buildings)
 log("end building compression")
