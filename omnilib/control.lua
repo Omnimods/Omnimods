@@ -182,7 +182,8 @@ local function update_force(force, silent)
 	local profiler = not silent and game.create_profiler()
 	--log("Updating force: " .. force.name)
 	--log("\tSyncing compressed and standard tech research states")
-	for _, tech in pairs(force.technologies) do
+	local force_techs = force.technologies
+	for _, tech in pairs(force_techs) do
 		update_tech(tech)
 	end
 	if profiler then
@@ -201,6 +202,14 @@ local function update_force(force, silent)
 	for recipe_name in pairs(global.omni.stock_recipes) do
 		if force.recipes[recipe_name] then
 			update_recipe(force.recipes[recipe_name], true)
+			for tier, tech_name in pairs(building_tiers) do
+				if force_techs[tech_name] and force_techs[tech_name].researched then
+					local recipe_name = string.format("%s-compressed-%s", recipe_name, tier)
+					update_recipe(force.recipes[recipe_name], true)
+				else
+					break -- Tiers in order, don't continue once we hit one that's locked
+				end
+			end
 		end
 	end
 	if profiler then
@@ -313,7 +322,26 @@ function acquire_data(game)
 	for name, recipe in pairs(game.recipe_prototypes) do
 		for index, pattern in pairs(patterns) do
 			local match = select(3,name:find(pattern))-- We only care about match position, denoted by ()
-			if match and ( (recipe.category and recipe.category:find("omni")) or (name:find("^omni")) ) then-- KR2 recipe names will screw us otherwise
+			if
+				match and
+				(
+					index < 3 and
+					(
+						(
+							recipe.category and
+							recipe.category:find("omni")
+		 				) or 
+						name:find("omni")
+					) or
+					(
+						(
+							recipe.category and 
+							recipe.category:find("compress")
+				 		) or
+						name:find("compress")
+					)
+				)
+			then-- KR2 recipe names will screw us otherwise
 				local base = name:sub(1, match-1)
 				local tier = name:sub(match, match):byte()
 				local variant = name:sub(match+1)

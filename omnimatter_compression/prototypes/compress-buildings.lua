@@ -9,7 +9,7 @@ local cost_multiplier = settings.startup["omnicompression_cost_mult"].value
 local energy_multiplier = settings.startup["omnicompression_energy_mult"].value
 local black_list = {--By name
   "creative",
-  {"burner","turbine"},
+  {"burner", "turbine"},
   {"crystal","reactor"},
   {"factory","port","marker"},
   {"biotech","biosolarpanel","solarpanel"},
