@@ -15,13 +15,14 @@ else
 end
 
 local b = BuildGen:create("omnimatter_wood","omnimutator"):
-	setSubgroup("omnitractor"):
 	setIngredients(mutator_cost):
 	setEnergy(10):
 	setUsage(250):
 	setReplace("omnimutator"):
 	setStacksize(10):
 	setSize(3):
+	setSubgroup("omnimutator"):
+	setOrder("a[omnimutator"):
 	setCrafting({"omnimutator"}):
 	setFluidBox("XWX.XXX.XSX"):
 	setTechName("omnimutator"):

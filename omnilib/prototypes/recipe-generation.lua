@@ -1204,7 +1204,8 @@ function RecGen:import(recipe)
 		setEnergy(recipe.energy_required or recipe.normal.energy_required):
 		setCategory(recipe.category):
 		setSubgroup(recipe.subgroup or r.subgroup(0,0)):
-		setIcons(r.icons(0,0) or recipe.icons or recipe.icon or omni.icon.of(recipe, true)):
+		setOrder(recipe.order or r.order(0,0)):
+		setIcons(recipe.icons or recipe.icon or r.icons(0,0) or omni.icon.of(recipe, true)):
 		setHidden(recipe.hidden or false):
 		setName(recipe.name)
 
@@ -4572,6 +4573,7 @@ function InsertGen:generateInserter()
 	setTechIcon(self.tech.icon(0,0)):
 	setTechPacks(self.tech.packs(0,0)):
 	setSubgroup(self.subgroup(0,0)):
+	setOrder(self.order(0,0)):
 	setTechTime(self.tech.time(0,0)):
 	setTechLocName(self.tech.loc_name(0,0)):
 	setTechLocDesc(self.tech.loc_desc(0,0)):
