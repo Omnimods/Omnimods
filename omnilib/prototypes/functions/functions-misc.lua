@@ -858,6 +858,16 @@ omni.lib.add_overlay = function(it,overlay_type,level)
 	if type(it) == "string" then --parsed whole table not the name...
 		it = omni.lib.find_prototype(it)
 	end
+	local icons = omni.icon.of(it, true)
+	if not icons or type(it) ~= "table" then -- Why go on...
+		log("Invalid prototype specified")
+		return
+	end
+	local base_size = icons[1] and icons[1].icon_size
+	if not base_size then
+		base_size = 32
+		log("No icon size found for " .. it.name)
+	end
 	level = level or "" -- So we can build our table
 	local overlays = { -- Since we normalize for 32px/no mipmap icons below, we only need to set those properties for exceptions
 		extraction = { -- omnimatter tiered extraction
@@ -875,7 +885,10 @@ omni.lib.add_overlay = function(it,overlay_type,level)
 				a = 1
 			},
 			scale = 1.5,
-			shift = {-8, 8}
+			shift = {
+				-8,
+				8
+			}
 		},
 		uncompress = { -- decompression recipe
 			icon = "__omnimatter_compression__/graphics/compress-out-arrow-32.png"
@@ -886,8 +899,11 @@ omni.lib.add_overlay = function(it,overlay_type,level)
 		technology = { -- compressed techs
 			icon = "__omnimatter_compression__/graphics/compress-tech-128.png",
 			icon_size = 128,
-			scale=1.5,
-			shift={-32,32},
+			scale= 1.5 * (base_size / 128),
+			shift={
+				-32 * (base_size / 128),
+				32 * (base_size / 128),
+			},
 			tint={
 				r = 1,
 				g = 1,
@@ -906,7 +922,6 @@ omni.lib.add_overlay = function(it,overlay_type,level)
 		error("add_overlay: invalid overlay_type specified")
 	end
   
-	local icons = omni.icon.of(it, true)
 	if icons then --ensure it exists first
 		-- Do we require an overlay? This will be placed at the end of the list and thus on top
 		if overlay.icon then
