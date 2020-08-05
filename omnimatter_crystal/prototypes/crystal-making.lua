@@ -34,7 +34,7 @@ end
 
 
 omni.crystal.add_crystal=function(metal,name,recipe)
-	if data.raw.item[metal] then
+	if data.raw.item[metal] and not data.raw.recipe[metal.."-crystal"] then
 		omni.crystal.metals[#omni.crystal.metals+1]=data.raw.item[metal]
 
 		RecGen:create("omnimatter_crystal",metal.."-crystal"):

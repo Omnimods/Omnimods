@@ -92,30 +92,48 @@ local has_unlock = function(tech,recipe)
 	return false
 end
 
+local angelsores = {
+    -- TIER 1 ORES
+    {ore = "iron-ore", product = "Iron"},
+    {ore = "angels-iron-nugget", product = "Iron nugget"},
+    {ore = "angels-iron-pebbles", product = "Iron pebbles"},
+    {ore = "angels-iron-slag", product = "Iron slag"},
+    {ore = "copper-ore", product = "Copper"},
+    {ore = "angels-copper-nugget", product = "Copper nugget"},
+    {ore = "angels-copper-pebbles", product = "Copper pebbles"},
+    {ore = "angels-copper-slag", product = "Copper slag"},
+    -- TIER 1.5 ORES
+    {ore = "tin-ore", product = "Tin"},
+    {ore = "lead-ore", product = "Lead"},
+    {ore = "quartz", product = "Silicon"},
+    {ore = "nickel-ore", product = "Nickel"},
+    {ore = "manganese-ore", product = "Manganese"},
+    -- TIER 2 ORES
+    {ore = "zinc-ore", product = "Zinc"},
+    {ore = "bauxite-ore", product =  "Aluminium"},
+    {ore = "cobalt-ore", product = "Cobalt"},
+    {ore = "silver-ore", product = "Silver"},
+    {ore = "fluorite-ore", product = "Fluorite"},
+    -- TIER 2.5 ORES
+    {ore = "gold-ore", product = "Gold"},
+    -- TIER 3 ORES
+    {ore = "rutile-ore", product = "Titanium"},
+    {ore = "uranium-ore", product = "Uranium"},
+    -- TIER 4 ORES
+    {ore = "tungsten-ore", product = "Tungsten"},
+    {ore = "thorium-ore", product = "Thorium"},
+    {ore = "chrome-ore", product = "Chrome"},
+    {ore = "platinum-ore", product = "Platinum"}
+  }
 
 if angelsmods and angelsmods.refining then
-  	spec_vanilla=true --set else case of no bobs or overhaul
-  	if mods["bobplates"] then
-		spec_vanilla=false
-	elseif mods["angelsindustries"] and angelsmods.industries.overhaul then
-		spec_vanilla=false
-	end
 
-	if spec_vanilla==true then
-		log("angels-special-vanilla-case")
-		--find angels refining special case
-		omni.crystal.add_crystal("angels-iron-nugget","Iron nugget")
-		omni.crystal.add_crystal("angels-iron-pebbles","Iron pebbles")
-		omni.crystal.add_crystal("angels-iron-slag","Iron slag")
-		omni.crystal.add_crystal("angels-copper-nugget","Copper nugget")
-		omni.crystal.add_crystal("angels-copper-pebbles","Copper pebbles")
-		omni.crystal.add_crystal("angels-copper-slag","Copper slag")
-	end
-	if angelsmods.petrochem then omni.crystal.add_crystal("fluorite-ore","Fluorite") end
-	--Force cobalt omnitraction with AB since cobalt is not spawning by default with pure Bob
-	if data.raw.item["cobalt-ore"] then omni.crystal.add_crystal("cobalt-ore","Cobalt") end
-	omni.crystal.add_crystal("manganese-ore","Manganese") -- do these show up in special vanilla?
-	omni.crystal.add_crystal("chrome-ore","Chrome")
+	--check ore triggers
+	for i, ores in pairs(angelsores) do
+        if angelsmods.functions.ore_enabled(ores.ore) then
+            omni.crystal.add_crystal(ores.ore,ores.product)
+        end
+    end
 
 	local rec = {}
 	local crystalines = {}
