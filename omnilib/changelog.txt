@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.16
+Date: 2020.08.xx
+  Changes:
+    - Fixed RecGen:impoort overwriting recipe subgroup and order
+    - Complete rewrite of all recipe related functions to avoid unnecessary standardisation
+  Bugfixes:
+    - Multiple locale and icon fixes in recipe-generation
+---------------------------------------------------------------------------------------------------
 Version: 3.18.15
 Date: 2020.07.15
   Features:
