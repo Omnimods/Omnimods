@@ -7,9 +7,6 @@ Date: 2020.08.05
     - Compressed inserter and burner generator variants
     - Compression of modded ores
     - Hand decompression of buildings
-  Changes:
-     - Runtime control script rewritten
-     - Icon and locale backend overhauled
   Bugfixes:
     - Significant decrease in buildings-phase loadtime
     - Fixed crash when using compression planner on cliffs
