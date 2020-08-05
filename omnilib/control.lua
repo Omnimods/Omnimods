@@ -45,7 +45,7 @@ local function update_last_tier(recipe, full_refresh)
 		local I = full_refresh and 97 or recipe_tree.active_tier
 		local research_status = not not (recipe.force.technologies["compression-recipes"] or {}).researched
 		repeat
-			for variant, recipe_name in pairs(recipe_tree[I]) do
+			for variant, recipe_name in pairs(recipe_tree[I] or {}) do
 				local force_recipe = recipe.force.recipes[recipe_name]
 				local is_compressed = global.omni.recipes[recipe.name].compressed
 				local desired_status = is_compressed and research_status or (I == metadata.tier) -- True if we're on the final tier, false otherwise
