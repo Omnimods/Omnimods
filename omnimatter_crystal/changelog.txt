@@ -3,6 +3,8 @@ Version: 3.18.7
 Date: 2020.xx.xx
   Bugfixes:
     - Fixed quartz crystals omnitraction outputting quarz instead of silicon plates with pure Bob
+    - Multiple recipe subgroup and order fixes
+    - Fixed cobalt crytsal recipes getting added even with cobalt ore beeing disabled
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.6
 Date: 2020.07.15

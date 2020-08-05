@@ -1,5 +1,13 @@
 ---------------------------------------------------------------------------------------------------
-Version: 1.18.9
+Version: 1.18.11
+Date: 2020.08.xx
+  Changes:
+    - Made the omnifurnace mk 3 electric
+    - Moved fuel related functions into omnilib
+  Bugfixes:
+    - Fixed multiple locale, subgroup and recipe order issues
+---------------------------------------------------------------------------------------------------
+Version: 1.18.10
 Date: 2020.07.14
   Features:
     - Added Upgrade Planner support

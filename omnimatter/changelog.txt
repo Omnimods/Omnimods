@@ -1,8 +1,13 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.10
-Date: 2020.xx.xx
+Date: 2020.08.xx
+  Features:
+    - Properly integraded water omnitraction into the tech tree
+    - Added a basic water omnitraction recipe
   Bugfixes:
     - Fix bobs ground water not beeing removed with certain mod setups
+    - Removed unneeded srecipe tandardisation
+    - Multiple recipe subgroup and order fixes
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.9
 Date: 2020.07.14
