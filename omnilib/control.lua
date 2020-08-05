@@ -100,7 +100,7 @@ local function update_recipe(recipe, enabled_override)
 		local recipes = recipe.force.recipes
 		-- Handle both compressed and permuted recipes.
 		local compressed = recipes[string.format("%s-compression",name)]
-		local permuted_compressed = name:find("omniperm") and name:gsub("omniperm","compression-omniperm")
+		local permuted_compressed = name:find("omniperm") and recipes[name:gsub("omniperm","compression-omniperm")]
 		if compressed then
 			compressed.enabled = true
 		end
