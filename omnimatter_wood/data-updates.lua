@@ -9,6 +9,7 @@ end
 if mods["angelsbioprocessing"] and mods["bobgreenhouse"] then --checks both bio and greenhouse
 	omni.lib.replace_all_ingredient("seedling","omniseedling")
 	omni.lib.replace_recipe_result("wood-sawing-manual","wood","omniwood")
+	omni.lib.remove_recipe_all_techs("bob-greenhouse")
 
 	data.raw.recipe["wood-sawing-manual"].icons[1].icon = data.raw.item["omniwood"].icons[1].icon
 	data.raw.recipe["wood-sawing-manual"].icons[1].icon_size = 32

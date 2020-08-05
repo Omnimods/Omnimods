@@ -22,9 +22,9 @@ omni.lib.add_unlock_recipe("base-impure-extraction","pulver-omnic-waste")
 
 --TEMPORARY
 --omnifluid (basically should be same timing as barrelling)
-local fluid_unlock = {}
+local fluids = {}
 for _, fluid in pairs(data.raw.fluid) do
-	if fluid.name ~= "heat" then
+	if fluid.name ~= "heat" and fluid.name ~= "omnic-water" then
 		RecGen:create("omnimatter","omniflush-"..fluid.name):
 		setIngredients({type="fluid",amount=360,name=fluid.name}):
 		setResults({type="fluid",amount=60,name="omnic-water"}):
@@ -33,37 +33,29 @@ for _, fluid in pairs(data.raw.fluid) do
 		setCategory("omniphlog"):
 		setEnabled(fluid.name=="omnic-waste"):
 		setSubgroup(fluid.subgroup):
+		--Same subgroup & order, but put the omnic water block behind all other recipes in that subgroup
+		setOrder("zzz"..(fluid.order or "")):
 		extend()
-		fluid_unlock[fluid.name]="omniflush-"..fluid.name
+		fluids[#fluids+1] = {new ="omniflush-"..fluid.name, old=fluid.name}
 	end
 end
-for _,tech in pairs(data.raw.technology) do
-	if tech.effects and tech.name ~= "fluid-handling" then
-		for _,eff in pairs(tech.effects) do
-			if eff.type=="unlock-recipe" then
-				if data.raw.recipe[eff.recipe] then
-					omni.marathon.standardise(data.raw.recipe[eff.recipe])
-					for _,dif in pairs({"normal","expensive"}) do
-						for _,res in pairs(data.raw.recipe[eff.recipe][dif].results) do
-							if fluid_unlock[res.name] then
-								table.insert(data.raw.technology[tech.name].effects,{type="unlock-recipe",recipe=fluid_unlock[res.name]})
-								fluid_unlock[res.name]=nil
-							end
-						end
-					end
-				end
+
+for _, rec in pairs(data.raw.recipe) do
+	for _, flu in pairs(fluids) do
+		if omni.lib.recipe_result_contains(rec.name, flu.old) then
+			local techname = omni.lib.get_tech_name(rec.name)
+			if techname then
+				omni.lib.add_unlock_recipe(techname, flu.new)
+			else
+				rec.enabled = true
 			end
 		end
 	end
-end
-for _, f in pairs(fluid_unlock) do
-	data.raw.recipe[f].enabled=true
 end
 --END TEMPORARY
 
 --omni.lib.add_unlock_recipe("omnic-hydrolyzation-"..math.floor(omni.fluid_levels/2),"stone-omnisolvent")
 --omni.lib.add_unlock_recipe("omnic-hydrolyzation-"..math.floor(omni.fluid_levels/2),"omnite-crystalization")
-
 
 for _,tier in pairs(omnisource) do
 	for _, ore in pairs(tier) do

@@ -11,8 +11,7 @@
 if mods["bobtech"] and settings.startup["bobmods-burnerphase"].value then
 -- Remove bobs burner lab
     table.insert(data.raw["lab"]["omnitor-lab"].inputs, "steam-science-pack")
-    data.raw.recipe["burner-lab"]["normal"].enabled=false
-    data.raw.recipe["burner-lab"]["expensive"].enabled=false
+    omni.lib.disable_recipe("burner-lab")
     omni.lib.remove_recipe_ingredient("lab", "burner-lab")
 
     -- Remove steam engine from steam power technology

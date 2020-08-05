@@ -1,5 +1,6 @@
 if not omni.science then omni.science = {} end
 if not omni.science.triggers then omni.science.triggers={} end
+
 --set settings to triggers
 omni.science.triggers.ModAllCost = settings.startup["omniscience-modify-costs"].value --bool
 omni.science.triggers.ModOmCost = settings.startup["omniscience-modify-omnimatter-costs"].value --bool
@@ -24,13 +25,3 @@ lab_ignore_pack["lab-module"] = true
 
 require("prototypes.functions")
 require("prototypes.omni-pack")
-
-if mods["omnimatter_crystal"] then
-  if data.raw.tool["production-science-pack"].icon == "__base__/graphics/icons/production-science-pack.png" then --only replace if vanilla icon?
-    data.raw.tool["production-science-pack"].icon = "__omnimatter_science__/graphics/icons/production-science-pack.png"
-    data.raw.tool["production-science-pack"].icon_size=64
-    data.raw.recipe["production-science-pack"].icon_size=64
-    data.raw.tool["omni-pack"].icon_size=64
-    data.raw.recipe["omni-pack"].icon_size=64
-  end
-end

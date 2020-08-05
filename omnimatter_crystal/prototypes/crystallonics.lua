@@ -6,9 +6,9 @@ RecGen:create("omnimatter_crystal","hydromnic-acid"):
 	fluid():
 	setBothColour(1,1,1):
 	setEnergy(1):
-	setSubgroup("crystallization"):
 	marathon():
 	setCategory("omniplant"):
+	setSubgroup("crystal-fluids"):
 	setTechName("omnitech-omnic-acid-hydrolyzation-1"):
 	setIngredients({
       {type = "item", name = "omnite", amount = 1},
@@ -482,6 +482,6 @@ if omni.rocket_locked then
 	omni.lib.add_prerequisite("rocket-silo","omnitech-pseudoliquid-amorphous-crystal-"..i)
 end
 
-if data.raw.item["tin-ore"] then
+if data.raw.item["tin-ore"] and data.raw.item["tin-ore-crystal"] then
 	omni.lib.replace_recipe_ingredient("crystal-rod","copper-ore-crystal","tin-ore-crystal")
 end
