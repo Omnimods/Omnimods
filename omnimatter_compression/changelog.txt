@@ -1,4 +1,19 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.11
+Date: 2020.08.05
+  Features:
+    - Indicator for compressed items, recipes, techs
+    - Additional balance and sorting settings
+    - Compressed inserter and burner generator variants
+    - Compression of modded ores
+    - Hand decompression of buildings
+  Changes:
+     - Runtime control script rewritten
+     - Icon and locale backend overhauled
+  Bugfixes:
+    - Significant decrease in buildings-phase loadtime
+    - Fixed crash when using compression planner on cliffs
+---------------------------------------------------------------------------------------------------
 Version: 3.18.10
 Date: 2020.07.15
   Features:
