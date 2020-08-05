@@ -4,68 +4,55 @@ local blacklist = {{"creative","mode"}}--{"stone",{"creative","mode"}}
 
 local add_fluid_boxes = false
 
-local get_icons = function(item)
-    --Build the icons table
-    local icons = {}
-    if item.icons then
-        for _ , icon in pairs(item.icons) do
-            local shrink = icon
-			--local scale = icon.scale or 1
-            --shrink.scale = scale*0.65
-            icons[#icons+1] = shrink
-        end
-    else
-        icons[#icons+1] = {icon = item.icon,icon_size=item.icon_size or 32}
-    end
-    return icons
-end
+local get_icons = omni.icon.of
+log("start ore compression")
+local compensation_c = 500/120
 for name,ore in pairs(data.raw.resource) do
-	if not omni.lib.string_contained_list(name,blacklist) then
-		if (ore.category == nil or ore.category == "basic-solid" or ore.category == "basic-fluid") and ore.name then
+  if not omni.lib.string_contained_list(name,blacklist) then
+    if ore.name then
 			local compressed = false
       local new = table.deepcopy(ore)
-
-      new.localised_name = {"entity-name.compressed-ore",{"entity-name."..new.name}}
-      new.name = "compressed-"..new.name.."-ore"
-      if new.category == "basic-fluid" then
-        new.name = "concentrated-" ..new.name --no need for ore in name      
-      end
+      new.localised_name = omni.locale.custom_name(ore, "compressed-ore")
       if new.autoplace then new.autoplace = nil end
-
+      local minable_type = "item"
       if new.minable.results then
-        local tempresults={}
-        for _,res in pairs(new.minable.results) do
-          if res.name == nil then
-            local resname = res[1]
-            local resct = res[2] or 1
-            tempresults[#tempresults+1] = {
-              amount_max = resct,
-              amount_min = resct,
-              name = resname,
+        local minable_results = {}
+        for _, result in pairs(new.minable.results) do
+          if result.name == nil then
+            local result_name = result[1]
+            local result_count = result[2] or 1
+            minable_results[#minable_results+1] = {
+              amount_max = result_count,
+              amount_min = result_count,
+              name = result_name,
               probability = 1,
               type = "item"
             }
           else
-            tempresults[#tempresults+1] = res
+            minable_type = result.type
+            minable_results[#minable_results+1] = result
           end
         end
-        new.minable.results = tempresults
+        new.minable.results = minable_results
       elseif new.minable.result then
 				new.minable.results = {{
-					amount_max = 1,
-					amount_min = 1,
+					amount_max = new.minable.count or 1,
+					amount_min = new.minable.count or 1,
 					name = new.minable.result,
 					probability = 1,
 					type = "item"
 				}}
 				new.minable.result=nil
-			end
+      end
+      if minable_type == "fluid" then
+        new.name = "concentrated-resource-" ..new.name --no need for ore in name      
+      else
+        new.name = "compressed-resource-"..new.name
+      end
 
       local max_stacksize = 0
-      for i,drop in ipairs(new.minable.results) do
-        
+      for i,drop in ipairs(new.minable.results) do        
         for _,comp in pairs({"compressed-", "concentrated-"}) do
-
           if omni.lib.is_in_table(comp .. drop.name, compressed_item_names) then
             max_stacksize = math.max(omni.lib.find_stacksize(drop.name),max_stacksize) --returns 50 for fluids
             drop.name = comp .. drop.name
@@ -102,7 +89,6 @@ for name,ore in pairs(data.raw.resource) do
 						name = r,
 						localised_name = {"item-name.solid-fluid", {"fluid-name."..new.minable.required_fluid}},
 						icons = get_icons(data.raw.fluid[new.minable.required_fluid]),
-						icon_size = 32,
 						subgroup = "omni-solid-fluids",
 						order = "a",
 						stack_size = 200,
@@ -113,7 +99,6 @@ for name,ore in pairs(data.raw.resource) do
 						name = "compressed-"..r,
 						localised_name = {"item-name.compressed-sluid", {"fluid-name."..new.minable.required_fluid}},
 						icons = get_icons(data.raw.fluid[new.minable.required_fluid]),
-						icon_size = 32,
 						subgroup = "omni-solid-fluids",
 						order = "a",
 						stack_size = 50,
@@ -126,7 +111,6 @@ for name,ore in pairs(data.raw.resource) do
             subgroup = "fluid-recipes",
             category = "general-omni-boiler",
             order = "g[hydromnic-acid]",
-            icon_size = 32,
             energy_required = 3,
             enabled = true,
             ingredients =
@@ -144,7 +128,6 @@ for name,ore in pairs(data.raw.resource) do
             icon = cf.icon,
             subgroup = "fluid-recipes",
             category = "general-omni-boiler",
-            icon_size = 32,
             order = "g[hydromnic-acid]",
             energy_required = 3,
             enabled = true,
@@ -161,9 +144,7 @@ for name,ore in pairs(data.raw.resource) do
 				  concentrate = {
             type = "recipe",
             name = "concentrated-"..new.minable.required_fluid.."-compression",
-            icons = data.raw.fluid[new.minable.required_fluid].icons,
-            icon = data.raw.fluid[new.minable.required_fluid].icon,
-            icon_size = 32,
+            icons = get_icons(data.raw.fluid[new.minable.required_fluid]),
             category = "fluid-concentration",
             enabled = true,
             hidden = true,
@@ -183,9 +164,7 @@ for name,ore in pairs(data.raw.resource) do
 				local concentrate = {
 					type = "recipe",
 					name = "concentrated-"..new.minable.required_fluid,
-					icons = data.raw.fluid[new.minable.required_fluid].icons,
-					icon = data.raw.fluid[new.minable.required_fluid].icon,
-					icon_size = 32,
+					icons = get_icons(data.raw.fluid[new.minable.required_fluid]),
 					category = "fluid-concentration",
 					enabled = true,
 					hidden = true,
@@ -202,6 +181,14 @@ for name,ore in pairs(data.raw.resource) do
 			end
 			if compressed and max_stacksize > 0 then
         compressed_ores[#compressed_ores+1]=new
+        --[[ Migrating to future properly named ores! hurray technical debt ]]--
+        local new_copy = table.deepcopy(new)
+        new_copy.name = ore.name
+        new_copy.name = "compressed-"..new_copy.name.."-ore"
+        if new.category == "basic-fluid" then
+          new_copy.name = "concentrated-" ..new_copy.name --no need for ore in name      
+        end
+        compressed_ores[#compressed_ores+1] = new_copy
 			end
 		end
 	end

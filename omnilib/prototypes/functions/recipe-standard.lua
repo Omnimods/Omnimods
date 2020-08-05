@@ -1,69 +1,6 @@
 if not omni then omni={} end
 if not omni.marathon then omni.marathon={} end
-
 standardized_recipes={}
-
-local function set_loc_name(item) --pass full table
-	if item then
-		if item.localised_name then
-			loc_name = table.deepcopy(item.localised_name)
-		--elseif item.type == "entity" and item.place_result then
-		--	loc_name = {"entity-name."..item.place_result}
-		elseif item.place_result then
-			loc_name = {"entity-name."..item.name}
-		elseif item.type == "fluid" then
-			loc_name = {"fluid-name."..item.name}
-		elseif string.find(item.name,"equipment") then
-			loc_name = {"equipment-name."..item.name}
-		else --should cover items, tools, capsules etc...
-			loc_name = {"item-name."..item.name}
- 		end
-	end
-return loc_name
-end
-
-local function loc_name_is_result(localised_name, results)
-	local name
-	if type(localised_name) == "string" then
-		name = localised_name
-	elseif type(localised_name) == "table" then
-		name = localised_name[1]
-	end
-	--substract localisation string
-	i,j = string.find(name,"-name.")
-	if j then
-	name = string.sub(name,j+1)
-	end
-	-- look for it in the result list
-	local found = false
-	if results then
-		for _,res in pairs(results) do
-			if res.name == name then found = true break end
-		end
-	end
-	return found
-end
-
-local function set_icons_tab(it) --pass item table to fish icons from
-	local ics={}--set icons table as 0
-	--icon only
-	if it.icon and not it.icons then
-		ics[#ics+1] = {icon=it.icon,icon_size=it.icon_size or 32}
-	--icons only
-	elseif it.icons and not it.icon then
-		--check tags and set name and size in each
-		for i,ic in pairs(it.icons) do
-			ic.icon = ic.icon or ic[1]
-			ic.icon_size = ic.icon_size or ic[2] or 32
-			ic.scale =ic.scale or 32/ic.icon_size
-			ics[#ics+1]=ic
-		end
-	--both, this implies an error has occurred with the item lookup function
-	elseif it.icon and it.icons then
-		ics[#ics+1]={icon=it.icon,icon_size=it.icon_size or 32}
-	end
-	return ics
-end
 
 function omni.marathon.standardise(recipe)
   if recipe == nil then return nil end
@@ -257,38 +194,8 @@ function omni.marathon.standardise(recipe)
 	-- Localisation
 	---------------------------------------------------------------------------
 	--Update loc. name if there is no localised name or no main product set
-	if (type(recipe.localised_name) ~= "table" and recipe.localised_name == nil) or (not recipe.main_product and not recipe.normal.main_product and loc_name_is_result(recipe.localised_name, recipe.normal.results)) then
-		local it={}
-		---------------------------------------------------------------------------
-		-- Multiple Results
-		---------------------------------------------------------------------------
-		if (recipe.results and #recipe.results > 1) or (recipe.normal.results and #recipe.normal.results > 1) then
-			--use the main product name if it exists
-			if recipe.main_product and recipe.main_product~="" then
-				it = omni.lib.find_prototype(recipe.main_product)
-			elseif recipe.normal.main_product and recipe.normal.main_product~="" then
-				it = omni.lib.find_prototype(recipe.normal.main_product)
-			--else use the recipe name
-			else
-				recipe.localised_name={"recipe-name."..recipe.name}
-			end
-		---------------------------------------------------------------------------
-		-- Single Result
-		---------------------------------------------------------------------------
-		elseif (recipe.results and #recipe.results == 1) or (recipe.normal.results and #recipe.normal.results == 1) then
-			--use the main product name if it exists
-			if recipe.main_product and recipe.main_product~="" then
-				it = omni.lib.find_prototype(recipe.main_product)
-			elseif recipe.normal.main_product and recipe.normal.main_product~="" then
-				it = omni.lib.find_prototype(recipe.normal.main_product)
-			elseif #recipe.normal.results>=1 then
-				it = omni.lib.find_prototype(recipe.normal.results[1].name)
-			--if not find result 1 or main product
-			else
-				recipe.localised_name={"recipe-name."..recipe.name}--hail mary
-			end	
-		end
-		if type(it)=="table" and next(it) then recipe.localised_name = set_loc_name(it) end
+	if not recipe.localised_name and not omni.locale.get_main_product(recipe) then
+		recipe.localised_name = recipe.localised_name or omni.locale.of(recipe).name
 	end
 	---------------------------------------------------------------------------
 	-- Move Flags to difficulty zone
@@ -341,45 +248,10 @@ function omni.marathon.standardise(recipe)
 	---------------------------------------------------------------------------
 	-- Icons standardisation
 	---------------------------------------------------------------------------
-	if recipe.icons and recipe.icon then -- case both, replace icons with icon (assume icon is new)
-		--replace recipe.icons with the new
-		recipe.icons[1]={icon=recipe.icon,icon_size=recipe.icon_size or 32,icon_mipmaps=recipe.icon_mipmaps or nil}
-	elseif recipe.icon then --only icon, set icons
-		recipe.icons={{icon=recipe.icon,icon_size=recipe.icon_size or 32,icon_mipmaps=recipe.icon_mipmaps or nil}}
-	 -- case neither icon or icons exist and recipe has ~= 1 results (search via product) (with 1 result its using the item icons)
-	elseif (not recipe.icons and not recipe.icon and ((recipe.normal.results and #recipe.normal.results ~= 1) or (recipe.expensive.results and #recipe.expensive.results ~= 1))) then
-		----------------------------------------------
-		-- NO RECIPE ICONS, SEARCH FOR MAIN PRODUCT --
-		----------------------------------------------
-		if (recipe.main_product and recipe.main_product ~= "") then
-			res=recipe.main_product
-		elseif (recipe.normal.main_product and recipe.normal.main_product ~= "") then
-			res=recipe.normal.main_product
-		----------------------------------------------
-		-- NO MAIN PRODUCT, SEARCH FOR FIRST RESULT --
-		----------------------------------------------
-		elseif recipe.result and recipe.result.name then
-			res=recipe.result.name
-		elseif recipe.result then
-			res=recipe.result
-		elseif recipe.normal.result and recipe.normal.result.name then
-			res=recipe.normal.result.name
-		elseif recipe.normal.result then
-			res=recipe.normal.result
-		elseif recipe.results and recipe.results[1] and recipe.results[1].name then
-			res=recipe.results[1].name
-		elseif 	recipe.normal.results and recipe.normal.results[1] and recipe.normal.results[1].name then
-			res=recipe.normal.results[1].name
-		else
-			res=recipe.name --should never get this far...
-		end
-		--find res
-		local item = omni.lib.find_prototype(res)
-		if item then
-			recipe.icons=set_icons_tab(item)
-		end
-	end
+	-- case both, replace icon with icons. Case none, we set the icon.
+	recipe.icons = omni.icon.of(recipe)
 	-- nil out non-compliant
-  recipe.icon=nil
+	recipe.icon = nil
+	recipe.icon_size = nil
 	return table.deepcopy(recipe)
 end

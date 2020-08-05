@@ -396,11 +396,23 @@ function omni.lib.set_item_icon(item,icon, tint)
 end
 
 function omni.lib.change_icon_tint(item, tint)
-	local t = {}
-	if tint.r then t=tint else t={r=tint[1],g=tint[2],b=tint[3]} end
-	local icons = {{icon = data.raw.item[item].icon, tint=t}}
-	--data.raw.item[item].icon = icons
+	local tint_table = {}
+	if tint[1] then
+		tint_table = {
+			r = tint[1],
+			g = tint[2],
+			b = tint[3],
+			a = tint[4]
+		}
+	else 
+		tint_table = tint 
+	end
+	local icons = omni.icon.of(item)
+	for i, layer in pais(icons) do
+		layer.tint = tint_table
+	end
 	data.raw.item[item].icons = icons
+	data.raw.item[item].icon = nil
 end
 
 function omni.lib.change_icons_tint(item, tint) --for changing a table of icons, not just a single icon
@@ -821,6 +833,103 @@ function omni.lib.find_entity_prototype(item)
 	end
 	--log("Could not find "..item.."'s entity prototype, check it's type.")
 	return nil
+end
+
+function omni.lib.find_recipe(item)
+	if type(item)=="table" then return item elseif type(item)~="string" then return nil end
+	for _, p in pairs(data.raw.recipe) do
+		if standardized_recipes[p.name] == nil then omni.marathon.standardise(p) end
+		for _,r in pairs(p.normal.results) do
+			if r.name == item then return p end
+		end
+	end
+	--log("Could not find "..item.."'s recipe prototype, check it's type.")
+	return nil
+end
+
+-----------------------------------------------------------------------------
+-- ICON FUNCTIONS --
+-----------------------------------------------------------------------------
+
+omni.lib.add_overlay = function(it,overlay_type,level) 
+	-- `it` is the item/recipe table, not the name (can search for it if wrong)
+	-- overlay_type is a string for type or an iconspecification table
+	-- level is required for extraction, building and compress-fluid and should be a number	
+	if type(it) == "string" then --parsed whole table not the name...
+		it = omni.lib.find_prototype(it)
+	end
+	local icons = omni.icon.of(it, true)
+	if not icons or type(it) ~= "table" then -- Why go on...
+		log("Invalid prototype specified")
+		return
+	end
+	local base_size = icons[1] and icons[1].icon_size
+	if not base_size then
+		base_size = 32
+		log("No icon size found for " .. it.name)
+	end
+	level = level or "" -- So we can build our table
+	local overlays = { -- Since we normalize for 32px/no mipmap icons below, we only need to set those properties for exceptions
+		extraction = { -- omnimatter tiered extraction
+			icon = "__omnimatter__/graphics/icons/extraction-"..level..".png"
+		},
+		building = {
+			icon = "__omnimatter_compression__/graphics/compress-"..level.."-32.png"
+		},
+		compress = { -- compressed item/recipe
+			icon = "__omnimatter_compression__/graphics/compress-blank-32.png",
+			tint = {
+				r = 0.65,
+				g = 0,
+				b = 0.65,
+				a = 1
+			},
+			scale = 1.5,
+			shift = {
+				-8,
+				8
+			}
+		},
+		uncompress = { -- decompression recipe
+			icon = "__omnimatter_compression__/graphics/compress-out-arrow-32.png"
+		},
+		["compress-fluid"] = { -- tiered compressed fluids (generator fluids)
+			icon = "__omnilib__/graphics/icons/small/lvl"..level..".png"
+		},
+		technology = { -- compressed techs
+			icon = "__omnimatter_compression__/graphics/compress-tech-128.png",
+			icon_size = 128,
+			scale= 1.5 * (base_size / 128),
+			shift={
+				-32 * (base_size / 128),
+				32 * (base_size / 128),
+			},
+			tint={
+				r = 1,
+				g = 1,
+				b = 1,
+				a = 0.75
+			}
+		}
+	}
+
+	local overlay
+	if type(overlay_type) == "string" then
+		overlay = overlays[overlay_type]
+	elseif type(overlay_type) == "table" then
+		overlay = overlay_type
+	else
+		error("add_overlay: invalid overlay_type specified")
+	end
+  
+	if icons then --ensure it exists first
+		-- Do we require an overlay? This will be placed at the end of the list and thus on top
+		if overlay.icon then
+			overlay.icon_size = overlay.icon_size or 32
+			icons = util.combine_icons(icons, {overlay}, {})
+		end
+		return icons
+	end
 end
 
 local c=0.9

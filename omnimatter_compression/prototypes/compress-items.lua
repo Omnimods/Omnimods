@@ -2,6 +2,7 @@
 --[[Initialisation and Config Variables]]--
 -------------------------------------------------------------------------------
 omni.compression.stack_compensate = settings.startup["omnicompression_compensate_stacksizes"].value --kind of local
+omni.compression.hide_handcraft =  settings.startup["omnicompression_hide_handcraft"].value or nil--Don't override to false
 local compress_recipes, uncompress_recipes, compress_items = {}, {}, {}
 compressed_item_names = {}  --global?
 local item_count = 0
@@ -14,23 +15,6 @@ local speed_div = 8 --Recipe speed is stack_size/speed_div
 -------------------------------------------------------------------------------
 --[[Item Functions]]--
 -------------------------------------------------------------------------------
-
---set new fuel value
-local new_fuel_value = function(effect,stack)
-	if not effect then return nil end
-	local eff = string.sub(effect,1,string.len(effect)-2)
-	local value = string.sub(effect,string.len(effect)-1,string.len(effect)-1)
-	if string.len(effect) == 2 then
-		eff = string.sub(effect,1,1)
-		value = ""
-	end
-	eff = tonumber(eff)*stack
-	if eff > 1000 then
-		eff = eff/1000
-		if value == "k" then value = "M" elseif value == "M" then value = "G" end
-	end
-	return eff..value.."J"
-end
 --update science packs in labs
 local is_science = function(item)
 	for _, lab in pairs(data.raw.lab) do
@@ -54,18 +38,16 @@ for _, group in pairs({"fluid"}) do
     --string.find(fluid.name,"^compress") ==nil and string.find(fluid.name,"^concentrat") ==nil then --not already compressed
       --copy original
       local new_fluid = table.deepcopy(fluid)
-      --Common Variables
-      loc_key = new_fluid.localised_name or {"fluid-name."..new_fluid.name}
 
       --Create the item
       new_fluid.name = "concentrated-"..new_fluid.name
+      new_fluid.localised_name = omni.locale.custom_name(fluid, 'concentrated-fluid')
 			new_fluid.sub_group = "fluids"
 			new_fluid.order = fluid.order or "z".."[concentrated-"..fluid.name .."]"
-			new_fluid.icons = omni.compression.add_overlay(fluid.name,"compress")
-      new_fluid.localised_name = {"fluid-name.concentrated-fluid", loc_key}
-      new_fluid.localised_description = {"fluid-description.concentrated-fluid", loc_key}
-      new_fluid.heat_capacity = new_fuel_value(new_fluid.heat_capacity,concentrationRatio)
-      new_fluid.fuel_value = new_fuel_value(new_fluid.fuel_value,concentrationRatio)
+      new_fluid.icons = omni.lib.add_overlay(fluid.name,"compress")
+      new_fluid.icon = nil
+      new_fluid.heat_capacity = new_fluid.heat_capacity and omni.lib.mult_fuel_value(new_fluid.heat_capacity, concentrationRatio)
+      new_fluid.fuel_value = new_fluid.fuel_value and omni.lib.mult_fuel_value(new_fluid.fuel_value, concentrationRatio)
 
       compressed_item_names[#compressed_item_names+1] = new_fluid.name
       compress_items[#compress_items+1] = new_fluid
@@ -74,14 +56,13 @@ for _, group in pairs({"fluid"}) do
       local compress = {
         type = "recipe",
         name = "compress-"..fluid.name,
-        localised_name = {"recipe-name.concentrate-fluid", loc_key},
-        localised_description = {"recipe-description.concentrate-fluid", loc_key},
+        localised_name = omni.locale.custom_name(fluid, 'recipe-name.concentrate-fluid'),
         category = "fluid-concentration",
         enabled = true,
         hidden = true,
-        icons = omni.compression.add_overlay(fluid.name,"compress"),
-        icon_size = 32,
+        icons = omni.lib.add_overlay(fluid.name,"compress"),
         order = fluid.order or "z".."[concentrated-"..fluid.name .."]",
+        subgroup = "concentrator-fluids",
         normal = {
           ingredients = {
             {name = fluid.name, type = "fluid", amount = sluid_contain_fluid*concentrationRatio}
@@ -93,6 +74,7 @@ for _, group in pairs({"fluid"}) do
           energy_required = sluid_contain_fluid / speed_div,
           enabled = true,
           hidden = true,
+          hide_from_player_crafting = omni.compression.hide_handcraft
         },
         expensive={
           ingredients = {
@@ -105,6 +87,7 @@ for _, group in pairs({"fluid"}) do
           energy_required = sluid_contain_fluid / speed_div,
           enabled = true,
           hidden = true,
+          hide_from_player_crafting = omni.compression.hide_handcraft
         }
       }
       --omni.marathon.standardise(compress)
@@ -115,10 +98,8 @@ for _, group in pairs({"fluid"}) do
       local uncompress = {
         type = "recipe",
         name = "uncompress-"..fluid.name,
-        localised_name = {"recipe-name.deconcentrate-fluid", loc_key},
-        localised_description = {"recipe-description.deconcentrate-fluid", loc_key},
-        icons = omni.compression.add_overlay(fluid.name,"uncompress"),
-        icon_size = 32,
+        localised_name = omni.locale.custom_name(fluid, 'recipe-name.deconcentrate-fluid'),
+        icons = omni.lib.add_overlay(fluid.name,"uncompress"),
         category = "fluid-concentration",
         enabled = true,
         hidden = true,
@@ -133,6 +114,7 @@ for _, group in pairs({"fluid"}) do
           },
           enabled = true,
           hidden = true,
+          hide_from_player_crafting = omni.compression.hide_handcraft,
           energy_required = concentrationRatio / speed_div,
         },
         expensive = {
@@ -145,6 +127,7 @@ for _, group in pairs({"fluid"}) do
           },
           enabled = true,
           hidden = true,
+          hide_from_player_crafting = omni.compression.hide_handcraft,
           energy_required = concentrationRatio / speed_div,
         },
       }
@@ -158,7 +141,7 @@ end
 --[[Create Dynamic Recipes from Items]]--
 -------------------------------------------------------------------------------
 for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", "capsule", "mining-tool", "tool","gun","armor"}) do
-  for _, item in pairs(data.raw[group]) do
+	for _, item in pairs(data.raw[group]) do
 		--Check for hidden flag to skip later
     local hidden = omni.compression.is_hidden(item) --check hidden
     if item.stack_size >= 1 and item.stack_size <= max_stack_size_to_compress and omni.compression.is_stackable(item) and
@@ -172,15 +155,6 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 					item.stack_size = omni.lib.round_up(item.stack_size/6)*6
 				end
       end
-      --localisation (thse 4 seem to work)
-			local loc_key = {"item-name."..item.name}
-			if item.localised_name then
-				loc_key = table.deepcopy(item.localised_name)
-			elseif item.place_result then
-				loc_key = {"entity-name."..item.place_result}
-			elseif item.placed_as_equipment_result then
-				loc_key = {"equipment-name."..item.placed_as_equipment_result}
-      end
       --recipe/item order
       local order = "z"
       if item.order then
@@ -189,27 +163,25 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
         order = item.normal.order
       end
       order = order .."[concentrated-"..item.name .."]"
-      --set type
-			local it_type = "item"
-			if is_science(item) then it_type = "tool" end
       --set up new item
 			local new_item = {
-				type = it_type,
+				type = "item",
 				name = "compressed-"..item.name,
-				localised_name = {"item-name.compressed-item", loc_key},
-				localised_description = {"item-description.compressed-item", loc_key},
+				localised_name = omni.locale.custom_name(item, 'item-name.compressed-item'),
+				localised_description = omni.locale.custom_name(item, 'item-description.compressed-item'),
 				flags = item.flags,
-				icons = omni.compression.add_overlay(item.name,"compress"),
-				icon_size = 32,
+				icons = omni.lib.add_overlay(item.name,"compress"),
 				subgroup = item.subgroup,
 				order = order,
 				stack_size = compressed_item_stack_size,
-				fuel_value = new_fuel_value(item.fuel_value,item.stack_size),
+				fuel_value = item.fuel_value and omni.lib.mult_fuel_value(item.fuel_value,item.stack_size),
 				fuel_category = item.fuel_category,
 				fuel_acceleration_multiplier = item.fuel_acceleration_multiplier,
 				fuel_top_speed_multiplier = item.fuel_top_speed_multiplier,
 				durability = item.durability
-			}
+      }
+
+      if is_science(item) then new_item.type = "tool" end
 
       compressed_item_names[#compressed_item_names+1] = new_item.name
       compress_items[#compress_items+1] = new_item
@@ -218,13 +190,12 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 			local compress = {
 				type = "recipe",
 				name = "compress-"..item.name,
-				localised_name = {"recipe-name.compress-item", loc_key},
-				localised_description = {"recipe-description.compress-item", loc_key},
+				localised_name = omni.locale.custom_name(item, 'recipe-name.compress-item', class),
+				localised_description = omni.locale.custom_description(item, 'recipe-description.compress-item', class),
 				category = "compression",
 				enabled = true,
         hidden = true,
-        icons=omni.compression.add_overlay(item.name,"compress"),
-				icon_size = 32,
+        icons = omni.lib.add_overlay(item.name,"compress"),
         order = order,
         normal = {
           ingredients = {
@@ -237,6 +208,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
           energy_required = item.stack_size / speed_div,
           enabled = true,
           hidden = true,
+          hide_from_player_crafting = omni.compression.hide_handcraft
         },
         expensive = {
           ingredients = {
@@ -249,6 +221,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
           energy_required = item.stack_size / speed_div,
           enabled = true,
           hidden = true,
+          hide_from_player_crafting = omni.compression.hide_handcraft
         },
       }
 
@@ -259,13 +232,13 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
 			local uncompress = {
 				type = "recipe",
 				name = "uncompress-"..item.name,
-				localised_name = {"recipe-name.uncompress-item", loc_key},
-				localised_description = {"recipe-description.uncompress-item", loc_key},
-				icons = omni.compression.add_overlay(item.name,"uncompress"),
-				icon_size = 32,
+				localised_name = omni.locale.custom_name(item, 'recipe-name.uncompress-item', class),
+				localised_description = omni.locale.custom_description(item, 'recipe-description.uncompress-item', class),
+				icons = omni.lib.add_overlay(item.name,"uncompress"),
 				category = "compression",
 				enabled = true,
         hidden = true,
+        hide_from_player_crafting = omni.compression.hide_handcraft,
         order = order,
         normal = {
           ingredients = {
@@ -278,6 +251,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
           energy_required = item.stack_size / speed_div,
           enabled = true,
           hidden = true,
+          hide_from_player_crafting = omni.compression.hide_handcraft
         },
         expensive = {
           ingredients = {
@@ -290,6 +264,7 @@ for _, group in pairs({"item", "ammo", "module", "rail-planner", "repair-tool", 
           energy_required = item.stack_size / speed_div,
           enabled = true,
           hidden = true,
+          hide_from_player_crafting = omni.compression.hide_handcraft
         },
       }
       --omni.marathon.standardise(uncompress)
@@ -306,7 +281,7 @@ for _, rec in pairs(data.raw.recipe) do
   for _, dif in pairs({"normal", "expensive"}) do
     for _, ing in pairs(rec[dif].ingredients) do
       if excluded_items[ing.name] then
-        log("Excluded recipe '"..rec.name.."' due to '"..ing.name.."' being on the blacklist")
+        --log("Excluded recipe '"..rec.name.."' due to '"..ing.name.."' being on the blacklist")
         omni.compression.exclude_recipe(rec.name)
       end
     end

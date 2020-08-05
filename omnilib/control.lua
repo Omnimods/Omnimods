@@ -45,12 +45,11 @@ local function update_last_tier(recipe, full_refresh)
 		local I = full_refresh and 97 or recipe_tree.active_tier
 		local research_status = not not (recipe.force.technologies["compression-recipes"] or {}).researched
 		repeat
-			for variant, recipe_name in pairs(recipe_tree[I]) do
+			for variant, recipe_name in pairs(recipe_tree[I] or {}) do
 				local force_recipe = recipe.force.recipes[recipe_name]
 				local is_compressed = global.omni.recipes[recipe.name].compressed
 				local desired_status = is_compressed and research_status or (I == metadata.tier) -- True if we're on the final tier, false otherwise
 				if force_recipe.enabled ~= desired_status then
-					--log((desired_status and "Enabled" or "Disabled") .. " recipe: " .. force_recipe.name)
 					force_recipe.enabled = desired_status
 				end
 			end
@@ -77,17 +76,20 @@ local function update_recipe(recipe, enabled_override)
 	if not recipe or not recipe.valid then
 		return
 	end
+
 	local name = recipe.name
 	local force_techs = recipe.force.technologies
 	local recipe_tree, metadata = get_recipe_family(recipe)
-	if recipe.enabled and recipe_tree and metadata.tier < recipe_tree.active_tier then-- Irrelevant recipe!
+
+	if recipe_tree and metadata.tier < recipe_tree.active_tier then-- Irrelevant recipe!
 		enabled_override = false
 	end
-	if enabled_override ~= nil then
-		recipe.enabled = enabled_override
-		if not recipe.enabled then -- Nothing further to do if we killed it
-			return
-		end
+	
+	if enabled_override ~= nil and enabled_override == false then
+		recipe.enabled = false
+		return
+	else
+		recipe.enabled = true
 	end
 	-- Update according to compression research status
 	if not recipe_tree and 
@@ -97,7 +99,8 @@ local function update_recipe(recipe, enabled_override)
 		not name:find("concentrated", nil, true) then
 		local recipes = recipe.force.recipes
 		-- Handle both compressed and permuted recipes.
-		local compressed, permuted_compressed = recipes[string.format("%s-compression",name)], recipes[name:gsub("omniperm","compression-omniperm")]
+		local compressed = recipes[string.format("%s-compression",name)]
+		local permuted_compressed = name:find("omniperm") and name:gsub("omniperm","compression-omniperm")
 		if compressed then
 			compressed.enabled = true
 		end
@@ -179,7 +182,8 @@ local function update_force(force, silent)
 	local profiler = not silent and game.create_profiler()
 	--log("Updating force: " .. force.name)
 	--log("\tSyncing compressed and standard tech research states")
-	for _, tech in pairs(force.technologies) do
+	local force_techs = force.technologies
+	for _, tech in pairs(force_techs) do
 		update_tech(tech)
 	end
 	if profiler then
@@ -197,7 +201,15 @@ local function update_force(force, silent)
 	--log("Updating any default recipes")
 	for recipe_name in pairs(global.omni.stock_recipes) do
 		if force.recipes[recipe_name] then
-			update_recipe(force.recipes[recipe_name])
+			update_recipe(force.recipes[recipe_name], true)
+			for tier, tech_name in pairs(building_tiers) do
+				if force_techs[tech_name] and force_techs[tech_name].researched then
+					local recipe_name = string.format("%s-compressed-%s", recipe_name, tier)
+					update_recipe(force.recipes[recipe_name], true)
+				else
+					break -- Tiers in order, don't continue once we hit one that's locked
+				end
+			end
 		end
 	end
 	if profiler then
@@ -310,7 +322,26 @@ function acquire_data(game)
 	for name, recipe in pairs(game.recipe_prototypes) do
 		for index, pattern in pairs(patterns) do
 			local match = select(3,name:find(pattern))-- We only care about match position, denoted by ()
-			if match and recipe.category and recipe.category:find("omni") then-- KR2 recipe names will screw us otherwise
+			if
+				match and
+				(
+					index < 3 and
+					(
+						(
+							recipe.category and
+							recipe.category:find("omni")
+		 				) or 
+						name:find("omni")
+					) or
+					(
+						(
+							recipe.category and 
+							recipe.category:find("compress")
+				 		) or
+						name:find("compress")
+					)
+				)
+			then-- KR2 recipe names will screw us otherwise
 				local base = name:sub(1, match-1)
 				local tier = name:sub(match, match):byte()
 				local variant = name:sub(match+1)
@@ -351,7 +382,6 @@ function acquire_data(game)
 	global.omni.stock_recipes = stock_recipes
 	global.omni.stock_fluids = stock_fluids
 	global.omni.tiered_buildings = tiered_buildings
-
 end
 
 script.on_configuration_changed( function(conf)

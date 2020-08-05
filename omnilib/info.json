@@ -10,12 +10,10 @@
     "?bobmodules",
     "!GDIW",
     "!fluid_permutations",
-    "!bobtechcolorsforomnilib",
     "(?)angelsrefining",
     "(?)angelsindustries",
     "(?)pyalienlife",
     "(?)pypetroleumhandling",
-    "(?)pyrawores",
-    "!player-count-based-research-speed"
+    "(?)pyrawores"
 ]
 }

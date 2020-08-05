@@ -475,20 +475,6 @@ function OmniGen:wasteYieldResults()
 	return clone_function(f)
 end
 
-function prototype_icon(proto)
-	local item = omni.lib.find_prototype(proto)
-	local icons = {}
-	if item ~= nil then
-		if item.icon then
-			icons = {icon = item.icon}
-		else
-			icons = item.icons
-		end
-	end
-	if #icons == 0 or icons == {} then icons = nil end
-	return icons
-end
-
 function linear_gen(start, final, levels, grade)
 	return start + (final-start)*(grade-1)/(levels-1)
 end
@@ -496,20 +482,19 @@ function standard_linear(levels,grade)
 	return linear_gen(6,12,levels,grade)
 end
 
-function ItemGen:create(mod,name)
-	local m = nil
-	--if string.find(mod,"omnimatter") then m = "__"..mod.."__" end
-  --if mod == nil or mod == "omnimatter" then m = "__omnimatter__" end
-  local nm=name
-  if type(nm)~=string then nm="omni" end
+function ItemGen:create(mod_name, item_name)
+	local new_name = item_name
+	if type(new_name) ~= "string" then
+		new_name = "omni" 
+	end
 	local t = {
-		mod = mod,
-		name=name,
-		loc_name=function(levels,grade) return nil end,
+		mod = mod_name,
+		name = item_name,
+		loc_name = function(levels,grade) return nil end,
 		loc_desc =  function(levels,grade) return nil end,
 		icons = function(levels,grade) return nil end,
 		flags = {},
-		order=function(levels,grade) return "y["..nm.."]" end,
+		order = function(levels,grade) return "y["..new_name.."]" end,
 		stack_size = 100,
 		subgroup = function(levels,grade) return "raw-resource" end,
 		fuel_value = nil,
@@ -521,9 +506,13 @@ function ItemGen:create(mod,name)
 		type="item",
 		force = false,
 	}
-	if mod then
-		m="__"..mod.."__"
-		t.icons = function(levels,grade) return {{icon = m.."/graphics/icons/"..name..".png"}} end
+	if mod_name then
+		mod_name = "__" .. mod_name .. "__"
+		t.icons = function(levels,grade)
+			return {{
+				icon = mod_name.."/graphics/icons/"..item_name..".png"
+			}}
+		end
 	end
 	return setmetatable(t,ItemGen)
 end
@@ -542,7 +531,7 @@ function ItemGen:import(item)
 		setPlace(proto.place_result):
 		setSubgroup(proto.subgroup):
 		setFuelCategory(proto.fuel_category):
-		setIcons(proto.icons or proto.icon):
+		setIcons(proto.icons or proto.icon or omni.icon.of(proto, true)):
 		setFuelValue(proto.fuel_value)
 		if item.type == "fluid" then
 			it:fluid():
@@ -748,14 +737,16 @@ function ItemGen:addSteamIcon()
 		shift = {-10, 10}})
 	return self
 end
-function ItemGen:addSmallIcon(icon,nr)
+function ItemGen:addSmallIcon(icon, nr)
 	local quad = {{10, -10},{-10, -10},{-10, 10},{10, 10}}
-	local icons = prototype_icon(icon)
+	local icons = omni.icon.of(icon, true)
 	local ic_sz=32
 	if icons then
-		if icons.icon_size then ic_sz=icons.icon_size end
-		for _,ic in pairs(icons) do
-			if ic.icon_size then ic_sz=ic.icon_size	end
+		ic_sz = icons.icon_size or ic_sz
+		for _, ic in pairs(icons) do
+			if ic.icon_size then
+				ic_sz = ic.icon_size
+			end
 			self:addIcon({icon = ic.icon,
 			icon_size=ic_sz,
 				scale = 0.4375*(ic.scale or 32/ic_sz),
@@ -1193,7 +1184,7 @@ function RecGen:import(recipe)
 			setPlace(proto.place_result):
 			setSubgroup(proto.subgroup):
 			setFuelCategory(proto.fuel_category):
-			setIcons(proto.icons or proto.icon):
+			setIcons(proto.icons or proto.icon or omni.icon.of(proto, true)):
 			setFuelValue(proto.fuel_value)
 			if proto.place_as_tile then r:tile():setPlace(proto.place_as_tile.result) end
 			if proto.type == "fluid" then
@@ -1214,7 +1205,7 @@ function RecGen:import(recipe)
 		setCategory(recipe.category):
 		setSubgroup(recipe.subgroup or r.subgroup(0,0)):
 		setOrder(recipe.order or r.order(0,0)):
-		setIcons(recipe.icons or recipe.icon or r.icons(0,0)):
+		setIcons(recipe.icons or recipe.icon or r.icons(0,0) or omni.icon.of(recipe, true)):
 		setHidden(recipe.hidden or false):
 		setName(recipe.name)
 
@@ -2814,7 +2805,7 @@ function BuildGen:import(name)
 		b[name]=table.deepcopy(data)
 	end
 	--if build.energy_source.type=="burner" then b:setBurner(self.energy_source.effectivity,self.energy_source.fuel_inventory_size) end
-	return b:setType(build.type):setFlags(build.flags):setIcons(build.icons or build.icon)
+	return b:setType(build.type):setFlags(build.flags):setIcons(build.icons or build.icon or omni.icon.of(build, true))
 end
 function BuildGen:importIf(name)
 	local build = omni.lib.find_entity_prototype(name) or omni.lib.find_entity_prototype("burner-"..name)

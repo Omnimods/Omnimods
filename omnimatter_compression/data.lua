@@ -6,7 +6,7 @@ require("prototypes/recipe-categories")
 require("prototypes/technologies")
 require("prototypes/auto-compressor")
 require("prototypes/planner")
-require("function")
+require("prototypes/functions")
 data:extend({
   {
     type = "custom-input",
