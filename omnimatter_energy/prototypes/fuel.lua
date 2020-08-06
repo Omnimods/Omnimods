@@ -91,8 +91,7 @@ for _,fuelitem in pairs(data.raw.item) do
         fuelitem.fuel_category = "omni-0"
 
 
-       log("Created Omnified "..fuelitem.name)
-      -- log(serpent.block(data.raw["item"]["omni-energy-"..fuelitem.name]))
+       --log("Created Omnified "..fuelitem.name)
     end
 ::continue::
 end
