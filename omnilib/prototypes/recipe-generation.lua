@@ -702,7 +702,8 @@ function ItemGen:addMask(...)
 	local icons = self.icons(0,0)
 	self:addIcon({
 		icon = string.sub(icons[#icons].icon,1,-5).."-mask.png",
-		tint=table.deepcopy(arg)
+		tint=table.deepcopy(arg),
+		icon_size = icons[#icons].icon.icon_size or 32
 	})
 	return self
 end
