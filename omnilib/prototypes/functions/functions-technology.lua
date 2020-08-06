@@ -85,15 +85,19 @@ function omni.lib.remove_science_pack(tech,pack)
 			end
 		end
 	else
-		log(tech.." does not seem to exist, check spelling and mods.")
+		log("Can not find tech "..tech.." to replace science pack "..pack)
 	end
 end
 
 function omni.lib.replace_prerequisite(tech,old, new)
-	for i,req in pairs(data.raw.technology[tech].prerequisites) do
-		if req==old then
-			data.raw.technology[tech].prerequisites[i]=new
+	if data.raw.technology[tech] then
+		for i,req in pairs(data.raw.technology[tech].prerequisites) do
+			if req==old then
+				data.raw.technology[tech].prerequisites[i]=new
+			end
 		end
+	else
+		log("Can not find tech "..tech.." to replace prerequisite "..old.." with "..new)
 	end
 end
 
