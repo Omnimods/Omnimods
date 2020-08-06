@@ -90,7 +90,7 @@ function omni.lib.remove_science_pack(tech,pack)
 end
 
 function omni.lib.replace_prerequisite(tech,old, new)
-	if data.raw.technology[tech] then
+	if data.raw.technology[tech] and data.raw.technology[tech].prerequisites then
 		for i,req in pairs(data.raw.technology[tech].prerequisites) do
 			if req==old then
 				data.raw.technology[tech].prerequisites[i]=new
@@ -102,7 +102,7 @@ function omni.lib.replace_prerequisite(tech,old, new)
 end
 
 function omni.lib.remove_prerequisite(tech,prereq)
-	if data.raw.technology[tech] then
+	if data.raw.technology[tech] and data.raw.technology[tech].prerequisites then
 		local pr={}
 		for i,req in pairs(data.raw.technology[tech].prerequisites) do
 			if req~=prereq then
