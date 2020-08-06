@@ -102,20 +102,28 @@ function omni.lib.replace_prerequisite(tech,old, new)
 end
 
 function omni.lib.remove_prerequisite(tech,prereq)
-	local pr={}
-	for i,req in pairs(data.raw.technology[tech].prerequisites) do
-		if req~=prereq then
-			pr[#pr+1]=req
+	if data.raw.technology[tech] then
+		local pr={}
+		for i,req in pairs(data.raw.technology[tech].prerequisites) do
+			if req~=prereq then
+				pr[#pr+1]=req
+			end
 		end
+		data.raw.technology[tech].prerequisites=pr
+	else
+		log("Can not find tech "..tech.." to remove prerequisite "..prereq)
 	end
-	data.raw.technology[tech].prerequisites=pr
 end
 
 function omni.lib.set_prerequisite(tech, req)
-	if type(req) == "table" then
-		data.raw.technology[tech].prerequisites = req
+	if data.raw.technology[tech] then
+		if type(req) == "table" then
+			data.raw.technology[tech].prerequisites = req
+		else
+			data.raw.technology[tech].prerequisites = {req}
+		end
 	else
-		data.raw.technology[tech].prerequisites = {req}
+		log("Can not find tech "..tech.." to set prerequisite "..prereq)
 	end
 end
 
