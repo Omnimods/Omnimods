@@ -130,10 +130,13 @@ if angelsmods and angelsmods.refining then
 
 	--check ore triggers
 	for i, ores in pairs(angelsores) do
-        if angelsmods.functions.ore_enabled(ores.ore) then
-            omni.crystal.add_crystal(ores.ore,ores.product)
-        end
+    --[[if angelsmods.functions.ore_enabled(ores.ore) then
+      omni.crystal.add_crystal(ores.ore,ores.product)
+    end]]
+    if angelsmods.trigger.ores[string.match(ores.ore,"(.*%a)-.*%a")] then
+      omni.crystal.add_crystal(ores.ore,ores.product)
     end
+  end
 
 	local rec = {}
 	local crystalines = {}
