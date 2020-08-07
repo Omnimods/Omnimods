@@ -242,6 +242,37 @@ end
 local supremumTime = settings.startup["omnicompression_too_long_time"].value
 --output(results) adjustments
 function adjustOutput(recipe)
+  -- Rocket case
+  local rocket_mult = 1
+  local silos = {}
+  -- Case: Rocket Parts
+  for _, proto in pairs(data.raw["rocket-silo"]) do
+    if (-- If our recipe matches or our category is applicable
+      (proto.fixed_recipe and 
+      proto.fixed_recipe == recipe.name) or
+      (proto.crafting_categories and 
+      recipe.category and
+      omni.lib.is_in_table(recipe.category, proto.crafting_categories))
+      ) 
+      and recipe.name:find("-compression$")
+    then
+      local old_recipe = omni.locale.find(recipe.name:gsub("-compression$", ""), "recipe")
+      local old_item = omni.locale.find(
+        omni.locale.get_main_product(
+          old_recipe
+        ).name,
+        "item"
+      )
+      local product = (proto.rocket_parts_required / old_item.stack_size)
+      local old_req = proto.rocket_parts_required
+      if product%1 == 1 then -- Whole number, no mult needed to be set
+        proto.rocket_parts_required = product
+      else
+        rocket_mult = old_item.stack_size / omni.lib.gcd(old_req, old_item.stack_size) -- Smallest whole multiple
+        proto.rocket_parts_required = old_req / omni.lib.gcd(old_req, old_item.stack_size)
+      end
+    end
+  end
 	for _, dif in pairs({"normal","expensive"}) do
 		local gcd = 0
 		local tooMuchIng = nil
@@ -286,35 +317,47 @@ function adjustOutput(recipe)
 					end
 				end
       end
-			for _,res in pairs(recipe[dif].results) do
-				if div then
-					res.amount = res.amount/div
-				end
-				if res.type == "item" then
-					--if res.amount_max then res.amount = (res.amount_max+res.amount_min)/2 end
-					--if res.probability then res.amount = res.amount*res.probability end
-					while res.amount > compressed_item_stack_size do
-						local add = table.deepcopy(res)
-						add.amount = compressed_item_stack_size
-						res.amount = res.amount - compressed_item_stack_size
-						table.insert(recipe[dif].results,add)
-					end
-					if res.amount and math.floor(res.amount) ~= res.amount and res.amount > 1 then
-						local add = table.deepcopy(res)
-						add.probability = res.amount-math.floor(res.amount)
-						res.amount = math.floor(res.amount)
-						add.amount = 1
-						table.insert(recipe[dif].results,add)
-					end
-				end
+      for _, res in pairs(recipe[dif].results) do
+        if div then
+          res.amount = res.amount / div
+        end
+        res.amount = res.amount * rocket_mult -- Rockets
+        if res.type == "item" then
+          -- Case: satellite
+          if dif == "normal" and omni.locale.get_main_product(recipe) then
+            -- Satellite
+            local launch_item = omni.locale.find(res.name, "item")
+            local product_table = launch_item.rocket_launch_product and
+              {launch_item.rocket_launch_product}
+              or launch_item.rocket_launch_products
+              or {}
+            for _, product in pairs(product_table) do           
+              -- Scale
+              if product.name and product.amount then
+                local product_proto = product.name:find("compressed") and omni.locale.find(product.name:gsub("compressed%-", ""), "item") or omni.locale.find(product.name, "item")
+                product.amount = math.max(1, (res.amount * product.amount) / product_proto.stack_size)
+              end
+            end
+            -- Aaaand insert
+            if #product_table > 0 then
+              launch_item.rocket_launch_products = product_table
+              launch_item.rocket_launch_product = nil
+              res.amount = (launch_item.stack_size == 1) and 1 or res.amount -- Revert amount if necessary
+            end
+          end
+          if res.amount > 10^16 then
+            res.amount = math.ceil(res.amount / 2)
+            table.insert(recipe[dif].results, table.deepcopy(res))
+          end
+        end
 			end
 			if div then
 				for _, ing in pairs(recipe[dif].ingredients) do
-          ing.amount = ing.amount/div
+          ing.amount = (ing.amount/div) * rocket_mult -- More rockets
 				end
-				recipe[dif].energy_required=recipe[dif].energy_required/div
+				recipe[dif].energy_required = (recipe[dif].energy_required / div) * rocket_mult -- Rockets
 			end
-		end
+    end
   end
 	return recipe
 end
@@ -386,7 +429,7 @@ function create_compression_recipe(recipe)
               --contains solids and results with no probability--
             -------------------------------------------------------------------------------
             if not_only_fluids(recipe) then
-                            --log(serpent.block(recipe.name .. " not_only_fluids"))
+              --log(serpent.block(recipe.name .. " not_only_fluids"))
               ------------------------------------
               -- **Set-up required parameters** --
               ------------------------------------
@@ -823,6 +866,14 @@ end
 -------------------------------------------------------------------------------
 --[[Extend tables]]--
 -------------------------------------------------------------------------------
+-- Final check
+if not data.raw["recipe-category"]["general-compressed"] then
+  data:extend({{
+    type = "recipe-category",
+    name = "general-compressed"
+  }})
+end
+-- Extend
 data:extend(new_cat)
 if #compress_recipes ~= 0 then
   data:extend(compress_recipes) --for generator fluid recipes
