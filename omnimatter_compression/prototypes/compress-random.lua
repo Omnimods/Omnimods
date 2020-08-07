@@ -119,7 +119,7 @@ for _,recipe in pairs(check_recipes) do
             local new_tab = new_rec[dif].results[i]
             --get style
             if prob_tab.style == "min-max" then
-              if math.floor(new_tab.amount*prob_tab.mm_prob) > new_tab.amount then --check it actually gets a range
+              if new_tab.amount and math.floor(new_tab.amount*prob_tab.mm_prob) > new_tab.amount then --check it actually gets a range
                 new_tab.amount_min = new_tab.amount
                 new_tab.amount_max = math.floor(new_tab.amount*prob_tab.mm_prob) --always round down
                 new_tab.amount = nil --remove standard if min and max exist
