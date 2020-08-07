@@ -1,6 +1,6 @@
 {
 "name":"omnimatter_energy",
-"version": "1.18.9",
+"version": "1.18.11",
 "title":"Omnienergy",
 "author":"EmperorZelos",
 "description":"Start with limited access to fuel and research better refining methods up to renewable energy",
@@ -10,10 +10,10 @@
     "omnilib >= 3.18.13",
     "omnimatter",
     "omnimatter_crystal",
-    "(?)bobplates",
     "?boblogistics",
-    "(?)deadlock-integrations",
     "?bobassembly",
+    "(?)bobplates",
+    "(?)deadlock-integrations",
     "!aai-industry"
 ]
 }

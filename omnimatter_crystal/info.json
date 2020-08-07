@@ -1,6 +1,6 @@
 {
 "name":"omnimatter_crystal",
-"version":"3.18.6",
+"version":"3.18.7",
 "title":"Omnicrystal",
 "author":"EmperorZelos",
 "description":"Adds crystalline branches for technology",
@@ -8,5 +8,6 @@
 "dependencies":[
 	"base",
 	"omnilib >= 3.18.5",
-	"omnimatter >= 3.18.3"]
+	"omnimatter >= 3.18.3"
+]
 }

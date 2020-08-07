@@ -34,7 +34,7 @@ end
 
 
 omni.crystal.add_crystal=function(metal,name,recipe)
-	if data.raw.item[metal] then
+	if data.raw.item[metal] and not data.raw.recipe[metal.."-crystal"] then
 		omni.crystal.metals[#omni.crystal.metals+1]=data.raw.item[metal]
 
 		RecGen:create("omnimatter_crystal",metal.."-crystal"):
@@ -42,6 +42,7 @@ omni.crystal.add_crystal=function(metal,name,recipe)
 			setFuelValue(35):
 			setFuelCategory("crystal"):
 			setSubgroup("crystallization"):
+			setOrder("a["..metal.."-crystal]"):
 			setStacksize(500):
 			marathon():
 			setIcons(metal.."-crystal"):
@@ -67,6 +68,7 @@ omni.crystal.add_crystal=function(metal,name,recipe)
 			fluid():
 			setBothColour(1,1,1):
 			setSubgroup("solvation"):
+			setOrder("a["..metal.."-omnide-solution]"):
 			marathon():
 			setIcons("omnide-solution"):
 			addSmallIcon(metal,3):
@@ -81,6 +83,7 @@ omni.crystal.add_crystal=function(metal,name,recipe)
 		RecGen:create("omnimatter_crystal",metal.."-crystal-omnitraction"):
 			setLocName("crystal-omnitraction","item-name."..metal):
 			setSubgroup("traction"):
+			setOrder("a["..metal.."-crystal-omnitraction]"):
 			marathon():
 			setIcons(metal):
 			setCategory("omnite-extraction"):
@@ -113,6 +116,8 @@ local results_solvation=function(recipe)
 	return ing
 end
 
+
+--Dead function ?
 omni.crystal.add_recipe=function(recipe,name)
 	crystalines={}
 	local ing = ingrediences_solvation(recipe)
@@ -130,7 +135,6 @@ omni.crystal.add_recipe=function(recipe,name)
 		crystalines[#crystalines+1]=cat
 	end
 	----log(recipe..":"..metal..","..data.raw.recipe[recipe].subgroup.."-omnide")
-
 	local solution = {
 		type = "recipe",
 		name = metal.."-salting",
@@ -138,11 +142,10 @@ omni.crystal.add_recipe=function(recipe,name)
 		localised_description = {"recipe-description.pure_extraction", loc_key},
 		category = "omniplant",
 		subgroup = data.raw.recipe[recipe].subgroup.."-omnide",
+		order = data.raw.recipe[recipe].order,
 		enabled = false,
 		ingredients = ing,
-		order = "a[angelsore1-crushed]",
 		icons = ic,
-		--icon_size = 32,
 		results = res,
 		energy_required = 5,
 	}

@@ -48,7 +48,7 @@ data:extend(
   },
   {
     type = "item-subgroup",
-    name = "omni-fluids",
+    name = "crystal-fluids",
 	group = "omnicrystal",
 	order = "ad",
   },

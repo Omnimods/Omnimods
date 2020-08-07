@@ -50,7 +50,7 @@ if mods["angelsindustries"] and angelsmods.industries.components then
 	RecGen:import("electric-mining-drill"):
 	setTechName("anbaric-mining"):
 	setTechCost(100):
-	setTechIcon("omnimatter_energy","anbaric-mining"):
+	setTechIcon("omnimatter_energy","mining-drill"):
 	setTechPacks(1):
 	setEnabled(false):
 	setTechPrereq("anbaricity"):extend()
@@ -72,7 +72,7 @@ else
       {type="item", name="burner-mining-drill", amount=1}):
 	setTechName("anbaric-mining"):
 	setTechCost(100):
-	setTechIcon("omnimatter_energy","anbaric-mining"):
+	setTechIcon("omnimatter_energy","mining-drill"):
 	setTechPacks(1):
 	setEnabled(false):
 	setTechPrereq("anbaricity"):extend()
@@ -196,7 +196,7 @@ if data.raw.recipe["lab"].enabled == false then
 	RecGen:import("lab"):
 		setTechLocName("anbaric-lab"):
 		addIngredients({"omnitor-lab",1}):
-		setTechIcon("omnimatter_energy","anbaric-lab"):
+		setTechIcon("omnimatter_energy","lab"):
 		setTechCost(100):extend()
 
 	omni.lib.add_prerequisite(omni.lib.get_tech_name("lab"), "anbaricity")
@@ -207,7 +207,7 @@ else
 		setTechLocName("anbaric-lab"):
 		addIngredients({"omnitor-lab",1}):
 		setTechCost(100):
-		setTechIcon("omnimatter_energy","anbaric-lab"):
+		setTechIcon("omnimatter_energy","lab"):
 		setTechPacks(1):
 		setTechPrereq("anbaricity"):extend()
 end

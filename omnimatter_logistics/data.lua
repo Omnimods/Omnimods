@@ -1,5 +1,5 @@
 if not omni then omni={} end
-if not omni.crystal then omni.logistics={} end
+if not omni.logistics then omni.logistics={} end
 
 require("prototypes.categories")
 require("prototypes.equipment.armour") --just adds a primative armour
