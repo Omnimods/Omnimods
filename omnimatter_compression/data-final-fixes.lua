@@ -1,4 +1,3 @@
---require('__debugadapter__/debugadapter.lua')
 --Regular Variables
 if not mods["omnimatter_marathon"] then
 	for _, rec in pairs(data.raw.recipe) do
