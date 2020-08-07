@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.4
-Date: 2020.08.xx
+Date: 2020.08.07
   Features:
     - Properly integrated all water extraction techs into the tech tree
   Changes:

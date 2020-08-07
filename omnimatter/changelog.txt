@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.10
-Date: 2020.08.xx
+Date: 2020.08.07
   Features:
     - Properly integraded water omnitraction into the tech tree
     - Added a basic water omnitraction recipe

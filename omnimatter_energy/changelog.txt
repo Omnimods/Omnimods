@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.18.11
-Date: 2020.08.xx
+Date: 2020.08.07
   Changes:
     - Made the omnifurnace mk 3 electric
     - Moved fuel related functions into omnilib

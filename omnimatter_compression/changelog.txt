@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.11
-Date: 2020.08.05
+Date: 2020.08.07
   Features:
     - Indicator for compressed items, recipes, techs
     - Additional balance and sorting settings
