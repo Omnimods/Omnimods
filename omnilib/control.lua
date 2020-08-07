@@ -448,5 +448,9 @@ script.on_event(defines.events.on_player_changed_force, function(event)
 end)
 
 script.on_event(defines.events.on_player_created, function(event)
-	game.players[event.player_index].print{"message.omni-difficulty"}
+	if (settings.startup["angels-enable-tech"] or {}).value then
+		game.players[event.player_index].print{"message.omni-angelstech", {200,15,15}}
+	else
+		game.players[event.player_index].print{"message.omni-difficulty"}
+	end
 end)
