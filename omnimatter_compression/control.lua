@@ -58,7 +58,10 @@ script.on_event("decompress-stack", function(event)
 					else
 						item.clear()
 					end
-					player.insert(decompressed)-- Defaults to a stack?
+					player.insert({
+						name = decompressed,
+						count = math.min(game.item_prototypes[decompressed].stack_size, 65535)
+					})-- Defaults to a stack?
 					return -- Don't bother continuing
 				end
 			end
