@@ -238,7 +238,7 @@ local function update_building_recipes(silent)
 					(new_recipe.name ~= recipe.name) and
 					settings.global["omnilib-autoupdate"].value -- Let's follow the user's preference :^)
 				then
-					local ingredients
+					local ingredients = {}
 					if entity.is_crafting() then
 						ingredients = recipe.ingredients or {}
 					end
