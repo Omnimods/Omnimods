@@ -33,7 +33,8 @@ local building_list = {--Types
   ["offshore-pump"] = true,
   ["inserter"] = true,
   ["loader-1x1"] = true,
-  ["burner-generator"] = true
+  ["burner-generator"] = true,
+  ["rocket-silo"] = true
 }
 local not_energy_use = {--Types
   "solar-panel",
@@ -248,7 +249,7 @@ local run_entity_updates = function(new, kind, i)
   --module slots
   if new.module_specification then new.module_specification.module_slots = new.module_specification.module_slots * (i+1) end
   --recipe category settings for assembly/furnace types
-  if kind == "assembling-machine" or kind == "furnace" then
+  if kind == "assembling-machine" or kind == "furnace" or kind == "rocket-silo" then
     local new_cat = {} --clear each time
     for j, cat in pairs(new.crafting_categories) do
       if not data.raw["recipe-category"][cat.."-compressed"] then --check if category exists
@@ -362,7 +363,7 @@ local run_entity_updates = function(new, kind, i)
     new.burner.emissions_per_minute = (new.burner.emissions_per_minute or 0) * math.pow(multiplier,i+1)
   end
   -- Rockets!
-  if kind == "rocket-silo" then
+  if kind == "rocket-silo" and new.fixed_recipe then
     new.door_opening_speed = new.door_opening_speed * math.pow(multiplier, i)
     new.rocket_result_inventory_size = 8
     new.fixed_recipe = new.fixed_recipe .. "-compression"
