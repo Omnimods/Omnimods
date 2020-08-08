@@ -663,6 +663,22 @@ function omni.lib.replace_recipe_all_techs(recipename,replacement)
 	end
 end
 
+function omni.lib.enable_recipe(recipename)
+    local rec = data.raw.recipe[recipename]
+    if rec then
+        --in some cases rec.enabled does not exist at all...
+        if rec.enabled or not (rec.normal or rec.expensive) then
+            rec.enabled = true
+        end
+        if rec.normal then
+            rec.normal.enabled = true
+        end
+        if rec.expensive then
+            rec.expensive.enabled = true
+        end
+    end
+end
+
 function omni.lib.disable_recipe(recipename)
     local rec = data.raw.recipe[recipename]
     if rec then
