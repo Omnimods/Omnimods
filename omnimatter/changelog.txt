@@ -5,7 +5,7 @@ Date: 2020.08.07
     - Properly integraded water omnitraction into the tech tree
     - Added a basic water omnitraction recipe
   Bugfixes:
-    - Fix bobs ground water not beeing removed with certain mod setups
+    - Fix bobs ground water not being removed with certain mod setups
     - Removed unneeded recipe standardisation
     - Multiple recipe subgroup and order fixes
 ---------------------------------------------------------------------------------------------------
