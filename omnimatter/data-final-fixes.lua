@@ -29,7 +29,8 @@ for _, fluid in pairs(data.raw.fluid) do
 		setIngredients({type="fluid",amount=360,name=fluid.name}):
 		setResults({type="fluid",amount=60,name="omnic-water"}):
 		setIcons("omnic-water"):
-		addSmallIcon(fluid.name,3):
+		--addSmallIcon(fluid.name,3):
+		addSmallIcon(fluid.icons or fluid.icon,3):
 		setCategory("omniphlog"):
 		setEnabled(fluid.name=="omnic-waste"):
 		setSubgroup(fluid.subgroup):

@@ -740,8 +740,13 @@ function ItemGen:addSteamIcon()
 end
 function ItemGen:addSmallIcon(icon, nr)
 	local quad = {{10, -10},{-10, -10},{-10, 10},{10, 10}}
-	local icons = omni.icon.of(icon, true)
+	local icons
 	local ic_sz=32
+	if type(icon) == "table" and icon[1] and icon[1].icon then
+		icons = icon 
+	else
+		icons = omni.icon.of(icon, true)
+	end
 	if icons then
 		ic_sz = icons.icon_size or ic_sz
 		for _, ic in pairs(icons) do
@@ -756,7 +761,9 @@ function ItemGen:addSmallIcon(icon, nr)
 		end
 	else
 		local ic = icon
-		self:addIcon({icon = icon,
+		self:addIcon({
+			icon = icon,
+			icon_size = icon.icon_size or ic_sz,
 			scale = 0.4375,
 			shift = quad[nr or 1]}) --currently "centres" the icon if it was already offset, may need to math that out
 	end
