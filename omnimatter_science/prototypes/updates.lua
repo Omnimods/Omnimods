@@ -74,14 +74,13 @@ if mods["omnimatter_crystal"] then
 	end
 
 	if mods["angelspetrochem"] then
-		omni.lib.replace_science_pack("chlorine-processing-2","chemical-science-pack")
 		omni.lib.replace_science_pack("angels-advanced-gas-processing","chemical-science-pack")
 		omni.lib.replace_science_pack("angels-advanced-oil-processing","chemical-science-pack")
 		omni.lib.add_science_pack("angels-advanced-chemistry-2")
 		omni.lib.add_science_pack("gas-steam-cracking-1")
 		omni.lib.add_science_pack("oil-steam-cracking-1")
 		omni.lib.add_science_pack("angels-nitrogen-processing-2")
-		omni.lib.add_science_pack("angels-chlorine-processing-2")
+		omni.lib.add_science_pack("chlorine-processing-2")
 	end
 
 	if mods["angelssmelting"] then
