@@ -66,7 +66,9 @@ for i,p in pairs(plates) do
 end
 if mods["bobplates"] then
 	data.raw.item["brass-gear-wheel"].icon="__omnimatter__/graphics/icons/brass-gear-wheel.png"
+	data.raw.item["brass-gear-wheel"].icon_size=32
 	data.raw.item["steel-gear-wheel"].icon="__omnimatter__/graphics/icons/steel-gear-wheel.png"
+	data.raw.item["steel-gear-wheel"].icon_size=32
 end
 
 data.raw.item["iron-gear-wheel"].icons={{icon="__omnimatter__/graphics/icons/iron-gear-wheel.png",icon_size=32,mipmaps=1}}
