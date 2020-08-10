@@ -575,13 +575,13 @@ end
 
 function omni.lib.replace_all_ingredient(ingredient, replacement)
 	for _,recipe in pairs(data.raw.recipe) do
-		omni.lib.replace_recipe_ingredient(recipe.name, ingredient,replacement)
+		omni.lib.replace_recipe_ingredient(recipe.name, ingredient, replacement)
 	end
 end
 
 function omni.lib.replace_all_result(result, replacement)
 	for _,recipe in pairs(data.raw.recipe) do
-		omni.lib.replace_recipe_result(recipe.name, ingredient,replacement)
+		omni.lib.replace_recipe_result(recipe.name, result, replacement)
 	end
 end
 
