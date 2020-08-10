@@ -69,7 +69,7 @@ function omni.lib.add_science_pack(tech,pack)
 			elseif type(pack)=="number" then
 				table.insert(data.raw.technology[tech].unit.ingredients,{type = "item", name = "omni-pack", amount = pack})
 			else
-				table.insert(data.raw.technology[tech].unit.ingredients,{type = "item", name = "omni-pack", amount = 1}})
+				table.insert(data.raw.technology[tech].unit.ingredients,{type = "item", name = "omni-pack", amount = 1})
 			end
 		else
 			log("Ingredient "..pack.." already exists.")
