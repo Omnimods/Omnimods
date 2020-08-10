@@ -10,7 +10,7 @@ if mods["angelsbioprocessing"] then
 
 	for i=1,3 do
 		local rec = data.raw.recipe["wood-sawing-"..i]
-		omni.lib.replace_recipe_result(rec, wood, omniwood)
+		omni.lib.replace_recipe_result(rec, "wood", "omniwood")
 		rec.icons[1].icon = data.raw.item["omniwood"].icons[1].icon
 		rec.icons[1].icon_size = data.raw.item["omniwood"].icons[1].icon_size
 		rec.icons[1].scale = 1
