@@ -29,25 +29,28 @@ for _, fluid in pairs(data.raw.fluid) do
 		setIngredients({type="fluid",amount=360,name=fluid.name}):
 		setResults({type="fluid",amount=60,name="omnic-water"}):
 		setIcons("omnic-water"):
-		addSmallIcon(fluid.name,3):
+		--addSmallIcon(fluid.name,3):
+		addSmallIcon(fluid.icons or fluid.icon,3):
 		setCategory("omniphlog"):
 		setEnabled(fluid.name=="omnic-waste"):
 		setSubgroup(fluid.subgroup):
 		--Same subgroup & order, but put the omnic water block behind all other recipes in that subgroup
 		setOrder("zzz"..(fluid.order or "")):
 		extend()
-		fluids[#fluids+1] = {new ="omniflush-"..fluid.name, old=fluid.name}
+		fluids[#fluids+1] = fluid.name
 	end
 end
 
 for _, rec in pairs(data.raw.recipe) do
-	for _, flu in pairs(fluids) do
-		if omni.lib.recipe_result_contains(rec.name, flu.old) then
-			local techname = omni.lib.get_tech_name(rec.name)
-			if techname then
-				omni.lib.add_unlock_recipe(techname, flu.new)
-			else
-				rec.enabled = true
+	if not rec.hidden and not string.find(rec.name, "barrel") then
+		for _, flu in pairs(fluids) do
+			if  omni.lib.recipe_result_contains(rec.name, flu) then
+				local techname = omni.lib.get_tech_name(rec.name)
+				if rec.enabled or (rec.normal and rec.normal.enabled) or (rec.expensive and rec.expensive.enabled) then
+					omni.lib.enable_recipe("omniflush-"..flu)
+				elseif techname then
+					omni.lib.add_unlock_recipe(techname, "omniflush-"..flu)
+				end
 			end
 		end
 	end

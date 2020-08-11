@@ -167,7 +167,7 @@ BuildChain:create("omnimatter_crystal","crystallomnizer"):
 	setTechName("crystallonics"):
 	setTechIcon("omnimatter_crystal","crystallonics"):
 	setTechCost(get_tech_times):
-	setTechPacks(function(levels,grade) return grade end):
+	setTechPacks(function(levels,grade) return grade + 1 end):
 	setReplace("crystallomnizer"):
 	setTechTime(function(levels,grade) return 15*grade end):
 	setTechPrereq(function(levels,grade)

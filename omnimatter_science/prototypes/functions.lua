@@ -14,7 +14,7 @@ omni.science.remaining_techs = {}
 local build_tech_list = function()
   for _,tech in pairs(data.raw.technology) do
   -- if modules
-    if string.find(tech.name,"module") or tech.name=="modules" then
+    if string.find(tech.name,"-module") or tech.name == "module-merging" then
       omni.science.exclude_tech[tech.name]=true
       goto continue 
     end
