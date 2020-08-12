@@ -157,7 +157,7 @@ local function generate_compressed_item(item, norecipe)
       for _, ingredient in pairs(recipe[difficulty].ingredients) do
         ingredient = omni.locale.parse_ingredient(ingredient)
         if ingredient.type == "item" and
-          not data.raw["item"]["compressed"..ingredient.name]
+          not data.raw["item"]["compressed-"..ingredient.name]
         then
           generate_compressed_item(data.raw.item[ingredient.name])
         end
@@ -165,7 +165,7 @@ local function generate_compressed_item(item, norecipe)
       for _, result in pairs(recipe[difficulty].results) do
         result = omni.locale.parse_product(result)
         if result.type == "item" and
-          not data.raw["item"]["compressed" .. result.name]
+          not data.raw["item"]["compressed-" .. result.name]
         then
           omni.compression.include_recipe(result.name)
           generate_compressed_item(data.raw.item[result.name])
