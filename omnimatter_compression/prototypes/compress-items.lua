@@ -242,8 +242,6 @@ local function generate_compressed_item(item, norecipe)
       localised_name = omni.locale.custom_name(item, 'recipe-name.compress-item'),
       localised_description = omni.locale.custom_name(item, 'recipe-description.compress-item'),
       category = "compression",
-      enabled = true,
-      hidden = true,
       icons = omni.lib.add_overlay(item,"compress"),
       order = order,
       normal = {
