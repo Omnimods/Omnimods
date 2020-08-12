@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.12
+Date: 2020.XX.XX
+  Features:
+    - Compressed rocket silo and satellite variants
+    - Alt-mode module scaling for compressed buildings
+  Bugfixes:
+    - Fixes to some locale entries
+    - More fuel attributes caught
+---------------------------------------------------------------------------------------------------
 Version: 3.18.11
 Date: 2020.08.07
   Features:

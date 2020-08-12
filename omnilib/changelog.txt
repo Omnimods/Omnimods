@@ -3,6 +3,8 @@ Version: 3.18.18
 Date: 2020.08.xx
   Features:
     - Added omni.lib.enable_recipe()
+  Bugfixes:
+    - Fix case where icon overlays weren't added correctly
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.17
 Date: 2020.08.07
