@@ -7,6 +7,7 @@ Date: 2020.XX.XX
   Bugfixes:
     - Fixes to some locale entries
     - More fuel attributes caught
+    - Fix some edge cases with chance-based recipes
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.11
 Date: 2020.08.07
