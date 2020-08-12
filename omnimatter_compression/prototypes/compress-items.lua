@@ -196,6 +196,8 @@ local function generate_compressed_item(item, norecipe)
     fuel_category = item.fuel_category,
     fuel_acceleration_multiplier = item.fuel_acceleration_multiplier,
     fuel_top_speed_multiplier = item.fuel_top_speed_multiplier,
+    fuel_emissions_multiplier = item.fuel_emissions_multiplier,
+    fuel_glow_color = item.fuel_glow_color,
     durability = item.durability,
     rocket_launch_product = table.deepcopy(item.rocket_launch_product),
     rocket_launch_products = table.deepcopy(item.rocket_launch_products)
