@@ -145,9 +145,9 @@ local function generate_compressed_item(item, norecipe)
   local place_result = omni.locale.find(item.place_result, "entity", true)
   if omni.compression.stack_compensate and item.stack_size > 1 then --setting variable and stack size exclusion
     if not item.place_result or place_result == nil then
-      item.stack_size = omni.lib.round_up(item.stack_size/60)*60
+      item.stack_size = math.ceil(item.stack_size/60)*60
     else
-      item.stack_size = omni.lib.round_up(item.stack_size/6)*6
+      item.stack_size = math.ceil(item.stack_size/6)*6
     end
   end
   -- Rockets and whatnot
