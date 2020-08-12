@@ -257,12 +257,7 @@ function adjustOutput(recipe)
       and recipe.name:find("-compression$")
     then
       local old_recipe = omni.locale.find(recipe.name:gsub("-compression$", ""), "recipe")
-      local old_item = omni.locale.find(
-        omni.locale.get_main_product(
-          old_recipe
-        ).name,
-        "item"
-      )
+      local old_item = omni.locale.find(omni.locale.get_main_product(old_recipe).name, "item")
       local product = (proto.rocket_parts_required / old_item.stack_size)
       local old_req = proto.rocket_parts_required
       if product%1 == 1 then -- Whole number, no mult needed to be set
