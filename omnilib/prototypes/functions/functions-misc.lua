@@ -265,11 +265,6 @@ function omni.lib.insert(array, ins)
 end
 --mathematics
 
-function omni.lib.round_up(number)
-	local decimal = number-math.floor(number)
-	if decimal > 0 then return math.floor(number)+1 else return math.floor(number) end
-end
-
 function omni.lib.round(number)
 	local decimal = number-math.floor(number)
 	if decimal > 0.5 then return math.floor(number)+1 else return math.floor(number) end
@@ -325,9 +320,9 @@ function omni.lib.achain_omnite_cost(item,chain)
 	for _,result in pairs(data.raw.recipe[chain[1]].results) do
 		if result.type == "item" and result.name == item then
 			if result.amount then
-				target_amount = omni.lib.round_up(1/result.amount)
+				target_amount = math.ceil(1/result.amount)
 			else
-				target_amount = omni.lib.round_up(1/((result.amount_min+result.amount_max)/2*result.probability))
+				target_amount = math.ceil(1/((result.amount_min+result.amount_max)/2*result.probability))
 			end
 			break
 		end
@@ -356,9 +351,9 @@ function omni.lib.chain_omnite_cost(item,chain)
 	for _,result in pairs(data.raw.recipe[chain[1]].results) do
 		if result.type == "item" and result.name == item then
 			if result.amount then
-				target_amount = omni.lib.round_up(1/result.amount)
+				target_amount = math.ceil(1/result.amount)
 			else
-				target_amount = omni.lib.round_up(1/((result.amount_min+result.amount_max)/2*result.probability))
+				target_amount = math.ceil(1/((result.amount_min+result.amount_max)/2*result.probability))
 			end
 			break
 		end

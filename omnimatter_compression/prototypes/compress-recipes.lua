@@ -511,7 +511,7 @@ function create_compression_recipe(recipe)
                   for _,dif in pairs({"normal","expensive"}) do
                     if #r[dif].results == 1 and omni.lib.find_entity_prototype(string.sub(r[dif].results[1].name,string.len("compressed-")+1,string.len(r[dif].results[1].name))) then
                       for _,ing in pairs(r[dif].ingredients) do
-                        ing.amount = omni.lib.round_up(ing.amount/r[dif].results[1].amount)
+                        ing.amount = math.ceil(ing.amount/r[dif].results[1].amount)
                       end
                       r[dif].energy_required = r[dif].energy_required/r[dif].results[1].amount
                       r[dif].results[1].amount=1
