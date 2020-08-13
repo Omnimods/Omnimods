@@ -264,7 +264,7 @@ function adjustOutput(recipe)
         proto.rocket_parts_required = product
       else
         rocket_mult = old_item.stack_size / omni.lib.gcd(old_req, old_item.stack_size) -- Smallest whole multiple
-        proto.rocket_parts_required = old_req / omni.lib.gcd(old_req, old_item.stack_size)
+        proto.rocket_parts_required = (old_req / omni.lib.gcd(old_req, old_item.stack_size)) * 10
       end
     end
   end
