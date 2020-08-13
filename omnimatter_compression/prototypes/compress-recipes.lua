@@ -238,13 +238,12 @@ function get_recipe_values(ingredients, results)
     results = newres
   }
 end
-
+local silos = {} -- For later reference
 local supremumTime = settings.startup["omnicompression_too_long_time"].value
 --output(results) adjustments
 function adjustOutput(recipe)
   -- Rocket case
   local rocket_mult = 1
-  local silos = {}
   -- Case: Rocket Parts
   for _, proto in pairs(data.raw["rocket-silo"]) do
     if (-- If our recipe matches or our category is applicable
@@ -260,11 +259,12 @@ function adjustOutput(recipe)
       local old_item = omni.locale.find(omni.locale.get_main_product(old_recipe).name, "item")
       local product = (proto.rocket_parts_required / old_item.stack_size)
       local old_req = proto.rocket_parts_required
+      silos[#silos+1] = proto -- For later reference
       if product%1 == 1 then -- Whole number, no mult needed to be set
         proto.rocket_parts_required = product
       else
         rocket_mult = old_item.stack_size / omni.lib.gcd(old_req, old_item.stack_size) -- Smallest whole multiple
-        proto.rocket_parts_required = (old_req / omni.lib.gcd(old_req, old_item.stack_size)) * 10
+        proto.rocket_parts_required = (old_req / omni.lib.gcd(old_req, old_item.stack_size))
       end
     end
   end
@@ -331,6 +331,10 @@ function adjustOutput(recipe)
               if product.name and product.amount then
                 local product_proto = product.name:find("compressed") and omni.locale.find(product.name:gsub("compressed%-", ""), "item") or omni.locale.find(product.name, "item")
                 product.amount = math.max(1, (res.amount * product.amount) / product_proto.stack_size)
+                for _, silo_prototype in pairs(silos) do -- Update according to stack size
+                  silo_prototype.rocket_parts_required = silo_prototype.rocket_parts_required * product.amount
+                end
+                silos = {}-- Remove since we don't want to accidentally compound the values
               end
             end
             -- Aaaand insert
