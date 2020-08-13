@@ -750,15 +750,6 @@ function omni.lib.create_barrel(fluid)
 	data:extend(reg)
 end
 
-function omni.lib.find_stacksize(item)
-	if data.raw.fluid[item] or (type(item)=="table" and item.type=="fluid") then return 50 end
-	if type(item)=="table" then return item.stack_size elseif type(item)~="string" then return nil end
-	for _, p in pairs({"item","mining-tool","gun","ammo","armor","repair-tool","capsule","module","tool","rail-planner","selection-tool","item-with-entity-data","item-with-inventory"}) do
-		if data.raw[p][item] and data.raw[p][item].stack_size then return data.raw[p][item].stack_size end
-	end
-	log("Could not find "..item.."'s stack size, check it's type.")
-end
-
 local itemproto = {
 	"item",
 	"mining-tool",
@@ -771,12 +762,12 @@ local itemproto = {
 	"tool",
 	"rail-planner",
 	"selection-tool",
-	"item-with-entity-data",
 	"fluid",
-	"selection-tool",
+	"item-with-entity-data",
 	"item-with-inventory",
 	"item-with-tags"
 }
+
 function omni.lib.find_prototype(item)
 	if type(item)=="table" then return item elseif type(item)~="string" then return nil end
 	for _, p in pairs(itemproto) do
@@ -827,6 +818,15 @@ function omni.lib.find_recipe(item)
 	end
 	--log("Could not find "..item.."'s recipe prototype, check it's type.")
 	return nil
+end
+
+function omni.lib.find_stacksize(item)
+	if data.raw.fluid[item] or (type(item)=="table" and item.type=="fluid") then return 50 end
+	if type(item)=="table" then return item.stack_size elseif type(item)~="string" then return nil end
+	for _, p in pairs(itemproto) do
+		if data.raw[p][item] and data.raw[p][item].stack_size then return data.raw[p][item].stack_size end
+	end
+	log("Could not find "..item.."'s stack size, check it's type.")
 end
 
 -----------------------------------------------------------------------------
