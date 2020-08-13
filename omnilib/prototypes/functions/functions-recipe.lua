@@ -344,23 +344,25 @@ end
 function omni.lib.replace_recipe_result(recipename, result, replacement)
     local rec = data.raw.recipe[recipename]
     if rec then
-        local name = nil
-        local amount = nil
-        local itype = nil
+        local repname = nil
+        local repamount = nil
+        local reptype = nil
         if type(replacement) == "table" then
-            name = replacement.name
-            amount = replacement.amount
-            itype = replacement.type
+            repname = replacement.name or replacement[1]
+            repamount = replacement.amount or replacement[2]
+            reptype = replacement.type
+        else
+            repname = replacement
         end
         -- Single result
         if rec.result and rec.result == result then
-            rec.result = replacement
+            rec.result = repname
         end
         if rec.normal and rec.normal.result and rec.normal.result == result then
-            rec.normal.result = replacement
+            rec.normal.result = repname
         end
         if rec.expensive and rec.expensive.result and rec.expensive.result == result then
-            rec.expensive.result = replacement
+            rec.expensive.result = repname
         end
         --rec.results
         if rec.results then
@@ -369,19 +371,19 @@ function omni.lib.replace_recipe_result(recipename, result, replacement)
                  --check if nametags exist (only check res[i] when no name tags exist)
                 if res.name then
                     if res.name == result then
-                        res.name = name or replacement
-                        res.amount = amount or res.amount
-                        res.type = itype or res.type
+                        res.name = repname
+                        res.amount = repamount or res.amount
+                        res.type = reptype or res.type
                         break
                     end
                 elseif res[1] and res[1] == result then
-                    res[1] = name or replacement
-                    res[2] = amount or res[2]
+                    res[1] = repname
+                    res[2] = repamount or res[2]
                     break
                 end
             end
             if rec.main_product and rec.main_product == result then
-                rec.main_product = replacement
+                rec.main_product = repname
             end
         end
         --rec.normal.results
@@ -391,19 +393,19 @@ function omni.lib.replace_recipe_result(recipename, result, replacement)
                 --check if nametags exist (only check res[i] when no name tags exist)
                 if res.name then
                     if res.name == result then
-                        res.name = name or replacement
-                        res.amount = amount or res.amount
-                        res.type = itype or res.type
+                        res.name = repname
+                        res.amount = repamount or res.amount
+                        res.type = reptype or res.type
                         break
                     end
                 elseif res[1] and res[1] == result then
-                    res[1] = name or replacement
-                    res[2] = amount or res[2]
+                    res[1] = repname
+                    res[2] = repamount or res[2]
                     break
                 end
             end
             if rec.normal.main_product and rec.normal.main_product == result then
-                rec.normal.main_product = replacement
+                rec.normal.main_product = repname
             end
         end
         --rec.expensive.results
@@ -413,34 +415,36 @@ function omni.lib.replace_recipe_result(recipename, result, replacement)
                 --check if nametags exist (only check res[i] when no name tags exist)
                 if res.name then
                     if res.name == result then
-                        res.name = name or replacement
-                        res.amount = amount or res.amount
-                        res.type = itype or res.type
+                        res.name = repname
+                        res.amount = repamount or res.amount
+                        res.type = reptype or res.type
                         break
                     end
                 elseif res[1] and res[1] == result then
-                    res[1] = name or replacement
-                    res[2] = amount or res[2]
+                    res[1] = repname
+                    res[2] = repamount or res[2]
                     break
                 end
             end
             if rec.expensive.main_product and rec.expensive.main_product == result then
-                rec.expensive.main_product = replacement
+                rec.expensive.main_product = repname
             end
         end
-	end
+    end
 end
 
 function omni.lib.replace_recipe_ingredient(recipename, ingredient, replacement)
 	local rec = data.raw.recipe[recipename]
     if rec then
-        local name = nil
-        local amount = nil
-        local itype = nil
+        local repname = nil
+        local repamount = nil
+        local reptype = nil
         if type(replacement) == "table" then
-            name = replacement.name
-            amount = replacement.amount
-            itype = replacement.type
+            repname = replacement.name or replacement[1]
+            repamount = replacement.amount or replacement[2]
+            reptype = replacement.type
+        else
+            repname = replacement
         end
         --rec.ingredients
         if rec.ingredients then
@@ -449,14 +453,14 @@ function omni.lib.replace_recipe_ingredient(recipename, ingredient, replacement)
                  --check if nametags exist (only check ing[i] when no name tags exist)
                 if ing.name then
                     if ing.name == ingredient then
-                        ing.name = name or replacement
-                        ing.amount = amount or ing.amount
-                        ing.type = itype or ing.type
+                        ing.name = repname
+                        ing.amount = repamount or ing.amount
+                        ing.type = reptype or ing.type
                         break
                     end
                 elseif ing[1] and ing[1] == ingredient then
-                    ing[1] = name or replacement
-                    ing[2] = amount or ing[2]
+                    ing[1] = repname
+                    ing[2] = repamount or ing[2]
                     break
                 end
             end
@@ -468,14 +472,14 @@ function omni.lib.replace_recipe_ingredient(recipename, ingredient, replacement)
                 --check if nametags exist (only check ing[i] when no name tags exist)
                 if ing.name then
                     if ing.name == ingredient then
-                        ing.name = name or replacement
-                        ing.amount = amount or ing.amount
-                        ing.type = itype or ing.type
+                        ing.name = repname
+                        ing.amount = repamount or ing.amount
+                        ing.type = reptype or ing.type
                         break
                     end
                 elseif ing[1] and ing[1] == ingredient then
-                    ing[1] = name or replacement
-                    ing[2] = amount or ing[2]
+                    ing[1] = repname
+                    ing[2] = repamount or ing[2]
                     break
                 end
            end
@@ -487,14 +491,14 @@ function omni.lib.replace_recipe_ingredient(recipename, ingredient, replacement)
                 --check if nametags exist (only check ing[i] when no name tags exist)
                 if ing.name then
                     if ing.name == ingredient then
-                        ing.name = name or replacement
-                        ing.amount = amount or ing.amount
-                        ing.type = itype or ing.type
+                        ing.name = repname
+                        ing.amount = repamount or ing.amount
+                        ing.type = reptype or ing.type
                         break
                     end
                 elseif ing[1] and ing[1] == ingredient then
-                    ing[1] = name or replacement
-                    ing[2] = amount or ing[2]
+                    ing[1] = repname
+                    ing[2] = repamount or ing[2]
                     break
                 end
            end
@@ -569,9 +573,15 @@ function omni.lib.multiply_recipe_result(recipename, result, mult)
 	end
 end
 
-function omni.lib.replace_all_ingredient(ingredient,replacement)
+function omni.lib.replace_all_ingredient(ingredient, replacement)
 	for _,recipe in pairs(data.raw.recipe) do
-		omni.lib.replace_recipe_ingredient(recipe.name, ingredient,replacement)
+		omni.lib.replace_recipe_ingredient(recipe.name, ingredient, replacement)
+	end
+end
+
+function omni.lib.replace_all_result(result, replacement)
+	for _,recipe in pairs(data.raw.recipe) do
+		omni.lib.replace_recipe_result(recipe.name, result, replacement)
 	end
 end
 
@@ -661,6 +671,22 @@ function omni.lib.replace_recipe_all_techs(recipename,replacement)
 			end
 		end
 	end
+end
+
+function omni.lib.enable_recipe(recipename)
+    local rec = data.raw.recipe[recipename]
+    if rec then
+        --in some cases rec.enabled does not exist at all...
+        if rec.enabled or not (rec.normal or rec.expensive) then
+            rec.enabled = true
+        end
+        if rec.normal then
+            rec.normal.enabled = true
+        end
+        if rec.expensive then
+            rec.expensive.enabled = true
+        end
+    end
 end
 
 function omni.lib.disable_recipe(recipename)

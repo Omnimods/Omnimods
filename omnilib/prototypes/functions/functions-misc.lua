@@ -254,33 +254,14 @@ function omni.lib.get_end(a,b)
 	return string.sub(a,string.len(a)-b+1,string.len(a))
 end
 
-function omni.lib.recipe_change_category(recipe, category)
-	if data.raw.recipe[recipe] and data.raw["recipe-category"][item] then
-		data.raw.recipe[recipe].category = category
-	end
-end
-
 function omni.lib.insert(array, ins)
 	array[#array+1]=ins
 end
+
 --mathematics
-
-function omni.lib.round_up(number)
-	local decimal = number-math.floor(number)
-	if decimal > 0 then return math.floor(number)+1 else return math.floor(number) end
-end
-
 function omni.lib.round(number)
 	local decimal = number-math.floor(number)
 	if decimal > 0.5 then return math.floor(number)+1 else return math.floor(number) end
-end
-
-function omni.lib.max(set)
-	local t = 0
-	for _,s in set do
-		t=math.max(s,t)
-	end
-	return t
 end
 
 --Omni specific
@@ -325,9 +306,9 @@ function omni.lib.achain_omnite_cost(item,chain)
 	for _,result in pairs(data.raw.recipe[chain[1]].results) do
 		if result.type == "item" and result.name == item then
 			if result.amount then
-				target_amount = omni.lib.round_up(1/result.amount)
+				target_amount = math.ceil(1/result.amount)
 			else
-				target_amount = omni.lib.round_up(1/((result.amount_min+result.amount_max)/2*result.probability))
+				target_amount = math.ceil(1/((result.amount_min+result.amount_max)/2*result.probability))
 			end
 			break
 		end
@@ -356,9 +337,9 @@ function omni.lib.chain_omnite_cost(item,chain)
 	for _,result in pairs(data.raw.recipe[chain[1]].results) do
 		if result.type == "item" and result.name == item then
 			if result.amount then
-				target_amount = omni.lib.round_up(1/result.amount)
+				target_amount = math.ceil(1/result.amount)
 			else
-				target_amount = omni.lib.round_up(1/((result.amount_min+result.amount_max)/2*result.probability))
+				target_amount = math.ceil(1/((result.amount_min+result.amount_max)/2*result.probability))
 			end
 			break
 		end
@@ -385,8 +366,9 @@ end
 --Modifications
 function omni.lib.add_number_item(item, val)
 	if data.raw.item[item] then
-		data.raw.item[item].icons={{icon=data.raw.item[item].icon},{icon = "__omnimatter__/graphics/icons/extraction-"..val..".png"}}
-		data.raw.item[item].icon=nil
+		data.raw.item[item].icons  ={{icon = data.raw.item[item].icon, icon_size = data.raw.item[item].icon_size or 32},{icon = "__omnimatter__/graphics/icons/extraction-"..val..".png", icon_size = 32}}
+		data.raw.item[item].icon = nil
+		data.raw.item[item].icon_size = nil
 	end
 end
 
@@ -768,15 +750,6 @@ function omni.lib.create_barrel(fluid)
 	data:extend(reg)
 end
 
-function omni.lib.find_stacksize(item)
-	if data.raw.fluid[item] or (type(item)=="table" and item.type=="fluid") then return 50 end
-	if type(item)=="table" then return item.stack_size elseif type(item)~="string" then return nil end
-	for _, p in pairs({"item","mining-tool","gun","ammo","armor","repair-tool","capsule","module","tool","rail-planner","selection-tool","item-with-entity-data","item-with-inventory"}) do
-		if data.raw[p][item] and data.raw[p][item].stack_size then return data.raw[p][item].stack_size end
-	end
-	log("Could not find "..item.."'s stack size, check it's type.")
-end
-
 local itemproto = {
 	"item",
 	"mining-tool",
@@ -789,12 +762,12 @@ local itemproto = {
 	"tool",
 	"rail-planner",
 	"selection-tool",
-	"item-with-entity-data",
 	"fluid",
-	"selection-tool",
+	"item-with-entity-data",
 	"item-with-inventory",
 	"item-with-tags"
 }
+
 function omni.lib.find_prototype(item)
 	if type(item)=="table" then return item elseif type(item)~="string" then return nil end
 	for _, p in pairs(itemproto) do
@@ -802,6 +775,15 @@ function omni.lib.find_prototype(item)
 	end
 	--log("Could not find "..item.."'s prototype, check it's type.")
 	return nil
+end
+
+function omni.lib.find_stacksize(item)
+	if data.raw.fluid[item] or (type(item)=="table" and item.type=="fluid") then return 50 end
+	if type(item)=="table" then return item.stack_size elseif type(item)~="string" then return nil end
+	for _, p in pairs(itemproto) do
+		if data.raw[p][item] and data.raw[p][item].stack_size then return data.raw[p][item].stack_size end
+	end
+	log("Could not find "..item.."'s stack size, check it's type.")
 end
 
 local entproto = {

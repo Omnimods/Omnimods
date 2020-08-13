@@ -42,8 +42,10 @@ function omni.lib.replace_science_pack(tech,old, new)
 	if not r then r = "omni-pack" end
 	if data.raw.technology[tech] then
 		for i,ing in pairs(data.raw.technology[tech].unit.ingredients) do
-			if ing[1]==old then
-				data.raw.technology[tech].unit.ingredients[i][1]=r
+			if ing.name and ing.name == old then
+				ing.name = r
+			elseif ing[1] == old then
+				ing[1] = r
 			end
 		end
 	else
@@ -63,11 +65,11 @@ function omni.lib.add_science_pack(tech,pack)
 			if type(pack) == "table" then
 				table.insert(data.raw.technology[tech].unit.ingredients,pack)
 			elseif type(pack) == "string" then
-				table.insert(data.raw.technology[tech].unit.ingredients,{pack,1})
+				table.insert(data.raw.technology[tech].unit.ingredients,{type = "item", name = pack, amount = 1})
 			elseif type(pack)=="number" then
-				table.insert(data.raw.technology[tech].unit.ingredients,{"omni-pack",pack})
+				table.insert(data.raw.technology[tech].unit.ingredients,{type = "item", name = "omni-pack", amount = pack})
 			else
-				table.insert(data.raw.technology[tech].unit.ingredients,{"omni-pack",1})
+				table.insert(data.raw.technology[tech].unit.ingredients,{type = "item", name = "omni-pack", amount = 1})
 			end
 		else
 			log("Ingredient "..pack.." already exists.")

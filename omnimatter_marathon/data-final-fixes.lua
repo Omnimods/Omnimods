@@ -304,7 +304,7 @@ for _,rec in pairs(data.raw.recipe) do
 		for j,ing in pairs(rec.normal.ingredients) do
 			if ing.name ~= nil and configure_item(rec,ing) then
 				local am=ing.amount
-				if ing.type == "fluid" then am=omni.lib.round_up(ing.amount/60) end
+				if ing.type == "fluid" then am=math.ceil(ing.amount/60) end
 				--if ing.type == "fluid" then am=math.log(am) end
 				ingredient.component[ing.name]={amount=am,nr=j}
 				ingredient.total=ingredient.total+am
@@ -315,7 +315,7 @@ for _,rec in pairs(data.raw.recipe) do
 				end
 			else
 				local am=ing.amount
-				if ing.type == "fluid" then am=omni.lib.round_up(ing.amount/60) end
+				if ing.type == "fluid" then am=math.ceil(ing.amount/60) end
 				ingredient.total=ingredient.total+am		
 			end
 		end
