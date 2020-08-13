@@ -303,6 +303,10 @@ script.on_event(defines.events.on_console_chat, function(event)
 	if event.player_index and game.players[event.player_index] then
 		if event.message=="omnidate" then
 			omni_update(game)
+		elseif event.message=="omnilog" then
+			log(
+				"Memory usage: " .. math.ceil(collectgarbage("count")) .. "K"
+			)
 		end
 	end
 end)

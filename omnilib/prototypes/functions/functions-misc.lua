@@ -264,14 +264,6 @@ function omni.lib.round(number)
 	if decimal > 0.5 then return math.floor(number)+1 else return math.floor(number) end
 end
 
-function omni.lib.max(set)
-	local t = 0
-	for _,s in set do
-		t=math.max(s,t)
-	end
-	return t
-end
-
 --Omni specific
 function omni.lib.omni_recipe_fluid_change_category(fluid, category)
 	if data.raw.recipe["omnirec-"..fluid.."-a"] then
