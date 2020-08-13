@@ -58,7 +58,10 @@ script.on_event("decompress-stack", function(event)
 					else
 						item.clear()
 					end
-					player.insert(decompressed)-- Defaults to a stack?
+					player.insert({
+						name = decompressed,
+						count = math.min(game.item_prototypes[decompressed].stack_size, 65535)
+					})-- Defaults to a stack?
 					return -- Don't bother continuing
 				end
 			end
@@ -176,6 +179,59 @@ local function compression_planner(event, log_only)
 		end
 	end
 end
+
+script.on_event(defines.events.on_rocket_launched, function(event)
+	rocket, silo, player = event.rocket, event.rocket_silo, event.player_index
+	if not rocket or not silo then
+		return
+	end
+	-- Silo has packs, rocket has satellite
+	local silo_inv = silo.get_inventory(defines.inventory.rocket_silo_result)
+	local rocket_inv = rocket.get_inventory(defines.inventory.rocket)
+	if rocket_inv and silo_inv then
+		-- There can be many things!
+		for satellite in pairs(rocket_inv.get_contents()) do
+			if satellite:find("^compressed%-") and #game.item_prototypes[satellite].rocket_launch_products > 0 then
+				-- Make sure we're tracking correctly
+				remote.call("silo_script", "add_tracked_item", satellite)
+				-- Naughty naughty!
+				if not rocket.prototype.name:find("^compressed%-") then
+					local result_array = game.item_prototypes[satellite].rocket_launch_products or {}
+					local uncomp_satellite = satellite:gsub("^compressed%-", "")
+					local uncomp_result_array = game.item_prototypes[uncomp_satellite].rocket_launch_products
+					local has_spilled_satellites = false
+					-- Time to spill
+					for i, result in pairs(result_array) do
+						-- Science
+						local normal_result = uncomp_result_array[i]
+						silo.surface.spill_item_stack(
+							silo.position,
+							{
+								name = normal_result.name,
+								count = normal_result.amount
+							}
+						)
+						silo_inv.remove(result.name)
+						-- Satellites, if we haven't already
+						if not has_spilled_satellites then
+							local satellite_remainder = game.item_prototypes[normal_result.name].stack_size * result.amount -- Convert to uncompressed count
+							satellite_remainder = satellite_remainder / normal_result.amount -- Divide by result size
+							satellite_remainder = math.max(0, satellite_remainder - 1) -- Get our actual remainder
+							silo.surface.spill_item_stack(
+								silo.position,
+								{
+									name = uncomp_satellite,
+									count = satellite_remainder
+								}
+							)
+							has_spilled_satellites = true
+						end
+					end
+				end
+			end
+		end
+	end
+end )
 
 script.on_event(defines.events.on_player_selected_area, compression_planner)
 

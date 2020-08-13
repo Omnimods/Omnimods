@@ -33,7 +33,8 @@ local building_list = {--Types
   ["offshore-pump"] = true,
   ["inserter"] = true,
   ["loader-1x1"] = true,
-  ["burner-generator"] = true
+  ["burner-generator"] = true,
+  ["rocket-silo"] = true
 }
 local not_energy_use = {--Types
   "solar-panel",
@@ -240,15 +241,133 @@ local process_fluid_box = function(fluid_box, i)
     end
   end
 end
+-- These names are ass
+local modspec = {
+  slot_count = "module_slots",
+  columns = "module_info_max_icons_per_row",
+  rows = "module_info_max_icon_rows",
+  shift = "module_info_icon_shift",
+  scale = "module_info_icon_scale",
+  gap_size = "module_info_separation_multiplier",
+  y_offset = "module_info_multi_row_initial_height_modifier"
+}
+-- Help us keep the code clean
+setmetatable(modspec, {
+  __call = function(self, proto, key, expression)
+    if expression then
+      proto.module_specification[self[key]] = expression(proto.module_specification[self[key]])
+    end
+    return proto.module_specification[self[key]]
+  end
+})
 -------------------------------------------------------------------------------
 --[[Entity Type Specific Properties]]--
 -------------------------------------------------------------------------------
 local run_entity_updates = function(new, kind, i)
   --[[assembly type updates]]--
   --module slots
-  if new.module_specification then new.module_specification.module_slots = new.module_specification.module_slots * (i+1) end
+  if new.module_specification then
+    -- Add slots
+    modspec(
+      new,
+      "slot_count", 
+      function(x) 
+        return x and (x * (i + 1)) 
+      end
+    )
+    -- Make sure we don't occlude nearby entities
+    local bounding_box = new.selection_box or {
+      {
+        x = 0,
+        y = 0
+      },
+      {
+        x = 0,
+        y = 0
+      }
+    }
+    for entry=1, #bounding_box do -- Remove numbered and convert to explicit 
+      for index=1, #bounding_box[entry] do
+        bounding_box[entry][string.char(119+index)] = bounding_box[entry][index]
+        bounding_box[entry][index] = nil
+      end
+    end
+    -- Onwards!
+    modspec(
+      new,
+      "scale", 
+      function(x)
+        x = modspec(new, "slot_count")
+        -- Approach according to module count
+        x = (x * 0.33) / (x + 2) + 0.25
+        return x
+      end
+    )
+    local scale_factor = modspec(new, "scale") / 0.5
+    modspec(
+      new,
+      "shift", 
+      function(x) 
+        x = x or {0, 0.7}
+        x[1] = x[1]
+        x[2] = x[2]
+        return x
+      end
+    )
+    modspec(
+      new,
+      "gap_size", 
+      function(x) 
+        return x or 1.1
+      end
+    )
+    modspec(
+      new,
+      "y_offset", 
+      function(x) 
+        return x or -0.1
+      end
+    )
+    modspec(
+      new,
+      "columns", 
+      function(x)
+        x = util.distance(
+          {bounding_box[1].x, 0},
+          {bounding_box[2].x, 0}
+        ) * 1.85
+        -- Account for shift
+        x = x - modspec(new, "shift")[1]
+        -- And for gap size as well
+        x = x - 0.05 * modspec(new, "gap_size") * scale_factor
+        -- Apply scale
+        x = x  / scale_factor
+        return x
+      end
+    )
+    modspec(
+      new,
+      "rows", 
+      function(x)
+        -- Get our stock height
+        x = util.distance(
+          {0, bounding_box[1].y},
+          {0, bounding_box[2].y}
+        ) * 0.9
+        -- Take out shift
+        x = x - modspec(new, "shift")[2]
+        -- y offset
+        x = x - modspec(new, "y_offset")
+        -- And for gap size as well
+        x = x - 0.05 * modspec(new, "gap_size") * scale_factor
+        -- Scale
+        x = x / scale_factor
+        return x
+      end
+    )
+  end
   --recipe category settings for assembly/furnace types
-  if kind == "assembling-machine" or kind == "furnace" then
+  if kind == "assembling-machine" or kind == "furnace" or kind == "rocket-silo" then
     local new_cat = {} --clear each time
     for j, cat in pairs(new.crafting_categories) do
       if not data.raw["recipe-category"][cat.."-compressed"] then --check if category exists
@@ -360,6 +479,21 @@ local run_entity_updates = function(new, kind, i)
   if kind == "burner-generator" then
     new.max_power_output = new_effect(new.max_power_output, i)
     new.burner.emissions_per_minute = (new.burner.emissions_per_minute or 0) * math.pow(multiplier,i+1)
+  end
+  -- Rockets!
+  if kind == "rocket-silo" and new.fixed_recipe then
+    new.door_opening_speed = new.door_opening_speed * math.pow(multiplier, i)
+    new.rocket_result_inventory_size = 8
+    new.fixed_recipe = new.fixed_recipe .. "-compression"
+    new.light_blinking_speed = new.light_blinking_speed * math.pow(multiplier, i)
+    local rocket = table.deepcopy(data.raw["rocket-silo-rocket"][new.rocket_entity])
+    rocket.name = "compressed-" .. rocket.name
+    new.rocket_entity = rocket.name
+    rocket.rising_speed = rocket.rising_speed * math.pow(multiplier, i)
+    rocket.engine_starting_speed = rocket.engine_starting_speed * math.pow(multiplier, i)
+    rocket.flying_speed = rocket.flying_speed * math.pow(multiplier, i)
+    rocket.flying_acceleration = rocket.flying_acceleration * math.pow(multiplier, i)
+    data:extend({rocket})
   end
   return new
 end

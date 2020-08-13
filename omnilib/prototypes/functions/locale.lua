@@ -84,7 +84,7 @@ function lib.find(input_name, input_type, silent)
     -- If we haven't been told not to error, we will now proceed to error.
     -- You could have stopped this
 	local existing_types = {}
-    for prototype_type, _ in pairs(lib.find_by_name(name)) do -- Find valid types with matching names
+    for prototype_type, _ in pairs(lib.find_by_name(input_name)) do -- Find valid types with matching names
         table.insert(existing_types, prototype_type)
     end
     -- Log with our types and input arguments

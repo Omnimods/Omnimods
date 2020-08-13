@@ -7,8 +7,11 @@ $DIRS = @(
 ".\omnimatter",
 ".\omnimatter_compression",
 ".\omnimatter_crystal",
+".\omnimatter_energy",
+".\omnimatter_fluid",
 ".\omnimatter_permutation",
-".\omnimatter_water",
+".\omnimatter_science",
+".\omnimatter_water,"
 ".\omnimatter_wood"
 )
 

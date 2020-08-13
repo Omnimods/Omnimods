@@ -29,5 +29,4 @@ for _,kind in pairs({"assembling-machine","furnace"}) do
 		  end
     end
 end
-
 log("Compression finished, data.raw has " .. rec_count .. " recipes.")
