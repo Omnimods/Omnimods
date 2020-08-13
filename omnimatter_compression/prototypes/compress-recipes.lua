@@ -465,7 +465,7 @@ function create_compression_recipe(recipe)
                     )
                     if component.type ~= "fluid" then
                       if not single_stack then -- No math on single bois
-                        local amount = math.max(math.floor(component.amount+0.5),1) --ensure no decimals on items
+                        local amount = math.min(math.max(math.floor(component.amount+0.5),1),65535)  --ensure no decimals on items
                         if gcd[recipe_difficulty] == 0 then
                           gcd[recipe_difficulty] = amount
                         else
