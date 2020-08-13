@@ -485,6 +485,7 @@ local run_entity_updates = function(new, kind, i)
     new.door_opening_speed = new.door_opening_speed * math.pow(multiplier, i)
     new.rocket_result_inventory_size = 8
     new.fixed_recipe = new.fixed_recipe .. "-compression"
+    new.light_blinking_speed = new.light_blinking_speed * math.pow(multiplier, i)
     local rocket = table.deepcopy(data.raw["rocket-silo-rocket"][new.rocket_entity])
     rocket.name = "compressed-" .. rocket.name
     new.rocket_entity = rocket.name
