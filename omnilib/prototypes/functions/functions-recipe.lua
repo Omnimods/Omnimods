@@ -348,8 +348,8 @@ function omni.lib.replace_recipe_result(recipename, result, replacement)
         local repamount = nil
         local reptype = nil
         if type(replacement) == "table" then
-            repname = replacement.name
-            repamount = replacement.amount
+            repname = replacement.name or replacement[1]
+            repamount = replacement.amount or replacement[2]
             reptype = replacement.type
         else
             repname = replacement
@@ -440,8 +440,8 @@ function omni.lib.replace_recipe_ingredient(recipename, ingredient, replacement)
         local repamount = nil
         local reptype = nil
         if type(replacement) == "table" then
-            repname = replacement.name
-            repamount = replacement.amount
+            repname = replacement.name or replacement[1]
+            repamount = replacement.amount or replacement[2]
             reptype = replacement.type
         else
             repname = replacement
