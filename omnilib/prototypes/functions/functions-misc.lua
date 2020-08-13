@@ -254,17 +254,11 @@ function omni.lib.get_end(a,b)
 	return string.sub(a,string.len(a)-b+1,string.len(a))
 end
 
-function omni.lib.recipe_change_category(recipe, category)
-	if data.raw.recipe[recipe] and data.raw["recipe-category"][item] then
-		data.raw.recipe[recipe].category = category
-	end
-end
-
 function omni.lib.insert(array, ins)
 	array[#array+1]=ins
 end
---mathematics
 
+--mathematics
 function omni.lib.round(number)
 	local decimal = number-math.floor(number)
 	if decimal > 0.5 then return math.floor(number)+1 else return math.floor(number) end
@@ -372,8 +366,9 @@ end
 --Modifications
 function omni.lib.add_number_item(item, val)
 	if data.raw.item[item] then
-		data.raw.item[item].icons={{icon=data.raw.item[item].icon},{icon = "__omnimatter__/graphics/icons/extraction-"..val..".png"}}
-		data.raw.item[item].icon=nil
+		data.raw.item[item].icons  ={{icon = data.raw.item[item].icon, icon_size = data.raw.item[item].icon_size or 32},{icon = "__omnimatter__/graphics/icons/extraction-"..val..".png", icon_size = 32}}
+		data.raw.item[item].icon = nil
+		data.raw.item[item].icon_size = nil
 	end
 end
 
