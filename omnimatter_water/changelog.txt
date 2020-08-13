@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.18.5
+Date: 2020.08.13
+  Bugfixes:
+    - Fixed a rounding error that caused tier 1 water extraction techs to not require any packs
+---------------------------------------------------------------------------------------------------
 Version: 3.18.4
 Date: 2020.08.07
   Features:

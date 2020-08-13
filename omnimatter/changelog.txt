@@ -1,8 +1,9 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.11
-Date: 2020.08.xx
+Date: 2020.08.13
   Bugfixes:
-    - Fixed hidden recipes getting enabled in some cases
+    - Fixed hidden recipes getting accidently enabled in some cases
+    - Fixed a rounding error that caused tier 1 water extraction techs to not require any packs
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.10
 Date: 2020.08.07

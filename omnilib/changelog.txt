@@ -1,8 +1,11 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.18
-Date: 2020.08.xx
+Date: 2020.08.13
   Features:
     - Added omni.lib.enable_recipe()
+  Bugfixes:
+    - Fixed a case where icon overlays weren't added correctly
+    - Fixed omni.lib.replace_science_pack() not properly working with untagged tables
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.17
 Date: 2020.08.07
