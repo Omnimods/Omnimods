@@ -809,8 +809,7 @@ local entproto = {
 	"solar-panel",
 	"turret",
 	"spider-vehicle",
-	"spider-leg",
-	"spidertron-remote"
+	"spider-leg"
 }
 
 function omni.lib.find_entity_prototype(item)
