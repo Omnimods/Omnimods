@@ -332,7 +332,7 @@ function adjustOutput(recipe)
                 local product_proto = product.name:find("compressed") and omni.locale.find(product.name:gsub("compressed%-", ""), "item") or omni.locale.find(product.name, "item")
                 product.amount = math.max(1, (res.amount * product.amount) / product_proto.stack_size)
                 for _, silo_prototype in pairs(silos) do -- Update according to stack size
-                  silo_prototype.rocket_parts_required = silo_prototype.rocket_parts_required * product.amount
+                  silo_prototype.rocket_parts_required = math.min(silo_prototype.rocket_parts_required * product.amount, 2^32-1)
                 end
                 silos = {}-- Remove since we don't want to accidentally compound the values
               end
