@@ -806,7 +806,10 @@ local entproto = {
 	"offshore-pump",
 	"pump",
 	"solar-panel",
-	"turret"
+	"turret",
+	"spider-vehicle",
+	"spider-remote",
+	"spider-leg"
 }
 function omni.lib.find_entity_prototype(item)
 	if type(item)=="table" then return item elseif type(item)~="string" then return nil end
