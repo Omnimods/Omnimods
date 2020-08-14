@@ -4,7 +4,7 @@
 "title":"Omnilibrary",
 "author":"EmperorZelos",
 "description":"A collection of functions that omni-series of mods are using.",
-"factorio_version":"1.0.0",
+"factorio_version":"1.0",
 "dependencies":[
     "base",
     "?bobmodules",
