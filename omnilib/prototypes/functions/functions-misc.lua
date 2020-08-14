@@ -764,6 +764,7 @@ local itemproto = {
 	"selection-tool",
 	"fluid",
 	"item-with-entity-data",
+	"spidertron-remote",
 	"item-with-inventory",
 	"item-with-tags"
 }
@@ -808,8 +809,7 @@ local entproto = {
 	"solar-panel",
 	"turret",
 	"spider-vehicle",
-	"spider-leg",
-	"spidertron-remote"
+	"spider-leg"
 }
 
 function omni.lib.find_entity_prototype(item)
