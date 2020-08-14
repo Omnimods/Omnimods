@@ -764,6 +764,7 @@ local itemproto = {
 	"selection-tool",
 	"fluid",
 	"item-with-entity-data",
+	"spidertron-remote",
 	"item-with-inventory",
 	"item-with-tags"
 }
