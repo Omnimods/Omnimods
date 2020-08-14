@@ -233,7 +233,7 @@ function omni.marathon.standardise(recipe)
         recipe.subgroup="fluid-recipes"
       end
     else
-      recipe.subgroup="general"
+	  recipe.subgroup="other"
     end
   end
 	---------------------------------------------------------------------------

@@ -86,6 +86,9 @@ return {
 		smoke = 'entity',
 		['solar-panel'] = 'entity-with-health',
 		['solar-panel-equipment'] = 'equipment',
+		['spidertron-remote'] = 'item',
+		['spider-vehicle'] = 'vehicle',
+		['spider-leg'] = 'entity-with-health',
 		splitter = 'transport-belt-connectable',
 		sticker = 'entity',
 		['straight-rail'] = 'rail',
@@ -218,6 +221,7 @@ return {
 							locomotive = {},
 							['artillery-wagon'] = {},
 						},
+						['spider-vehicle'] = {}
 					},
 					['flying-robot'] = {
 						['combat-robot'] = {},
@@ -263,6 +267,7 @@ return {
 					roboport = {},
 					['rocket-defense'] = {},
 					['solar-panel'] = {},
+					['spider-leg'] = {},
 					['transport-belt-connectable'] = {
 						splitter = {},
 						['transport-belt'] = {},
@@ -362,6 +367,7 @@ return {
 				module = {},
 				['item-with-entity-data'] = {},
 				['rail-planner'] = {},
+				['spidertron-remote'] = {}
 			},
 			achievement = {
 				['build-entity-achievement'] = {},
