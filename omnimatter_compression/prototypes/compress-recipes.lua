@@ -196,7 +196,7 @@ function get_recipe_values(ingredients, results)
     end
   end
   for i,p in pairs(new_parts) do
-    new[i]=new[i] / new_gcd
+    new[i]=math.min(new[i] / new_gcd, 65535)
   end
   local total_mult = new[1]*omni.lib.find_stacksize(parts[1].name)/parts[1].amount
 
