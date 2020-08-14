@@ -1,8 +1,9 @@
 ---------------------------------------------------------------------------------------------------
-Version: 3.18.19
+Version: 4.0.0
 Date: 2020.08.14
-  Bugfixes:
-    - 1.0 hotfix for new types
+  Changes:
+    - Updated for Factorio version 1.0.0
+    - Added "spider-vehicle", "spider-leg" and "spidertron-remote" types
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.18
 Date: 2020.08.13
