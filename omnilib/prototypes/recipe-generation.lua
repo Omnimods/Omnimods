@@ -2142,19 +2142,21 @@ end
 function RecGen:setTechIcon(mod,icon)
 	if icon then
 		self.tech.icon = function(levels,grade) return "__"..mod.."__/graphics/technology/"..icon..".png" end
-	elseif type(mod)=="string" then
+	elseif type(mod) == "string" then
 		if not string.match(mod, "%_%_(.-)%_%_") then
 			local proto = omni.lib.find_prototype(mod)
 			if proto then
-				self.tech.icon=function(levels,grade) return proto.icon end
+				self.tech.icon = function(levels,grade) return proto.icon end
 			else
-				self.tech.icon=function(levels,grade) return "__"..self.mod.."__/graphics/technology/"..mod..".png" end
+				self.tech.icon = function(levels,grade) return "__"..self.mod.."__/graphics/technology/"..mod..".png" end
 			end
 		else
-			self.tech.icon=function(levels,grade) return mod end
+			self.tech.icon = function(levels,grade) return mod end
 		end
-	elseif type(mod)=="function" then
-		self.tech.icon=mod
+	elseif type(mod) == "function" then
+		self.tech.icon = mod
+	elseif type(mod) == "table" then
+		self.tech.icon = function(levels,grade) return mod end
 	end
 	return self
 end
@@ -2635,6 +2637,11 @@ function TechGen:generate_tech()
 	},
 	order = "c-a"
 	}
+	if type(tech.icon) == "table" and tech.icon[1] then
+		tech.icons = self.icon
+		tech.icon = nil
+		tech.icon_size = nil
+	end
 	if self.loc_name and #self.loc_name>0 then
 		if type(self.loc_name[1]) == "string" and not string.find(self.loc_name[1],".") and not string.find(self.loc_name[1],"name") then
 			self.loc_name[1]="technology-name."..self.loc_name[1]
