@@ -912,7 +912,7 @@ omni.lib.add_overlay = function(it,overlay_type,level)
 		-- Do we require an overlay? This will be placed at the end of the list and thus on top
 		if overlay.icon then
 			overlay.icon_size = overlay.icon_size or 32
-			icons = util.combine_icons(icons, {overlay}, {})
+			icons = util.combine_icons(icons, overlay[1] and overlay or {overlay}, {})
 		end
 		return icons
 	end

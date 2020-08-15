@@ -71,7 +71,10 @@ function icon.of(prototype, ptype, silent)
     elseif type(ptype) == 'boolean' then -- wrong arg order
         silent = ptype 
     end
-
+    -- We got handed a .icons
+    if type(prototype) == "table" and prototype[1] then
+        return prototype
+    end
     if omni.locale.inherits(prototype.type, 'recipe') then
         return icon.of_recipe(prototype, silent)
     else
