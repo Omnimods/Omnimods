@@ -1,18 +1,16 @@
 script.on_event(defines.events.on_player_created, function(event)
     local player = game.players[event.player_index]
-    if player.controller_type ~= defines.controllers.god then
-		player.insert{name = "burner-omnitractor", count = 1}
-		player.insert{name = "burner-mining-drill", count = 1}
-		local noAAII = true
-		for name, version in pairs(game.active_mods) do
-			if name=="aai-industry" then
-				noAAII = false
-				break
-			end
-		end
-		if not noAAII and game.entity_prototypes["burner-omniphlog"] then
-			player.insert{name = "burner-omniphlog", count = 1}
-		end
-    end
     player.print{"message.omni-difficulty"}
+end)
+
+script.on_init(function(event)
+	if remote.interfaces["freeplay"] then
+		local items_to_insert = remote.call("freeplay", "get_created_items")
+		items_to_insert["burner-omnitractor"] = (items_to_insert["burner-omnitractor"] or 0) + 1
+		items_to_insert["burner-mining-drill"] = (items_to_insert["burner-mining-drill"] or 0) + 1
+		if not game.active_mods["aai-industry"] and game.entity_prototypes["burner-omniphlog"] then
+			items_to_insert["burner-omniphlog"] = (items_to_insert["burner-omniphlog"] or 0) + 1
+		end
+		remote.call("freeplay", "set_created_items", items_to_insert)
+	end
 end)
