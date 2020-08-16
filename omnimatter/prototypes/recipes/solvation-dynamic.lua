@@ -90,7 +90,7 @@ local get_distillation_tech_icon=function(item)
 		icon = "__"..item.mod.."__"
 	end
 	icon=icon.."/graphics/extraction/"..item.fluid.name..".png"
-    return icon
+	return icon
 end
 
 local get_distillation_req=function(tier,item, level)
@@ -258,7 +258,29 @@ for _,tier in pairs(omnifluid) do
 			setIcons(fluid.name):
 			setResults(cost:results()):
 			setEnergy(function(levels,grade) return 5 end):
-			setTechIcon(fluid.mod or "omnimatter",fluid.name):
+			setTechIcon(function(levels, grade)
+				local fluid_icon = omni.icon.of(fluid.name, "fluid")
+				tint = data.raw.fluid[fluid.name].base_color
+				if tint.r then
+					tint.a = 0.75
+				else
+					tint[4] = 0.75
+				end
+				for _, layer in pairs(fluid_icon) do
+					layer.shift = {
+						-48 - (0.5 * (64 / layer.icon_size)),
+						48 + (0.5 * (64 / layer.icon_size))
+					}
+				end
+				return omni.lib.add_overlay(
+					{{
+						icon = "__omnimatter__/graphics/technology/fluid-generic.png",
+						icon_size = 128,
+						tint = data.raw.fluid[fluid.name].base_color
+					}},
+					fluid_icon
+				)
+			end):
 			setTechCost(function(levels,grade) return 25*get_tier_mult(levels,grade,1) end):
 			setTechPacks(function(levels,grade) return get_generic_tech_packs(grade, fluid.tier) end):
 			setTechPrereq(function(levels,grade) return get_distillation_req(fluid.tier,fluid.name, grade)  end):
