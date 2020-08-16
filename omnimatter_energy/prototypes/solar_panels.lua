@@ -99,17 +99,11 @@ local get_req = function(tier, size, msize)
 end
 
 local get_scienceing = function(tier)
-	local techtier= {
-		[1]={{"automation-science-pack", 1},{"logistic-science-pack", 1},},
-		[2]={{"automation-science-pack", 1},{"logistic-science-pack", 1},{"chemical-science-pack", 1},},
-		[3]={{"automation-science-pack", 1},{"logistic-science-pack", 1},{"chemical-science-pack", 1},{"production-science-pack", 1},},
-		[4]={{"automation-science-pack", 1},{"logistic-science-pack", 1},{"chemical-science-pack", 1},{"production-science-pack", 1},{"utility-science-pack", 1},},
-	}
-	if tier <= #techtier then
-		return techtier[tier]
-	else
-		return techtier[#techtier]
+	local packs = {}
+	for i=1,math.min(tier+1,5) do
+		packs[#packs+1] = {omni.sciencepacks[i],1}
 	end
+	return packs
 end
 
 --log("solar shite")
