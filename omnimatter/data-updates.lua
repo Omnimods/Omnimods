@@ -25,13 +25,12 @@ if mods["Yuoki"] then
 	omni.add_resource("y-res1",2)
 	omni.add_resource("y-res2",3)
 end
-if mods["pycoal"] then
+if mods["pycoalprocessing"] then
 	-- Green
 	omni.add_resource("raw-borax", 2)
-	-- Blue
-	omni.add_resource("niobium-ore", 3)
+	omni.add_resource("niobium-ore", 2)	
 end
-if mods["pyfusion"] then
+if mods["pyfusionenergy"] then
 	-- Blue
 	omni.add_resource("molybdenum-ore", 3)
 	-- Beyond
@@ -45,8 +44,10 @@ if mods["pyhightech"] then
 	omni.add_resource("phosphate-rock", 3)
 end
 if mods["pypetroleumhandling"] then
---	omni.add_fluid("crude-oil", 1)
---	omni.add_fluid("tar", 1)
+	-- Green
+	omni.add_resource("oil-sand", 2)
+	omni.add_fluid("tar", 2, 1)
+	omni.add_resource("sulfur", 2)
 end
 if mods["pyalienlife"] then
 	-- Green
@@ -141,7 +142,7 @@ end
 if angelsmods and angelsmods.petrochem then
 	omni.add_fluid("gas-natural-1",1,3+4/7)
 	omni.add_fluid("liquid-multi-phase-oil",2,1+3/8)
-	if not mods["omnimatter_water"] then omni.add_resource("sulfur",2) end
+	if not mods["omnimatter_water"] and not mods["pypetroleumhandling"] then omni.add_resource("sulfur",2) end
 else
 	omni.add_fluid("crude-oil",1,1)
 end
