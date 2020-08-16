@@ -26,7 +26,10 @@ local burnerEntities = {
 }
 
 for _,entity in pairs(burnerEntities) do
-	BuildGen:importIf(entity):setFuelCategory("omnite"):extend()
+	local build = omni.lib.find_entity_prototype(entity)
+	if build then
+		build.energy_source.fuel_category = "omnite"
+	end
 end
 
 --Overwrite the localised name of the Burner inserter
