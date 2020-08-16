@@ -52,6 +52,7 @@ function icon.of_recipe(prototype, silent)
         if silent then
             return nil
         end
+        log(serpent.block(prototype))
         error(("%s/%s doesn't specify icons correctly"):format(prototype.type, prototype.name))
     end
 
@@ -72,7 +73,7 @@ function icon.of(prototype, ptype, silent)
         silent = ptype 
     end
     -- We got handed a .icons
-    if type(prototype) == "table" and prototype[1] then
+    if type(prototype) == "table" and prototype[1] and prototype[1].icon then
         return prototype
     end
     if omni.locale.inherits(prototype.type, 'recipe') then

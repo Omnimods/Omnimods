@@ -260,7 +260,7 @@ for _,tier in pairs(omnifluid) do
 			setEnergy(function(levels,grade) return 5 end):
 			setTechIcon(function(levels, grade)
 				local fluid_icon = omni.icon.of(fluid.name, "fluid")
-				tint = data.raw.fluid[fluid.name].base_color
+				local tint = table.deepcopy(data.raw.fluid[fluid.name].base_color)
 				if tint.r then
 					tint.a = 0.75
 				else
@@ -276,7 +276,7 @@ for _,tier in pairs(omnifluid) do
 					{{
 						icon = "__omnimatter__/graphics/technology/fluid-generic.png",
 						icon_size = 128,
-						tint = data.raw.fluid[fluid.name].base_color
+						tint = tint
 					}},
 					fluid_icon
 				)
