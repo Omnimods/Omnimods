@@ -214,8 +214,7 @@ end
 
 --Stuff to manually remove from the Omnitor Lab
 local packs = {
-	"token-bio",
-	"omni-pack"
+	"token-bio"
 }
 
 for i,inputs in pairs(data.raw["lab"]["omnitor-lab"].inputs) do
