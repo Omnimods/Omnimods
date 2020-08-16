@@ -226,11 +226,6 @@ for i,inputs in pairs(data.raw["lab"]["omnitor-lab"].inputs) do
 	end
 end
 
-RecGen:import("omnicium-plate-pure"):multiplyIngredients(0.5):extend()
-RecGen:import("omnicium-plate-mix"):multiplyIfModsIngredients(0.5,"angelsrefining"):extend()
-RecGen:import("omnite-smelting"):multiplyIngredients(0.5):extend()
-RecGen:import("omnicium-processing"):multiplyIngredients(0.5):extend()
-
 -- Deadlock compatibility
 if data.raw.technology["basic-transport-belt-beltbox"] then
 	omni.lib.add_unlock_recipe("basic-belt-logistics", "basic-transport-belt-loader")
