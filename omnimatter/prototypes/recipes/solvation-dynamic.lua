@@ -259,7 +259,7 @@ for _,tier in pairs(omnifluid) do
 			setResults(cost:results()):
 			setEnergy(function(levels,grade) return 5 end):
 			setTechIcon(function(levels, grade)
-				local fluid_icon = omni.icon.of(fluid.name, "fluid")
+				local fluid_icon = table.deepcopy(omni.icon.of(fluid.name, "fluid"))
 				local tint = table.deepcopy(data.raw.fluid[fluid.name].base_color)
 				if tint.r then
 					tint.a = 0.75
