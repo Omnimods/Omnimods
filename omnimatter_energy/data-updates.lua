@@ -1,5 +1,7 @@
 require("prototypes.fuel")
+require("prototypes.solar_panels")
 --require("prototypes.compat.omnium-cycle")
+
 RecGen:import("repair-pack"):
 	setNormalIngredients({type="item", name="omnicium-plate", amount=6},{type="item", name="omni-tablet", amount=2}):
 	setExpensiveIngredients({type="item", name="omnicium-plate", amount=15},{type="item", name="omni-tablet", amount=7}):extend()

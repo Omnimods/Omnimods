@@ -510,6 +510,57 @@ function omni.lib.replace_recipe_ingredient(recipename, ingredient, replacement)
 	end
 end
 
+function omni.lib.multiply_recipe_ingredient(recipename, ingredient, mult)
+	local rec = data.raw.recipe[recipename]
+    if rec then
+        --rec.ingredients
+        if rec.ingredients then
+            for i,ing in pairs(rec.ingredients) do
+                 --check if nametags exist (only check ing[i] when no name tags exist)
+                if ing.name then
+                    if ing.name == ingredient then
+                        ing.amount = omni.lib.round(ing.amount * mult)
+                        break
+                    end
+                elseif ing[1] and ing[1] == ingredient then
+                    ing[2] = omni.lib.round(ing[2] * mult)
+                    break
+                end
+            end
+        end
+        --rec.normal.ingredients
+        if rec.normal and rec.normal.ingredients then
+            for i,ing in pairs(rec.normal.ingredients) do
+                --check if nametags exist (only check ing[i] when no name tags exist)
+                if ing.name then
+                    if ing.name == ingredient then
+                        ing.amount = omni.lib.round(ing.amount * mult)
+                        break
+                    end
+                elseif ing[1] and ing[1] == ingredient then
+                    ing[2] = omni.lib.round(ing[2] * mult)
+                    break
+                end
+           end
+        end
+        --rec.expensive.ingredients
+        if rec.expensive and rec.expensive.ingredients then
+            for i,ing in pairs(rec.expensive.ingredients) do
+                --check if nametags exist (only check ing[i] when no name tags exist)
+                if ing.name then
+                    if ing.name == ingredient then
+                        ing.amount = omni.lib.round(ing.amount * mult)
+                        break
+                    end
+                elseif ing[1] and ing[1] == ingredient then
+                    ing[2] = omni.lib.round(ing[2] * mult)
+                    break
+                end
+           end
+        end   
+	end
+end
+
 function omni.lib.multiply_recipe_result(recipename, result, mult)
 	local rec = data.raw.recipe[recipename]
     if rec then

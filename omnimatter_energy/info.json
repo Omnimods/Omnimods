@@ -1,13 +1,13 @@
 {
 "name":"omnimatter_energy",
-"version": "1.18.11",
+"version": "2.0.0",
 "title":"Omnienergy",
 "author":"EmperorZelos",
 "description":"Start with limited access to fuel and research better refining methods up to renewable energy",
-"factorio_version":"0.18",
+"factorio_version":"1.0",
 "dependencies":[
     "base",
-    "omnilib >= 3.18.13",
+    "omnilib >= 4.0.0",
     "omnimatter",
     "omnimatter_crystal",
     "?boblogistics",

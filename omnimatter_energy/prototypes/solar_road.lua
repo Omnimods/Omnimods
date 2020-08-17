@@ -1,3 +1,15 @@
+--Crystal Panels
+RecGen:create("omnimatter_energy","crystal-panel"):
+	setStacksize(50):
+	setCategory("crafting"):
+	setSubgroup("omnienergy-solar"):
+	setOrder("a[crystal-panel]"):
+	setEnergy(2):
+	setIngredients({"iron-ore-crystal",2},{"copper-ore-crystal",3},{"basic-crystallonic",3}):
+	setEnabled(false):
+	setTechName("solar-energy"):extend()
+
+
 data:extend({
 	--- Solar Mat
   {
