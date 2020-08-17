@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.0.1
+Date: 2020.XX.XX
+  Bugfixes:
+    - Fixed cases where tech compression math wasn't accurate
+    - Fixed overflow on certain attributes causing crashes
+---------------------------------------------------------------------------------------------------
 Version: 4.0.0
 Date: 2020.08.14
   Changes:
