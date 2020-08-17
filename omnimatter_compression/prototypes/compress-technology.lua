@@ -154,55 +154,47 @@ for _,tech in pairs(data.raw.technology) do
     --Handle icons
     t.icons = omni.lib.add_overlay(t, "technology")
     t.icon = nil
-    --lowest common multiple for the packs
-		local lcm = 1
+    --if we req more than a (compressed) stack, we increment this counter
+    local stacks_needed = 1
+    local divisor = 1
     for _, ings in pairs(t.unit.ingredients) do
-      local st_s=pack_sizes[ings.name or ings[1]]
-      --local item = data.raw.tool[ings[1]]
-			lcm=omni.lib.lcm(lcm,(ings.amount or ings[2])*st_s)
+      -- Standardize
+      if ings[1] then
+        ings.name = ings[1]
+        ings.amount = ings[2]
+        ings[1] = nil
+        ings[2] = nil
+      end
+      divisor = math.max(divisor, data.raw.tool[ings.name].stack_size)
+      ings.amount = (ings.amount * (t.unit.count or 1)) / pack_sizes[ings.name]
+      ings.amount = math.max(1, omni.lib.round(ings.amount))
+      ings.name = "compressed-"..ings.name
+      if ings.amount > data.raw.tool[ings.name].stack_size then
+        stacks_needed = omni.lib.lcm(
+          stacks_needed,
+          math.ceil(ings.amount / data.raw.tool[ings.name].stack_size)
+        )
+      end
     end
-    local wrong = false
     --set compressed ingredients and amounts
-    for num,ing in pairs(t.unit.ingredients) do
-      local nme="" --get name string prepped
-      local amt="" --get amount sorted out
-      if ing.name then
-        nme=ing.name
-        amt=ing.amount
-      else
-        nme=ing[1]
-        amt=ing[2]
-      end
-      local st_s=pack_sizes[nme]
-      --check if compressed tool exists (it had bloody better)
-      if data.raw.tool["compressed-"..nme] then
-        ing={} --reset ing for this next step
-        ing[1] = "compressed-"..nme
-        ing[2] = lcm/(amt*st_s)
-      else
-        log("compressed tool missing?"..nme)
-        log(serpent.block(ing)) --tell log what is wrong
-        wrong=true
-        break
-      end
-      t.unit.ingredients[num]=ing
+    for num, ings in pairs(t.unit.ingredients) do
+      ings.amount = ings.amount / stacks_needed
+      ings.amount = math.max(1, omni.lib.round(ings.amount))
     end
     --if valid remove effects from compressed and update cost curve
-		if not wrong then
-			if t.effects then
-				for i, eff in pairs(t.effects) do
-					if eff.type ~= "unlock-recipe" then t.effects[i] = nil end
-				end
-			end
-			if t.unit.count then
-				t.unit.count = math.floor(t.unit.count/lcm)+1
-			else
-				t.unit.count_formula = t.unit.count_formula.."*"..(math.floor(10000/lcm)/1000).."+1"
-			end
-			t.unit.time = t.unit.time*lcm
-			compressed_techs[#compressed_techs+1]=table.deepcopy(t)
+    if t.effects then
+      for i, eff in pairs(t.effects) do
+        if eff.type ~= "unlock-recipe" then t.effects[i] = nil end
+      end
     end
-	end
+    if t.unit.count then
+      t.unit.time = math.ceil(t.unit.time * t.unit.count / stacks_needed)
+      t.unit.count = stacks_needed
+    else
+      t.unit.count_formula = "(" .. t.unit.count_formula..")*"..1/divisor
+    end
+    compressed_techs[#compressed_techs+1]=table.deepcopy(t)
+  end
 end
 if #compressed_techs >= 1 then --in case no tech is compressed
   data:extend(compressed_techs)
