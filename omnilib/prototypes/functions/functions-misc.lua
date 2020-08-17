@@ -260,8 +260,7 @@ end
 
 --mathematics
 function omni.lib.round(number)
-	local decimal = number-math.floor(number)
-	if decimal > 0.5 then return math.floor(number)+1 else return math.floor(number) end
+return math.floor(number+0.5)
 end
 
 --Omni specific
@@ -436,7 +435,10 @@ function omni.lib.capitalize(str)
 end
 
 function omni.lib.gcd(m,n)
-	    while m ~= 0 do
+		while m ~= 0 do
+			if m~=m then
+				error("GCD loop detected, please report with a log file and mod list @ https://discord.gg/xeadqBj")
+			end
 			m, n = n % m, m;
 		end
 
