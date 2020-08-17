@@ -210,7 +210,7 @@ if mods["pyrawores"] then
 end
 
 for index, result in pairs(initial_recipes) do
-	RecGen:create("omnimatter","initial-omnitraction-" .. index):
+	RecGen:create("omnimatter","initial-omnitraction-" .. result[1].name):
 	setCategory("omnite-extraction-burner"):
 	setEnergy(5):
 	setEnabled():
