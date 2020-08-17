@@ -84,7 +84,6 @@ for _, lab in pairs(data.raw.lab) do
 end
 --find lowest level in tiered techs that gets compressed to ensure chains are all compressed passed the first one
 for _,tech in pairs(data.raw.technology) do --run always
-  --log(tech.name)
   local name, lvl = splitTech(tech.name)
   if lvl == "" or lvl == nil then --tweak to allow techs that start with no number
     lvl = 1
@@ -157,16 +156,23 @@ for _,tech in pairs(data.raw.technology) do
     --if we req more than a (compressed) stack, we increment this counter
     local stacks_needed = 1
     local divisor = 1
+    local lcm = {1}
+    -- Stage 1: Standardize and find our LCM of the various stack sizes
     for _, ings in pairs(t.unit.ingredients) do
-      -- Standardize
       if ings[1] then
         ings.name = ings[1]
         ings.amount = ings[2]
         ings[1] = nil
         ings[2] = nil
       end
+      lcm[#lcm+1] = data.raw.tool[ings.name].stack_size
+    end
+    lcm = omni.lib.lcm(unpack(lcm))
+
+    -- Stage 2: Determine our amounts and unit.count (stacks_needed)
+    for _, ings in pairs(t.unit.ingredients) do
       divisor = math.max(divisor, data.raw.tool[ings.name].stack_size)
-      ings.amount = (ings.amount * (t.unit.count or 1)) / pack_sizes[ings.name]
+      ings.amount = (ings.amount * (t.unit.count or lcm)) / pack_sizes[ings.name]
       ings.amount = math.max(1, omni.lib.round(ings.amount))
       ings.name = "compressed-"..ings.name
       if ings.amount > data.raw.tool[ings.name].stack_size then
@@ -176,7 +182,8 @@ for _,tech in pairs(data.raw.technology) do
         )
       end
     end
-    --set compressed ingredients and amounts
+
+    -- Stage 3: Do the final adjustment of our amount requirements, dividing amount by unit count
     for num, ings in pairs(t.unit.ingredients) do
       ings.amount = ings.amount / stacks_needed
       ings.amount = math.max(1, omni.lib.round(ings.amount))
@@ -188,9 +195,11 @@ for _,tech in pairs(data.raw.technology) do
       end
     end
     if t.unit.count then
-      t.unit.time = math.ceil(t.unit.time * t.unit.count / stacks_needed)
+      t.unit.time = omni.lib.round((t.unit.time * t.unit.count) / stacks_needed)
+      t.unit.time = math.max(1, t.unit.time)
       t.unit.count = stacks_needed
     else
+      t.unit.time = t.unit.time * divisor
       t.unit.count_formula = "(" .. t.unit.count_formula..")*"..1/divisor
     end
     compressed_techs[#compressed_techs+1]=table.deepcopy(t)
