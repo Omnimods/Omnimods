@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.0.0
+Date: 2020.XX.XX
+  Features:
+    - Solvation and Extraction icons are now dynamically generated
+    - Improvements to recipe naming conventions
+    - Deal with removing Py ores from autoplace
+---------------------------------------------------------------------------------------------------
 Version: 3.18.11
 Date: 2020.08.13
   Bugfixes:
