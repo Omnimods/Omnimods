@@ -119,8 +119,9 @@ local seperate_fluid_solid = function(collection)
 	local fluid = {}
 	local solid = {}
 	if type(collection) == "table" then
-    for _,thing in pairs(collection) do
-      if thing.amount > 0 then
+    for _, thing in pairs(collection) do
+      local amount = type(thing) == "table" and tonumber(thing.amount or thing[2])
+      if not amount or (amount and amount > 0) then
         if thing.type and thing.type == "fluid" then
           fluid[#fluid+1]=thing
         else
@@ -136,7 +137,7 @@ local seperate_fluid_solid = function(collection)
           end
         end
       else
-        log("Invalid recipe with a 0 requirement/result for " .. (thing[1] or thing.name))
+        log("Invalid recipe with a 0 requirement/result!\n" .. serpent.block(collection))
       end
 		end
 	else solid[#solid+1] = {type="item",name=collection,amount=1}
