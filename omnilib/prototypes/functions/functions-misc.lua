@@ -219,6 +219,16 @@ function omni.lib.union(...)
 	end
 	return table.deepcopy(t)
 end
+
+-- Two arrays
+function omni.lib.iunion(dest, source)
+	local base = #dest
+	for I=1, #source do
+		dest[base+I] = source[I]
+	end
+	return dest
+end
+
 function omni.lib.dif(tab1,tab2)
 	local t = {}
 	for name,i in pairs(tab1) do
