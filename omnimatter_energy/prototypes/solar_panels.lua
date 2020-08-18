@@ -109,6 +109,7 @@ for j=1,nr_tiers do
 		--panel pictures
 		local pic = {}
 		local icons={{icon="__omnimatter_energy__/graphics/icons/empty.png"}}
+		local ticons={{icon="__omnimatter_energy__/graphics/technology/empty.png"}}
 		for k=i,1,-1 do
 			for l=1, i do
 				--entity pictures
@@ -120,11 +121,19 @@ for j=1,nr_tiers do
 					scale=0.5,
 					shift = {k-i/2-0.5,l-i/2-0.4},
 				}
-				--icons
+				--recipe icons
 				icons[#icons+1]={
 					icon="__omnimatter_energy__/graphics/icons/zolar-panel.png",
 					icon_size= 32,
 					scale = 1/i,
+					shift={(k-i/2-0.5)*32/i,(l-i/2-0.5)*32/i}
+				}
+
+				--tech icons
+				ticons[#ticons+1]={
+					icon="__omnimatter_energy__/graphics/technology/zolar-panel.png",
+					icon_size= 128,
+					scale = 1/i*72/128,
 					shift={(k-i/2-0.5)*32/i,(l-i/2-0.5)*32/i}
 				}
 			end
@@ -141,8 +150,16 @@ for j=1,nr_tiers do
 					scale=0.5,
 					shift = {k-i/2,l-i/2},
 				}
-				--icons
-				icons[#icons+1]={
+				--recipe icons
+				ticons[#icons+1]={
+					icon="__omnimatter_energy__/graphics/entity/buildings/zolar-crystal.png",
+					icon_size=192,
+					scale = 1/i*72/192,
+					shift={(k-i/2)*32/i,(l-i/2)*32/i}
+				}
+
+				--tech icons
+				ticons[#ticons+1]={
 					icon="__omnimatter_energy__/graphics/entity/buildings/zolar-crystal.png",
 					icon_size=192,
 					scale = 1/i*72/192,
@@ -152,6 +169,7 @@ for j=1,nr_tiers do
 		end
 		--add tier icon
 		icons[#icons+1]={icon="__omnilib__/graphics/icons/small/lvl"..j..".png",icon_size=32} --handles 0-8
+		ticons[#ticons+1]={icon="__omnilib__/graphics/icons/small/lvl"..j..".png",icon_size=32} --handles 0-8
 
 		--solar panel array item
 		sol[#sol+1]={
@@ -159,11 +177,11 @@ for j=1,nr_tiers do
 			name = "crystal-solar-panel-tier-"..j.."-size-"..i,
 			localised_name = {"item-name.crystal-solar-panel", j, i},
 			icons = icons,
+			icon_size = 32,
 			flags = {},
 			subgroup = "omnienergy-solar-tier-"..j,
 			order = "a[crystal-solar-panel-tier-"..j.."-size-"..i.."]",
 			place_result = "crystal-solar-panel-tier-"..j.."-size-"..i,
-			icon_size = 32,
 			stack_size = 10+max_size*10-10*i,
 		}
 
@@ -218,7 +236,7 @@ for j=1,nr_tiers do
 			type = "technology",
 			name = "crystal-solar-panel-tier-"..j.."-size-"..i,
 			localised_name = {"technology-name.crystal-solar-panel", j, i},
-			icons = icons,
+			icons = ticons,
 			icon_size = 32,
 			prerequisites = get_req(j,i,max_size),
 			effects =
