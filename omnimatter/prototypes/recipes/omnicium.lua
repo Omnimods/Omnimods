@@ -4,7 +4,7 @@ RecGen:create("omnimatter","omnicium-plate-pure"):
 	setItemName("omnicium-plate"):
 	setIcons("omnicium-plate","omnimatter"):
 	setStacksize(200):
-	setIngredients({ "crushed-omnite", 10}):
+	setIngredients({ "crushed-omnite", 20}):
 	setResults("omnicium-plate"):
 	setCategory("smelting"):
 	setSubgroup("omnicium"):
@@ -14,8 +14,8 @@ RecGen:create("omnimatter","omnicium-plate-pure"):
 	extend()
 
 RecGen:create("omnimatter","omnicium-plate-mix"):
-	setIngredients({type="item", name="omnite",amount=4}):
-	ifModsAddIngredients("angelsrefining",{"angels-ore1-crushed",4},{"angels-ore3-crushed",4}):
+	setIngredients({type="item", name="omnite",amount=2}):
+	ifModsAddIngredients("angelsrefining",{"angels-ore1-crushed",2},{"angels-ore3-crushed",2}):
 	ifAddIngredients(not mods["angelsrefining"],{"copper-ore",1},{"iron-ore",1}):
 	setResults({type="item", name="omnicium-plate",amount=2}):
 	addProductivity():
@@ -82,9 +82,10 @@ ItemGen:import("ingot-iron"):
 
 RecGen:import("iron-ore-smelting"):
 	setName("omnite-smelting","omnimatter"):
-	setIngredients({type="item", name="iron-ore", amount=24},
-		{type="item", name="copper-ore", amount=24},
-		{type="item", name="omnite", amount=48}):
+	setIngredients(
+		{type="item", name="iron-ore", amount=12},
+		{type="item", name="copper-ore", amount=12},
+		{type="item", name="omnite", amount=24}):
 	replaceResults("ingot-iron","ingot-omnicium"):
 	setSubgroup("angels-omnicium"):
 	setOrder("rc"):
@@ -122,7 +123,7 @@ RecGen:import("angels-plate-iron"):
 RecGen:import("iron-ore-processing"):
 	setName("omnicium-processing","omnimatter"):
 	setItemName("processed-omnicium"):
-	setIngredients({"iron-ore",4},{"copper-ore",4},{"omnite",8}):
+	setIngredients({"iron-ore",2},{"copper-ore",2},{"omnite",4}):
 	replaceResults("processed-iron","processed-omnicium"):
 	setSubgroup("angels-omnicium"):
 	setOrder("ra"):

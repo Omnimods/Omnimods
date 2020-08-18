@@ -1,3 +1,6 @@
+local nr_tiers = settings.startup["omnielectricity-solar-tiers"].value
+local max_size = settings.startup["omnielectricity-solar-size"].value
+
 --Disable all Solar Panels
 for _, sol in pairs(data.raw["solar-panel"]) do
 	if sol.minable then
@@ -6,92 +9,78 @@ for _, sol in pairs(data.raw["solar-panel"]) do
 	end
 end
 
-local sol = {
-	--sol item
-	{
-		type = "item",
-		name = "crystal-panel",
-		icon = "__omnimatter_energy__/graphics/icons/crystal-panel.png",
-		flags = {},
-		subgroup = "omnitractor",
-		order = "crystal-panel",
-		icon_size = 32,
-		stack_size = 50,
-	},
-	--sol recipe
-	{
-		type = "recipe",
-		name = "crystal-panel",
-		subgroup = "omnienergy-solar",
-		category="omniphlog",
-		energy_required = 2,
-		ingredients = {{"iron-ore-crystal",2},{"copper-ore-crystal",3},{"basic-crystallonic",3}},
-		enabled=false,
-		results=
-		{
-			{type="item", name="crystal-panel", amount=1},
-		},
-		order = "a[angelsore1-crushed-hand]",
-	}
-}
-
 local parts={"plate","crystal","circuit"}
 
 local quant={}
-quant["crystal"]=5
 quant["plate"]=5
+quant["crystal"]=5
 quant["circuit"]=5
 
 local component={}
-component["circuit"]={"basic-crystallonic","basic-oscillo-crystallonic"}
 component["plate"]= {"steel-plate"}
 component["crystal"]={"iron-ore-crystal"}
+component["circuit"]={"basic-crystallonic","basic-oscillo-crystallonic"}
+if data.raw.item["lead-ore-crystal"] then component["crystal"][#component["crystal"]+1] = "lead-ore-crystal" end
+if data.raw.item["quartz-crystal"] then component["crystal"][#component["crystal"]+1] = "quartz-crystal" end
+if data.raw.item["cobalt-ore-crystal"] then component["crystal"][#component["crystal"]+1] = "cobalt-ore-crystal" end
+if data.raw.item["silver-ore-crystal"] then component["crystal"][#component["crystal"]+1] = "silver-ore-crystal" end
 
-if mods["bobores"] then
-	component["crystal"][#component["crystal"]+1] = "lead-ore-crystal"
-end
-
-local nr_tiers = settings.startup["omnielectricity-solar-tiers"].value
-local max_size = settings.startup["omnielectricity-solar-size"].value
+local crystallonics = {"crystal-rod","oscillocrystal","electrocrystal"}
 
 local get_cost = function(tier, size)
 	local ing = {}
-	ing[#ing+1]={type="item",name="omnicium-plate",amount=10+tier+size}
-	--ing[#ing+1]={type="item",name="omnicium-gear-wheel",amount=7+3*tier}
+
+	ing[#ing+1]={type="item",name="omnicium-plate", amount = 6 + (size-1)*(size-1) + (tier-1)*4}
+
+	--Add components to each crystal panel recipe
 	for _,part in pairs(parts) do
 		local amount = quant[part]
-		for i=tier,1,-1 do
+		for i=tier, 1, -1 do
 			if component[part] and component[part][i] then
 				ing[#ing+1]={type="item",name=component[part][i],amount=amount}
 				break
 			else
-				amount = amount+2
+				amount = amount + 2
 			end
 		end
 	end
+
+	--Add crystallonics to each crystal panel with size > 1
+	for i=tier, 1, -1 do
+		if size > 1 and crystallonics[i] then
+			ing[#ing+1]={type="item",name=crystallonics[i],amount=math.pow(size-1,2)-math.pow(size-2,2)}
+			break
+		end
+	end
+
 	if size > 1 then
 		if size > 2 then
 			ing[#ing+1]={type="item",name="crystal-solar-panel-tier-"..tier.."-size-"..size-1,amount=1}
 			ing[#ing+1]={type="item",name="crystal-solar-panel-tier-"..tier.."-size-1",amount=math.pow(size,2)-math.pow(size-1,2)}
 		elseif size==2 then
-			ing[#ing+1]={type="item",name="crystal-solar-panel-tier-"..tier.."-size-"..size-1,amount=3}
+			ing[#ing+1]={type="item",name="crystal-solar-panel-tier-"..tier.."-size-"..size-1,amount=4}
 		end
-		ing[#ing+1]={type="item",name="electrocrystal",amount=math.pow(size-1,2)-math.pow(size-2,2)}
 	else
 		ing[#ing+1]={type="item",name="crystal-panel",amount=7}
 	end
+
 	if tier > 1 and size == 1 then
 		ing[#ing+1]={type="item",name="crystal-solar-panel-tier-"..(tier-1).."-size-1",amount=1}
 	end
+
 	return ing
 end
 
-local get_req = function(tier, size, msize)
+local get_req = function(tier, size)
 	local req = {}
 	if tier == 1 and size == 1 then
-		req = {"solar-energy"}
+		req = {"solar-energy", "crystallonics-1"}
 	elseif size == 1 then
-		req = {"crystal-solar-panel-tier-"..(tier-1).."-size-"..msize}
+		if tier <= 5 then
+			req = {"crystal-solar-panel-tier-"..(tier-1).."-size-"..max_size, "crystallonics-"..tier}
+		else
+			req = {"crystal-solar-panel-tier-"..(tier-1).."-size-"..max_size}
+		end
 	else
 		req = {"crystal-solar-panel-tier-"..tier.."-size-"..size-1}
 	end
@@ -99,20 +88,14 @@ local get_req = function(tier, size, msize)
 end
 
 local get_scienceing = function(tier)
-	local techtier= {
-		[1]={{"automation-science-pack", 1},{"logistic-science-pack", 1},},
-		[2]={{"automation-science-pack", 1},{"logistic-science-pack", 1},{"chemical-science-pack", 1},},
-		[3]={{"automation-science-pack", 1},{"logistic-science-pack", 1},{"chemical-science-pack", 1},{"production-science-pack", 1},},
-		[4]={{"automation-science-pack", 1},{"logistic-science-pack", 1},{"chemical-science-pack", 1},{"production-science-pack", 1},{"utility-science-pack", 1},},
-	}
-	if tier <= #techtier then
-		return techtier[tier]
-	else
-		return techtier[#techtier]
+	local packs = {}
+	for i=1,math.min(tier+1,5) do
+		packs[#packs+1] = {omni.sciencepacks[i],1}
 	end
+	return packs
 end
 
---log("solar shite")
+local sol = {}
 for j=1,nr_tiers do
 	--subgroup
 	sol[#sol+1]={
@@ -169,7 +152,8 @@ for j=1,nr_tiers do
 		end
 		--add tier icon
 		icons[#icons+1]={icon="__omnilib__/graphics/icons/small/lvl"..j..".png",icon_size=32} --handles 0-8
-		--solar panel array item sets
+
+		--solar panel array item
 		sol[#sol+1]={
 			type = "item",
 			name = "crystal-solar-panel-tier-"..j.."-size-"..i,
@@ -177,12 +161,13 @@ for j=1,nr_tiers do
 			icons = icons,
 			flags = {},
 			subgroup = "omnienergy-solar-tier-"..j,
-			order = "zolar-panel",
+			order = "a[crystal-solar-panel-tier-"..j.."-size-"..i.."]",
 			place_result = "crystal-solar-panel-tier-"..j.."-size-"..i,
 			icon_size = 32,
 			stack_size = 10+max_size*10-10*i,
 		}
-		--solar panel array entity sets
+
+		--solar panel array entity
 		sol[#sol+1]={
 			type = "solar-panel",
 			name = "crystal-solar-panel-tier-"..j.."-size-"..i,
@@ -207,7 +192,8 @@ for j=1,nr_tiers do
 			vehicle_impact_sound =  { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 },
 			production = math.floor(5*math.pow(i,2)*math.pow(1.2,i-1)*math.pow(1.5,j-1)).."kW"
 		}
-		--solar panel array recipe sets
+
+		--solar panel array recipe
 		sol[#sol+1]={
 			type = "recipe",
 			name = "crystal-solar-panel-tier-"..j.."-size-"..i,
@@ -224,8 +210,9 @@ for j=1,nr_tiers do
 				{type="item", name="crystal-solar-panel-tier-"..j.."-size-"..i, amount=1},
 			},
 			energy_required = 6.0,
-			order = "a[angelsore1-crushed-hand]",
+			order = "a[crystal-solar-panel-tier-"..j.."-size-"..i.."]",
 		}
+
 		--solar panel array tech unlocks sets
 		sol[#sol+1]={
 			type = "technology",
@@ -248,7 +235,42 @@ for j=1,nr_tiers do
 		}
 	end
 end
+
 data:extend(sol)
 
+--Add an upgrade recipe from previous tier max size to this tier size 1
+for j=1,nr_tiers do
+	for i=1,max_size do
+		
+		if i == 1 and j > 1 then
+			data:extend({
+			{
+				type = "recipe",
+				name = "crystal-solar-panel-tier-"..j.."-size-"..i.."-upgrade",
+				localised_name = {"recipe-name.crystal-solar-panel", j, i},
+				icons = icons,
+				icon_size = 32,
+				subgroup = "omnienergy-solar-tier-"..j,
+				category ="crafting",
+				energy_required = 1,
+				enabled = false,
+				ingredients = get_cost(j,i),
+				results=
+				{
+					{type="item", name="crystal-solar-panel-tier-"..j.."-size-"..i, amount=max_size*max_size},
+				},
+				energy_required = 6.0,
+				order = "a[crystal-solar-panel-tier-"..j.."-size-"..i.."]z"
+			}})
+
+			omni.lib.remove_recipe_ingredient("crystal-solar-panel-tier-"..j.."-size-"..i.."-upgrade", "crystal-solar-panel-tier-"..(j-1).."-size-"..i)
+			for _,ing in pairs(data.raw.recipe["crystal-solar-panel-tier-"..j.."-size-"..i.."-upgrade"].ingredients) do
+				omni.lib.multiply_recipe_ingredient("crystal-solar-panel-tier-"..j.."-size-"..i.."-upgrade", ing.name, max_size*max_size)
+			end
+			omni.lib.add_recipe_ingredient("crystal-solar-panel-tier-"..j.."-size-"..i.."-upgrade", "crystal-solar-panel-tier-"..(j-1).."-size-"..max_size)
+			omni.lib.add_unlock_recipe("crystal-solar-panel-tier-"..j.."-size-"..i, "crystal-solar-panel-tier-"..j.."-size-"..i.."-upgrade")
+		end
+	end
+end
+
 omni.lib.replace_all_ingredient("solar-panel","crystal-panel")
-omni.lib.add_unlock_recipe("solar-energy", "crystal-panel")

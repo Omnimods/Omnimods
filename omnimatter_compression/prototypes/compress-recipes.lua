@@ -486,15 +486,23 @@ function create_compression_recipe(recipe)
                     then
                       generatorfluid = component.name
                     end
-                    component.amount = single_stack and component.amount or math.min(component.amount/gcd[recipe_difficulty],65535) --set max cap (in case something slips through)
+                  end
+                end
+                
+                -- finish finding gcd before applying calculation to parts
+                for b, io_type in pairs({"ingredients","results"}) do
+                  for _, item_type in pairs{"solid", "fluid"} do
+                    for _, component in pairs(parts[item_type][a][b]) do
+                      component.amount = single_stack and component.amount or math.min(component.amount/gcd[recipe_difficulty],65535) --set max cap (in case something slips through)
+                    end
                   end
                 end
               end
               --log(serpent.block(check))
               -- Scope
               if not missing_solids then
-                new_val_norm = get_recipe_values(ing.normal, res.normal)
-                new_val_exp = get_recipe_values(ing.expensive, res.expensive)
+                local new_val_norm = get_recipe_values(ing.normal, res.normal)
+                local new_val_exp = get_recipe_values(ing.expensive, res.expensive)
                 local mult
                 if parts.solid[1][1][1] and parts.solid[2][1][1] then
                   mult = {

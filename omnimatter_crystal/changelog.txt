@@ -1,5 +1,12 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.8
+Date: 2020.08.xx
+  Changes:
+    - Updated to Factorio version 1.0
+  Bugfixes:
+    - Fixed crystallonics tech not always requiring its previous tier
+---------------------------------------------------------------------------------------------------
+Version: 3.18.8
 Date: 2020.08.13
   Bugfixes:
     - Fixed crystallonics tech starting with green instead of blue science

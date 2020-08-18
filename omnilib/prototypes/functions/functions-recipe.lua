@@ -277,27 +277,31 @@ end
 
 function omni.lib.remove_recipe_ingredient(recipename, ingredient)
     local rec = data.raw.recipe[recipename]
-	if rec.ingredients then
-		for i,ing in pairs(rec.ingredients) do
-			if ing.name == ingredient or ing[1] == ingredient then
-				table.remove(rec.ingredients,i)
-			end
+    if rec then
+	    if rec.ingredients then
+	    	for i,ing in pairs(rec.ingredients) do
+		    	if ing.name == ingredient or ing[1] == ingredient then
+		    		table.remove(rec.ingredients,i)
+		    	end
+         end
         end
-    end
-	if rec.normal and rec.normal.ingredients then
-		for i,ing in pairs(rec.normal.ingredients) do
-			if ing.name == ingredient or ing[1] == ingredient then
-				table.remove(rec.normal.ingredients,i)
-			end
+	    if rec.normal and rec.normal.ingredients then
+		    for i,ing in pairs(rec.normal.ingredients) do
+		    	if ing.name == ingredient or ing[1] == ingredient then
+		    		table.remove(rec.normal.ingredients,i)
+		    	end
+            end
         end
+        if rec.expensive and rec.expensive.ingredients then
+		    for i,ing in pairs(rec.expensive.ingredients) do
+			    if ing.name == ingredient or ing[1] == ingredient then
+			    	table.remove(rec.expensive.ingredients,i)
+			    end
+		    end
+        end
+    else
+        log("Can not remove ingredient "..ingredient..". Recipe "..recipename.." not found.")
     end
-    if rec.expensive and rec.expensive.ingredients then
-		for i,ing in pairs(rec.expensive.ingredients) do
-			if ing.name == ingredient or ing[1] == ingredient then
-				table.remove(rec.expensive.ingredients,i)
-			end
-		end
-	end
 end
 
 function omni.lib.remove_recipe_result(recipename, result)
@@ -506,6 +510,57 @@ function omni.lib.replace_recipe_ingredient(recipename, ingredient, replacement)
 	end
 end
 
+function omni.lib.multiply_recipe_ingredient(recipename, ingredient, mult)
+	local rec = data.raw.recipe[recipename]
+    if rec then
+        --rec.ingredients
+        if rec.ingredients then
+            for i,ing in pairs(rec.ingredients) do
+                 --check if nametags exist (only check ing[i] when no name tags exist)
+                if ing.name then
+                    if ing.name == ingredient then
+                        ing.amount = omni.lib.round(ing.amount * mult)
+                        break
+                    end
+                elseif ing[1] and ing[1] == ingredient then
+                    ing[2] = omni.lib.round(ing[2] * mult)
+                    break
+                end
+            end
+        end
+        --rec.normal.ingredients
+        if rec.normal and rec.normal.ingredients then
+            for i,ing in pairs(rec.normal.ingredients) do
+                --check if nametags exist (only check ing[i] when no name tags exist)
+                if ing.name then
+                    if ing.name == ingredient then
+                        ing.amount = omni.lib.round(ing.amount * mult)
+                        break
+                    end
+                elseif ing[1] and ing[1] == ingredient then
+                    ing[2] = omni.lib.round(ing[2] * mult)
+                    break
+                end
+           end
+        end
+        --rec.expensive.ingredients
+        if rec.expensive and rec.expensive.ingredients then
+            for i,ing in pairs(rec.expensive.ingredients) do
+                --check if nametags exist (only check ing[i] when no name tags exist)
+                if ing.name then
+                    if ing.name == ingredient then
+                        ing.amount = omni.lib.round(ing.amount * mult)
+                        break
+                    end
+                elseif ing[1] and ing[1] == ingredient then
+                    ing[2] = omni.lib.round(ing[2] * mult)
+                    break
+                end
+           end
+        end   
+	end
+end
+
 function omni.lib.multiply_recipe_result(recipename, result, mult)
 	local rec = data.raw.recipe[recipename]
     if rec then
@@ -531,11 +586,11 @@ function omni.lib.multiply_recipe_result(recipename, result, mult)
                  --check if nametags exist (only check res[i] when no name tags exist)
                 if res.name then
                     if res.name == result then
-                        res.amount = res.amount + mult
+                        res.amount = omni.lib.round(res.amount * mult)
                         break
                     end
                 elseif res[1] and res[1] == result then
-                    res[2] = res[2] + mult
+                    res[2] = omni.lib.round(res[2] * mult)
                     break
                 end
             end
@@ -546,11 +601,11 @@ function omni.lib.multiply_recipe_result(recipename, result, mult)
                 --check if nametags exist (only check res[i] when no name tags exist)
                 if res.name then
                     if res.name == result then
-                        res.amount = res.amount + mult
+                        res.amount = omni.lib.round(res.amount * mult)
                         break
                     end
                 elseif res[1] and res[1] == result then
-                    res[2] = res[2] + mult
+                    res[2] = omni.lib.round(res[2] * mult)
                     break
                 end
            end
@@ -561,11 +616,11 @@ function omni.lib.multiply_recipe_result(recipename, result, mult)
                 --check if nametags exist (only check res[i] when no name tags exist)
                 if res.name then
                     if res.name == result then
-                        res.amount = res.amount + mult
+                        res.amount = omni.lib.round(res.amount * mult)
                         break
                     end
                 elseif res[1] and res[1] == result then
-                    res[2] = res[2] + mult
+                    res[2] = omni.lib.round(res[2] * mult)
                     break
                 end
            end

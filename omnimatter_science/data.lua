@@ -22,6 +22,7 @@ lab_ignore_pack = omni.science.triggers.lab_ignore_pack or {}
 --default the bobs special labs to not take
 lab_ignore_pack["lab-alien"] = true
 lab_ignore_pack["lab-module"] = true
+lab_ignore_pack["omnitor-lab"] = true
 
 require("prototypes.functions")
 require("prototypes.omni-pack")
