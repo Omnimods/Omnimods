@@ -6,30 +6,6 @@ function extraction_value(levels,grade)
 	return (8*levels+5*grade-13)*(3*levels+grade-4)/(4*math.pow(levels-1,2))
 end
 
-local get_item_icons = function(item,tier)
-    --Build the icons table
-    local icons = {}
-    if item.icons then
-        for _ , icon in pairs(item.icons) do
-            icons[#icons+1] = icon
-        end
-    else
-        icons[#icons+1] = {icon = item.icon}
-    end
-    return icons
-end
-local get_tech_icons = function(item)
-    --Build the icons table
-    local icon = ""
-    if not item.mod then
-		icon = "__omnimatter__"
-	else
-		icon = "__"..item.mod.."__"
-	end
-	icon=icon.."/graphics/extraction/"..item.ore.name..".png"
-    return icon
-end
-
 local reqpure = function(tier,level,item)
 	local req = {}
 	if level%omni.pure_levels_per_tier==1 or omni.pure_levels_per_tier==1 then
@@ -235,7 +211,7 @@ end
 --omni.pure_dependency > omni.pure_levels_per_tier
 --omni.max_tier
 local function generate_impure_icon(ore)
-	local ore_icon = omni.icon.of(ore.name, "item")
+	local ore_icon = table.deepcopy(omni.icon.of(ore.name, "item"))
 	for _, layer in pairs(ore_icon) do
 		layer.shift = {
 			5 * (64 / layer.icon_size),
@@ -252,7 +228,7 @@ local function generate_impure_icon(ore)
 end
 
 local function generate_pure_icon(ore)
-	local ore_icon = omni.icon.of(ore.name, "item")
+	local ore_icon = table.deepcopy(omni.icon.of(ore.name, "item"))
 	for _, layer in pairs(ore_icon) do
 		layer.shift = {
 			0,
