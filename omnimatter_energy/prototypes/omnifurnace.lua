@@ -24,7 +24,7 @@ addIcon("__omnilib__/graphics/icons/small/lvl2.png"):
 setSpeed(2.0):
 setOrder("a[omni-furnace-2]"):
 setFuelCategory("chemical"):
-setIngredients({"burner-omni-furnace",1},{"omnicium-iron-alloy",15},{"iron-plate",20},{"omnicium-iron-gear-box",60}):
+setIngredients({"burner-omni-furnace",1},{"omnicium-iron-alloy",15},{"iron-plate",20},{"omnicium-iron-gear-box",20}):
 setEnabled(false):
 setTechName("advanced-material-processing"):
 setReplace("furnace"):
@@ -42,7 +42,7 @@ setStacksize(20):
 setSubgroup("omni-buildings"):
 setOrder("a[omni-furnace-3]"):
 setCrafting("smelting","omnifurnace"):
-setIngredients({"omni-furnace-2",1},{"omnicium-steel-alloy",25},{"steel-plate",30},{"omnicium-iron-gear-box",150}):
+setIngredients({"omni-furnace-2",1},{"omnicium-steel-alloy",15},{"steel-plate",20},{"omnicium-steel-gear-box",20}):
 setEnabled(false):
 setTechName("advanced-material-processing-2"):
 setReplace("furnace"):

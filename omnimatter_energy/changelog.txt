@@ -6,6 +6,7 @@ Date: 2020.08.xx
   Changes:
     - Rebalanced crystal solar panel recipes
     - Added the required crystallonics tech as prereq for each new tier of crystal solar panels
+    - Made the Omnifurnace mk2 and mk3 recipe slightly cheaper
 ---------------------------------------------------------------------------------------------------
 Version: 1.18.11
 Date: 2020.08.07
