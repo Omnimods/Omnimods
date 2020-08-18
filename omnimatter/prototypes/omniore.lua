@@ -83,31 +83,146 @@ if mods["angelsrefining"] then
     {type="item", name="stone-crushed", amount=5}}
 end
 
-RecGen:create("omnimatter","initial-omnitraction-1"):
-setCategory("omnite-extraction-burner"):
-setEnergy(5):
-setEnabled():
-noItem():
-setSubgroup("omni-basic"):
-setIngredients({"omnite",q_in}):
-setResults(out1):
-setIcons(out1[1].name):
-marathon():
-setLocName("recipe-name.initial-omni","item-name."..out1[1].name):
-addSmallIcon("stone-crushed",3):extend()
+local initial_recipes = {}
+local inputs = {}
+if mods["angelsrefining"] then
+	initial_recipes[#initial_recipes + 1] = {
+		{
+			type = "item",
+			name = "angels-ore1",
+			amount = 1
+		},
+		{
+			type = "item",
+			name = "stone-crushed",
+			amount = 5
+		},
+	}
+	inputs[#inputs + 1] = 6
+	initial_recipes[#initial_recipes + 1] = {
+		{
+			type = "item",
+			name = "angels-ore1",
+			amount = 1
+		},
+		{
+			type = "item",
+			name = "stone-crushed",
+			amount = 5
+		},
+	}
+	inputs[#inputs + 1] = 6
+else
+	initial_recipes[#initial_recipes + 1] = {
+		{
+			type = "item",
+			name = "iron-ore",
+			amount = 1
+		},
+		{
+			type = "item",
+			name = "stone-crushed",
+			amount = 6
+		},
+	}
+	inputs[#inputs + 1] = 7
+	initial_recipes[#initial_recipes + 1] = {
+		{
+			type = "item",
+			name = "copper-ore",
+			amount = 1
+		},
+		{
+			type = "item",
+			name = "stone-crushed",
+			amount = 6
+		},
+	}
+	inputs[#inputs + 1] = 7
+end
 
-RecGen:create("omnimatter","initial-omnitraction-2"):
-setCategory("omnite-extraction-burner"):
-setEnergy(5):
-setEnabled():
-noItem():
-setSubgroup("omni-basic"):
-setIngredients({"omnite",q_in}):
-setResults(out2):
-setIcons(out2[1].name):
-marathon():
-setLocName("recipe-name.initial-omni","item-name."..out2[1].name):
-addSmallIcon("stone-crushed",3):extend()
+if mods["pyrawores"] then
+	initial_recipes[#initial_recipes + 1] = {
+		{
+			type = "item",
+			name = "ore-aluminium",
+			amount = 1
+		},
+		{
+			type = "item",
+			name = "stone-crushed",
+			amount = 13
+		},
+	}
+	inputs[#inputs + 1] = 14
+	initial_recipes[#initial_recipes + 1] = {
+		{
+			type = "item",
+			name = "ore-tin",
+			amount = 1
+		},
+		{
+			type = "item",
+			name = "stone-crushed",
+			amount = 11
+		},
+	}
+	inputs[#inputs + 1] = 12
+	initial_recipes[#initial_recipes + 1] = {
+		{
+			type = "item",
+			name = "ore-quartz",
+			amount = 1
+		},
+		{
+			type = "item",
+			name = "stone-crushed",
+			amount = 11
+		},
+	}
+	inputs[#inputs + 1] = 12
+	initial_recipes[#initial_recipes + 1] = {
+		{
+			type = "item",
+			name = "raw-coal",
+			amount = 1
+		},
+		{
+			type = "item",
+			name = "stone-crushed",
+			amount = 9
+		},
+	}
+	inputs[#inputs + 1] = 10
+	initial_recipes[#initial_recipes + 1] = {
+		{
+			type = "item",
+			name = "nexelit-ore",
+			amount = 1
+		},
+		{
+			type = "item",
+			name = "stone-crushed",
+			amount = 6
+		},
+	}
+	inputs[#inputs + 1] = 7
+end
+
+for index, result in pairs(initial_recipes) do
+	RecGen:create("omnimatter","initial-omnitraction-" .. result[1].name):
+	setCategory("omnite-extraction-burner"):
+	setEnergy(5):
+	setEnabled():
+	noItem():
+	setSubgroup("omni-basic"):
+	setIngredients({"omnite", inputs[index]}):
+	setResults(result):
+	setIcons(result[1].name):
+	marathon():
+	setLocName("recipe-name.initial-omni","item-name."..result[1].name):
+	addSmallIcon(result[2].name, 3):extend()
+end
 
 ItemGen:create("omnimatter","omnic-waste"):
 	fluid():

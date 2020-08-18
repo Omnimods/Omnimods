@@ -25,6 +25,52 @@ if mods["Yuoki"] then
 	omni.add_resource("y-res1",2)
 	omni.add_resource("y-res2",3)
 end
+if mods["pycoalprocessing"] then
+	-- Green
+	omni.add_resource("raw-borax", 2)
+	omni.add_resource("niobium-ore", 2)	
+end
+if mods["pyfusionenergy"] then
+	-- Blue
+	omni.add_resource("molybdenum-ore", 3)
+	-- Beyond
+	omni.add_resource("regolite-rock", 3)
+	omni.add_resource("kimberlite-rock", 3)
+end
+if mods["pyhightech"] then
+	-- Blue
+	omni.add_resource("rare-earth-ore", 3)
+	-- Beyond
+	omni.add_resource("phosphate-rock", 3)
+end
+if mods["pypetroleumhandling"] then
+	-- Green
+	omni.add_resource("oil-sand", 2)
+	omni.add_fluid("tar", 2, 1)
+	omni.add_resource("sulfur", 2)
+end
+if mods["pyalienlife"] then
+	-- Green
+	omni.add_resource("bio-sample", 2)
+
+end
+if mods["pyrawores"] then
+	-- Pre-sci/red
+	omni.add_resource("ore-aluminium", 1)
+	omni.add_resource("ore-tin", 1)
+	omni.add_resource("ore-quartz", 1)
+	omni.add_resource("raw-coal", 1)
+	omni.add_resource("nexelit-ore", 1)
+	-- Green
+	omni.add_resource("ore-lead", 2)
+	omni.add_resource("ore-titanium", 2)
+	omni.add_resource("ore-chromium", 2)
+	omni.add_resource("salt", 2)
+	-- Blue
+	omni.add_resource("ore-nickel", 3)
+	-- Beyond
+	omni.add_resource("ore-zinc", 3)
+end
 ----------------------------------------------------------------------------
 -- Vanilla, Angels and Bobs combo solid ores section --
 ----------------------------------------------------------------------------
@@ -96,7 +142,7 @@ end
 if angelsmods and angelsmods.petrochem then
 	omni.add_fluid("gas-natural-1",1,3+4/7)
 	omni.add_fluid("liquid-multi-phase-oil",2,1+3/8)
-	if not mods["omnimatter_water"] then omni.add_resource("sulfur",2) end
+	if not mods["omnimatter_water"] and not mods["pypetroleumhandling"] then omni.add_resource("sulfur",2) end
 else
 	omni.add_fluid("crude-oil",1,1)
 end
