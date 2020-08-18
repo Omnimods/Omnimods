@@ -296,19 +296,14 @@ function omni.crystal.generate_hybrid_circuit(control_crystal,electronic_circuit
 	--log("generating hybrid: "..cc)
 	
 	local items = {}
-	
-	local icons={}
-	local crystal_icon = data.raw.item[cc].icons
-	icons[#icons+1]={icon="__omnimatter_crystal__/graphics/blank.png"}
-	for _,ic in pairs(crystal_icon) do
-		icons[#icons+1]=ic
-		--icons[#icons].scale=0.5
-	--icons[#icons].shift={0,-5}
-	end
-	icons[#icons+1]={icon=data.raw.item[electronic_circuit].icon}
-	icons[#icons].scale=0.5
-	icons[#icons].shift={-6,8}
-	--icons[#icons+1]=
+	--	icons[#icons+1]={icon="__omnimatter_crystal__/graphics/blank.png"}
+	local icons = util.combine_icons(
+		omni.icon.of(data.raw.item[cc]),
+		omni.icon.of(data.raw.item[electronic_circuit]),
+		{}
+	)
+	icons[#icons].scale = 0.5
+	icons[#icons].shift = {-6, 8}
 	local loc = {"item-name.control_crystal_hybrid"}
 	for i = 2, #data.raw.item[cc].localised_name do
 		loc[#loc+1]=data.raw.item[cc].localised_name[i]
@@ -320,7 +315,6 @@ function omni.crystal.generate_hybrid_circuit(control_crystal,electronic_circuit
 		name = cc.."-"..electronic_circuit.."-hybrid",
         localised_name = loc,
 		icons = icons,
-		icon_size = 32,
 		flags = {"goes-to-main-inventory"},
 		subgroup = "omni-basic",
 		stack_size = 200
@@ -333,7 +327,6 @@ function omni.crystal.generate_hybrid_circuit(control_crystal,electronic_circuit
 		ingredients = {{type="item",name=cc,amount=1},{type="item",name=electronic_circuit,amount=1}},
 		order = "a[angelsore1-crushed]",
 		icons = icons,
-		icon_size = 32,
 		results = {{type = "item", name = cc.."-"..electronic_circuit.."-hybrid", amount=1}},
 		energy_required = 1,
 	}

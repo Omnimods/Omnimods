@@ -59,16 +59,19 @@ local results_nodule_solvation=function(recipe)
 end
 --icons
 local salt_omnide_icon = function(metal)
-	local nr = 5
 	--Build the icons table
-	local icons = {}
-	icons[#icons+1] = {icon = "__omnimatter_crystal__/graphics/icons/omnide-salt.png",icon_size=32}
-	icons[#icons+1] = {
-		icon = data.raw.item[metal].icon or data.raw.item[metal].icons[1].icon,
-		icon_size=omni.crystal.get_ore_ic_size(metal),
-		scale=0.4*32/omni.crystal.get_ore_ic_size(metal),
-		shift={-10,10}
-	}
+	local icons = util.combine_icons(
+		{{
+			icon = "__omnimatter_crystal__/graphics/icons/omnide-salt.png",
+			icon_size = 32
+		}},
+		omni.icon.of(data.raw.item[metal]),
+		{}
+	)
+	for I=2, #icons do
+		icons[I].scale = 0.4 * 32 / icons[I].icon_size
+		icons[I].shift = {-10, 10}
+	end
 	return icons
 end
 --checks
