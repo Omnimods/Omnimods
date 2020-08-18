@@ -204,6 +204,7 @@ local function generate_compressed_item(item, norecipe)
   }
   if science_list[item.name] then
     new_item.type = "tool"
+    new_item.stack_size = compressed_item_stack_size
   end
   -- Case: satellite
   local product_table = (

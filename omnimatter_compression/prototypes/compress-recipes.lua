@@ -119,21 +119,25 @@ local seperate_fluid_solid = function(collection)
 	local fluid = {}
 	local solid = {}
 	if type(collection) == "table" then
-		for _,thing in pairs(collection) do
-			if thing.type and thing.type == "fluid" then
-				fluid[#fluid+1]=thing
-			else
-				if type(thing)=="table" then
-					if thing.type then
-						solid[#solid+1] = thing
-					elseif thing[1] then
-						solid[#solid+1] = {type="item",name=thing[1],amount=thing[2]}
-					elseif thing.name then
-						solid[#solid+1] = {type="item",name=thing.name,amount=thing.amount}
-					end
-				else solid[#solid+1] = {type="item",name=thing[1],amount=1}
-				end
-			end
+    for _,thing in pairs(collection) do
+      if thing.amount > 0 then
+        if thing.type and thing.type == "fluid" then
+          fluid[#fluid+1]=thing
+        else
+          if type(thing)=="table" then
+            if thing.type then
+              solid[#solid+1] = thing
+            elseif thing[1] then
+              solid[#solid+1] = {type="item",name=thing[1],amount=thing[2]}
+            elseif thing.name then
+              solid[#solid+1] = {type="item",name=thing.name,amount=thing.amount}
+            end
+          else solid[#solid+1] = {type="item",name=thing[1],amount=1}
+          end
+        end
+      else
+        log("Invalid recipe with a 0 requirement/result for " .. (thing[1] or thing.name))
+      end
 		end
 	else solid[#solid+1] = {type="item",name=collection,amount=1}
 	end
@@ -149,7 +153,7 @@ function get_recipe_values(ingredients, results)
 	local all_res = seperate_fluid_solid(results)
 
 	for _,comp in pairs({all_ing.solid,all_res.solid}) do
-		for _,  resing in pairs(comp) do
+    for _,  resing in pairs(comp) do
 			parts[#parts+1]={name=resing.name,amount=resing.amount}
 		end
   end
