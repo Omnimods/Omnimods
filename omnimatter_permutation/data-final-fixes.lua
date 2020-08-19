@@ -108,7 +108,16 @@ for _,rec in pairs(data.raw.recipe) do
 end
 log(serpent.block(data.raw.recipe["ingot-mingnisium"]))
 --error("derp")
-if #recipesExpanded>0 then data:extend(recipesExpanded) end
+
+local rawsize = table_size(data.raw.recipe) + #recipesExpanded
+if rawsize > 65535 then
+	error("data.raw.recipe exceeds the limit of 65535 (" .. rawsize .. "). Please disable either your largest mod or omnipermute.")
+end
+
+if #recipesExpanded > 0 then
+	data:extend(recipesExpanded)
+end
+
 for _,tech in pairs(data.raw.technology) do
 	if tech.effects then
 		for i,eff in pairs(tech.effects) do
@@ -121,14 +130,17 @@ for _,tech in pairs(data.raw.technology) do
 		end
 	end
 end
+
+
+
 for _,mod in pairs(data.raw.module) do
 	if mod.limitation then
 		local newRestrict = {}
-		for i,restrict in pairs(mod.limitation) do
+		for i, restrict in pairs(mod.limitation) do
 			if techRec[restrict] then
-				newRestrict=omni.lib.union(newRestrict,techRec[restrict])
+				newRestrict = omni.lib.iunion(newRestrict, techRec[restrict])
 			else
-				newRestrict[#newRestrict+1]=restrict
+				newRestrict[#newRestrict+1] = restrict
 			end
 		end
 		mod.limitation = table.deepcopy(newRestrict)

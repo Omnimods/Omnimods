@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: X.XX.X
+Date: 2020.XX.XX
+  Features:
+    - Significant performance increase
+  Bugfixes:
+    - Fixed cases where we would run out of RAM with large include lists on prod modules
+---------------------------------------------------------------------------------------------------
 Version: 1.18.0
 Date: 2020.04.02
   Features:
