@@ -41,7 +41,7 @@ local function update_last_tier(recipe, full_refresh)
 		return
 	end
 	-- We're the top of the tree!
-	if recipe_tree and metadata.variant == "" and recipe_tree.active_tier < metadata.tier then
+	if recipe_tree and metadata.variant == "" and recipe_tree.active_tier <= metadata.tier then
 		local I = full_refresh and 97 or recipe_tree.active_tier
 		local research_status = not not (recipe.force.technologies["compression-recipes"] or {}).researched
 		repeat
