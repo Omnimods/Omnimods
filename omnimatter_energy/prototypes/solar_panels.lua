@@ -77,12 +77,12 @@ local get_req = function(tier, size)
 		req = {"solar-energy", "crystallonics-1"}
 	elseif size == 1 then
 		if tier <= 5 then
-			req = {"crystal-solar-panel-tier-"..(tier-1).."-size-"..max_size, "crystallonics-"..tier}
+			req = {"omnitech-crystal-solar-panel-tier-"..(tier-1).."-size-"..max_size, "crystallonics-"..tier}
 		else
-			req = {"crystal-solar-panel-tier-"..(tier-1).."-size-"..max_size}
+			req = {"omnitech-crystal-solar-panel-tier-"..(tier-1).."-size-"..max_size}
 		end
 	else
-		req = {"crystal-solar-panel-tier-"..tier.."-size-"..size-1}
+		req = {"omnitech-crystal-solar-panel-tier-"..tier.."-size-"..size-1}
 	end
 	return req
 end
@@ -167,23 +167,10 @@ for j=1,nr_tiers do
 				}
 			end
 		end
+
 		--add tier icon
 		icons[#icons+1]={icon="__omnilib__/graphics/icons/small/lvl"..j..".png",icon_size=32} --handles 0-8
 		ticons[#ticons+1]={icon="__omnilib__/graphics/icons/small/lvl"..j..".png",icon_size=32} --handles 0-8
-
-		--solar panel array item
-		sol[#sol+1]={
-			type = "item",
-			name = "crystal-solar-panel-tier-"..j.."-size-"..i,
-			localised_name = {"item-name.crystal-solar-panel", j, i},
-			icons = icons,
-			icon_size = 32,
-			flags = {},
-			subgroup = "omnienergy-solar-tier-"..j,
-			order = "a[crystal-solar-panel-tier-"..j.."-size-"..i.."]",
-			place_result = "crystal-solar-panel-tier-"..j.."-size-"..i,
-			stack_size = 10+max_size*10-10*i,
-		}
 
 		--solar panel array entity
 		sol[#sol+1]={
@@ -211,46 +198,31 @@ for j=1,nr_tiers do
 			production = math.floor(5*math.pow(i,2)*math.pow(1.2,i-1)*math.pow(1.5,j-1)).."kW"
 		}
 
-		--solar panel array recipe
-		sol[#sol+1]={
-			type = "recipe",
-			name = "crystal-solar-panel-tier-"..j.."-size-"..i,
-			localised_name = {"recipe-name.crystal-solar-panel", j, i},
-			icons = icons,
-			icon_size = 32,
-			subgroup = "omnienergy-solar-tier-"..j,
-			category ="crafting",
-			energy_required = 1,
-			enabled = false,
-			ingredients = get_cost(j,i),
-			results=
-			{
-				{type="item", name="crystal-solar-panel-tier-"..j.."-size-"..i, amount=1},
-			},
-			energy_required = 6.0,
-			order = "a[crystal-solar-panel-tier-"..j.."-size-"..i.."]",
-		}
+		RecGen:create("omnimatter_energy", "crystal-solar-panel-tier-"..j.."-size-"..i):
+            setLocName({"recipe-name.crystal-solar-panel", j, i}):
+			setIcons(icons):
+			noItem():
+			setIngredients(get_cost(j,i)):
+			setResults({name = "crystal-solar-panel-tier-"..j.."-size-"..i, amount = 1}):
+			setSubgroup("omnienergy-solar-tier-"..j):
+			setOrder("a[crystal-solar-panel-tier-"..j.."-size-"..i.."]"):
+            setCategory("crafting"):
+			setEnergy(5):
+			setEnabled(false):
+			setStacksize(50):
+			setTechName("omnitech-crystal-solar-panel-tier-"..j.."-size-"..i):
+			setTechLocName("crystal-solar-panel", j, i):
+			setTechIcon("__omnimatter_energy__/graphics/technology/empty.png"):			
+			setTechCost(150+((j-1)*max_size+i)*75+j*100):	--base_cost+...*cost_between_techs+...*addidional_cost_between_tiers
+			setTechPacks(get_scienceing(j)):
+			setTechPrereq(get_req(j,i,max_size)):
+			--setTechIcons(ticons):extend()     does not exist yet, outcomment this once its added to lib
+			setForce():
+			extend()
 
-		--solar panel array tech unlocks sets
-		sol[#sol+1]={
-			type = "technology",
-			name = "crystal-solar-panel-tier-"..j.."-size-"..i,
-			localised_name = {"technology-name.crystal-solar-panel", j, i},
-			icons = ticons,
-			icon_size = 32,
-			prerequisites = get_req(j,i,max_size),
-			effects =
-			{
-				{type = "unlock-recipe", recipe = "crystal-solar-panel-tier-"..j.."-size-"..i}
-			},
-			unit =
-			{
-				count = 150+((j-1)*max_size+i)*75+j*100,	--base_cost+...*cost_between_techs+...*addidional_cost_between_tiers
-				ingredients = get_scienceing(j),
-				time = 30
-			},
-			order = "c-a",
-		}
+		data.raw.technology["omnitech-crystal-solar-panel-tier-"..j.."-size-"..i].icon = nil
+		data.raw.technology["omnitech-crystal-solar-panel-tier-"..j.."-size-"..i].icon_size = 32
+		data.raw.technology["omnitech-crystal-solar-panel-tier-"..j.."-size-"..i].icons = ticons
 	end
 end
 
@@ -261,32 +233,20 @@ for j=1,nr_tiers do
 	for i=1,max_size do
 		
 		if i == 1 and j > 1 then
-			data:extend({
-			{
-				type = "recipe",
-				name = "crystal-solar-panel-tier-"..j.."-size-"..i.."-upgrade",
-				localised_name = {"recipe-name.crystal-solar-panel", j, i},
-				icons = icons,
-				icon_size = 32,
-				subgroup = "omnienergy-solar-tier-"..j,
-				category ="crafting",
-				energy_required = 1,
-				enabled = false,
-				ingredients = get_cost(j,i),
-				results=
-				{
-					{type="item", name="crystal-solar-panel-tier-"..j.."-size-"..i, amount=max_size*max_size},
-				},
-				energy_required = 6.0,
-				order = "a[crystal-solar-panel-tier-"..j.."-size-"..i.."]z"
-			}})
-
-			omni.lib.remove_recipe_ingredient("crystal-solar-panel-tier-"..j.."-size-"..i.."-upgrade", "crystal-solar-panel-tier-"..(j-1).."-size-"..i)
-			for _,ing in pairs(data.raw.recipe["crystal-solar-panel-tier-"..j.."-size-"..i.."-upgrade"].ingredients) do
-				omni.lib.multiply_recipe_ingredient("crystal-solar-panel-tier-"..j.."-size-"..i.."-upgrade", ing.name, max_size*max_size)
-			end
-			omni.lib.add_recipe_ingredient("crystal-solar-panel-tier-"..j.."-size-"..i.."-upgrade", "crystal-solar-panel-tier-"..(j-1).."-size-"..max_size)
-			omni.lib.add_unlock_recipe("crystal-solar-panel-tier-"..j.."-size-"..i, "crystal-solar-panel-tier-"..j.."-size-"..i.."-upgrade")
+			RecGen:create("omnimatter_energy", "crystal-solar-panel-tier-"..j.."-size-"..i.."-upgrade"):
+            setLocName({"recipe-name.crystal-solar-panel", j, i}):
+			setIcons(icons):
+			setIngredients(get_cost(j,i)):
+			removeIngredients("crystal-solar-panel-tier-"..(j-1).."-size-"..i):
+			multiplyIngredients(max_size*max_size):
+			addIngredients({name = "crystal-solar-panel-tier-"..(j-1).."-size-"..max_size, amount = 1}):
+			setResults({name="crystal-solar-panel-tier-"..j.."-size-"..i, amount=max_size*max_size}):
+			setSubgroup("omnienergy-solar-tier-"..j):
+			setOrder("a[crystal-solar-panel-tier-"..j.."-size-"..i.."]z"):
+            setCategory("crafting"):
+			setEnergy(5):
+			setEnabled(false):
+			setTechName("omnitech-crystal-solar-panel-tier-"..j.."-size-"..i):extend()
 		end
 	end
 end
