@@ -235,7 +235,7 @@ function get_recipe_values(ingredients, results)
       type = "fluid",
       name = "concentrated-" .. f.name,
       amount = f.amount * total_mult / concentrationRatio,
-      temperature = f.temperature
+      --temperature = f.temperature
     }
 	end
 	return {
