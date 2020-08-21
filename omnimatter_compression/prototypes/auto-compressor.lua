@@ -140,3 +140,5 @@ local b = BuildGen:create("omnimatter_compression","auto-compressor"):
       animation_speed = 0.25
     }):extend()
 	
+data.raw["furnace"]["auto-concentrator"].scale_entity_info_icon = true
+data.raw["assembling-machine"]["auto-condensator"].scale_entity_info_icon = true
