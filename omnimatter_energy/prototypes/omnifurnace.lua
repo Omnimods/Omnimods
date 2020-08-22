@@ -42,7 +42,9 @@ setStacksize(20):
 setSubgroup("omni-buildings"):
 setOrder("a[omni-furnace-3]"):
 setCrafting("smelting","omnifurnace"):
-setIngredients({"omni-furnace-2",1},{"omnicium-steel-alloy",15},{"steel-plate",20},{"omnicium-steel-gear-box",20}):
+setIngredients({"omni-furnace-2",1},{"omnicium-steel-alloy",15},{"steel-plate",20}):
+ifAddIngredients(mods["bobplates"],{"omnicium-steel-gear-box",20}):
+ifAddIngredients(not mods["bobplates"],{"omnicium-iron-gear-box",20}):
 setEnabled(false):
 setTechName("advanced-material-processing-2"):
 setReplace("furnace"):
