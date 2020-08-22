@@ -274,7 +274,7 @@ RecGen:create("omnimatter_crystal","omnine-shards"):
 --[[                         ]]
 
 local crystal_cat = "crystallomnizer"
-if mods["bobmods"] or (angelsmods.industries and angelsmods.industries.overhaul) then
+if mods["bobmods"] or (mods["angelsindustries"] and angelsmods.industries and angelsmods.industries.overhaul) then
   ore_circuit = "lead-ore"
   cry_rod = "tin-ore-crystal"
 else
