@@ -8,27 +8,48 @@ local shard_icons = function(metal)
     --Build the icons table
     local icons = {}
 	for i=1,nr do
-		icons[#icons+1] = {icon = "__omnimatter_crystal__/graphics/icons/"..metal.."-crystal.png",icon_size=32,scale=0.2,shift={5*math.cos(((i-1)/nr+0.5)*2*math.pi),5*math.sin(((i-1)/nr+0.5)*2*math.pi)}}
+		icons[#icons+1] = {
+			icon = "__omnimatter_crystal__/graphics/icons/"..metal.."-crystal.png",
+			icon_size=32,
+			scale=0.2,
+			shift={5*math.cos(((i-1)/nr+0.5)*2*math.pi),5*math.sin(((i-1)/nr+0.5)*2*math.pi)}
+		}
 	end
     return icons
 end
 
 local metal_omnide_icon = function(metal)
-	local nr = 5
     --Build the icons table
-    local icons = {}
-	icons[#icons+1] = {icon = "__omnimatter_crystal__/graphics/icons/omnide-solution.png",icon_size=32}
-	icons[#icons+1] = {icon = data.raw.item[metal].icon,icon_size=omni.crystal.get_ore_ic_size(metal),scale=0.4*32/omni.crystal.get_ore_ic_size(metal),shift={-10,10}}
+    local icons = util.combine_icons(
+		{{
+			icon = "__omnimatter_crystal__/graphics/icons/omnide-solution.png",
+			icon_size = 32
+		}},
+		omni.icon.of(data.raw.item[metal]),
+		{}
+	)
+	for I=2, #icons do
+		icons[I].scale = 0.4 * 32 / icons[I].icon_size
+		icons[I].shift = {-10, 10}
+	end
     return icons
 end
 
 local salt_omnide_icon = function(metal)
-	local nr = 5
-    --Build the icons table
-    local icons = {}
-	icons[#icons+1] = {icon = "__omnimatter_crystal__/graphics/icons/omnide-salt.png",icon_size=32}
-	icons[#icons+1] = {icon = data.raw.item[metal].icon,icon_size=omni.crystal.get_ore_ic_size(metal),scale=0.4*32/omni.crystal.get_ore_ic_size(metal),shift={-10,10}}
-    return icons
+	--Build the icons table
+	local icons = util.combine_icons(
+		{{
+			icon = "__omnimatter_crystal__/graphics/icons/omnide-salt.png",
+			icon_size = 32
+		}},
+		omni.icon.of(data.raw.item[metal]),
+		{}
+	)
+	for I=2, #icons do
+		icons[I].scale = 0.4 * 32 / icons[I].icon_size
+		icons[I].shift = {-10, 10}
+	end
+	return icons
 end
 
 

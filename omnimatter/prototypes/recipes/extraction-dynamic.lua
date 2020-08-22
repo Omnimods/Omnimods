@@ -6,30 +6,6 @@ function extraction_value(levels,grade)
 	return (8*levels+5*grade-13)*(3*levels+grade-4)/(4*math.pow(levels-1,2))
 end
 
-local get_item_icons = function(item,tier)
-    --Build the icons table
-    local icons = {}
-    if item.icons then
-        for _ , icon in pairs(item.icons) do
-            icons[#icons+1] = icon
-        end
-    else
-        icons[#icons+1] = {icon = item.icon}
-    end
-    return icons
-end
-local get_tech_icons = function(item)
-    --Build the icons table
-    local icon = ""
-    if not item.mod then
-		icon = "__omnimatter__"
-	else
-		icon = "__"..item.mod.."__"
-	end
-	icon=icon.."/graphics/extraction/"..item.ore.name..".png"
-    return icon
-end
-
 local reqpure = function(tier,level,item)
 	local req = {}
 	if level%omni.pure_levels_per_tier==1 or omni.pure_levels_per_tier==1 then
@@ -232,9 +208,43 @@ local get_omnimatter_split = function(tier,focus,level)
 	end
 	return ores
 end
-	--omni.pure_dependency > omni.pure_levels_per_tier
-	--omni.max_tier
-	
+--omni.pure_dependency > omni.pure_levels_per_tier
+--omni.max_tier
+local function generate_impure_icon(ore)
+	local ore_icon = table.deepcopy(omni.icon.of(ore.name, "item"))
+	for _, layer in pairs(ore_icon) do
+		layer.shift = {
+			5 * (64 / layer.icon_size),
+			(layer.icon_size * 0.5 + 5) * (64 / layer.icon_size)
+		}
+	end
+	return omni.lib.add_overlay(
+		{{
+			icon = "__omnimatter__/graphics/technology/omnimatter.png",
+			icon_size = 128
+		}},
+		ore_icon
+	)
+end
+
+local function generate_pure_icon(ore)
+	local ore_icon = table.deepcopy(omni.icon.of(ore.name, "item"))
+	for _, layer in pairs(ore_icon) do
+		layer.shift = {
+			0,
+			layer.icon_size * 0.5 * (64 / layer.icon_size)
+		}
+	end
+	return omni.lib.add_overlay(
+		{{
+			icon = "__omnimatter__/graphics/technology/extraction-generic.png",
+			icon_size = 128
+		}},
+		ore_icon
+	)
+end
+
+
 --Pure extraction
 for i, tier in pairs(omnisource) do
 	for ore_name, ore in pairs(tier) do
@@ -267,7 +277,7 @@ for i, tier in pairs(omnisource) do
 		setMain(item):
 		setLevel(3*omni.pure_levels_per_tier):
 		setEnergy(function(levels,grade) return 5*(math.floor((grade-1+(tier_int-1)/2)/levels)+1) end):
-		setTechIcon(ore.mod or "omnimatter","extraction-"..item):
+		setTechIcon(generate_pure_icon(ore)):
 		setTechCost(function(levels,grade) return tech_cost(levels,grade,tier_int) end):
 		setTechPrereq(function(levels,grade) return reqpure(tier_int,grade,item)  end):
 		setTechPacks(function(levels,grade) return math.floor((grade-1)*3/levels)+tier_int end):
@@ -339,7 +349,8 @@ for _,ore_tiers in pairs(omnisource) do
 				setTechCost(25*i*t):
 				setTechLocName("impure-omnitraction","item-name."..ore.name,i):
 				setTechPacks(math.max(1,t)):
-				setTechIcon(ore.mod or "omnimatter","impure_"..ore.name):
+				--setTechIcon(ore.mod or "omnimatter","omnimatter"):--"impure_"..ore.name):
+				setTechIcon(generate_impure_icon(ore)):
 				marathon()
 				
 				if #sp > 1 then

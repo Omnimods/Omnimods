@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.0
+Date: 2020.08.22
+  Info:
+    - Updated for Factorio version 1.0.0
+  Features:
+    - Significant performance increase
+  Bugfixes:
+    - Fixed cases where we would run out of RAM with large include lists on prod modules
+---------------------------------------------------------------------------------------------------
 Version: 1.18.0
 Date: 2020.04.02
   Features:

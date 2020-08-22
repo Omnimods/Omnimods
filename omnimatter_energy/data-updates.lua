@@ -1,5 +1,7 @@
 require("prototypes.fuel")
+require("prototypes.solar_panels")
 --require("prototypes.compat.omnium-cycle")
+
 RecGen:import("repair-pack"):
 	setNormalIngredients({type="item", name="omnicium-plate", amount=6},{type="item", name="omni-tablet", amount=2}):
 	setExpensiveIngredients({type="item", name="omnicium-plate", amount=15},{type="item", name="omni-tablet", amount=7}):extend()
@@ -214,8 +216,7 @@ end
 
 --Stuff to manually remove from the Omnitor Lab
 local packs = {
-	"token-bio",
-	"omni-pack"
+	"token-bio"
 }
 
 for i,inputs in pairs(data.raw["lab"]["omnitor-lab"].inputs) do
@@ -225,11 +226,6 @@ for i,inputs in pairs(data.raw["lab"]["omnitor-lab"].inputs) do
 		end
 	end
 end
-
-RecGen:import("omnicium-plate-pure"):multiplyIngredients(0.5):extend()
-RecGen:import("omnicium-plate-mix"):multiplyIfModsIngredients(0.5,"angelsrefining"):extend()
-RecGen:import("omnite-smelting"):multiplyIngredients(0.5):extend()
-RecGen:import("omnicium-processing"):multiplyIngredients(0.5):extend()
 
 -- Deadlock compatibility
 if data.raw.technology["basic-transport-belt-beltbox"] then

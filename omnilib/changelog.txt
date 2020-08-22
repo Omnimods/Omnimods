@@ -1,8 +1,17 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.0.1
+Date: 2020.08.22
+  Features:
+    - Add omni.lib.iunion as a faster alternative to lib.union for merging two contiguous arrays
+  Bugfixes:
+    - Fixed cases where gcd function hung on NaN
+    - Fixed cases where recgen wouldn't handle tech icons correctly
+    - Added omni.lib.multiply_recipe_ingredient()
+---------------------------------------------------------------------------------------------------
 Version: 4.0.0
 Date: 2020.08.14
   Changes:
-    - Updated for Factorio version 1.0.0
+    - Updated for Factorio version 1.0
     - Added "spider-vehicle", "spider-leg" and "spidertron-remote" types
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.18

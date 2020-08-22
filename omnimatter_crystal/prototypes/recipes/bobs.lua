@@ -16,7 +16,7 @@ if bobmods and bobmods.ores then
     }
     for i, ore in pairs(bobmods.ores) do --check ore triggers (works with plates)
         if ore.enabled and products[ore.name] then
-            omni.crystal.add_crystal(ore.name,products[ore.name])
+            omni.crystal.add_crystal(ore.name, products[ore.name])
         end
     end
 end

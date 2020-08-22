@@ -20,16 +20,19 @@ if mods["omnimatter_marathon"] then
 end
 
 local salt_omnide_icon = function(metal)
-	local nr = 5
 	--Build the icons table
-	local icons = {}
-	icons[#icons+1] = {icon = "__omnimatter_crystal__/graphics/icons/omnide-salt.png",icon_size=32}
-	icons[#icons+1] = {
-		icon = data.raw.item[metal].icon or data.raw.item[metal].icons[1].icon,
-		icon_size=omni.crystal.get_ore_ic_size(metal),
-		scale=0.4*32/omni.crystal.get_ore_ic_size(metal),
-		shift={-10,10}
-	}
+	local icons = util.combine_icons(
+		{{
+			icon = "__omnimatter_crystal__/graphics/icons/omnide-salt.png",
+			icon_size = 32
+		}},
+		omni.icon.of(data.raw.item[metal]),
+		{}
+	)
+	for I=2, #icons do
+		icons[I].scale = 0.4 * 32 / icons[I].icon_size
+		icons[I].shift = {-10, 10}
+	end
 	return icons
 end
 
@@ -72,10 +75,10 @@ if not mods["angelsrefining"] then
 				metal = string.sub(ore,1,string.len(ore)-string.len("-ore"))
 			end
 			if data.raw.item[plate] then
-				rec.normal.results[1].name=plate
+				rec.normal.results[1].name = plate
 				rec.icon=nil
 				rec.icon_size=nil
-				rec.icons = {{icon =data.raw.item[plate].icon, icon_size = data.raw.item[plate].icon_size}}
+				rec.icons = omni.icon.of(data.raw.item[plate])
 				rec.localised_name = {"recipe-name.item", {"item-name."..plate}}
 				local tier = 1
 				for i,t in pairs(omnisource) do
@@ -101,7 +104,6 @@ if not mods["angelsrefining"] then
 						{type="fluid",name="hydromnic-acid",amount=120},
 					},
 					icons = ic,
-					icon_size = omni.crystal.get_ore_ic_size(ore),--32,
 					results = {
 						{type="item",name=ore.."-omnide-salt",amount=1},
 					},

@@ -76,7 +76,6 @@ local tech3 = {
     icon = "__omnimatter_compression__/graphics/compress-tech.png",
     icon_size = 128,
     order = "z",
-    effects = {{type = "unlock-recipe",recipe="compression-planner"}},
     upgrade = true,
     prerequisites = {"compression-recipes","advanced-electronics-2"},
     unit =

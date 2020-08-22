@@ -41,14 +41,17 @@ local function update_last_tier(recipe, full_refresh)
 		return
 	end
 	-- We're the top of the tree!
-	if recipe_tree and metadata.variant == "" and recipe_tree.active_tier < metadata.tier then
+	if recipe_tree and metadata.variant == "" and recipe_tree.active_tier <= metadata.tier then
 		local I = full_refresh and 97 or recipe_tree.active_tier
 		local research_status = not not (recipe.force.technologies["compression-recipes"] or {}).researched
 		repeat
 			for variant, recipe_name in pairs(recipe_tree[I] or {}) do
 				local force_recipe = recipe.force.recipes[recipe_name]
-				local is_compressed = global.omni.recipes[recipe.name].compressed
-				local desired_status = is_compressed and research_status or (I == metadata.tier) -- True if we're on the final tier, false otherwise
+				local desired_status = (I == metadata.tier) -- True if we're on the final tier, false otherwise
+				local is_compressed = global.omni.recipes[recipe_name].compressed
+				if is_compressed then
+					desired_status = research_status
+				end
 				if force_recipe.enabled ~= desired_status then
 					force_recipe.enabled = desired_status
 				end
@@ -290,6 +293,14 @@ function omni_update(game, silent)
 		update_force(force, silent)
 	end	
 	update_building_recipes(silent)
+	if game.shortcut_prototypes["compression-planner-shortcut"] then
+		for _, ply in pairs(game.players) do
+			ply.set_shortcut_available(
+				"compression-planner-shortcut", 
+				not not ply.force.technologies["compression-mining"].researched
+			)
+		end
+	end
 	local printer = silent and log or game.print
 	printer({
 		"",
@@ -452,9 +463,16 @@ script.on_event(defines.events.on_player_changed_force, function(event)
 end)
 
 script.on_event(defines.events.on_player_created, function(event)
+	local ply = game.players[event.player_index]
 	if (settings.startup["angels-enable-tech"] or {}).value then
-		game.players[event.player_index].print{"message.omni-angelstech", {200,15,15}}
+		ply.print{"message.omni-angelstech", {200,15,15}}
 	else
-		game.players[event.player_index].print{"message.omni-difficulty"}
+		ply.print{"message.omni-difficulty"}
+	end
+	if game.shortcut_prototypes["compression-planner-shortcut"] then
+		ply.set_shortcut_available(
+			"compression-planner-shortcut", 
+			not not ply.force.technologies["compression-mining"].researched
+		)
 	end
 end)

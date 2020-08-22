@@ -23,7 +23,6 @@ local function On_Remove(event)
 end
 
 local function Player_Tile_Built(event)
-  log("player_tile_built")
 	local player = game.players[event.player_index]
 	local surface = player and player.surface
 

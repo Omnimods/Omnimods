@@ -174,7 +174,7 @@ BuildChain:create("omnimatter_crystal","crystallomnizer"):
 		local tmp = {"crystallology-"..math.min(grade,omni.max_tier-1)}
 		if grade == 1 then
 			tmp[#tmp+1]="advanced-electronics"
-		elseif grade == omni.max_tier then
+		else
 			tmp[#tmp+1]="crystallonics-"..(grade-1)
 		end
 		return tmp end):
@@ -274,10 +274,13 @@ RecGen:create("omnimatter_crystal","omnine-shards"):
 --[[                         ]]
 
 local crystal_cat = "crystallomnizer"
-
-local ore_circuit = "coal"
-if mods["bobores"] then ore_circuit = "lead-ore" end
-
+if mods["bobmods"] or (mods["angelsindustries"] and angelsmods.industries and angelsmods.industries.overhaul) then
+  ore_circuit = "lead-ore"
+  cry_rod = "tin-ore-crystal"
+else
+  ore_circuit = "coal"
+  cry_rod = "copper-ore-crystal"
+end
 
 RecGen:create("omnimatter_crystal","omnine-structure-crystal"):
 	setEnergy(1):
@@ -296,7 +299,7 @@ RecGen:create("omnimatter_crystal","crystal-rod"):
 	setCategory("crystallomnizer"):
 	setTechName("crystallonics-1"):
 	addProductivity():
-	setIngredients({type="item",name="copper-ore-crystal",amount=2}):
+	setIngredients({type="item",name= cry_rod ,amount=2}):
 	setResults({type="item",name="crystal-rod",amount=3}):extend()
 
 RecGen:create("omnimatter_crystal","basic-crystallonic"):

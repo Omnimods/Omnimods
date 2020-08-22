@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.0.0
+Date: 2020.08.22
+  Info:
+    - Updated for Factorio version 1.0.0
+  Bugfixes:
+    - Fixed crystallonics tech not always requiring its previous tier
+    - Fixed cases of incorrect icon generation
+---------------------------------------------------------------------------------------------------
 Version: 3.18.8
 Date: 2020.08.13
   Bugfixes:

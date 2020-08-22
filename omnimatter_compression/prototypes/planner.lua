@@ -23,15 +23,29 @@ data:extend({
     alt_selection_mode = "any-entity"
   },
   {
-    type = "recipe",
-    name = "compression-planner",
-	icon_size = 32,
-    enabled = false,
-    energy_required = 1,
-    ingredients =
-    {
-		{"blueprint", 1},
+    type = "shortcut",
+    name = "compression-planner-shortcut",
+    localised_name = {"item-name.compression-planner"},
+    action = "create-blueprint-item",
+    item_to_create = "compression-planner",
+    technology_to_unlock = "compression-mining",
+	  icon = {
+      filename = "__omnimatter_compression__/graphics/planner-shortcut.png",
+      size = 128,
+      scale = 1,
+      flags = {"gui-icon"}
     },
-    result = "compression-planner"
+    disabled_icon = {
+      filename = "__omnimatter_compression__/graphics/planner-shortcut-white.png",
+      size = 128,
+      scale = 1,
+      flags = {"gui-icon"}
+    },
+    small_icon = {
+      filename = "__omnimatter_compression__/graphics/planner-shortcut-white.png",
+      size = 128,
+      scale = 1,
+      flags = {"gui-icon"}
+    },
   }
 })

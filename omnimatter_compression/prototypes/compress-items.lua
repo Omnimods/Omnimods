@@ -47,7 +47,8 @@ for _, group in pairs({"fluid"}) do
 			new_fluid.order = fluid.order or "z".."[concentrated-"..fluid.name .."]"
       new_fluid.icons = omni.lib.add_overlay(fluid, "compress")
       new_fluid.icon = nil
-      new_fluid.heat_capacity = new_fluid.heat_capacity and omni.lib.mult_fuel_value(new_fluid.heat_capacity, concentrationRatio)
+      -- This causes issues with boiler and fluid generator scaling
+      --new_fluid.heat_capacity = new_fluid.heat_capacity and omni.lib.mult_fuel_value(new_fluid.heat_capacity, concentrationRatio)
       new_fluid.fuel_value = new_fluid.fuel_value and omni.lib.mult_fuel_value(new_fluid.fuel_value, concentrationRatio)
       compressed_item_names[new_fluid.name] = true
       compress_items[#compress_items+1] = new_fluid
@@ -204,6 +205,7 @@ local function generate_compressed_item(item, norecipe)
   }
   if science_list[item.name] then
     new_item.type = "tool"
+    new_item.stack_size = compressed_item_stack_size
   end
   -- Case: satellite
   local product_table = (

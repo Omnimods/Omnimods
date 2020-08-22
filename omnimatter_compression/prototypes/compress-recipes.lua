@@ -119,21 +119,26 @@ local seperate_fluid_solid = function(collection)
 	local fluid = {}
 	local solid = {}
 	if type(collection) == "table" then
-		for _,thing in pairs(collection) do
-			if thing.type and thing.type == "fluid" then
-				fluid[#fluid+1]=thing
-			else
-				if type(thing)=="table" then
-					if thing.type then
-						solid[#solid+1] = thing
-					elseif thing[1] then
-						solid[#solid+1] = {type="item",name=thing[1],amount=thing[2]}
-					elseif thing.name then
-						solid[#solid+1] = {type="item",name=thing.name,amount=thing.amount}
-					end
-				else solid[#solid+1] = {type="item",name=thing[1],amount=1}
-				end
-			end
+    for _, thing in pairs(collection) do
+      local amount = type(thing) == "table" and tonumber(thing.amount or thing[2])
+      if not amount or (amount and amount > 0) then
+        if thing.type and thing.type == "fluid" then
+          fluid[#fluid+1]=thing
+        else
+          if type(thing)=="table" then
+            if thing.type then
+              solid[#solid+1] = thing
+            elseif thing[1] then
+              solid[#solid+1] = {type="item",name=thing[1],amount=thing[2]}
+            elseif thing.name then
+              solid[#solid+1] = {type="item",name=thing.name,amount=thing.amount}
+            end
+          else solid[#solid+1] = {type="item",name=thing[1],amount=1}
+          end
+        end
+      else
+        log("Invalid recipe with a 0 requirement/result!\n" .. serpent.block(collection))
+      end
 		end
 	else solid[#solid+1] = {type="item",name=collection,amount=1}
 	end
@@ -149,7 +154,7 @@ function get_recipe_values(ingredients, results)
 	local all_res = seperate_fluid_solid(results)
 
 	for _,comp in pairs({all_ing.solid,all_res.solid}) do
-		for _,  resing in pairs(comp) do
+    for _,  resing in pairs(comp) do
 			parts[#parts+1]={name=resing.name,amount=resing.amount}
 		end
   end
@@ -230,7 +235,7 @@ function get_recipe_values(ingredients, results)
       type = "fluid",
       name = "concentrated-" .. f.name,
       amount = f.amount * total_mult / concentrationRatio,
-      temperature = f.temperature
+      --temperature = f.temperature
     }
 	end
 	return {
@@ -486,15 +491,23 @@ function create_compression_recipe(recipe)
                     then
                       generatorfluid = component.name
                     end
-                    component.amount = single_stack and component.amount or math.min(component.amount/gcd[recipe_difficulty],65535) --set max cap (in case something slips through)
+                  end
+                end
+                
+                -- finish finding gcd before applying calculation to parts
+                for b, io_type in pairs({"ingredients","results"}) do
+                  for _, item_type in pairs{"solid", "fluid"} do
+                    for _, component in pairs(parts[item_type][a][b]) do
+                      component.amount = single_stack and component.amount or math.min(component.amount/gcd[recipe_difficulty],65535) --set max cap (in case something slips through)
+                    end
                   end
                 end
               end
               --log(serpent.block(check))
               -- Scope
               if not missing_solids then
-                new_val_norm = get_recipe_values(ing.normal, res.normal)
-                new_val_exp = get_recipe_values(ing.expensive, res.expensive)
+                local new_val_norm = get_recipe_values(ing.normal, res.normal)
+                local new_val_exp = get_recipe_values(ing.expensive, res.expensive)
                 local mult
                 if parts.solid[1][1][1] and parts.solid[2][1][1] then
                   mult = {

@@ -1191,6 +1191,7 @@ function RecGen:import(recipe)
 			setFlags(proto.flags):
 			setPlace(proto.place_result):
 			setSubgroup(proto.subgroup):
+			setOrder(proto.order):
 			setFuelCategory(proto.fuel_category):
 			setIcons(proto.icons or proto.icon or omni.icon.of(proto, true)):
 			setFuelValue(proto.fuel_value)
@@ -1205,7 +1206,8 @@ function RecGen:import(recipe)
 				setDurabilityDesc(proto.durability_description_key)
 			end
 		end
-		r:setResults({normal = table.deepcopy(recipe.normal.results),expensive=table.deepcopy(recipe.expensive.results)}):
+		r:setName(recipe.name):
+		setResults({normal = table.deepcopy(recipe.normal.results),expensive=table.deepcopy(recipe.expensive.results)}):
 		setIngredients({normal = table.deepcopy(recipe.normal.ingredients),expensive=table.deepcopy(recipe.expensive.ingredients)}):
 		setMain(recipe.main_product):
 		setEnabled(recipe.enabled or recipe.normal.enabled or false):
@@ -1214,8 +1216,7 @@ function RecGen:import(recipe)
 		setSubgroup(recipe.subgroup or r.subgroup(0,0)):
 		setOrder(recipe.order or r.order(0,0)):
 		setIcons(recipe.icons or recipe.icon or r.icons(0,0) or omni.icon.of(recipe, true)):
-		setHidden(recipe.hidden or false):
-		setName(recipe.name)
+		setHidden(recipe.hidden or false)
 
 		for _, module in pairs(data.raw.module) do
 			if module.effect.productivity and module.limitation then
@@ -1827,14 +1828,16 @@ function RecGen:generate_recipe()
 	if res and #res == 1 and not self.set_icon then
 		self.main_product=function(levels,grade) return res[1].name end
 	end
-	if (((res and #res == 1 and omni.lib.find_prototype(res[1].name)==nil) or (self.main_product(0,0) and omni.lib.find_prototype(self.main_product(0,0))==nil) or
+	if ((
+	(res and #res == 1 and omni.lib.find_prototype(res[1].name)==nil) or 
+	(self.main_product(0,0) and omni.lib.find_prototype(self.main_product(0,0))==nil) or
 	(self.item_name and omni.lib.find_prototype(self.item_name)==nil)) and (self.noItem ~= false and self.noItem ~= nil)) or self.force then
 		local it = ItemGen:create(self.mod,self.item_name or self.main_product(0,0) or res[1].name):
 		setIcons(self.icons(0,0)):
 		setSubgroup(self.subgroup(0,0)):
-		setStacksize(self.stack_size):
-		setFuelValue(self.fuel_value):
 		setOrder(self.order(0,0)):
+		setStacksize(self.stack_size):
+		setFuelValue(self.fuel_value):		
 		setPlace(self.place_result(0,0)):
 		setFlags(self.flags):
 		setLocName(self.loc_name(0,0)):
@@ -1957,6 +1960,7 @@ function RecGen:generate_recipe()
 		localised_description = self:setDescLocType("recipe"),
 		category = self.category(0,0),
 		subgroup = self.subgroup(0,0),
+		order = self.order(0,0),
 		hidden = self.hidden(0,0),
 		normal = {
 			ingredients=table.deepcopy(self.ingredients(0,0,0)) or {},
@@ -1972,7 +1976,6 @@ function RecGen:generate_recipe()
 			main_product = self.main_product(0,0),
 			energy_required = self.energy_required(0,0) or 0.5,
 		},
-		order = self.order(0,0),
 		icons = self.icons(0,0),
 		icon_size = 32,
 	}
@@ -2142,19 +2145,21 @@ end
 function RecGen:setTechIcon(mod,icon)
 	if icon then
 		self.tech.icon = function(levels,grade) return "__"..mod.."__/graphics/technology/"..icon..".png" end
-	elseif type(mod)=="string" then
+	elseif type(mod) == "string" then
 		if not string.match(mod, "%_%_(.-)%_%_") then
 			local proto = omni.lib.find_prototype(mod)
 			if proto then
-				self.tech.icon=function(levels,grade) return proto.icon end
+				self.tech.icon = function(levels,grade) return proto.icon end
 			else
-				self.tech.icon=function(levels,grade) return "__"..self.mod.."__/graphics/technology/"..mod..".png" end
+				self.tech.icon = function(levels,grade) return "__"..self.mod.."__/graphics/technology/"..mod..".png" end
 			end
 		else
-			self.tech.icon=function(levels,grade) return mod end
+			self.tech.icon = function(levels,grade) return mod end
 		end
-	elseif type(mod)=="function" then
-		self.tech.icon=mod
+	elseif type(mod) == "function" then
+		self.tech.icon = mod
+	elseif type(mod) == "table" then
+		self.tech.icon = function(levels,grade) return mod end
 	end
 	return self
 end
@@ -2635,6 +2640,11 @@ function TechGen:generate_tech()
 	},
 	order = "c-a"
 	}
+	if type(tech.icon) == "table" and tech.icon[1] then
+		tech.icons = self.icon
+		tech.icon = nil
+		tech.icon_size = nil
+	end
 	if self.loc_name and #self.loc_name>0 then
 		if type(self.loc_name[1]) == "string" and not string.find(self.loc_name[1],".") and not string.find(self.loc_name[1],"name") then
 			self.loc_name[1]="technology-name."..self.loc_name[1]
