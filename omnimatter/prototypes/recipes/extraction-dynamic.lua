@@ -114,7 +114,7 @@ local get_omnimatter_split = function(tier,focus,level)
     local aligned_ores = {}
     local source_count = table_size(source)
     for a, i in pairs(source) do
-        -- Build a contiguous array of our ors
+        -- Build a contiguous array of our ores
         aligned_ores[#aligned_ores + 1] = i.name
     end
     -- If very little ores per tier, break out early
@@ -156,28 +156,41 @@ local get_omnimatter_split = function(tier,focus,level)
     for _, rec_index in pairs(splits) do
         local split_ores = {}
         local total_quantity = level
-        for i = 1, rec_index do
-            total_quantity = total_quantity + 1
-            split_ores[#split_ores + 1] = {
-                name = aligned_ores[#aligned_ores],
-                amount = 1,
-                type = "item"
-            }
-            aligned_ores[#aligned_ores] = nil
-        end
+        local i = 0
+        -- Loop until we've caught the required amount of ores *and* our focus if applicable
+        repeat
+            i = i + 1
+            local index = aligned_ores[i] == focus and i or #aligned_ores
+            if (index == i) or (#split_ores < rec_index - 1) then 
+                total_quantity = total_quantity + 1
+                split_ores[#split_ores + 1] = {
+                    name = aligned_ores[index],
+                    amount = 1,
+                    type = "item"
+                }
+                if index == i then
+                    table.remove(aligned_ores, i)
+                    i = i - 1
+                else
+                    aligned_ores[index] = nil
+                end
+            end
+        until (#split_ores == rec_index) or (i == #aligned_ores)
         -- Adjust by total count + level
-        for index, ore in pairs(split_ores) do
+        for I = 1, #split_ores do
+            local ore = split_ores[I]
             ore.amount = 4 / total_quantity * ore.amount
             -- Handle "focus"
             if focus and ore.name == focus then
                 ore.amount = (level + 1) * ore.amount
                 -- Make the focus first in the list
-                local old_entry = split_ores[index]
-                split_ores[1] = ore
-                split_ores[index] = old_entry
-                index = 1
+                if I~= 1 then
+                    split_ores[1], split_ores[I] = ore, split_ores[1]
+                end
+                split_ores[1] = table.deepcopy(result_round(ore))
+            else
+                split_ores[I] = table.deepcopy(result_round(ore))
             end
-            split_ores[index] = table.deepcopy(result_round(ore))
         end
         -- Add our stone post-adjustment
         split_ores[#split_ores + 1] =
