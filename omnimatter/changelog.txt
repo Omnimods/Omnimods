@@ -5,6 +5,10 @@ Date: 2020.XX.XX
     - Solvation and Extraction icons are now dynamically generated
     - Improvements to recipe naming conventions
     - Deal with removing Py ores from autoplace
+  Changes:
+    - Improved splitting between impure omnitraction recipes to have more even distribution.
+  Info:
+    - This recipe change will break most setups using impure omnitraction. Thankfully, most are early-game.
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.11
 Date: 2020.08.13
