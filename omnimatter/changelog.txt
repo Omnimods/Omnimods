@@ -5,14 +5,6 @@ Date: 2020.XX.XX
     - Solvation and Extraction icons are now dynamically generated
     - Improvements to recipe naming conventions
     - Deal with removing Py ores from autoplace
-    - Compression planner is now on the shortcut bar instead of being a recipe
-  Changes:
-    - Compressed boilers no longer require tiered input
-  Bugfixes:
-    - Compressed boilers now consume and produce the appropriate amount of fluids
-    - Power and fluid scaling on steam engines and turbines is now appropriate to tier and multiplier
-  Info:
-    - Compressed boilers are still incompatibile with omnifluid, this has not changed
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.11
 Date: 2020.08.13

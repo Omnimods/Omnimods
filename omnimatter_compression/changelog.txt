@@ -1,10 +1,18 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.0.1
 Date: 2020.XX.XX
+  Features:
+    - Compression planner is now on the shortcut bar instead of being a recipe
+  Changes:
+    - Compressed boilers no longer require tiered input
   Bugfixes:
     - Fixed cases where tech compression math wasn't accurate
     - Fixed overflow on certain attributes causing crashes
     - Fixed crash with 0 count recipes and numbers with string type
+    - Compressed boilers now consume and produce the appropriate amount of fluids
+    - Power and fluid scaling on steam engines and turbines is now appropriate to tier and multiplier
+  Info:
+    - Compressed boilers are still incompatibile with omnifluid, this has not changed
 ---------------------------------------------------------------------------------------------------
 Version: 4.0.0
 Date: 2020.08.14
