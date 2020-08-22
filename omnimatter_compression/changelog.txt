@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.0.1
-Date: 2020.XX.XX
+Date: 2020.08.22
   Features:
     - Compression planner is now on the shortcut bar instead of being a recipe
   Changes:

@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.0
-Date: 2020.08.xx
+Date: 2020.08.22
+  Info:
+    - Updated for Factorio version 1.0.0
   Features:
     - Added recipes to upgrade max size crystal solar panels to the next tier
   Changes:
