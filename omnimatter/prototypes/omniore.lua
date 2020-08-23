@@ -102,7 +102,7 @@ if mods["angelsrefining"] then
 	initial_recipes[#initial_recipes + 1] = {
 		{
 			type = "item",
-			name = "angels-ore1",
+			name = "angels-ore3",
 			amount = 1
 		},
 		{
