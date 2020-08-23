@@ -3,7 +3,7 @@
 local ord = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r"}
 
 function extraction_value(levels, grade)
-    return (3 * levels + grade - 4) * (8 * levels + 5 * grade - 13) / (4 * (levels - 1))--(8 * levels + 5 * grade - 13) * (3 * levels + grade - 4) / (4 * math.pow(levels - 1, 2))
+    return (8 * levels + 5 * grade - 13) * (3 * levels + grade - 4) / (4 * math.pow(levels - 1, 2))
 end
 
 local reqpure = function(tier,level,item)
