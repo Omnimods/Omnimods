@@ -41,7 +41,7 @@ local function update_last_tier(recipe, full_refresh)
 		return
 	end
 	-- We're the top of the tree!
-	if recipe_tree and metadata.variant == "" and recipe_tree.active_tier <= metadata.tier then
+	if recipe_tree and metadata.variant == "" and recipe_tree.active_tier < metadata.tier then
 		local I = full_refresh and 97 or recipe_tree.active_tier
 		local research_status = not not (recipe.force.technologies["compression-recipes"] or {}).researched
 		repeat
@@ -95,8 +95,7 @@ local function update_recipe(recipe, enabled_override)
 		recipe.enabled = true
 	end
 	-- Update according to compression research status
-	if not recipe_tree and 
-		force_techs["compression-recipes"] and
+	if 	force_techs["compression-recipes"] and
 		force_techs["compression-recipes"].researched and 
 		not recipe.category:find("-compressed", nil, true) and 
 		not name:find("concentrated", nil, true) then
