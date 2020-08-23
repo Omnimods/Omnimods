@@ -68,21 +68,7 @@ RecGen:create("omnimatter","pulverized-stone"):
 	setIngredients({"stone-crushed", 10}):
 	setResults({type="item", name="pulverized-stone", amount=10}):extend()
 
-
-
-local q_in = 7
-local out1 = {{type="item", name="iron-ore", amount=1},
-    {type="item", name="stone-crushed", amount=6}}
-local out2 = {{type="item", name="copper-ore", amount=1},
-    {type="item", name="stone-crushed", amount=6}}
-if mods["angelsrefining"] then
-	q_in=6
-	out1 = {{type="item", name="angels-ore1", amount=1},
-    {type="item", name="stone-crushed", amount=5}}
-	out2 = {{type="item", name="angels-ore3", amount=1},
-    {type="item", name="stone-crushed", amount=5}}
-end
-
+	
 local initial_recipes = {}
 local inputs = {}
 if mods["angelsrefining"] then
