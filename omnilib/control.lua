@@ -318,6 +318,21 @@ script.on_event(defines.events.on_console_chat, function(event)
 			log(
 				"Memory usage: " .. math.ceil(collectgarbage("count")) .. "K"
 			)
+			log(
+				"Recipe map: \n" .. serpent.block(global.omni.recipe_map)
+			)
+			log(
+				"Recipes: \n" .. serpent.block(global.omni.recipes)
+			)
+			log(
+				"Stock Recipes: \n" .. serpent.block(global.omni.stock_recipes)
+			)
+			log(
+				"Stock Fluids: \n" .. serpent.block(global.omni.stock_fluids)
+			)
+			log(
+				"Tiered Buildings: \n" .. serpent.block(global.omni.tiered_buildings)
+			)
 		end
 	end
 end)
