@@ -201,7 +201,6 @@ for j=1,nr_tiers do
 		RecGen:create("omnimatter_energy", "crystal-solar-panel-tier-"..j.."-size-"..i):
             setLocName({"recipe-name.crystal-solar-panel", j, i}):
 			setIcons(icons):
-			noItem():
 			setIngredients(get_cost(j,i)):
 			setResults({name = "crystal-solar-panel-tier-"..j.."-size-"..i, amount = 1}):
 			setPlace("crystal-solar-panel-tier-"..j.."-size-"..i):
@@ -237,6 +236,7 @@ for j=1,nr_tiers do
 			RecGen:create("omnimatter_energy", "crystal-solar-panel-tier-"..j.."-size-"..i.."-upgrade"):
             setLocName({"recipe-name.crystal-solar-panel", j, i}):
 			setIcons(icons):
+			noItem():
 			setIngredients(get_cost(j,i)):
 			removeIngredients("crystal-solar-panel-tier-"..(j-1).."-size-"..i):
 			multiplyIngredients(max_size*max_size):
