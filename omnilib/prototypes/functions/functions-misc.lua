@@ -413,7 +413,7 @@ function omni.lib.change_icons_tint(item, tint) --for changing a table of icons,
 	if tint.r then t=tint else t={r=tint[1],g=tint[2],b=tint[3],a=tint[4] or 1} end
   for i,icon in pairs(icons) do
     if icons[i].tint then
-      if icons[i].tint.r then tnt=icons[i].tint else tnt={r=tint[1],g=tint[2],b=tint[3],a=tint[4] or 1or 1} end
+      if icons[i].tint.r then tnt=icons[i].tint else tnt={r=tint[1],g=tint[2],b=tint[3],a=tint[4] or 1} end
       tint={r=(tint.r+tnt.r)/2,g=(tint.g+tnt.g)/2,b=(tint.b+tnt.b)/2,a=(tint.a+tnt.a)/2} --average tint blending, may need to expand this to alpha channel blending
       icons[i].tint=tint 
     else
