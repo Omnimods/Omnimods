@@ -3,6 +3,7 @@ Version: 4.0.2
 Date: 2020.08.XX
   Bugfixes:
     - Fix boiler fuel use scaling
+    - Compressed infinite ores now have a more accurate yield
 ---------------------------------------------------------------------------------------------------
 Version: 4.0.1
 Date: 2020.08.22

@@ -4,6 +4,7 @@ Date: 2020.08.xx
   Bugfixes:
     - Fixed omnium-power techs not using science packs with omnimatter science
     - Fixed omnium-power techs not beeing affected by omnimatter science omni multiplier
+    - Fixed crystal solar panels not having a placable result since 2.0.0
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.0
 Date: 2020.08.22
