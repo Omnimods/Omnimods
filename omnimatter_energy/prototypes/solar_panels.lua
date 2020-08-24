@@ -204,6 +204,7 @@ for j=1,nr_tiers do
 			noItem():
 			setIngredients(get_cost(j,i)):
 			setResults({name = "crystal-solar-panel-tier-"..j.."-size-"..i, amount = 1}):
+			setPlace("crystal-solar-panel-tier-"..j.."-size-"..i):
 			setSubgroup("omnienergy-solar-tier-"..j):
 			setOrder("a[crystal-solar-panel-tier-"..j.."-size-"..i.."]"):
             setCategory("crafting"):
