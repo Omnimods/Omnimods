@@ -62,9 +62,13 @@ for name,ore in pairs(data.raw.resource) do
       end
 			new.minable.mining_time = tonumber(new.minable.mining_time*max_stacksize)
       if new.infinite then --just flat out clobber it by dropping yield by a factor of 3
-				new.minimum = math.max(new.minimum/max_stacksize/3,1) --ensure at least 1
-				new.normal = math.max(new.normal/max_stacksize/3,1) --ensure at least 1
-				if new.maximum then new.maximum = new.maximum/max_stacksize/3 end
+        local normal_ratio = new.minimum / new.normal -- Minimum as a ratio of normal
+        local max_ratio = new.maximum and new.normal / new.maximum
+        new.normal = math.max(new.normal / max_stacksize, 1) --ensure at least 1
+        new.minimum = math.max(new.normal * normal_ratio, 1)
+        if new.maximum then
+          new.maximum = math.max(new.normal / max_ratio, 1)
+        end
 			end
 			compressed = true
       if new.minable.required_fluid then
