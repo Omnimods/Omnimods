@@ -92,9 +92,9 @@ local function compression_planner(event, log_only)
 		local surface = player.surface
 		local entities = game.entity_prototypes
 		local items = game.item_prototypes
-		local remainder = 0
+		local remainder, iremainder = 0, 0
 		local result_table = {}
-		for _, entity in pairs(event.entities) do
+		for key, entity in pairs(event.entities) do
 			if entity.valid and
 			entity.type == "resource" and
 			#entity.prototype.mineable_properties.products > 0 and
@@ -112,13 +112,7 @@ local function compression_planner(event, log_only)
 				}
 				local size
 				local min, max, amount = entity.initial_amount, results.amount_max or 1, entity.amount
-				-- if initial amount, =(min*max)/min/100, else entity.amount
-				local output_amount
-				if min then
-					output_amount = (min * max) / 100 -- Infinites are divided by 100
-				else
-					output_amount = amount -- Otherwise we just give ore contents
-				end
+				local output_amount = amount
 				if result.type == "item" and entities["compressed-resource-"..entity.name] then
 					size = items[result.name].stack_size
 					ent.name = "compressed-resource-" .. entity.name
@@ -129,35 +123,49 @@ local function compression_planner(event, log_only)
 
 				if size then -- We have valid output, continue
 					-- Do our final division
+					if min then
+						output_amount = (amount / min) * min
+						min = min / size
+						iremainder = iremainder + (min % 1) -- New remainder, add what floor removes
+						if iremainder > 1 then -- We'll add if we're greater than 1
+							min = min + math.floor(iremainder)
+							iremainder = iremainder % 1
+						end
+						min = math.floor(min)
+					end
 					output_amount = output_amount / size
-					if not min and result.type == "item" then -- If not infinite, we'll add to our remainder.
+					if result.type == "item" then -- If not infinite, we'll add to our remainder.
 						remainder = remainder + (output_amount % 1) -- New remainder, add what floor removes
 						if remainder > 1 then -- We'll add if we're greater than 1
-							output_amount = output_amount + 1
-							remainder = remainder - 1
+							output_amount = output_amount + math.floor(remainder)
+							remainder = remainder % 1
 						end
+						output_amount = math.floor(output_amount)
 					end
 					-- Floor our actual output
-					output_amount = math.max(1, math.floor(output_amount))
+					--output_amount = math.max(1, math.floor(output_amount))
 					-- Apply to infinite or non-infinite respectively
-					ent.initial_amount = min and output_amount
-					ent.amount = amount and output_amount
-					if output_amount >= 1 then
-						if not log_only then-- Actually do the thing
-							entity.destroy()
-							surface.create_entity(ent)
-						else -- Or don't do the thing
-							result_table[result.name] = result_table[result.name] or {}
-							-- Alias and store
-							local res_table = result_table[result.name]
-							res_table.source_amount = (res_table.source_amount or 0) + (entity.amount or entity.initial_amount)
-							res_table.dest_name = (
-								result.type == "item" and "compressed-" .. result.name or
-								"concentrated-" .. result.name
-							)
-							res_table.dest_amount = (res_table.dest_amount or 0) + (ent.amount or ent.initial_amount)
-							res_table.type = result.type
+					ent.initial_amount = min
+					ent.amount = output_amount
+					if not log_only then-- Actually do the thing
+						entity.destroy()
+						if output_amount >= 1 then
+							local res = surface.create_entity(ent)
+							if ent.initial_amount then
+								res.initial_amount = ent.initial_amount
+							end
 						end
+					else -- Or don't do the thing
+						result_table[result.name] = result_table[result.name] or {}
+						-- Alias and store
+						local res_table = result_table[result.name]
+						res_table.source_amount = (res_table.source_amount or 0) + entity.amount
+						res_table.dest_name = (
+							result.type == "item" and "compressed-" .. result.name or
+							"concentrated-" .. result.name
+						)
+						res_table.dest_amount = (res_table.dest_amount or 0) + (output_amount >= 1 and ent.amount or 0)
+						res_table.type = result.type
 					end
 				end
 			end
