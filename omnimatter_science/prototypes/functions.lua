@@ -244,9 +244,9 @@ function omni.science.tech_updates()
           if Set.Cumul then
             if tech ~= "rocket-silo" or Set.ModSilo then
             	if not string.find(pre,"omnitech") then
-							  cost = cost+get_cost(pre)*Set.CumulOmConst --adds all non-omni techs regardless
+							  cost = cost+get_cost(pre)*Set.CumulConst --adds all non-omni techs regardless
 						  else
-							  add = math.max(add,get_cost(pre))*Set.CumulConst --adds only the most expensive omni tech
+							  add = math.max(add,get_cost(pre))*Set.CumulOmConst --adds only the most expensive omni tech
 						  end
 					  elseif not string.find(pre,"omnitech") then
 						  cost = cost+get_cost(pre)
