@@ -43,11 +43,11 @@ for _,fuelitem in pairs(data.raw.item) do
         --Get fuel number in MJ (divide by 10^6)
         local FV=omni.lib.get_fuel_number(fuelitem.fuel_value)/10^6
         local props={
-            [5]={ing_add={"crushed-omnite",2}, cat="crafting", sub="omnienergy-fuel-1", time=1.0, tech="omnium-power-1", fuelmult = 1.30},
-            [10]={ing_add={"pulverized-omnite",4}, cat="omnite-extraction", sub="omnienergy-fuel-2", time=2.0,tech="omnium-power-2", fuelmult = 1.25},
-            [40]={ing_add={type = "fluid", name = "omnic-acid", amount = 20}, cat="omniphlog", sub="omnienergy-fuel-3", time=2.0,tech="omnium-power-3", fuelmult = 1.20},
-            [250]={ing_add={type = "fluid", name = "omnisludge", amount = 80}, cat="omniplant", sub="omnienergy-fuel-4", time=4.0,tech="omnium-power-4", fuelmult = 1.15},
-            [300]={ing_add={type = "fluid", name = "omniston", amount = 40}, cat="omniplant", sub="omnienergy-fuel-5", time=4.0,tech="omnium-power-5", fuelmult = 1.10},}
+            [5]={ing_add={"crushed-omnite",2}, cat="crafting", sub="omnienergy-fuel-1", time=1.0, tech="omnitech-omnium-power-1", fuelmult = 1.30},
+            [10]={ing_add={"pulverized-omnite",4}, cat="omnite-extraction", sub="omnienergy-fuel-2", time=2.0,tech="omnitech-omnium-power-2", fuelmult = 1.25},
+            [40]={ing_add={type = "fluid", name = "omnic-acid", amount = 20}, cat="omniphlog", sub="omnienergy-fuel-3", time=2.0,tech="omnitech-omnium-power-3", fuelmult = 1.20},
+            [250]={ing_add={type = "fluid", name = "omnisludge", amount = 80}, cat="omniplant", sub="omnienergy-fuel-4", time=4.0,tech="omnitech-omnium-power-4", fuelmult = 1.15},
+            [300]={ing_add={type = "fluid", name = "omniston", amount = 40}, cat="omniplant", sub="omnienergy-fuel-5", time=4.0,tech="omnitech-omnium-power-5", fuelmult = 1.10},}
             local props_add={}
         if FV<=5 then
             props_add=props[5]
@@ -98,9 +98,9 @@ end
 
 --Add Solid Fuel Tech Prereq manually
 if data.raw.technology["solid-fuel"] then
-    omni.lib.add_prerequisite("omnium-power-3","solid-fuel")
+    omni.lib.add_prerequisite("omnitech-omnium-power-3","solid-fuel")
 elseif data.raw.technology["advanced-oil-processing"] then
-    omni.lib.add_prerequisite("omnium-power-3","advanced-oil-processing")
+    omni.lib.add_prerequisite("omnitech-omnium-power-3","advanced-oil-processing")
 end
 
 RecGen:create("omnimatter_energy","purified-omnite"):
@@ -120,4 +120,4 @@ RecGen:create("omnimatter_energy","purified-omnite"):
     setTechPrereq("anbaricity"):extend()
   
 omni.lib.add_prerequisite("burner-filter-2","basic-omnium-power")
-omni.lib.add_prerequisite("omnium-power-1","basic-omnium-power")
+omni.lib.add_prerequisite("omnitech-omnium-power-1","basic-omnium-power")
