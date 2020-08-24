@@ -231,11 +231,11 @@ function omni.science.tech_updates()
 				table.insert(tech_list.name,tech)
         local cost = techno.unit.count or techno.unit[2]
 
-				if omni.lib.start_with(tech,"omnitech") and Set.Cumul then --skip if not cumulative mode
-					cost = cost*Set.CumulOmConst
+				--[[if omni.lib.start_with(tech,"omnitech") and Set.Cumul then --skip if not cumulative mode
+					cost = cost--*Set.CumulOmConst
         elseif Set.Cumul then --skip if not cumulative mode
-					cost = cost*Set.CumulConst
-        end
+					cost = cost--*Set.CumulConst
+        end]]
         
 				local h = 0
         local add = 0
@@ -244,16 +244,16 @@ function omni.science.tech_updates()
           if Set.Cumul then
             if tech ~= "rocket-silo" or Set.ModSilo then
             	if not string.find(pre,"omnitech") then
-							  cost = cost+get_cost(pre)
+							  cost = cost+get_cost(pre)*Set.CumulConst --adds all non-omni techs regardless
 						  else
-							  add = math.max(add,get_cost(pre))
+							  add = math.max(add,get_cost(pre)*Set.CumulOmConst) --adds only the most expensive omni tech
 						  end
 					  elseif not string.find(pre,"omnitech") then
 						  cost = cost+get_cost(pre)
 				    end
           end
         end
-        cost=cost+add*Set.OmMaxConst --add==0 if not cumulative mode, so this line does nothing in exp mode
+        cost=cost+add--*Set.OmMaxConst --add==0 if not cumulative mode, so this line does nothing in exp mode
 
         if #techno.prerequisites == 1 and Set.Cumul then
 					local c = Set.CumulOmConst
@@ -261,13 +261,13 @@ function omni.science.tech_updates()
 					if omni.lib.start_with(tech,"omnitech") then
 						cost = cost*(1+Set.ChainOmConst*c/(c+1))
 					else
-						local ln = 1
+						local lv = 1
 						local t = techno.prerequisites[1]
 						while data.raw.technology[t].prerequisites and #data.raw.technology[t].prerequisites >= 1 do
-							ln = ln+1
+							lv = lv+1
 							t = data.raw.technology[t].prerequisites[1]
 						end
-						cost = cost*(math.pow(1+chain*c/(c+1),1+ln/(ln+1)))
+						cost = cost*(math.pow(1+chain*c/(c+1),1+lv/(lv+1)))
 					end
 				end
         table.insert(tech_list.cost,cost)

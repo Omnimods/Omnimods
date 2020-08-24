@@ -1,7 +1,16 @@
+local function get_packs(tier)
+  local c = {}
+  local length = math.min(tier,#omni.sciencepacks)
+  for l=1,length do
+    c[#c+1] = {omni.sciencepacks[l],1}
+  end
+  return c
+end
+
 data:extend({
     { 
         type = "technology",
-        name = "omnium-power-1",
+        name = "omnitech-omnium-power-1",
         localised_name = {"technology-name.omnium-power-1"},
         localised_description = {"technology-description.omnium-power-1"},
         icon = "__omnimatter_energy__/graphics/technology/omnium-power.png",
@@ -16,25 +25,21 @@ data:extend({
         unit =
         {
           count = 80,
-          ingredients = 
-            {
-            {"automation-science-pack", 1},
-            {"logistic-science-pack", 1},
-            },
+          ingredients = get_packs(2),
           time = 30
         },
         order = "c-a"
     },
     { 
         type = "technology",
-        name = "omnium-power-2",
+        name = "omnitech-omnium-power-2",
         localised_name = {"technology-name.omnium-power-2"},
         localised_description = {"technology-description.omnium-power-2"},
         icon = "__omnimatter_energy__/graphics/technology/omnium-power.png",
         icon_size = 128,
         prerequisites =
         {
-            "omnium-power-1",
+            "omnitech-omnium-power-1",
         },
         effects =
         {
@@ -42,24 +47,21 @@ data:extend({
         unit =
         {
           count = 160,
-          ingredients = {
-            {"automation-science-pack", 1},
-            {"logistic-science-pack", 1},
-          },
+          ingredients = get_packs(2),
           time = 30
         },
         order = "c-a"
     },
     { 
         type = "technology",
-        name = "omnium-power-3",
+        name = "omnitech-omnium-power-3",
         localised_name = {"technology-name.omnium-power-3"},
         localised_description = {"technology-description.omnium-power-3"},
         icon = "__omnimatter_energy__/graphics/technology/omnium-power.png",
         icon_size = 128,
         prerequisites =
         {
-            "omnium-power-2",
+            "omnitech-omnium-power-2",
         },
         effects =
         {
@@ -67,25 +69,21 @@ data:extend({
         unit =
         {
           count = 175,
-          ingredients = {
-            {"automation-science-pack", 1},
-            {"logistic-science-pack", 1},
-            {"chemical-science-pack", 1},
-          },
+          ingredients = get_packs(3),
           time = 30
         },
         order = "c-a"
     },
     { 
         type = "technology",
-        name = "omnium-power-4",
+        name = "omnitech-omnium-power-4",
         localised_name = {"technology-name.omnium-power-4"},
         localised_description = {"technology-description.omnium-power-4"},
         icon = "__omnimatter_energy__/graphics/technology/omnium-power.png",
         icon_size = 128,
         prerequisites =
         {
-            "omnium-power-3",
+            "omnitech-omnium-power-3",
         },
         effects =
         {
@@ -93,26 +91,21 @@ data:extend({
         unit =
         {
           count = 250,
-          ingredients = {
-            {"automation-science-pack", 1},
-            {"logistic-science-pack", 1},
-            {"chemical-science-pack", 1},
-            {"production-science-pack", 1},
-            },
+          ingredients = get_packs(4),
           time = 30
         },
         order = "c-a"
     },
     { 
         type = "technology",
-        name = "omnium-power-5",
+        name = "omnitech-omnium-power-5",
         localised_name = {"technology-name.omnium-power-5"},
         localised_description = {"technology-description.omnium-power-5"},
         icon = "__omnimatter_energy__/graphics/technology/omnium-power.png",
         icon_size = 128,
         prerequisites =
         {
-            "omnium-power-4",
+            "omnitech-omnium-power-4",
         },
         effects =
         {
@@ -120,20 +113,14 @@ data:extend({
         unit =
         {
           count = 400,
-          ingredients = {
-            {"automation-science-pack", 1},
-            {"logistic-science-pack", 1},
-            {"chemical-science-pack", 1},
-            {"production-science-pack", 1},
-            {"utility-science-pack", 1},
-            },
+          ingredients = get_packs(5),
           time = 30
         },
         order = "c-a"
     },
     { 
       type = "technology",
-      name = "omni-solar-road",
+      name = "omnitech-omni-solar-road",
       localised_name = {"technology-name.omni-solar-road"},
       icon = "__omnimatter_energy__/graphics/technology/omni-solar-road.png",
       icon_size = 128,
@@ -150,14 +137,7 @@ data:extend({
       unit =
       {
         count = 2000,
-        ingredients = {
-          {"automation-science-pack", 1},
-          {"logistic-science-pack", 1},
-          {"chemical-science-pack", 1},
-          {"production-science-pack", 1},
-          {"utility-science-pack", 1},
-          {"space-science-pack", 1},
-          },
+        ingredients = get_packs(6),
         time = 30
       },
       order = "c-a"

@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.0.1
+Date: 2020.08.24
+  Bugfixes:
+    - Fixed that the maximum cumulative factor was accidently used for tech cost calculations
+---------------------------------------------------------------------------------------------------
 Version: 4.0.0
 Date: 2020.08.22
   Info:

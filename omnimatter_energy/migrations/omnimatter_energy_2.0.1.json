@@ -1,0 +1,11 @@
+{
+  "technology":
+  [
+    ["omni-solar-road", "omnitech-omni-solar-road"],
+    ["omnium-power-1", "omnitech-omnium-power-1"],
+    ["omnium-power-2", "omnitech-omnium-power-2"],
+    ["omnium-power-3", "omnitech-omnium-power-3"],
+    ["omnium-power-4", "omnitech-omnium-power-4"],
+    ["omnium-power-5", "omnitech-omnium-power-5"]
+  ]
+}
