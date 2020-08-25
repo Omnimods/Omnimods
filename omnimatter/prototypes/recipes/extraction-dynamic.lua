@@ -114,8 +114,8 @@ local get_omnimatter_split = function(tier,focus,level)
     local aligned_ores = {}
     local source_count = table_size(source)
     for a, i in pairs(source) do
-        -- Build a contiguous array of our ores
-        aligned_ores[#aligned_ores + 1] = i.name
+        -- Build a table of our ore names
+        aligned_ores[i.name] = true
     end
     -- If very little ores per tier, break out early
     if source_count < (focus and 1 or 2) then
@@ -150,32 +150,32 @@ local get_omnimatter_split = function(tier,focus,level)
             splits[#splits + 1] = math.floor(quotient)
         end
     end
-
     local ores = {}
     -- Add the proper number of products to our extraction recipe
     for _, rec_index in pairs(splits) do
         local split_ores = {}
-        local total_quantity = level
-        local i = 0
-        -- Loop until we've caught the required amount of ores *and* our focus if applicable
-        repeat
-            i = i + 1
-            local index = aligned_ores[i] == focus and i or #aligned_ores
-            if (index == i) or (#split_ores < rec_index - 1) then 
+        local total_quantity = level + (focus and 1 or 0)
+        if focus and aligned_ores[focus] then
+            split_ores[#split_ores + 1] = {
+                name = focus,
+                amount = 1,
+                type = "item"
+            }
+            aligned_ores[focus] = nil
+        end
+        for current in pairs(aligned_ores) do
+            if rec_index > #split_ores then 
                 total_quantity = total_quantity + 1
                 split_ores[#split_ores + 1] = {
-                    name = aligned_ores[index],
+                    name = current,
                     amount = 1,
                     type = "item"
                 }
-                if index == i then
-                    table.remove(aligned_ores, i)
-                    i = i - 1
-                else
-                    aligned_ores[index] = nil
-                end
+                aligned_ores[current] = nil
+            else
+                break
             end
-        until (#split_ores == rec_index) or (i == #aligned_ores)
+        end
         -- Adjust by total count + level
         for I = 1, #split_ores do
             local ore = split_ores[I]
