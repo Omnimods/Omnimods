@@ -41,7 +41,7 @@ local function update_last_tier(recipe, full_refresh)
 		return
 	end
 	-- We're the top of the tree!
-	if recipe_tree and metadata.variant == "" and recipe_tree.active_tier < metadata.tier then
+	if recipe_tree and recipe_tree.active_tier < metadata.tier then
 		local I = full_refresh and 97 or recipe_tree.active_tier
 		local research_status = not not (recipe.force.technologies["compression-recipes"] or {}).researched
 		repeat
@@ -388,7 +388,7 @@ function acquire_data(game)
 			end
 		end
 		-- Comes unlocked
-		if recipe.enabled then
+		if recipe.enabled and not (recipes[name] or {}).compressed then
 			stock_recipes[name] = true
 		end
 		-- Generator variant
@@ -414,9 +414,7 @@ function acquire_data(game)
 end
 
 script.on_configuration_changed( function(conf)
-	if not global.omni then
-		global.omni = {}
-	end
+	global.omni = {}
 	acquire_data(game)
 	global.omni.need_update=true
 end)
