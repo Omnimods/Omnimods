@@ -1,14 +1,14 @@
 {
 "name":"omnimatter_wood",
-"version": "3.18.7",
+"version": "4.0.0",
 "title":"Omniwood",
 "author":"EmperorZelos",
 "description":"Adds a wood production method for omnimatter",
-"factorio_version":"0.18",
+"factorio_version":"1.0",
 "dependencies":[
     "base",
-    "omnimatter >= 3.18.1",
-    "omnilib >= 3.18.3",
+    "omnilib >= 4.0.0",
+    "omnimatter",
     "?Bio_Industries",
     "?bobgreenhouse",
     "?angelsbioprocessing"

@@ -1,14 +1,26 @@
 ---------------------------------------------------------------------------------------------------
-Version: 4.0.0
+Version: 4.0.2
 Date: 2020.XX.XX
+  Changes:
+    - Improved splitting between impure omnitraction recipes to have more even distribution.
+  Info:
+    - This recipe change can possibly require changes to early-game omnitraction setups on existing saves.
+---------------------------------------------------------------------------------------------------
+Version: 4.0.1
+Date: 2020.08.24
+  Bugfixes:
+    - Fixed initial angel's ores omnitraction
+---------------------------------------------------------------------------------------------------
+Version: 4.0.0
+Date: 2020.08.22
+  Info:
+    - Updated for Factorio version 1.0.0
   Features:
     - Solvation and Extraction icons are now dynamically generated
     - Improvements to recipe naming conventions
     - Deal with removing Py ores from autoplace
-  Changes:
-    - Improved splitting between impure omnitraction recipes to have more even distribution.
-  Info:
-    - This recipe change will break most setups using impure omnitraction. Thankfully, most are early-game.
+  Bugfixes:
+    - Fixed starting items not being properly inserted into the player
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.11
 Date: 2020.08.13

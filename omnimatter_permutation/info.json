@@ -5,8 +5,9 @@
 "author":"EmperorZelos",
 "description":"Let's you shift the outputs of fluids on recipes and buildings to make better designs. This involves ALL premutations of ANY recipe and output/input.",
 "factorio_version":"1.0",
-"dependencies":["base",
-	"omnilib >= 3.0.0",
+"dependencies":[
+	"base",
+	"omnilib >= 4.0.0",
 	"?omnimatter_fluid",
 	"?omnimatter_compression",
 	"?omnimatter_energy",

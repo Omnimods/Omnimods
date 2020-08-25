@@ -166,7 +166,7 @@ local create_concentrated_fluid = function(fluid,tier)
   newFluid.localised_name = omni.locale.custom_name(newFluid, "compressed-fluid", tier)
   newFluid.name = newFluid.name.."-concentrated-grade-"..tier
   if newFluid.heat_capacity then
-    newFluid.heat_capacity = new_effect(newFluid.heat_capacity, tier)
+    newFluid.heat_capacity = new_effect(newFluid.heat_capacity, tier, nil, sluid_contain_fluid)
   end
   
   if newFluid.fuel_value then
@@ -222,22 +222,40 @@ local create_concentrated_fluid = function(fluid,tier)
 end
 
 
-local process_fluid_box = function(fluid_box, i)
+local process_fluid_box = function(fluid_box, i, is_graded)
   if not fluid_box then return end
+  local fl_name
   if fluid_box.filter then
-    local fl_name = fluid_box.filter.."-concentrated-grade-"..i
+    if is_graded then
+      fl_name = fluid_box.filter.."-concentrated-grade-"..i
+    else
+      fl_name = "concentrated-" .. fluid_box.filter
+    end
     if not data.raw.fluid[fl_name] then 
       create_concentrated_fluid(fluid_box.filter,i)
     end
     fluid_box.filter = fl_name
   end
+  if fluid_box.base_area then
+    fluid_box.base_area = fluid_box.base_area * math.pow(multiplier, i) / sluid_contain_fluid
+  end
   for I=1, #fluid_box do
-    if fluid_box[I] and fluid_box[I].filter then
-      local fl_name = fluid_box[I].filter.."-concentrated-grade-"..i
-      if not data.raw.fluid[fl_name] then 
-        create_concentrated_fluid(fluid_box[I].filter,i)
+    if fluid_box[I] then
+      if fluid_box.filter then
+        local fl_name
+        if is_graded then
+          fl_name = fluid_box.filter.."-concentrated-grade-"..i
+        else
+          fl_name = "concentrated-" .. fluid_box.filter
+        end
+        if not data.raw.fluid[fl_name] then 
+          create_concentrated_fluid(fluid_box[I].filter,i)
+        end
+        fluid_box[I].filter = fl_name
       end
-      fluid_box[I].filter = fl_name
+      if fluid_box[I].base_area then
+        fluid_box[I].base_area = fluid_box[I].base_area * math.pow(multiplier, i) / sluid_contain_fluid
+      end
     end
   end
 end
@@ -382,6 +400,9 @@ local run_entity_updates = function(new, kind, i)
     end
     new.crafting_categories = new_cat
     new.crafting_speed = new.crafting_speed * math.pow(multiplier,i)
+    if new.fluid_boxes then
+      --process_fluid_box(new.fluid_boxes, i, false)
+    end
   end
   --lab vial slot update (may want to move this to recipe update since tools/items are done later...)
   if kind == "lab" then
@@ -407,17 +428,18 @@ local run_entity_updates = function(new, kind, i)
   end
   --Boiler
   if kind == "boiler" then
-    if new.energy_consumption then new.energy_consumption = new_effect(new.energy_consumption,i) end
+    if new.energy_consumption then new.energy_consumption = new_effect(new.energy_consumption, i, nil, (multiplier^(i+1))/sluid_contain_fluid) end
     if new.energy_source.fuel_inventory_size then new.energy_source.fuel_inventory_size = new.energy_source.fuel_inventory_size*(i+1) end
     if new.energy_source.effectivity then new.energy_source.effectivity = math.pow(new.energy_source.effectivity,1/(i+1)) end
-    process_fluid_box(new.output_fluid_box, i)
+    process_fluid_box(new.output_fluid_box, i, true)
     process_fluid_box(new.fluid_box, i)
   end
   --Generator
   if kind == "generator" and new.fluid_box then
     process_fluid_box(new.output_fluid_box, i)
-    process_fluid_box(new.fluid_box, i)
-    new.fluid_usage_per_tick = new.fluid_usage_per_tick*math.pow((multiplier+1)/multiplier,i)
+    process_fluid_box(new.fluid_box, i, true)
+    new.scale_fluid_usage = true
+    new.fluid_usage_per_tick = new.fluid_usage_per_tick * math.pow(multiplier, i) / sluid_contain_fluid --new.fluid_usage_per_tick*math.pow((multiplier+1)/multiplier,i)
     --new.effectivity = new.effectivity*math.pow(multiplier,i)
   end
   --Accumulator
