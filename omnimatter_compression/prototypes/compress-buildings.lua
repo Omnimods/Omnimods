@@ -557,6 +557,7 @@ for build_name, values in pairs(recipe_results) do
               data:extend({item_cat}) --create it if it didn't already exist
             end
             item.subgroup = "compressor-"..item.subgroup.."-"..build.type
+            rc.subgroup = item.subgroup
           else --clean up item ordering
             item.order = item.order or "z"..i.."-compressed" --should force it to match, but be after it under all circumstances
           end
@@ -617,7 +618,6 @@ for build_name, values in pairs(recipe_results) do
             result = new.name,
             energy_required = 5*math.floor(math.pow(multiplier,i/2)),
             enabled = false,
-            subgroup = rc.subgroup,
             order = (rc.order or details.item.order or "") .. "-compressed",
             subgroup = rc.subgroup,
             hide_from_player_crafting = rc.hide_from_player_crafting or omni.compression.hide_handcraft
