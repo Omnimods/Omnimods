@@ -368,71 +368,69 @@ function omni.lib.replace_recipe_result(recipename, result, replacement)
         if rec.expensive and rec.expensive.result and rec.expensive.result == result then
             rec.expensive.result = repname
         end
+
         --rec.results
-        if rec.results then
-            found = false
-            for i,res in pairs(rec.results) do
-                 --check if nametags exist (only check res[i] when no name tags exist)
-                if res.name then
-                    if res.name == result then
-                        res.name = repname
-                        res.amount = repamount or res.amount
-                        res.type = reptype or res.type
-                        break
-                    end
-                elseif res[1] and res[1] == result then
-                    res[1] = repname
-                    res[2] = repamount or res[2]
+        local ress = {}
+        if rec.results then ress[#ress+1] = rec.results end
+        if rec.normal and rec.normal.results then ress[#ress+1] = rec.normal.results end
+        if rec.expensive and rec.expensive.results then ress[#ress+1] = rec.expensive.results end
+
+        for _,diff in pairs(ress) do
+            local found = false
+            local num = 0
+            --create a new variable that gets reset to repamount for each diff
+            local amount = repamount
+            --check if the replacement is already an result
+            for i,res in pairs(diff) do
+                if (res.name or res[1]) == repname then        
+                    found = true
+                    num=i
+                    amount = (repamount or 1) + res.amount or res[2]
                     break
                 end
             end
-            if rec.main_product and rec.main_product == result then
-                rec.main_product = repname
+
+            for i,res in pairs(diff) do
+                --check if nametags exist (only check res[i] when no name tags exist)
+                if res.name and res.name == result then
+                    if found then
+                        if diff[num].amount then
+                            diff[num].amount = amount          
+                        else        
+                            diff[num][2] = repamount
+                        end
+                        diff[i] = nil
+                    else
+                        res.name = repname
+                        res.amount = repamount or res.amount
+                        res.type = reptype or res.type  
+                    end
+                    break
+                elseif not res.name and res[1] and res[1] == result then
+                    if found then
+                        if diff[num].amount then
+                            diff[num].amount = amount          
+                        else        
+                            diff[num][2] = repamount
+                        end
+                        diff[i] = nil
+                    else
+                        res[1] = repname
+                        res[2] = repamount or res[2]
+                    end
+                    break
+                end
             end
         end
-        --rec.normal.results
-        if rec.normal and rec.normal.results then
-            found = false
-            for i,res in pairs(rec.normal.results) do
-                --check if nametags exist (only check res[i] when no name tags exist)
-                if res.name then
-                    if res.name == result then
-                        res.name = repname
-                        res.amount = repamount or res.amount
-                        res.type = reptype or res.type
-                        break
-                    end
-                elseif res[1] and res[1] == result then
-                    res[1] = repname
-                    res[2] = repamount or res[2]
-                    break
-                end
-            end
-            if rec.normal.main_product and rec.normal.main_product == result then
-                rec.normal.main_product = repname
-            end
+        --Check if the main product was replaced
+        if rec.main_product and rec.main_product == result then
+            rec.main_product = repname
         end
-        --rec.expensive.results
-        if rec.expensive and rec.expensive.results then
-            found = false
-            for i,res in pairs(rec.expensive.results) do
-                --check if nametags exist (only check res[i] when no name tags exist)
-                if res.name then
-                    if res.name == result then
-                        res.name = repname
-                        res.amount = repamount or res.amount
-                        res.type = reptype or res.type
-                        break
-                    end
-                elseif res[1] and res[1] == result then
-                    res[1] = repname
-                    res[2] = repamount or res[2]
-                    break
-                end
-            end
-            if rec.expensive.main_product and rec.expensive.main_product == result then
-                rec.expensive.main_product = repname
-            end
+        if rec.normal and rec.normal.main_product and rec.normal.main_product == result then
+            rec.normal.main_product = repname
+        end
+        if rec.expensive and rec.expensive.main_product and rec.expensive.main_product == result then
+            rec.normexpensiveal.main_product = repname
         end
     end
 end
@@ -450,63 +448,59 @@ function omni.lib.replace_recipe_ingredient(recipename, ingredient, replacement)
         else
             repname = replacement
         end
-        --rec.ingredients
-        if rec.ingredients then
-            found = false
-            for i,ing in pairs(rec.ingredients) do
-                 --check if nametags exist (only check ing[i] when no name tags exist)
-                if ing.name then
-                    if ing.name == ingredient then
+
+        local ings = {}
+        if rec.ingredients then ings[#ings+1] = rec.ingredients end
+        if rec.normal and rec.normal.ingredients then ings[#ings+1] = rec.normal.ingredients end
+        if rec.expensive and rec.expensive.ingredients then ings[#ings+1] = rec.expensive.ingredients end
+
+        for _,diff in pairs(ings) do
+            local found = false
+            local num = 0
+            --create a new variable that gets reset to repamount for each diff
+            local amount = repamount
+            --check if the replacement is already an ingredient
+            for i,ing in pairs(diff) do
+                if (ing.name or ing[1]) == repname then        
+                    found = true
+                    num=i
+                    amount = (repamount or 1) + ing.amount or ing[2]
+                    break
+                end
+            end
+
+            for i,ing in pairs(diff) do
+                --check if nametags exist (only check ing[i] when no name tags exist)
+                if ing.name and ing.name == ingredient then
+                    if found then
+                        if diff[num].amount then
+                            diff[num].amount = amount          
+                        else        
+                            diff[num][2] = repamount
+                        end
+                        diff[i] = nil
+                    else
                         ing.name = repname
                         ing.amount = repamount or ing.amount
-                        ing.type = reptype or ing.type
-                        break
+                        ing.type = reptype or ing.type  
                     end
-                elseif ing[1] and ing[1] == ingredient then
-                    ing[1] = repname
-                    ing[2] = repamount or ing[2]
+                    break
+                elseif not ing.name and ing[1] and ing[1] == ingredient then
+                    if found then
+                        if diff[num].amount then
+                            diff[num].amount = amount          
+                        else        
+                            diff[num][2] = repamount
+                        end
+                        diff[i] = nil
+                    else
+                        ing[1] = repname
+                        ing[2] = repamount or ing[2]
+                    end
                     break
                 end
             end
         end
-        --rec.normal.ingredients
-        if rec.normal and rec.normal.ingredients then
-            found = false
-            for i,ing in pairs(rec.normal.ingredients) do
-                --check if nametags exist (only check ing[i] when no name tags exist)
-                if ing.name then
-                    if ing.name == ingredient then
-                        ing.name = repname
-                        ing.amount = repamount or ing.amount
-                        ing.type = reptype or ing.type
-                        break
-                    end
-                elseif ing[1] and ing[1] == ingredient then
-                    ing[1] = repname
-                    ing[2] = repamount or ing[2]
-                    break
-                end
-           end
-        end
-        --rec.expensive.ingredients
-        if rec.expensive and rec.expensive.ingredients then
-            found = false
-            for i,ing in pairs(rec.expensive.ingredients) do
-                --check if nametags exist (only check ing[i] when no name tags exist)
-                if ing.name then
-                    if ing.name == ingredient then
-                        ing.name = repname
-                        ing.amount = repamount or ing.amount
-                        ing.type = reptype or ing.type
-                        break
-                    end
-                elseif ing[1] and ing[1] == ingredient then
-                    ing[1] = repname
-                    ing[2] = repamount or ing[2]
-                    break
-                end
-           end
-        end   
 	end
 end
 
