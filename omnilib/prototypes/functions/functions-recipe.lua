@@ -20,10 +20,10 @@ function omni.lib.set_recipe_ingredients(recipename,...)
         if rec.ingredients then
             rec.ingredients = ing
         end
-        if rec.normal.ingredients then
+        if rec.normal and rec.normal.ingredients then
             rec.normal.ingredients = ing
         end
-        if rec.expensive.ingredients then
+        if rec.expensive and rec.expensive.ingredients then
             rec.expensive.ingredients = ing
         end
 	end
