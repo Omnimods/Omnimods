@@ -248,3 +248,4 @@ if data.raw.technology["logistics-0"] then
 end
 
 require("prototypes.bobs_burner_phase")
+require("prototypes.heresy")
