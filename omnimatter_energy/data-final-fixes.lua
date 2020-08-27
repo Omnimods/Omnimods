@@ -4,7 +4,8 @@
 --	end
 --end
 
-RecGen:importIf("wooden-board"):addNormalIngredients({"omni-tablet",1}):addExpensiveIngredients({"omni-tablet",2}):setTechName("anbaricity"):extend()
+omni.lib.add_recipe_ingredient("wooden-board", {normal = {"omni-tablet",1}, expensive = {"omni-tablet",2}})
+omni.lib.add_unlock_recipe("anbaricity", "wooden-board")
 
 ItemGen:import("omnite"):setFuelCategory("omnite"):extend()
 ItemGen:import("crushed-omnite"):setFuelCategory("omnite"):extend()
