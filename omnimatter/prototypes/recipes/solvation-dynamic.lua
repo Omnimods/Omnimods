@@ -171,7 +171,7 @@ local omniston = RecChain:create("omnimatter","water-omnitraction"):
 		setTechPacks(function(levels,grade) return get_generic_tech_packs(grade,1,true)  end):
 		setTechPrereq(function(levels,grade) return get_generic_prereq(grade,"water",1) end):
 		setTechTime(15):
-		setTechLocName("water-omnitraction"):
+		setTechLocName("omnitech-water-omnitraction"):
 		extend()
 
 local cost = OmniGen:create():
@@ -194,7 +194,7 @@ local omniston = RecChain:create("omnimatter","omniston"):
 		setTechPacks(function(levels,grade) return get_solvation_tech_packs(grade) end):
 		setTechPrereq(function(levels,grade) return get_omniston_req(grade)  end):
 		setTechTime(15):
-		setTechLocName("omniston_solvation"):
+		setTechLocName("omnitech-omniston_solvation"):
 		extend()
 
 local cost = OmniGen:create():
@@ -220,7 +220,7 @@ local omnisludge = RecChain:create("omnimatter","omnisludge"):
 		setTechCost(function(levels,grade) return 25*get_tier_mult(levels,grade,1) end):
 		setTechPacks(function(levels,grade) return get_acid_tech_cost(grade) end):
 		setTechPrereq(function(levels,grade) return get_sludge_req(grade)  end):
-		setTechLocName("omnisludge"):
+		setTechLocName("omnitech-omnisludge"):
 		setTechTime(15):
 		extend()
 
@@ -286,7 +286,7 @@ for _,tier in pairs(omnifluid) do
 			setTechCost(function(levels,grade) return 25*get_tier_mult(levels,grade,1) end):
 			setTechPacks(function(levels,grade) return get_generic_tech_packs(grade, fluid.tier) end):
 			setTechPrereq(function(levels,grade) return get_distillation_req(fluid.tier,fluid.name, grade)  end):
-			setTechLocName("omnistillation",{"fluid-name."..fluid.name}):
+			setTechLocName("omnitech-omnistillation",{"fluid-name."..fluid.name}):
 			setTechTime(15):
 			extend()
 

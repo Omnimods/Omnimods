@@ -93,7 +93,7 @@ RecGen:import("iron-ore-smelting"):
 	setIcons("ingot-omnicium","omnimatter"):
 	addSmallIcon("iron-ore",3):
 	addSmallIcon("copper-ore",1):
-	setTechName("angels-omnicium-smelting-1"):
+	setTechName("omnitech-angels-omnicium-smelting-1"):
 	setTechIcon("smelting-omnicium"):
 	extend()
 
@@ -106,7 +106,7 @@ RecGen:import("molten-iron-smelting-1"):
 	setIcons("molten-omnicium","omnimatter"):
 	setReqAllMods("angelssmelting"):
 	setBothColour({r = 125/255, g = 0/255, b = 161/255}):
-	setTechName("angels-omnicium-smelting-1"):extend()
+	setTechName("omnitech-angels-omnicium-smelting-1"):extend()
 
 RecGen:import("angels-plate-iron"):
 	setName("angels-plate-omnicium","omnimatter"):
@@ -118,7 +118,7 @@ RecGen:import("angels-plate-iron"):
 	addSmallIcon("molten-omnicium",3):
 	addProductivity():
 	setReqAllMods("angelssmelting"):
-	setTechName("angels-omnicium-smelting-1"):extend()
+	setTechName("omnitech-angels-omnicium-smelting-1"):extend()
 
 RecGen:import("iron-ore-processing"):
 	setName("omnicium-processing","omnimatter"):
@@ -130,8 +130,8 @@ RecGen:import("iron-ore-processing"):
 	setIcons("processed-omnicium","omnimatter"):
 	addSmallIcon("molten-omnicium",3):
 	setReqAllMods("angelssmelting"):
-	setTechName("angels-omnicium-smelting-2"):
-	setTechPrereq("angels-omnicium-smelting-1"):
+	setTechName("omnitech-angels-omnicium-smelting-2"):
+	setTechPrereq("omnitech-angels-omnicium-smelting-1"):
 	setTechIcon("smelting-omnicium"):extend()
 
 RecGen:import("processed-iron-smelting"):
@@ -145,7 +145,7 @@ RecGen:import("processed-iron-smelting"):
 	setIcons("ingot-omnicium","omnimatter"):
 	addSmallIcon("processed-omnicium",3):
 	setReqAllMods("angelssmelting"):
-	setTechName("angels-omnicium-smelting-2"):extend()
+	setTechName("omnitech-angels-omnicium-smelting-2"):extend()
 
 RecGen:import("iron-processed-processing"):
 	setName("omnicium-processed-processing","omnimatter"):
@@ -156,8 +156,8 @@ RecGen:import("iron-processed-processing"):
 	setSubgroup("angels-omnicium"):
 	setIcons("pellet-omnicium","omnimatter"):
 	setReqAllMods("angelssmelting"):
-	setTechName("angels-omnicium-smelting-3"):
-	setTechPrereq("angels-omnicium-smelting-2"):
+	setTechName("omnitech-angels-omnicium-smelting-3"):
+	setTechPrereq("omnitech-angels-omnicium-smelting-2"):
 	setTechIcon("smelting-omnicium"):extend()
 
 RecGen:import("pellet-iron-smelting"):
@@ -171,7 +171,7 @@ RecGen:import("pellet-iron-smelting"):
 	setIcons("ingot-omnicium","omnimatter"):
 	addSmallIcon("pellet-omnicium",3):
 	setReqAllMods("angelssmelting"):
-	setTechName("angels-omnicium-smelting-3"):
+	setTechName("omnitech-angels-omnicium-smelting-3"):
 	setTechIcon("smelting-omnicium"):extend()
 
 RecGen:import("roll-iron-casting"):
@@ -182,7 +182,7 @@ RecGen:import("roll-iron-casting"):
 	replaceResults("angels-roll-iron","angels-roll-omnicium"):
 	setSubgroup("omnicium-casting"):
 	setReqAllMods("angelssmelting"):
-	setTechName("angels-omnicium-smelting-2"):extend()
+	setTechName("omnitech-angels-omnicium-smelting-2"):extend()
 
 RecGen:import("roll-iron-casting-fast"):
 	setName("roll-omnicium-casting-fast","omnimatter"):
@@ -191,7 +191,7 @@ RecGen:import("roll-iron-casting-fast"):
 	replaceResults("angels-roll-iron","angels-roll-omnicium"):
 	setSubgroup("omnicium-casting"):
 	setReqAllMods("angelssmelting"):
-	setTechName("angels-omnicium-smelting-3"):extend()
+	setTechName("omnitech-angels-omnicium-smelting-3"):extend()
 
 RecGen:import("angels-roll-iron-converting"):
 	setName("angels-roll-omnicium-converting","omnimatter"):
@@ -201,7 +201,7 @@ RecGen:import("angels-roll-iron-converting"):
 	replaceResults("angels-plate-iron","omnicium-plate"):
 	setSubgroup("omnicium-casting"):
 	setReqAllMods("angelssmelting"):
-	setTechName("angels-omnicium-smelting-2"):extend()
+	setTechName("omnitech-angels-omnicium-smelting-2"):extend()
 
 if mods["angelssmelting"] then
 
@@ -215,7 +215,7 @@ if mods["angelssmelting"] then
 	addProductivity():
 	setEnergy(2):
 	setReqAllMods("angelssmelting"):
-	setTechName("angels-omnicium-smelting-1"):extend()
+	setTechName("omnitech-angels-omnicium-smelting-1"):extend()
 
 	data:extend({
   {

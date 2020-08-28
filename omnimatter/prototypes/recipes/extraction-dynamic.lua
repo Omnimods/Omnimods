@@ -299,7 +299,7 @@ for i, tier in pairs(omnisource) do
                 function(levels, grade)
                     return math.floor((grade - 1) * 3 / levels) + tier_int
                 end):
-            setTechLocName("pure-omnitraction", {"item-name." .. item}):extend()
+            setTechLocName("omnitech-pure-omnitraction", {"item-name." .. item}):extend()
         )
     end
 end
@@ -359,8 +359,8 @@ for _,ore_tiers in pairs(omnisource) do
         if t == 1 then
             base_impure_ore:setCategory("omnite-extraction-both"):
             setTechPrereq(nil):
-            setTechName("base-impure-extraction"):
-            setTechLocName("base-omnitraction")
+            setTechName("omnitech-base-impure-extraction"):
+            setTechLocName("omnitech-base-omnitraction")
         else
             base_impure_ore:setCategory("omnite-extraction"):
             setTechName("omnitech-omnitractor-electric-" .. (t - 1))
@@ -394,7 +394,7 @@ for _,ore_tiers in pairs(omnisource) do
                     setTechName("omnitech-focused-extraction-" .. ore.name .. "-" .. i):
                     setTechCost(25 * i * t):
                     setTechLocName(
-                        "impure-omnitraction",
+                        "omnitech-impure-omnitraction",
                         "item-name." .. ore.name,
                         i
                     ):

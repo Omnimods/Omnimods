@@ -111,7 +111,7 @@ if mods["omnimatter_crystal"] then
 		omni.lib.replace_science_pack("strand-casting-2","chemical-science-pack")
 		omni.lib.replace_science_pack("thermal-water-extraction","chemical-science-pack")
 		omni.lib.replace_science_pack("ore-advanced-floatation","chemical-science-pack")
-		omni.lib.replace_science_pack("angels-omnicium-smelting-3","chemical-science-pack")
+		omni.lib.replace_science_pack("omnitech-angels-omnicium-smelting-3","chemical-science-pack")
 		omni.lib.add_science_pack("angels-coolant-1")
 
 		if mods ["Clowns-Extended-Minerals"] then
