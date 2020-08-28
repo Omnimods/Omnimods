@@ -25,7 +25,7 @@ local b = BuildGen:create("omnimatter_wood","omnimutator"):
 	setOrder("a[omnimutator"):
 	setCrafting({"omnimutator"}):
 	setFluidBox("XWX.XXX.XSX"):
-	setTechName("omnimutator"):
+	setTechName("omnitech-omnimutator"):
 	setTechIcon("omnimatter_wood","mutator"):
 	setTechCost(50):
 	setTechTime(15):
@@ -94,7 +94,7 @@ RecGen:create("omnimatter_wood","basic-wood-mutation"):
       {type = "item", name = "omniwood", amount_min = 5, amount_max = 15},
     }):
 	setReqNoneMods("bobgreenhouse","angelsbioprocessing"):
-	setTechName("omnimutator"):extend()
+	setTechName("omnitech-omnimutator"):extend()
 	
 	RecGen:create("omnimatter_wood","omniseedling"):
 	setFuelValue(1):
@@ -123,7 +123,7 @@ RecGen:create("omnimatter_wood","basic-wood-mutation"):
       {type = "item", name = "omniseedling", amount = 5},
       {type = "fluid", name = "omnic-water", amount = 50}
     }):
-	setTechName("omnimutator"):
+	setTechName("omnitech-omnimutator"):
 	setGenerationCondition(mods["bobgreenhouse"]~= nil and not mods["angelsbioprocessing"]):
 	setResults({type = "item", name = "omniwood", amount_min = 10, amount_max = 30}):extend()
 

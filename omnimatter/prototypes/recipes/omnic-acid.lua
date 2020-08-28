@@ -31,7 +31,7 @@ end
 local get_omnic_req=function(lvl)
 	local req = {}
 	if (lvl-1)%omni.fluid_levels_per_tier == 0 then
-		req[#req+1]="omnitractor-electric-"..math.min((lvl-1)/omni.fluid_levels_per_tier+1,5)
+		req[#req+1]="omnitech-omnitractor-electric-"..math.min((lvl-1)/omni.fluid_levels_per_tier+1,5)
 		if lvl > 1 and omni.fluid_dependency < omni.fluid_levels_per_tier then
 			req[#req+1]="omnitech-omnic-acid-hydrolyzation-"..(lvl-1)
 		end

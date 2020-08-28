@@ -1,10 +1,12 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.0.2
-Date: 2020.XX.XX
+Date: 2020.08.XX
   Features:
     - Basic omnitraction recipes now have proper icons and locales
   Changes:
     - Improved splitting between impure omnitraction recipes to have more even distribution.
+    - Renamed technology "omnitractor-electric-x" to "omnitech-omnitractor-electric-x"
+    - Renamed technology "base-impure-extraction" to "omnitech-base-impure-extraction"
   Info:
     - This recipe change can possibly require changes to early-game omnitraction setups on existing saves.
 ---------------------------------------------------------------------------------------------------

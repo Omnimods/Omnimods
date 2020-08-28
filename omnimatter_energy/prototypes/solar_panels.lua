@@ -74,10 +74,10 @@ end
 local get_req = function(tier, size)
 	local req = {}
 	if tier == 1 and size == 1 then
-		req = {"solar-energy", "crystallonics-1"}
+		req = {"solar-energy", "omnitech-crystallonics-1"}
 	elseif size == 1 then
 		if tier <= 5 then
-			req = {"omnitech-crystal-solar-panel-tier-"..(tier-1).."-size-"..max_size, "crystallonics-"..tier}
+			req = {"omnitech-crystal-solar-panel-tier-"..(tier-1).."-size-"..max_size, "omnitech-crystallonics-"..tier}
 		else
 			req = {"omnitech-crystal-solar-panel-tier-"..(tier-1).."-size-"..max_size}
 		end
@@ -211,7 +211,7 @@ for j=1,nr_tiers do
 			setEnabled(false):
 			setStacksize(50):
 			setTechName("omnitech-crystal-solar-panel-tier-"..j.."-size-"..i):
-			setTechLocName("crystal-solar-panel", j, i):
+			setTechLocName("omnitech-crystal-solar-panel", j, i):
 			setTechIcon("__omnimatter_energy__/graphics/technology/empty.png"):			
 			setTechCost(150+((j-1)*max_size+i)*75+j*100):	--base_cost+...*cost_between_techs+...*addidional_cost_between_tiers
 			setTechPacks(get_scienceing(j)):

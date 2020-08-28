@@ -30,10 +30,10 @@ local get_generic_prereq = function(grade,element,tier)
 	end
 	--Add an electric omnitractor tech as prereq if this is the first tech of a new tier
 	if grade%omni.fluid_levels_per_tier== 1 and (tractor_lvl <=omni.max_tier) and (tractor_lvl >= 1)then
-		req[#req+1]="omnitractor-electric-"..tractor_lvl
+		req[#req+1]="omnitech-omnitractor-electric-"..tractor_lvl
 		--Add the last tech as prereq for this omnitractor tech
 		if (grade-1) > 0 then
-			omni.lib.add_prerequisite("omnitractor-electric-"..tractor_lvl, "omnitech-"..element.."-omnitraction-"..(grade-1), true)
+			omni.lib.add_prerequisite("omnitech-omnitractor-electric-"..tractor_lvl, "omnitech-"..element.."-omnitraction-"..(grade-1), true)
 		end
 	end
 	return req
@@ -66,7 +66,7 @@ local get_sludge_req=function(lvl)
   local req = {}
   req[#req+1]="omnitech-omnic-acid-hydrolyzation-"..lvl
   if (lvl-1)%omni.fluid_levels_per_tier == 0 then
-    req[#req+1]="omnitractor-electric-"..((lvl-1)/omni.fluid_levels_per_tier+1)
+    req[#req+1]="omnitech-omnitractor-electric-"..((lvl-1)/omni.fluid_levels_per_tier+1)
     if lvl > 1 and omni.fluid_dependency < omni.fluid_levels_per_tier then
       if data.raw.technology["omnitech-omnisolvent-omnisludge-"..(lvl-1)] then
         req[#req+1]="omnitech-omnisolvent-omnisludge-"..(lvl-1)
@@ -101,8 +101,8 @@ local get_distillation_req=function(tier,item, level)
 		req[#req+1]="omnitech-solvation-omniston-"..omni.fluid_levels
 	end
 	if (level-1)%omni.fluid_levels_per_tier == 0 then
-		if data.raw.technology["omnitractor-electric-"..((level-1)/omni.fluid_levels_per_tier+tier)] then
-			req[#req+1]="omnitractor-electric-"..((level-1)/omni.fluid_levels_per_tier+tier)
+		if data.raw.technology["omnitech-omnitractor-electric-"..((level-1)/omni.fluid_levels_per_tier+tier)] then
+			req[#req+1]="omnitech-omnitractor-electric-"..((level-1)/omni.fluid_levels_per_tier+tier)
 			if level > 1 and omni.fluid_dependency < omni.fluid_levels_per_tier then
 				req[#req+1]="omnitech-distillation-"..item.."-"..(level-1)
 			end
