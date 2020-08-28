@@ -81,29 +81,29 @@ function omni.lib.add_recipe_ingredient(recipename, ingredient)
         local expens = {}
 		if not ingredient.name then
 			if type(ingredient)=="string" then
-				norm = table.deepcopy({type="item",name=ingredient,amount=1})
-				expens = table.deepcopy({type="item",name=ingredient,amount=1})
+				norm = {type="item",name=ingredient,amount=1}
+				expens = {type="item",name=ingredient,amount=1}
             elseif ingredient.normal or ingredient.expensive then
                 if ingredient.normal then
-                    norm = table.deepcopy({type=ingredient.normal.type or "item",name=ingredient.normal.name or ingredient.normal[1], amount=ingredient.normal.amount or ingredient.normal[2] or 1})
+                    norm = {type=ingredient.normal.type or "item",name=ingredient.normal.name or ingredient.normal[1], amount=ingredient.normal.amount or ingredient.normal[2] or 1}
                 else
                     norm = nil
                 end
                 if ingredient.expensive then
-                    expens = table.deepcopy({type=ingredient.expensive.type or "item",name=ingredient.expensive.name or ingredient.expensive[1], amount=ingredient.expensive.amount or ingredient.expensive[2] or 1})
+                    expens = {type=ingredient.expensive.type or "item",name=ingredient.expensive.name or ingredient.expensive[1], amount=ingredient.expensive.amount or ingredient.expensive[2] or 1}
                 else
                     expens = nil
                 end
 			elseif ingredient[1].name then
-				norm = table.deepcopy(ingredient[1])
-				expens = table.deepcopy(ingredient[2])
+				norm = ingredient[1]
+				expens = ingredient[2]
 			elseif type(ingredient[1])=="string" then
-				norm = table.deepcopy({type="item",name=ingredient[1],amount=ingredient[2]})
-				expens = table.deepcopy({type="item",name=ingredient[1],amount=ingredient[2]})
+				norm = {type="item",name=ingredient[1],amount=ingredient[2]}
+				expens = {type="item",name=ingredient[1],amount=ingredient[2]}
 			end
 		else
-			norm = table.deepcopy(ingredient)
-			expens = table.deepcopy(ingredient)
+			norm = ingredient
+            expens = ingredient
         end
         local found = false
         --rec.ingredients --If only .normal needs to be modified, keep ingredients, else copy into .normal/.expensive
@@ -121,8 +121,8 @@ function omni.lib.add_recipe_ingredient(recipename, ingredient)
                 rec.result_count = nil
             end
             if rec.results then
-                rec.normal.results = rec.results
-                rec.expensive.results = rec.results
+                rec.normal.results = table.deepcopy(rec.results)
+                rec.expensive.results = table.deepcopy(rec.results)
                 rec.results = nil
             end
         elseif rec.ingredients and norm then
@@ -200,29 +200,29 @@ function omni.lib.add_recipe_result(recipename, result)
         local expens = {}
 	    if not result.name then
 	    	if type(result)=="string" then
-	    		norm = table.deepcopy({type="item",name=result,amount=1})
-	    		expens = table.deepcopy({type="item",name=result,amount=1})
+	    		norm = {type="item",name=result,amount=1}
+	    		expens = {type="item",name=result,amount=1}
 	    	elseif result.normal or result.expensive then
                 if result.normal then
-                    norm = table.deepcopy({type=result.normal.type or "item",name=result.normal.name or result.normal[1], amount=result.normal.amount or result.normal[2] or 1})
+                    norm = {type=result.normal.type or "item",name=result.normal.name or result.normal[1], amount=result.normal.amount or result.normal[2] or 1}
                 else
                     norm = nil
                 end
                 if result.expensive then
-                    expens = table.deepcopy({type=result.expensive.type or "item",name=result.expensive.name or result.expensive[1], amount=result.expensive.amount or result.expensive[2] or 1})
+                    expens = {type=result.expensive.type or "item",name=result.expensive.name or result.expensive[1], amount=result.expensive.amount or result.expensive[2] or 1}
                 else
                     expens = nil
                 end
 	    	elseif result[1].name then
-	    		norm = table.deepcopy(result[1])
-	    		expens = table.deepcopy(result[2])
+	    		norm = result[1]
+	    		expens = result[2]
 	    	elseif type(result[1])=="string" then
-	    		norm = table.deepcopy({type="item",name=result[1],amount=result[2]})
-	    		expens = table.deepcopy({type="item",name=result[1],amount=result[2]})
+	    		norm = {type="item",name=result[1],amount=result[2]}
+	    		expens = {type="item",name=result[1],amount=result[2]}
     		end
 	    else
-	    	norm = table.deepcopy(result)
-	    	expens = table.deepcopy(result)
+	    	norm = result
+	    	expens = result
         end
         local found = false
         -- Single result checks
@@ -245,12 +245,12 @@ function omni.lib.add_recipe_result(recipename, result)
         if rec.results and norm ~= expens  then
             rec.normal = {}
             rec.expensive = {}
-            rec.normal.results = rec.results
-            rec.expensive.results = rec.results
+            rec.normal.results = table.deepcopy(rec.results)
+            rec.expensive.results = table.deepcopy(rec.results)
             rec.results = nil
             if rec.ingredients then
-                rec.normal.results = rec.ingredients
-                rec.expensive.results = rec.ingredients
+                rec.normal.results = table.deepcopy(rec.ingredients)
+                rec.expensive.results = table.deepcopy(rec.ingredients)
                 rec.ingredients = nil
             end
         elseif rec.results and norm then
