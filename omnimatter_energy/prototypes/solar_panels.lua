@@ -74,10 +74,10 @@ end
 local get_req = function(tier, size)
 	local req = {}
 	if tier == 1 and size == 1 then
-		req = {"solar-energy", "crystallonics-1"}
+		req = {"solar-energy", "omnitech-crystallonics-1"}
 	elseif size == 1 then
 		if tier <= 5 then
-			req = {"omnitech-crystal-solar-panel-tier-"..(tier-1).."-size-"..max_size, "crystallonics-"..tier}
+			req = {"omnitech-crystal-solar-panel-tier-"..(tier-1).."-size-"..max_size, "omnitech-crystallonics-"..tier}
 		else
 			req = {"omnitech-crystal-solar-panel-tier-"..(tier-1).."-size-"..max_size}
 		end

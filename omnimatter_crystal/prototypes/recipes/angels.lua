@@ -212,7 +212,7 @@ if angelsmods and angelsmods.refining then
 					else tier = 4 --if something goes horribly wrong...
 					end
 					-- Force unlock recipe since data:extend() is called later
-					omni.lib.add_unlock_recipe("crystallology-"..tier, metal.."-salting", true)
+					omni.lib.add_unlock_recipe("omnitech-crystallology-"..tier, metal.."-salting", true)
 					--check and set unlock tier
 					for i,ore in pairs(results) do
 						if not processed[ore.name] then processed[ore.name]=tier end
@@ -226,7 +226,7 @@ if angelsmods and angelsmods.refining then
 	for _,suf in pairs(suffixes) do
 		for ore,i in pairs(processed) do
 			if ore~="slag" then
-				for _,eff in pairs(data.raw.technology["crystallology-"..i].effects) do	omni.lib.add_unlock_recipe("crystallology-"..i, ore..suf) end
+				for _,eff in pairs(data.raw.technology["omnitech-crystallology-"..i].effects) do	omni.lib.add_unlock_recipe("omnitech-crystallology-"..i, ore..suf) end
 			end
 		end
 	end
@@ -238,7 +238,7 @@ if angelsmods and angelsmods.refining then
 		--setIcons("catalysator-yellow","angelsrefining"):
 		setIcons("omni-catalyst"):
 		setCategory("crystallizing"):
-		setTechName("crystallology-1"):
+		setTechName("omnitech-crystallology-1"):
 		setOrder("zz"):
 		setIngredients	({
 			{type = "fluid", name = "hydromnic-acid", amount = 120},

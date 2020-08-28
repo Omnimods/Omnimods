@@ -3,6 +3,7 @@ Version: 4.0.2
 Date: 2020.08.xx
   Changes:
     - Renamed technology "omnitractor-electric-x" to "omnitech-omnitractor-electric-x"
+    - Renamed technology "base-impure-extraction" to "omnitech-base-impure-extraction"
 ---------------------------------------------------------------------------------------------------
 Version: 4.0.1
 Date: 2020.08.24

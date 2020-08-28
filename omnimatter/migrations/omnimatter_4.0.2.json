@@ -9,8 +9,7 @@
     ["omnitractor-electric-6", "omnitech-omnitractor-electric-6"],
     ["omnitractor-electric-7", "omnitech-omnitractor-electric-7"],
     ["omnitractor-electric-8", "omnitech-omnitractor-electric-8"],
-    ["omnitractor-electric-9", "omnitech-omnitractor-electric-9"],
-    ["omnitractor-electric-10", "omnitech-omnitractor-electric-10"]
+    ["base-impure-extraction", "omnitech-base-impure-extraction"]
 
   ]
 }

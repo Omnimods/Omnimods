@@ -41,7 +41,7 @@ if mods["bobtech"] and settings.startup["bobmods-burnerphase"].value then
     omni.lib.add_prerequisite("automation-science-pack", "steam-power")
 
     --change technologies to be steam pack in place of red packs
-    omni.lib.replace_science_pack("base-impure-extraction","automation-science-pack", "steam-science-pack")
+    omni.lib.replace_science_pack("omnitech-base-impure-extraction","automation-science-pack", "steam-science-pack")
     omni.lib.replace_science_pack("anbaricity","automation-science-pack", "steam-science-pack")
     omni.lib.replace_science_pack("simple-automation","automation-science-pack", "steam-science-pack")
 

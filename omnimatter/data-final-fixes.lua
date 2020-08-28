@@ -15,10 +15,10 @@ for _,f in pairs(data.raw.fluid) do
 	data.raw.recipe["angels-fluid-splitter-"..f.name]=nil
 end
 
-omni.lib.add_unlock_recipe("base-impure-extraction","crushed-omnite")
-omni.lib.add_unlock_recipe("base-impure-extraction","pulverized-omnite")
-omni.lib.add_unlock_recipe("base-impure-extraction","pulverized-stone")
-omni.lib.add_unlock_recipe("base-impure-extraction","pulver-omnic-waste")
+omni.lib.add_unlock_recipe("omnitech-base-impure-extraction","crushed-omnite")
+omni.lib.add_unlock_recipe("omnitech-base-impure-extraction","pulverized-omnite")
+omni.lib.add_unlock_recipe("omnitech-base-impure-extraction","pulverized-stone")
+omni.lib.add_unlock_recipe("omnitech-base-impure-extraction","pulver-omnic-waste")
 
 --TEMPORARY
 --omnifluid (basically should be same timing as barrelling)

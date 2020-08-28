@@ -301,7 +301,7 @@ for _,ore_tiers in pairs(omnisource) do
 		local tc = 25*t*t
 		if t==1 then tc=tc*omni.beginning_tech_help end
 		local base_impure_ore = RecGen:create("omnimatter","omnirec-base-"..i.."-extraction-"..t):
-		setLocName("base-impure",{t}):
+		setLocName("omnitech-base-impure",{t}):
 		setIngredients({name="omnite",type="item",amount=10}):
 		setSubgroup("omni-impure-basic"):
 		setEnergy(5*(math.floor(t/2+0.5))):
@@ -318,7 +318,7 @@ for _,ore_tiers in pairs(omnisource) do
 		if t==1 then
 			base_impure_ore:setCategory("omnite-extraction-both"):
 			setTechPrereq(nil):
-			setTechName("base-impure-extraction"):
+			setTechName("omnitech-base-impure-extraction"):
 			setTechLocName("base-omnitraction")
 		else
 			base_impure_ore:setCategory("omnite-extraction"):
@@ -365,7 +365,7 @@ for _,ore_tiers in pairs(omnisource) do
 					focused_ore:setCategory("omnite-extraction")
 				end
 				if i==1 and t==1 then
-					focused_ore:setTechPrereq("base-impure-extraction")
+					focused_ore:setTechPrereq("omnitech-base-impure-extraction")
 				elseif i == 1 then
 					focused_ore:setTechPrereq("omnitech-omnitractor-electric-"..t-1)
 				else

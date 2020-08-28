@@ -244,7 +244,7 @@ function omni.crystal.generate_control_crystal(board_crystal,circuit_crystal,con
 				tech_unlock[i][#tech_unlock[i]+1]=x
 			end
 		end
-		for _,eff in pairs(data.raw.technology["crystallology-"..i].effects) do
+		for _,eff in pairs(data.raw.technology["omnitech-crystallology-"..i].effects) do
 			--log("crystal effect: "..eff.recipe)
 			if eff.type=="unlock-recipe" and string.find(eff.recipe,"omnitraction") and data.raw.recipe[eff.recipe] then
 				--log("Circuit: "..eff.recipe)
@@ -267,11 +267,11 @@ function omni.crystal.generate_control_crystal(board_crystal,circuit_crystal,con
 	
 	for i=1,4 do
 		if omni.lib.sub_table_of(resources,tech_unlock[i]) then 
-			omni.lib.add_unlock_recipe("crystallonics-"..i,circuit_name)
-			omni.lib.add_unlock_recipe("crystallonics-"..i,connection_crystal.."-electrocrystal")
-			omni.lib.add_unlock_recipe("crystallonics-"..i,circuit_crystal.."-oscillocrystal")
-			omni.lib.add_unlock_recipe("crystallonics-"..i,board_crystal.."-crystal-board")
-			if node_crystal then omni.lib.add_unlock_recipe("crystallonics-"..i,node_crystal.."-thermocrystal") end
+			omni.lib.add_unlock_recipe("omnitech-crystallonics-"..i,circuit_name)
+			omni.lib.add_unlock_recipe("omnitech-crystallonics-"..i,connection_crystal.."-electrocrystal")
+			omni.lib.add_unlock_recipe("omnitech-crystallonics-"..i,circuit_crystal.."-oscillocrystal")
+			omni.lib.add_unlock_recipe("omnitech-crystallonics-"..i,board_crystal.."-crystal-board")
+			if node_crystal then omni.lib.add_unlock_recipe("omnitech-crystallonics-"..i,node_crystal.."-thermocrystal") end
 			break
 		end
 	end
@@ -335,9 +335,9 @@ function omni.crystal.generate_hybrid_circuit(control_crystal,electronic_circuit
 	
 	
 	for i=1,4 do
-		for _,eff in pairs(data.raw.technology["crystallonics-"..i].effects) do
+		for _,eff in pairs(data.raw.technology["omnitech-crystallonics-"..i].effects) do
 			if eff.type == "unlock-recipe" and eff.recipe == cc then
-				omni.lib.add_unlock_recipe("crystallonics-"..i, cc.."-"..electronic_circuit.."-hybrid")
+				omni.lib.add_unlock_recipe("omnitech-crystallonics-"..i, cc.."-"..electronic_circuit.."-hybrid")
 				break
 			end
 		end

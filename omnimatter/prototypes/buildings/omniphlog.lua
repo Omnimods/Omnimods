@@ -70,7 +70,7 @@ BuildChain:create("omnimatter","omniphlog"):
 	setReplace("omniphlog"):
 	setStacksize(10):
 	setSize(3):
-	setTechName("omnitractor-electric"):
+	setTechName("omnitech-omnitractor-electric"):
 	setFluidBox("XWX.XXX.XKX"):
 	setLevel(omni.max_tier):
 	setSoundWorking("ore-crusher"):

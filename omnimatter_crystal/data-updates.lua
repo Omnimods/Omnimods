@@ -40,8 +40,8 @@ if data.raw.item["angels-copper-pebbles-crystal"] then
 	for _,metal in pairs({"iron","copper"}) do
 		for _,type in pairs({"-pebbles","-slag","-nugget"}) do
 			for _,style in pairs({"-omnide-solution","-crystal-omnitraction","-crystal"}) do
-				omni.lib.add_unlock_recipe("crystallology-1", "angels-"..metal..type..style)
-				omni.lib.add_unlock_recipe("crystallology-1", metal.."-ore"..style)
+				omni.lib.add_unlock_recipe("omnitech-crystallology-1", "angels-"..metal..type..style)
+				omni.lib.add_unlock_recipe("omnitech-crystallology-1", metal.."-ore"..style)
 			end
 		end
 	end
@@ -88,7 +88,7 @@ if not mods["angelsrefining"] then
 						end
 					end
 				end
-				--omni.lib.add_unlock_recipe("crystallology-"..tier, rec.name)
+				--omni.lib.add_unlock_recipe("omnitech-crystallology-"..tier, rec.name)
 				local ic = salt_omnide_icon(ore)
 				local solution = {
 					type = "recipe",
@@ -111,10 +111,10 @@ if not mods["angelsrefining"] then
 				}
 
 				crystalines[#crystalines+1]=solution
-				omni.lib.add_unlock_recipe("crystallology-"..tier, ore.."-salting")
-				omni.lib.add_unlock_recipe("crystallology-"..tier, ore.."-omnide-solution")
-				omni.lib.add_unlock_recipe("crystallology-"..tier, ore.."-crystal-omnitraction")
-				omni.lib.add_unlock_recipe("crystallology-"..tier, ore.."-crystal")
+				omni.lib.add_unlock_recipe("omnitech-crystallology-"..tier, ore.."-salting")
+				omni.lib.add_unlock_recipe("omnitech-crystallology-"..tier, ore.."-omnide-solution")
+				omni.lib.add_unlock_recipe("omnitech-crystallology-"..tier, ore.."-crystal-omnitraction")
+				omni.lib.add_unlock_recipe("omnitech-crystallology-"..tier, ore.."-crystal")
 			end
 		end
 	end
