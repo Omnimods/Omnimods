@@ -1,6 +1,6 @@
 function omni.lib.add_unlock_recipe(tech, recipe,force)
 	local found = false
-	if data.raw.technology[tech] then
+	if data.raw.technology[tech] and (data.raw.recipe[recipe] or force) then
 		if data.raw.technology[tech].effects then
 			for _,eff in pairs(data.raw.technology[tech].effects) do
 				if eff.type == "unlock-recipe" and eff.recipe == recipe then
@@ -19,6 +19,7 @@ function omni.lib.add_unlock_recipe(tech, recipe,force)
 		--log("cannot add recipe to "..tech.." as it doesn't exist")
 	end
 end
+
 function omni.lib.remove_unlock_recipe(tech, recipe)
 	local res = {}
 	if tech then
