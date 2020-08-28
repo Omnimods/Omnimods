@@ -1,0 +1,20 @@
+{
+  "technology":
+  [
+    ["basic-omnium-power", "omnitech-basic-omnium-power"],
+    ["anbaricity", "omnitech-anbaricity"],
+    ["simple-automation", "omnitech-simple-automation"],
+    ["anbaric-lab", "omnitech-anbaric-lab"],
+    ["anbaric-mining", "omnitech-anbaric-mining"],
+    ["burner-filter-1", "omnitech-burner-filter-1"],
+    ["burner-filter-2", "omnitech-burner-filter-2"],
+    ["anbaric-inserter", "omnitech-anbaric-inserter"],
+    ["steam-power", "omnitech-steam-power"],
+    ["belt-logistics", "omnitech-belt-logistics"],
+    ["basic-belt-logistics", "omnitech-basic-belt-logistics"],
+    ["splitter-logistics", "omnitech-splitter-logistics"],
+    ["basic-splitter-logistics", "omnitech-basic-splitter-logistics"],
+    ["underground-logistics", "omnitech-underground-logistics"],
+    ["basic-underground-logistics", "omnitech-basic-underground-logistics"]
+  ]
+}

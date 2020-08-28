@@ -1935,7 +1935,8 @@ function RecGen:generate_recipe()
 			setLocName(self.tech.loc_name(0,0)):
 			return_array()[1]
 		else
-			omni.lib.add_unlock_recipe(tname, self.name)
+			--Force recipe unlock since the recipe is not generated yet
+			omni.lib.add_unlock_recipe(tname, self.name, true)
 		end
 	end
 	if self.category(0,0) and not data.raw["recipe-category"][self.category(0,0)] then
@@ -2362,8 +2363,16 @@ function RecChain:generate_chain()
 		setTechIcon(self.tech.icon(levels,i)):
 		setTechLocName(self.tech.loc_name(levels,grade)):
 		setTechLocDesc(self.tech.loc_desc,self.tech.loc_desc_keys):
-		setTechName("omnitech-"..techname.."-"..i-techDifEnabled):
+		--setTechName("omnitech-"..techname.."-"..i-techDifEnabled):
 		setGenerationCondition(self.requiredMods(levels,grade))
+
+		if string.find(techname, "omnitech-") then
+			r:setTechName(techname.."-"..i-techDifEnabled)
+		else
+			r:setTechName("omnitech-"..techname.."-"..i-techDifEnabled)
+		end
+
+
 		if self.tech.icon(levels,i) then
 			r:setTechIcon(self.tech.icon(levels,i))
 		else

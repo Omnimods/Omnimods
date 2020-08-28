@@ -33,13 +33,13 @@ function omni.add_omnicium_alloy(name,plate,ingot)
 		setCategory("induction-smelting"):
 		setSubgroup("omnicium-casting"):
 		setEnergy(4):
-		setTechName("angels-omnicium-"..name.."-alloy-smelting"):
+		setTechName("omnitech-angels-omnicium-"..name.."-alloy-smelting"):
 		setTechIcon("smelting-omnicium-"..name):
 		setTechPacks("angels-"..name.."-smelting-1"):
 		setTechCost(50):
 		setTechTime(30):
 		setTechPrereq(
-			"angels-omnicium-smelting-1",
+			"omnitech-angels-omnicium-smelting-1",
 			"angels-"..name.."-smelting-1"):
 		setIngredients(
 			{type="item", name="ingot-omnicium", amount=18},
@@ -53,7 +53,7 @@ function omni.add_omnicium_alloy(name,plate,ingot)
 		setSubgroup("omnicium-casting"):
 		setEnergy(4):
 		addProductivity():
-		setTechName("angels-omnicium-"..name.."-alloy-smelting"):
+		setTechName("omnitech-angels-omnicium-"..name.."-alloy-smelting"):
 		setIngredients({type="fluid", name="molten-omnicium-"..name.."-alloy", amount=40}):
 		addProductivity():
 		setResults({type="item", name="omnicium-"..name.."-alloy", amount=4}):extend()

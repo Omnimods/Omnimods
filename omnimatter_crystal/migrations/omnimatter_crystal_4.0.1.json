@@ -1,0 +1,36 @@
+{
+  "technology":
+  [
+    ["crystallology-1", "omnitech-crystallology-1"],
+    ["crystallology-2", "omnitech-crystallology-2"],
+    ["crystallology-3", "omnitech-crystallology-3"],
+    ["crystallology-4", "omnitech-crystallology-4"],
+    ["crystallology-5", "omnitech-crystallology-5"],
+    ["crystallology-6", "omnitech-crystallology-6"],
+    ["crystallology-7", "omnitech-crystallology-7"],
+    ["crystallology-8", "omnitech-crystallology-8"],
+
+    ["crystallonics-1", "omnitech-crystallonics-1"],
+    ["crystallonics-2", "omnitech-crystallonics-2"],
+    ["crystallonics-3", "omnitech-crystallonics-3"],
+    ["crystallonics-4", "omnitech-crystallonics-4"],
+    ["crystallonics-5", "omnitech-crystallonics-5"],
+    ["crystallonics-6", "omnitech-crystallonics-6"],
+    ["crystallonics-7", "omnitech-crystallonics-7"],
+    ["crystallonics-8", "omnitech-crystallonics-8"],
+    ["crystallonics-9", "omnitech-crystallonics-9"],
+    ["crystallonics-10", "omnitech-crystallonics-10"],
+
+    ["pseudoliquid-amorphous-crystal-1", "omnitech-pseudoliquid-amorphous-crystal-1"],
+    ["pseudoliquid-amorphous-crystal-2", "omnitech-pseudoliquid-amorphous-crystal-2"],
+    ["pseudoliquid-amorphous-crystal-3", "omnitech-pseudoliquid-amorphous-crystal-3"],
+    ["pseudoliquid-amorphous-crystal-4", "omnitech-pseudoliquid-amorphous-crystal-4"],
+    ["pseudoliquid-amorphous-crystal-5", "omnitech-pseudoliquid-amorphous-crystal-5"],
+    ["pseudoliquid-amorphous-crystal-6", "omnitech-pseudoliquid-amorphous-crystal-6"],
+    ["pseudoliquid-amorphous-crystal-7", "omnitech-pseudoliquid-amorphous-crystal-7"],
+    ["pseudoliquid-amorphous-crystal-8", "omnitech-pseudoliquid-amorphous-crystal-8"],
+    ["pseudoliquid-amorphous-crystal-9", "omnitech-pseudoliquid-amorphous-crystal-9"],
+    ["pseudoliquid-amorphous-crystal-10", "omnitech-pseudoliquid-amorphous-crystal-10"]
+
+  ]
+}

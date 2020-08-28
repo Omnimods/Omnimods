@@ -31,7 +31,7 @@ end
 local get_omnic_req=function(lvl)
 	local req = {}
 	if (lvl-1)%omni.fluid_levels_per_tier == 0 then
-		req[#req+1]="omnitractor-electric-"..math.min((lvl-1)/omni.fluid_levels_per_tier+1,5)
+		req[#req+1]="omnitech-omnitractor-electric-"..math.min((lvl-1)/omni.fluid_levels_per_tier+1,5)
 		if lvl > 1 and omni.fluid_dependency < omni.fluid_levels_per_tier then
 			req[#req+1]="omnitech-omnic-acid-hydrolyzation-"..(lvl-1)
 		end
@@ -70,6 +70,6 @@ local omnic_acid = RecChain:create("omnimatter","omnic-acid"):
 		setTechCost(function(levels,grade) return 25*get_tier_mult(levels,grade,1) end):
 		setTechPacks(function(levels,grade) return get_acid_tech_cost(grade) end):
 		setTechPrereq(function(levels,grade) return get_omnic_req(grade)  end):
-		setTechLocName("omnic-acid"):
+		setTechLocName("omnitech-omnic-acid"):
 		setTechTime(15):
 		extend()

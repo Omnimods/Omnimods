@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.0.1
+Date: 2020.08.xx
+  Changes:
+    - Renamed technology "omnimutator" to "omnitech-omnimutator"
+    - Renamed technology "omnialgae" to "omnitech-omnialgae"
+---------------------------------------------------------------------------------------------------
 Version: 4.0.0
 Date: 2020.08.22
   Info:

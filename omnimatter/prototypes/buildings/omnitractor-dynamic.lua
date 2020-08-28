@@ -141,8 +141,9 @@ BuildChain:create("omnimatter","omnitractor"):
 	setIngredients(cost:ingredients()):
 	setEnergy(5):
 	setUsage(function(level,grade) return (100+25*grade).."kW" end):
-	setTechPrereq(get_pure_req):
 	addElectricIcon():
+	setTechName("omnitech-omnitractor"):
+	setTechPrereq(get_pure_req):
 	setTechSuffix("electric"):
 	setTechIcon("omnimatter","omnitractor-electric"):
 	setTechCost(get_tech_times):
@@ -150,7 +151,6 @@ BuildChain:create("omnimatter","omnitractor"):
 	setReplace("omnitractor"):
 	setTechTime(function(levels,grade) return 15*grade end):
 	ifModsAddTechPrereq("omnimatter_crystal",function(levels,grade) if grade > 2 and (grade-2)*omni.fluid_levels_per_tier+omni.fluid_dependency<=omni.fluid_levels then return "omnitech-omnisolvent-omnisludge-"..(grade-2)*omni.fluid_levels_per_tier+omni.fluid_dependency else return nil end end):
-	setTechLocName("electric-omnitractor"):
 	setStacksize(10):
 	allowProductivity():
 	setLevel(settings.startup["omnimatter-max-tier"].value):
@@ -176,11 +176,11 @@ BuildChain:create("omnimatter","omnitractor"):
 	},
 	}):setOverlay("tractor-over"):
 	extend()
-
+log(serpent.block(data.raw.technology))
 if mods["angelsindustries"] and angelsmods.industries.components then
 	for i=1,math.min(settings.startup["omnimatter-max-tier"].value,5) do
 		-- Add omniblock unlocks
-		omni.lib.add_unlock_recipe("omnitractor-electric-"..i, "block-omni-"..i)
+		omni.lib.add_unlock_recipe("omnitech-omnitractor-electric-"..i, "block-omni-"..i)
 		-- Remove previous tier buildings from the recipes
 		if i == 1 then
 			omni.lib.remove_recipe_ingredient("omnitractor-1", "burner-omnitractor")

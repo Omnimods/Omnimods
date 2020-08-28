@@ -20,10 +20,10 @@ function omni.lib.set_recipe_ingredients(recipename,...)
         if rec.ingredients then
             rec.ingredients = ing
         end
-        if rec.normal.ingredients then
+        if rec.normal and rec.normal.ingredients then
             rec.normal.ingredients = ing
         end
-        if rec.expensive.ingredients then
+        if rec.expensive and rec.expensive.ingredients then
             rec.expensive.ingredients = ing
         end
 	end
@@ -76,30 +76,56 @@ end
 
 function omni.lib.add_recipe_ingredient(recipename, ingredient)
     local rec = data.raw.recipe[recipename]
-	if rec then
+    if rec then
 		local norm = {}
         local expens = {}
 		if not ingredient.name then
 			if type(ingredient)=="string" then
-				norm = table.deepcopy({type="item",name=ingredient,amount=1})
-				expens = table.deepcopy({type="item",name=ingredient,amount=1})
-			elseif ingredient.normal then
-				norm = table.deepcopy(ingredient.normal)
-				expens = table.deepcopy(ingredient.expensive)
+				norm = {type="item",name=ingredient,amount=1}
+				expens = {type="item",name=ingredient,amount=1}
+            elseif ingredient.normal or ingredient.expensive then
+                if ingredient.normal then
+                    norm = {type=ingredient.normal.type or "item",name=ingredient.normal.name or ingredient.normal[1], amount=ingredient.normal.amount or ingredient.normal[2] or 1}
+                else
+                    norm = nil
+                end
+                if ingredient.expensive then
+                    expens = {type=ingredient.expensive.type or "item",name=ingredient.expensive.name or ingredient.expensive[1], amount=ingredient.expensive.amount or ingredient.expensive[2] or 1}
+                else
+                    expens = nil
+                end
 			elseif ingredient[1].name then
-				norm = table.deepcopy(ingredient[1])
-				expens = table.deepcopy(ingredient[2])
+				norm = ingredient[1]
+				expens = ingredient[2]
 			elseif type(ingredient[1])=="string" then
-				norm = table.deepcopy({type="item",name=ingredient[1],amount=ingredient[2]})
-				expens = table.deepcopy({type="item",name=ingredient[1],amount=ingredient[2]})
+				norm = {type="item",name=ingredient[1],amount=ingredient[2]}
+				expens = {type="item",name=ingredient[1],amount=ingredient[2]}
 			end
 		else
-			norm = table.deepcopy(ingredient)
-			expens = table.deepcopy(ingredient)
+			norm = ingredient
+            expens = ingredient
         end
         local found = false
-        --rec.ingredients
-        if rec.ingredients then
+        --rec.ingredients --If only .normal needs to be modified, keep ingredients, else copy into .normal/.expensive
+        if rec.ingredients and  norm ~= expens  then
+            rec.normal = {}
+            rec.expensive = {}
+            rec.normal.ingredients = table.deepcopy(rec.ingredients)
+            rec.expensive.ingredients = table.deepcopy(rec.ingredients)
+            rec.ingredients = nil
+            --move result(s) aswell into diffs
+            if rec.result then
+                rec.normal.results =  {{type = "item", name = rec.result, amount = rec.result_count or 1}}
+                rec.expensive.results = {{type = "item", name = rec.result, amount = rec.result_count or 1}}
+                rec.result = nil
+                rec.result_count = nil
+            end
+            if rec.results then
+                rec.normal.results = table.deepcopy(rec.results)
+                rec.expensive.results = table.deepcopy(rec.results)
+                rec.results = nil
+            end
+        elseif rec.ingredients and norm then
             found = false
             --check if ingredient the ingredient is already used
             for i,ing in pairs(rec.ingredients) do
@@ -121,7 +147,7 @@ function omni.lib.add_recipe_ingredient(recipename, ingredient)
             end
         end
         --rec.normal.ingredients
-        if rec.normal and rec.normal.ingredients then
+        if norm and rec.normal and rec.normal.ingredients then
             found = false
             for i,ing in pairs(rec.normal.ingredients) do
                 --check if nametags exist (only check ing[i] when no name tags exist)
@@ -142,7 +168,7 @@ function omni.lib.add_recipe_ingredient(recipename, ingredient)
            end
         end
         --rec.expensive.ingredients
-        if rec.expensive and rec.expensive.ingredients then
+        if expens and rec.expensive and rec.expensive.ingredients then
             found = false
             for i,ing in pairs(rec.expensive.ingredients) do
                 --check if nametags exist (only check ing[i] when no name tags exist)
@@ -174,21 +200,29 @@ function omni.lib.add_recipe_result(recipename, result)
         local expens = {}
 	    if not result.name then
 	    	if type(result)=="string" then
-	    		norm = table.deepcopy({type="item",name=result,amount=1})
-	    		expens = table.deepcopy({type="item",name=result,amount=1})
-	    	elseif result.normal then
-	    		norm = table.deepcopy(result.normal)
-	    		expens = table.deepcopy(result.expensive)
+	    		norm = {type="item",name=result,amount=1}
+	    		expens = {type="item",name=result,amount=1}
+	    	elseif result.normal or result.expensive then
+                if result.normal then
+                    norm = {type=result.normal.type or "item",name=result.normal.name or result.normal[1], amount=result.normal.amount or result.normal[2] or 1}
+                else
+                    norm = nil
+                end
+                if result.expensive then
+                    expens = {type=result.expensive.type or "item",name=result.expensive.name or result.expensive[1], amount=result.expensive.amount or result.expensive[2] or 1}
+                else
+                    expens = nil
+                end
 	    	elseif result[1].name then
-	    		norm = table.deepcopy(result[1])
-	    		expens = table.deepcopy(result[2])
+	    		norm = result[1]
+	    		expens = result[2]
 	    	elseif type(result[1])=="string" then
-	    		norm = table.deepcopy({type="item",name=result[1],amount=result[2]})
-	    		expens = table.deepcopy({type="item",name=result[1],amount=result[2]})
+	    		norm = {type="item",name=result[1],amount=result[2]}
+	    		expens = {type="item",name=result[1],amount=result[2]}
     		end
 	    else
-	    	norm = table.deepcopy(result)
-	    	expens = table.deepcopy(result)
+	    	norm = result
+	    	expens = result
         end
         local found = false
         -- Single result checks
@@ -207,8 +241,19 @@ function omni.lib.add_recipe_result(recipename, result)
             rec.expensive.result = nil
             rec.expensive.result_count = nil
         end
-        --rec.results
-        if rec.results then
+        --rec.results --If only .normal needs to be modified, keep results, else copy into .normal/.expensive
+        if rec.results and norm ~= expens  then
+            rec.normal = {}
+            rec.expensive = {}
+            rec.normal.results = table.deepcopy(rec.results)
+            rec.expensive.results = table.deepcopy(rec.results)
+            rec.results = nil
+            if rec.ingredients then
+                rec.normal.results = table.deepcopy(rec.ingredients)
+                rec.expensive.results = table.deepcopy(rec.ingredients)
+                rec.ingredients = nil
+            end
+        elseif rec.results and norm then
             found = false
             for i,res in pairs(rec.results) do
                  --check if nametags exist (only check res[i] when no name tags exist)
@@ -229,7 +274,7 @@ function omni.lib.add_recipe_result(recipename, result)
             end
         end
         --rec.normal.results
-        if rec.normal and rec.normal.results then
+        if norm and rec.normal and rec.normal.results then
             found = false
             for i,res in pairs(rec.normal.results) do
                 --check if nametags exist (only check res[i] when no name tags exist)
@@ -250,7 +295,7 @@ function omni.lib.add_recipe_result(recipename, result)
            end
         end
         --rec.expensive.results
-        if rec.expensive and rec.expensive.results then
+        if expens and rec.expensive and rec.expensive.results then
             found = false
             for i,res in pairs(rec.expensive.results) do
                 --check if nametags exist (only check res[i] when no name tags exist)
@@ -368,71 +413,69 @@ function omni.lib.replace_recipe_result(recipename, result, replacement)
         if rec.expensive and rec.expensive.result and rec.expensive.result == result then
             rec.expensive.result = repname
         end
+
         --rec.results
-        if rec.results then
-            found = false
-            for i,res in pairs(rec.results) do
-                 --check if nametags exist (only check res[i] when no name tags exist)
-                if res.name then
-                    if res.name == result then
-                        res.name = repname
-                        res.amount = repamount or res.amount
-                        res.type = reptype or res.type
-                        break
-                    end
-                elseif res[1] and res[1] == result then
-                    res[1] = repname
-                    res[2] = repamount or res[2]
+        local ress = {}
+        if rec.results then ress[#ress+1] = rec.results end
+        if rec.normal and rec.normal.results then ress[#ress+1] = rec.normal.results end
+        if rec.expensive and rec.expensive.results then ress[#ress+1] = rec.expensive.results end
+
+        for _,diff in pairs(ress) do
+            local found = false
+            local num = 0
+            --create a new variable that gets reset to repamount for each diff
+            local amount = repamount
+            --check if the replacement is already an result
+            for i,res in pairs(diff) do
+                if (res.name or res[1]) == repname then        
+                    found = true
+                    num=i
+                    amount = (repamount or 1) + res.amount or res[2]
                     break
                 end
             end
-            if rec.main_product and rec.main_product == result then
-                rec.main_product = repname
+
+            for i,res in pairs(diff) do
+                --check if nametags exist (only check res[i] when no name tags exist)
+                if res.name and res.name == result then
+                    if found then
+                        if diff[num].amount then
+                            diff[num].amount = amount          
+                        else        
+                            diff[num][2] = repamount
+                        end
+                        diff[i] = nil
+                    else
+                        res.name = repname
+                        res.amount = repamount or res.amount
+                        res.type = reptype or res.type  
+                    end
+                    break
+                elseif not res.name and res[1] and res[1] == result then
+                    if found then
+                        if diff[num].amount then
+                            diff[num].amount = amount          
+                        else        
+                            diff[num][2] = repamount
+                        end
+                        diff[i] = nil
+                    else
+                        res[1] = repname
+                        res[2] = repamount or res[2]
+                    end
+                    break
+                end
             end
         end
-        --rec.normal.results
-        if rec.normal and rec.normal.results then
-            found = false
-            for i,res in pairs(rec.normal.results) do
-                --check if nametags exist (only check res[i] when no name tags exist)
-                if res.name then
-                    if res.name == result then
-                        res.name = repname
-                        res.amount = repamount or res.amount
-                        res.type = reptype or res.type
-                        break
-                    end
-                elseif res[1] and res[1] == result then
-                    res[1] = repname
-                    res[2] = repamount or res[2]
-                    break
-                end
-            end
-            if rec.normal.main_product and rec.normal.main_product == result then
-                rec.normal.main_product = repname
-            end
+        --Check if the main product was replaced
+        if rec.main_product and rec.main_product == result then
+            rec.main_product = repname
         end
-        --rec.expensive.results
-        if rec.expensive and rec.expensive.results then
-            found = false
-            for i,res in pairs(rec.expensive.results) do
-                --check if nametags exist (only check res[i] when no name tags exist)
-                if res.name then
-                    if res.name == result then
-                        res.name = repname
-                        res.amount = repamount or res.amount
-                        res.type = reptype or res.type
-                        break
-                    end
-                elseif res[1] and res[1] == result then
-                    res[1] = repname
-                    res[2] = repamount or res[2]
-                    break
-                end
-            end
-            if rec.expensive.main_product and rec.expensive.main_product == result then
-                rec.expensive.main_product = repname
-            end
+        if rec.normal and rec.normal.main_product and rec.normal.main_product == result then
+            rec.normal.main_product = repname
+        end
+        if rec.expensive and rec.expensive.main_product and rec.expensive.main_product == result then
+            rec.normexpensiveal.main_product = repname
         end
     end
 end
@@ -450,63 +493,59 @@ function omni.lib.replace_recipe_ingredient(recipename, ingredient, replacement)
         else
             repname = replacement
         end
-        --rec.ingredients
-        if rec.ingredients then
-            found = false
-            for i,ing in pairs(rec.ingredients) do
-                 --check if nametags exist (only check ing[i] when no name tags exist)
-                if ing.name then
-                    if ing.name == ingredient then
+
+        local ings = {}
+        if rec.ingredients then ings[#ings+1] = rec.ingredients end
+        if rec.normal and rec.normal.ingredients then ings[#ings+1] = rec.normal.ingredients end
+        if rec.expensive and rec.expensive.ingredients then ings[#ings+1] = rec.expensive.ingredients end
+
+        for _,diff in pairs(ings) do
+            local found = false
+            local num = 0
+            --create a new variable that gets reset to repamount for each diff
+            local amount = repamount
+            --check if the replacement is already an ingredient
+            for i,ing in pairs(diff) do
+                if (ing.name or ing[1]) == repname then        
+                    found = true
+                    num=i
+                    amount = (repamount or 1) + ing.amount or ing[2]
+                    break
+                end
+            end
+
+            for i,ing in pairs(diff) do
+                --check if nametags exist (only check ing[i] when no name tags exist)
+                if ing.name and ing.name == ingredient then
+                    if found then
+                        if diff[num].amount then
+                            diff[num].amount = amount          
+                        else        
+                            diff[num][2] = repamount
+                        end
+                        diff[i] = nil
+                    else
                         ing.name = repname
                         ing.amount = repamount or ing.amount
-                        ing.type = reptype or ing.type
-                        break
+                        ing.type = reptype or ing.type  
                     end
-                elseif ing[1] and ing[1] == ingredient then
-                    ing[1] = repname
-                    ing[2] = repamount or ing[2]
+                    break
+                elseif not ing.name and ing[1] and ing[1] == ingredient then
+                    if found then
+                        if diff[num].amount then
+                            diff[num].amount = amount          
+                        else        
+                            diff[num][2] = repamount
+                        end
+                        diff[i] = nil
+                    else
+                        ing[1] = repname
+                        ing[2] = repamount or ing[2]
+                    end
                     break
                 end
             end
         end
-        --rec.normal.ingredients
-        if rec.normal and rec.normal.ingredients then
-            found = false
-            for i,ing in pairs(rec.normal.ingredients) do
-                --check if nametags exist (only check ing[i] when no name tags exist)
-                if ing.name then
-                    if ing.name == ingredient then
-                        ing.name = repname
-                        ing.amount = repamount or ing.amount
-                        ing.type = reptype or ing.type
-                        break
-                    end
-                elseif ing[1] and ing[1] == ingredient then
-                    ing[1] = repname
-                    ing[2] = repamount or ing[2]
-                    break
-                end
-           end
-        end
-        --rec.expensive.ingredients
-        if rec.expensive and rec.expensive.ingredients then
-            found = false
-            for i,ing in pairs(rec.expensive.ingredients) do
-                --check if nametags exist (only check ing[i] when no name tags exist)
-                if ing.name then
-                    if ing.name == ingredient then
-                        ing.name = repname
-                        ing.amount = repamount or ing.amount
-                        ing.type = reptype or ing.type
-                        break
-                    end
-                elseif ing[1] and ing[1] == ingredient then
-                    ing[1] = repname
-                    ing[2] = repamount or ing[2]
-                    break
-                end
-           end
-        end   
 	end
 end
 

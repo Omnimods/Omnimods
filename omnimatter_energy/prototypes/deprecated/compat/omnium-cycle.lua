@@ -66,7 +66,7 @@ RecGen:create("omnimatter_energy","oxyomnide-hydromnization"):
 	setTechIcon("omnimatter_energy","omnium-power"):
 	setTechPrereq(
 		"omnicells",
-		"crystallonics-2"):
+		"omnitech-crystallonics-2"):
 	addCondPrereq(
 		"boblogistics",
 		"fluid-handling",":"
@@ -88,13 +88,13 @@ for _,salt in pairs(salts) do
 	local tech_found = false
 	local level = 0
 	for i=1,4 do
-		for _,eff in pairs(data.raw.technology["crystallology-"..i].effects) do
+		for _,eff in pairs(data.raw.technology["omnitech-crystallology-"..i].effects) do
 			if eff.type == "unlock-recipe" and not string.find(eff.recipe,"hydronmization") then
 				omni.marathon.standardise(data.raw.recipe[eff.recipe])
 				local recipe = data.raw.recipe[eff.recipe]
 				if #recipe.normal.results == 1 and recipe.normal.results[1].name == salt then
 					level = i
-					--omni.lib.add_unlock_recipe("crystallology-"..i,salt.."-hydronmization")
+					--omni.lib.add_unlock_recipe("omnitech-crystallology-"..i,salt.."-hydronmization")
 					tech_found=true
 					break
 				end
@@ -104,7 +104,7 @@ for _,salt in pairs(salts) do
 	end
 	RecGen:create("omnimatter_energy",salt.."-hydronmization"):
 	setItemName("hydromnide-salt"):
-	setTechName("crystallology-"..level):
+	setTechName("omnitech-crystallology-"..level):
 	setCategory("omniplant"):
 	setIngredients(salt,{type="fluid",name="hydromnic-acid",amount=60}):
 	setResults({type = "item", name = "hydromnide-salt", amount=3},
