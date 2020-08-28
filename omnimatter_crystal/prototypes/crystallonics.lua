@@ -18,6 +18,61 @@ RecGen:create("omnimatter_crystal","hydromnic-acid"):
 	setResults({type = "fluid", name = "hydromnic-acid", amount = 500}):extend()
 
 
+	-- Burner Omniplant
+	--SETTING VANILLA INGREDIENTS FIRST
+	local pipe="pipe"
+	local electronic="electronic-circuit"
+	if mods["boblogistics"] then pipe="copper-pipe" end
+	if mods["bobelectronics"] then electronic="basic-circuit-board" end
+
+    local burner_ings = {}
+	if mods["angelsindustries"] and angelsmods.industries.components then
+		burner_ings = {
+		{name="block-construction-1", amount=5},
+		{name="block-electronics-0", amount=3},
+		{name="block-fluidbox-1", amount=5},
+		{name="block-omni-0", amount=5}
+		}
+	else
+		burner_ings = {{pipe,15},{"omnicium-plate",5},{electronic,5},{"omnite-brick",10},{"iron-gear-wheel",10}}
+	end
+
+	BuildGen:create("omnimatter_crystal","omniplant"):
+	setBurner(0.75,2):
+	setSubgroup("omniplant"):
+	setIngredients(burner_ings):
+	setEnergy(5):
+	setUsage(function(level,grade) return "750kW" end):
+	--setTechName("omnitractor-electric-1"): --Done in final-fixes for now
+	setReplace("omniplant"):
+	setNextUpgrade("omniplant-1"):
+	setStacksize(20):
+	setSize(5):
+	setCrafting({"omniplant"}):
+	setSpeed(1):
+	setSoundWorking("oil-refinery",1,"base"):
+	setSoundVolume(2):
+	setAnimation({
+	layers={
+	{
+        filename = "__omnimatter_crystal__/graphics/buildings/omni-plant.png",
+		priority = "extra-high",
+        width = 224,
+        height = 224,
+        frame_count = 36,
+		line_length = 6,
+        shift = {0.00, -0.05},
+		scale = 1,
+		animation_speed = 0.5
+	},
+	}
+	}):
+	setOverlay("omni-plant-overlay"):
+	setFluidBox("XWXWX.XXXXX.XXXXX.XXXXX.XKXKX"):
+	setEnabled(false):
+	extend()
+
+
 local dif = 1
 if not mods["bobelectronics"] then dif=0 end
 
@@ -53,7 +108,6 @@ end
 BuildChain:create("omnimatter_crystal","omniplant"):
 	setSubgroup("omniplant"):
 	setLocName("omniplant"):
-	setIcons("omniplant","omnimatter_crystal"):
 	setIngredients(cost_plant:ingredients()):
 	setEnergy(5):
 	setUsage(function(level,grade) return (200+50*grade).."kW" end):
@@ -79,59 +133,6 @@ BuildChain:create("omnimatter_crystal","omniplant"):
 	setSoundWorking("oil-refinery",1,"base"):
 	setSoundVolume(2):
 	allowProductivity():
-	setAnimation({
-	layers={
-	{
-        filename = "__omnimatter_crystal__/graphics/buildings/omni-plant.png",
-		priority = "extra-high",
-        width = 224,
-        height = 224,
-        frame_count = 36,
-		line_length = 6,
-        shift = {0.00, -0.05},
-		scale = 1,
-		animation_speed = 0.5
-	},
-	}
-	}):
-	setOverlay("omni-plant-overlay"):
-	setFluidBox("XWXWX.XXXXX.XXXXX.XXXXX.XKXKX"):
-	extend()
-
-	-- Burner Omniplant
-	--SETTING VANILLA INGREDIENTS FIRST
-	local pipe="pipe"
-	local electronic="electronic-circuit"
-	if mods["boblogistics"] then pipe="copper-pipe" end
-	if mods["bobelectronics"] then electronic="basic-circuit-board" end
-
-    local burner_ings = {}
-	if mods["angelsindustries"] and angelsmods.industries.components then
-		burner_ings = {
-		{name="block-construction-1", amount=5},
-		{name="block-electronics-0", amount=3},
-		{name="block-fluidbox-1", amount=5},
-		{name="block-omni-0", amount=5}
-		}
-	else
-		burner_ings = {{pipe,15},{"omnicium-plate",5},{electronic,5},{"omnite-brick",10},{"iron-gear-wheel",10}}
-	end
-	BuildGen:create("omnimatter_crystal","omniplant"):
-	setBurner(0.75,2):
-	setSubgroup("omniplant"):
-	setIcons("omniplant","omnimatter_crystal"):
-	setIngredients(burner_ings):
-	setEnergy(5):
-	setUsage(function(level,grade) return "750kW" end):
-	--setTechName("omnitractor-electric-1"): --Done in final-fixes for now
-	setReplace("omniplant"):
-	setNextUpgrade("omniplant-1"):
-	setStacksize(20):
-	setSize(5):
-	setCrafting({"omniplant"}):
-	setSpeed(1):
-	setSoundWorking("oil-refinery",1,"base"):
-	setSoundVolume(2):
 	setAnimation({
 	layers={
 	{

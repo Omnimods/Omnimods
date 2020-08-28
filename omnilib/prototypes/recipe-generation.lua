@@ -1935,7 +1935,8 @@ function RecGen:generate_recipe()
 			setLocName(self.tech.loc_name(0,0)):
 			return_array()[1]
 		else
-			omni.lib.add_unlock_recipe(tname, self.name)
+			--Force recipe unlock since the recipe is not generated yet
+			omni.lib.add_unlock_recipe(tname, self.name, true)
 		end
 	end
 	if self.category(0,0) and not data.raw["recipe-category"][self.category(0,0)] then

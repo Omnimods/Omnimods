@@ -211,7 +211,8 @@ if angelsmods and angelsmods.refining then
 					elseif find_type(recipe,"pure") or (blended_ore=="true" and string.find(recipe.name,"crystal")) then tier= 4
 					else tier = 4 --if something goes horribly wrong...
 					end
-					omni.lib.add_unlock_recipe("crystallology-"..tier, metal.."-salting")
+					-- Force unlock recipe since data:extend() is called later
+					omni.lib.add_unlock_recipe("crystallology-"..tier, metal.."-salting", true)
 					--check and set unlock tier
 					for i,ore in pairs(results) do
 						if not processed[ore.name] then processed[ore.name]=tier end
