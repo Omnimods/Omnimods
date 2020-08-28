@@ -49,7 +49,7 @@ if mods["omnimatter_crystal"] then
 	end
 
 	if mods["omnimatter_wood"] then 
-		omni.lib.replace_science_pack("omnimutator-2","chemical-science-pack")
+		omni.lib.replace_science_pack("omnitech-omnimutator-2","chemical-science-pack")
 	end
 
 	if mods["omnimatter_compression"] then

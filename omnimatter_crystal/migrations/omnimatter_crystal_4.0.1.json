@@ -1,14 +1,14 @@
 {
   "technology":
   [
-    ["crystallogy-1", "omnitech-crystallogy-1"],
-    ["crystallogy-2", "omnitech-crystallogy-2"],
-    ["crystallogy-3", "omnitech-crystallogy-3"],
-    ["crystallogy-4", "omnitech-crystallogy-4"],
-    ["crystallogy-5", "omnitech-crystallogy-5"],
-    ["crystallogy-6", "omnitech-crystallogy-6"],
-    ["crystallogy-7", "omnitech-crystallogy-7"],
-    ["crystallogy-8", "omnitech-crystallogy-8"],
+    ["crystallology-1", "omnitech-crystallology-1"],
+    ["crystallology-2", "omnitech-crystallology-2"],
+    ["crystallology-3", "omnitech-crystallology-3"],
+    ["crystallology-4", "omnitech-crystallology-4"],
+    ["crystallology-5", "omnitech-crystallology-5"],
+    ["crystallology-6", "omnitech-crystallology-6"],
+    ["crystallology-7", "omnitech-crystallology-7"],
+    ["crystallology-8", "omnitech-crystallology-8"],
 
     ["crystallonics-1", "omnitech-crystallonics-1"],
     ["crystallonics-2", "omnitech-crystallonics-2"],

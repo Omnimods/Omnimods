@@ -2,10 +2,10 @@
 
 if mods["bobgreenhouse"] then
 	omni.lib.remove_recipe_all_techs("bob-seedling")
-	omni.lib.add_prerequisite("bob-greenhouse","omnimutator")
+	omni.lib.add_prerequisite("bob-greenhouse","omnitech-omnimutator")
 	omni.lib.remove_recipe_all_techs("basic-wood-mutation")
 	omni.lib.remove_recipe_all_techs("improved-wood-mutation")
-	--omni.lib.add_unlock_recipe("omnimutator","omniseedling")
+	--omni.lib.add_unlock_recipe("omnitech-omnimutator","omniseedling")
 	--omni.lib.replace_recipe_all_techs("bob-basic-greenhouse-cycle","basic-omniwood-growth")
 	--omni.lib.replace_recipe_all_techs("bob-advanced-greenhouse-cycle","fertilized-omniwood-growth")
 	omni.lib.remove_recipe_all_techs("bob-basic-greenhouse-cycle")

@@ -5,8 +5,8 @@ if mods["angelsindustries"] and settings.startup["angels-enable-tech"].value the
   --replace starting tech requirements to needing grey (not red)
   for _,tech_name in pairs({
     -- Omniwood
-    "omnialgae",
-    "omnimutator",
+    "omnitech-omnialgae",
+    "omnitech-omnimutator",
     --omnimatter
     "omnitech-base-impure-extraction",
     "omnitech-omnitractor-electric-1",

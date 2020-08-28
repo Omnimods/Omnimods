@@ -18,10 +18,6 @@ function omni.lib.add_unlock_recipe(tech, recipe,force)
 		end	
 	else
 		--log("cannot add recipe to "..tech.." as it doesn't exist")
-		if not data.raw.recipe[recipe] then
-		--log("add_unlock_recipe: Recipe \"" .. recipe .. "\" does not exist\n" .. debug.traceback())
-		end
-        return
 	end
 end
 
