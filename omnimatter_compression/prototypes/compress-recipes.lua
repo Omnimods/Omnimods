@@ -854,25 +854,36 @@ end
 local module_limits = function()
   local max_module_speed = 0
   local max_module_prod = 0
-  for _,modul in pairs(data.raw.module) do
-    if modul.effect.speed and modul.effect.speed.bonus > max_module_speed then max_module_speed=modul.effect.speed.bonus end
-    if modul.effect.productivity and modul.effect.productivity.bonus > max_module_prod then max_module_prod=modul.effect.productivity.bonus end
+  for _, modul in pairs(data.raw.module) do
+      if modul.effect.speed and modul.effect.speed.bonus > max_module_speed then
+          max_module_speed = modul.effect.speed.bonus
+      end
+      if modul.effect.productivity and modul.effect.productivity.bonus > max_module_prod then
+          max_module_prod = modul.effect.productivity.bonus
+      end
   end
 
   --Transfer category set modules
   local max_cat = {}
-  local building_list = {"assembling-machine","furnace"}
-  for _,cat in pairs(data.raw["recipe-category"]) do
-    max_cat[cat.name] = {speed = 0,modules = 0}
-    for _,bcat in pairs(building_list) do
-      for _,build in pairs(data.raw[bcat]) do
-        if omni.lib.is_in_table(cat.name,build.crafting_categories) then
-          if build.crafting_speed and build.crafting_speed > tonumber(max_cat[cat.name].speed) then max_cat[cat.name].speed = build.crafting_speed end
-          if build.module_specification and build.module_specification.module_slots and build.module_specification.module_slots > tonumber(max_cat[cat.name].modules) then max_cat[cat.name].modules=build.module_specification.module_slots end
-          --new.module_specification.module_slots
-        end
+  local building_list = {"assembling-machine", "furnace"}
+  for _, cat in pairs(data.raw["recipe-category"]) do
+      max_cat[cat.name] = {speed = 0, modules = 0}
+      for _, bcat in pairs(building_list) do
+          for _, build in pairs(data.raw[bcat]) do
+              if omni.lib.is_in_table(cat.name, build.crafting_categories) then
+                  if build.crafting_speed and build.crafting_speed > tonumber(max_cat[cat.name].speed) then
+                      max_cat[cat.name].speed = build.crafting_speed
+                  end
+                  if
+                      build.module_specification and build.module_specification.module_slots and
+                          build.module_specification.module_slots > tonumber(max_cat[cat.name].modules)
+                   then
+                      max_cat[cat.name].modules = build.module_specification.module_slots
+                  end
+              --new.module_specification.module_slots
+              end
+          end
       end
-    end
   end
 end
 -------------------------------------------------------------------------------
