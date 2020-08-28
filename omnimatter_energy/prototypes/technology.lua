@@ -11,13 +11,13 @@ data:extend({
     { 
         type = "technology",
         name = "omnitech-omnium-power-1",
-        localised_name = {"technology-name.omnium-power-1"},
-        localised_description = {"technology-description.omnium-power-1"},
+        localised_name = {"technology-name.omnitech-omnium-power-1"},
+        localised_description = {"technology-description.omnitech-omnium-power-1"},
         icon = "__omnimatter_energy__/graphics/technology/omnium-power.png",
         icon_size = 128,
         prerequisites =
         {
-            "steam-power",
+            "omnitech-steam-power",
         },
         effects =
         {
@@ -33,8 +33,8 @@ data:extend({
     { 
         type = "technology",
         name = "omnitech-omnium-power-2",
-        localised_name = {"technology-name.omnium-power-2"},
-        localised_description = {"technology-description.omnium-power-2"},
+        localised_name = {"technology-name.omnitech-omnium-power-2"},
+        localised_description = {"technology-description.omnitech-omnium-power-2"},
         icon = "__omnimatter_energy__/graphics/technology/omnium-power.png",
         icon_size = 128,
         prerequisites =
@@ -55,8 +55,8 @@ data:extend({
     { 
         type = "technology",
         name = "omnitech-omnium-power-3",
-        localised_name = {"technology-name.omnium-power-3"},
-        localised_description = {"technology-description.omnium-power-3"},
+        localised_name = {"technology-name.omnitech-omnium-power-3"},
+        localised_description = {"technology-description.omnitech-omnium-power-3"},
         icon = "__omnimatter_energy__/graphics/technology/omnium-power.png",
         icon_size = 128,
         prerequisites =
@@ -77,8 +77,8 @@ data:extend({
     { 
         type = "technology",
         name = "omnitech-omnium-power-4",
-        localised_name = {"technology-name.omnium-power-4"},
-        localised_description = {"technology-description.omnium-power-4"},
+        localised_name = {"technology-name.omnitech-omnium-power-4"},
+        localised_description = {"technology-description.omnitech-omnium-power-4"},
         icon = "__omnimatter_energy__/graphics/technology/omnium-power.png",
         icon_size = 128,
         prerequisites =
@@ -99,8 +99,8 @@ data:extend({
     { 
         type = "technology",
         name = "omnitech-omnium-power-5",
-        localised_name = {"technology-name.omnium-power-5"},
-        localised_description = {"technology-description.omnium-power-5"},
+        localised_name = {"technology-name.omnitech-omnium-power-5"},
+        localised_description = {"technology-description.omnitech-omnium-power-5"},
         icon = "__omnimatter_energy__/graphics/technology/omnium-power.png",
         icon_size = 128,
         prerequisites =
@@ -121,7 +121,7 @@ data:extend({
     { 
       type = "technology",
       name = "omnitech-omni-solar-road",
-      localised_name = {"technology-name.omni-solar-road"},
+      localised_name = {"technology-name.omnitech-omni-solar-road"},
       icon = "__omnimatter_energy__/graphics/technology/omni-solar-road.png",
       icon_size = 128,
       prerequisites =

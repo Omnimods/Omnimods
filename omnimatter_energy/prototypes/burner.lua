@@ -7,11 +7,11 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
 	--Create seperate techs for Basic Belt, Splitter and UG
 	RecGen:import("basic-transport-belt"):
 		setEnabled(false):
-		setTechName("basic-belt-logistics"):
+		setTechName("omnitech-basic-belt-logistics"):
 		setTechIcon("base","logistics"):
 		setTechPrereq():
 		ifAddTechPrereq(data.raw.technology["basic-automation"], "basic-automation"):
-		ifAddTechPrereq(not data.raw.technology["basic-automation"], "simple-automation"):
+		ifAddTechPrereq(not data.raw.technology["basic-automation"], "omnitech-simple-automation"):
 		setTechPacks(1):
 		setTechCost(25):
 		setIngredients(
@@ -21,29 +21,29 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
 	
 	RecGen:import("basic-splitter"):
 		setEnabled(false):
-		setTechName("basic-splitter-logistics"):
+		setTechName("omnitech-basic-splitter-logistics"):
 		setTechIcon("base","logistics"):
-		setTechPrereq("basic-belt-logistics"):
+		setTechPrereq("omnitech-basic-belt-logistics"):
 		setTechPacks(1):
 		setTechCost(25):extend()
 
 	RecGen:import("basic-underground-belt"):
 		setEnabled(false):
-		setTechName("basic-underground-logistics"):
+		setTechName("omnitech-basic-underground-logistics"):
 		setTechIcon("base","logistics"):
-		setTechPrereq("basic-belt-logistics"):
+		setTechPrereq("omnitech-basic-belt-logistics"):
 	 	setTechPacks(1):
 		setTechCost(25):extend()
 
 	--Add new Techs as Prereq for vanilla logistics
-	TechGen:import("logistics"):setPrereq("basic-splitter-logistics","basic-underground-logistics"):extend()
+	TechGen:import("logistics"):setPrereq("omnitech-basic-splitter-logistics","omnitech-basic-underground-logistics"):extend()
 
 	--Move all Techs that have logistics-0 as Prereq behind Basic Splitter & UG Techs
 	for _,t in pairs(data.raw.technology) do
 		if omni.lib.is_in_table("logistics-0",t.prerequisites) then
 			omni.lib.remove_prerequisite(t.name,"logistics-0")
-			omni.lib.add_prerequisite(t.name,"basic-splitter-logistics")
-			omni.lib.add_prerequisite(t.name,"basic-underground-logistics")
+			omni.lib.add_prerequisite(t.name,"omnitech-basic-splitter-logistics")
+			omni.lib.add_prerequisite(t.name,"omnitech-basic-underground-logistics")
 		end
 	end
 
@@ -54,11 +54,11 @@ else
 	--Create seperate techs for Belt, Splitter and UG
 	RecGen:import("transport-belt"):
 		setEnabled(false):
-		setTechName("belt-logistics"):
+		setTechName("omnitech-belt-logistics"):
 		setTechIcon("base","logistics"):
 		setTechPrereq():
 		ifAddTechPrereq(data.raw.technology["basic-automation"], "basic-automation"):
-		ifAddTechPrereq(not data.raw.technology["basic-automation"], "simple-automation"):
+		ifAddTechPrereq(not data.raw.technology["basic-automation"], "omnitech-simple-automation"):
 		setTechPacks(1):
 		setTechCost(25):
 		setIngredients(
@@ -67,17 +67,17 @@ else
 	
 	RecGen:import("splitter"):
 		setEnabled(false):
-		setTechName("splitter-logistics"):
+		setTechName("omnitech-splitter-logistics"):
 		setTechIcon("base","logistics"):
-		setTechPrereq("belt-logistics"):
+		setTechPrereq("omnitech-belt-logistics"):
 		setTechPacks(1):
 		setTechCost(25):extend()
 
 	RecGen:import("underground-belt"):
 		setEnabled(false):
-		setTechName("underground-logistics"):
+		setTechName("omnitech-underground-logistics"):
 		setTechIcon("base","logistics"):
-		setTechPrereq("belt-logistics"):
+		setTechPrereq("omnitech-belt-logistics"):
 		setTechPacks(1):
 		setTechCost(25):extend()
 
@@ -85,8 +85,8 @@ else
 	for _,t in pairs(data.raw.technology) do
 		if omni.lib.is_in_table("logistics",t.prerequisites) then
 			omni.lib.remove_prerequisite(t.name,"logistics")
-			omni.lib.add_prerequisite(t.name,"splitter-logistics")
-			omni.lib.add_prerequisite(t.name,"underground-logistics")
+			omni.lib.add_prerequisite(t.name,"omnitech-splitter-logistics")
+			omni.lib.add_prerequisite(t.name,"omnitech-underground-logistics")
 		end
 	end	
 
@@ -124,15 +124,15 @@ RecGen:create("omnimatter_energy","heat"):
 	setMaxTemp(250):
 	setFuelCategory("thermo"):
 	setCapacity(1):
-	setTechName("anbaricity"):
+	setTechName("omnitech-anbaricity"):
 	setTechCost(40):
 	setTechIcon("base","electric-engine"):
 	setTechPrereq():
 	ifAddTechPrereq(settings.startup["bobmods-logistics-beltoverhaul"] and settings.startup["bobmods-logistics-beltoverhaul"].value,
-	"basic-splitter-logistics","basic-underground-logistics"
+	"omnitech-basic-splitter-logistics","omnitech-basic-underground-logistics"
 	):
 	ifAddTechPrereq(not (settings.startup["bobmods-logistics-beltoverhaul"] and settings.startup["bobmods-logistics-beltoverhaul"].value),
-	"splitter-logistics","underground-logistics"
+	"omnitech-splitter-logistics","omnitech-underground-logistics"
 	):
 	setTechPacks(1):	
 	setResults({type="fluid",name="heat",amount=2*60+1,temperature=250}):
@@ -159,7 +159,7 @@ BuildGen:import("steam-turbine"):
 	setReplace("heat-burner"):
 	setSubgroup("omnienergy-power"):
 	setOrder("aa"):
-	setTechName("anbaricity"):
+	setTechName("omnitech-anbaricity"):
 	setFluidConsumption(1):
 	setEffectivity(2/13.5/2):
 	setMaxTemp(250):
@@ -183,7 +183,7 @@ RecGen:create("omnimatter_energy","anbaric-omnitor"):
 	setSubgroup("omnienergy-intermediates"):
 	setOrder("b"):
 	setEnergy(0.75):
-	setTechName("anbaricity"):
+	setTechName("omnitech-anbaricity"):
 	setIngredients({type="item", name="omnicium-plate", amount=2},{type="item", name="copper-cable", amount=2},{type="item", name="omnitor", amount=1}):
 	addProductivity():extend()
 	
@@ -194,7 +194,7 @@ if mods["angelsindustries"] and angelsmods.industries.components then
 	omni.lib.replace_recipe_ingredient("block-omni-1",component["omniplate"][1],"anbaric-omnitor")
 end
 
-RecGen:import("small-electric-pole"):setEnabled(false):setTechName("anbaricity"):extend()
+RecGen:import("small-electric-pole"):setEnabled(false):setTechName("omnitech-anbaricity"):extend()
 
 BuildGen:import("small-electric-pole"):
 	setName("small-iron-electric-pole"):
@@ -208,7 +208,7 @@ BuildGen:import("small-electric-pole"):
       shift = {1.4, -1.1}
 	}):
 	setEnabled(false):
-	setTechName("anbaricity"):extend()
+	setTechName("omnitech-anbaricity"):extend()
 	
 BuildGen:import("small-electric-pole"):
 	setName("small-omnicium-electric-pole"):
@@ -224,7 +224,7 @@ BuildGen:import("small-electric-pole"):
       shift = {1.4, -1.1}
 	}):
 	setEnabled(false):
-	setTechName("anbaricity"):extend()
+	setTechName("omnitech-anbaricity"):extend()
 
 	--Temp sound fix until lib is fixed
 	data.raw["electric-pole"]["small-iron-electric-pole"].working_sound = nil
@@ -242,7 +242,7 @@ BuildGen:import("assembling-machine-1"):
 	setName("omnitor-assembling-machine"):
 	setIcons("omnitor-assembling-machine","omnimatter_energy"):
 	setEnabled(false):
-	setTechName("simple-automation"):
+	setTechName("omnitech-simple-automation"):
 	setTechIcon("base","automation"):
 	setTechPrereq():
 	setTechPacks(1):
@@ -431,13 +431,13 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter-1"):
 	setNextUpgrade("burner-filter-inserter-2"):
 	setSubgroup("inserter"):
 	setOrder("ab[burner-filter-inserter-1]"):
-	setTechName("burner-filter-1"):
-	setTechLocName("burner-filter-1"):
+	setTechName("omnitech-burner-filter-1"):
+	setTechLocName("omnitech-burner-filter-1"):
 	setTechIcon("burner-filter"):
 	setTechPacks(1):
 	setTechCost(50):
-	ifAddTechPrereq(data.raw.technology["basic-belt-logistics"], "basic-belt-logistics"):
-	ifAddTechPrereq(data.raw.technology["belt-logistics"], "belt-logistics"):extend()
+	ifAddTechPrereq(data.raw.technology["omnitech-basic-belt-logistics"], "omnitech-basic-belt-logistics"):
+	ifAddTechPrereq(data.raw.technology["omnitech-belt-logistics"], "omnitech-belt-logistics"):extend()
 
 --Create a second tier filter and normal burner inserter that accepts omnified fuel
 InsertGen:create("omnimatter_energy","burner-filter-inserter-2"):
@@ -453,12 +453,12 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter-2"):
 	setNextUpgrade("filter-inserter"):
 	setSubgroup("inserter"):
 	setOrder("ab[burner-filter-inserter-2]"):
-	setTechName("burner-filter-2"):
-	setTechLocName("burner-filter-2"):
+	setTechName("omnitech-burner-filter-2"):
+	setTechLocName("omnitech-burner-filter-2"):
 	setTechPacks(1):
 	setTechCost(50):
 	setTechIcon("burner-filter"):
-	setTechPrereq("burner-filter-1"):extend()
+	setTechPrereq("omnitech-burner-filter-1"):extend()
 
 InsertGen:create("omnimatter_energy","burner-inserter-2"):
 	setIngredients({"burner-inserter",1},{"omnicium-plate",2}):
@@ -472,7 +472,7 @@ InsertGen:create("omnimatter_energy","burner-inserter-2"):
 	setNextUpgrade("inserter"):
 	setSubgroup("inserter"):
 	setOrder("aa[burner-inserter-2]"):
-	setTechName("burner-filter-2"):extend()
+	setTechName("omnitech-burner-filter-2"):extend()
 
 RecGen:import("burner-inserter"):
 	addBurnerIcon():

@@ -15,12 +15,12 @@ if mods["bobtech"] and settings.startup["bobmods-burnerphase"].value then
     omni.lib.remove_recipe_ingredient("lab", "burner-lab")
 
     -- Remove steam engine from steam power technology
-    omni.lib.remove_unlock_recipe("steam-power","steam-engine")
+    omni.lib.remove_unlock_recipe("omnitech-steam-power","steam-engine")
 
     -- Add anbarcity to pre-requisites
-    omni.lib.add_prerequisite("steam-power", "anbaricity")
-    omni.lib.add_prerequisite("electricity", "anbaricity")
-    data.raw.technology["anbaric-lab"].hidden=true --i hope this works
+    omni.lib.add_prerequisite("omnitech-steam-power", "omnitech-anbaricity")
+    omni.lib.add_prerequisite("electricity", "omnitech-anbaricity")
+    data.raw.technology["omnitech-anbaric-lab"].hidden=true --i hope this works
 
     -- Remove duplicate recipe unlocks
     omni.lib.remove_unlock_recipe("electricity","small-electric-pole")
@@ -38,12 +38,12 @@ if mods["bobtech"] and settings.startup["bobmods-burnerphase"].value then
     end
 
     omni.lib.add_prerequisite("automation-science-pack", "electricity")
-    omni.lib.add_prerequisite("automation-science-pack", "steam-power")
+    omni.lib.add_prerequisite("automation-science-pack", "omnitech-steam-power")
 
     --change technologies to be steam pack in place of red packs
     omni.lib.replace_science_pack("omnitech-base-impure-extraction","automation-science-pack", "steam-science-pack")
-    omni.lib.replace_science_pack("anbaricity","automation-science-pack", "steam-science-pack")
-    omni.lib.replace_science_pack("simple-automation","automation-science-pack", "steam-science-pack")
+    omni.lib.replace_science_pack("omnitech-anbaricity","automation-science-pack", "steam-science-pack")
+    omni.lib.replace_science_pack("omnitech-simple-automation","automation-science-pack", "steam-science-pack")
 
     if mods["bobassembly"] and settings.startup["bobmods-assembly-burner"].value then
         omni.lib.remove_prerequisite("steam-automation","basic-automation")
@@ -51,13 +51,13 @@ if mods["bobtech"] and settings.startup["bobmods-burnerphase"].value then
         data.raw.technology["steam-automation"].unit.count = 65
     end
 
-    data.raw.technology["steam-power"].unit.count = 60
+    data.raw.technology["omnitech-steam-power"].unit.count = 60
     data.raw.technology["automation-science-pack"].unit.count = 75
 
     if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].value then
-        omni.lib.replace_science_pack("basic-belt-logistics","automation-science-pack", "steam-science-pack")
-        omni.lib.replace_science_pack("basic-underground-logistics","automation-science-pack", "steam-science-pack")
-        omni.lib.replace_science_pack("basic-splitter-logistics","automation-science-pack", "steam-science-pack")
+        omni.lib.replace_science_pack("omnitech-basic-belt-logistics","automation-science-pack", "steam-science-pack")
+        omni.lib.replace_science_pack("omnitech-basic-underground-logistics","automation-science-pack", "steam-science-pack")
+        omni.lib.replace_science_pack("omnitech-basic-splitter-logistics","automation-science-pack", "steam-science-pack")
     end
     if data.raw.technology["bob-steam-engine-1"] then
        omni.lib.replace_science_pack("bob-steam-engine-1", "steam-science-pack","automation-science-pack")
