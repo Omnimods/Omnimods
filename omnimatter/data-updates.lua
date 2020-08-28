@@ -26,8 +26,9 @@ if mods["Yuoki"] then
 	omni.add_resource("y-res2",3)
 end
 if mods["pycoalprocessing"] then
-	-- Green
+	-- Red
 	omni.add_resource("raw-borax", 1)
+	-- Green
 	omni.add_resource("niobium-ore", 2)	
 end
 if mods["pyfusionenergy"] then
