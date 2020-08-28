@@ -9,7 +9,7 @@ if mods["angelsindustries"] and settings.startup["angels-enable-tech"].value the
     "omnimutator",
     --omnimatter
     "base-impure-extraction",
-    "omnitractor-electric-1",
+    "omnitech-omnitractor-electric-1",
     "omnitech-omnic-acid-hydrolyzation-1",
     "omnitech-omnisolvent-omnisludge-1",
     "omnitech-focused-extraction-angels-ore3-2",

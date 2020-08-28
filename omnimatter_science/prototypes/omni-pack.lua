@@ -19,7 +19,7 @@ if mods["omnimatter_crystal"] then
 		setTechCost(150):
 		setTechIcon("omnipack-tech"):
 		setTechPacks(2):
-		setTechPrereq("omnitractor-electric-2"):
+		setTechPrereq("omnitech-omnitractor-electric-2"):
 		setTechTime(20):
 		extend()
 

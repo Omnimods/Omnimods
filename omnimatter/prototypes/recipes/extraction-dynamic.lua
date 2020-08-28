@@ -9,7 +9,7 @@ end
 local reqpure = function(tier,level,item)
 	local req = {}
 	if level%omni.pure_levels_per_tier==1 or omni.pure_levels_per_tier==1 then
-		req[#req+1]="omnitractor-electric-"..(level-1)/omni.pure_levels_per_tier+tier
+		req[#req+1]="omnitech-omnitractor-electric-"..(level-1)/omni.pure_levels_per_tier+tier
 		if level > 1 and omni.pure_dependency < omni.pure_levels_per_tier then
 			req[#req+1]="omnitech-extraction-"..item.."-"..(level-1)
 		end
@@ -322,7 +322,7 @@ for _,ore_tiers in pairs(omnisource) do
 			setTechLocName("base-omnitraction")
 		else
 			base_impure_ore:setCategory("omnite-extraction"):
-			setTechName("omnitractor-electric-"..(t-1))
+			setTechName("omnitech-omnitractor-electric-"..(t-1))
 		end
 		base_impure_ore:setResults(split):marathon()
 		base_impure_ore:extend()
@@ -367,7 +367,7 @@ for _,ore_tiers in pairs(omnisource) do
 				if i==1 and t==1 then
 					focused_ore:setTechPrereq("base-impure-extraction")
 				elseif i == 1 then
-					focused_ore:setTechPrereq("omnitractor-electric-"..t-1)
+					focused_ore:setTechPrereq("omnitech-omnitractor-electric-"..t-1)
 				else
 					focused_ore:setTechPrereq("omnitech-focused-extraction-"..ore.name.."-"..(i-1))
 				end

@@ -43,7 +43,7 @@ RecGen:create("omnimatter_crystal","hydromnic-acid"):
 	setIngredients(burner_ings):
 	setEnergy(5):
 	setUsage(function(level,grade) return "750kW" end):
-	--setTechName("omnitractor-electric-1"): --Done in final-fixes for now
+	--setTechName("omnitech-omnitractor-electric-1"): --Done in final-fixes for now
 	setReplace("omniplant"):
 	setNextUpgrade("omniplant-1"):
 	setStacksize(20):
@@ -119,7 +119,7 @@ BuildChain:create("omnimatter_crystal","omniplant"):
 	setTechPacks(function(levels,grade) return grade end):
 	setTechPrereq(function(levels,grade)
 		local req = {}
-		if grade < omni.max_tier then req[#req+1]="omnitractor-electric-"..grade end
+		if grade < omni.max_tier then req[#req+1]="omnitech-omnitractor-electric-"..grade end
 		if grade > 2 then req[#req+1]="crystallology-"..(grade-2) end
 		return req end):
 	setReplace("omniplant"):
