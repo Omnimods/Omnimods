@@ -191,7 +191,9 @@ else
 	end	
 end
 
-omni.lib.add_unlock_recipe("anbaricity", "basic-circuit-board")
+if data.raw.recipe["basic-circuit-board"] then
+	omni.lib.add_unlock_recipe("anbaricity", "basic-circuit-board")
+end
 
 --Check if the vanilla lab is locked behind a tech /disabled. If yes, modify the tech
 if data.raw.recipe["lab"].enabled == false then
