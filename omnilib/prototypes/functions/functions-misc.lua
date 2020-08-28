@@ -24,6 +24,10 @@ omni.lib.ore_tints = {--can add to the tint table with table.insert(omni.lib.ore
 --based on tint
   ["iron"]      = {r = 0.415, g = 0.525, b = 0.580}, -- vanilla
   ["copper"]    = {r = 0.803, g = 0.388, b = 0.215}, -- vanilla
+  ["coal"]      = {r = 0    , g = 0    , b = 0    }, -- vanilla
+  ["stone"]     = {r = 0.690, g = 0.611, b = 0.427}, -- vanilla
+  ["uranium"]   = {r = 0    , g = 0.7  , b = 0    }, -- vanilla
+  ["omnite"]    = {r = 0.396, g = 0    , b = 0.729}, -- omni
   ["tin"]       = {r = 0.95 , g = 0.95 , b = 0.95 }, --map_color = {r = 0.600, g = 0.600, b = 0.600}
   ["lead"]      = {r = 0.5  , g = 0.5  , b = 0.5  }, --map_color = {r=0.0, g=0.0, b=0.50}
   ["titanium"]  = {r = 0.8  , g = 0.55 , b = 0.7  }, --map_color = {r=0.610, g=0.325, b=0.500}
@@ -36,14 +40,11 @@ omni.lib.ore_tints = {--can add to the tint table with table.insert(omni.lib.ore
   ["manganese"] = {r = 1    , g = 1    , b = 1    , a = 1},
   ["chrome"]    = {r = 1    , g = 1    , b = 1    , a = 1},
   ["platinum"]  = {r = 1    , g = 1    , b = 1    , a = 1},
-  ["uranium"]   = {r = 0    , g = 0.7  , b = 0    }, -- vanilla
   ["thorium"]   = {r = 1    , g = 1    , b = 0.25 }, --map_color = {r = 0.75, g = 1, b = 0.25}
   ["cobalt"]    = {r = 0.3  , g = 0.53 , b = 0.77 }, --map_color = {r=0.18, g=0.35, b=0.53}
   ["aluminium"] = {r = 0.777, g = 0.7  , b = 0.333}, --map_color = {r=0.777, g=0.7, b=0.333}
-  ["coal"]      = {r = 0    , g = 0    , b = 0    }, -- vanilla
   ["sulfur"]    = {r = 0.8  , g = 0.75 , b = 0.1  }, --map_color = {r=1, g=1, b=0}
   ["gems"]      = {r = 0.25 , g = 1    , b = 0.25 }, --<-- map_color only
-  ["stone"]     = {r = 0.690, g = 0.611, b = 0.427} -- vanilla
 }
 
 function omni.lib.add_ore_tint(icon,ore_name) --should work for a specific icon or icons table
