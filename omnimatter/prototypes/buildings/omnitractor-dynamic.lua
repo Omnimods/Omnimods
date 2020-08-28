@@ -176,7 +176,6 @@ BuildChain:create("omnimatter","omnitractor"):
 	},
 	}):setOverlay("tractor-over"):
 	extend()
-log(serpent.block(data.raw.technology))
 if mods["angelsindustries"] and angelsmods.industries.components then
 	for i=1,math.min(settings.startup["omnimatter-max-tier"].value,5) do
 		-- Add omniblock unlocks
