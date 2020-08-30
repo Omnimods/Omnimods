@@ -7,7 +7,6 @@ Date: 2020.08.XX
     - Improved splitting between impure omnitraction recipes to have more even distribution.
     - Renamed technology "omnitractor-electric-x" to "omnitech-omnitractor-electric-x"
     - Renamed technology "base-impure-extraction" to "omnitech-base-impure-extraction"
-
     - Renamed technology "angels-omnicium-smelting-x" to "omnitech-angels-omnicium-smelting-x"
     - Renamed technology "angels-omnicium-iron-alloy-smelting" to 
       "omnitech-angels-omnicium-iron-alloy-smelting"
