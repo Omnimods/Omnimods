@@ -2,7 +2,7 @@
 
 
 
-omni.lib.add_unlock_recipe("omnitractor-electric-1","omnissenced-wood")
+omni.lib.add_unlock_recipe("omnitech-omnitractor-electric-1","omnissenced-wood")
 omni.lib.add_unlock_recipe("crystallology-1","omnissenced-iron-crystal")
 
 
@@ -12,9 +12,9 @@ RecGen:importIf("omnite-smelting"):replaceIngredients("copper-ore",{"copper-iron
 RecGen:importIf("omnicium-processing"):replaceIngredients("copper-ore",{"copper-iron-ore-mix",4}):removeIngredients("iron-ore"):extend()
 
 omni.lib.add_unlock_recipe("omnipack-technology","ingot-mingnisium")
-omni.lib.add_unlock_recipe("omnitractor-electric-3","crushed-mixture")
-omni.lib.add_unlock_recipe("omnitractor-electric-3","hydrosalamite")
-omni.lib.add_unlock_recipe("omnitractor-electric-3","omnissenced-plastic")
+omni.lib.add_unlock_recipe("omnitech-omnitractor-electric-3","crushed-mixture")
+omni.lib.add_unlock_recipe("omnitech-omnitractor-electric-3","hydrosalamite")
+omni.lib.add_unlock_recipe("omnitech-omnitractor-electric-3","omnissenced-plastic")
 
 if mods["omnimatter_marathon"] then
 	omni.marathon.exclude_recipe("ore-mix-essence")
@@ -39,7 +39,7 @@ BuildChain:create("omnimatter_research","omnicosm"):
 	setEnergy(5):
 	setUsage(function(level,grade) return (100+25*grade).."kW" end):
 	addElectricIcon():
-	setTechName("omnitractor-electric"):
+	setTechName("omnitech-omnitractor-electric"):
 	--[[setTechIcon("omnimatter_ressearch","omnicosm"):
 	setTechPrereq(get_pure_req):
 	setTechCost(function(levels,grade) return 250*math.pow(2,grade-1) end):
@@ -102,7 +102,7 @@ BuildChain:create("omnimatter_research","research_facility"):
 	addElectricIcon():
 	setReplace("research_facility"):
 	setUsage(function(level,grade) return (100+25*grade).."kW" end):
-	setTechName("omnitractor-electric"):
+	setTechName("omnitech-omnitractor-electric"):
 	--[[setTechPrereq(get_pure_req):
 	setTechIcon("omnimatter_ressearch","research_facility"):
 	setTechCost(function(levels,grade) return 250*math.pow(2,grade-1) end):

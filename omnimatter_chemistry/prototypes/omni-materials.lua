@@ -39,7 +39,7 @@ RecChain:create("omnimatter_chemistry","omnirous-acid"):
 	setTechName("advanced-omni-processing"):
 	setTechPacks(function(levels,grade) return 2+math.floor(grade*3/omni.chem.levels)+1 end):
 	setTechIcon("omnimatter_chemistry","omni-processing-advanced"):
-	setTechPrereq("omnitech-basic-omni-processing-3","omnitractor-electric-3"):
+	setTechPrereq("omnitech-basic-omni-processing-3","omnitech-omnitractor-electric-3"):
 	setTechLocName("advanced-omni-processing"):
 	setCategory("omniplant"):
 	setIngredients(cost:ingredients()):

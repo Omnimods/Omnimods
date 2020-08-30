@@ -73,7 +73,7 @@ RecChain:create("omnimatter_chemistry","omniperoxide"):
 	setTechName("advanced-oxomni-processing"):
 	setTechPacks(function(levels,grade) return 2+math.floor(grade*3/omni.chem.levels)+1 end):
 	setTechIcon("omnimatter_chemistry","oxomni-advanced"):
-	setTechPrereq("omnitech-basic-oxomni-processing-3","omnitractor-electric-3"):
+	setTechPrereq("omnitech-basic-oxomni-processing-3","omnitech-omnitractor-electric-3"):
 	setTechLocName("advanced-oxomni-processing"):
 	setCategory("omniplant"):
 	setIngredients(cost:ingredients()):

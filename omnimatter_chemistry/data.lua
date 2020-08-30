@@ -24,7 +24,7 @@ BuildChain:create("omnimatter_chemistry","omnismelter"):
 	setIngredients(cost:ingredients()):
 	setEnergy(5):
 	setUsage(function(level,grade) return (200+50*grade).."kW" end):
-	setTechPrereq(function(levels,grade) return "omnitractor-electric-"..grade end):
+	setTechPrereq(function(levels,grade) return "omnitech-omnitractor-electric-"..grade end):
 	setTechIcon("omnimatter_chemistry","omnismelter"):
 	setTechCost(function(levels,grade) return 50+75*grade+math.pow(2,grade) end):
 	setTechPacks(function(levels,grade) return grade+1 end):
@@ -73,7 +73,7 @@ BuildChain:create("omnimatter_chemistry","omnization-chamber"):
 	setIngredients(cost:ingredients()):
 	setEnergy(5):
 	setUsage(function(level,grade) return (100+50*grade).."kW" end):
-	setTechPrereq(function(levels,grade) return "omnitractor-electric-"..grade end):
+	setTechPrereq(function(levels,grade) return "omnitech-omnitractor-electric-"..grade end):
 	setTechIcon("omnimatter_chemistry","omnichem"):
 	setTechCost(function(levels,grade) return 50+75*grade+math.pow(2,grade) end):
 	setTechPacks(function(levels,grade) return grade end):
@@ -121,7 +121,7 @@ BuildChain:create("omnimatter_chemistry","omni-refinery"):
 	setEnergy(5):
 	setUsage(function(level,grade) return (200+50*grade).."kW" end):
 	setTechName("omni-refining"):
-	setTechPrereq(function(levels,grade) if grade +2 < omni.max_tier then return "omnitractor-electric-"..(grade+2) else return nil end end):
+	setTechPrereq(function(levels,grade) if grade +2 < omni.max_tier then return "omnitech-omnitractor-electric-"..(grade+2) else return nil end end):
 	setTechIcon("omnimatter_chemistry","omnirefining"):
 	setTechCost(function(levels,grade) return 150+100*grade+20*math.pow(2,grade) end):
 	setTechPacks(function(levels,grade) return math.floor(grade/2)+3 end):
