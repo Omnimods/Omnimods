@@ -130,7 +130,7 @@ local get_omnimatter_split = function(tier,focus,level)
                 ),
                 result_round(
                     {
-                        name = focus or aligned_ores[1],
+                        name = focus or next(aligned_ores),
                         amount = 4 / (omni.impure_levels_per_tier - level + 1),
                         type = "item"
                     }
@@ -179,16 +179,16 @@ local get_omnimatter_split = function(tier,focus,level)
         -- Adjust by total count + level
         for I = 1, #split_ores do
             local ore = split_ores[I]
-            ore.amount = 4 / total_quantity * ore.amount
             -- Handle "focus"
             if focus and ore.name == focus then
                 ore.amount = (level + 1) * ore.amount
                 -- Make the focus first in the list
-                if I~= 1 then
+                if I ~= 1 then
                     split_ores[1], split_ores[I] = ore, split_ores[1]
                 end
                 split_ores[1] = table.deepcopy(result_round(ore))
             else
+                ore.amount = 4 / total_quantity * ore.amount
                 split_ores[I] = table.deepcopy(result_round(ore))
             end
         end
