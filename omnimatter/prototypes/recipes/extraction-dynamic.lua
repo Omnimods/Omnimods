@@ -117,27 +117,6 @@ local get_omnimatter_split = function(tier,focus,level)
         -- Build a table of our ore names
         aligned_ores[i.name] = true
     end
-    -- If very little ores per tier, break out early
-    if source_count < (focus and 1 or 2) then
-        return {
-            {
-                result_round(
-                    {
-                        name = "stone-crushed",
-                        amount = 10 - 4 / (omni.impure_levels_per_tier - level + 1),
-                        type = "item"
-                    }
-                ),
-                result_round(
-                    {
-                        name = focus or next(aligned_ores),
-                        amount = 4 / (omni.impure_levels_per_tier - level + 1),
-                        type = "item"
-                    }
-                )
-            }
-        }
-    end
     -- splits is a table of integers that shows how ores are divided between recipes, e.g. {5,5} or {3,3,4}
     local splits = {}
     local divisor = math.min(math.ceil(source_count / 3), 5)
@@ -177,27 +156,29 @@ local get_omnimatter_split = function(tier,focus,level)
             end
         end
         -- Adjust by total count + level
+        local stone_amount = 10
         for I = 1, #split_ores do
             local ore = split_ores[I]
             -- Handle "focus"
             if focus and ore.name == focus then
-                ore.amount = (level + 1) * ore.amount
+                ore.amount = 2+level/omni.impure_levels_per_tier
                 -- Make the focus first in the list
                 if I ~= 1 then
                     split_ores[1], split_ores[I] = ore, split_ores[1]
                 end
                 split_ores[1] = table.deepcopy(result_round(ore))
             else
-                ore.amount = 4 / total_quantity * ore.amount
+                ore.amount = focus and (2-level/omni.impure_levels_per_tier) or 4 / math.max(2, total_quantity * ore.amount)
                 split_ores[I] = table.deepcopy(result_round(ore))
             end
+            stone_amount = stone_amount - ore.amount
         end
         -- Add our stone post-adjustment
         split_ores[#split_ores + 1] =
             result_round(
             {
                 name = "stone-crushed",
-                amount = 6,
+                amount = stone_amount,
                 type = "item"
             }
         )
