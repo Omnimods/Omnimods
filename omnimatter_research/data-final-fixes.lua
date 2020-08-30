@@ -3,7 +3,7 @@
 
 
 omni.lib.add_unlock_recipe("omnitech-omnitractor-electric-1","omnissenced-wood")
-omni.lib.add_unlock_recipe("crystallology-1","omnissenced-iron-crystal")
+omni.lib.add_unlock_recipe("omnitech-crystallology-1","omnissenced-iron-crystal")
 
 
 --omnicium-plate

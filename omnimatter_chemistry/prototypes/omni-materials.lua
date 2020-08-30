@@ -106,7 +106,7 @@ ItemGen:create("omnimatter_chemistry","crystalline-wood"):
       {type = "fluid", name = "omnic-water", amount = 50},
       {type = "fluid", name = "omnic-mutagen", amount = 100},
     }):
-	setTechName("crystallology-2"):
+	setTechName("omnitech-crystallology-2"):
 	setResults({type = "item", name = "omniwood", amount_min = 20, amount_max = 60},
 		{type = "item", name = "crystalline-wood", amount_min = 5, amount_max = 20}
 	):extend()]]
