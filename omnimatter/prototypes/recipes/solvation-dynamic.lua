@@ -262,7 +262,7 @@ local function generate_solvation_icon(fluid)
 		fluid_icon
 	)
 end
-log("cocks")
+
 for _,tier in pairs(omnifluid) do
 	for _, fluid in pairs(tier) do
 		local cost = OmniGen:create():
