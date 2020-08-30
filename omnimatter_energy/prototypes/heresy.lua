@@ -3,7 +3,7 @@
 -----------------------------------------------------------------------------
 --tech fixes
 if mods["pyalienlife"] then
-  omni.lib.replace_prerequisite("fluid-handling","automation-2", "anbaricity")
+  omni.lib.replace_prerequisite("fluid-handling","automation-2", "omnitech-anbaricity")
 end
 --other tweaks
 if mods["pycoalprocessing"] then
