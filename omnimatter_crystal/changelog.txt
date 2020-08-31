@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.0.1
-Date: 2020.08.xx
+Date: 2020.08.31
   Changes:
     - Renamed technology "crystallology-x" to "omnitech-crystallology-x"
     - Renamed technology "crystallonics-y" to "omnitech-crystallonics-x"

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
-Version: 4.0.X
-Date: 2020.08.XX
+Version: 4.0.3
+Date: 2020.08.31
   Bugfixes:
     - Fix compressed building sorting in single-tab mode
     - Fix module limits not being applied correctly in certain cases

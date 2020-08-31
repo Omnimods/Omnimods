@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.2
-Date: 2020.08.xx
+Date: 2020.08.31
   Changes:
     - Renamed technology "basic-omnium-power" to "omnitech-basic-omnium-power"
     - Renamed technology "anbaricity" to "omnitech-anbaricity"

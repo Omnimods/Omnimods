@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.0.2
-Date: 2020.08.XX
+Date: 2020.08.31
   Features:
     - Basic omnitraction recipes now have proper icons and locales
   Changes:
