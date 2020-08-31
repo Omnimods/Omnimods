@@ -50,6 +50,3 @@ for _,tech in pairs(data.raw.technology) do
 		end
 	end
 end
-if mods["pyalienlife"] then
-  omni.lib.replace_prerequisite("fluid-handling","automation-2", "omnitech-anbaricity")
-end
