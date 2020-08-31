@@ -254,8 +254,9 @@ for i, tier in pairs(omnisource) do
             local desc = ""
             local costres =cost:results()
             local res =costres(levels, grade)
-            for _, part in pairs(res) do
-                desc = desc.."[img=item."..part.name.."] x "..string.format("%.2f",part.amount * (part.probability or 1)).."  "
+            for j, part in pairs(res) do
+                desc = desc.."[img=item."..part.name.."] x "..string.format("%.2f",part.amount * (part.probability or 1))
+                if j<#res then desc = desc.."\n" end
             end
             return desc
         end
@@ -312,7 +313,9 @@ for _,ore_tiers in pairs(omnisource) do
         local item_count = #split-1
         for I=1, item_count do
             result_names = result_names .. "[img=item." .. split[I].name .. "]/"
-            desc = desc.."[img=item." .. split[I].name .. "] x "..string.format("%.2f",split[I].amount * (split[I].probability or 1)).."  "
+            desc = desc.."[img=item." .. split[I].name .. "] x "..string.format("%.2f",split[I].amount * (split[I].probability or 1))
+            if I<item_count then desc = desc.."\n" end
+
             local deg = (I / item_count * 360)+90 -- Offset a bit
             deg = math.rad(deg % 360)
             icons = util.combine_icons(
@@ -371,8 +374,9 @@ for _,ore_tiers in pairs(omnisource) do
         for i, sp in pairs(level_splits) do
             for j, r in pairs(sp) do
                 local desc = ""
-                for _, part in pairs(r) do
-                    desc = desc.."[img=item."..part.name.."] x "..string.format("%.2f",part.amount * (part.probability or 1)).."  "
+                for j, part in pairs(r) do
+                    desc = desc.."[img=item."..part.name.."] x "..string.format("%.2f",part.amount * (part.probability or 1))
+                    if j<#r then desc = desc.."\n" end
                 end
                 local focused_ore =
                 (
