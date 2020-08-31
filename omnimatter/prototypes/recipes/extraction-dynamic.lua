@@ -250,10 +250,21 @@ for i, tier in pairs(omnisource) do
                 end
             )
         )
+        local function get_desc(levels,grade)
+            local desc = ""
+            local costres =cost:results()
+            local res =costres(levels, grade)
+            for j, part in pairs(res) do
+                desc = desc.."[img=item."..part.name.."] x "..string.format("%.2f",part.amount * (part.probability or 1))
+                if j<#res then desc = desc.."\n" end
+            end
+            return desc
+        end
 
         local pure_ore = (
             RecChain:create("omnimatter", "extraction-" .. item):
             setLocName("recipe-name.pure-omnitraction", {"item-name." .. item}):
+            setLocDesc(function(levels, grade) return get_desc(levels,grade) end):
             setIngredients("omnite"):
             setIcons(item):
             setIngredients(cost:ingredients()):
@@ -296,11 +307,15 @@ for _,ore_tiers in pairs(omnisource) do
             tc = tc * omni.beginning_tech_help
         end
         local result_names = " "
+        local desc = ""
         local icons = omni.icon.of("omnite", "item")
         icons[1].tint = {1,1,1,0.8}-- Just a canvas but we want the right size
         local item_count = #split-1
         for I=1, item_count do
             result_names = result_names .. "[img=item." .. split[I].name .. "]/"
+            desc = desc.."[img=item." .. split[I].name .. "] x "..string.format("%.2f",split[I].amount * (split[I].probability or 1))
+            if I<item_count then desc = desc.."\n" end
+
             local deg = (I / item_count * 360)+90 -- Offset a bit
             deg = math.rad(deg % 360)
             icons = util.combine_icons(
@@ -319,6 +334,7 @@ for _,ore_tiers in pairs(omnisource) do
         local base_impure_ore = (
             RecGen:create("omnimatter", "omnirec-base-" .. i .. "-extraction-" .. t):
             setLocName("recipe-name.base-impure", {"", result_names}):
+            setLocDesc(desc):
             setIngredients(
                 {name = "omnite", type = "item", amount = 10}
             ):
@@ -349,6 +365,7 @@ for _,ore_tiers in pairs(omnisource) do
         base_impure_ore:setResults(split):marathon()
         base_impure_ore:extend()
     end
+
     for _,ore in pairs(ore_tiers) do
         local level_splits = {}
         for l=1,omni.impure_levels_per_tier do
@@ -356,10 +373,16 @@ for _,ore_tiers in pairs(omnisource) do
         end
         for i, sp in pairs(level_splits) do
             for j, r in pairs(sp) do
+                local desc = ""
+                for j, part in pairs(r) do
+                    desc = desc.."[img=item."..part.name.."] x "..string.format("%.2f",part.amount * (part.probability or 1))
+                    if j<#r then desc = desc.."\n" end
+                end
                 local focused_ore =
                 (
                     RecGen:create("omnimatter", "omnirec-focus-" .. j .. "-" .. ore.name .. "-" .. ord[i]):
                     setLocName("recipe-name.impure-omnitraction", {"item-name." .. ore.name}):
+                    setLocDesc(desc):
                     setIngredients({name = "omnite", type = "item", amount = 10}):
                     setSubgroup("omni-impure"):
                     setEnergy(5 * (math.floor(t / 2 + 0.5))):

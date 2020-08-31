@@ -17,6 +17,8 @@ Date: 2020.08.31
     - Renamed technology "basic-splitter-logistics" to "omnitech-basic-splitter-logistics"
     - Renamed technology "underground-logistics" to "omnitech-underground-logistics"
     - Renamed technology "basic-underground-logistics" to "omnitech-basic-underground-logistics"
+    - Added some heretical scripts to allow Pyanodons to work with this mod... even without the AB patch mod
+      - Not recommended, confirmed to work up to green science... be warned, burner phase lasts a log while
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.1
 Date: 2020.08.24
