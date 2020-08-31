@@ -1935,7 +1935,8 @@ function RecGen:generate_recipe()
 			setLocName(self.tech.loc_name(0,0)):
 			return_array()[1]
 		else
-			omni.lib.add_unlock_recipe(tname, self.name)
+			--Force recipe unlock since the recipe is not generated yet
+			omni.lib.add_unlock_recipe(tname, self.name, true)
 		end
 	end
 	if self.category(0,0) and not data.raw["recipe-category"][self.category(0,0)] then
@@ -1957,7 +1958,7 @@ function RecGen:generate_recipe()
 		type = "recipe",
 		name = self.name,
 		localised_name = lname,
-		localised_description = self:setDescLocType("recipe"),
+		localised_description = self.loc_desc(0,0), --self:setDescLocType("recipe"),
 		category = self.category(0,0),
 		subgroup = self.subgroup(0,0),
 		order = self.order(0,0),
@@ -2362,8 +2363,16 @@ function RecChain:generate_chain()
 		setTechIcon(self.tech.icon(levels,i)):
 		setTechLocName(self.tech.loc_name(levels,grade)):
 		setTechLocDesc(self.tech.loc_desc,self.tech.loc_desc_keys):
-		setTechName("omnitech-"..techname.."-"..i-techDifEnabled):
+		--setTechName("omnitech-"..techname.."-"..i-techDifEnabled):
 		setGenerationCondition(self.requiredMods(levels,grade))
+
+		if string.find(techname, "omnitech-") then
+			r:setTechName(techname.."-"..i-techDifEnabled)
+		else
+			r:setTechName("omnitech-"..techname.."-"..i-techDifEnabled)
+		end
+
+
 		if self.tech.icon(levels,i) then
 			r:setTechIcon(self.tech.icon(levels,i))
 		else
@@ -2453,7 +2462,7 @@ function TechGen:import(name)
 	if tech then
 		local t = TechGen:create():
 		setName(name):
-		setIcon(tech.icon):
+		setIcon(tech.icons or tech.icon):
 		setPacks(tech.unit.ingredients):
 		setCost(tech.unit.count):
 		setTime(tech.unit.time):
@@ -3456,7 +3465,7 @@ function BuildGen:generateBuilding()
 		icon_size = 32,
 		order=self.order(0,0),
 		localised_name = lname,
-		localised_description = self:setDescLocType("entity"),
+		localised_description = self.loc_desc(0,0), --self:setDescLocType("entity"),
 		icons = self.icons(0,0),
 		flags = self.flags,
 		minable = {mining_time = self.mining_time(0,0), result = self.name},

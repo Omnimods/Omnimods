@@ -1,4 +1,26 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.2
+Date: 2020.08.31
+  Features:
+    - Added heretical scripts to allow Pyanodons to work with this... even without the AB patch mod
+      Confirmed to work up to green science... be warned, burner phase lasts a log while
+  Changes:
+    - Renamed technology "basic-omnium-power" to "omnitech-basic-omnium-power"
+    - Renamed technology "anbaricity" to "omnitech-anbaricity"
+    - Renamed technology "simple-automation" to "omnitech-simple-automation"
+    - Renamed technology "anbaric-lab" to "omnitech-anbaric-lab"
+    - Renamed technology "anbaric-mining" to "omnitech-anbaric-mining"
+    - Renamed technology "burner-filter-1" to "omnitech-burner-filter-1"
+    - Renamed technology "burner-filter-2" to "omnitech-burner-filter-2"
+    - Renamed technology "anbaric-inserter" to "omnitech-anbaric-inserter"
+    - Renamed technology "steam-power" to "omnitech-steam-power"
+    - Renamed technology "belt-logistics" to "omnitech-belt-logistics"
+    - Renamed technology "basic-belt-logistics" to "omnitech-basic-belt-logistics"
+    - Renamed technology "splitter-logistics" to "omnitech-splitter-logistics"
+    - Renamed technology "basic-splitter-logistics" to "omnitech-basic-splitter-logistics"
+    - Renamed technology "underground-logistics" to "omnitech-underground-logistics"
+    - Renamed technology "basic-underground-logistics" to "omnitech-basic-underground-logistics"
+---------------------------------------------------------------------------------------------------
 Version: 2.0.1
 Date: 2020.08.24
   Bugfixes:

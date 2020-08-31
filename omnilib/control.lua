@@ -41,7 +41,7 @@ local function update_last_tier(recipe, full_refresh)
 		return
 	end
 	-- We're the top of the tree!
-	if recipe_tree and metadata.variant == "" and recipe_tree.active_tier <= metadata.tier then
+	if recipe_tree and recipe_tree.active_tier < metadata.tier then
 		local I = full_refresh and 97 or recipe_tree.active_tier
 		local research_status = not not (recipe.force.technologies["compression-recipes"] or {}).researched
 		repeat
@@ -95,8 +95,7 @@ local function update_recipe(recipe, enabled_override)
 		recipe.enabled = true
 	end
 	-- Update according to compression research status
-	if not recipe_tree and 
-		force_techs["compression-recipes"] and
+	if 	force_techs["compression-recipes"] and
 		force_techs["compression-recipes"].researched and 
 		not recipe.category:find("-compressed", nil, true) and 
 		not name:find("concentrated", nil, true) then
@@ -318,6 +317,21 @@ script.on_event(defines.events.on_console_chat, function(event)
 			log(
 				"Memory usage: " .. math.ceil(collectgarbage("count")) .. "K"
 			)
+			log(
+				"Recipe map: \n" .. serpent.block(global.omni.recipe_map)
+			)
+			log(
+				"Recipes: \n" .. serpent.block(global.omni.recipes)
+			)
+			log(
+				"Stock Recipes: \n" .. serpent.block(global.omni.stock_recipes)
+			)
+			log(
+				"Stock Fluids: \n" .. serpent.block(global.omni.stock_fluids)
+			)
+			log(
+				"Tiered Buildings: \n" .. serpent.block(global.omni.tiered_buildings)
+			)
 		end
 	end
 end)
@@ -374,7 +388,7 @@ function acquire_data(game)
 			end
 		end
 		-- Comes unlocked
-		if recipe.enabled then
+		if recipe.enabled and not (recipes[name] or {}).compressed then
 			stock_recipes[name] = true
 		end
 		-- Generator variant
@@ -400,9 +414,7 @@ function acquire_data(game)
 end
 
 script.on_configuration_changed( function(conf)
-	if not global.omni then
-		global.omni = {}
-	end
+	global.omni = {}
 	acquire_data(game)
 	global.omni.need_update=true
 end)

@@ -4,7 +4,8 @@
 --	end
 --end
 
-RecGen:importIf("wooden-board"):addNormalIngredients({"omni-tablet",1}):addExpensiveIngredients({"omni-tablet",2}):setTechName("anbaricity"):extend()
+omni.lib.add_recipe_ingredient("wooden-board", {normal = {"omni-tablet",1}, expensive = {"omni-tablet",2}})
+omni.lib.add_unlock_recipe("omnitech-anbaricity", "wooden-board")
 
 ItemGen:import("omnite"):setFuelCategory("omnite"):extend()
 ItemGen:import("crushed-omnite"):setFuelCategory("omnite"):extend()
@@ -43,7 +44,7 @@ for _,tech in pairs(data.raw.technology) do
 			if eff.type == "unlock-recipe" then
 				ent = omni.lib.find_entity_prototype(eff.recipe)
 				if ent and ent.energy_source and ent.energy_source.type == "electric" then
-					omni.lib.add_prerequisite(tech.name, "anbaricity")
+					omni.lib.add_prerequisite(tech.name, "omnitech-anbaricity")
 				end
 			end
 		end

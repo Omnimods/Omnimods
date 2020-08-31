@@ -1,0 +1,21 @@
+{
+  "technology":
+  [
+    ["omnitractor-electric-1", "omnitech-omnitractor-electric-1"],
+    ["omnitractor-electric-2", "omnitech-omnitractor-electric-2"],
+    ["omnitractor-electric-3", "omnitech-omnitractor-electric-3"],
+    ["omnitractor-electric-4", "omnitech-omnitractor-electric-4"],
+    ["omnitractor-electric-5", "omnitech-omnitractor-electric-5"],
+    ["omnitractor-electric-6", "omnitech-omnitractor-electric-6"],
+    ["omnitractor-electric-7", "omnitech-omnitractor-electric-7"],
+    ["omnitractor-electric-8", "omnitech-omnitractor-electric-8"],
+    ["base-impure-extraction", "omnitech-base-impure-extraction"],
+    ["angels-omnicium-smelting-1", "omnitech-angels-omnicium-smelting-1"],
+    ["angels-omnicium-smelting-2", "omnitech-angels-omnicium-smelting-2"],
+    ["angels-omnicium-smelting-3", "omnitech-angels-omnicium-smelting-3"],
+    ["angels-omnicium-iron-alloy-smelting", "omnitech-angels-omnicium-iron-alloy-smelting"],
+    ["angels-omnicium-steel-alloy-smelting", "omnitech-angels-omnicium-steel-alloy-smelting"],
+    ["angels-omnicium-aluminium-alloy-smelting", "omnitech-angels-omnicium-aluminium-alloy-smelting"],
+    ["angels-omnicium-tungsten-alloy-smelting", "omnitech-angels-omnicium-tungsten-alloy-smelting"]
+  ]
+}

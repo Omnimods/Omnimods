@@ -8,7 +8,7 @@ data:extend({
     {
 		"fluid-handling",
 		"omnicells",
-		"crystallonics-2",
+		"omnitech-crystallonics-2",
     },
     effects =
     {

@@ -18,6 +18,61 @@ RecGen:create("omnimatter_crystal","hydromnic-acid"):
 	setResults({type = "fluid", name = "hydromnic-acid", amount = 500}):extend()
 
 
+	-- Burner Omniplant
+	--SETTING VANILLA INGREDIENTS FIRST
+	local pipe="pipe"
+	local electronic="electronic-circuit"
+	if mods["boblogistics"] then pipe="copper-pipe" end
+	if mods["bobelectronics"] then electronic="basic-circuit-board" end
+
+    local burner_ings = {}
+	if mods["angelsindustries"] and angelsmods.industries.components then
+		burner_ings = {
+		{name="block-construction-1", amount=5},
+		{name="block-electronics-0", amount=3},
+		{name="block-fluidbox-1", amount=5},
+		{name="block-omni-0", amount=5}
+		}
+	else
+		burner_ings = {{pipe,15},{"omnicium-plate",5},{electronic,5},{"omnite-brick",10},{"iron-gear-wheel",10}}
+	end
+
+	BuildGen:create("omnimatter_crystal","omniplant"):
+	setBurner(0.75,2):
+	setSubgroup("omniplant"):
+	setIngredients(burner_ings):
+	setEnergy(5):
+	setUsage(function(level,grade) return "750kW" end):
+	--setTechName("omnitech-omnitractor-electric-1"): --Done in final-fixes for now
+	setReplace("omniplant"):
+	setNextUpgrade("omniplant-1"):
+	setStacksize(20):
+	setSize(5):
+	setCrafting({"omniplant"}):
+	setSpeed(1):
+	setSoundWorking("oil-refinery",1,"base"):
+	setSoundVolume(2):
+	setAnimation({
+	layers={
+	{
+        filename = "__omnimatter_crystal__/graphics/buildings/omni-plant.png",
+		priority = "extra-high",
+        width = 224,
+        height = 224,
+        frame_count = 36,
+		line_length = 6,
+        shift = {0.00, -0.05},
+		scale = 1,
+		animation_speed = 0.5
+	},
+	}
+	}):
+	setOverlay("omni-plant-overlay"):
+	setFluidBox("XWXWX.XXXXX.XXXXX.XXXXX.XKXKX"):
+	setEnabled(false):
+	extend()
+
+
 local dif = 1
 if not mods["bobelectronics"] then dif=0 end
 
@@ -53,20 +108,19 @@ end
 BuildChain:create("omnimatter_crystal","omniplant"):
 	setSubgroup("omniplant"):
 	setLocName("omniplant"):
-	setIcons("omniplant","omnimatter_crystal"):
 	setIngredients(cost_plant:ingredients()):
 	setEnergy(5):
 	setUsage(function(level,grade) return (200+50*grade).."kW" end):
 	setTechPrereq(get_pure_req):
 	addElectricIcon():
-	setTechName(function(levels,grade) if grade == 1 then return "omnitech-omnic-acid-hydrolyzation-1" else return "crystallology" end end):
+	setTechName(function(levels,grade) if grade == 1 then return "omnitech-omnic-acid-hydrolyzation-1" else return "omnitech-crystallology" end end):
 	setTechIcon("omnimatter_crystal","crystallology"):
 	setTechCost(get_tech_times):
 	setTechPacks(function(levels,grade) return grade end):
 	setTechPrereq(function(levels,grade)
 		local req = {}
-		if grade < omni.max_tier then req[#req+1]="omnitractor-electric-"..grade end
-		if grade > 2 then req[#req+1]="crystallology-"..(grade-2) end
+		if grade < omni.max_tier then req[#req+1]="omnitech-omnitractor-electric-"..grade end
+		if grade > 2 then req[#req+1]="omnitech-crystallology-"..(grade-2) end
 		return req end):
 	setReplace("omniplant"):
 	setTechTime(function(levels,grade) return 15*grade end):
@@ -79,59 +133,6 @@ BuildChain:create("omnimatter_crystal","omniplant"):
 	setSoundWorking("oil-refinery",1,"base"):
 	setSoundVolume(2):
 	allowProductivity():
-	setAnimation({
-	layers={
-	{
-        filename = "__omnimatter_crystal__/graphics/buildings/omni-plant.png",
-		priority = "extra-high",
-        width = 224,
-        height = 224,
-        frame_count = 36,
-		line_length = 6,
-        shift = {0.00, -0.05},
-		scale = 1,
-		animation_speed = 0.5
-	},
-	}
-	}):
-	setOverlay("omni-plant-overlay"):
-	setFluidBox("XWXWX.XXXXX.XXXXX.XXXXX.XKXKX"):
-	extend()
-
-	-- Burner Omniplant
-	--SETTING VANILLA INGREDIENTS FIRST
-	local pipe="pipe"
-	local electronic="electronic-circuit"
-	if mods["boblogistics"] then pipe="copper-pipe" end
-	if mods["bobelectronics"] then electronic="basic-circuit-board" end
-
-    local burner_ings = {}
-	if mods["angelsindustries"] and angelsmods.industries.components then
-		burner_ings = {
-		{name="block-construction-1", amount=5},
-		{name="block-electronics-0", amount=3},
-		{name="block-fluidbox-1", amount=5},
-		{name="block-omni-0", amount=5}
-		}
-	else
-		burner_ings = {{pipe,15},{"omnicium-plate",5},{electronic,5},{"omnite-brick",10},{"iron-gear-wheel",10}}
-	end
-	BuildGen:create("omnimatter_crystal","omniplant"):
-	setBurner(0.75,2):
-	setSubgroup("omniplant"):
-	setIcons("omniplant","omnimatter_crystal"):
-	setIngredients(burner_ings):
-	setEnergy(5):
-	setUsage(function(level,grade) return "750kW" end):
-	--setTechName("omnitractor-electric-1"): --Done in final-fixes for now
-	setReplace("omniplant"):
-	setNextUpgrade("omniplant-1"):
-	setStacksize(20):
-	setSize(5):
-	setCrafting({"omniplant"}):
-	setSpeed(1):
-	setSoundWorking("oil-refinery",1,"base"):
-	setSoundVolume(2):
 	setAnimation({
 	layers={
 	{
@@ -164,18 +165,18 @@ BuildChain:create("omnimatter_crystal","crystallomnizer"):
 	setTechPrereq(get_pure_req):
 	addElectricIcon():
 	allowProductivity():
-	setTechName("crystallonics"):
+	setTechName("omnitech-crystallonics"):
 	setTechIcon("omnimatter_crystal","crystallonics"):
 	setTechCost(get_tech_times):
 	setTechPacks(function(levels,grade) return grade + 1 end):
 	setReplace("crystallomnizer"):
 	setTechTime(function(levels,grade) return 15*grade end):
 	setTechPrereq(function(levels,grade)
-		local tmp = {"crystallology-"..math.min(grade,omni.max_tier-1)}
+		local tmp = {"omnitech-crystallology-"..math.min(grade,omni.max_tier-1)}
 		if grade == 1 then
 			tmp[#tmp+1]="advanced-electronics"
 		else
-			tmp[#tmp+1]="crystallonics-"..(grade-1)
+			tmp[#tmp+1]="omnitech-crystallonics-"..(grade-1)
 		end
 		return tmp end):
 	setStacksize(20):
@@ -228,7 +229,7 @@ RecGen:create("omnimatter_crystal","omnine"):
 	setFuelValue(18):
 	setFuelCategory("crystal"):
 	marathon():
-	setTechName("crystallology-1"):
+	setTechName("omnitech-crystallology-1"):
 	setIngredients({
     {type = "item", name = "omnine-shards", amount=1},
     {type = "fluid", name = "omnisludge", amount=100},
@@ -240,7 +241,7 @@ RecGen:create("omnimatter_crystal","omnine-distillation-quick"):
 	setCategory("omniplant"):
 	setEnergy(180):
 	marathon():
-	setTechName("crystallology-1"):
+	setTechName("omnitech-crystallology-1"):
 	setIngredients({type = "fluid", name = "omnisludge", amount=20000}):
 	setResults({type = "item", name = "omnine", amount=1}):extend()
 
@@ -249,7 +250,7 @@ RecGen:create("omnimatter_crystal","omnine-distillation-slow"):
 	setCategory("omniplant"):
 	setEnergy(1800):
 	marathon():
-	setTechName("crystallology-1"):
+	setTechName("omnitech-crystallology-1"):
 	setIngredients({type = "fluid", name = "omnisludge", amount=2000}):
 	setResults({type = "item", name = "omnine", amount=1}):extend()
 
@@ -263,7 +264,7 @@ RecGen:create("omnimatter_crystal","omnine-shards"):
 	setFuelCategory("crystal"):
 	setEnergy(1):
 	marathon():
-	setTechName("crystallology-1"):
+	setTechName("omnitech-crystallology-1"):
 	setIngredients({type = "item", name = "omnine", amount=1}):
 	setResults({type = "item", name = "omnine-shards", amount=10}):extend()
 
@@ -288,7 +289,7 @@ RecGen:create("omnimatter_crystal","omnine-structure-crystal"):
 	setSubgroup("crystallonic-part"):
 	setCategory("crystallomnizer"):
 	addProductivity():
-	setTechName("crystallonics-1"):
+	setTechName("omnitech-crystallonics-1"):
 	setIngredients({type="item",name="omnine",amount=3}):
 	setResults({type="item",name="omnine-structure-crystal",amount=2}):extend()
 
@@ -297,7 +298,7 @@ RecGen:create("omnimatter_crystal","crystal-rod"):
 	setStacksize(100):
 	setSubgroup("crystallonic-part"):
 	setCategory("crystallomnizer"):
-	setTechName("crystallonics-1"):
+	setTechName("omnitech-crystallonics-1"):
 	addProductivity():
 	setIngredients({type="item",name= cry_rod ,amount=2}):
 	setResults({type="item",name="crystal-rod",amount=3}):extend()
@@ -306,7 +307,7 @@ RecGen:create("omnimatter_crystal","basic-crystallonic"):
 	setEnergy(1):
 	setStacksize(200):
 	setSubgroup("crystallonic"):
-	setTechName("crystallonics-1"):
+	setTechName("omnitech-crystallonics-1"):
 	setCategory("crystallomnizer"):
 	addProductivity():
 	setIngredients({
@@ -324,8 +325,8 @@ RecChain:create("omnimatter_crystal","pseudoliquid-amorphous-crystal"):
 	setIngredients({type="item",name="omnine",amount=12}):
 	setResults(function (levels,grade) return {{type="fluid",name="pseudoliquid-amorphous-crystal",amount=240+2160*(grade-1)/levels}} end):
 	setLevel(omni.fluid_levels):
-	setTechName("pseudoliquid-amorphous-crystal"):
-	setTechLocName("pseudoliquid-amorphous-crystal",grade):
+	setTechName("omnitech-pseudoliquid-amorphous-crystal"):
+	setTechLocName("omnitech-pseudoliquid-amorphous-crystal",grade):
 	setTechIcon("omnimatter_crystal","amorphous-crystal"):
 	setTechCost(function(levels,grade) return 500+50*grade end):
 	setTechPacks(function(levels,grade) return 3+math.floor(grade*3/levels) end):
@@ -333,13 +334,13 @@ RecChain:create("omnimatter_crystal","pseudoliquid-amorphous-crystal"):
 	setTechPrereq(function(levels,grade)
 		local req = {}
 		if grade==1 then
-			req={"crystallonics-1"}
+			req={"omnitech-crystallonics-1"}
 		else
 			req={"omnitech-pseudoliquid-amorphous-crystal-"..grade-1}
 		end
 		local c = omni.lib.round(levels/3)
 		if grade%c==0 and grade>1 then
-			req[#req+1]="crystallonics-"..math.floor(grade/c)+1
+			req[#req+1]="omnitech-crystallonics-"..math.floor(grade/c)+1
 		end
 		return req
 	end):extend()
@@ -351,7 +352,7 @@ RecGen:create("omnimatter_crystal","shattered-omnine"):
 	setSubgroup("crystallonic-part"):
 	addProductivity():
 	setCategory(cat):
-	setTechName("crystallonics-2"):
+	setTechName("omnitech-crystallonics-2"):
 	setIngredients({type="item",name="omnine",amount=2}):
 	setResults({type="item",name="shattered-omnine",amount=3}):extend()
 
@@ -361,7 +362,7 @@ RecGen:create("omnimatter_crystal","impure-crystal-rod"):
 	setSubgroup("crystallonic-part"):
 	setCategory("crystallomnizer"):
 	addProductivity():
-	setTechName("crystallonics-2"):
+	setTechName("omnitech-crystallonics-2"):
 	setIngredients({
 		{type="item",name="shattered-omnine",amount=1},
 		{type="fluid",name="pseudoliquid-amorphous-crystal",amount=150},
@@ -375,7 +376,7 @@ RecGen:create("omnimatter_crystal","fragment-iron-crystal"):
 	setSubgroup("crystallonic-part"):
 	setCategory("advanced-crafting"):
 	addProductivity():
-	setTechName("crystallonics-2"):
+	setTechName("omnitech-crystallonics-2"):
 	setIngredients({type="item",name="iron-ore-crystal",amount=1}):
 	setResults({type="item",name="fragmented-iron-crystal",amount=3}):extend()
 
@@ -385,7 +386,7 @@ RecGen:create("omnimatter_crystal","fragment-copper-crystal"):
 	setSubgroup("crystallonic-part"):
 	setCategory("advanced-crafting"):
 	addProductivity():
-	setTechName("crystallonics-2"):
+	setTechName("omnitech-crystallonics-2"):
 	setIngredients({type="item",name="copper-ore-crystal",amount=1}):
 	setResults({type="item",name="fragmented-copper-crystal",amount=3}):extend()
 
@@ -393,7 +394,7 @@ RecGen:create("omnimatter_crystal","omnilgium"):
 	setEnergy(3):
 	setStacksize(400):
 	setSubgroup("crystallonic-part"):
-	setTechName("crystallonics-2"):
+	setTechName("omnitech-crystallonics-2"):
 	addProductivity():
 	setCategory("crystallomnizer"):
 	setIngredients({
@@ -409,7 +410,7 @@ RecGen:create("omnimatter_crystal","oscillocrystal"):
 	setSubgroup("crystallonic-part"):
 	setCategory("crystallomnizer"):
 	addProductivity():
-	setTechName("crystallonics-2"):
+	setTechName("omnitech-crystallonics-2"):
 	setIngredients({
 		{type="item",name="impure-crystal-rod",amount=3},
 		{type="item",name="omnilgium",amount=2},
@@ -422,7 +423,7 @@ RecGen:create("omnimatter_crystal","oscillocrystal"):
 	setSubgroup("crystallonic-part"):
 	setCategory("crystallomnizer"):
 	addProductivity():
-	setTechName("crystallonics-2"):
+	setTechName("omnitech-crystallonics-2"):
 	setIngredients({
 		{type="item",name="impure-crystal-rod",amount=3},
 		{type="item",name="omnilgium",amount=2},
@@ -434,7 +435,7 @@ RecGen:create("omnimatter_crystal","electrocrystal"):
 	setStacksize(500):
 	setSubgroup("crystallonic-part"):
 	setCategory("crystallomnizer"):
-	setTechName("crystallonics-3"):
+	setTechName("omnitech-crystallonics-3"):
 	addProductivity():
 	setIngredients({
 		{type="item",name="impure-crystal-rod",amount=3},
@@ -448,7 +449,7 @@ RecGen:create("omnimatter_crystal","quasi-solid-omnistal"):
 	setStacksize(200):
 	setSubgroup("crystallonic-part"):
 	setCategory("crystallomnizer"):
-	setTechName("crystallonics-2"):
+	setTechName("omnitech-crystallonics-2"):
 	addProductivity():
 	setIngredients({
 		{type="item",name="shattered-omnine",amount=1},
@@ -465,7 +466,7 @@ RecGen:create("omnimatter_crystal","basic-oscillo-crystallonic"):
 	setStacksize(200):
 	setSubgroup("crystallonic"):
 	setCategory("crystallomnizer"):
-	setTechName("crystallonics-2"):
+	setTechName("omnitech-crystallonics-2"):
 	addProductivity():
 	setIngredients({
 		{type="item",name="basic-crystallonic",amount=1},

@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.0.2
+Date: 2020.08.31
+  Features:
+    - omni.lib.add_recipe_ingredient()/result() can replace .expensive ings/res seperately
+  Bugfixes:
+    - Fixed omni.lib.add_unlock_recipe() not disabling the recipe
+    - Fixed setLocDesc() forcing localisation types
+---------------------------------------------------------------------------------------------------
 Version: 4.0.1
 Date: 2020.08.22
   Features:

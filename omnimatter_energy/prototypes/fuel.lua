@@ -37,7 +37,7 @@ for _,fuelitem in pairs(data.raw.item) do
     end
 
     --Generate Chemical Fuel Recipes
-    if fuelitem.fuel_category == "chemical" and fuelitem.fuel_value and not string.find(fuelitem.subgroup, "omnienergy-fuel", 1, true) then
+    if fuelitem.fuel_category == "chemical" and fuelitem.fuel_value and not (fuelitem.subgroup and string.find(fuelitem.subgroup, "omnienergy-fuel", 1, true)) then
 
         --lets define the variables first, then jump in and create it all in one go:
         --Get fuel number in MJ (divide by 10^6)
@@ -114,10 +114,10 @@ RecGen:create("omnimatter_energy","purified-omnite"):
 	setFuelValue(2.4):
     setEnergy(2.0):
     setEnabled(false):
-    setTechName("basic-omnium-power"):
+    setTechName("omnitech-basic-omnium-power"):
 	setTechCost(55):
 	setTechIcon("omnimatter_energy","purified-omnite"):
-    setTechPrereq("anbaricity"):extend()
+    setTechPrereq("omnitech-anbaricity"):extend()
   
-omni.lib.add_prerequisite("burner-filter-2","basic-omnium-power")
-omni.lib.add_prerequisite("omnitech-omnium-power-1","basic-omnium-power")
+omni.lib.add_prerequisite("omnitech-burner-filter-2","omnitech-basic-omnium-power")
+omni.lib.add_prerequisite("omnitech-omnium-power-1","omnitech-basic-omnium-power")

@@ -18,7 +18,7 @@ RecGen:create("omnimatter_chemistry","crystallo-mutation"):
       {type = "fluid", name = "omnic-water", amount = 30},
       {type = "fluid", name = "omnic-mutagen", amount = 120},
     }):
-	setTechName("crystallology-2"):
+	setTechName("omnitech-crystallology-2"):
 	setResults({type = "item", name = "omniwood", amount_min = 5, amount_max = 10},
 		{type = "item", name = "crystalline-wood", amount_min = 40, amount_max = 100}
 	):extend()
@@ -30,7 +30,7 @@ RecGen:create("omnimatter_chemistry","carbomnilline"):
 	setIngredients({
       {type = "item", name = "crystalline-wood", amount = 5},
     }):
-	setTechName("crystallology-2"):
+	setTechName("omnitech-crystallology-2"):
 	setResults({type = "item", name = "carbomnilline", amount = 5}
 	):extend()
 	
@@ -45,7 +45,7 @@ RecGen:create("omnimatter_chemistry","tree-making"):
       {type = "fluid", name = "omnic-water", amount = 120},
       {type = "fluid", name = "omnic-mutagen", amount = 120},
     }):
-	setTechName("crystallology-2"):
+	setTechName("omnitech-crystallology-2"):
 	setResults(
 		{type = "item", name = "temperate-tree", amount = 1,probability=0.02},
 		{type = "item", name = "swamp-tree", amount = 1,probability=0.02},

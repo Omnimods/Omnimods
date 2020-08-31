@@ -25,11 +25,11 @@ if mods["omnimatter_crystal"] then
 	omni.lib.add_recipe_ingredient("utility-science-pack","basic-oscillo-crystallonic")
 
 	--SP tech manipulation
-	omni.lib.remove_science_pack("crystallonics-4","utility-science-pack")
+	omni.lib.remove_science_pack("omnitech-crystallonics-4","utility-science-pack")
 	omni.lib.add_science_pack("electric-engine")
 	omni.lib.add_science_pack("plastics")
 	omni.lib.add_prerequisite("plastics", "omnipack-technology")
-	omni.lib.replace_science_pack("crystallology-2","chemical-science-pack")
+	omni.lib.replace_science_pack("omnitech-crystallology-2","chemical-science-pack")
 	omni.lib.replace_science_pack("military-3","chemical-science-pack")
 	omni.lib.replace_science_pack("mining-productivity-4","chemical-science-pack")
 	--omni.lib.replace_science_pack("rocket-damage-3","chemical-science-pack") --keeps throwing an error??
@@ -49,7 +49,7 @@ if mods["omnimatter_crystal"] then
 	end
 
 	if mods["omnimatter_wood"] then 
-		omni.lib.replace_science_pack("omnimutator-2","chemical-science-pack")
+		omni.lib.replace_science_pack("omnitech-omnimutator-2","chemical-science-pack")
 	end
 
 	if mods["omnimatter_compression"] then
@@ -111,7 +111,7 @@ if mods["omnimatter_crystal"] then
 		omni.lib.replace_science_pack("strand-casting-2","chemical-science-pack")
 		omni.lib.replace_science_pack("thermal-water-extraction","chemical-science-pack")
 		omni.lib.replace_science_pack("ore-advanced-floatation","chemical-science-pack")
-		omni.lib.replace_science_pack("angels-omnicium-smelting-3","chemical-science-pack")
+		omni.lib.replace_science_pack("omnitech-angels-omnicium-smelting-3","chemical-science-pack")
 		omni.lib.add_science_pack("angels-coolant-1")
 
 		if mods ["Clowns-Extended-Minerals"] then

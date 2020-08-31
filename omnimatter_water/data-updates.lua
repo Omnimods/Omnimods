@@ -10,10 +10,10 @@ local get_omniwater_prereq = function(grade,element,tier)
   end
   --Add an electric omnitractor tech as prereq if this is the first tech of a new tier
   if grade%omni.fluid_levels_per_tier == 1 and (tractor_lvl <=omni.max_tier) and (tractor_lvl >= 1)then
-    req[#req+1]="omnitractor-electric-"..tractor_lvl
+    req[#req+1]="omnitech-omnitractor-electric-"..tractor_lvl
     --Add the last tech as prereq for this omnitractor tech
 	  if (grade-1) > 0 then
-      omni.lib.add_prerequisite("omnitractor-electric-"..tractor_lvl, "omnitech-"..element.."-omnitraction-"..(grade-1), true)
+      omni.lib.add_prerequisite("omnitech-omnitractor-electric-"..tractor_lvl, "omnitech-"..element.."-omnitraction-"..(grade-1), true)
     end
   end
 	return req

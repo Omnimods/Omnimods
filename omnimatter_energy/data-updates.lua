@@ -24,20 +24,20 @@ RecGen:import("burner-inserter"):setIngredients({"omnitor",1},{"iron-plate",1}):
 RecGen:import("inserter"):
 	setIngredients({"burner-inserter",1},{"omnitor",1}):
 	setEnabled(false):
-	setTechName("anbaric-inserter"):
+	setTechName("omnitech-anbaric-inserter"):
 	setTechCost(60):
 	setTechIcon("__base__/graphics/technology/demo/electric-inserter.png"):
 	setTechPacks(1):
-	setTechPrereq("anbaricity"):extend()
+	setTechPrereq("omnitech-anbaricity"):extend()
 
-	omni.lib.add_prerequisite("logistic-science-pack", "anbaric-inserter")
+	omni.lib.add_prerequisite("logistic-science-pack", "omnitech-anbaric-inserter")
 
 RecGen:import("boiler"):
-	setTechName("steam-power"):
+	setTechName("omnitech-steam-power"):
 	setTechCost(120):
 	addIngredients("burner-omnitractor"):
-	setTechLocName("steam-power"):
-	setTechPrereq("logistic-science-pack","basic-omnium-power"):
+	setTechLocName("omnitech-steam-power"):
+	setTechPrereq("logistic-science-pack","omnitech-basic-omnium-power"):
 	setTechIcon("omnimatter_energy","steam-power"):
 	equalize("burner-omnitractor"):
 	setEnabled(false):
@@ -47,15 +47,15 @@ if mods["angelsindustries"] and angelsmods.industries.components then
 	RecGen:import("steam-engine"):
 	equalize("omni-heat-burner"):
 	setEnabled(false):
-	setTechName("steam-power"):extend()
+	setTechName("omnitech-steam-power"):extend()
 
 	RecGen:import("electric-mining-drill"):
-	setTechName("anbaric-mining"):
+	setTechName("omnitech-anbaric-mining"):
 	setTechCost(100):
 	setTechIcon("omnimatter_energy","mining-drill"):
 	setTechPacks(1):
 	setEnabled(false):
-	setTechPrereq("anbaricity"):extend()
+	setTechPrereq("omnitech-anbaricity"):extend()
 else
 	RecGen:import("steam-engine"):
 	setIngredients(
@@ -65,23 +65,23 @@ else
 	  {type="item",name="omni-heat-burner",amount=1}):
 	  equalize("omni-heat-burner"):
 	  setEnabled(false):
-	  setTechName("steam-power"):extend()
+	  setTechName("omnitech-steam-power"):extend()
 	  
 	RecGen:import("electric-mining-drill"):
 	setIngredients(
       {type="item", name="iron-gear-wheel", amount=4},
       {type="item", name="anbaric-omnitor", amount=2},
       {type="item", name="burner-mining-drill", amount=1}):
-	setTechName("anbaric-mining"):
+	setTechName("omnitech-anbaric-mining"):
 	setTechCost(100):
 	setTechIcon("omnimatter_energy","mining-drill"):
 	setTechPacks(1):
 	setEnabled(false):
-	setTechPrereq("anbaricity"):extend()
+	setTechPrereq("omnitech-anbaricity"):extend()
 end
 	
 if mods["bobassembly"] and settings.startup["bobmods-assembly-burner"].value then
-	omni.lib.add_prerequisite("basic-automation", "simple-automation")
+	omni.lib.add_prerequisite("basic-automation", "omnitech-simple-automation")
 	omni.lib.remove_prerequisite("automation", "basic-automation")
 	BuildGen:import("omnitor-assembling-machine"):
 		setSpeed(0.1):
@@ -132,13 +132,13 @@ else
 end
 
 if mods["bobpower"] then
-	omni.lib.add_prerequisite("bob-steam-engine-2", "steam-power")
-	omni.lib.add_prerequisite("bob-boiler-2", "steam-power")
+	omni.lib.add_prerequisite("bob-steam-engine-2", "omnitech-steam-power")
+	omni.lib.add_prerequisite("bob-boiler-2", "omnitech-steam-power")
 	RecGen:import("bob-burner-generator"):setEnabled(false):extend()
 end
 
 if mods["bobmining"] then
-	omni.lib.add_prerequisite("bob-drills-1", "anbaric-mining")
+	omni.lib.add_prerequisite("bob-drills-1", "omnitech-anbaric-mining")
 end
 
 omni.lib.add_prerequisite("fast-inserter", "burner-filter")
@@ -181,37 +181,37 @@ else
 		RecGen:import("ore-sorting-facility"):setIngredients({type="item", name="omnite-brick", amount=30},
 			{type="item", name="iron-plate", amount=15},
 			{type="item", name="anbaric-omnitor", amount=5}):
-			setTechPrereq("anbaricity"):extend() --not working...
+			setTechPrereq("omnitech-anbaricity"):extend() --not working...
 
-			omni.lib.add_prerequisite("ore-crushing", "anbaricity")
+			omni.lib.add_prerequisite("ore-crushing", "omnitech-anbaricity")
 	end
 
 	if mods["angelssmelting"] then
-		omni.lib.add_prerequisite("angels-metallurgy-1", "basic-omnium-power")
+		omni.lib.add_prerequisite("angels-metallurgy-1", "omnitech-basic-omnium-power")
 	end	
 end
-	  
-RecGen:import("basic-circuit-board"):setEnabled(false):setTechName("anbaricity"):extend()
+
+omni.lib.add_unlock_recipe("omnitech-anbaricity", "basic-circuit-board")
 
 --Check if the vanilla lab is locked behind a tech /disabled. If yes, modify the tech
 if data.raw.recipe["lab"].enabled == false then
 	RecGen:import("lab"):
-		setTechLocName("anbaric-lab"):
+		setTechLocName("omnitech-anbaric-lab"):
 		addIngredients({"omnitor-lab",1}):
 		setTechIcon("omnimatter_energy","lab"):
 		setTechCost(100):extend()
 
-	omni.lib.add_prerequisite(omni.lib.get_tech_name("lab"), "anbaricity")
+	omni.lib.add_prerequisite(omni.lib.get_tech_name("lab"), "omnitech-anbaricity")
 else
 --Create a new tech
 	RecGen:import("lab"):setEnabled(false):
-		setTechName("anbaric-lab"):
-		setTechLocName("anbaric-lab"):
+		setTechName("omnitech-anbaric-lab"):
+		setTechLocName("omnitech-anbaric-lab"):
 		addIngredients({"omnitor-lab",1}):
 		setTechCost(100):
 		setTechIcon("omnimatter_energy","lab"):
 		setTechPacks(1):
-		setTechPrereq("anbaricity"):extend()
+		setTechPrereq("omnitech-anbaricity"):extend()
 end
 
 --Stuff to manually remove from the Omnitor Lab
@@ -229,9 +229,9 @@ end
 
 -- Deadlock compatibility
 if data.raw.technology["basic-transport-belt-beltbox"] then
-	omni.lib.add_unlock_recipe("basic-belt-logistics", "basic-transport-belt-loader")
+	omni.lib.add_unlock_recipe("omnitech-basic-belt-logistics", "basic-transport-belt-loader")
 	TechGen:import("basic-transport-belt-beltbox"):
-	setPrereq("basic-splitter-logistics","basic-underground-logistics"):
+	setPrereq("omnitech-basic-splitter-logistics","omnitech-basic-underground-logistics"):
 	extend()
 end
 
@@ -248,3 +248,4 @@ if data.raw.technology["logistics-0"] then
 end
 
 require("prototypes.bobs_burner_phase")
+require("prototypes.heresy")

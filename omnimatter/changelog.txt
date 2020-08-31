@@ -1,4 +1,25 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.0.2
+Date: 2020.08.31
+  Features:
+    - Basic omnitraction recipes now have proper icons and locales
+    - Omnitraction recipes now show their result as floating point value in their description
+  Changes:
+    - Improved splitting between impure omnitraction recipes to have more even distribution.
+    - Renamed technology "omnitractor-electric-x" to "omnitech-omnitractor-electric-x"
+    - Renamed technology "base-impure-extraction" to "omnitech-base-impure-extraction"
+    - Renamed technology "angels-omnicium-smelting-x" to "omnitech-angels-omnicium-smelting-x"
+    - Renamed technology "angels-omnicium-iron-alloy-smelting" to 
+      "omnitech-angels-omnicium-iron-alloy-smelting"
+    - Renamed technology "angels-omnicium-steel-alloy-smelting" to 
+      "omnitech-angels-omnicium-steel-alloy-smelting"
+    - Renamed technology "angels-omnicium-aluminium-alloy-smelting" to 
+      "omnitech-angels-omnicium-aluminium-alloy-smelting"
+    - Renamed technology "angels-omnicium-tungsten-alloy-smelting" to 
+      "omnitech-angels-omnicium-tungsten-alloy-smelting"
+  Info:
+    - This recipe change could require changes to early-game omnitraction setups on existing saves.
+---------------------------------------------------------------------------------------------------
 Version: 4.0.1
 Date: 2020.08.24
   Bugfixes:

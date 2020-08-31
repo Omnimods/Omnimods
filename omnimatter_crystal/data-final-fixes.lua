@@ -24,18 +24,18 @@ for _,item in pairs(data.raw.item) do
 end
 
 for i=2,4 do
-	if not (data.raw.technology["crystallonics-"..i-1].enabled and data.raw.technology["crystallonics-"..i].effects and #data.raw.technology["crystallonics-"..i].effects>0) then
-		--data.raw.technology["crystallonics-"..i].enabled = false
+	if not (data.raw.technology["omnitech-crystallonics-"..i-1].enabled and data.raw.technology["omnitech-crystallonics-"..i].effects and #data.raw.technology["omnitech-crystallonics-"..i].effects>0) then
+		--data.raw.technology["omnitech-crystallonics-"..i].enabled = false
 	end
 end
 
 -- Add the Burner Omniplant to the omnitractor tech here until the tech is moved out of final fixes in omnimatter
 -- If omniwater and bob's steam phase is on, we need a way to produce water early via omniplant
 if mods["omnimatter_water"] and data.raw.recipe["steam-science-pack"] then
-	RecGen:import("burner-omniplant"):setTechName("base-impure-extraction"):extend()
+	RecGen:import("burner-omniplant"):setTechName("omnitech-base-impure-extraction"):extend()
 	omni.lib.replace_science_pack("omnitech-water-omnitraction-1","automation-science-pack", "steam-science-pack")
 	omni.lib.replace_science_pack("omnitech-omnic-water-omnitraction-1","automation-science-pack", "steam-science-pack")
-	omni.lib.remove_prerequisite("omnitech-omnic-water-omnitraction-1", "omnitractor-electric-1")
+	omni.lib.remove_prerequisite("omnitech-omnic-water-omnitraction-1", "omnitech-omnitractor-electric-1")
 else
-	RecGen:import("burner-omniplant"):setTechName("omnitractor-electric-1"):extend()
+	RecGen:import("burner-omniplant"):setTechName("omnitech-omnitractor-electric-1"):extend()
 end

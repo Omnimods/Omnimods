@@ -94,5 +94,5 @@ if mods["Bio_Industries"] then
 		icon_size=64,}
 	}
 	
-	omni.lib.add_prerequisite("bi-tech-bio-farming", "omnimutator") 
+	omni.lib.add_prerequisite("bi-tech-bio-farming", "omnitech-omnimutator") 
 end
