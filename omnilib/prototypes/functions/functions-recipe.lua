@@ -430,7 +430,7 @@ function omni.lib.replace_recipe_result(recipename, result, replacement)
                 if (res.name or res[1]) == repname then        
                     found = true
                     num=i
-                    amount = (repamount or 1) + res.amount or res[2]
+                    amount = (repamount or 1) + (res.amount or res[2])
                     break
                 end
             end
@@ -509,7 +509,7 @@ function omni.lib.replace_recipe_ingredient(recipename, ingredient, replacement)
                 if (ing.name or ing[1]) == repname then        
                     found = true
                     num=i
-                    amount = (repamount or 1) + ing.amount or ing[2]
+                    amount = (repamount or 1) + (ing.amount or ing[2])
                     break
                 end
             end
