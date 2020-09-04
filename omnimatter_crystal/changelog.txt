@@ -1,10 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.0.2
+Date: 2020.09.04
+  Bugfixes:
+    - Fixed an issue that prevented salting recipes from beeing unlocked with crystallology techs
+---------------------------------------------------------------------------------------------------
 Version: 4.0.1
 Date: 2020.08.31
   Changes:
     - Renamed technology "crystallology-x" to "omnitech-crystallology-x"
     - Renamed technology "crystallonics-y" to "omnitech-crystallonics-x"
-    - Renamed technology "pseudoliquid-amorphous-crystal-x" to "omnitech-pseudoliquid-amorphous-crystal-x"
+    - Renamed technology "pseudoliquid-amorphous-crystal-x" to 
+    - "omnitech-pseudoliquid-amorphous-crystal-x"
 ---------------------------------------------------------------------------------------------------
 Version: 4.0.0
 Date: 2020.08.22

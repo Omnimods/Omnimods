@@ -47,7 +47,6 @@ if data.raw.item["angels-copper-pebbles-crystal"] then
 	end
 end
 
-local crystalines = {}
 if not mods["angelsrefining"] then
 	local turn_to_plate = {}
 	for _,rec in pairs(data.raw.recipe) do
@@ -88,35 +87,28 @@ if not mods["angelsrefining"] then
 						end
 					end
 				end
-				--omni.lib.add_unlock_recipe("omnitech-crystallology-"..tier, rec.name)
-				local ic = salt_omnide_icon(ore)
-				local solution = {
-					type = "recipe",
-					name = ore.."-salting",
-					localised_name = {"recipe-name.omnide-salting", {"item-name."..ore}},
-					localised_description = {"recipe-description.pure_extraction", {"item-name."..ore}},
-					category = "omniplant",
-					subgroup = "salting",
-					order = "a[omnide-salting]"..ore,
-					enabled = false,
-					ingredients = {
+				
+				RecGen:create("omnimatter_crystal", ore.."-salting"):
+					setIngredients({
 						{type="item",name=ore,amount=1},
-						{type="fluid",name="hydromnic-acid",amount=120},
-					},
-					icons = ic,
-					results = {
-						{type="item",name=ore.."-omnide-salt",amount=1},
-					},
-					energy_required = 5,
-				}
+						{type="fluid",name="hydromnic-acid",amount=120}}):
+					setResults(ore.."-omnide-salt"):
+					setEnabled(false):
+					setTechName("omnitech-crystallology-"..tier):
+					setIcons(salt_omnide_icon(ore)):
+					setLocName({"recipe-name.omnide-salting", {"item-name."..ore}}):
+					setLocDesc({"recipe-description.pure_extraction", {"item-name."..ore}}):
+					setSubgroup("salting"):
+					setOrder("a[omnide-salting]"..ore):
+					setStacksize(200):
+					setEnergy(5):
+					setCategory("omniplant"):
+					extend()
 
-				crystalines[#crystalines+1]=solution
-				omni.lib.add_unlock_recipe("omnitech-crystallology-"..tier, ore.."-salting")
 				omni.lib.add_unlock_recipe("omnitech-crystallology-"..tier, ore.."-omnide-solution")
 				omni.lib.add_unlock_recipe("omnitech-crystallology-"..tier, ore.."-crystal-omnitraction")
 				omni.lib.add_unlock_recipe("omnitech-crystallology-"..tier, ore.."-crystal")
 			end
 		end
 	end
-	data:extend(crystalines)
 end
