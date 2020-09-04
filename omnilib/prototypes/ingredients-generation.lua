@@ -85,7 +85,7 @@ else
 	component["omniplate"]=component["vanilla-omniplate"]
 end
 --PLATE SWITCHES
-if mods["angelsindustries"] and angelsmods.industries.overhaul then
+if mods["angelsindustries"] and angelsmods.industries.components then
 	component["plates"]=component["angels-comp-plate"]
 elseif mods["bobplates"] then
 	if mods["angelssmelting"] then
