@@ -2,7 +2,7 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
 	log("OmniEnergy: Bobs Belt Overhaul found")
 
 	--Remove logistics-0 Tech
-	TechGen:import("logistics-0"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():extend()
+	TechGen:import("logistics-0"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():sethidden():extend()
 
 	--Create seperate techs for Basic Belt, Splitter and UG
 	RecGen:import("basic-transport-belt"):
@@ -49,7 +49,7 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
 
 else
 	--Remove logistics Tech
-	TechGen:import("logistics"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():extend()
+	TechGen:import("logistics"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():sethidden():extend()
 
 	--Create seperate techs for Belt, Splitter and UG
 	RecGen:import("transport-belt"):

@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.0.4
+Date: 2020.09.xx
+  Features:
+    - Added TechGen:sethidden()
+  Bugfixes:
+    - Fixed omnitractors mk4+ requiring the wrong plates with angels industries
+---------------------------------------------------------------------------------------------------
 Version: 4.0.3
 Date: 2020.09.01
   Bugfixes:

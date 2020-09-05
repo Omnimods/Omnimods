@@ -2604,6 +2604,12 @@ function TechGen:removeUnlocks(...)
 	self.unlock=omni.lib.dif(self.unlock,unlock)
 	return self
 end
+
+function TechGen:sethidden(hidden)
+	self.hidden = hidden or true
+	return self
+end
+
 function TechGen:generate_tech()
 	local c = {}
 	local add_cost = 1
@@ -2640,6 +2646,7 @@ function TechGen:generate_tech()
 	icon_size = 128,
 	prerequisites = self.prereq,
 	enabled = self.enabled,
+	hidden = self.hidden,
 	effects =u,
 	unit  =
 	{
