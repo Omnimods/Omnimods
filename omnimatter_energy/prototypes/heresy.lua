@@ -22,8 +22,8 @@ if mods["pycoalprocessing"] then
       {name = "micro-mine-mk01", old = "inserter", new = "burner-inserter"},
       {name = "botanical-nursery", old = "electric-mining-drill", new = "burner-mining-drill"},
       {name = "sap-extractor-mk01", old = "inserter", new = "burner-inserter"},
-      {name = "agar", old = "steam", new = "coal-gas"},
-      {name = "latex", old = "steam", new = "coal-gas"},
+      {name = "agar", old = "steam", new = "coal-gas", temp = "blank"},
+      {name = "latex", old = "steam", new = "coal-gas", temp = "blank"},
 
     }
     for _,ing in pairs(ing_reps) do
@@ -35,7 +35,11 @@ if mods["pycoalprocessing"] then
     --add in a few custom tweaks if not playing angels or bobs
     if #replacements > 0 then
       for i,rep in pairs(replacements) do
-        omni.lib.replace_recipe_ingredient(rep.name, rep.old, rep.new)
+        if rep.temp then --replace the whole table
+          omni.lib.replace_recipe_ingredient(rep.name, rep.old, {name = rep.new, temperature = rep.temp})
+        else
+          omni.lib.replace_recipe_ingredient(rep.name, rep.old, rep.new)
+        end
       end
     end
     if #burners > 0 then
