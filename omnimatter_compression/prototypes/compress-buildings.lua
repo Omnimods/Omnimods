@@ -23,6 +23,7 @@ local building_list = {--Types
   ["mining-drill"] = true,
   ["solar-panel"] = true,
   ["reactor"] = true,
+  ["heat-pipe"] = true,
   ["accumulator"] = true,
   ["transport-belt"] = true,
   ["loader"] = true,
@@ -421,6 +422,13 @@ local run_entity_updates = function(new, kind, i)
     new.production = new_effect(new.production,i)
   elseif kind == "reactor" then
     new.consumption = new_effect(new.consumption,i)
+    if new.heatbuffer then
+      new.heatbuffer.specific_heat = new_effect(new.heatbuffer.specific_heat,i,true)
+      new.heatbuffer.max_transfer = new_effect(new.heatbuffer.max_transfer,i,true)
+    end
+  end
+  --Heat Pipe
+  if kind == "heat-pipe" then
     if new.heatbuffer then
       new.heatbuffer.specific_heat = new_effect(new.heatbuffer.specific_heat,i,true)
       new.heatbuffer.max_transfer = new_effect(new.heatbuffer.max_transfer,i,true)
