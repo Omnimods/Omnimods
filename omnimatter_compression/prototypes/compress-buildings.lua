@@ -439,6 +439,9 @@ local run_entity_updates = function(new, kind, i)
     process_fluid_box(new.output_fluid_box, i)
     process_fluid_box(new.fluid_box, i, true)
     new.scale_fluid_usage = true
+    if new.max_power_output then
+      new.max_power_output = new_effect(new.max_power_output, i)
+    end
     -- new.fluid_usage_per_tick = new.fluid_usage_per_tick * math.pow(multiplier, i) / sluid_contain_fluid
      --new.fluid_usage_per_tick*math.pow((multiplier+1)/multiplier,i)
     --new.effectivity = new.effectivity*math.pow(multiplier,i)
@@ -654,6 +657,16 @@ for build_name, values in pairs(recipe_results) do
       end
     end
 end
+
+-- create tiered fluid fuel
+for fluidname, fluid in pairs(data.raw.fluid) do
+  if fluid.fuel_value and not fluidname:find("%-concentrated%-grade%-") then
+    for i = 1, omni.compression.bld_lvls do
+      create_concentrated_fluid(fluidname,i)
+    end
+  end
+end
+
 --extend new categories
 data:extend(recipe_category)
 --extend new buildings
