@@ -311,11 +311,13 @@ for _,ore_tiers in pairs(omnisource) do
         local icons = omni.icon.of("omnite", "item")
         icons[1].tint = {1,1,1,0.8}-- Just a canvas but we want the right size
         local item_count = #split-1
-        for I=1, item_count do
-            result_names = result_names .. "[img=item." .. split[I].name .. "]/"
+        for I=1, #split do
+            --Add crushed stone to the recipe description and jump the rest
             desc = desc.."[img=item." .. split[I].name .. "] x "..string.format("%.2f",split[I].amount * (split[I].probability or 1))
-            if I<item_count then desc = desc.."\n" end
+            if I < #split then desc = desc.."\n" end
+            if I == #split then goto continue end
 
+            result_names = result_names .. "[img=item." .. split[I].name .. "]/"
             local deg = (I / item_count * 360)+90 -- Offset a bit
             deg = math.rad(deg % 360)
             icons = util.combine_icons(
@@ -329,6 +331,7 @@ for _,ore_tiers in pairs(omnisource) do
                     }
                 }
             )
+            ::continue::
         end
         result_names = result_names:sub(1, -2)
         local base_impure_ore = (
