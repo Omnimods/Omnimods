@@ -439,7 +439,6 @@ end)
 script.on_event(defines.events.on_research_finished, function(event)
 	if not initializing then
 		local tech = event.research
-		if tech.name == "compression-recipes" then
 		if tech.name == "compression-recipes" or tech.name:find("compression%-%a+%-buildings") then
 			global.omni.need_update = true
 		elseif not global.omni.need_update then -- If we need_update we'll be iterating everything anyway.
