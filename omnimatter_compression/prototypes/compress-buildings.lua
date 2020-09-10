@@ -23,6 +23,7 @@ local building_list = {--Types
   ["mining-drill"] = true,
   ["solar-panel"] = true,
   ["reactor"] = true,
+  ["heat-pipe"] = true,
   ["accumulator"] = true,
   ["transport-belt"] = true,
   ["loader"] = true,
@@ -166,7 +167,7 @@ local create_concentrated_fluid = function(fluid,tier)
   newFluid.localised_name = omni.locale.custom_name(newFluid, "compressed-fluid", tier)
   newFluid.name = newFluid.name.."-concentrated-grade-"..tier
   if newFluid.heat_capacity then
-    newFluid.heat_capacity = new_effect(newFluid.heat_capacity, tier, nil, sluid_contain_fluid)
+    newFluid.heat_capacity = new_effect(newFluid.heat_capacity, tier, nil, multiplier^tier)
   end
   
   if newFluid.fuel_value then
@@ -177,11 +178,10 @@ local create_concentrated_fluid = function(fluid,tier)
   data:extend{newFluid}
 
   local baseFluid = fluid
-  if tier > 1 then baseFluid = baseFluid.."-concentrated-grade-"..(tier-1) end
-  local baseFluidData = {{name = baseFluid, type = "fluid", amount = sluid_contain_fluid*multiplier}}
-  local compressFluidData = {{name = fluid.."-concentrated-grade-"..tier, type = "fluid", amount = sluid_contain_fluid}}
+  -- if tier > 1 then baseFluid = baseFluid.."-concentrated-grade-"..(tier-1) end
+  local baseFluidData = {{name = baseFluid, type = "fluid", amount = sluid_contain_fluid*multiplier^(tier+1)}}
+  local compressFluidData = {{name = fluid.."-concentrated-grade-"..tier, type = "fluid", amount = sluid_contain_fluid*multiplier}}
   local compressRecipeData = {
-    subgroup = "concentrator-fluids",
     energy_required = multiplier/10,
     enabled = false,
     hide_from_player_crafting = omni.compression.hide_handcraft
@@ -208,6 +208,7 @@ local create_concentrated_fluid = function(fluid,tier)
     --localised_name = omni.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
     icons = omni.lib.add_overlay(fluid,"uncompress"),
     category = "fluid-condensation",
+    subgroup = "concentrator-fluids",
     enabled = false,
     order = newFluid.order or "z".."[condensed-"..fluid .."]",
     hide_from_player_crafting = omni.compression.hide_handcraft
@@ -236,9 +237,9 @@ local process_fluid_box = function(fluid_box, i, is_graded)
     end
     fluid_box.filter = fl_name
   end
-  if fluid_box.base_area then
-    fluid_box.base_area = fluid_box.base_area * math.pow(multiplier, i) / sluid_contain_fluid
-  end
+  -- if fluid_box.base_area then
+  --   fluid_box.base_area = fluid_box.base_area * math.pow(multiplier, i) / sluid_contain_fluid
+  -- end
   for I=1, #fluid_box do
     if fluid_box[I] then
       if fluid_box.filter then
@@ -426,20 +427,31 @@ local run_entity_updates = function(new, kind, i)
       new.heatbuffer.max_transfer = new_effect(new.heatbuffer.max_transfer,i,true)
     end
   end
+  --Heat Pipe
+  if kind == "heat-pipe" then
+    if new.heatbuffer then
+      new.heatbuffer.specific_heat = new_effect(new.heatbuffer.specific_heat,i,true)
+      new.heatbuffer.max_transfer = new_effect(new.heatbuffer.max_transfer,i,true)
+    end
+  end
   --Boiler
   if kind == "boiler" then
-    if new.energy_consumption then new.energy_consumption = new_effect(new.energy_consumption, i, nil, (multiplier^(i+1))/sluid_contain_fluid) end
+    if new.energy_consumption then new.energy_consumption = new_effect(new.energy_consumption, i, nil, multiplier^i) end
     if new.energy_source.fuel_inventory_size then new.energy_source.fuel_inventory_size = new.energy_source.fuel_inventory_size*(i+1) end
     if new.energy_source.effectivity then new.energy_source.effectivity = math.pow(new.energy_source.effectivity,1/(i+1)) end
     process_fluid_box(new.output_fluid_box, i, true)
-    process_fluid_box(new.fluid_box, i)
+    process_fluid_box(new.fluid_box, i, true)
   end
   --Generator
   if kind == "generator" and new.fluid_box then
     process_fluid_box(new.output_fluid_box, i)
     process_fluid_box(new.fluid_box, i, true)
     new.scale_fluid_usage = true
-    new.fluid_usage_per_tick = new.fluid_usage_per_tick * math.pow(multiplier, i) / sluid_contain_fluid --new.fluid_usage_per_tick*math.pow((multiplier+1)/multiplier,i)
+    if new.max_power_output then
+      new.max_power_output = new_effect(new.max_power_output, i)
+    end
+    -- new.fluid_usage_per_tick = new.fluid_usage_per_tick * math.pow(multiplier, i) / sluid_contain_fluid
+     --new.fluid_usage_per_tick*math.pow((multiplier+1)/multiplier,i)
     --new.effectivity = new.effectivity*math.pow(multiplier,i)
   end
   --Accumulator
@@ -490,7 +502,12 @@ local run_entity_updates = function(new, kind, i)
   end
   --offshore pumps
   if kind == "offshore-pump" then
-    new.fluid = "concentrated-"..new.fluid
+    -- new.fluid = "concentrated-"..new.fluid
+    local fl_name = new.fluid.."-concentrated-grade-"..i
+    if not data.raw.fluid[fl_name] then 
+      create_concentrated_fluid(new.fluid,i)
+    end
+    new.fluid = fl_name
   end
   --Inserters!
   if kind == "inserter" then
@@ -648,6 +665,16 @@ for build_name, values in pairs(recipe_results) do
       end
     end
 end
+
+-- create tiered fluid fuel
+for fluidname, fluid in pairs(data.raw.fluid) do
+  if fluid.fuel_value and not fluidname:find("concentrated%-") then
+    for i = 1, omni.compression.bld_lvls do
+      create_concentrated_fluid(fluidname,i)
+    end
+  end
+end
+
 --extend new categories
 data:extend(recipe_category)
 --extend new buildings
