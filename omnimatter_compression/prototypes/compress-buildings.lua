@@ -154,7 +154,7 @@ local new_effect = function(effect, level, linear, constant)
   local mult = (
     (linear and level + 1)
     or constant or
-    math.pow(multiplier + 1, level)
+    math.pow(multiplier, level + 1)
   )
   return omni.lib.mult_fuel_value(effect, mult)
 end
@@ -166,7 +166,12 @@ local create_concentrated_fluid = function(fluid,tier)
   newFluid.localised_name = omni.locale.custom_name(newFluid, "compressed-fluid", tier)
   newFluid.name = newFluid.name.."-concentrated-grade-"..tier
   if newFluid.heat_capacity then
-    newFluid.heat_capacity = new_effect(newFluid.heat_capacity, tier, nil, sluid_contain_fluid)
+    --Boiler fuel usage, and thus output is based on heat_capacity and energy spent to achieve the desired temperature
+    local mult = 1
+    if multiplier ^ tier / tier < 3.01 then
+      mult = (multiplier ^ tier / tier) / 3.01
+    end
+    newFluid.heat_capacity = new_effect(newFluid.heat_capacity, nil, nil, 60 * tier * mult)
   end
   
   if newFluid.fuel_value then
@@ -237,7 +242,7 @@ local process_fluid_box = function(fluid_box, i, is_graded)
     fluid_box.filter = fl_name
   end
   if fluid_box.base_area then
-    fluid_box.base_area = fluid_box.base_area * math.pow(multiplier, i) / sluid_contain_fluid
+    fluid_box.base_area = (fluid_box.base_area * math.pow(multiplier, i)) / sluid_contain_fluid
   end
   for I=1, #fluid_box do
     if fluid_box[I] then
@@ -254,7 +259,7 @@ local process_fluid_box = function(fluid_box, i, is_graded)
         fluid_box[I].filter = fl_name
       end
       if fluid_box[I].base_area then
-        fluid_box[I].base_area = fluid_box[I].base_area * math.pow(multiplier, i) / sluid_contain_fluid
+        fluid_box[I].base_area = (fluid_box[I].base_area * math.pow(multiplier, i)) / sluid_contain_fluid
       end
     end
   end
@@ -428,19 +433,45 @@ local run_entity_updates = function(new, kind, i)
   end
   --Boiler
   if kind == "boiler" then
-    if new.energy_consumption then new.energy_consumption = new_effect(new.energy_consumption, i, nil, (multiplier^(i+1))/sluid_contain_fluid) end
-    if new.energy_source.fuel_inventory_size then new.energy_source.fuel_inventory_size = new.energy_source.fuel_inventory_size*(i+1) end
-    if new.energy_source.effectivity then new.energy_source.effectivity = math.pow(new.energy_source.effectivity,1/(i+1)) end
     process_fluid_box(new.output_fluid_box, i, true)
     process_fluid_box(new.fluid_box, i)
+    if new.energy_source.fuel_inventory_size then
+      new.energy_source.fuel_inventory_size = new.energy_source.fuel_inventory_size * (i + 1)
+    end
+    if new.energy_source.type == "heat" then
+      new.energy_source.specific_heat = new_effect(new.energy_consumption, nil, nil, math.max(multiplier ^ i / i, 3.01) / 60)
+      new.energy_source.max_transfer = new.energy_source.specific_heat
+      new.energy_consumption = new_effect(new.energy_consumption, nil, nil, multiplier ^ i)
+      local fluid = data.raw.fluid[new.fluid_box.filter or new.fluid_box[1].filter or ""]
+      local fluid_consumption = math.max(multiplier ^ i / i, 3.01)
+      if fluid then
+        fluid_consumption = (
+          util.parse_energy(new.energy_source.specific_heat)
+          / util.parse_energy(fluid.heat_capacity) 
+          / (new.target_temperature - fluid.default_temperature)
+        ) * 60
+      end
+      new.localised_description = {
+        "entity-description.boiler-append",
+        new.localised_description,
+        string.format("%.2f", fluid_consumption),
+        new.output_fluid_box.filter or new.output_fluid_box[1].filter}
+    else
+      if new.energy_consumption then
+        new.energy_consumption = new_effect(new.energy_consumption, nil, nil, math.max(multiplier ^ i / i, 3.01)/60)
+      end
+      if new.energy_source.effectivity then
+        -- We use what energy cost wasn't added to the fluid's heat_capacity to make up the difference
+        new.energy_source.effectivity = new.energy_source.effectivity / (60 / math.max(multiplier ^ i / i, 3.01)) / multiplier ^ i
+      end
+    end
   end
   --Generator
   if kind == "generator" and new.fluid_box then
     process_fluid_box(new.output_fluid_box, i)
     process_fluid_box(new.fluid_box, i, true)
-    new.scale_fluid_usage = true
-    new.fluid_usage_per_tick = new.fluid_usage_per_tick * math.pow(multiplier, i) / sluid_contain_fluid --new.fluid_usage_per_tick*math.pow((multiplier+1)/multiplier,i)
-    --new.effectivity = new.effectivity*math.pow(multiplier,i)
+    -- Set fluid usage
+    new.fluid_usage_per_tick = (new.fluid_usage_per_tick * math.max(3.01, (multiplier ^ i / i))) / 60
   end
   --Accumulator
   if kind == "accumulator" then
