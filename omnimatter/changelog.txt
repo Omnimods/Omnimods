@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.0.3
+Date: 2020.09.xx
+  Bugfixes:
+    - Fixed basic omnitraction recipes not inlcuding crushed stone outputs in their description
+---------------------------------------------------------------------------------------------------
 Version: 4.0.2
 Date: 2020.08.31
   Features:

@@ -1,11 +1,10 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.0.4
-Date: ???
-  Features:
-    - Added compressed heat pipes
-  Changes:
-    - Compressed boilers requires tiered output again
-    - Buffed condensator throughput and changed how the recipe works 
+Date: 2020.09.XX
+  Bugfixes:
+    - Fix loadtime error with some compressed researches
+  Info:
+    - 4.0.4 version not found
 ---------------------------------------------------------------------------------------------------
 Version: 4.0.3
 Date: 2020.08.31
