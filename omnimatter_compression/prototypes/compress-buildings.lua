@@ -189,7 +189,7 @@ local create_concentrated_fluid = function(fluid,tier)
   local compressRecipeData = {
     energy_required = multiplier/10,
     enabled = false,
-    hide_from_player_crafting = omni.compression.hide_handcraft
+    hide_from_player_crafting = true
   }
   local uncompressRecipeData = table.deepcopy(compressRecipeData)
   compressRecipeData.ingredients = baseFluidData
@@ -205,7 +205,7 @@ local create_concentrated_fluid = function(fluid,tier)
     enabled = false,
     icons = newFluid.icons,
     order = newFluid.order or "z".."[condensed-"..fluid.name .."]",
-    hide_from_player_crafting = omni.compression.hide_handcraft
+    hide_from_player_crafting = true
   }
   local uncompress = {
     type = "recipe",
@@ -216,7 +216,7 @@ local create_concentrated_fluid = function(fluid,tier)
     subgroup = "concentrator-fluids",
     enabled = false,
     order = newFluid.order or "z".."[condensed-"..fluid .."]",
-    hide_from_player_crafting = omni.compression.hide_handcraft
+    hide_from_player_crafting = true
   }
 
   compress.normal = compressRecipeData
@@ -527,12 +527,13 @@ local run_entity_updates = function(new, kind, i)
   end
   --offshore pumps
   if kind == "offshore-pump" then
-    -- new.fluid = "concentrated-"..new.fluid
+    new.fluid = "concentrated-"..new.fluid
+    --[[
     local fl_name = new.fluid.."-concentrated-grade-"..i
     if not data.raw.fluid[fl_name] then 
       create_concentrated_fluid(new.fluid,i)
     end
-    new.fluid = fl_name
+    new.fluid = fl_name]]
   end
   --Inserters!
   if kind == "inserter" then
