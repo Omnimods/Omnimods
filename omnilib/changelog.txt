@@ -5,6 +5,8 @@ Date: 2020.09.xx
     - Added TechGen:sethidden()
   Bugfixes:
     - Fixed omnitractors mk4+ requiring the wrong plates with angels industries
+    - More compression unlock fixes
+    - Fixed missing recipe flags on recipe standardization
 ---------------------------------------------------------------------------------------------------
 Version: 4.0.3
 Date: 2020.09.01

@@ -200,7 +200,7 @@ for _,tech in pairs(data.raw.technology) do
       t.unit.count = stacks_needed
     else
       t.unit.time = t.unit.time * divisor
-      t.unit.count_formula = "(" .. t.unit.count_formula..")*"..1/divisor
+      t.unit.count_formula = "(" .. t.unit.count_formula..")*".. string.format("%f", 1 / divisor)
     end
     compressed_techs[#compressed_techs+1]=table.deepcopy(t)
   end

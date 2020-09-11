@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.0.4
+Date: 2020.09.XX
+  Features:
+    - Added compressed heat pipes
+  Bugfixes:
+    - Fix loadtime error with some compressed researches
+  Info:
+    - 4.0.4 version not found
+---------------------------------------------------------------------------------------------------
 Version: 4.0.3
 Date: 2020.08.31
   Bugfixes:

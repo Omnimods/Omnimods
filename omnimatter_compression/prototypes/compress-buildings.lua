@@ -23,6 +23,7 @@ local building_list = {--Types
   ["mining-drill"] = true,
   ["solar-panel"] = true,
   ["reactor"] = true,
+  ["heat-pipe"] = true,
   ["accumulator"] = true,
   ["transport-belt"] = true,
   ["loader"] = true,
@@ -182,11 +183,10 @@ local create_concentrated_fluid = function(fluid,tier)
   data:extend{newFluid}
 
   local baseFluid = fluid
-  if tier > 1 then baseFluid = baseFluid.."-concentrated-grade-"..(tier-1) end
-  local baseFluidData = {{name = baseFluid, type = "fluid", amount = sluid_contain_fluid*multiplier}}
-  local compressFluidData = {{name = fluid.."-concentrated-grade-"..tier, type = "fluid", amount = sluid_contain_fluid}}
+  -- if tier > 1 then baseFluid = baseFluid.."-concentrated-grade-"..(tier-1) end
+  local baseFluidData = {{name = baseFluid, type = "fluid", amount = sluid_contain_fluid*multiplier^(tier+1)}}
+  local compressFluidData = {{name = fluid.."-concentrated-grade-"..tier, type = "fluid", amount = sluid_contain_fluid*multiplier}}
   local compressRecipeData = {
-    subgroup = "concentrator-fluids",
     energy_required = multiplier/10,
     enabled = false,
     hide_from_player_crafting = omni.compression.hide_handcraft
@@ -213,6 +213,7 @@ local create_concentrated_fluid = function(fluid,tier)
     --localised_name = omni.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
     icons = omni.lib.add_overlay(fluid,"uncompress"),
     category = "fluid-condensation",
+    subgroup = "concentrator-fluids",
     enabled = false,
     order = newFluid.order or "z".."[condensed-"..fluid .."]",
     hide_from_player_crafting = omni.compression.hide_handcraft
@@ -431,6 +432,13 @@ local run_entity_updates = function(new, kind, i)
       new.heatbuffer.max_transfer = new_effect(new.heatbuffer.max_transfer,i,true)
     end
   end
+  --Heat Pipe
+  if kind == "heat-pipe" then
+    if new.heatbuffer then
+      new.heatbuffer.specific_heat = new_effect(new.heatbuffer.specific_heat,i,true)
+      new.heatbuffer.max_transfer = new_effect(new.heatbuffer.max_transfer,i,true)
+    end
+  end
   --Boiler
   if kind == "boiler" then
     process_fluid_box(new.output_fluid_box, i, true)
@@ -519,7 +527,12 @@ local run_entity_updates = function(new, kind, i)
   end
   --offshore pumps
   if kind == "offshore-pump" then
-    new.fluid = "concentrated-"..new.fluid
+    -- new.fluid = "concentrated-"..new.fluid
+    local fl_name = new.fluid.."-concentrated-grade-"..i
+    if not data.raw.fluid[fl_name] then 
+      create_concentrated_fluid(new.fluid,i)
+    end
+    new.fluid = fl_name
   end
   --Inserters!
   if kind == "inserter" then
@@ -677,6 +690,16 @@ for build_name, values in pairs(recipe_results) do
       end
     end
 end
+
+-- create tiered fluid fuel
+for fluidname, fluid in pairs(data.raw.fluid) do
+  if fluid.fuel_value and not fluidname:find("concentrated%-") then
+    for i = 1, omni.compression.bld_lvls do
+      create_concentrated_fluid(fluidname,i)
+    end
+  end
+end
+
 --extend new categories
 data:extend(recipe_category)
 --extend new buildings

@@ -48,7 +48,7 @@ for _, group in pairs({"fluid"}) do
       new_fluid.icons = omni.lib.add_overlay(fluid, "compress")
       new_fluid.icon = nil
       -- This causes issues with boiler and fluid generator scaling
-      --new_fluid.heat_capacity = new_fluid.heat_capacity and omni.lib.mult_fuel_value(new_fluid.heat_capacity, concentrationRatio)
+      new_fluid.heat_capacity = new_fluid.heat_capacity and omni.lib.mult_fuel_value(new_fluid.heat_capacity, concentrationRatio)
       new_fluid.fuel_value = new_fluid.fuel_value and omni.lib.mult_fuel_value(new_fluid.fuel_value, concentrationRatio)
       compressed_item_names[new_fluid.name] = true
       compress_items[#compress_items+1] = new_fluid
