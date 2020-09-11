@@ -204,7 +204,7 @@ local create_concentrated_fluid = function(fluid,tier)
     category = "fluid-condensation",
     enabled = false,
     icons = newFluid.icons,
-    order = newFluid.order or "z".."[condensed-"..fluid.name .."]",
+    order = newFluid.order or "z".."[condensed-"..fluid .."]",
     hide_from_player_crafting = true
   }
   local uncompress = {
