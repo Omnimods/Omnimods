@@ -154,7 +154,7 @@ local new_effect = function(effect, level, linear, constant)
   local mult = (
     (linear and level + 1)
     or constant or
-    math.pow(multiplier, level + 1)
+    math.pow(multiplier, level)
   )
   return omni.lib.mult_fuel_value(effect, mult)
 end
@@ -489,9 +489,7 @@ local run_entity_updates = function(new, kind, i)
       new.energy_usage = new_effect(new.energy_usage, i)
     else
       new.energy_usage = new_effect(new.energy_usage, i)
-      if i==1 then -- Account for our multiplier, we apply to the first tier only
-        new.energy_usage = new_effect(new.energy_usage, nil, nil, energy_multiplier)
-      end
+      new.energy_usage = new_effect(new.energy_usage, nil, nil, energy_multiplier)
     end
   end
   --mining speed and radius update
