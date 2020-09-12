@@ -423,15 +423,15 @@ local run_entity_updates = function(new, kind, i)
   elseif kind == "reactor" then
     new.consumption = new_effect(new.consumption,i)
     if new.heatbuffer then
-      new.heatbuffer.specific_heat = new_effect(new.heatbuffer.specific_heat,i,true)
-      new.heatbuffer.max_transfer = new_effect(new.heatbuffer.max_transfer,i,true)
+      new.heatbuffer.specific_heat = new_effect(new.heatbuffer.specific_heat,i)
+      new.heatbuffer.max_transfer = new_effect(new.heatbuffer.max_transfer,i)
     end
   end
   --Heat Pipe
   if kind == "heat-pipe" then
     if new.heatbuffer then
-      new.heatbuffer.specific_heat = new_effect(new.heatbuffer.specific_heat,i,true)
-      new.heatbuffer.max_transfer = new_effect(new.heatbuffer.max_transfer,i,true)
+      new.heatbuffer.specific_heat = new_effect(new.heatbuffer.specific_heat,i)
+      new.heatbuffer.max_transfer = new_effect(new.heatbuffer.max_transfer,i)
     end
   end
   --Boiler
