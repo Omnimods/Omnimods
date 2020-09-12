@@ -113,7 +113,7 @@ local get_solvation_tech_packs = function(grade)
 end
 
 --Add water-omnitraction recipe
-omni.add_omnic_water_extraction("omnimatter", "water", omni.fluid_levels, 1, 360, true)
+omni.add_omniwater_extraction("omnimatter", "water", omni.fluid_levels, 1, 360, true)
 
 local quant = 24
 local cost = OmniGen:create():

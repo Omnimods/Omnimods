@@ -88,7 +88,7 @@ function omni.add_omnicium_alloy(name,plate,ingot)
   if #reg > 0 then data:extend(reg) end
 end
 
-function omni.add_omnic_water_extraction(mod, element, lvls, tier, gain, starter_recipe)
+function omni.add_omniwater_extraction(mod, element, lvls, tier, gain, starter_recipe)
 
 	local get_prereq = function(grade,element,tier)
 		local req = {}
@@ -141,7 +141,7 @@ function omni.add_omnic_water_extraction(mod, element, lvls, tier, gain, starter
 		yieldQuant(function(levels,grade) return gain+(grade-1)*gain/(levels-1) end):
 		wasteQuant(function(levels,grade) return gain-(grade-1)*gain/(levels-1) end)
 	local omniston = RecChain:create(mod, element.."-omnitraction"):
-		setLocName("fluid-name."..element):
+		setLocName("recipe-name.omnic-water-omnitraction",{"fluid-name."..element}):
 		setIngredients(cost:ingredients()):
 		setCategory("omnite-extraction-both"):
 		setIcons(element):
