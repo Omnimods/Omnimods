@@ -214,6 +214,11 @@ local function generate_compressed_item(item, norecipe)
     or new_item.rocket_launch_products
     or {}
   )
+  -- Case: Nuclear fuel
+  if item.burnt_result then
+    new_item.burnt_result = "compressed-"..item.burnt_result
+  end
+  
   for _, product in pairs(product_table) do
     -- Standardise
     product.name = product.name or product[1]
