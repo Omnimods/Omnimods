@@ -89,7 +89,6 @@ function omni.add_omnicium_alloy(name,plate,ingot)
 end
 
 function omni.add_omniwater_extraction(mod, element, lvls, tier, gain, starter_recipe)
-
 	local get_prereq = function(grade,element,tier)
 		local req = {}
 		local tractor_lvl = ((grade-1)/omni.fluid_levels_per_tier)+tier-1 
@@ -118,20 +117,22 @@ function omni.add_omniwater_extraction(mod, element, lvls, tier, gain, starter_r
 	end
 
 	--Starter recipe
-	RecGen:create(mod,"basic-"..element.."-omnitraction"):
-		setIcons(element):
-		addSmallIcon("__omnilib__/graphics/icons/small/num_1.png", 2):
-		setIngredients({type="fluid",name="omnic-water",amount=720}):
-		setResults({
-			{type = "fluid", name = element, amount = gain*0.5},
-			{type = "fluid", name = "omnic-waste", amount = gain*1.5}}):
-		setSubgroup("omni-fluid-basic"):
-		setOrder("a[basic-"..element.."-omnitraction]"):
-		setCategory("omnite-extraction-both"):
-		setLocName("recipe-name.basic-omnic-water-omnitraction",{"fluid-name."..element}):
-		setEnergy(5):
-		setEnabled(true):
-		extend()
+	if starter_recipe == true then
+		RecGen:create(mod,"basic-"..element.."-omnitraction"):
+			setIcons(element):
+			addSmallIcon("__omnilib__/graphics/icons/small/num_1.png", 2):
+			setIngredients({type="fluid",name="omnic-water",amount=720}):
+			setResults({
+				{type = "fluid", name = element, amount = gain*0.5},
+				{type = "fluid", name = "omnic-waste", amount = gain*1.5}}):
+			setSubgroup("omni-fluid-basic"):
+			setOrder("b[basic-"..element.."-omnitraction]"):
+			setCategory("omnite-extraction-both"):
+			setLocName("recipe-name.basic-omnic-water-omnitraction",{"fluid-name."..element}):
+			setEnergy(5):
+			setEnabled(true):
+			extend()
+	end
 
 	--Chained recipes
 	local cost = OmniGen:create():
@@ -147,9 +148,9 @@ function omni.add_omniwater_extraction(mod, element, lvls, tier, gain, starter_r
 		setIcons(element):
 		setResults(cost:results()):
 		setSubgroup("omni-fluid-extraction"):
-		setOrder("a["..element.."-omnitraction]"):
+		setOrder("b["..element.."-omnitraction]"):
 		setLevel(lvls):
-		setEnergy(function(levels,grade) return 1 end):
+		setEnergy(function(levels,grade) return 0.5 end):
 		setEnabled(false):
 		setTechIcon(mod,element.."-omnitraction"):
 		setTechPrereq(function(levels,grade) return get_prereq(grade,element,tier) end):
