@@ -487,9 +487,7 @@ local run_entity_updates = function(new, kind, i)
       new.energy_usage = new_effect(new.energy_usage, i)
     else
       new.energy_usage = new_effect(new.energy_usage, i)
-      if i==1 then -- Account for our multiplier, we apply to the first tier only
-        new.energy_usage = new_effect(new.energy_usage, nil, nil, energy_multiplier)
-      end
+      new.energy_usage = new_effect(new.energy_usage, nil, nil, energy_multiplier)
     end
   end
   --mining speed and radius update
