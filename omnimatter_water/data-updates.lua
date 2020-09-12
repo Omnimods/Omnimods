@@ -30,6 +30,8 @@ local get_omniwater_tech_packs = function(grade,tier)
 end
 
 function omniwateradd(element,gain,tier,const,input,starter_recipe)
+
+
 	local cost = OmniGen:create():
 		setInputAmount(12*(input or 1)):
 		setYield(element):
@@ -58,7 +60,7 @@ function omniwateradd(element,gain,tier,const,input,starter_recipe)
     setTechCost(function(levels,grade) return const*get_tier_mult(levels,grade,1) end):
 		setTechTime(15):
 		setTechLocName("water-based-omnitraction",{"fluid-name."..element}):
-		extend()
+    extend()
 
   --Add the last tier as prereq for the rocket silo
   omni.lib.add_prerequisite("rocket-silo", "omnitech-"..element.."-omnitraction-"..water_levels)
@@ -87,10 +89,10 @@ if mods["omnimatter_compression"] then c = 1/3 end
 omniwateradd("omnic-water",1728*2*c,1,18,c,true)
 
 if mods["angelsrefining"] then
-	omniwateradd("water-viscous-mud",1728/2,1,36,false)
+	omniwateradd("water-viscous-mud",1728/2,1,36,1,false)
 	for _,fluid in pairs(data.raw.fluid) do
 		if omni.lib.start_with(fluid.name,"water") and omni.lib.end_with(fluid.name,"waste") then
-			omniwateradd(fluid.name,1728/6,2,54,false)
+			omniwateradd(fluid.name,1728/6,2,54,1,false)
 		end
 	end
 end
