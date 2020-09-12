@@ -1,0 +1,15 @@
+{
+  "recipe":
+  [
+    ["omnirec-omnic-water-a", "omnirec-omnic-water-omnitraction-a"],
+    ["omnirec-omnic-water-b", "omnirec-omnic-water-omnitraction-b"],
+    ["omnirec-omnic-water-c", "omnirec-omnic-water-omnitraction-c"],
+    ["omnirec-omnic-water-d", "omnirec-omnic-water-omnitraction-d"],
+    ["omnirec-omnic-water-e", "omnirec-omnic-water-omnitraction-e"],
+    ["omnirec-omnic-water-f", "omnirec-omnic-water-omnitraction-f"],
+    ["omnirec-omnic-water-g", "omnirec-omnic-water-omnitraction-g"],
+    ["omnirec-omnic-water-h", "omnirec-omnic-water-omnitraction-h"],
+    ["omnirec-omnic-water-i", "omnirec-omnic-water-omnitraction-i"],
+    ["omnirec-omnic-water-j", "omnirec-omnic-water-omnitraction-j"]
+  ]
+}
