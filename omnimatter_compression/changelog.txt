@@ -10,6 +10,7 @@ Date: 2020.09.XX
   Bugfixes:
     - Fix loadtime error with some compressed researches
     - Fix compressed heatstuffs heat capacity scaling linearly instead of exponentially
+    - Fix compressed nuclear fuel returning uncompressed spent fuel
   Info:
     - 4.0.4 version not found
 ---------------------------------------------------------------------------------------------------
