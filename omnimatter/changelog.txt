@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.0.3
 Date: 2020.09.xx
+  Changes:
+    - Internal cleanup of omnic water extractions
   Bugfixes:
     - Fixed basic omnitraction recipes not inlcuding crushed stone outputs in their description
 ---------------------------------------------------------------------------------------------------
