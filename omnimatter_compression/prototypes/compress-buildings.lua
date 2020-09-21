@@ -538,7 +538,9 @@ local run_entity_updates = function(new, kind, i)
   if kind == "rocket-silo" and new.fixed_recipe then
     new.door_opening_speed = new.door_opening_speed * math.pow(multiplier, i)
     new.rocket_result_inventory_size = 8
-    new.fixed_recipe = new.fixed_recipe .. "-compression"
+    if data.raw.recipe[new.fixed_recipe.."-compression"] then -- check if silo recipe is compressed first
+      new.fixed_recipe = new.fixed_recipe .. "-compression"
+    end
     new.light_blinking_speed = new.light_blinking_speed * math.pow(multiplier, i)
     local rocket = table.deepcopy(data.raw["rocket-silo-rocket"][new.rocket_entity])
     rocket.name = "compressed-" .. rocket.name
