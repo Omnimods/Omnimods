@@ -11,6 +11,7 @@ Date: 2020.09.XX
     - Fix loadtime error with some compressed researches
     - Fix compressed heatstuffs heat capacity scaling linearly instead of exponentially
     - Fix compressed nuclear fuel returning uncompressed spent fuel
+    - Fix crash when compressed rocket silo's fixed recipe isn't compressed
   Info:
     - 4.0.4 version not found
 ---------------------------------------------------------------------------------------------------
@@ -87,17 +88,17 @@ Date: 2020.07.14
 Version: 3.18.8
 Date: 2020.07.02
   Bugfixes:
-      - Fixed compression recipe icon size and mipmap issues
+    - Fixed compression recipe icon size and mipmap issues
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.7
 Date: 2020.06.19
   Changes:
-      - Updated to omnilib 3.18.12
+    - Updated to omnilib 3.18.12
   Bugfixes:
-      - Fixed a bug relating to compressed air not omni-compressing causing a non-starting error
-      - Fixed compressed boilers and generators not working
-      - Fixed pollution values
-      - Fixed compressed offshore pumps not outputting compressed fluid 
+    - Fixed a bug relating to compressed air not omni-compressing causing a non-starting error
+    - Fixed compressed boilers and generators not working
+    - Fixed pollution values
+    - Fixed compressed offshore pumps not outputting compressed fluid 
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.6
 Date: 2020.06.09
