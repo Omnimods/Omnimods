@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.4
-Date: 2020.09.xx
+Date: 2020.09.25
   Bugfixes:
     - Properly hide logistics tech that has no unlocks
     - Fixed Fuel Refining tier 3 having hidden prereqs in some cases

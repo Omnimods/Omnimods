@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.0.3
-Date: 2020.09.xx
+Date: 2020.09.25
   Changes:
     - Internal cleanup of omnic water extractions
   Bugfixes:
@@ -17,13 +17,13 @@ Date: 2020.08.31
     - Renamed technology "base-impure-extraction" to "omnitech-base-impure-extraction"
     - Renamed technology "angels-omnicium-smelting-x" to "omnitech-angels-omnicium-smelting-x"
     - Renamed technology "angels-omnicium-iron-alloy-smelting" to 
-      "omnitech-angels-omnicium-iron-alloy-smelting"
+      - "omnitech-angels-omnicium-iron-alloy-smelting"
     - Renamed technology "angels-omnicium-steel-alloy-smelting" to 
-      "omnitech-angels-omnicium-steel-alloy-smelting"
+      - "omnitech-angels-omnicium-steel-alloy-smelting"
     - Renamed technology "angels-omnicium-aluminium-alloy-smelting" to 
-      "omnitech-angels-omnicium-aluminium-alloy-smelting"
+      - "omnitech-angels-omnicium-aluminium-alloy-smelting"
     - Renamed technology "angels-omnicium-tungsten-alloy-smelting" to 
-      "omnitech-angels-omnicium-tungsten-alloy-smelting"
+      - "omnitech-angels-omnicium-tungsten-alloy-smelting"
   Info:
     - This recipe change could require changes to early-game omnitraction setups on existing saves.
 ---------------------------------------------------------------------------------------------------
