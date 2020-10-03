@@ -610,7 +610,7 @@ function ItemGen:setIcons(icons,mod)
 			if icons[1].icon_size then
 				ic_sz=icons[1].icon_size
 			elseif type(icons[1].icon)=="string" then --try to find item name by extracting icon name
-				name=string.match(icons[1].icon,".*%/(.-).png")
+				local name=string.match(icons[1].icon,".*%/(.-).png")
 				--check if a HR icon, if so, update icon_size default
 				if string.match(name,"-HR") then
 					name=string.sub(name,1,-4)
@@ -629,7 +629,7 @@ function ItemGen:setIcons(icons,mod)
 			end
 		end
 		if type(icons)=="string" and string.match(icons, "%_%_(.-)%_%_") then
-			name=string.match(icons,".*%/(.-).png")
+			local name=string.match(icons,".*%/(.-).png")
 			proto = omni.lib.find_prototype(name)
 			if proto then
 				setup={{icon=proto.icon,icon_size=proto.icon_size,mipmaps=proto.mipmaps or nil}}
