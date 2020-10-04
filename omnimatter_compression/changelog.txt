@@ -1,9 +1,4 @@
 ---------------------------------------------------------------------------------------------------
-Version: 4.0.5
-Date: 2020.10.XX
-  Bugfixes:
-    - Fix some compressed variants of burnt_result not being generated
----------------------------------------------------------------------------------------------------
 Version: 4.0.4
 Date: 2020.09.25
   Features:
@@ -17,6 +12,7 @@ Date: 2020.09.25
     - Fix compressed heatstuffs heat capacity scaling linearly instead of exponentially
     - Fix compressed nuclear fuel returning uncompressed spent fuel
     - Fix crash when compressed rocket silo's fixed recipe isn't compressed
+    - Fix some compressed variants of burnt_result not being generated
   Info:
     - 4.0.4 version not found
 ---------------------------------------------------------------------------------------------------
