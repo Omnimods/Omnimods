@@ -217,6 +217,9 @@ local function generate_compressed_item(item, norecipe)
   -- Case: Nuclear fuel
   if item.burnt_result then
     new_item.burnt_result = "compressed-"..item.burnt_result
+    if not data.raw.item[new_item.burnt_result] then
+      generate_compressed_item(data.raw.item[item.burnt_result], true)
+    end
   end
   
   for _, product in pairs(product_table) do
