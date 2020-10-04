@@ -32,6 +32,7 @@ if mods["bobtech"] and settings.startup["bobmods-burnerphase"].value then
         omni.lib.add_prerequisite("bob-steam-engine-1", "logistic-science-pack")
         omni.lib.add_science_pack("bob-steam-engine-1", "logistic-science-pack")
         omni.lib.add_science_pack("bob-steam-engine-2", "logistic-science-pack")
+
         omni.lib.remove_prerequisite("bob-steam-engine-2","omnitech-steam-power")
         omni.lib.remove_prerequisite("bob-boiler-2","omnitech-steam-power")
         omni.lib.remove_prerequisite("omnitech-omnium-power-1","omnitech-steam-power")

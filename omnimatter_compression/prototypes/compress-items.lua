@@ -48,7 +48,7 @@ for _, group in pairs({"fluid"}) do
       new_fluid.icons = omni.lib.add_overlay(fluid, "compress")
       new_fluid.icon = nil
       -- This causes issues with boiler and fluid generator scaling
-      --new_fluid.heat_capacity = new_fluid.heat_capacity and omni.lib.mult_fuel_value(new_fluid.heat_capacity, concentrationRatio)
+      new_fluid.heat_capacity = new_fluid.heat_capacity and omni.lib.mult_fuel_value(new_fluid.heat_capacity, concentrationRatio)
       new_fluid.fuel_value = new_fluid.fuel_value and omni.lib.mult_fuel_value(new_fluid.fuel_value, concentrationRatio)
       compressed_item_names[new_fluid.name] = true
       compress_items[#compress_items+1] = new_fluid
@@ -214,6 +214,14 @@ local function generate_compressed_item(item, norecipe)
     or new_item.rocket_launch_products
     or {}
   )
+  -- Case: Nuclear fuel
+  if item.burnt_result then
+    new_item.burnt_result = "compressed-"..item.burnt_result
+    if not data.raw.item[new_item.burnt_result] then
+      generate_compressed_item(data.raw.item[item.burnt_result], true)
+    end
+  end
+  
   for _, product in pairs(product_table) do
     -- Standardise
     product.name = product.name or product[1]

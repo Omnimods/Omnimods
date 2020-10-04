@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.4
+Date: 2020.10.04
+  Bugfixes:
+    - Properly hide logistics tech that has no unlocks
+    - Fixed Fuel Refining tier 3 having hidden prereqs in some cases
+---------------------------------------------------------------------------------------------------
 Version: 2.0.3
 Date: 2020.09.01
   Bugfixes:
@@ -7,7 +13,7 @@ Date: 2020.09.01
 Version: 2.0.2
 Date: 2020.08.31
   Features:
-    - Added heretical scripts to allow Pyanodons to work with this... even without the AB patch mod
+    - Added heretical scripts to allow Pyanodons to work with this...even without the AB patch mod
     -   Confirmed to work up to green science... be warned, burner phase lasts a log while
   Changes:
     - Renamed technology "basic-omnium-power" to "omnitech-basic-omnium-power"

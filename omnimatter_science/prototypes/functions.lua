@@ -262,10 +262,16 @@ function omni.science.tech_updates()
 						cost = cost*(1+Set.ChainOmConst*c/(c+1))
 					else
 						local lv = 1
-						local t = techno.prerequisites[1]
+            local t = techno.prerequisites[1]
 						while data.raw.technology[t].prerequisites and #data.raw.technology[t].prerequisites >= 1 do
-							lv = lv+1
-							t = data.raw.technology[t].prerequisites[1]
+              if data.raw.technology[t].prerequisites[1] == nil then --what the heck is going on here
+                log("nil detected in pre-req table of "..t)
+                log(serpent.block(data.raw.technology[t].prerequisites))
+                break
+              else
+                lv = lv+1
+                t = data.raw.technology[t].prerequisites[1]
+              end
 						end
 						cost = cost*(math.pow(1+chain*c/(c+1),1+lv/(lv+1)))
 					end

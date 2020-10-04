@@ -200,7 +200,23 @@ function omni.marathon.standardise(recipe)
 	---------------------------------------------------------------------------
 	-- Move Flags to difficulty zone
 	---------------------------------------------------------------------------
-	for _, flag in pairs({"hidden", "enabled", "allow_decomposition", "hide_from_player_crafting", "allow_as_intermediate", "allow_intermediates"}) do
+	local flags = {
+		"hidden", 
+		"enabled", 
+		"allow_decomposition", 
+		"hide_from_stats",
+		"hide_from_player_crafting", 
+		"allow_decomposition",
+		"allow_as_intermediate", 
+		"allow_intermediates",
+		"emissions_multiplier",
+		"requester_paste_multiplier",
+		"overload_multiplier",
+		"always_show_made_in",
+		"unlock_results",
+		"always_show_products"
+	}
+	for _, flag in pairs(flags) do
 		for _, difficulty in pairs({"normal", "expensive"}) do
 			-- is this adding all of the flags, or only the ones that already exist?
 			if recipe[difficulty][flag] == nil then
