@@ -1,6 +1,20 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.4
+Date: 2020.10.04
+  Bugfixes:
+    - Properly hide logistics tech that has no unlocks
+    - Fixed Fuel Refining tier 3 having hidden prereqs in some cases
+---------------------------------------------------------------------------------------------------
+Version: 2.0.3
+Date: 2020.09.01
+  Bugfixes:
+    - Fixed a crash with Deadlocks integrations mod
+---------------------------------------------------------------------------------------------------
 Version: 2.0.2
-Date: 2020.08.xx
+Date: 2020.08.31
+  Features:
+    - Added heretical scripts to allow Pyanodons to work with this...even without the AB patch mod
+    -   Confirmed to work up to green science... be warned, burner phase lasts a log while
   Changes:
     - Renamed technology "basic-omnium-power" to "omnitech-basic-omnium-power"
     - Renamed technology "anbaricity" to "omnitech-anbaricity"
@@ -139,7 +153,7 @@ Date: 2020.04.13
     - Added Crystal Solar Panels (Max Size & Tier configurable)
     - Added Solar Road (Tiles that produce & distribute energy)
     - Added Omnified Fuel, Omnified Fuel has a boosted Fuel value. 
-      All available Fuels have to be Omnified before they can be used
+    -   All available Fuels have to be Omnified before they can be used
     - Lowered the crafting Speed of the Omnitor Assembling Machine
     - Added 2 new Omnifurnace Tiers
     - Starter Burner Entities only accept (crushed-) Omnite as fuel

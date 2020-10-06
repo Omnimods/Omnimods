@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.0.2
+Date: 2020.10.04
+  Changes:
+    - Water extractions require omnic water instead of omnite now to follow omnimatters scheme
+---------------------------------------------------------------------------------------------------
+Version: 4.0.1
+Date: 2020.08.31
+  Changes:
+    - Updated tech names that changed in other omnimods
+---------------------------------------------------------------------------------------------------
 Version: 4.0.0
 Date: 2020.08.22
   Info:

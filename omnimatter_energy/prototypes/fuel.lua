@@ -96,11 +96,21 @@ for _,fuelitem in pairs(data.raw.item) do
 ::continue::
 end
 
---Add Solid Fuel Tech Prereq manually
-if data.raw.technology["solid-fuel"] then
-    omni.lib.add_prerequisite("omnitech-omnium-power-3","solid-fuel")
-elseif data.raw.technology["advanced-oil-processing"] then
-    omni.lib.add_prerequisite("omnitech-omnium-power-3","advanced-oil-processing")
+--Add Solid Fuel Tech Prereqs manually
+if mods["angelspetrochem"] then
+    if data.raw.technology["gas-processing"] and data.raw.technology["gas-processing"].hidden ~= true then
+        omni.lib.add_prerequisite("omnitech-omnium-power-3", "gas-processing")
+    end
+    if data.raw.technology["oil-processing"] and data.raw.technology["oil-processing"].hidden ~= true then
+        omni.lib.add_prerequisite("omnitech-omnium-power-3", "oil-processing")
+    end
+else
+    if data.raw.technology["solid-fuel"] and data.raw.technology["solid-fuel"].hidden ~= true then
+        omni.lib.add_prerequisite("omnitech-omnium-power-3","solid-fuel")
+    end
+    if data.raw.technology["advanced-oil-processing"] and data.raw.technology["advanced-oil-processing"].hidden ~= true then
+        omni.lib.add_prerequisite("omnitech-omnium-power-3", "advanced-oil-processing")
+    end
 end
 
 RecGen:create("omnimatter_energy","purified-omnite"):

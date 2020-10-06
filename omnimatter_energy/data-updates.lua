@@ -230,9 +230,7 @@ end
 -- Deadlock compatibility
 if data.raw.technology["basic-transport-belt-beltbox"] then
 	omni.lib.add_unlock_recipe("omnitech-basic-belt-logistics", "basic-transport-belt-loader")
-	TechGen:import("basic-transport-belt-beltbox"):
-	setPrereq("omnitech-basic-splitter-logistics","omnitech-basic-underground-logistics"):
-	extend()
+	omni.lib.set_prerequisite("basic-transport-belt-beltbox", {"omnitech-basic-splitter-logistics","omnitech-basic-underground-logistics"})
 end
 
 --Miniloader compatibility

@@ -117,27 +117,6 @@ local get_omnimatter_split = function(tier,focus,level)
         -- Build a table of our ore names
         aligned_ores[i.name] = true
     end
-    -- If very little ores per tier, break out early
-    if source_count < (focus and 1 or 2) then
-        return {
-            {
-                result_round(
-                    {
-                        name = "stone-crushed",
-                        amount = 10 - 4 / (omni.impure_levels_per_tier - level + 1),
-                        type = "item"
-                    }
-                ),
-                result_round(
-                    {
-                        name = focus or aligned_ores[1],
-                        amount = 4 / (omni.impure_levels_per_tier - level + 1),
-                        type = "item"
-                    }
-                )
-            }
-        }
-    end
     -- splits is a table of integers that shows how ores are divided between recipes, e.g. {5,5} or {3,3,4}
     local splits = {}
     local divisor = math.min(math.ceil(source_count / 3), 5)
@@ -177,27 +156,29 @@ local get_omnimatter_split = function(tier,focus,level)
             end
         end
         -- Adjust by total count + level
+        local stone_amount = 10
         for I = 1, #split_ores do
             local ore = split_ores[I]
-            ore.amount = 4 / total_quantity * ore.amount
             -- Handle "focus"
             if focus and ore.name == focus then
-                ore.amount = (level + 1) * ore.amount
+                ore.amount = 2+level/omni.impure_levels_per_tier
                 -- Make the focus first in the list
-                if I~= 1 then
+                if I ~= 1 then
                     split_ores[1], split_ores[I] = ore, split_ores[1]
                 end
                 split_ores[1] = table.deepcopy(result_round(ore))
             else
+                ore.amount = focus and (2-level/omni.impure_levels_per_tier) or 4 / math.max(2, total_quantity * ore.amount)
                 split_ores[I] = table.deepcopy(result_round(ore))
             end
+            stone_amount = stone_amount - ore.amount
         end
         -- Add our stone post-adjustment
         split_ores[#split_ores + 1] =
             result_round(
             {
                 name = "stone-crushed",
-                amount = 6,
+                amount = stone_amount,
                 type = "item"
             }
         )
@@ -269,10 +250,21 @@ for i, tier in pairs(omnisource) do
                 end
             )
         )
+        local function get_desc(levels,grade)
+            local desc = ""
+            local costres =cost:results()
+            local res =costres(levels, grade)
+            for j, part in pairs(res) do
+                desc = desc.."[img=item."..part.name.."] x "..string.format("%.2f",part.amount * (part.probability or 1))
+                if j<#res then desc = desc.."\n" end
+            end
+            return desc
+        end
 
         local pure_ore = (
             RecChain:create("omnimatter", "extraction-" .. item):
             setLocName("recipe-name.pure-omnitraction", {"item-name." .. item}):
+            setLocDesc(function(levels, grade) return get_desc(levels,grade) end):
             setIngredients("omnite"):
             setIcons(item):
             setIngredients(cost:ingredients()):
@@ -315,10 +307,16 @@ for _,ore_tiers in pairs(omnisource) do
             tc = tc * omni.beginning_tech_help
         end
         local result_names = " "
+        local desc = ""
         local icons = omni.icon.of("omnite", "item")
         icons[1].tint = {1,1,1,0.8}-- Just a canvas but we want the right size
         local item_count = #split-1
-        for I=1, item_count do
+        for I=1, #split do
+            --Add crushed stone to the recipe description and jump the rest
+            desc = desc.."[img=item." .. split[I].name .. "] x "..string.format("%.2f",split[I].amount * (split[I].probability or 1))
+            if I < #split then desc = desc.."\n" end
+            if I == #split then goto continue end
+
             result_names = result_names .. "[img=item." .. split[I].name .. "]/"
             local deg = (I / item_count * 360)+90 -- Offset a bit
             deg = math.rad(deg % 360)
@@ -333,11 +331,13 @@ for _,ore_tiers in pairs(omnisource) do
                     }
                 }
             )
+            ::continue::
         end
         result_names = result_names:sub(1, -2)
         local base_impure_ore = (
             RecGen:create("omnimatter", "omnirec-base-" .. i .. "-extraction-" .. t):
             setLocName("recipe-name.base-impure", {"", result_names}):
+            setLocDesc(desc):
             setIngredients(
                 {name = "omnite", type = "item", amount = 10}
             ):
@@ -368,6 +368,7 @@ for _,ore_tiers in pairs(omnisource) do
         base_impure_ore:setResults(split):marathon()
         base_impure_ore:extend()
     end
+
     for _,ore in pairs(ore_tiers) do
         local level_splits = {}
         for l=1,omni.impure_levels_per_tier do
@@ -375,10 +376,16 @@ for _,ore_tiers in pairs(omnisource) do
         end
         for i, sp in pairs(level_splits) do
             for j, r in pairs(sp) do
+                local desc = ""
+                for j, part in pairs(r) do
+                    desc = desc.."[img=item."..part.name.."] x "..string.format("%.2f",part.amount * (part.probability or 1))
+                    if j<#r then desc = desc.."\n" end
+                end
                 local focused_ore =
                 (
                     RecGen:create("omnimatter", "omnirec-focus-" .. j .. "-" .. ore.name .. "-" .. ord[i]):
                     setLocName("recipe-name.impure-omnitraction", {"item-name." .. ore.name}):
+                    setLocDesc(desc):
                     setIngredients({name = "omnite", type = "item", amount = 10}):
                     setSubgroup("omni-impure"):
                     setEnergy(5 * (math.floor(t / 2 + 0.5))):

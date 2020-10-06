@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.0.3
+Date: 2020.10.04
+  Changes:
+    - Patched an issue related to nil's in the pre-req calculation method
+      - to mod authors: please ensure this table is trimmed correctly before moving on, a nil will terminate,
+        causing possible breaks in cumulative and exponential tech cost adjustments
+---------------------------------------------------------------------------------------------------
+Version: 4.0.2
+Date: 2020.08.31
+  Changes:
+    - Updated tech names that changed in other omnimods
+---------------------------------------------------------------------------------------------------
 Version: 4.0.1
 Date: 2020.08.24
   Bugfixes:

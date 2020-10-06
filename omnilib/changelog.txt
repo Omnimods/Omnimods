@@ -1,4 +1,26 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.0.4
+Date: 2020.10.04
+  Features:
+    - Added TechGen:sethidden()
+  Bugfixes:
+    - Fixed omnitractors mk4+ requiring the wrong plates with angels industries
+    - More compression unlock fixes
+    - Fixed missing recipe flags on recipe standardization
+---------------------------------------------------------------------------------------------------
+Version: 4.0.3
+Date: 2020.09.01
+  Bugfixes:
+    - Fixed a possible crash with omni.lib.replace_recipe_result() due to missing brackets
+---------------------------------------------------------------------------------------------------
+Version: 4.0.2
+Date: 2020.08.31
+  Features:
+    - omni.lib.add_recipe_ingredient()/result() can replace .expensive ings/res seperately
+  Bugfixes:
+    - Fixed omni.lib.add_unlock_recipe() not disabling the recipe
+    - Fixed setLocDesc() forcing localisation types
+---------------------------------------------------------------------------------------------------
 Version: 4.0.1
 Date: 2020.08.22
   Features:

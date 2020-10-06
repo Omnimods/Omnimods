@@ -1,24 +1,5 @@
-local omniston_subcategories = {}
-local omniston_recipes = {}
-local omniston_technology = {}
-
-local fluid_subcategories = {}
-local fluid_recipes = {}
-local fluid_technology = {}
-local ord={"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q"}
-
 local omniFluidCat = "chemistry"
 if mods["omnimatter_crystal"] then omniFluidCat = "omniplant" end
-
-local sorting = {
-    type = "item-subgroup",
-    name = "omniston",
-	group = "omnimatter",
-	order = "aa",
-	}
-omniston_subcategories[#omniston_subcategories+1]=sorting
-
-data:extend(omniston_subcategories)
 
 --Dynamically calc prereqs, splits levels eqúally between omnitractor techs
 local get_generic_prereq = function(grade,element,tier)
@@ -49,7 +30,7 @@ local get_generic_tech_packs = function(grade,tier)
 	return packs
 end
 
-local get_omniston_req=function(lvl)
+local get_omniston_req = function(lvl)
 	local req = {}
 	req[#req+1]="omnitech-omnic-acid-hydrolyzation-"..lvl
 	if (lvl-1)%omni.fluid_levels_per_tier == 0 then
@@ -62,7 +43,7 @@ local get_omniston_req=function(lvl)
 	return req
 end
 
-local get_sludge_req=function(lvl)
+local get_sludge_req = function(lvl)
   local req = {}
   req[#req+1]="omnitech-omnic-acid-hydrolyzation-"..lvl
   if (lvl-1)%omni.fluid_levels_per_tier == 0 then
@@ -82,7 +63,7 @@ local get_sludge_req=function(lvl)
   return req
 end
 
-local get_distillation_tech_icon=function(item)
+local get_distillation_tech_icon = function(item)
     local icon = ""
     if not item.mod then
 		icon = "__omnimatter__"
@@ -93,7 +74,7 @@ local get_distillation_tech_icon=function(item)
 	return icon
 end
 
-local get_distillation_req=function(tier,item, level)
+local get_distillation_req = function(tier,item, level)
 	local req = {}
 	if omni.fluid_levels>=(tier-1)*omni.fluid_levels_per_tier+level then
 		req[#req+1]="omnitech-solvation-omniston-"..(tier-1)*omni.fluid_levels_per_tier+level
@@ -131,49 +112,10 @@ local get_solvation_tech_packs = function(grade)
 	return c
 end
 
---Add starter water-omnitraction recipe
-RecGen:create("omnimatter_water","basic-water-omnitraction"):
-	setIcons("water"):
-	addSmallIcon("__omnilib__/graphics/icons/small/num_1.png", 2):
-	setIngredients({type="fluid",name="omnic-water",amount=720}):
-	setResults({
-		{type = "fluid", name = "water", amount = 180},
-		{type = "fluid", name = "omnic-waste", amount = 540}}):
-	setSubgroup("omni-fluid-basic"):
-	setOrder("a[basic-water-omnitraction]"):
-	setCategory("omnite-extraction-both"):
-	setEnergy(5):
-	setEnabled(true):
-	extend()
-
+--Add water-omnitraction recipe
+omni.add_omniwater_extraction("omnimatter", "water", omni.fluid_levels, 1, 360, true)
 
 local quant = 24
---log("omnic water disaster")
-local cost = OmniGen:create():
-		setYield("water"):
-		setIngredients({type="fluid",name="omnic-water",amount=360*2}):
-		setWaste("omnic-waste"):
-		yieldQuant(function(levels,grade) return 360+(grade-1)*360/(levels-1) end ):
-		wasteQuant(function(levels,grade) return 360-(grade-1)*360/(levels-1) end)
-local omniston = RecChain:create("omnimatter","water-omnitraction"):
-		setLocName("fluid-name.water"):
-		setIngredients(cost:ingredients()):
-		setCategory("omnite-extraction-both"):
-		setIcons("water"):
-		setResults(cost:results()):
-		setSubgroup("omni-fluid-extraction"):
-		setOrder("a[water-omnitraction]"):
-		setLevel(omni.fluid_levels):
-		setEnergy(function(levels,grade) return 1 end):
-		setEnabled(false):
-		setTechIcon("omnimatter","water-omnitraction"):
-		setTechCost(function(levels,grade) return 25*get_tier_mult(levels,grade,1,true) end):
-		setTechPacks(function(levels,grade) return get_generic_tech_packs(grade,1,true)  end):
-		setTechPrereq(function(levels,grade) return get_generic_prereq(grade,"water",1) end):
-		setTechTime(15):
-		setTechLocName("omnitech-water-omnitraction"):
-		extend()
-
 local cost = OmniGen:create():
 		setYield("omniston"):
 		setIngredients("omnite"):
@@ -262,7 +204,7 @@ local function generate_solvation_icon(fluid)
 		fluid_icon
 	)
 end
-log("cocks")
+
 for _,tier in pairs(omnifluid) do
 	for _, fluid in pairs(tier) do
 		local cost = OmniGen:create():
