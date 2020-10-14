@@ -1,6 +1,7 @@
 omni.fluid.excempt_boiler("crystal-reactor")
 omni.fluid.excempt_boiler("burner-turbine")
 omni.fluid.excempt_boiler("burner-generator")
+omni.fluid.excempt_recipe("heat")
 --Find mining operations if mining-drones is active
 if mods["Mining_Drones"] then  --well this does nothing as far as i can tell... :(
     omni.fluid.excempt_assembler("mining-depot")
