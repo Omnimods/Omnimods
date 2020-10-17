@@ -654,6 +654,7 @@ for build_name, values in pairs(recipe_results) do
             result = new.name,
             energy_required = 5*math.floor(math.pow(multiplier,i/2)),
             enabled = false,
+            category = "crafting-compressed",
             order = (rc.order or details.item.order or "") .. "-compressed",
             subgroup = rc.subgroup,
             hide_from_player_crafting = rc.hide_from_player_crafting or omni.compression.hide_handcraft
