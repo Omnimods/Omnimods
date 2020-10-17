@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.0.5
+Date: ???
+  Bugfixes:
+    - Fix highly compressed heat exchanger underperforming 
+    - Fix reactor and heat pipe heat buffer not compressing
+---------------------------------------------------------------------------------------------------
 Version: 4.0.4
 Date: 2020.10.04
   Features:
