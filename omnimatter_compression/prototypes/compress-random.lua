@@ -64,6 +64,11 @@ for _,recipe in pairs(check_recipes) do
         end
         --begin property setting, bring name into the key
         prob[dif][nme]={style="normal"}
+        if res.amount_min and res.amount_max and res.amount_max <= res.amount_min then
+          res.amount = res.amount_min
+          res.amount_min = nil
+          res.amount_max = nil
+        end
         local amt = res.amount --set default value
         --amount min system
         -- "min-max" parses mininum, sets mm_prob as max/min
