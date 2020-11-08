@@ -24,16 +24,20 @@ if mods["pycoalprocessing"] then
       {name = "sap-extractor-mk01", old = "inserter", new = "burner-inserter"},
       {name = "agar", old = "steam", new = "coal-gas", temp = "blank"},
       {name = "latex", old = "steam", new = "coal-gas", temp = "blank"},
+      {name = "automated-factory-mk01", old = "assembling-machine-1", new = "omnitor-assembling-machine"}
     }
     for _,ing in pairs(ing_reps) do
       replacements[#replacements+1] = ing
     end
   end
   if not mods["PyCoalTBaA"] then
+    if mods["bobplates"] then
+      omni.lib.replace_prerequisite("steel-processing","automation", "omnitech-anbaricity")
+    end
     --add in a few custom tweaks if not playing angels or bobs
     if #replacements > 0 then
       for i,rep in pairs(replacements) do
-        if rep.temp then --replace the whole table
+        if rep.temp and rep.temp ~="blank" then --replace the whole table
           omni.lib.replace_recipe_ingredient(rep.name, rep.old, {name = rep.new, temperature = rep.temp})
         else
           omni.lib.replace_recipe_ingredient(rep.name, rep.old, rep.new)
