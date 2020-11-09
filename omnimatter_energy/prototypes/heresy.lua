@@ -37,7 +37,7 @@ if mods["pycoalprocessing"] then
     --add in a few custom tweaks if not playing angels or bobs
     if #replacements > 0 then
       for i,rep in pairs(replacements) do
-        if rep.temp and rep.temp ~="blank" then --replace the whole table
+        if rep.temp then --replace the whole table
           omni.lib.replace_recipe_ingredient(rep.name, rep.old, {name = rep.new, temperature = rep.temp})
         else
           omni.lib.replace_recipe_ingredient(rep.name, rep.old, rep.new)
