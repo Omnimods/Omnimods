@@ -125,6 +125,7 @@ local ingrediences_solvation=function(recipe)
 	end
 	return ing
 end
+
 local results_solvation=function(recipe)
 	local ing = {}
 	--ing[#ing+1]={type = "fluid", name = "hydromnic-acid", amount = 120}
