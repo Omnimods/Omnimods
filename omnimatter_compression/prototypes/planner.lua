@@ -26,8 +26,8 @@ data:extend({
     type = "shortcut",
     name = "compression-planner-shortcut",
     localised_name = {"item-name.compression-planner"},
-    action = "create-blueprint-item",
-    item_to_create = "compression-planner",
+    action = "spawn-item",
+    item_to_spawn = "compression-planner",
     technology_to_unlock = "compression-mining",
 	  icon = {
       filename = "__omnimatter_compression__/graphics/planner-shortcut.png",
