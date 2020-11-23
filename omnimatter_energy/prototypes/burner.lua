@@ -8,7 +8,7 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
 	RecGen:import("basic-transport-belt"):
 		setEnabled(false):
 		setTechName("omnitech-basic-belt-logistics"):
-		setTechIcon("base","logistics"):
+		setTechIcon("omnimatter_energy","logistics"):
 		setTechPrereq():
 		ifAddTechPrereq(data.raw.technology["basic-automation"], "basic-automation"):
 		ifAddTechPrereq(not data.raw.technology["basic-automation"], "omnitech-simple-automation"):
@@ -22,7 +22,7 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
 	RecGen:import("basic-splitter"):
 		setEnabled(false):
 		setTechName("omnitech-basic-splitter-logistics"):
-		setTechIcon("base","logistics"):
+		setTechIcon("omnimatter_energy","logistics"):
 		setTechPrereq("omnitech-basic-belt-logistics"):
 		setTechPacks(1):
 		setTechCost(25):extend()
@@ -30,7 +30,7 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
 	RecGen:import("basic-underground-belt"):
 		setEnabled(false):
 		setTechName("omnitech-basic-underground-logistics"):
-		setTechIcon("base","logistics"):
+		setTechIcon("omnimatter_energy","logistics"):
 		setTechPrereq("omnitech-basic-belt-logistics"):
 	 	setTechPacks(1):
 		setTechCost(25):extend()
@@ -55,7 +55,7 @@ else
 	RecGen:import("transport-belt"):
 		setEnabled(false):
 		setTechName("omnitech-belt-logistics"):
-		setTechIcon("base","logistics"):
+		setTechIcon("omnimatter_energy","logistics"):
 		setTechPrereq():
 		ifAddTechPrereq(data.raw.technology["basic-automation"], "basic-automation"):
 		ifAddTechPrereq(not data.raw.technology["basic-automation"], "omnitech-simple-automation"):
@@ -68,7 +68,7 @@ else
 	RecGen:import("splitter"):
 		setEnabled(false):
 		setTechName("omnitech-splitter-logistics"):
-		setTechIcon("base","logistics"):
+		setTechIcon("omnimatter_energy","logistics"):
 		setTechPrereq("omnitech-belt-logistics"):
 		setTechPacks(1):
 		setTechCost(25):extend()
@@ -76,7 +76,7 @@ else
 	RecGen:import("underground-belt"):
 		setEnabled(false):
 		setTechName("omnitech-underground-logistics"):
-		setTechIcon("base","logistics"):
+		setTechIcon("omnimatter_energy","logistics"):
 		setTechPrereq("omnitech-belt-logistics"):
 		setTechPacks(1):
 		setTechCost(25):extend()
@@ -243,7 +243,7 @@ BuildGen:import("assembling-machine-1"):
 	setIcons("omnitor-assembling-machine","omnimatter_energy"):
 	setEnabled(false):
 	setTechName("omnitech-simple-automation"):
-	setTechIcon("base","automation"):
+	setTechIcon("base","automation-1"):
 	setTechPrereq():
 	setTechPacks(1):
 	setTechCost(10):

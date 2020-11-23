@@ -26,7 +26,7 @@ RecGen:import("inserter"):
 	setEnabled(false):
 	setTechName("omnitech-anbaric-inserter"):
 	setTechCost(60):
-	setTechIcon("__base__/graphics/technology/demo/electric-inserter.png"):
+	setTechIcon("omnimatter_energy","electric-inserter"):
 	setTechPacks(1):
 	setTechPrereq("omnitech-anbaricity"):extend()
 

@@ -1,13 +1,13 @@
 {
 "name":"omnimatter_water",
-"version": "4.0.2",
+"version": "4.1.0",
 "title":"Omniwater",
 "author":"EmperorZelos",
 "description":"Adds water extraction from omnite",
-"factorio_version":"1.0",
+"factorio_version":"1.1",
 "dependencies":[
     "base",
-    "omnilib >= 4.0.0",
+    "omnilib >= 4.1.0",
     "omnimatter",
     "?omnimatter_marathon",
     "?angelsrefining"
