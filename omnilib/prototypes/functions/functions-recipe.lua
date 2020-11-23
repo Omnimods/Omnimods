@@ -691,6 +691,32 @@ function omni.lib.change_recipe_category(recipe, category)
 	data.raw.recipe[recipe].category=category
 end
 
+--Checks if a recipe contains a specific material as ingredient
+function omni.lib.recipe_ingredient_contains(recipename, itemname)
+    local rec = data.raw.recipe[recipename]
+    if rec then
+        --rec.ingredients
+        if rec.ingredients then
+            for i,ing in pairs(rec.ingredients) do
+                if omni.lib.is_in_table(itemname, ing) then return true end
+            end
+        end
+        --rec.normal.ingredients
+        if rec.normal and rec.normal.ingredients then
+            for i,ing in pairs(rec.normal.ingredients) do
+                if omni.lib.is_in_table(itemname, ing) then return true end
+           end
+        end
+        --rec.expensive.ingredients
+        if rec.expensive and rec.expensive.ingredients then
+            for i,ing in pairs(rec.expensive.ingredients) do
+                if omni.lib.is_in_table(itemname, ing) then return true end
+           end
+        end 
+        return nil
+    end
+end
+
 --Checks if a recipe contains a specific material as result
 function omni.lib.recipe_result_contains(recipename, itemname)
     local rec = data.raw.recipe[recipename]
