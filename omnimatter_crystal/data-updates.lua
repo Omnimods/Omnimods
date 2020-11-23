@@ -113,11 +113,11 @@ if not mods["angelsrefining"] then
 		for _,ore in pairs(added_ores) do
 
 			--Copy all smelting / processing recipes, make a copy and replace the ore ingredient with crystal-powder
-			if omni.lib.recipe_ingredient_contains(rec.name, ore) and (string.find(rec.name, "plate") or string.find(rec.name, "processing")) then
+			if omni.lib.recipe_ingredient_contains(rec.name, ore) then --and (string.find(rec.name, "plate") or string.find(rec.name, "processing") ) then
 				local metal = string.sub(ore,1,string.len(ore)-string.len("-ore"))
-
+				
 				RecGen:import(rec):
-					setName("crystal-powder"..rec.name):
+					setName("crystal-powder-"..rec.name):
 					replaceIngredients(ore, "crystal-powder-"..metal):
 					setEnabled(false):
 					setTechName(omni.lib.get_tech_name(ore.."-crystal")):
