@@ -22,7 +22,7 @@ if mods["angelsbioprocessing"] then
 	setSubgroup("algae"):
 	setTechName("omnitech-omnialgae"):
 	setTechPrereq("omnitech-omnimutator"):
-	setTechIcon("angelsbioprocessing","algae-farm-tech"):
+	setTechIcons("algae-farm-tech","angelsbioprocessing"):
 	setTechCost(250):
 	setTechTime(15):
 	setCategory("bio-processing"):

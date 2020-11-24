@@ -17,7 +17,7 @@ if mods["omnimatter_crystal"] then
 		setOrder("ca[omni-science-pack]"):
 		setTechName("omnipack-technology"):
 		setTechCost(150):
-		setTechIcon("omnipack-tech"):
+		setTechIcons("omnipack-tech","omnimatter_science"):
 		setTechPacks(2):
 		setTechPrereq("omnitech-omnitractor-electric-2"):
 		setTechTime(20):

@@ -278,7 +278,7 @@ for i, tier in pairs(omnisource) do
                 function(levels, grade)
                     return 5 * (math.floor((grade - 1 + (tier_int - 1) / 2) / levels) + 1)
                 end):
-            setTechIcon(generate_pure_icon(ore)):
+            setTechIcons(generate_pure_icon(ore)):
             setTechCost(
                 function(levels, grade)
                     return tech_cost(levels, grade, tier_int)
@@ -347,7 +347,7 @@ for _,ore_tiers in pairs(omnisource) do
             setTechCost(tc):
             setEnabled(false):
             setTechPacks(math.max(1, t - 1)):
-            setTechIcon("omnimatter", "omnimatter"):
+            setTechIcons("omnimatter", "omnimatter"):
             setIcons(icons)--[[:addIcon(
                 {
                     icon = "__omnilib__/graphics/icons/small/num_" .. i .. ".png",
@@ -406,7 +406,7 @@ for _,ore_tiers in pairs(omnisource) do
                         i
                     ):
                     setTechPacks(math.max(1, t)):
-                    setTechIcon(generate_impure_icon(ore)):
+                    setTechIcons(generate_impure_icon(ore)):
                     marathon()
                 )
                 if #sp > 1 then

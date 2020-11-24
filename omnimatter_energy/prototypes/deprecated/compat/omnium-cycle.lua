@@ -63,7 +63,7 @@ RecGen:create("omnimatter_energy","oxyomnide-hydromnization"):
 	setIcons("hydromnide-salt"):
 	addSmallIcon("hydromnic-acid",3):
 	setTechCost(250):
-	setTechIcon("omnimatter_energy","omnium-power"):
+	setTechIcons("omnium-power","omnimatter_energy"):
 	setTechPrereq(
 		"omnicells",
 		"omnitech-crystallonics-2"):
