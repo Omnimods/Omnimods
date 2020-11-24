@@ -34,7 +34,7 @@ function omni.add_omnicium_alloy(name,plate,ingot)
 		setSubgroup("omnicium-casting"):
 		setEnergy(4):
 		setTechName("omnitech-angels-omnicium-"..name.."-alloy-smelting"):
-		setTechIcon("smelting-omnicium-"..name):
+		setTechIcons("smelting-omnicium-"..name):
 		setTechPacks("angels-"..name.."-smelting-1"):
 		setTechCost(50):
 		setTechTime(30):
@@ -152,7 +152,7 @@ function omni.add_omniwater_extraction(mod, element, lvls, tier, gain, starter_r
 		setLevel(lvls):
 		setEnergy(function(levels,grade) return 0.5 end):
 		setEnabled(false):
-		setTechIcon(mod,element.."-omnitraction"):
+		setTechIcons(element.."-omnitraction",mod):
 		setTechPrereq(function(levels,grade) return get_prereq(grade,element,tier) end):
     	setTechPacks(function(levels,grade) return get_tech_packs(grade,tier,true) end):
     	setTechCost(function(levels,grade) return get_tier_mult(levels,grade,1,true) end):

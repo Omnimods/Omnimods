@@ -212,7 +212,7 @@ for j=1,nr_tiers do
 			setStacksize(50):
 			setTechName("omnitech-crystal-solar-panel-tier-"..j.."-size-"..i):
 			setTechLocName("omnitech-crystal-solar-panel", j, i):
-			setTechIcon("__omnimatter_energy__/graphics/technology/empty.png"):			
+			setTechIcons("__omnimatter_energy__/graphics/technology/empty.png"):			
 			setTechCost(150+((j-1)*max_size+i)*75+j*100):	--base_cost+...*cost_between_techs+...*addidional_cost_between_tiers
 			setTechPacks(get_scienceing(j)):
 			setTechPrereq(get_req(j,i,max_size)):

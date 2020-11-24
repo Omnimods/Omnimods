@@ -145,7 +145,7 @@ BuildChain:create("omnimatter","omnitractor"):
 	setTechName("omnitech-omnitractor"):
 	setTechPrereq(get_pure_req):
 	setTechSuffix("electric"):
-	setTechIcon("omnimatter","omnitractor-electric"):
+	setTechIcons("omnitractor-electric","omnimatter"):
 	setTechCost(get_tech_times):
 	setTechPacks(function(levels,grade) return grade end):
 	setReplace("omnitractor"):

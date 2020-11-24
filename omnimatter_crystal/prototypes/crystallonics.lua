@@ -114,7 +114,7 @@ BuildChain:create("omnimatter_crystal","omniplant"):
 	setTechPrereq(get_pure_req):
 	addElectricIcon():
 	setTechName(function(levels,grade) if grade == 1 then return "omnitech-omnic-acid-hydrolyzation-1" else return "omnitech-crystallology" end end):
-	setTechIcon("omnimatter_crystal","crystallology"):
+	setTechIcons("crystallology","omnimatter_crystal"):
 	setTechCost(get_tech_times):
 	setTechPacks(function(levels,grade) return grade end):
 	setTechPrereq(function(levels,grade)
@@ -166,7 +166,7 @@ BuildChain:create("omnimatter_crystal","crystallomnizer"):
 	addElectricIcon():
 	allowProductivity():
 	setTechName("omnitech-crystallonics"):
-	setTechIcon("omnimatter_crystal","crystallonics"):
+	setTechIcons("crystallonics","omnimatter_crystal"):
 	setTechCost(get_tech_times):
 	setTechPacks(function(levels,grade) return grade + 1 end):
 	setReplace("crystallomnizer"):
@@ -327,7 +327,7 @@ RecChain:create("omnimatter_crystal","pseudoliquid-amorphous-crystal"):
 	setLevel(omni.fluid_levels):
 	setTechName("omnitech-pseudoliquid-amorphous-crystal"):
 	setTechLocName("omnitech-pseudoliquid-amorphous-crystal",grade):
-	setTechIcon("omnimatter_crystal","amorphous-crystal"):
+	setTechIcons("amorphous-crystal","omnimatter_crystal"):
 	setTechCost(function(levels,grade) return 500+50*grade end):
 	setTechPacks(function(levels,grade) return 3+math.floor(grade*3/levels) end):
 	setTechTime(60):
