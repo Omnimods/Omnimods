@@ -58,25 +58,6 @@ if not mods["angelsrefining"] then
 			added_ores[#added_ores+1] = ore
 			local metal = string.sub(ore,1,string.len(ore)-string.len("-ore"))
 
-			--Create crystal powder item if it doesnt exist yet
-			if not data.raw.item["crystal-powder-"..metal] then
-				ItemGen:create("omnimatter_crystal", "crystal-powder-"..metal):
-					setLocName({"item-name.crystal-powder", {metal}}):
-					setIcons({{
-						icon = "__omnimatter_crystal__/graphics/icons/crystal-powder.png",
-						icon_size = 32,
-						tint = omni.lib.ore_tints[metal] or {r = 1, g = 1, b = 1, a = 1}
-						}}):
-					extend()	
-			end
-
-			--Replace the ore with crystal powder
-			rec.normal.results[1].name = "crystal-powder-"..metal
-			rec.icon=nil
-			rec.icon_size=nil
-			rec.icons = omni.icon.of(data.raw.item["crystal-powder-"..metal])
-			rec.localised_name = {"item-name.crystal-powder", {metal}}
-
 			local tier = 1
 			for i,t in pairs(omnisource) do
 				for _,o in pairs(t) do
@@ -86,6 +67,7 @@ if not mods["angelsrefining"] then
 				end
 			end
 			
+			--Create salting recipes
 			RecGen:create("omnimatter_crystal", ore.."-salting"):
 				setIngredients({
 					{type="item",name=ore,amount=1},
@@ -106,14 +88,33 @@ if not mods["angelsrefining"] then
 			omni.lib.add_unlock_recipe("omnitech-crystallology-"..tier, ore.."-omnide-solution")
 			omni.lib.add_unlock_recipe("omnitech-crystallology-"..tier, ore.."-crystal-omnitraction")
 			omni.lib.add_unlock_recipe("omnitech-crystallology-"..tier, ore.."-crystal")
+
+			--Create crystal powder item if it doesnt exist yet
+			if not data.raw.item["crystal-powder-"..metal] then
+				ItemGen:create("omnimatter_crystal", "crystal-powder-"..metal):
+					setLocName({"item-name.crystal-powder", {metal}}):
+					setIcons({{
+						icon = "__omnimatter_crystal__/graphics/icons/crystal-powder.png",
+						icon_size = 32,
+						tint = omni.lib.ore_tints[metal] or {r = 1, g = 1, b = 1, a = 1}
+						}}):
+					extend()	
+			end
+
+			--Replace the ore with crystal powder
+			rec.normal.results[1].name = "crystal-powder-"..metal
+			rec.icon=nil
+			rec.icon_size=nil
+			rec.icons = omni.icon.of(data.raw.item["crystal-powder-"..metal])
+			rec.localised_name = {"recipe-name.crystal-powder", {metal}}
 		end
 	end
 
 	for _,rec in pairs(data.raw.recipe) do
 		for _,ore in pairs(added_ores) do
 
-			--Copy all smelting / processing recipes, make a copy and replace the ore ingredient with crystal-powder
-			if omni.lib.recipe_ingredient_contains(rec.name, ore) then --and (string.find(rec.name, "plate") or string.find(rec.name, "processing") ) then
+			--Copy all smelting / processing recipes, make a copy and replace the ore ingredient with crystal-powder (exclude salting recipes!!!)
+			if omni.lib.recipe_ingredient_contains(rec.name, ore) and rec.subgroup~="salting" then --and (string.find(rec.name, "plate") or string.find(rec.name, "processing") ) then
 				local metal = string.sub(ore,1,string.len(ore)-string.len("-ore"))
 
 				--Check if its already a crystal-powder recipe (recipes with multiple ores as ingredients) to avoid the creation of nested powder recipes
@@ -124,6 +125,7 @@ if not mods["angelsrefining"] then
 					r:replaceIngredients(ore, "crystal-powder-"..metal):
 					setEnabled(false):
 					setTechName(omni.lib.get_tech_name(ore.."-crystal")):
+					setLocName({"recipe-name.advanced-crystal-powder", {"recipe-name."..rec.name}}):
 					extend()
 			end
 		end
