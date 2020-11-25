@@ -126,7 +126,7 @@ RecGen:create("omnimatter_energy","heat"):
 	setCapacity(1):
 	setTechName("omnitech-anbaricity"):
 	setTechCost(40):
-	setTechIcons("electric-engine"):
+	setTechIcons({{"electric-engine",256}},"base"):
 	setTechPrereq():
 	ifAddTechPrereq(settings.startup["bobmods-logistics-beltoverhaul"] and settings.startup["bobmods-logistics-beltoverhaul"].value,
 	"omnitech-basic-splitter-logistics","omnitech-basic-underground-logistics"
@@ -243,7 +243,7 @@ BuildGen:import("assembling-machine-1"):
 	setIcons("omnitor-assembling-machine","omnimatter_energy"):
 	setEnabled(false):
 	setTechName("omnitech-simple-automation"):
-	setTechIcons("automation"):
+	setTechIcons({{"automation-1",256}},"base"):
 	setTechPrereq():
 	setTechPacks(1):
 	setTechCost(10):
