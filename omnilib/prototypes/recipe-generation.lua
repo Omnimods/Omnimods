@@ -1157,6 +1157,7 @@ function RecGen:create(mod,name,efficency)
 	r.add_prod = false
 	r.hidden = function(levels,grade) return nil end
 	r.tech = {
+		noTech = false,
 		cost = function(levels,grade) return 50 end,
 		packs = function(levels,grade) return 1 end,
 		time=function(levels,grade) return 20 end,
@@ -1354,6 +1355,10 @@ function RecGen:setHidden(en)
 end
 function RecGen:noItem()
 	self.noItem=true
+	return self
+end
+function RecGen:noTech(b)
+	self.tech.noTech = (b == nil) or b
 	return self
 end
 function RecGen:setItemName(en)
@@ -1911,7 +1916,7 @@ function RecGen:generate_recipe()
 			end
 		end
 	end
-	if self.tech.name(0,0) ~= nil and not self.enabled(0,0) then
+	if self.tech.name(0,0) ~= nil and not self.enabled(0,0) and self.tech.noTech ~= true then
 		local tname = self.tech.name(0,0)
 		--Add way to make this optional
 		--omni.lib.remove_recipe_all_techs(tname)
@@ -2144,88 +2149,44 @@ function RecGen:setTechCost(cost)
 	end
 	return self
 end
+--setTechIcons() can be called with either:
+	--icon name (mod=nil, mod from RecGen() call is used as dir path)
+	--icon name + modname
+	--(icon name, icon_size) if mod is defined in the RecGen call
+	--the full path to the icon (mod=nil)
+	--with an icons table where icon and icon_size are specified (mod=nil)
+	--with an (icons) table consisting of {{namestring, icon_size}} or {{namestring, icon_size=XXX}} (+ modname if not already defined)
 function RecGen:setTechIcons(icons,mod)
-	local proto = nil
-	if type(icons)=="string" then
-		proto = data.raw.technology[icons]
-	end
-	if type(icons)~= "function" and mod and (type(icons)~= "string" or not string.match(icons, "%_%_(.-)%_%_")) then
-		if type(icons)=="table" then
-			local ic = {}
-			local ic_sz=128
+	if type(icons)~= "function" then
+		local ic = {}
+		local ic_sz = 128
+		--if not mod and not self.mod then log("RecGen:setTechIcons() mod not defined") return nil end
+		if type(icons)=="string" then
+			if string.match(icons, "%_%_(.-)%_%_") then
+				ic[#ic+1]={icon=icons, icon_size=ic_sz}
+			elseif type(mod) == "number" and self.mod then
+				ic[#ic+1]={icon = "__"..self.mod.."__/graphics/technology/"..icons..".png", icon_size=mod}
+			else
+				ic[#ic+1]={icon = "__"..(mod or self.mod).."__/graphics/technology/"..icons..".png", icon_size=ic_sz}
+			end
+		elseif type(icons)=="table" then
 			for _, c in pairs(icons) do
-				if c.icon_size then	ic_sz=c.icon_size end
-				if c.name and type(c)=="table" then
-					ic[#ic+1]={icon = "__"..(mod or self.mod).."__/graphics/technology/"..c.name..".png",
-						icon_size=ic_sz,
-						scale=c.scale*128/ic_sz,
-						shift=c.shift}
-				elseif c.icon_size and c[1] and type(c[1]) == "string" then
-					ic[#ic+1]={icon = "__"..(mod or self.mod).."__/graphics/technology/"..c[1]..".png",icon_size=ic_sz}
+				-- .icon is just a namestring
+				if c.icon and not string.match(c.icon, "%_%_(.-)%_%_") then
+					ic[#ic+1]={icon = "__"..(mod or self.mod).."__/graphics/technology/"..c.icon..".png", icon_size=c.icon_size or ic_sz}
+				--table consists of {namestring,icon_size} or {namestring, icon_size=XXX}
+				elseif not c.icon and c[1] and type(c[1])=="string" then
+					ic[#ic+1]={icon = "__"..(mod or self.mod).."__/graphics/technology/"..c[1]..".png", icon_size=c[2] or c.icon_size or ic_sz}
+				-- table should be fine
 				else
-					ic[#ic+1]={icon = "__"..(mod or self.mod).."__/graphics/technology/"..c..".png",icon_size=ic_sz}
+					ic[#ic+1] = c
 				end
 			end
-			self.tech.icons = function(levels,grade) return ic end
-		else
-			local ic_size=128
-			if data.raw.technology[icons] then
-				check=data.raw.technology[icons]
-				if check.icon_size then ic_size=check.icon_size end
-			end
-			self.tech.icons = function(levels,grade) return {{icon = "__"..(mod or self.mod).."__/graphics/technology/"..icons..".png",icon_size=ic_size}} end
 		end
-	elseif type(icons)~= "function" then
-		--find icon_size
-		if type(icons)=="table" and type(icons[1].icon)=="string" then
-			local ic_sz=128
-			if icons[1].icon_size then
-				ic_sz=icons[1].icon_size
-			--might be overkill for techs:
-			elseif type(icons[1].icon)=="string" then --try to find item name by extracting icon name
-				local name=string.match(icons[1].icon,".*%/(.-).png")
-				--check if a HR icon, if so, update icon_size default
-				if string.match(name,"-HR") then
-					name=string.sub(name,1,-4)
-				end
-				for _,cat in pairs({"item-with-entity-data","recipe","tool","fluid","item"}) do
-					if data.raw[cat][name] then
-						if data.raw[cat][name].icon_size then
-							ic_sz=data.raw[cat][name].icon_size
-						elseif data.raw[cat][name].icons and data.raw[cat][name].icons[1].icon_size then
-							ic_sz=data.raw[cat][name].icons[1].icon_size
-						else
-						end
-					end
-				end
-				icons[1].icon_size=ic_sz
-			end
-		end
-		if type(icons)=="string" and string.match(icons, "%_%_(.-)%_%_") then
-			local name=string.match(icons,".*%/(.-).png")
-			local setup = {}
-			local proto = omni.lib.find_prototype(name)
-			if proto then
-				setup={{icon=proto.icon,icon_size=proto.icon_size,mipmaps=proto.mipmaps or nil}}
-			else
-				setup={{icon = icons, icon_size=ic_sz}}
-			end
-			self.tech.icons = function(levels,grade)	return setup end
-		elseif type(icons) == "string" and not proto and (mod or self.mod) then
-			self.tech.icons = function(levels,grade) return {{icon = "__"..(mod or self.mod).."__/graphics/technology/"..icons..".png",icon_size=ic_sz}} end
-		elseif proto then
-			if proto.icons then
-				self.tech.icons=function(levels,grade) return proto.icons end
-			else
-				self.tech.icons=function(levels,grade) return {{icon=proto.icon,icon_size=proto.icon_size,mipmaps=proto.mipmaps or nil}} end
-			end
-		else
-			self.tech.icons = function(levels,grade) return icons end
-		end
+		self.tech.icons = function(levels,grade) return ic end
 	else
 		self.tech.icons = icons
-	end
-	
+	end	
 	return self
 end
 function RecGen:setTechPacks(cost)
@@ -2420,6 +2381,7 @@ function RecChain:generate_chain()
 		setSubgroup(self.subgroup(0,0)):
 		setOrder(self.order(0,0)):
 		setEnergy(self.energy_required(self.levels,i)):
+		noTech(self.tech.noTech):
 		setTechCost(omni.lib.round(self.tech.cost(self.levels,i))):
 		setTechTime(omni.lib.round(self.tech.time(self.levels,i))):
 		setTechPacks(self.tech.packs(self.levels,i)):
@@ -3613,6 +3575,7 @@ function BuildGen:generateBuilding()
 	setEnabled(self.enabled(0,0)):
 	setMain(self.main_product(0,0)):
 	setPlace(self.name):
+	noTech(self.tech.noTech):
 	setTechName(self.tech.name(0,0)):
 	setTechUpgrade(self.tech.upgrade(0,0)):
 	setTechCost(self.tech.cost(0,0)):
@@ -4669,6 +4632,7 @@ function InsertGen:generateInserter()
 	setEnabled(self.enabled(0,0)):
 	setMain(self.main_product(0,0)):
 	setPlace(self.name):
+	noTech(self.tech.noTech):
 	setTechName(self.tech.name(0,0)):
 	setTechUpgrade(self.tech.upgrade(0,0)):
 	setTechCost(self.tech.cost(0,0)):
