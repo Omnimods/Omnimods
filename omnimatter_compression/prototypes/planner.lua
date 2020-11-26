@@ -9,7 +9,7 @@ data:extend({
     stackable = false,
     subgroup = "tool",
     order = "c[automated-construction]-d[dirty-planner]",
-    flags = {"only-in-cursor"},
+    flags = {"only-in-cursor", "spawnable"},
     selection_color = {r = 1.0, g = 0.2, b = 1.0, a = 0.3},
     alt_selection_color = {r = 0.2, g = 0.8, b = 0.3, a = 0.3},
     selection_cursor_box_type = "not-allowed",
@@ -23,20 +23,23 @@ data:extend({
     alt_selection_mode = "any-entity"
   },
   {
+    type = "custom-input",
+    name = "give-compression-planner",
+    key_sequence = "ALT + C",
+    consuming = "game-only",
+    item_to_spawn = "compression-planner",
+    action = "spawn-item"
+  },
+  {
     type = "shortcut",
     name = "compression-planner-shortcut",
     localised_name = {"item-name.compression-planner"},
     action = "spawn-item",
     item_to_spawn = "compression-planner",
+    associated_control_input = "give-compression-planner",
     technology_to_unlock = "compression-mining",
 	  icon = {
       filename = "__omnimatter_compression__/graphics/planner-shortcut.png",
-      size = 128,
-      scale = 1,
-      flags = {"gui-icon"}
-    },
-    disabled_icon = {
-      filename = "__omnimatter_compression__/graphics/planner-shortcut-white.png",
       size = 128,
       scale = 1,
       flags = {"gui-icon"}
@@ -47,5 +50,17 @@ data:extend({
       scale = 1,
       flags = {"gui-icon"}
     },
+    disabled_icon = {
+      filename = "__omnimatter_compression__/graphics/planner-shortcut-white.png",
+      size = 128,
+      scale = 1,
+      flags = {"gui-icon"}
+    },
+    disabled_small_icon = {
+      filename = "__omnimatter_compression__/graphics/planner-shortcut-white.png",
+      size = 128,
+      scale = 1,
+      flags = {"gui-icon"}
+    }
   }
 })
