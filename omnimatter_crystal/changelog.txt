@@ -3,6 +3,8 @@ Version: 4.1.0
 Date: 2020.11.xx
   Info:
     - Updated for Factorio version 1.1.0
+  Features:
+    - Crystallogy now outputs "crystal powder" when playing without angels
 ---------------------------------------------------------------------------------------------------
 Version: 4.0.2
 Date: 2020.09.04

@@ -51,12 +51,11 @@ end
 --Non Angels case
 if not mods["angelsrefining"] then
 	local added_ores = {}
-
 	for _,rec in pairs(data.raw.recipe) do
 		if string.find(rec.name,"crystal") and omni.lib.end_with(rec.name,"omnitraction") and rec.category=="omnite-extraction" then
 			local ore = rec.normal.results[1].name
 			added_ores[#added_ores+1] = ore
-			local metal = string.sub(ore,1,string.len(ore)-string.len("-ore"))
+			local metal = string.gsub(ore,"-ore","")
 
 			local tier = 1
 			for i,t in pairs(omnisource) do
@@ -112,21 +111,20 @@ if not mods["angelsrefining"] then
 
 	for _,rec in pairs(data.raw.recipe) do
 		for _,ore in pairs(added_ores) do
-
 			--Copy all smelting / processing recipes, make a copy and replace the ore ingredient with crystal-powder (exclude salting recipes!!!)
 			if omni.lib.recipe_ingredient_contains(rec.name, ore) and rec.subgroup~="salting" then --and (string.find(rec.name, "plate") or string.find(rec.name, "processing") ) then
-				local metal = string.sub(ore,1,string.len(ore)-string.len("-ore"))
+				local metal = string.gsub(ore,"-ore","")
 
 				--Check if its already a crystal-powder recipe (recipes with multiple ores as ingredients) to avoid the creation of nested powder recipes
 				local r= RecGen:import(rec)
 				if not string.find(rec.name, "crystal%-powder") then
 					r:setName("crystal-powder-"..rec.name)
 				end
-					r:replaceIngredients(ore, "crystal-powder-"..metal):
-					setEnabled(false):
-					setTechName(omni.lib.get_tech_name(ore.."-crystal")):
-					setLocName({"recipe-name.advanced-crystal-powder", {"recipe-name."..rec.name}}):
-					extend()
+				r:replaceIngredients(ore, "crystal-powder-"..metal):
+				setEnabled(false):
+				setTechName(omni.lib.get_tech_name(ore.."-crystal")):
+				setLocName({"recipe-name.crystalline", omni.locale.of(rec).name }):
+				extend()
 			end
 		end
 	end
