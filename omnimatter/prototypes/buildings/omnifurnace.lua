@@ -109,7 +109,7 @@ BuildGen:create("omnimatter","omni-furnace"):
           priority = "high",
           line_length = 8,
           width = 64,
-          height = 75,
+          height = 74,
           frame_count = 1,
           axially_symmetrical = false,
           direction_count = 1,
