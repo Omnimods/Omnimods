@@ -26,7 +26,7 @@ RecGen:import("inserter"):
 	setEnabled(false):
 	setTechName("omnitech-anbaric-inserter"):
 	setTechCost(60):
-	setTechIcon("__base__/graphics/technology/demo/electric-inserter.png"):
+	setTechIcons("electric-inserter","omnimatter_energy"):
 	setTechPacks(1):
 	setTechPrereq("omnitech-anbaricity"):extend()
 
@@ -38,7 +38,7 @@ RecGen:import("boiler"):
 	addIngredients("burner-omnitractor"):
 	setTechLocName("omnitech-steam-power"):
 	setTechPrereq("logistic-science-pack","omnitech-basic-omnium-power"):
-	setTechIcon("omnimatter_energy","steam-power"):
+	setTechIcons("steam-power","omnimatter_energy"):
 	equalize("burner-omnitractor"):
 	setEnabled(false):
 	setTechPacks(2):extend()
@@ -52,7 +52,7 @@ if mods["angelsindustries"] and angelsmods.industries.components then
 	RecGen:import("electric-mining-drill"):
 	setTechName("omnitech-anbaric-mining"):
 	setTechCost(100):
-	setTechIcon("omnimatter_energy","mining-drill"):
+	setTechIcons("mining-drill","omnimatter_energy"):
 	setTechPacks(1):
 	setEnabled(false):
 	setTechPrereq("omnitech-anbaricity"):extend()
@@ -74,7 +74,7 @@ else
       {type="item", name="burner-mining-drill", amount=1}):
 	setTechName("omnitech-anbaric-mining"):
 	setTechCost(100):
-	setTechIcon("omnimatter_energy","mining-drill"):
+	setTechIcons("mining-drill","omnimatter_energy"):
 	setTechPacks(1):
 	setEnabled(false):
 	setTechPrereq("omnitech-anbaricity"):extend()
@@ -198,7 +198,7 @@ if data.raw.recipe["lab"].enabled == false then
 	RecGen:import("lab"):
 		setTechLocName("omnitech-anbaric-lab"):
 		addIngredients({"omnitor-lab",1}):
-		setTechIcon("omnimatter_energy","lab"):
+		setTechIcons("lab","omnimatter_energy"):
 		setTechCost(100):extend()
 
 	omni.lib.add_prerequisite(omni.lib.get_tech_name("lab"), "omnitech-anbaricity")
@@ -209,7 +209,7 @@ else
 		setTechLocName("omnitech-anbaric-lab"):
 		addIngredients({"omnitor-lab",1}):
 		setTechCost(100):
-		setTechIcon("omnimatter_energy","lab"):
+		setTechIcons("lab","omnimatter_energy"):
 		setTechPacks(1):
 		setTechPrereq("omnitech-anbaricity"):extend()
 end

@@ -490,6 +490,7 @@ function omni.lib.replace_recipe_ingredient(recipename, ingredient, replacement)
             repname = replacement.name or replacement[1]
             repamount = replacement.amount or replacement[2]
             reptype = replacement.type
+            reptemp = replacement.temperature --use the word "blank" to clobber it
         else
             repname = replacement
         end
@@ -527,7 +528,14 @@ function omni.lib.replace_recipe_ingredient(recipename, ingredient, replacement)
                     else
                         ing.name = repname
                         ing.amount = repamount or ing.amount
-                        ing.type = reptype or ing.type  
+                        ing.type = reptype or ing.type
+                        if reptemp == "blank" then
+                          ing.temperature = nil
+                          ing.maximum_temperature = nil
+                          ing.minimum_temperature = nil
+                        else
+                          ing.temperature = reptemp or ing.temp
+                        end
                     end
                     break
                 elseif not ing.name and ing[1] and ing[1] == ingredient then
@@ -681,6 +689,32 @@ end
 
 function omni.lib.change_recipe_category(recipe, category)
 	data.raw.recipe[recipe].category=category
+end
+
+--Checks if a recipe contains a specific material as ingredient
+function omni.lib.recipe_ingredient_contains(recipename, itemname)
+    local rec = data.raw.recipe[recipename]
+    if rec then
+        --rec.ingredients
+        if rec.ingredients then
+            for i,ing in pairs(rec.ingredients) do
+                if omni.lib.is_in_table(itemname, ing) then return true end
+            end
+        end
+        --rec.normal.ingredients
+        if rec.normal and rec.normal.ingredients then
+            for i,ing in pairs(rec.normal.ingredients) do
+                if omni.lib.is_in_table(itemname, ing) then return true end
+           end
+        end
+        --rec.expensive.ingredients
+        if rec.expensive and rec.expensive.ingredients then
+            for i,ing in pairs(rec.expensive.ingredients) do
+                if omni.lib.is_in_table(itemname, ing) then return true end
+           end
+        end 
+        return nil
+    end
 end
 
 --Checks if a recipe contains a specific material as result

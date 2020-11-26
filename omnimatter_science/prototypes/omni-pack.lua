@@ -17,7 +17,7 @@ if mods["omnimatter_crystal"] then
 		setOrder("ca[omni-science-pack]"):
 		setTechName("omnipack-technology"):
 		setTechCost(150):
-		setTechIcon("omnipack-tech"):
+		setTechIcons("omnipack-tech","omnimatter_science"):
 		setTechPacks(2):
 		setTechPrereq("omnitech-omnitractor-electric-2"):
 		setTechTime(20):
@@ -26,6 +26,7 @@ if mods["omnimatter_crystal"] then
 	if data.raw.tool["production-science-pack"].icon == "__base__/graphics/icons/production-science-pack.png" then --only replace if vanilla icon?
 	  data.raw.tool["production-science-pack"].icon = "__omnilib__/graphics/icons/science-pack/production-science-pack.png"
 	  data.raw.technology["production-science-pack"].icon = "__omnilib__/graphics/technology/production-science-pack.png"
+	  data.raw.technology["production-science-pack"].icon_size = 128
 	  data.raw.tool["production-science-pack"].icon_size=64
 	  data.raw.recipe["production-science-pack"].icon_size=64
 	  data.raw.tool["omni-pack"].icon_size=64

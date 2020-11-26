@@ -630,6 +630,7 @@ function ItemGen:setIcons(icons,mod)
 		end
 		if type(icons)=="string" and string.match(icons, "%_%_(.-)%_%_") then
 			local name=string.match(icons,".*%/(.-).png")
+			local setup = {}
 			proto = omni.lib.find_prototype(name)
 			if proto then
 				setup={{icon=proto.icon,icon_size=proto.icon_size,mipmaps=proto.mipmaps or nil}}
@@ -1156,6 +1157,7 @@ function RecGen:create(mod,name,efficency)
 	r.add_prod = false
 	r.hidden = function(levels,grade) return nil end
 	r.tech = {
+		noTech = false,
 		cost = function(levels,grade) return 50 end,
 		packs = function(levels,grade) return 1 end,
 		time=function(levels,grade) return 20 end,
@@ -1163,7 +1165,7 @@ function RecGen:create(mod,name,efficency)
 		name = function(levels,grade) return self.name end,
 		loc_name = function(levels,grade) return nil end,
 		loc_desc = function(levels,grade) return nil end,
-		icon = function(levels,grade) return nil end,
+		icons = function(levels,grade) return nil end,
 		prerequisites = function(level,grade) return nil end,
 		effects = {}}
 	return setmetatable(r,RecGen)
@@ -1248,7 +1250,7 @@ function RecGen:import(recipe)
 			if tech then
 				r:setTechName(tech.name):
 				setTechCost(tech.unit.count):
-				setTechIcon(tech.icon):
+				setTechIcons(tech.icons  or {{icon=tech.icon, icon_size=tech.icon_size or 128, icon_mipmaps = tech.icon_mipmaps or nil}}):
 				setTechLocName(tech.localised_name):
 				setTechLocDesc(tech.localised_description):
 				setTechPacks(tech.unit.ingredients):
@@ -1353,6 +1355,10 @@ function RecGen:setHidden(en)
 end
 function RecGen:noItem()
 	self.noItem=true
+	return self
+end
+function RecGen:noTech(b)
+	self.tech.noTech = (b == nil) or b
 	return self
 end
 function RecGen:setItemName(en)
@@ -1910,7 +1916,7 @@ function RecGen:generate_recipe()
 			end
 		end
 	end
-	if self.tech.name(0,0) ~= nil and not self.enabled(0,0) then
+	if self.tech.name(0,0) ~= nil and not self.enabled(0,0) and self.tech.noTech ~= true then
 		local tname = self.tech.name(0,0)
 		--Add way to make this optional
 		--omni.lib.remove_recipe_all_techs(tname)
@@ -1921,13 +1927,13 @@ function RecGen:generate_recipe()
 				tname = "omnitech-"..tname.."-1"
 			end
 		end
-		if not data.raw.technology[tname] and self.tech.icon(0,0)~= nil then
+		if not data.raw.technology[tname] and self.tech.icons(0,0)~= nil then
 			--omni.lib.remove_unlock_recipe(self.tech.name(0,0),self.name)
 			self.rtn[#self.rtn+1]=TechGen:create(self.mod,self.tech.name(0,0)):
 			setCost(self.tech.cost(0,0)):
 			setPacks(self.tech.packs(0,0)):
 			setTime(self.tech.time(0,0)):
-			setIcon(self.tech.icon(0,0)):
+			setIcons(self.tech.icons(0,0)):
 			setUpgrade(self.tech.upgrade(0,0) or false):
 			addUnlocks(omni.lib.union(self.tech.effects,{self.name})):
 			setPrereq(self.tech.prerequisites(0,0)):
@@ -2143,25 +2149,44 @@ function RecGen:setTechCost(cost)
 	end
 	return self
 end
-function RecGen:setTechIcon(mod,icon)
-	if icon then
-		self.tech.icon = function(levels,grade) return "__"..mod.."__/graphics/technology/"..icon..".png" end
-	elseif type(mod) == "string" then
-		if not string.match(mod, "%_%_(.-)%_%_") then
-			local proto = omni.lib.find_prototype(mod)
-			if proto then
-				self.tech.icon = function(levels,grade) return proto.icon end
+--setTechIcons() can be called with either:
+	--icon name (mod=nil, mod from RecGen() call is used as dir path)
+	--icon name + modname
+	--(icon name, icon_size) if mod is defined in the RecGen call
+	--the full path to the icon (mod=nil)
+	--with an icons table where icon and icon_size are specified (mod=nil)
+	--with an (icons) table consisting of {{namestring, icon_size}} or {{namestring, icon_size=XXX}} (+ modname if not already defined)
+function RecGen:setTechIcons(icons,mod)
+	if type(icons)~= "function" then
+		local ic = {}
+		local ic_sz = 128
+		--if not mod and not self.mod then log("RecGen:setTechIcons() mod not defined") return nil end
+		if type(icons)=="string" then
+			if string.match(icons, "%_%_(.-)%_%_") then
+				ic[#ic+1]={icon=icons, icon_size=ic_sz}
+			elseif type(mod) == "number" and self.mod then
+				ic[#ic+1]={icon = "__"..self.mod.."__/graphics/technology/"..icons..".png", icon_size=mod}
 			else
-				self.tech.icon = function(levels,grade) return "__"..self.mod.."__/graphics/technology/"..mod..".png" end
+				ic[#ic+1]={icon = "__"..(mod or self.mod).."__/graphics/technology/"..icons..".png", icon_size=ic_sz}
 			end
-		else
-			self.tech.icon = function(levels,grade) return mod end
+		elseif type(icons)=="table" then
+			for _, c in pairs(icons) do
+				-- .icon is just a namestring
+				if c.icon and not string.match(c.icon, "%_%_(.-)%_%_") then
+					ic[#ic+1]={icon = "__"..(mod or self.mod).."__/graphics/technology/"..c.icon..".png", icon_size=c.icon_size or ic_sz}
+				--table consists of {namestring,icon_size} or {namestring, icon_size=XXX}
+				elseif not c.icon and c[1] and type(c[1])=="string" then
+					ic[#ic+1]={icon = "__"..(mod or self.mod).."__/graphics/technology/"..c[1]..".png", icon_size=c[2] or c.icon_size or ic_sz}
+				-- table should be fine
+				else
+					ic[#ic+1] = c
+				end
+			end
 		end
-	elseif type(mod) == "function" then
-		self.tech.icon = mod
-	elseif type(mod) == "table" then
-		self.tech.icon = function(levels,grade) return mod end
-	end
+		self.tech.icons = function(levels,grade) return ic end
+	else
+		self.tech.icons = icons
+	end	
 	return self
 end
 function RecGen:setTechPacks(cost)
@@ -2356,11 +2381,12 @@ function RecChain:generate_chain()
 		setSubgroup(self.subgroup(0,0)):
 		setOrder(self.order(0,0)):
 		setEnergy(self.energy_required(self.levels,i)):
+		noTech(self.tech.noTech):
 		setTechCost(omni.lib.round(self.tech.cost(self.levels,i))):
 		setTechTime(omni.lib.round(self.tech.time(self.levels,i))):
 		setTechPacks(self.tech.packs(self.levels,i)):
 		setTechUpgrade(i>1):
-		setTechIcon(self.tech.icon(levels,i)):
+		setTechIcons(self.tech.icons(levels,i)):
 		setTechLocName(self.tech.loc_name(levels,grade)):
 		setTechLocDesc(self.tech.loc_desc,self.tech.loc_desc_keys):
 		--setTechName("omnitech-"..techname.."-"..i-techDifEnabled):
@@ -2373,10 +2399,10 @@ function RecChain:generate_chain()
 		end
 
 
-		if self.tech.icon(levels,i) then
-			r:setTechIcon(self.tech.icon(levels,i))
+		if self.tech.icons(levels,i) then
+			r:setTechIcons(self.tech.icons(levels,i))
 		else
-			r:setTechIcon(self.mod,self.tech.name)
+			r:setTechIcons(self.tech.name,self.mod)
 		end
 		if self.add_prod then
 			r:addProductivity()
@@ -2462,7 +2488,7 @@ function TechGen:import(name)
 	if tech then
 		local t = TechGen:create():
 		setName(name):
-		setIcon(tech.icons or tech.icon):
+		setIcons(tech.icons or tech.icons  or {{icon=tech.icon, icon_size=tech.icon_size or 128, icon_mipmaps = tech.icon_mipmaps or nil}}):
 		setPacks(tech.unit.ingredients):
 		setCost(tech.unit.count):
 		setTime(tech.unit.time):
@@ -2500,7 +2526,11 @@ function TechGen:setEnabled(name)
 	return self
 end
 function TechGen:setIcon(m)
-	self.icon = m
+	self.icons = {icon = m, icon_size = 128}
+	return self
+end
+function TechGen:setIcons(m)
+	self.icons = m
 	return self
 end
 function TechGen:setAllow(m)
@@ -2641,9 +2671,9 @@ function TechGen:generate_tech()
     --localised_name = self.locname(0,0),
 	--localised_description = self.locdesc(0,0),
 	type = "technology",
-	icon = self.icon,
+	icons = self.icons,
 	upgrade = self.upgrade,
-	icon_size = 128,
+	--icon_size = 128,
 	prerequisites = self.prereq,
 	enabled = self.enabled,
 	hidden = self.hidden,
@@ -2656,11 +2686,11 @@ function TechGen:generate_tech()
 	},
 	order = "c-a"
 	}
-	if type(tech.icon) == "table" and tech.icon[1] then
-		tech.icons = self.icon
-		tech.icon = nil
-		tech.icon_size = nil
-	end
+	--if type(tech.icon) == "table" and tech.icon[1] then
+	--	tech.icons = self.icon
+	--	tech.icon = nil
+	--	tech.icon_size = nil
+	--end
 	if self.loc_name and #self.loc_name>0 then
 		if type(self.loc_name[1]) == "string" and not string.find(self.loc_name[1],".") and not string.find(self.loc_name[1],"name") then
 			self.loc_name[1]="technology-name."..self.loc_name[1]
@@ -3545,10 +3575,11 @@ function BuildGen:generateBuilding()
 	setEnabled(self.enabled(0,0)):
 	setMain(self.main_product(0,0)):
 	setPlace(self.name):
+	noTech(self.tech.noTech):
 	setTechName(self.tech.name(0,0)):
 	setTechUpgrade(self.tech.upgrade(0,0)):
 	setTechCost(self.tech.cost(0,0)):
-	setTechIcon(self.tech.icon(0,0)):
+	setTechIcons(self.tech.icons(0,0)):
 	setTechPacks(self.tech.packs(0,0)):
 	setSubgroup(self.subgroup(0,0)):
 	setTechTime(self.tech.time(0,0)):
@@ -3665,7 +3696,7 @@ function BuildChain:generate_building_chain()
 		setNextUpgrade(function(levels,grade) return nextname end):
 		setTechUpgrade(self.tech.upgrade(levels,i)):
 		setTechCost(self.tech.cost(levels,i)):
-		setTechIcon(self.tech.icon(levels,i)):
+		setTechIcons(self.tech.icons(levels,i)):
 		setEnabled(self.enabled(levels,i)):
 		setTechPacks(self.tech.packs(levels,i)):
 		setTechTime(self.tech.time(levels,i)):
@@ -4601,10 +4632,11 @@ function InsertGen:generateInserter()
 	setEnabled(self.enabled(0,0)):
 	setMain(self.main_product(0,0)):
 	setPlace(self.name):
+	noTech(self.tech.noTech):
 	setTechName(self.tech.name(0,0)):
 	setTechUpgrade(self.tech.upgrade(0,0)):
 	setTechCost(self.tech.cost(0,0)):
-	setTechIcon(self.tech.icon(0,0)):
+	setTechIcons(self.tech.icons(0,0)):
 	setTechPacks(self.tech.packs(0,0)):
 	setSubgroup(self.subgroup(0,0)):
 	setOrder(self.order(0,0)):
@@ -4736,7 +4768,7 @@ hand_base_picture
 --[[
 setTechUpgrade(value)
 setTechCost(cost)
-setTechIcon(mod,icon)
+setTechIcons(mod,icon)
 setTechPacks(cost)
 setTechTime(t)
 setTechPrereq(prereq)

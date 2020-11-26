@@ -439,16 +439,16 @@ local run_entity_updates = function(new, kind, i)
     new.production = new_effect(new.production,i)
   elseif kind == "reactor" then
     new.consumption = new_effect(new.consumption,i)
-    if new.heatbuffer then
-      new.heatbuffer.specific_heat = new_effect(new.heatbuffer.specific_heat,i)
-      new.heatbuffer.max_transfer = new_effect(new.heatbuffer.max_transfer,i)
+    if new.heat_buffer then
+      new.heat_buffer.specific_heat = new_effect(new.heat_buffer.specific_heat,i)
+      new.heat_buffer.max_transfer = new_effect(new.heat_buffer.max_transfer,i)
     end
   end
   --Heat Pipe
   if kind == "heat-pipe" then
-    if new.heatbuffer then
-      new.heatbuffer.specific_heat = new_effect(new.heatbuffer.specific_heat,i)
-      new.heatbuffer.max_transfer = new_effect(new.heatbuffer.max_transfer,i)
+    if new.heat_buffer then
+      new.heat_buffer.specific_heat = new_effect(new.heat_buffer.specific_heat,i)
+      new.heat_buffer.max_transfer = new_effect(new.heat_buffer.max_transfer,i)
     end
   end
   --Boiler
@@ -456,6 +456,8 @@ local run_entity_updates = function(new, kind, i)
     if new.energy_consumption then new.energy_consumption = new_effect(new.energy_consumption, i, nil, multiplier^i) end
     if new.energy_source.fuel_inventory_size then new.energy_source.fuel_inventory_size = new.energy_source.fuel_inventory_size*(i+1) end
     if new.energy_source.effectivity then new.energy_source.effectivity = math.pow(new.energy_source.effectivity,1/(i+1)) end
+    if new.energy_source.specific_heat then new.energy_source.specific_heat = new_effect(new.energy_source.specific_heat, i, nil, multiplier^i) end
+    if new.energy_source.max_transfer then new.energy_source.max_transfer = new_effect(new.energy_source.max_transfer, i, nil, multiplier^i) end
     process_fluid_box(new.output_fluid_box, i, true)
     process_fluid_box(new.fluid_box, i, true)
   end

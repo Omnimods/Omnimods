@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.0
+Date: 2020.11.26
+  Info:
+    - Updated for Factorio version 1.1.0
+  Bugfixes:
+    - Fix highly compressed heat exchanger underperforming 
+    - Fix reactor and heat pipe heat buffer not compressing
+---------------------------------------------------------------------------------------------------
 Version: 4.0.4
 Date: 2020.10.04
   Features:

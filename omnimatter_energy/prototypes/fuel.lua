@@ -126,7 +126,7 @@ RecGen:create("omnimatter_energy","purified-omnite"):
     setEnabled(false):
     setTechName("omnitech-basic-omnium-power"):
 	setTechCost(55):
-	setTechIcon("omnimatter_energy","purified-omnite"):
+	setTechIcons("purified-omnite","omnimatter_energy"):
     setTechPrereq("omnitech-anbaricity"):extend()
   
 omni.lib.add_prerequisite("omnitech-burner-filter-2","omnitech-basic-omnium-power")

@@ -37,13 +37,14 @@ RecGen:create("omnimatter_crystal","hydromnic-acid"):
 		burner_ings = {{pipe,15},{"omnicium-plate",5},{electronic,5},{"omnite-brick",10},{"iron-gear-wheel",10}}
 	end
 
-	BuildGen:create("omnimatter_crystal","omniplant"):
+BuildGen:create("omnimatter_crystal","omniplant"):
 	setBurner(0.75,2):
 	setSubgroup("omniplant"):
 	setIngredients(burner_ings):
 	setEnergy(5):
 	setUsage(function(level,grade) return "750kW" end):
 	--setTechName("omnitech-omnitractor-electric-1"): --Done in final-fixes for now
+	noTech():
 	setReplace("omniplant"):
 	setNextUpgrade("omniplant-1"):
 	setStacksize(20):
@@ -71,7 +72,6 @@ RecGen:create("omnimatter_crystal","hydromnic-acid"):
 	setFluidBox("XWXWX.XXXXX.XXXXX.XXXXX.XKXKX"):
 	setEnabled(false):
 	extend()
-
 
 local dif = 1
 if not mods["bobelectronics"] then dif=0 end
@@ -114,7 +114,7 @@ BuildChain:create("omnimatter_crystal","omniplant"):
 	setTechPrereq(get_pure_req):
 	addElectricIcon():
 	setTechName(function(levels,grade) if grade == 1 then return "omnitech-omnic-acid-hydrolyzation-1" else return "omnitech-crystallology" end end):
-	setTechIcon("omnimatter_crystal","crystallology"):
+	setTechIcons("crystallology","omnimatter_crystal"):
 	setTechCost(get_tech_times):
 	setTechPacks(function(levels,grade) return grade end):
 	setTechPrereq(function(levels,grade)
@@ -166,7 +166,7 @@ BuildChain:create("omnimatter_crystal","crystallomnizer"):
 	addElectricIcon():
 	allowProductivity():
 	setTechName("omnitech-crystallonics"):
-	setTechIcon("omnimatter_crystal","crystallonics"):
+	setTechIcons("crystallonics","omnimatter_crystal"):
 	setTechCost(get_tech_times):
 	setTechPacks(function(levels,grade) return grade + 1 end):
 	setReplace("crystallomnizer"):
@@ -327,7 +327,7 @@ RecChain:create("omnimatter_crystal","pseudoliquid-amorphous-crystal"):
 	setLevel(omni.fluid_levels):
 	setTechName("omnitech-pseudoliquid-amorphous-crystal"):
 	setTechLocName("omnitech-pseudoliquid-amorphous-crystal",grade):
-	setTechIcon("omnimatter_crystal","amorphous-crystal"):
+	setTechIcons("amorphous-crystal","omnimatter_crystal"):
 	setTechCost(function(levels,grade) return 500+50*grade end):
 	setTechPacks(function(levels,grade) return 3+math.floor(grade*3/levels) end):
 	setTechTime(60):

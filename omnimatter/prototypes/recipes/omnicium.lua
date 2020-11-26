@@ -94,7 +94,7 @@ RecGen:import("iron-ore-smelting"):
 	addSmallIcon("iron-ore",3):
 	addSmallIcon("copper-ore",1):
 	setTechName("omnitech-angels-omnicium-smelting-1"):
-	setTechIcon("smelting-omnicium"):
+	setTechIcons("smelting-omnicium"):
 	extend()
 
 RecGen:import("molten-iron-smelting-1"):
@@ -132,7 +132,7 @@ RecGen:import("iron-ore-processing"):
 	setReqAllMods("angelssmelting"):
 	setTechName("omnitech-angels-omnicium-smelting-2"):
 	setTechPrereq("omnitech-angels-omnicium-smelting-1"):
-	setTechIcon("smelting-omnicium"):extend()
+	setTechIcons("smelting-omnicium"):extend()
 
 RecGen:import("processed-iron-smelting"):
 	setName("processed-omnicium-smelting","omnimatter"):
@@ -158,7 +158,7 @@ RecGen:import("iron-processed-processing"):
 	setReqAllMods("angelssmelting"):
 	setTechName("omnitech-angels-omnicium-smelting-3"):
 	setTechPrereq("omnitech-angels-omnicium-smelting-2"):
-	setTechIcon("smelting-omnicium"):extend()
+	setTechIcons("smelting-omnicium"):extend()
 
 RecGen:import("pellet-iron-smelting"):
 	setName("pellet-omnicium-smelting","omnimatter"):
@@ -172,7 +172,7 @@ RecGen:import("pellet-iron-smelting"):
 	addSmallIcon("pellet-omnicium",3):
 	setReqAllMods("angelssmelting"):
 	setTechName("omnitech-angels-omnicium-smelting-3"):
-	setTechIcon("smelting-omnicium"):extend()
+	setTechIcons("smelting-omnicium"):extend()
 
 RecGen:import("roll-iron-casting"):
 	setName("roll-omnicium-casting","omnimatter"):
