@@ -17,6 +17,17 @@ local round = function(nr)
 	end
 end
 
+script.on_event(defines.events.on_cutscene_cancelled, function(event)
+	local ply = game.players
+	log("test")
+	log(serpent.block(ply))
+	--if game.shortcut_prototypes["ore-move-planner-shortcut"] then
+	--	ply.set_shortcut_available("ore-move-planner-shortcut", not not ply.force.technologies["rocket-silo"].researched)
+	--end
+end)
+
+
+
 script.on_event(defines.events.on_player_alt_selected_area, function(event)
 
 end)

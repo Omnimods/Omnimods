@@ -1,32 +1,54 @@
 data:extend({
-
   {
     type = "selection-tool",
     name = "ore-move-planner",
     icon = "__omnimatter_move__/graphics/planner.png",
-	icon_size = 32,
+	  icon_size = 32,
     stack_size = 1,
+    stackable = false,
     subgroup = "tool",
     order = "c[automated-construction]-d[dirty-planner]",
-    flags = {},
+    flags = {"only-in-cursor", "spawnable"},
     selection_color = {r = 1.0, g = 0.2, b = 1.0, a = 0.3},
     alt_selection_color = {r = 0.2, g = 0.8, b = 0.3, a = 0.3},
-    selection_mode = {"any-entity"},
-    alt_selection_mode = {"any-entity"},
+    selection_mode = "any-entity",
+    alt_selection_mode = "any-entity",
     selection_cursor_box_type = "entity",
     alt_selection_cursor_box_type = "entity"
-    
   },
   {
-    type = "recipe",
-    name = "ore-move-planner",
-	icon_size = 32,
-    enabled = true,
-    energy_required = 1,
-    ingredients =
-    {
-		{"blueprint", 1},
+    type = "custom-input",
+    name = "give-ore-move-planner",
+    key_sequence = "ALT + M",
+    consuming = "game-only",
+    item_to_spawn = "ore-move-planner",
+    action = "spawn-item"
+  },
+  {
+    type = "shortcut",
+    name = "ore-move-planner-shortcut",
+    localised_name = {"item-name.ore-move-planner"},
+    action = "spawn-item",
+    item_to_spawn = "ore-move-planner",
+    associated_control_input = "give-ore-move-planner",
+    technology_to_unlock = "rocket-silo",
+	  icon = {
+      filename = "__omnimatter_move__/graphics/planner-shortcut.png",
+      size = 128,
+      scale = 1,
+      flags = {"gui-icon"}
     },
-    result = "ore-move-planner"
+    disabled_icon = {
+      filename = "__omnimatter_move__/graphics/planner-shortcut-white.png",
+      size = 128,
+      scale = 1,
+      flags = {"gui-icon"}
+    },
+    small_icon = {
+      filename = "__omnimatter_move__/graphics/planner-shortcut-white.png",
+      size = 128,
+      scale = 1,
+      flags = {"gui-icon"}
+    },
   }
 })
