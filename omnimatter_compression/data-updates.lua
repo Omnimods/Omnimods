@@ -38,7 +38,6 @@ omni.compression.exclude_recipe("tank")
 omni.compression.exclude_recipe("locomotive")
 omni.compression.exclude_recipe("cargo-wagon")
 omni.compression.exclude_recipe("fluid-wagon")
-omni.compression.exclude_recipe("compression-planner")
 omni.compression.exclude_recipe("omega-drill")
 
 omni.compression.include_recipe("burner-inserter")
