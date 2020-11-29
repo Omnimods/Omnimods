@@ -200,8 +200,6 @@ script.on_event(defines.events.on_rocket_launched, function(event)
 		-- There can be many things!
 		for satellite in pairs(rocket_inv.get_contents()) do
 			if satellite:find("^compressed%-") and #game.item_prototypes[satellite].rocket_launch_products > 0 then
-				-- Make sure we're tracking correctly
-				remote.call("silo_script", "add_tracked_item", satellite)
 				-- Naughty naughty!
 				if not rocket.prototype.name:find("^compressed%-") then
 					local result_array = game.item_prototypes[satellite].rocket_launch_products or {}
