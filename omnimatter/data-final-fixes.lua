@@ -92,8 +92,11 @@ for _,tier in pairs(omnisource) do
 			if pre.basic_settings then
 				if pre.basic_settings.autoplace_controls then
 					pre.basic_settings.autoplace_controls[ore.name] = nil
-					pre.basic_settings.autoplace_controls["sulfur"] = nil
 					pre.basic_settings.autoplace_controls["infinite-"..ore.name] = nil
+					--patch special cases where autoplace names don't match ore name
+					pre.basic_settings.autoplace_controls["sulfur"] = nil
+					pre.basic_settings.autoplace_controls["borax"] = nil
+					pre.basic_settings.autoplace_controls["infinite-borax"] = nil
 				end
 			end
 		end
