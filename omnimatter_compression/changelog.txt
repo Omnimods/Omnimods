@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.2
 Date: 2020.XX.XX
+  Features:
+    - Silos now also scale the forced wait between "ready" and "launching" states
   Bugfixes:
     - Fix crash from compressed rocket silos calling a removed interface
     - Fix module counts on compressed buildings ending up negative
