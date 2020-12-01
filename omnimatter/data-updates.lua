@@ -48,8 +48,10 @@ if mods["pypetroleumhandling"] then
 	-- Green
 	omni.add_resource("oil-sand", 2)
 	omni.add_resource("sulfur", 2)
+	--Red
 	omni.add_fluid("tar", 1, 1)
 	omni.add_fluid("natural-gas", 1, 1)
+	--Tier 4
 	omni.add_fluid("water-saline", 4, 1)
 end
 if mods["pyalienlife"] then

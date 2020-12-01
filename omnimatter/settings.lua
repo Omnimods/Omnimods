@@ -1,18 +1,17 @@
-data:extend(
-{
+data:extend({
   {
     type = "bool-setting",
     name = "omnimatter-infinite",
     setting_type = "startup",
     default_value = false,
-	order=a
+    order=a
   },
   {
     type = "bool-setting",
     name = "omnimatter-infinite-omnic-acid",
     setting_type = "startup",
     default_value = true,
-	order=ab
+    order=ab
   },
   {
     type = "int-setting",
@@ -22,7 +21,7 @@ data:extend(
     maximum_value = 8,
     minimum_value = 3,
     per_user = false,
-	order=ac
+    order=ac
   },
   {
     type = "int-setting",
@@ -121,14 +120,14 @@ data:extend(
     type = "bool-setting",
     name = "omnimatter-linear-science-packs",
     setting_type = "startup",
-	default_value = false,
+    default_value = false,
     per_user = false,
   },
   {
     type = "bool-setting",
     name = "omnimatter-rocket-locked",
     setting_type = "startup",
-	default_value = true,
+    default_value = true,
     per_user = false,
   },
   {
@@ -140,7 +139,4 @@ data:extend(
     minimum_value = 0.00,
     per_user = false,
   },
-}
-)
-
-
+})
