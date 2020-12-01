@@ -544,6 +544,8 @@ local run_entity_updates = function(new, kind, i)
       new.fixed_recipe = new.fixed_recipe .. "-compression"
     end
     new.light_blinking_speed = new.light_blinking_speed * math.pow(multiplier, i)
+    new.rocket_rising_delay = math.ceil((new.rocket_rising_delay or 30) / math.pow(multiplier, i)) -- Defaults are NOT present on the prototype!
+    new.launch_wait_time = math.ceil((new.launch_wait_time or 120) / math.pow(multiplier, i))
     local rocket = table.deepcopy(data.raw["rocket-silo-rocket"][new.rocket_entity])
     rocket.name = "compressed-" .. rocket.name .. "-" .. i
     new.rocket_entity = rocket.name
