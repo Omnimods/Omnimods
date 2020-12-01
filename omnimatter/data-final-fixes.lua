@@ -87,7 +87,9 @@ for _,tier in pairs(omnisource) do
 					end
 				end	
 			end
-		end
+    end
+    --move this for loop out and remove all non-omni ores
+    -- also look at defaulting solids to tier 1, and fluids to tier 2 if not already "dealt with"
 		for _, pre in pairs(data.raw["map-gen-presets"].default) do
 			if pre.basic_settings then
 				if pre.basic_settings.autoplace_controls then
@@ -97,6 +99,7 @@ for _,tier in pairs(omnisource) do
 					pre.basic_settings.autoplace_controls["sulfur"] = nil
 					pre.basic_settings.autoplace_controls["borax"] = nil
 					pre.basic_settings.autoplace_controls["infinite-borax"] = nil
+					pre.basic_settings.autoplace_controls["bitumen-seep"] = nil
 				end
 			end
 		end
