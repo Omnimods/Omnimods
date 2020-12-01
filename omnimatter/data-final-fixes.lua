@@ -1,5 +1,3 @@
---sortTiers()
-
 local m = 3
 for _,om in pairs({omnisource,omnifluid}) do
 	for i, tier in pairs(om) do
@@ -99,7 +97,6 @@ for _,tier in pairs(omnisource) do
 					pre.basic_settings.autoplace_controls["sulfur"] = nil
 					pre.basic_settings.autoplace_controls["borax"] = nil
 					pre.basic_settings.autoplace_controls["infinite-borax"] = nil
-					pre.basic_settings.autoplace_controls["bitumen-seep"] = nil
 				end
 			end
 		end
@@ -126,6 +123,7 @@ for _,tier in pairs(omnifluid) do
 					pre.basic_settings.autoplace_controls["crude-oil"] = nil
 					pre.basic_settings.autoplace_controls["angels-fissure"] = nil
 					pre.basic_settings.autoplace_controls["angels-natural-gas"] = nil
+					pre.basic_settings.autoplace_controls["bitumen-seep"] = nil
 				end
 			end
 		end
@@ -133,6 +131,12 @@ for _,tier in pairs(omnifluid) do
 end
 if bobmods and bobmods.ores then
 	require("prototypes.bob-compensation")
+end
+
+--remove Py´s bitumen-seep the hard way
+if data.raw["resource"]["bitumen-seep"] then
+	data.raw["autoplace-control"]["bitumen-seep"] = nil
+	data.raw["resource"]["bitumen-seep"].autoplace = nil
 end
 
 for _,rock in pairs(data.raw["simple-entity"]) do
@@ -153,8 +157,7 @@ for _,rock in pairs(data.raw["simple-entity"]) do
 		end
 	end
 end
---sortTiers()
-----log(serpent.block(data.raw.technology))
+
 if omni.rocket_locked then
 --"rocket-silo"
 	for _,tier in pairs(omnisource) do
@@ -169,12 +172,6 @@ if omni.rocket_locked then
 	end
 end
 
-local debrick = table.deepcopy("stone-brick")
-if debrick.normal then
-
-
-end
-
 for _,pump in pairs(data.raw["offshore-pump"]) do
 	if pump.fluid == "water" then
 		pump.fluid="omnic-water"
@@ -183,15 +180,3 @@ for _,pump in pairs(data.raw["offshore-pump"]) do
 end
 
 RecGen:import("coal-liquefaction"):replaceIngredients("heavy-oil","omniston"):replaceIngredients("liquid-naphtha","omniston"):extend()
-
-
-
---log("zombiee why more ideas?")
-
---data.raw.technology["coal-liquefaction"]=nil
---data.raw.recipe["coal-liquefaction"]=nil
-
---require("prototypes.omnitractor-requirements")
-
-
---require("migrations.omnimatter_reset")
