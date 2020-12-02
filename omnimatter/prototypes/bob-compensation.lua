@@ -1,27 +1,3 @@
-data.raw.resource["tin-ore"] = nil
-data.raw["autoplace-control"]["tin-ore"] = nil
-data.raw.resource["lead-ore"] = nil
-data.raw["autoplace-control"]["lead-ore"] = nil
-data.raw.resource["quartz"] = nil
-data.raw["autoplace-control"]["quartz"] = nil
-data.raw.resource["tungsten-ore"] = nil
-data.raw["autoplace-control"]["tungsten-ore"] = nil
-data.raw.resource["rutile-ore"] = nil
-data.raw["autoplace-control"]["rutile-ore"] = nil
-data.raw.resource["silver-ore"] = nil
-data.raw["autoplace-control"]["silver-ore"] = nil
-data.raw.resource["bauxite-ore"] = nil
-data.raw["autoplace-control"]["bauxite-ore"] = nil
-data.raw.resource["gold-ore"] = nil
-data.raw["autoplace-control"]["gold-ore"] = nil
-data.raw.resource["nickel-ore"] = nil
-data.raw["autoplace-control"]["nickel-ore"] = nil
-data.raw.resource["zinc-ore"] = nil
-data.raw["autoplace-control"]["zinc-ore"] = nil
-data.raw.resource["gem-ore"] = nil
-data.raw["autoplace-control"]["gem-ore"] = nil
-data.raw.resource["sulfur"] = nil
-data.raw["autoplace-control"]["sulfur"] = nil
 data:extend(
 {
   {
@@ -53,16 +29,3 @@ if data.raw["item-subgroup"]["bob-gems-ore"] then
 end
 
 bobmods.lib.module.add_productivity_limitation("sort-gem-ore")
-
---remove ground water if it exists and if the settings exist
-if (bobmods.ores and settings.startup["bobmods-ores-enablewaterores"].value) or (bobmods.plates and bobmods.ores.bauxite.create_autoplace and settings.startup["bobmods-plates-groundwater"].value == false) then
-  data.raw.resource["ground-water"] = nil
-  data.raw["autoplace-control"]["ground-water"] = nil
-  for _, pre in pairs(data.raw["map-gen-presets"].default) do
-    if pre.basic_settings then
-      if pre.basic_settings.autoplace_controls then
-        pre.basic_settings.autoplace_controls["ground-water"] = nil
-      end
-    end
-  end
-end

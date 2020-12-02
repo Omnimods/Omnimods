@@ -125,20 +125,6 @@ else
 		omni.add_resource("gem-ore",3)
 		omni.add_fluid("lithia-water",2,1)
 	end
-	--remove stone from mining
-	for _, gen in pairs(data.raw["resource"]) do
-		if gen.minable.result == "stone" then
-			data.raw.resource[gen.name] = nil
-			data.raw["autoplace-control"][gen.name] = nil
-		elseif gen.minable.results  then
-			for _,res in pairs(gen.minable.results) do
-				if res.name == "stone" then
-					data.raw.resource[gen.name] = nil
-					data.raw["autoplace-control"][gen.name] = nil
-				end
-			end
-		end
-	end
 end
 
 ----------------------------------------------------------------------------
