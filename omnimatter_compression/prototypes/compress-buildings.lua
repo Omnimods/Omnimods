@@ -308,7 +308,7 @@ local run_entity_updates = function(new, kind, i)
       new,
       "slot_count", 
       function(x) 
-        return x and (x * (i + 1)) 
+        return x and (x * (i + 1))
       end
     )
     -- Make sure we don't occlude nearby entities
@@ -378,7 +378,7 @@ local run_entity_updates = function(new, kind, i)
         x = x - 0.05 * modspec(new, "gap_size") * scale_factor
         -- Apply scale
         x = x  / scale_factor
-        return x
+        return math.max(1, x)
       end
     )
     modspec(
@@ -398,7 +398,7 @@ local run_entity_updates = function(new, kind, i)
         x = x - 0.05 * modspec(new, "gap_size") * scale_factor
         -- Scale
         x = x / scale_factor
-        return x
+        return math.max(1, x)
       end
     )
   end
@@ -544,8 +544,10 @@ local run_entity_updates = function(new, kind, i)
       new.fixed_recipe = new.fixed_recipe .. "-compression"
     end
     new.light_blinking_speed = new.light_blinking_speed * math.pow(multiplier, i)
+    new.rocket_rising_delay = math.ceil((new.rocket_rising_delay or 30) / math.pow(multiplier, i)) -- Defaults are NOT present on the prototype!
+    new.launch_wait_time = math.ceil((new.launch_wait_time or 120) / math.pow(multiplier, i))
     local rocket = table.deepcopy(data.raw["rocket-silo-rocket"][new.rocket_entity])
-    rocket.name = "compressed-" .. rocket.name
+    rocket.name = "compressed-" .. rocket.name .. "-" .. i
     new.rocket_entity = rocket.name
     rocket.rising_speed = rocket.rising_speed * math.pow(multiplier, i)
     rocket.engine_starting_speed = rocket.engine_starting_speed * math.pow(multiplier, i)
