@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.2
+Date: 2020.12.02
+  Features:
+    - More Py compat: Added extractions for natural gas (tier 1) and saline water (tier 4)
+  Changes:
+    - Moved Py´s tar extraction down to tier 1
+  Bugfixes:
+    - Fixed that infinite omnite´s autoplace was missing when playing without Angel´s
+    - Fixed that bitumen seeps were not properly removed with Py
+---------------------------------------------------------------------------------------------------
 Version: 4.1.1
 Date: 2020.11.26
   Bugfixes:

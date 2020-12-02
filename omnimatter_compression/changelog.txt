@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.2
-Date: 2020.XX.XX
+Date: 2020.12.02
   Features:
     - Silos now also scale the forced wait between "ready" and "launching" states
   Bugfixes:
