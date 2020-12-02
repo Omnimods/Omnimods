@@ -55,89 +55,49 @@ for _, rec in pairs(data.raw.recipe) do
 end
 --END TEMPORARY
 
---omni.lib.add_unlock_recipe("omnic-hydrolyzation-"..math.floor(omni.fluid_levels/2),"stone-omnisolvent")
---omni.lib.add_unlock_recipe("omnic-hydrolyzation-"..math.floor(omni.fluid_levels/2),"omnite-crystalization")
-for _,tier in pairs(omnisource) do
-	for _, ore in pairs(tier) do
-		for _, gen in pairs(data.raw["resource"]) do			
-			if gen.minable.result == ore.name then
-				log(table.concat{
-					"Removing autoplace for ",
-					gen.name,
-					" (",
-					ore.name,
-					")"
-				})
-				data.raw.resource[gen.name] = nil
-				data.raw["autoplace-control"][gen.name] = nil
-			elseif gen.minable.results  then
-				for _,res in pairs(gen.minable.results) do
-					if (res.name or res[1]) == ore.name then
-						data.raw.resource[gen.name] = nil
-						data.raw["autoplace-control"][gen.name] = nil
-						log(table.concat{
-							"Removing autoplace for ",
-							gen.name,
-							" (",
-							ore.name,
-							")"
-						})
-					end
-				end	
-			end
-    end
-    --move this for loop out and remove all non-omni ores
-    -- also look at defaulting solids to tier 1, and fluids to tier 2 if not already "dealt with"
-		for _, pre in pairs(data.raw["map-gen-presets"].default) do
-			if pre.basic_settings then
-				if pre.basic_settings.autoplace_controls then
-					pre.basic_settings.autoplace_controls[ore.name] = nil
-					pre.basic_settings.autoplace_controls["infinite-"..ore.name] = nil
-					--patch special cases where autoplace names don't match ore name
-					pre.basic_settings.autoplace_controls["sulfur"] = nil
-					pre.basic_settings.autoplace_controls["borax"] = nil
-					pre.basic_settings.autoplace_controls["infinite-borax"] = nil
-				end
-			end
-		end
-	end
-end
-
-for _,tier in pairs(omnifluid) do
-	for _,fluid in pairs(tier) do
-		for _, gen in pairs(data.raw["resource"]) do
-			if gen.minable.results then
-				for _,f in pairs(gen.minable.results) do
-					if f.name == fluid.name then
-						data.raw.resource[gen.name] = nil
-						data.raw["autoplace-control"][gen.name] = nil
-						--return
-					end
-				end
-			end
-		end
-		for _, pre in pairs(data.raw["map-gen-presets"].default) do
-			if pre.basic_settings then
-				if pre.basic_settings.autoplace_controls then
-					pre.basic_settings.autoplace_controls[fluid.name] = nil
-					pre.basic_settings.autoplace_controls["crude-oil"] = nil
-					pre.basic_settings.autoplace_controls["angels-fissure"] = nil
-					pre.basic_settings.autoplace_controls["angels-natural-gas"] = nil
-					pre.basic_settings.autoplace_controls["bitumen-seep"] = nil
-				end
-			end
-		end
-	end
-end
 if bobmods and bobmods.ores then
 	require("prototypes.bob-compensation")
 end
 
---remove Py´s bitumen-seep the hard way
-if data.raw["resource"]["bitumen-seep"] then
-	data.raw["autoplace-control"]["bitumen-seep"] = nil
-	data.raw["resource"]["bitumen-seep"].autoplace = nil
+---------------------
+--Autoplace Removal--
+---------------------
+--remove everything that is not on this whitelist from all autoplace controls
+local ores_to_keep ={
+	"omnite",
+	"infinite-omnite",
+	"trees",
+	"enemy-base"
+}
+
+--autoplace-control
+for _,ore in pairs(data.raw["autoplace-control"]) do
+	if ore.category  and ore.category  == "resource" and ore.name and not omni.lib.is_in_table(ore.name, ores_to_keep) then
+		data.raw["autoplace-control"][ore.name] = nil
+		log("Removed "..ore.name.." from autoplace control")
+	end
 end
+
+--map presets
+for _,preset in pairs(data.raw["map-gen-presets"]["default"]) do
+	if type(preset) == "table" and preset.basic_settings and preset.basic_settings.autoplace_controls then
+		for ore_name,ore in pairs(preset.basic_settings.autoplace_controls) do
+			if ore_name and not omni.lib.is_in_table(ore_name, ores_to_keep) then
+				preset.basic_settings.autoplace_controls[ore_name] = nil
+				log("Removed "..ore_name.." ´s autoplace controls from presets")
+			end
+		end
+	end
+end
+--resources
+
+for _,ore in pairs(data.raw["resource"]) do
+	if ore.autoplace and ore.name and not omni.lib.is_in_table(ore.name, ores_to_keep) then
+		data.raw["resource"][ore.name].autoplace = nil
+		log("Removed "..ore.name.." ´s resource autoplace")
+	end
+end
+
 
 for _,rock in pairs(data.raw["simple-entity"]) do
 	if string.find(rock.name,"rock") then
