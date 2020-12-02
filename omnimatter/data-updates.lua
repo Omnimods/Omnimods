@@ -119,7 +119,7 @@ else
 			["sulfur"]=2
 		}
 		for i, ore in pairs(bobmods.ores) do --check ore triggers (works with plates)
-			if ore.enabled and ore.category and ore.category ~= "water" then
+			if ore.enabled and not (ore.category and ore.category == "water") then
 				if levels[ore.name] then
 					omni.add_resource(ore.name,levels[ore.name])
 				else
@@ -127,7 +127,8 @@ else
 				end
 			end
 		end
-		--omni.add_resource("gem-ore",3)
+		--Force Gem ore, certain bob settings disable it in the table checked above
+		omni.add_resource("gem-ore",3)
 		omni.add_fluid("lithia-water",2,1)
 	end
 end
