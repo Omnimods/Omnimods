@@ -1,3 +1,5 @@
+require("prototypes.bob-compensation")
+
 local m = 3
 for _,om in pairs({omnisource,omnifluid}) do
 	for i, tier in pairs(om) do
@@ -54,10 +56,6 @@ for _, rec in pairs(data.raw.recipe) do
 	end
 end
 --END TEMPORARY
-
-if bobmods and bobmods.ores then
-	require("prototypes.bob-compensation")
-end
 
 ---------------------
 --Autoplace Removal--
