@@ -115,14 +115,19 @@ else
 			["tungsten-ore"]=3,
 			--["uranium-ore"]=3,
 			["thorium-ore"]=3,
-			--["gem-ore"]=3
+			["gem-ore"]=3,
+			["sulfur"]=2
 		}
 		for i, ore in pairs(bobmods.ores) do --check ore triggers (works with plates)
-			if ore.enabled and levels[ore.name] then
-				omni.add_resource(ore.name,levels[ore.name])
+			if ore.enabled and ore.category and ore.category ~= "water" then
+				if levels[ore.name] then
+					omni.add_resource(ore.name,levels[ore.name])
+				else
+					log("WARNING: Omni Tier not set for bob´s ore: "..ore.name)
+				end
 			end
 		end
-		omni.add_resource("gem-ore",3)
+		--omni.add_resource("gem-ore",3)
 		omni.add_fluid("lithia-water",2,1)
 	end
 end

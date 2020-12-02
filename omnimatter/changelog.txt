@@ -4,6 +4,7 @@ Date: 2020.12.xx
   Bugfixes:
     - Rewrote autoplace removal into a whitelist of what to keep
     - Finally fixes stuff slipping through with certain mods
+    - Fixed that sulfur omnitraction recipes were not created when playing with Bob´s
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.2
 Date: 2020.12.02
