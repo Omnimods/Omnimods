@@ -72,7 +72,7 @@ local ores_to_keep ={
 for _,ore in pairs(data.raw["autoplace-control"]) do
 	if ore.category  and ore.category  == "resource" and ore.name and not omni.lib.is_in_table(ore.name, ores_to_keep) then
 		data.raw["autoplace-control"][ore.name] = nil
-		log("Removed "..ore.name.." from autoplace control")
+		--log("Removed "..ore.name.." from autoplace control")
 	end
 end
 
@@ -82,7 +82,7 @@ for _,preset in pairs(data.raw["map-gen-presets"]["default"]) do
 		for ore_name,ore in pairs(preset.basic_settings.autoplace_controls) do
 			if ore_name and not omni.lib.is_in_table(ore_name, ores_to_keep) then
 				preset.basic_settings.autoplace_controls[ore_name] = nil
-				log("Removed "..ore_name.." ´s autoplace controls from presets")
+				--log("Removed "..ore_name.." ´s autoplace controls from presets")
 			end
 		end
 	end
@@ -92,7 +92,7 @@ end
 for _,ore in pairs(data.raw["resource"]) do
 	if ore.autoplace and ore.name and not omni.lib.is_in_table(ore.name, ores_to_keep) then
 		data.raw["resource"][ore.name].autoplace = nil
-		log("Removed "..ore.name.." ´s resource autoplace")
+		--log("Removed "..ore.name.." ´s resource autoplace")
 	end
 end
 
