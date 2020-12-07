@@ -37,6 +37,8 @@ data:extend({
     name = "omnimatter-tier-pure-dependency",
     setting_type = "startup",
     default_value = 2,
+    maximum_value = 6,
+    minimum_value = 1,
     per_user = false,
   },
   {
@@ -53,6 +55,8 @@ data:extend({
     name = "omnimatter-tier-impure-dependency",
     setting_type = "startup",
     default_value = 2,
+    maximum_value = 6,
+    minimum_value = 1,
     per_user = false,
   },
   {
