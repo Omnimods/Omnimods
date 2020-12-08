@@ -248,7 +248,6 @@ BuildGen:import("assembling-machine-1"):
 	setTechPacks(1):
 	setTechCost(10):
 	setInventory(3):
-	setCrafting("crafting", "basic-crafting"):
 	setFuelCategory("omnite"):
 	setSpeed(0.25):
 	setIngredients(ings):
