@@ -87,7 +87,7 @@ end
 function omni.lib.remove_science_pack(tech,pack)
 	if data.raw.technology[tech] then
 		for i,ing in pairs(data.raw.technology[tech].unit.ingredients) do
-			if ing[1]==pack then
+			if (ing.name and ing.name == pack) or ing[1]==pack then
 				table.remove(data.raw.technology[tech].unit.ingredients,i)
 			end
 		end
