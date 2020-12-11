@@ -78,7 +78,7 @@ function omni.lib.add_science_pack(techname,pack)
 				table.insert(data.raw.technology[techname].unit.ingredients,{type = "item", name = "omni-pack", amount = 1})
 			end
 		else
-			log("Ingredient "..pack.." already exists.")
+			--log("Ingredient "..pack.." already exists.")
 		end
 	else
 		log("Cannot find "..tetechnamech..", ignoring it.")
@@ -153,7 +153,7 @@ function omni.lib.add_prerequisite(techname, req, force)
 				if not found then
 					table.insert(data.raw.technology[techname].prerequisites,r)
 				else
-					log("Prerequisite "..r.." already exists")
+					--log("Prerequisite "..r.." already exists")
 				end
 				found = nil
 			end
@@ -166,7 +166,7 @@ function omni.lib.add_prerequisite(techname, req, force)
 			if not found then
 				table.insert(data.raw.technology[techname].prerequisites,req)
 			else
-				log("Prerequisite "..req.." already exists")
+				--log("Prerequisite "..req.." already exists")
 			end
 		else
 			log(techname.." does not exist, please check spelling.")
