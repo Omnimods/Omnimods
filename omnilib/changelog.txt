@@ -3,6 +3,8 @@ Version: 4.1.1
 Date: 2020.12.11
   Features:
     - Added Krastorio 2 support
+  Bugfixes:
+    - Fixed that setDurabilityDesc() was not setting durability_description_value
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.0
 Date: 2020.11.26

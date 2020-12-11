@@ -819,7 +819,8 @@ end
 function ItemGen:tool()
 	self.type="tool"
 	self.durability=1
-	self.durability_description_key="description.science-pack-remaining-amount"
+	self.durability_description_key="description.science-pack-remaining-amount-key"
+	self.durability_description_value="description.science-pack-remaining-amount-value"
 	return self
 end
 function ItemGen:tile(tog)
@@ -838,7 +839,12 @@ function ItemGen:setDurability(tmp)
 end
 function ItemGen:setDurabilityDesc(tmp)
 	if self.type=="tool" then
-		self.durability_description_key=tmp
+		local name = tmp
+		if string.find(tmp,"-key") then
+			tmp = string.gsub(tmp,"-key","")
+		end
+		self.durability_description_key=tmp.."-key"
+		self.durability_description_value=tmp.."-value"
 	end
 	return self
 end
@@ -1119,7 +1125,8 @@ function ItemGen:generate_item()
 		pressure_to_speed_ratio = self.pressure_to_speed_ratio,
 		flow_to_energy_ratio = self.flow_to_energy_ratio,
 		durability=self.durability,
-		durability_description_key=self.durability_description_key
+		durability_description_key=self.durability_description_key,
+		durability_description_value=self.durability_description_value
 	}
 	if  self.isTile then
 		self.rtn[#self.rtn].place_as_tile={
