@@ -1,52 +1,53 @@
-function omni.lib.add_unlock_recipe(tech, recipe,force)
+function omni.lib.add_unlock_recipe(techname, recipe,force)
 	local found = false
-	if data.raw.technology[tech] and (data.raw.recipe[recipe] or force) then
-		if data.raw.technology[tech].effects then
-			for _,eff in pairs(data.raw.technology[tech].effects) do
+	if data.raw.technology[techname] and (data.raw.recipe[recipe] or force) then
+		if data.raw.technology[techname].effects then
+			for _,eff in pairs(data.raw.technology[techname].effects) do
 				if eff.type == "unlock-recipe" and eff.recipe == recipe then
 					found = true
 					break
 				end
 			end
 		else
-			data.raw.technology[tech].effects = {}
+			data.raw.technology[techname].effects = {}
 		end
 		if not found then
-			table.insert(data.raw.technology[tech].effects,{type="unlock-recipe",recipe = recipe})
+			table.insert(data.raw.technology[techname].effects,{type="unlock-recipe",recipe = recipe})
 			omni.lib.disable_recipe(recipe)
 			return
 		end	
 	else
-		--log("cannot add recipe to "..tech.." as it doesn't exist")
+		--log("cannot add recipe to "..techname.." as it doesn't exist")
 	end
 end
 
-function omni.lib.remove_unlock_recipe(tech, recipe)
+function omni.lib.remove_unlock_recipe(techname, recipe)
 	local res = {}
-	if tech then
-		for _,eff in pairs(data.raw.technology[tech].effects or {}) do
+	if data.raw.technology[techname] then
+		for _,eff in pairs(data.raw.technology[techname].effects or {}) do
 			if eff.type == "unlock-recipe" and eff.recipe ~= recipe then
 				res[#res+1]=eff
 			end
 		end
-		data.raw.technology[tech].effects=res
+		data.raw.technology[techname].effects=res
 	end
 end
-function omni.lib.replace_unlock_recipe(tech, recipe,new)
+
+function omni.lib.replace_unlock_recipe(techname, recipe,new)
 	local res = {}
-	for _,eff in pairs(data.raw.technology[tech].effects) do
+	for _,eff in pairs(data.raw.technology[techname].effects) do
 		if eff.type == "unlock-recipe" and eff.recipe == recipe then
 			eff.recipe=new
 		end
 	end
-	--data.raw.technology[tech].effects=res
+	--data.raw.technology[techname].effects=res
 end
 
-function omni.lib.replace_science_pack(tech,old, new)
+function omni.lib.replace_science_pack(techname,old, new)
 	local r = new
 	if not r then r = "omni-pack" end
-	if data.raw.technology[tech] then
-		for i,ing in pairs(data.raw.technology[tech].unit.ingredients) do
+	if data.raw.technology[techname] then
+		for i,ing in pairs(data.raw.technology[techname].unit.ingredients) do
 			if ing.name and ing.name == old then
 				ing.name = r
 			elseif ing[1] == old then
@@ -54,41 +55,41 @@ function omni.lib.replace_science_pack(tech,old, new)
 			end
 		end
 	else
-		log(tech.." cannot be found, replacement of "..old.." with "..r.." has failed.")
+		log(techname.." cannot be found, replacement of "..old.." with "..r.." has failed.")
 	end
 end
 
-function omni.lib.add_science_pack(tech,pack)
-	if data.raw.technology[tech] then
+function omni.lib.add_science_pack(techname,pack)
+	if data.raw.technology[techname] then
 		local found = false
-		for __,sp in pairs(data.raw.technology[tech].unit.ingredients) do
+		for __,sp in pairs(data.raw.technology[techname].unit.ingredients) do
 			for __,ing in pairs(sp) do
 				if ing == pack then found=true end
 			end
 		end
 		if not found then
 			if type(pack) == "table" then
-				table.insert(data.raw.technology[tech].unit.ingredients,pack)
+				table.insert(data.raw.technology[techname].unit.ingredients,pack)
 			elseif type(pack) == "string" then
-				table.insert(data.raw.technology[tech].unit.ingredients,{type = "item", name = pack, amount = 1})
+				table.insert(data.raw.technology[techname].unit.ingredients,{type = "item", name = pack, amount = 1})
 			elseif type(pack)=="number" then
-				table.insert(data.raw.technology[tech].unit.ingredients,{type = "item", name = "omni-pack", amount = pack})
+				table.insert(data.raw.technology[techname].unit.ingredients,{type = "item", name = "omni-pack", amount = pack})
 			else
-				table.insert(data.raw.technology[tech].unit.ingredients,{type = "item", name = "omni-pack", amount = 1})
+				table.insert(data.raw.technology[techname].unit.ingredients,{type = "item", name = "omni-pack", amount = 1})
 			end
 		else
 			log("Ingredient "..pack.." already exists.")
 		end
 	else
-		log("Cannot find "..tech..", ignoring it.")
+		log("Cannot find "..tetechnamech..", ignoring it.")
 	end
 end
 
-function omni.lib.remove_science_pack(tech,pack)
-	if data.raw.technology[tech] then
-		for i,ing in pairs(data.raw.technology[tech].unit.ingredients) do
+function omni.lib.remove_science_pack(techname,pack)
+	if data.raw.technology[techname] then
+		for i,ing in pairs(data.raw.technology[techname].unit.ingredients) do
 			if (ing.name and ing.name == pack) or ing[1]==pack then
-				table.remove(data.raw.technology[tech].unit.ingredients,i)
+				table.remove(data.raw.technology[techname].unit.ingredients,i)
 			end
 		end
 	else
@@ -96,61 +97,61 @@ function omni.lib.remove_science_pack(tech,pack)
 	end
 end
 
-function omni.lib.replace_prerequisite(tech,old, new)
-	if data.raw.technology[tech] and data.raw.technology[tech].prerequisites then
-		for i,req in pairs(data.raw.technology[tech].prerequisites) do
+function omni.lib.replace_prerequisite(techname,old, new)
+	if data.raw.technology[techname] and data.raw.technology[techname].prerequisites then
+		for i,req in pairs(data.raw.technology[techname].prerequisites) do
 			if req==old then
-				data.raw.technology[tech].prerequisites[i]=new
+				data.raw.technology[techname].prerequisites[i]=new
 			end
 		end
 	else
-		log("Can not find tech "..tech.." to replace prerequisite "..old.." with "..new)
+		log("Can not find tech "..techname.." to replace prerequisite "..old.." with "..new)
 	end
 end
 
-function omni.lib.remove_prerequisite(tech,prereq)
-	if data.raw.technology[tech] and data.raw.technology[tech].prerequisites then
+function omni.lib.remove_prerequisite(techname,prereq)
+	if data.raw.technology[techname] and data.raw.technology[techname].prerequisites then
 		local pr={}
-		for i,req in pairs(data.raw.technology[tech].prerequisites) do
+		for i,req in pairs(data.raw.technology[techname].prerequisites) do
 			if req~=prereq then
 				pr[#pr+1]=req
 			end
 		end
-		data.raw.technology[tech].prerequisites=pr
+		data.raw.technology[techname].prerequisites=pr
 	else
-		log("Can not find tech "..tech.." to remove prerequisite "..prereq)
+		log("Can not find tech "..techname.." to remove prerequisite "..prereq)
 	end
 end
 
-function omni.lib.set_prerequisite(tech, req)
-	if data.raw.technology[tech] then
+function omni.lib.set_prerequisite(techname, req)
+	if data.raw.technology[techname] then
 		if type(req) == "table" then
-			data.raw.technology[tech].prerequisites = req
+			data.raw.technology[techname].prerequisites = req
 		else
-			data.raw.technology[tech].prerequisites = {req}
+			data.raw.technology[techname].prerequisites = {req}
 		end
 	else
-		log("Can not find tech "..tech.." to set prerequisite "..prereq)
+		log("Can not find tech "..techname.." to set prerequisite "..prereq)
 	end
 end
 
 --Add a prerequisite to a tech, force will jump checks if that prereq exists
-function omni.lib.add_prerequisite(tech, req, force)
+function omni.lib.add_prerequisite(techname, req, force)
 	local found = nil
 	--check that the table exists, or create a blank one
-	if data.raw.technology[tech] then
-		if not data.raw.technology[tech].prerequisites then
-			data.raw.technology[tech].prerequisites = {}
+	if data.raw.technology[techname] then
+		if not data.raw.technology[techname].prerequisites then
+			data.raw.technology[techname].prerequisites = {}
 		end
 	end
 	if type(req) == "table" then
 		for _,r in pairs(req) do
 			if data.raw.technology[r] or force then
-				for i,prereq in pairs(data.raw.technology[tech].prerequisites) do
+				for i,prereq in pairs(data.raw.technology[techname].prerequisites) do
 					if prereq == r then found = 1 end
 				end
 				if not found then
-					table.insert(data.raw.technology[tech].prerequisites,r)
+					table.insert(data.raw.technology[techname].prerequisites,r)
 				else
 					log("Prerequisite "..r.." already exists")
 				end
@@ -158,19 +159,19 @@ function omni.lib.add_prerequisite(tech, req, force)
 			end
 		end
 	elseif req and (data.raw.technology[req] or force) then
-		if data.raw.technology[tech] then
-			for i,prereq in pairs(data.raw.technology[tech].prerequisites) do
+		if data.raw.technology[techname] then
+			for i,prereq in pairs(data.raw.technology[techname].prerequisites) do
 				if prereq == req then found = 1 end
 			end
 			if not found then
-				table.insert(data.raw.technology[tech].prerequisites,req)
+				table.insert(data.raw.technology[techname].prerequisites,req)
 			else
 				log("Prerequisite "..req.." already exists")
 			end
 		else
-			log(tech.." does not exist, please check spelling.")
+			log(techname.." does not exist, please check spelling.")
 		end
 	else
-		log("There is no prerequisities to add to "..tech)
+		log("There is no prerequisities to add to "..techname)
 	end
 end
