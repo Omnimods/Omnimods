@@ -245,5 +245,6 @@ if data.raw.technology["logistics-0"] then
 	data.raw.technology["logistics-0"] = nil
 end
 
-require("prototypes.bobs_burner_phase")
-require("prototypes.heresy")
+require("prototypes.compat.bobs_burner_phase")
+require("prototypes.compat.py")
+require("prototypes.compat.krastorio2")

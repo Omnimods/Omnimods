@@ -1,8 +1,10 @@
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.1
-Date: 2020.12.11
+Date: 2020.12.12
+  Features:
+    - Added Krastorio 2 support
   Changes:
-    - Switch omnitor assemling machine´s craftting category from basic-crafting to crafting
+    - Switch omnitor assemling machine´s crafting category from basic-crafting to crafting
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.0
 Date: 2020.11.26
