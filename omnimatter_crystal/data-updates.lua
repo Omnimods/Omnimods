@@ -14,6 +14,10 @@ if mods["Yuoki"] then
 	omni.crystal.add_crystal("y-res1","Durotal")
 	omni.crystal.add_crystal("y-res2","Nuatreel")
 end
+if mods["Krastorio2"] then
+	omni.crystal.add_crystal("raw-imersite","Imersite")
+	omni.crystal.add_crystal("raw-rare-metals","Rare metals")
+end
 
 if mods["omnimatter_marathon"] then
 	omni.marathon.exclude_recipe("omnine-distillation-quick")
@@ -61,7 +65,7 @@ if not mods["angelsrefining"] then
 			for i,t in pairs(omnisource) do
 				for _,o in pairs(t) do
 					if o.name == ore then
-						tier = o.tier
+						tier = math.min(o.tier,omni.max_tier - 1)
 					end
 				end
 			end
@@ -122,9 +126,13 @@ if not mods["angelsrefining"] then
 				end
 				r:replaceIngredients(ore, "crystal-powder-"..metal):
 				setEnabled(false):
-				setTechName(omni.lib.get_tech_name(ore.."-crystal")):
-				setLocName({"recipe-name.crystalline", omni.locale.of(rec).name }):
-				extend()
+				setLocName({"recipe-name.crystalline", omni.locale.of(rec).name })
+				if (rec.hidden and rec.hidden == true) or (rec.normal and rec.normal.hidden and rec.normal.hidden ==true) then
+					r:setHidden(rec.hidden)
+				else
+					r:setTechName(omni.lib.get_tech_name(ore.."-crystal"))
+				end
+				r:extend()
 			end
 		end
 	end

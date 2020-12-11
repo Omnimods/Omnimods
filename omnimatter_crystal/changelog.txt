@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.1
 Date: 2020.12.11
+  Features:
+    - Added Krastorio 2 support
   Bugfixes:
     - Fixed a crash with certain mods when the max tier setting was set to <= 3
 ---------------------------------------------------------------------------------------------------

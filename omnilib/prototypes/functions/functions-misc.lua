@@ -48,6 +48,8 @@ omni.lib.ore_tints = {--can add to the tint table with table.insert(omni.lib.ore
   ["bauxite"] 	= {r=0.777	, g=0.7	   , b=0.333  }, --<-- map_color only
   ["rutile"]    = {r = 0.8  , g = 0.55 , b = 0.7  }, --map_color = {r=0.610, g=0.325, b=0.500}
   ["gems"]      = {r = 0.25 , g = 1    , b = 0.25 }, --<-- map_color only
+  ["raw-imersite"] = {r=1	, g=0.5	   , b=1	  }, --<-- map_color only
+  ["raw-rare-metals"] = {r = 0.6, g = 0.3, b = 1  }, --<-- map_color only
 }
 
 function omni.lib.add_ore_tint(icon,ore_name) --should work for a specific icon or icons table
