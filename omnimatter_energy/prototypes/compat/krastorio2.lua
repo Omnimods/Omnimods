@@ -12,8 +12,13 @@ if mods["Krastorio2"] then
 
     --Move Automation behind automation tech card and add back automation sp
     omni.lib.remove_prerequisite("automation","logistic-science-pack")
+    omni.lib.remove_science_pack("automation","logistic-science-pack")
     omni.lib.add_science_pack("automation","automation-science-pack")
     omni.lib.replace_prerequisite("automation","kr-automation-core","omnitech-anbaricity")
+
+    --Add automation as prereq for logi sp and remove electronics as prereq from automation 2
+    omni.lib.add_prerequisite("logistic-science-pack","automation")
+    omni.lib.remove_prerequisite("automation-2","electronics")
 
     --unify kr and omni mining drill tech
     omni.lib.replace_prerequisite("kr-electric-mining-drill","automation-science-pack","omnitech-anbaricity")
@@ -56,6 +61,47 @@ if mods["Krastorio2"] then
     --Fix that the omnitor lab doesnt accept basic tech cards:
     table.insert(data.raw["lab"]["omnitor-lab"].inputs,"basic-tech-card")
 
+    --Move wind turbine to anbaricity
+    RecGen:import("kr-wind-turbine"):
+        setEnabled(false):
+        setTechName("omnitech-anbaricity"):
+        extend()
+
+    --Make crash site lab and assembler burner and set fuel cat to omni
+    local burners = {
+        "kr-crash-site-assembling-machine-1-repaired",
+        "kr-crash-site-assembling-machine-2-repaired",
+        "kr-crash-site-lab-repaired"
+    }
+    for _,b in pairs(burners) do
+        local e = data.raw["assembling-machine"][b] or data.raw["lab"][b]
+        e.energy_source = {
+            type = "burner",
+            effectivity = 0.5,
+            fuel_inventory_size = 1,
+            fuel_category = "omnite",
+            emissions = 0.01,
+            smoke = {{
+                name = "smoke",
+                deviation = {0.1, 0.1},
+                frequency = 5,
+                position = {1.0, -0.8},
+                starting_vertical_speed = 0.08,
+                starting_frame_deviation = 60
+            }}
+        }
+    end
+    
+    --Set crash site reactor output to 0 until K2 added the commented out interface below to remove it.
+    --remote.interfaces["kr-crash-site"].remove_crash_site_entity("kr-crash-site-generator")
+    data.raw["electric-energy-interface"]["kr-crash-site-generator"].energy_source = {
+        type = "electric",
+    	buffer_capacity = "0kJ",
+    	usage_priority = "primary-output",
+    	input_flow_limit = "0kW",
+    	output_flow_limit = "0kW"}
+    data.raw["electric-energy-interface"]["kr-crash-site-generator"].energy_production  = "0kW"
+
     --Add Basic tech card to all omni science up to t2(greens)
     --Baic tech cards are not used for mid-late game techs, thats why we cant add them as t1 pack to lib
     for _,tech in pairs(data.raw.technology) do
@@ -63,4 +109,14 @@ if mods["Krastorio2"] then
             omni.lib.add_science_pack(tech.name,"basic-tech-card")
         end
     end
+
+    --Balance out early tech cost (mainly moved stuff)
+    data.raw.technology["omnitech-simple-automation"].unit.count = 30
+    data.raw.technology["omnitech-anbaric-lab"].unit.count = 65
+    data.raw.technology["kr-crusher"].unit.count = 45
+    data.raw.technology["optics"].unit.count = 75
+    data.raw.technology["electronics"].unit.count = 65
+    data.raw.technology["kr-electric-mining-drill"].unit.count = 65
+    data.raw.technology["automation"].unit.count = 60
+    data.raw.technology["automation"].unit.count = 90
 end

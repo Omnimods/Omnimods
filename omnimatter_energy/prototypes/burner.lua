@@ -25,7 +25,7 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
 		setTechIcons("logistics","omnimatter_energy"):
 		setTechPrereq("omnitech-basic-belt-logistics"):
 		setTechPacks(1):
-		setTechCost(25):extend()
+		setTechCost(30):extend()
 
 	RecGen:import("basic-underground-belt"):
 		setEnabled(false):
@@ -33,7 +33,7 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
 		setTechIcons("logistics","omnimatter_energy"):
 		setTechPrereq("omnitech-basic-belt-logistics"):
 	 	setTechPacks(1):
-		setTechCost(25):extend()
+		setTechCost(30):extend()
 
 	--Add new Techs as Prereq for vanilla logistics
 	omni.lib.set_prerequisite("logistics",{"omnitech-basic-splitter-logistics","omnitech-basic-underground-logistics"})
@@ -71,7 +71,7 @@ else
 		setTechIcons("logistics","omnimatter_energy"):
 		setTechPrereq("omnitech-belt-logistics"):
 		setTechPacks(1):
-		setTechCost(25):extend()
+		setTechCost(30):extend()
 
 	RecGen:import("underground-belt"):
 		setEnabled(false):
@@ -79,7 +79,7 @@ else
 		setTechIcons("logistics","omnimatter_energy"):
 		setTechPrereq("omnitech-belt-logistics"):
 		setTechPacks(1):
-		setTechCost(25):extend()
+		setTechCost(30):extend()
 
 	--Move all Techs that have logistics as Prereq behind Splitter & UG Techs
 	for _,t in pairs(data.raw.technology) do
@@ -455,7 +455,7 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter-2"):
 	setTechName("omnitech-burner-filter-2"):
 	setTechLocName("omnitech-burner-filter-2"):
 	setTechPacks(1):
-	setTechCost(50):
+	setTechCost(75):
 	setTechIcons("burner-filter","omnimatter_energy"):
 	setTechPrereq("omnitech-burner-filter-1"):extend()
 
