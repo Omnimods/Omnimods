@@ -38,7 +38,23 @@ if mods["Krastorio2"] then
     --Move electric opener techs behind anbaricity
     omni.lib.add_prerequisite("optics","omnitech-anbaricity")
     omni.lib.add_prerequisite("electronics","omnitech-anbaricity")
-    --omni.lib.add_prerequisite("kr-fluids-chemistry","omnitech-anbaricity")
+
+    --Put Logi Tech behind anbaric lab
+    omni.lib.replace_prerequisite("logistic-science-pack","automation-science-pack","omnitech-anbaric-lab")
+
+    -- Lock omnitor lab behind a basic tech card tech (crash site lab --> omnitor lab --> normal lab)
+    RecGen:import("omnitor-lab"):
+        setEnabled(false):
+        setTechName("omnitech-simple-research"):
+	    setTechCost(30):
+        setTechPacks({{"basic-tech-card",1}}):
+        setTechIcons("lab","omnimatter_energy"):
+        setTechPrereq("kr-automation-core"):
+        extend()
+    omni.lib.add_prerequisite("automation-science-pack","omnitech-simple-research")
+
+    --Fix that the omnitor lab doesnt accept basic tech cards:
+    table.insert(data.raw["lab"]["omnitor-lab"].inputs,"basic-tech-card")
 
     --Add Basic tech card to all omni science up to t2(greens)
     --Baic tech cards are not used for mid-late game techs, thats why we cant add them as t1 pack to lib
