@@ -1,4 +1,7 @@
 if mods["Krastorio2"] then
+    ----------------------
+    ----- Tech compat-----
+    ----------------------
     --Fix Tech order
     omni.lib.remove_prerequisite("electronics","logistic-science-pack")
     omni.lib.remove_science_pack("electronics","logistic-science-pack")
@@ -119,4 +122,11 @@ if mods["Krastorio2"] then
     data.raw.technology["kr-electric-mining-drill"].unit.count = 65
     data.raw.technology["automation"].unit.count = 60
     data.raw.technology["automation"].unit.count = 90
+
+    ----------------------
+    ----- Item compat-----
+    ----------------------
+    omni.lib.add_recipe_ingredient("inserter-parts",{"omnitor",2})
+    omni.lib.add_recipe_ingredient("kr-crusher",{"omnitor",2})
+
 end
