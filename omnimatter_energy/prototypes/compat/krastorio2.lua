@@ -126,7 +126,28 @@ if mods["Krastorio2"] then
     ----------------------
     ----- Item compat-----
     ----------------------
+    
+    --Add omnitors to some recipes
     omni.lib.add_recipe_ingredient("inserter-parts",{"omnitor",2})
     omni.lib.add_recipe_ingredient("kr-crusher",{"omnitor",2})
 
+    --Fix inserter recipes to be like normal K2 (omnitor is already in inserter parts) and set them to require their previous tier
+    omni.lib.replace_recipe_ingredient("burner-inserter","omnitor","inserter-parts")
+    omni.lib.replace_recipe_ingredient("inserter","omnitor","inserter-parts")
+    omni.lib.add_recipe_ingredient("inserter","automation-core")
+
+    omni.lib.replace_recipe_ingredient("burner-filter-inserter-1","omnitor",{"inserter-parts",1})
+    omni.lib.add_recipe_ingredient("burner-filter-inserter-2","inserter-parts")
+    omni.lib.add_recipe_ingredient("burner-inserter-2","inserter-parts")
+
+    omni.lib.add_recipe_ingredient("fast-inserter","inserter")
+    omni.lib.add_recipe_ingredient("long-handed-inserter","inserter")
+    omni.lib.add_recipe_ingredient("filter-inserter","inserter")
+    omni.lib.add_recipe_ingredient("stack-inserter","fast-inserter")
+    omni.lib.add_recipe_ingredient("stack-filter-inserter","stack-inserter")
+
+    omni.lib.add_recipe_ingredient("kr-superior-inserter","fast-inserter")
+    omni.lib.add_recipe_ingredient("kr-superior-long-inserter","long-handed-inserter")
+    omni.lib.add_recipe_ingredient("kr-superior-filter-inserter","filter-inserter")
+    omni.lib.add_recipe_ingredient("kr-superior-long-filter-inserter","long-handed-inserter")
 end

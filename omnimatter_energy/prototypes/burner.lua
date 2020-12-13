@@ -486,4 +486,12 @@ RecGen:import("burner-inserter"):
 	setSubgroup("inserter"):
 	setOrder("aa[burner-inserter-1]"):extend()
 
-	data.raw["inserter"]["burner-inserter"].next_upgrade= "burner-inserter-2"
+--Fix vanilla burner inserter item icon & localised name
+ItemGen:import("burner-inserter"):
+	addBurnerIcon():
+	addIcon("__omnilib__/graphics/icons/small/lvl1.png"):
+	setLocName("entity-name.burner-inserter-1"):
+	extend()
+
+--Set next_upgrade
+data.raw["inserter"]["burner-inserter"].next_upgrade= "burner-inserter-2"
