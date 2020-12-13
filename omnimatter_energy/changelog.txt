@@ -11,6 +11,7 @@ Date: 2020.12.12
     - Fixed that fuel with category = "vehicle-fuel" were not omnified
     - Fixed that the fuel_category on entities with "fuel_categories" was not properly set
     - Fixed that the burner inserter mk1 item had no burner + lvl icon and "mk1" localisation
+    - Fixed recipe & item order for burner inserters,assembler and lab being broken
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.0
 Date: 2020.11.26

@@ -434,7 +434,7 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter-1"):
 	setFuelCategory("omnite"): --not working...
 	setBurner(0.75,1):
 	setNextUpgrade("burner-filter-inserter-2"):
-	setSubgroup("inserter"):
+	setSubgroup("burner-inserter"):
 	setOrder("ab[burner-filter-inserter-1]"):
 	setTechName("omnitech-burner-filter-1"):
 	setTechLocName("omnitech-burner-filter-1"):
@@ -442,7 +442,8 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter-1"):
 	setTechPacks(1):
 	setTechCost(50):
 	ifAddTechPrereq(data.raw.technology["omnitech-basic-belt-logistics"], "omnitech-basic-belt-logistics"):
-	ifAddTechPrereq(data.raw.technology["omnitech-belt-logistics"], "omnitech-belt-logistics"):extend()
+	ifAddTechPrereq(data.raw.technology["omnitech-belt-logistics"], "omnitech-belt-logistics"):
+	extend()
 
 --Create a second tier filter and normal burner inserter that accepts omnified fuel
 InsertGen:create("omnimatter_energy","burner-filter-inserter-2"):
@@ -456,14 +457,15 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter-2"):
 	setFuelCategory("chemical"):
 	setBurner(0.75,1):
 	setNextUpgrade("filter-inserter"):
-	setSubgroup("inserter"):
+	setSubgroup("burner-inserter"):
 	setOrder("ab[burner-filter-inserter-2]"):
 	setTechName("omnitech-burner-filter-2"):
 	setTechLocName("omnitech-burner-filter-2"):
 	setTechPacks(1):
 	setTechCost(75):
 	setTechIcons("burner-filter","omnimatter_energy"):
-	setTechPrereq("omnitech-burner-filter-1"):extend()
+	setTechPrereq("omnitech-burner-filter-1"):
+	extend()
 
 InsertGen:create("omnimatter_energy","burner-inserter-2"):
 	setIngredients({"burner-inserter",1},{"omnicium-plate",2}):
@@ -475,22 +477,26 @@ InsertGen:create("omnimatter_energy","burner-inserter-2"):
 	setFuelCategory("chemical"):
 	setBurner(0.75,1):
 	setNextUpgrade("inserter"):
-	setSubgroup("inserter"):
+	setSubgroup("burner-inserter"):
 	setOrder("aa[burner-inserter-2]"):
-	setTechName("omnitech-burner-filter-2"):extend()
+	setTechName("omnitech-burner-filter-2"):
+	extend()
 
 RecGen:import("burner-inserter"):
 	addBurnerIcon():
 	addIcon("__omnilib__/graphics/icons/small/lvl1.png"):
 	setLocName("entity-name.burner-inserter-1"):
-	setSubgroup("inserter"):
-	setOrder("aa[burner-inserter-1]"):extend()
+	setSubgroup("burner-inserter"):
+	setOrder("aa[burner-inserter-1]"):
+	extend()
 
 --Fix vanilla burner inserter item icon & localised name
 ItemGen:import("burner-inserter"):
 	addBurnerIcon():
 	addIcon("__omnilib__/graphics/icons/small/lvl1.png"):
 	setLocName("entity-name.burner-inserter-1"):
+	setOrder("aa[burner-inserter-1]"):
+	setSubgroup("burner-inserter"):
 	extend()
 
 --Set next_upgrade
