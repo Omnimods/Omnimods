@@ -5,6 +5,7 @@ Date: 2020.12.12
     - Added Krastorio 2 support
   Changes:
     - Switch omnitor assemling machine´s crafting category from basic-crafting to crafting
+    - Early game burner entities now accept omnified fuels aswell
     - High tier omnium-power techs that have no unlocks are now hidden
   Bugfixes:
     - Fixed that fuel with category = "vehicle-fuel" were not omnified

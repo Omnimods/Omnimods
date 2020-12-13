@@ -79,7 +79,7 @@ if mods["Krastorio2"] then
             type = "burner",
             effectivity = 0.5,
             fuel_inventory_size = 1,
-            fuel_category = "omnite",
+            fuel_categories = {"omnite","chemical","vehicle-fuel"},
             emissions = 0.01,
             smoke = {{
                 name = "smoke",
