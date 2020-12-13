@@ -208,7 +208,9 @@ BuildGen:import("small-electric-pole"):
       shift = {1.4, -1.1}
 	}):
 	setEnabled(false):
-	setTechName("omnitech-anbaricity"):extend()
+	setTechName("omnitech-anbaricity"):
+	setOrder("a[energy]-a[small-electric-pole]-iron"):
+	extend()
 	
 BuildGen:import("small-electric-pole"):
 	setName("small-omnicium-electric-pole"):
@@ -224,7 +226,9 @@ BuildGen:import("small-electric-pole"):
       shift = {1.4, -1.1}
 	}):
 	setEnabled(false):
-	setTechName("omnitech-anbaricity"):extend()
+	setTechName("omnitech-anbaricity"):
+	setOrder("a[energy]-a[small-electric-pole]-omnicium"):
+	extend()
 
 	--Temp sound fix until lib is fixed
 	data.raw["electric-pole"]["small-iron-electric-pole"].working_sound = nil
@@ -251,6 +255,7 @@ BuildGen:import("assembling-machine-1"):
 	setFuelCategory("omnite"):
 	setSpeed(0.25):
 	setIngredients(ings):
+	setOrder("a[assembling-machine-0]"):
 	setAnimation(
 	{layers={{
 	  filename = "__omnimatter_energy__/graphics/entity/omnitor-assembling-machine/omnitor-assembling-machine.png",
@@ -293,6 +298,7 @@ BuildGen:import("lab"):
 	setExpensiveIngredients(expensive_cost):
 	setReplace("lab"):
 	setNextUpgrade("lab"):
+	setOrder("g[lab-omnitor]"):
 	setOnAnimation({
   layers =
   {

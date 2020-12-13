@@ -5,6 +5,7 @@ Date: 2020.12.12
     - Added Krastorio 2 support
   Bugfixes:
     - Fixed that setDurabilityDesc() was not setting durability_description_value
+    - Fixed that recipe & item order were overwritten on entity import
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.0
 Date: 2020.11.26
