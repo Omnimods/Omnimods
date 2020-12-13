@@ -532,7 +532,8 @@ function ItemGen:import(item)
 		setSubgroup(proto.subgroup):
 		setFuelCategory(proto.fuel_category):
 		setIcons(proto.icons or proto.icon or omni.icon.of(proto, true)):
-		setFuelValue(proto.fuel_value)
+		setFuelValue(proto.fuel_value):
+		setOrder(proto.order)
 		if item.type == "fluid" then
 			it:fluid():
 			setFlowColour(proto.flow_color):
@@ -2816,6 +2817,7 @@ function BuildGen:import(name)
 		setEnergySource(build.energy_source):
 		setInventory(math.max(build.source_inventory_size or 3,build.ingredient_count or 3)):
 		setResultInventory(math.max(build.result_inventory_size or 3,build.result_count or 3)):
+		setOrder(build.order):
 		setNextUpgrade(build.next_upgrade):
 		setUsage(build.energy_usage):
 		setAnimation(build.animation):
@@ -2853,6 +2855,12 @@ function BuildGen:import(name)
 			b:setModSlots(build.module_specification.module_slots)
 		else
 			b:setModSlots(0)
+		end
+		if build.localised_name then
+			b:setLocName(build.localised_name)
+		end
+		if build.localised_description then
+			b:setLocDesc(build.localised_description)
 		end
 
 		--if build.energy_source and build.energy_source.fuel_category then b:setFuelCategory(build.energy_source.fuel_category) end
@@ -3574,6 +3582,7 @@ function BuildGen:generateBuilding()
 	setIngredients(self.ingredients):
 	setResults(self.name):
 	setIcons(self.icons(0,0)):
+	setOrder(self.order(0,0)):
 	setBuildProto(self.rtn[#self.rtn]):
 	setEnergy(self.energy_required(0,0)):
 	setCategory(self.category(0,0)):
