@@ -28,12 +28,17 @@ local burnerEntities = {
 	"omnitor-lab",
 	"omnitor-assembling-machine"
 }
+local fuelcats = {
+	"omnite",
+	"chemical"
+}
+if mods["Krastorio2"] then fuelcats[#fuelcats+1] = "vehicle-fuel" end
 
 for _,entity in pairs(burnerEntities) do
 	local build = omni.lib.find_entity_prototype(entity)
 	if build then
 		build.energy_source.fuel_category = nil
-		build.energy_source.fuel_categories = {"omnite","chemical","vehicle-fuel"}
+		build.energy_source.fuel_categories = fuelcats
 	end
 end
 
