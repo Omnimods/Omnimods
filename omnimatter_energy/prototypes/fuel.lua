@@ -25,7 +25,7 @@ end
 for _,fuelitem in pairs(data.raw.item) do  
 
     for _,blockeditem in pairs(ignore) do
-        if fuelitem.name == blockeditem then
+        if fuelitem.name == blockeditem and fuelitem.fuel_category then
             fuelitem.fuel_value = omni.lib.mult_fuel_value(fuelitem.fuel_value, 0.9)
             goto continue 
         end
@@ -40,7 +40,7 @@ for _,fuelitem in pairs(data.raw.item) do
     end
 
     --Generate Chemical Fuel Recipes
-    if fuelitem.fuel_category == "chemical" and fuelitem.fuel_value and not (fuelitem.subgroup and string.find(fuelitem.subgroup, "omnienergy-fuel", 1, true)) then
+    if (fuelitem.fuel_category == "chemical" or fuelitem.fuel_category == "vehicle-fuel") and fuelitem.fuel_value and not (fuelitem.subgroup and string.find(fuelitem.subgroup, "omnienergy-fuel", 1, true)) then
 
         --lets define the variables first, then jump in and create it all in one go:
         --Get fuel number in MJ (divide by 10^6)

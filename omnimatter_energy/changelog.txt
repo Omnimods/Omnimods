@@ -5,6 +5,9 @@ Date: 2020.12.12
     - Added Krastorio 2 support
   Changes:
     - Switch omnitor assemling machine´s crafting category from basic-crafting to crafting
+  Bugfixes:
+    - Fixed that fuel with category = "vehicle-fuel" were not omnified
+    - Fixed that the fuel_category on entities with "fuel_categories" was not properly set
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.0
 Date: 2020.11.26

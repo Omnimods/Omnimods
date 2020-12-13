@@ -18,6 +18,7 @@ local burnerEntities = {
 	"burner-omniphlog",
 	"burner-omnitractor",
 	"burner-omniplant",
+	"burner-inserter",
 	"burner-ore-crusher",
   	"stone-furnace",
 	"stone-mixing-furnace",
@@ -29,7 +30,8 @@ local burnerEntities = {
 for _,entity in pairs(burnerEntities) do
 	local build = omni.lib.find_entity_prototype(entity)
 	if build then
-		build.energy_source.fuel_category = "omnite"
+		build.energy_source.fuel_category = nil
+		build.energy_source.fuel_categories = {"omnite","chemical"}
 	end
 end
 

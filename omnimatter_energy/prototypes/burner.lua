@@ -480,5 +480,4 @@ RecGen:import("burner-inserter"):
 	setSubgroup("inserter"):
 	setOrder("aa[burner-inserter-1]"):extend()
 
-	data.raw["inserter"]["burner-inserter"].energy_source.fuel_category = "omnite"
 	data.raw["inserter"]["burner-inserter"].next_upgrade= "burner-inserter-2"
