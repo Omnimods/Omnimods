@@ -22,7 +22,7 @@ RecGen:import("burner-inserter"):setIngredients({"omnitor",1},{"iron-plate",1}):
 
 --Move the Basic Inserter to its own tech (Red Packs only) to avoid deadlocks
 RecGen:import("inserter"):
-	setIngredients({"burner-inserter",1},{"omnitor",1}):
+	setIngredients({"burner-inserter",1},{"anbaric-omnitor",1}):
 	setEnabled(false):
 	setTechName("omnitech-anbaric-inserter"):
 	setTechCost(60):
@@ -135,6 +135,7 @@ if mods["bobpower"] then
 	omni.lib.add_prerequisite("bob-steam-engine-2", "omnitech-steam-power")
 	omni.lib.add_prerequisite("bob-boiler-2", "omnitech-steam-power")
 	RecGen:import("bob-burner-generator"):setEnabled(false):extend()
+	omni.lib.add_recipe_ingredient("steam-turbine",{"anbaric-omnitor",10})
 end
 
 if mods["bobmining"] then
@@ -219,8 +220,8 @@ end
 --omnitor
 omni.lib.add_recipe_ingredient("gun-turret",{"omnitor",4})
 --anbaric omnitor
-omni.lib.add_recipe_ingredient("steam-turbine",{"anbaric-omnitor",10})
 omni.lib.add_recipe_ingredient("radar",{"anbaric-omnitor",2})
+omni.lib.add_recipe_ingredient("lab",{"anbaric-omnitor",4})
 omni.lib.add_recipe_ingredient("centrifuge",{"anbaric-omnitor",25})
 omni.lib.add_recipe_ingredient("artillery-turret",{"anbaric-omnitor",15})
 omni.lib.add_recipe_ingredient("artillery-wagon",{"anbaric-omnitor",15})
