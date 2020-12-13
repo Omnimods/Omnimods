@@ -135,6 +135,7 @@ if mods["bobpower"] then
 	omni.lib.add_prerequisite("bob-steam-engine-2", "omnitech-steam-power")
 	omni.lib.add_prerequisite("bob-boiler-2", "omnitech-steam-power")
 	RecGen:import("bob-burner-generator"):setEnabled(false):extend()
+else
 	omni.lib.add_recipe_ingredient("steam-turbine",{"anbaric-omnitor",10})
 end
 
