@@ -107,7 +107,7 @@ if mods["bobassembly"] and settings.startup["bobmods-assembly-burner"].value the
 		RecGen:import("assembling-machine-1"):
 			setIngredients(
 				{type="item", name="iron-gear-wheel", amount=4},
-				{type="item", name="anbaric-omnitor", amount=1},
+				{type="item", name="anbaric-omnitor", amount=2},
 				{type="item", name="burner-assembling-machine", amount=1}):
 			setEnabled(false):
 			setTechName("automation"):
@@ -123,7 +123,7 @@ else
 		RecGen:import("assembling-machine-1"):
 			setIngredients(
 				{type="item", name="iron-gear-wheel", amount=4},
-				{type="item", name="anbaric-omnitor", amount=1},
+				{type="item", name="anbaric-omnitor", amount=2},
 				{type="item", name="omnitor-assembling-machine", amount=1}):
 			setEnabled(false):
 			setTechName("automation"):
@@ -167,21 +167,19 @@ end
 if mods["angelsindustries"] and angelsmods.industries.components then
 	--skip if angels components
 else
-	local i=2
-	while data.raw.recipe["assembling-machine-"..i] do
-		RecGen:import("assembling-machine-"..i):addIngredients({"anbaric-omnitor",i}):extend()
-		i=i+1
-	end
-
 	if mods["angelsrefining"] then
-		RecGen:import("burner-ore-crusher"):setIngredients({type="item", name="omnite-brick", amount=4},
+		RecGen:import("burner-ore-crusher"):
+			setIngredients({type="item", name="omnite-brick", amount=4},
 			{type="item", name="iron-plate", amount=4},
-			{type="item", name="omnitor", amount=1}):extend()
+			{type="item", name="omnitor", amount=1}):
+			extend()
 		
-		RecGen:import("ore-sorting-facility"):setIngredients({type="item", name="omnite-brick", amount=30},
+		RecGen:import("ore-sorting-facility"):
+			setIngredients({type="item", name="omnite-brick", amount=30},
 			{type="item", name="iron-plate", amount=15},
 			{type="item", name="anbaric-omnitor", amount=5}):
-			setTechPrereq("omnitech-anbaricity"):extend() --not working...
+			setTechPrereq("omnitech-anbaricity"):
+			extend() --not working...
 
 			omni.lib.add_prerequisite("ore-crushing", "omnitech-anbaricity")
 	end
@@ -199,20 +197,34 @@ if data.raw.recipe["lab"].enabled == false then
 		setTechLocName("omnitech-anbaric-lab"):
 		addIngredients({"omnitor-lab",1}):
 		setTechIcons("lab","omnimatter_energy"):
-		setTechCost(100):extend()
+		setTechCost(100):
+		extend()
 
 	omni.lib.add_prerequisite(omni.lib.get_tech_name("lab"), "omnitech-anbaricity")
 else
 --Create a new tech
-	RecGen:import("lab"):setEnabled(false):
+	RecGen:import("lab"):
+		setEnabled(false):
 		setTechName("omnitech-anbaric-lab"):
 		setTechLocName("omnitech-anbaric-lab"):
 		addIngredients({"omnitor-lab",1}):
 		setTechCost(100):
 		setTechIcons("lab","omnimatter_energy"):
 		setTechPacks(1):
-		setTechPrereq("omnitech-anbaricity"):extend()
+		setTechPrereq("omnitech-anbaricity"):
+		extend()
 end
+
+--Add omnitors to various recipes
+--omnitor
+omni.lib.add_recipe_ingredient("gun-turret",{"omnitor",4})
+--anbaric omnitor
+omni.lib.add_recipe_ingredient("steam-turbine",{"anbaric-omnitor",10})
+omni.lib.add_recipe_ingredient("radar",{"anbaric-omnitor",2})
+omni.lib.add_recipe_ingredient("centrifuge",{"anbaric-omnitor",25})
+omni.lib.add_recipe_ingredient("artillery-turret",{"anbaric-omnitor",15})
+omni.lib.add_recipe_ingredient("artillery-wagon",{"anbaric-omnitor",15})
+omni.lib.add_recipe_ingredient("laser-turret",{"anbaric-omnitor",8})
 
 --Stuff to manually remove from the Omnitor Lab
 local packs = {
