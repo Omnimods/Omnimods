@@ -134,3 +134,14 @@ RecGen:create("omnimatter_energy","purified-omnite"):
   
 omni.lib.add_prerequisite("omnitech-burner-filter-2","omnitech-basic-omnium-power")
 omni.lib.add_prerequisite("omnitech-omnium-power-1","omnitech-basic-omnium-power")
+
+--remove upper omnium-power techs that unlock nothing
+for i=5,2,-1 do
+    local tech = data.raw.technology["omnitech-omnium-power-"..i]
+    if not next(tech.effects) then
+        TechGen:import(tech.name):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():sethidden():extend()
+    --Break when the highest omnium power tech that has an effect is reached
+    else
+        break
+    end
+end
