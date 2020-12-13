@@ -8,7 +8,10 @@ local ignore = {
 }
 
 --Fuels to disable,no omnified version will be created, fuel values will be nilled
-local nilfuel = {}
+local nilfuel = {
+    "wooden-chest",
+    "small-electric-pole"
+}
 
 if mods["omnimatter_wood"] then
     table.insert(nilfuel, "wood")
@@ -29,7 +32,7 @@ for _,fuelitem in pairs(data.raw.item) do
     end
 
     for _,nilit in pairs(nilfuel) do
-        if fuelitem.name == nilit then
+        if fuelitem.name == nilit and fuelitem.fuel_category then
             --fuelitem.fuel_value = "1kJ"
             fuelitem.fuel_category = "omni-0"
             goto continue 
