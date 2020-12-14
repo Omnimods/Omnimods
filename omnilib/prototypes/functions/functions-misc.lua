@@ -817,6 +817,7 @@ local entproto = {
 	"electric-pole",
 	"furnace",
 	"generator",
+	"inserter",
 	"lab",
 	"lamp",
 	"loader",
