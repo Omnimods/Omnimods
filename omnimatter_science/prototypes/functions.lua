@@ -86,6 +86,7 @@ function omni.science.omnipack_tech_post_update()
           found = true
           break
         else
+          if not data.raw.technology[prereq] then error("Prereq "..prereq.." of Technology "..techname.." does not exist") end
           for _,ing in pairs(data.raw.technology[prereq].unit.ingredients) do
             if omni.lib.is_in_table("omni-pack", ing) then
               contains_omnipack[prereq] = true

@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.1
+Date: 2020.12.14
+  Bugfixes:
+    - Fixed a crash that happened with mods that add trees with an icons table
+---------------------------------------------------------------------------------------------------
 Version: 4.1.0
 Date: 2020.11.26
   Info:
@@ -23,7 +28,7 @@ Date: 2020.08.13
 Version: 3.18.6
 Date: 2020.08.07
   Bugfixes:
-    - Multiple locae, recipe order and subgroup fixes
+    - Multiple locale, recipe order and subgroup fixes
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.5
 Date: 2020.06.19

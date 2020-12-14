@@ -18,23 +18,30 @@ local burnerEntities = {
 	"burner-omniphlog",
 	"burner-omnitractor",
 	"burner-omniplant",
+	"burner-inserter",
+	"burner-filter-inserter",
 	"burner-ore-crusher",
   	"stone-furnace",
 	"stone-mixing-furnace",
 	"stone-chemical-furnace",
 	"burner-assembling-machine",
-	"burner-mining-drill"
+	"burner-mining-drill",
+	"omnitor-lab",
+	"omnitor-assembling-machine"
 }
+local fuelcats = {
+	"omnite",
+	"chemical"
+}
+if mods["Krastorio2"] then fuelcats[#fuelcats+1] = "vehicle-fuel" end
 
 for _,entity in pairs(burnerEntities) do
 	local build = omni.lib.find_entity_prototype(entity)
 	if build then
-		build.energy_source.fuel_category = "omnite"
+		build.energy_source.fuel_category = nil
+		build.energy_source.fuel_categories = fuelcats
 	end
 end
-
---Overwrite the localised name of the Burner inserter
-data.raw.recipe["burner-inserter"].localised_name = {"entity-name.burner-inserter-1"}
 
 --Find all remaining Techs that unlock entities that require electricity and move them behind anbaricity
 for _,tech in pairs(data.raw.technology) do 

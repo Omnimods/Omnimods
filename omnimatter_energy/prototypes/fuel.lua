@@ -8,28 +8,36 @@ local ignore = {
 }
 
 --Fuels to disable,no omnified version will be created, fuel values will be nilled
-local nilfuel = {}
+local nilfuel = {
+    "wooden-chest",
+    "small-electric-pole"
+}
+
+--Fuel categories that get omnified
+local fuelcats = {
+    "chemical",
+    "vehicle-fuel" --K2 thing
+}
 
 if mods["omnimatter_wood"] then
     table.insert(nilfuel, "wood")
 end
-
 --nil Bob´s carbon if angel is present
 if mods["angelspetrochem"] then
     table.insert(nilfuel, "carbon")
 end
 
 for _,fuelitem in pairs(data.raw.item) do  
-
+    --Check if item is on the "ignore" list
     for _,blockeditem in pairs(ignore) do
-        if fuelitem.name == blockeditem then
+        if fuelitem.name == blockeditem and fuelitem.fuel_category then
             fuelitem.fuel_value = omni.lib.mult_fuel_value(fuelitem.fuel_value, 0.9)
             goto continue 
         end
     end
-
+    --Check if item is on the "to nil" list
     for _,nilit in pairs(nilfuel) do
-        if fuelitem.name == nilit then
+        if fuelitem.name == nilit and fuelitem.fuel_category then
             --fuelitem.fuel_value = "1kJ"
             fuelitem.fuel_category = "omni-0"
             goto continue 
@@ -37,7 +45,7 @@ for _,fuelitem in pairs(data.raw.item) do
     end
 
     --Generate Chemical Fuel Recipes
-    if fuelitem.fuel_category == "chemical" and fuelitem.fuel_value and not (fuelitem.subgroup and string.find(fuelitem.subgroup, "omnienergy-fuel", 1, true)) then
+    if omni.lib.is_in_table(fuelitem.fuel_category, fuelcats) and fuelitem.fuel_value and not (fuelitem.subgroup and string.find(fuelitem.subgroup, "omnienergy-fuel", 1, true)) then
 
         --lets define the variables first, then jump in and create it all in one go:
         --Get fuel number in MJ (divide by 10^6)
@@ -129,5 +137,15 @@ RecGen:create("omnimatter_energy","purified-omnite"):
 	setTechIcons("purified-omnite","omnimatter_energy"):
     setTechPrereq("omnitech-anbaricity"):extend()
   
-omni.lib.add_prerequisite("omnitech-burner-filter-2","omnitech-basic-omnium-power")
 omni.lib.add_prerequisite("omnitech-omnium-power-1","omnitech-basic-omnium-power")
+
+--remove upper omnium-power techs that unlock nothing
+for i=5,2,-1 do
+    local tech = data.raw.technology["omnitech-omnium-power-"..i]
+    if not next(tech.effects) then
+        TechGen:import(tech.name):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():sethidden():extend()
+    --Break when the highest omnium power tech that has an effect is reached
+    else
+        break
+    end
+end

@@ -1,4 +1,22 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.1
+Date: 2020.12.14
+  Features:
+    - Added Krastorio 2 support
+  Changes:
+    - Switch omnitor assemling machine´s crafting category from basic-crafting to crafting
+    - Early game burner entities now accept omnified fuels aswell
+    - Removed burner inserter mk2 and burner filter inserter mk2
+    - High tier omnium-power techs that have no unlocks are now hidden
+    - Omnitors are no longer required for T1+ assemblers
+    - Radars, centrifuges, steam turbines, artillery, gun- and laser turrets now require omnitors
+  Bugfixes:
+    - Fixed that fuel with category = "vehicle-fuel" were not omnified
+    - Fixed that the fuel_category on entities with "fuel_categories" was not properly set
+    - Fixed that the burner inserter mk1 item had no burner + lvl icon and "mk1" localisation
+    - Fixed recipe & item order for burner inserters,assembler and lab being broken
+    - Miniloader compat: fixed that the first miniloader tech didnt require logistic science packs
+---------------------------------------------------------------------------------------------------
 Version: 2.1.0
 Date: 2020.11.26
   Info:

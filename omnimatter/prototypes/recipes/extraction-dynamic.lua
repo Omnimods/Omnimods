@@ -9,7 +9,7 @@ end
 local reqpure = function(tier,level,item)
     local req = {}
     if level%omni.pure_levels_per_tier==1 or omni.pure_levels_per_tier==1 then
-        req[#req+1]="omnitech-omnitractor-electric-"..(level-1)/omni.pure_levels_per_tier+tier
+        req[#req+1]="omnitech-omnitractor-electric-"..math.min((level-1)/omni.pure_levels_per_tier+tier, omni.max_tier)
         if level > 1 and omni.pure_dependency < omni.pure_levels_per_tier then
             req[#req+1]="omnitech-extraction-"..item.."-"..(level-1)
         end

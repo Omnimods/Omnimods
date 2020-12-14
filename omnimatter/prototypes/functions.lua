@@ -11,6 +11,7 @@ function omni.add_resource(r,t,s,m)
 	if not omnisource[tostring(t)] then omnisource[tostring(t)] = {} end
 	omnisource[tostring(t)][r]={mod=m,tier = t, name = r,techicon = s}
 end
+
 function omni.add_fluid(r,t,q,s,m)
 	if not omnifluid[tostring(t)] then omnifluid[tostring(t)] = {} end
 	omnifluid[tostring(t)][r]={mod=m,tier = t,ratio=q, name = r,techicon = s}

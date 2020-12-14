@@ -1,4 +1,5 @@
 BuildGen:create("omnimatter","omni-furnace"):
+  noTech():
 	setEnergy(5):
 	setIngredients({ "omnicium-plate", 5},{ "omnite-brick", 5},{ "stone-furnace", 1}):
 	setStacksize(20):

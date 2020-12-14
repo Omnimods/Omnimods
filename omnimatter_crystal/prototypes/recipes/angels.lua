@@ -222,14 +222,19 @@ if angelsmods and angelsmods.refining then
 		end
 	end
 	data:extend(crystalines)
+
 	local suffixes = {"-omnide-solution","-crystal","-crystal-omnitraction"}
+	local maxcrystaltech = omni.max_tier -1
 	for _,suf in pairs(suffixes) do
 		for ore,i in pairs(processed) do
 			if ore~="slag" then
-				for _,eff in pairs(data.raw.technology["omnitech-crystallology-"..i].effects) do	omni.lib.add_unlock_recipe("omnitech-crystallology-"..i, ore..suf) end
+				for _,eff in pairs(data.raw.technology["omnitech-crystallology-"..math.min(i,maxcrystaltech)].effects) do
+					omni.lib.add_unlock_recipe("omnitech-crystallology-"..math.min(i,maxcrystaltech), ore..suf)
+				end
 			end
 		end
 	end
+
 	if settings.startup["angels-salt-sorting"].value then
 		RecGen:create("omnimatter_crystal","omni-catalyst"):
 		setSubgroup("omnine"):
