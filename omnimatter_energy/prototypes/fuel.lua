@@ -137,7 +137,6 @@ RecGen:create("omnimatter_energy","purified-omnite"):
 	setTechIcons("purified-omnite","omnimatter_energy"):
     setTechPrereq("omnitech-anbaricity"):extend()
   
-omni.lib.add_prerequisite("omnitech-burner-filter-2","omnitech-basic-omnium-power")
 omni.lib.add_prerequisite("omnitech-omnium-power-1","omnitech-basic-omnium-power")
 
 --remove upper omnium-power techs that unlock nothing

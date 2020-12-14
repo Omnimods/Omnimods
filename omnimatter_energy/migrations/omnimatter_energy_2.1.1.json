@@ -1,0 +1,18 @@
+{
+  "entity":
+  [
+    ["burner-inserter-2", "burner-inserter"],
+    ["burner-filter-inserter-1", "burner-filter-inserter"],
+    ["burner-filter-inserter-2", "burner-filter-inserter"]
+  ],
+  "item":
+  [
+    ["burner-inserter-2", "burner-inserter"],
+    ["burner-filter-inserter-1", "burner-filter-inserter"],
+    ["burner-filter-inserter-2", "burner-filter-inserter"]
+  ],
+  "technology":
+  [
+    ["omnitech-burner-filter-inserter-1", "omnitech-burner-filter-inserter"]
+  ]
+}

@@ -18,11 +18,14 @@ RecGen:import("electric-engine-unit"):setIngredients({type="fluid", name="lubric
 
 omni.lib.add_recipe_ingredient("electric-furnace", {"steel-furnace", 1})
 
-RecGen:import("burner-inserter"):setIngredients({"omnitor",1},{"iron-plate",1}):setTechName("basic-automation"):extend()
+RecGen:import("burner-inserter"):
+	setIngredients({"omnitor",1},{"iron-plate",1},{"iron-gear-wheel",1}):
+	setTechName("basic-automation"):
+	extend()
 
 --Move the Basic Inserter to its own tech (Red Packs only) to avoid deadlocks
 RecGen:import("inserter"):
-	setIngredients({"burner-inserter",1},{"anbaric-omnitor",1}):
+	setIngredients({"burner-inserter",1},{"anbaric-omnitor",1},{"electronic-circuit",1}):
 	setEnabled(false):
 	setTechName("omnitech-anbaric-inserter"):
 	setTechCost(60):

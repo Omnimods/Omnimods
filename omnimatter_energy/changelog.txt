@@ -6,6 +6,7 @@ Date: 2020.12.12
   Changes:
     - Switch omnitor assemling machine´s crafting category from basic-crafting to crafting
     - Early game burner entities now accept omnified fuels aswell
+    - Removed burner inserter mk2 and burner filter inserter mk2
     - High tier omnium-power techs that have no unlocks are now hidden
     - Omnitors are no longer required for T1+ assemblers
     - Radars, centrifuges, steam turbines, artillery, gun- and laser turrets now require omnitors

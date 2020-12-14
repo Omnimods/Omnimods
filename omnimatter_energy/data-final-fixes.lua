@@ -19,7 +19,7 @@ local burnerEntities = {
 	"burner-omnitractor",
 	"burner-omniplant",
 	"burner-inserter",
-	"burner-filter-inserter-1",
+	"burner-filter-inserter",
 	"burner-ore-crusher",
   	"stone-furnace",
 	"stone-mixing-furnace",
@@ -42,9 +42,6 @@ for _,entity in pairs(burnerEntities) do
 		build.energy_source.fuel_categories = fuelcats
 	end
 end
-
---Overwrite the localised name of the Burner inserter
-data.raw.recipe["burner-inserter"].localised_name = {"entity-name.burner-inserter-1"}
 
 --Find all remaining Techs that unlock entities that require electricity and move them behind anbaricity
 for _,tech in pairs(data.raw.technology) do 

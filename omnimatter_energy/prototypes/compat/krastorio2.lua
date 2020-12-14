@@ -137,12 +137,10 @@ if mods["Krastorio2"] then
 
     --Fix inserter recipes to be like normal K2 (omnitor is already in inserter parts) and set them to require their previous tier
     omni.lib.replace_recipe_ingredient("burner-inserter","omnitor","inserter-parts")
-    omni.lib.replace_recipe_ingredient("inserter","omnitor","inserter-parts")
+    omni.lib.replace_recipe_ingredient("inserter","electronic-circuit","inserter-parts")
     omni.lib.add_recipe_ingredient("inserter","automation-core")
 
-    omni.lib.replace_recipe_ingredient("burner-filter-inserter-1","omnitor",{"inserter-parts",1})
-    omni.lib.add_recipe_ingredient("burner-filter-inserter-2","inserter-parts")
-    omni.lib.add_recipe_ingredient("burner-inserter-2","inserter-parts")
+    omni.lib.replace_recipe_ingredient("burner-filter-inserter","omnitor",{"inserter-parts",1})
 
     omni.lib.add_recipe_ingredient("fast-inserter","inserter")
     omni.lib.add_recipe_ingredient("long-handed-inserter","inserter")
@@ -157,8 +155,6 @@ if mods["Krastorio2"] then
 
 
     --Add vehicle fuel cat to burner inserter 2 and burner filter 2
-    data.raw["inserter"]["burner-inserter-2"].energy_source.fuel_category = nil
-    data.raw["inserter"]["burner-inserter-2"].energy_source.fuel_categories = {"chemical","vehicle-fuel"}
-    data.raw["inserter"]["burner-filter-inserter-2"].energy_source.fuel_category = nil
-    data.raw["inserter"]["burner-filter-inserter-2"].energy_source.fuel_categories = {"chemical","vehicle-fuel"}
+    data.raw["inserter"]["burner-filter-inserter"].energy_source.fuel_category = nil
+    data.raw["inserter"]["burner-filter-inserter"].energy_source.fuel_categories = {"chemical","vehicle-fuel"}
 end

@@ -424,20 +424,19 @@ if data.raw["lab"]["lab"] then
 	data.raw["lab"]["lab"].fast_replaceable_group = "lab"
 end
 
-InsertGen:create("omnimatter_energy","burner-filter-inserter-1"):
+InsertGen:create("omnimatter_energy","burner-filter-inserter"):
 	setIngredients({"burner-inserter",1},{"omnitor",2},{"omnicium-gear-wheel",2}):
 	setIcons("burner-filter-inserter","omnimatter_energy"):
-	addIcon("__omnilib__/graphics/icons/small/lvl1.png"):
 	setFilter(1):
 	setSpeed(0.0214, 0.01): --vanilla burner inserter speed
 	setAnimation("burner-filter-inserter"):
 	setFuelCategory("omnite"): --not working...
 	setBurner(0.75,1):
-	setNextUpgrade("burner-filter-inserter-2"):
-	setSubgroup("burner-inserter"):
-	setOrder("ab[burner-filter-inserter-1]"):
-	setTechName("omnitech-burner-filter-1"):
-	setTechLocName("omnitech-burner-filter-1"):
+	setNextUpgrade("filter-inserter"):
+	setSubgroup("inserter"):
+	setOrder("ab[burner-filter-inserter]"):
+	setTechName("omnitech-burner-filter"):
+	setTechLocName("omnitech-burner-filter"):
 	setTechIcons("burner-filter","omnimatter_energy"):
 	setTechPacks(1):
 	setTechCost(50):
@@ -445,59 +444,6 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter-1"):
 	ifAddTechPrereq(data.raw.technology["omnitech-belt-logistics"], "omnitech-belt-logistics"):
 	extend()
 
---Create a second tier filter and normal burner inserter that accepts omnified fuel
-InsertGen:create("omnimatter_energy","burner-filter-inserter-2"):
-	setIngredients({"burner-filter-inserter-1",1},{"omnicium-plate",2}):
-	setIcons("burner-filter-inserter","omnimatter_energy"):
-	addIcon("__omnilib__/graphics/icons/small/lvl2.png"):
-	setFilter(1):
-	setSpeed(0.03, 0.014): --vanilla inserter speed
-	setAnimation("burner-filter-inserter"):
-	setEnabled(false):
-	setFuelCategory("chemical"):
-	setBurner(0.75,1):
-	setNextUpgrade("filter-inserter"):
-	setSubgroup("burner-inserter"):
-	setOrder("ab[burner-filter-inserter-2]"):
-	setTechName("omnitech-burner-filter-2"):
-	setTechLocName("omnitech-burner-filter-2"):
-	setTechPacks(1):
-	setTechCost(75):
-	setTechIcons("burner-filter","omnimatter_energy"):
-	setTechPrereq("omnitech-burner-filter-1"):
-	extend()
-
-InsertGen:create("omnimatter_energy","burner-inserter-2"):
-	setIngredients({"burner-inserter",1},{"omnicium-plate",2}):
-	setIcons("burner-inserter","base"):
-	addIcon("__omnilib__/graphics/icons/small/lvl2.png"):
-	setSpeed(0.03, 0.014): --vanilla inserter speed
-	setAnimation("burner-inserter"):
-	setEnabled(false):
-	setFuelCategory("chemical"):
-	setBurner(0.75,1):
-	setNextUpgrade("inserter"):
-	setSubgroup("burner-inserter"):
-	setOrder("aa[burner-inserter-2]"):
-	setTechName("omnitech-burner-filter-2"):
-	extend()
-
 RecGen:import("burner-inserter"):
 	addBurnerIcon():
-	addIcon("__omnilib__/graphics/icons/small/lvl1.png"):
-	setLocName("entity-name.burner-inserter-1"):
-	setSubgroup("burner-inserter"):
-	setOrder("aa[burner-inserter-1]"):
 	extend()
-
---Fix vanilla burner inserter item icon & localised name
-ItemGen:import("burner-inserter"):
-	addBurnerIcon():
-	addIcon("__omnilib__/graphics/icons/small/lvl1.png"):
-	setLocName("entity-name.burner-inserter-1"):
-	setOrder("aa[burner-inserter-1]"):
-	setSubgroup("burner-inserter"):
-	extend()
-
---Set next_upgrade
-data.raw["inserter"]["burner-inserter"].next_upgrade= "burner-inserter-2"

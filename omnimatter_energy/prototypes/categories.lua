@@ -24,12 +24,6 @@ data:extend({
     --Item subgroups
     {
         type = "item-subgroup",
-        name = "burner-inserter",
-        group = "logistics",
-        order = "bz",
-    },
-    {
-        type = "item-subgroup",
         name = "omnienergy-intermediates",
         group = "omnienergy",
         order = "a",
