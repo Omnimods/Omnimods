@@ -50,6 +50,10 @@ if mods["Krastorio2"] then
     --Put Logi Tech behind anbaric lab
     omni.lib.replace_prerequisite("logistic-science-pack","automation-science-pack","omnitech-anbaric-lab")
 
+    --Fix fast inserter prereqs (red sp not needed, requires hidden logistic tech)
+    omni.lib.remove_prerequisite("fast-inserter","logistics")
+    omni.lib.remove_prerequisite("fast-inserter","automation-science-pack")
+
     -- Lock omnitor lab behind a basic tech card tech (crash site lab --> omnitor lab --> normal lab)
     RecGen:import("omnitor-lab"):
         setEnabled(false):
@@ -150,4 +154,11 @@ if mods["Krastorio2"] then
     omni.lib.add_recipe_ingredient("kr-superior-long-inserter","long-handed-inserter")
     omni.lib.add_recipe_ingredient("kr-superior-filter-inserter","filter-inserter")
     omni.lib.add_recipe_ingredient("kr-superior-long-filter-inserter","long-handed-inserter")
+
+
+    --Add vehicle fuel cat to burner inserter 2 and burner filter 2
+    data.raw["inserter"]["burner-inserter-2"].energy_source.fuel_category = nil
+    data.raw["inserter"]["burner-inserter-2"].energy_source.fuel_categories = {"chemical","vehicle-fuel"}
+    data.raw["inserter"]["burner-filter-inserter-2"].energy_source.fuel_category = nil
+    data.raw["inserter"]["burner-filter-inserter-2"].energy_source.fuel_categories = {"chemical","vehicle-fuel"}
 end
