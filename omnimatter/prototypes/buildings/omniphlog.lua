@@ -16,6 +16,7 @@ else
 end
 
 BuildGen:create("omnimatter","omniphlog"):
+noTech():
 setBurner(0.75,1):
 setStacksize(10):
 setSubgroup("omniphlog"):
@@ -41,7 +42,9 @@ layers={
 }
 }):
 setIngredients(phlog_cost):
-setEnabled():extend()
+setEnabled():
+extend()
+
 --Electric
 local cost = OmniGen:create():
 		building():

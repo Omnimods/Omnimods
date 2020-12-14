@@ -38,13 +38,13 @@ RecGen:create("omnimatter_crystal","hydromnic-acid"):
 	end
 
 BuildGen:create("omnimatter_crystal","omniplant"):
+	noTech():
 	setBurner(0.75,2):
 	setSubgroup("omniplant"):
 	setIngredients(burner_ings):
 	setEnergy(5):
 	setUsage(function(level,grade) return "750kW" end):
 	--setTechName("omnitech-omnitractor-electric-1"): --Done in final-fixes for now
-	noTech():
 	setReplace("omniplant"):
 	setNextUpgrade("omniplant-1"):
 	setStacksize(20):

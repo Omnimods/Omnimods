@@ -12,6 +12,7 @@ else
 end
 
 BuildGen:create("omnimatter","omnitractor"):
+	noTech():
 	setSubgroup("omnitractor"):
 	setIngredients(burner_ingredients):
 	setEnergy(10):
