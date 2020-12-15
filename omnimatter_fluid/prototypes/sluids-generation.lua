@@ -1,4 +1,82 @@
---log("stupid Luna")
+
+--------------------------------------------------------------------------------------------------
+--[[ SETTING UP BASICS AND NOTES
+PLAN: FLAT OUT REPLACE ALL FLUIDS WITH SOLIDS in non-furnace type recipes
+--for all power production (steam etc) fluids, add in a solid-fluid conversion recipe to the sluid boiler
+STEP 1 Find all properties assocated with fluids which are not associated with solids
+--Fluid only props
+Temperature (temperature, max_temperature, default_temperature)
+Heat_capacity
+visuals(base_color, flow_color)
+pressure_to_speed_ratio
+flow_to_energy_ratio
+auto_barrel
+type="fluid"
+
+--Solid only props
+type="item"
+stack_size
+
+]]
+--------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------
+--do a build for all fluids
+--------------------------------------------------------------------------------------------------
+local sluids={}
+for name, fluid in pairs(data.raw.fluid) do
+	local sluid = table.deepcopy(fluid)
+	sluid.name = "solid-"..sluid.name
+	--store incompatible properties in the name
+	if sluid.max_temperature then
+		sluid.name = sluid.name.."-mxt-"..sluid.max_temperature
+		sluid.max_temperature = nil
+	end
+	if sluid.default_temperature and sluid.default_temperature ~= 25 then
+		--add only if not 25C
+		sluid.name = sluid.name.."-dft-"..sluid.default_temperature
+	end
+	sluid.default_temperature = nil
+  sluid.heat_capacity = nil
+	sluid.type = "item"
+  sluid.base_color = nil
+  sluid.flow_color = nil
+  sluid.auto_barrel = nil
+  sluid.pressure_to_speed_ratio = nil
+  sluid.flow_to_energy_ratio = nil
+  sluid.stack_size = sluid_stack_size or 10
+  --locale key
+  local loc_key = {"item-name.solid-fluid-tmp"}
+	local fluid = data.raw.fluid[name]
+	if type(fluid.localised_name) == "string" then
+		loc_key[#loc_key+1] = {"fluid-name."..fluid.name}
+	elseif type(fluid.localised_name) == "table" then
+		loc_key[#loc_key+1] = fluid.localised_name
+	else
+		loc_key[#loc_key+1] = {"fluid-name."..fluid.name}
+	end
+	loc_key[#loc_key+1] = tostring(tmp)
+  sluid.localised_name = loc_key
+  sluids[#sluids+1] = sluid
+end
+data:extend(sluids)
+--replace all fluids with solids
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--[[log("stupid Luna")
 local generator_fluid={}
 for _, gen in pairs(data.raw.generator) do
 	if not string.find(gen.name,"creative") then
@@ -311,7 +389,7 @@ end
 	end
 end]]
 
-local dont_remove = {}
+--[[local dont_remove = {}
 
 
 for _,pump in pairs(data.raw["offshore-pump"]) do
@@ -522,7 +600,7 @@ end
 	end
 end]]
 
-local excluded_subgroups = {"empty-barrel","fill-barrel","barreling-pump"}
+--[[local excluded_subgroups = {"empty-barrel","fill-barrel","barreling-pump"}
 local excluded_names = {"creative",{"boiling","steam"},{"solid","fluid","conversion"},{"fluid","production"}}
 local temperature_fluids = {}
 
