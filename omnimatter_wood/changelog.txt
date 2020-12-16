@@ -1,8 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.2
-Date: 2020.12.xx
+Date: 2020.12.16
   Bugfixes:
-    - Fixed crashin with certain mods that add trees once again
+    - Fixed crashing with certain mods that add trees once again
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.1
 Date: 2020.12.14
