@@ -25,7 +25,9 @@ RecGen:import("burner-inserter"):
 
 --Move the Basic Inserter to its own tech (Red Packs only) to avoid deadlocks
 RecGen:import("inserter"):
-	setIngredients({"burner-inserter",1},{"anbaric-omnitor",1},{"electronic-circuit",1}):
+	setIngredients({"burner-inserter",1},{"anbaric-omnitor",1}):
+	ifAddIngredients(mods["bobelectronics"],{"basic-circuit-board",1}):
+	ifAddIngredients(not mods["bobelectronics"],{"electronic-circuit",1}):
 	setEnabled(false):
 	setTechName("omnitech-anbaric-inserter"):
 	setTechCost(60):
