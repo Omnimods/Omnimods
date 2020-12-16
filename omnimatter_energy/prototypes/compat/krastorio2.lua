@@ -98,16 +98,6 @@ if mods["Krastorio2"] then
             }}
         }
     end
-    
-    --Set crash site reactor output to 0 until K2 added the commented out interface below to remove it.
-    --remote.interfaces["kr-crash-site"].remove_crash_site_entity("kr-crash-site-generator")
-    data.raw["electric-energy-interface"]["kr-crash-site-generator"].energy_source = {
-        type = "electric",
-    	buffer_capacity = "0kJ",
-    	usage_priority = "primary-output",
-    	input_flow_limit = "0kW",
-    	output_flow_limit = "0kW"}
-    data.raw["electric-energy-interface"]["kr-crash-site-generator"].energy_production  = "0kW"
 
     --Add Basic tech card to all omni science up to t2(greens)
     --Baic tech cards are not used for mid-late game techs, thats why we cant add them as t1 pack to lib
