@@ -165,15 +165,9 @@ local function Robot_Tile_Remove(event)
       return solar_mat_removed_at(robot.surface,robot.position)
       end
    end
-
-local function call_remote_functions()
-	if game.active_mods["Krastorio2"] and remote.interfaces["kr-crash-site"] then
-		remote.call("kr-crash-site","remove_crash_site_entity","kr-crash-site-generator")
-	end
-end
 --------------------------------------------------------------------
 
-script.on_init(call_remote_functions)
+
 
 local build_events = {defines.events.on_built_entity, defines.events.on_robot_built_entity}
 script.on_event(build_events, On_Built)
