@@ -5,7 +5,7 @@ if not omni.matter then omni.matter = {} end
 
 require("prototypes.constants")
 require("prototypes.categories")
-require("prototypes.extraction.extraction-functions")
+require("prototypes.compat.extraction-functions")
 
 
 
@@ -20,7 +20,7 @@ require("prototypes.buildings.omnifurnace")
 require("prototypes.recipes.omnicium")
 require("prototypes.recipes.omnibrick")
 require("prototypes.recipes.omnic-acid")
-require("prototypes.extraction.extraction-resources")
+require("prototypes.compat.extraction-resources")
 
 --require("prototypes.generation.omniston")
 --require("prototypes.omnitractor-dynamic")
