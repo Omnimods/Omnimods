@@ -18,3 +18,6 @@
 
 - Create an omnicium plate alloy recipe & item:
   - omni.add_omnicium_alloy(name,platename,ingredientname)
+  
+- Creates fluid extraction recipes & techs (omniwater --> fluid):
+  - omni.add_omniwater_extraction(mod, element, lvls, tier, gain, starter_recipe)
