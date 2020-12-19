@@ -1,18 +1,18 @@
 --INITIALIZE
-if not zemods then zemods = {} end
 if not omnimatter then omnimatter = {} end
 if not omni then omni = {} end
+if not omni.matter then omni.matter = {} end
 
-require("prototypes.functions")
 require("prototypes.constants")
+require("prototypes.categories")
+require("prototypes.extraction.extraction-functions")
 
-if omni.pure_dependency > omni.pure_levels_per_tier then omni.pure_dependency = omni.pure_levels_per_tier end
-if omni.impure_dependency > omni.impure_levels_per_tier then omni.impure_dependency = omni.impure_levels_per_tier end
-if omni.fluid_dependency > omni.fluid_levels_per_tier then omni.fluid_dependency = omni.fluid_levels_per_tier end
+
+
 
 --Infinite ore result probability check
 --LOAD PROTOTYPES
-require("prototypes.categories")
+
 require("prototypes.omniore")
 require("prototypes.generation.omnite-inf")
 require("prototypes.generation.omnite")
@@ -20,7 +20,7 @@ require("prototypes.buildings.omnifurnace")
 require("prototypes.recipes.omnicium")
 require("prototypes.recipes.omnibrick")
 require("prototypes.recipes.omnic-acid")
-require("prototypes.extraction-resources")
+require("prototypes.extraction.extraction-resources")
 
 --require("prototypes.generation.omniston")
 --require("prototypes.omnitractor-dynamic")
