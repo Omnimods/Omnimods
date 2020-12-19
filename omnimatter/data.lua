@@ -2,7 +2,7 @@
 if not zemods then zemods = {} end
 if not omnimatter then omnimatter = {} end
 if not omni then omni = {} end
-require("config")
+
 require("prototypes.functions")
 require("prototypes.constants")
 
