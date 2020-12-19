@@ -227,6 +227,22 @@ local function generate_pure_icon(ore)
     )
 end
 
+--Initial omnitraction
+for n, ore in pairs(omni.omnitial) do
+	RecGen:create("omnimatter","initial-omnitraction-" .. n):
+		setCategory("omnite-extraction-burner"):
+		setEnergy(5):
+		setEnabled(true):
+		noItem():
+		setSubgroup("omni-basic"):
+		setIngredients(ore.ingredients):
+		setResults(ore.results):
+		setIcons(n):
+		marathon():
+		setLocName("recipe-name.initial-omni","item-name."..n):
+		addSmallIcon("stone-crushed", 3):
+		extend()
+end
 
 --Pure extraction
 for i, tier in pairs(omni.omnisource) do
@@ -296,7 +312,7 @@ for i, tier in pairs(omni.omnisource) do
     end
 end
 
---Impure recipies
+--Impure recipes
 for _,ore_tiers in pairs(omni.omnisource) do
     --Base mix
     local t = select(2, next(ore_tiers)).tier

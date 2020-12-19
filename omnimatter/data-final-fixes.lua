@@ -1,4 +1,4 @@
-require("prototypes.bob-compensation")
+require("prototypes.compat.bob-compensation")
 
 local m = 3
 for _,om in pairs({omni.omnisource,omni.omnifluid}) do

@@ -1,26 +1,28 @@
 --INITIALIZE
-if not omnimatter then omnimatter = {} end
 if not omni then omni = {} end
 if not omni.matter then omni.matter = {} end
 
+--LOAD CONSTANT, CATEGORY AND FUNCTION PROTOTYPES
 require("prototypes.constants")
 require("prototypes.categories")
 require("prototypes.compat.extraction-functions")
 
-
-
-
---Infinite ore result probability check
---LOAD PROTOTYPES
-
+--LOAD ALL OTHER PROTOTYPES
 require("prototypes.omniore")
 require("prototypes.generation.omnite-inf")
 require("prototypes.generation.omnite")
+require("prototypes.compat.extraction-resources")
+
+require("prototypes.buildings.omnitractor-dynamic")
+require("prototypes.buildings.omniphlog")
+require("prototypes.buildings.steam-omni")
+
 require("prototypes.buildings.omnifurnace")
 require("prototypes.recipes.omnicium")
 require("prototypes.recipes.omnibrick")
 require("prototypes.recipes.omnic-acid")
-require("prototypes.compat.extraction-resources")
+
+
 
 --require("prototypes.generation.omniston")
 --require("prototypes.omnitractor-dynamic")

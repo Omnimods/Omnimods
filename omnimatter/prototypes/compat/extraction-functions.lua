@@ -1,5 +1,4 @@
-if not omni then omni = {} end
-
+omni.omnitial={}
 omni.omnisource={}
 omni.omnifluid={}
 
@@ -57,6 +56,14 @@ function omni.set_ore_tier(n,t)
 	else
 		return nil
 	end
+end
+
+--Add initial extraction ores
+function omni.add_initial(ore_name,ore_amount,omnite_amount)
+	omni.omnitial[ore_name] = {
+		ingredients ={{name = "omnite", amount = omnite_amount}},
+		results = {{name = ore_name, amount = ore_amount}, {name = "stone-crushed", amount = (omnite_amount-ore_amount) or 6}}
+	}
 end
 
 function omni.add_omnicium_alloy(name,plate,ingot)

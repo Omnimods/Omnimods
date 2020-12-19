@@ -11,6 +11,11 @@ local vanilla_fluids = true	--crude oil
 -- Angels / Bobs
 if angelsmods and angelsmods.refining then
 	metal_ores = false
+
+	--Initial omnitractions for saph/ stir
+	omni.add_initial("angels-ore1",1,6)
+    omni.add_initial("angels-ore3",1,6)
+
 	omni.add_resource("angels-ore1",1)
 	omni.add_resource("angels-ore3",1) 
 	omni.add_resource("angels-ore4",3)
@@ -23,6 +28,9 @@ if angelsmods and angelsmods.refining then
 		omni.add_resource("angels-ore2",2)
 	end
 else
+	--Non-Angel initial omnitractions
+	omni.add_initial("iron-ore",1,7)
+	omni.add_initial("copper-ore",1,7)
 	if bobmods and bobmods.ores then
 		local levels={		
 			--["iron-ore"]=1,
@@ -102,6 +110,13 @@ if mods["pyalienlife"] then
 	omni.add_resource("bio-sample", 2)
 end
 if mods["pyrawores"] then
+	--Initial omnitractions
+	omni.add_initial("ore-aluminium",1,14)
+    omni.add_initial("ore-tin",1,12)
+    omni.add_initial("ore-quartz",1,12)
+    omni.add_initial("raw-coal",1,10)
+	omni.add_initial("nexelit-ore",1,7)
+	
 	-- Pre-sci/red
 	omni.add_resource("ore-aluminium", 1)
 	omni.add_resource("ore-tin", 1)

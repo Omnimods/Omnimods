@@ -29,8 +29,6 @@ end
 ----------------------------------------------------------------------------
 -- Late requires --
 ----------------------------------------------------------------------------
-require("prototypes.buildings.omnitractor-dynamic")
+--Extraction & solvation recipes (allow other mods to interact between our data and data-updates)
 require("prototypes.recipes.extraction-dynamic")
 require("prototypes.recipes.solvation-dynamic")
-require("prototypes.buildings.omniphlog")
-require("prototypes.buildings.steam-omni")
