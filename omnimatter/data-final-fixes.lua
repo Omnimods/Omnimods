@@ -117,20 +117,36 @@ for _,rock in pairs(data.raw["simple-entity"]) do
 	end
 end
 
+--Add last extraction techs as rocket silo prereq
 if omni.rocket_locked then
---"rocket-silo"
+	--Get highest ore and fluid tier
+	local max_tier = 0
 	for _,tier in pairs(omni.omnisource) do
-		for _,ore in pairs(tier) do
-			omni.lib.add_prerequisite("rocket-silo","omnitech-extraction-"..ore.name.."-"..3*omni.pure_levels_per_tier)
+		max_tier = max_tier + 1
+	end
+
+	local max_fluid_tier = 0
+	for _,tier in pairs(omni.omnifluid) do
+		max_fluid_tier = max_fluid_tier + 1
+	end
+
+	--Check if there is a higher fluid than ore tier
+	if max_tier > max_fluid_tier then
+		local pure_extractions = 3 * omni.pure_levels_per_tier
+		for _,ore in pairs(omni.omnisource[tostring(max_tier)]) do
+			omni.lib.add_prerequisite("rocket-silo","omnitech-extraction-"..ore.name.."-"..pure_extractions)
 		end
 	end
-	for _,tier in pairs(omni.omnifluid) do
-		for _,fluid in pairs(tier) do
+	
+	--Check if there is a higher ore than fluid tier
+	if max_fluid_tier > max_tier then
+		for _,fluid in pairs(omni.omnifluid[tostring(max_fluid_tier)]) do
 			omni.lib.add_prerequisite("rocket-silo","omnitech-distillation-"..fluid.name.."-"..omni.fluid_levels)
 		end
 	end
 end
 
+--Offshore pump should output omnic water
 for _,pump in pairs(data.raw["offshore-pump"]) do
 	if pump.fluid == "water" then
 		pump.fluid="omnic-water"
@@ -138,4 +154,7 @@ for _,pump in pairs(data.raw["offshore-pump"]) do
 	end
 end
 
-RecGen:import("coal-liquefaction"):replaceIngredients("heavy-oil","omniston"):replaceIngredients("liquid-naphtha","omniston"):extend()
+RecGen:import("coal-liquefaction"):
+	replaceIngredients("heavy-oil","omniston"):
+	replaceIngredients("liquid-naphtha","omniston"):
+	extend()

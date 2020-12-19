@@ -151,7 +151,12 @@ BuildChain:create("omnimatter","omnitractor"):
 	setTechPacks(function(levels,grade) return grade end):
 	setReplace("omnitractor"):
 	setTechTime(function(levels,grade) return 15*grade end):
-	ifModsAddTechPrereq("omnimatter_crystal",function(levels,grade) if grade > 2 and (grade-2)*omni.fluid_levels_per_tier+omni.fluid_dependency<=omni.fluid_levels then return "omnitech-omnisolvent-omnisludge-"..(grade-2)*omni.fluid_levels_per_tier+omni.fluid_dependency else return nil end end):
+	ifModsAddTechPrereq("omnimatter_crystal",
+		function(levels,grade)
+			if grade > 2 and ((grade-2)*omni.fluid_levels_per_tier + omni.fluid_dependency) <= omni.fluid_levels then
+				return "omnitech-omnisolvent-omnisludge-"..(grade-2)*omni.fluid_levels_per_tier+omni.fluid_dependency else return nil 
+			end
+		end):
 	setStacksize(10):
 	allowProductivity():
 	setLevel(settings.startup["omnimatter-max-tier"].value):
