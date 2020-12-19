@@ -1,34 +1,30 @@
 if not omni then omni = {} end
 
-omnisource={}
-tiercount={0,0,0}
-omnifluid={}
-uniomnitiers={}
-
-phlog = false
+omni.omnisource={}
+omni.omnifluid={}
 
 function omni.add_resource(n, t, s, m)
-	if not omnisource[tostring(t)] then omnisource[tostring(t)] = {} end
-	omnisource[tostring(t)][n]={mod=m, tier = t, name = n, techicon = s}
+	if not omni.omnisource[tostring(t)] then omni.omnisource[tostring(t)] = {} end
+	omni.omnisource[tostring(t)][n]={mod=m, tier = t, name = n, techicon = s}
 end
 
 function omni.add_fluid(n ,t, r, s, m)
-	if not omnifluid[tostring(t)] then omnifluid[tostring(t)] = {} end
-	omnifluid[tostring(t)][n]={mod=m, tier = t, ratio=r, name = n,techicon = s}
+	if not omni.omnifluid[tostring(t)] then omni.omnifluid[tostring(t)] = {} end
+	omni.omnifluid[tostring(t)][n]={mod=m, tier = t, ratio=r, name = n,techicon = s}
 end
 
 function omni.remove_resource(n)
-	for t, tiers in pairs(omnisource) do
-		if omnisource[t][n] then
-			omnisource[t][n] = nil
+	for t, tiers in pairs(omni.omnisource) do
+		if omni.omnisource[t][n] then
+			omni.omnisource[t][n] = nil
 		end
 	end
 end
 
 function omni.remove_fluid(n)
-	for t, tiers in pairs(omnifluid) do
-		if omnifluid[t][n] then
-			omnifluid[t][n] = nil
+	for t, tiers in pairs(omni.omnifluid) do
+		if omni.omnifluid[t][n] then
+			omni.omnifluid[t][n] = nil
 		end
 	end
 end

@@ -43,7 +43,7 @@ function omni.matter.get_fluid_production(level,fluid)
 end
 
 function omni.matter.ore_tier(ore)
-	for _,s in pairs(omnisource) do
+	for _,s in pairs(omni.omnisource) do
 		if s.ore.name == ore then
 			return s.tier
 		end

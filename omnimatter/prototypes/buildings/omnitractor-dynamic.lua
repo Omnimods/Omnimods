@@ -47,7 +47,7 @@ BuildGen:create("omnimatter","omnitractor"):
 
 local get_pure_req = function(levels,i)
 	local r = {}
-	for j,tier in pairs(omnisource) do
+	for j,tier in pairs(omni.omnisource) do
 		if tonumber(j) < i and tonumber(j) >= i-3 then
 			for _,ore in pairs(tier) do
 				r[#r+1]="omnitech-extraction-"..ore.name.."-"..omni.pure_levels_per_tier*(i-ore.tier-1)+omni.pure_dependency
@@ -69,7 +69,7 @@ local get_pure_req = function(levels,i)
 			r[#r+1]="omnitech-omnisolvent-omnisludge-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
 		end
 	end
-	for j,tier in pairs(omnifluid) do
+	for j,tier in pairs(omni.omnifluid) do
 		if tonumber(j) < i and tonumber(j) >= i-3 then
 			for _,fluid in pairs(tier) do
 				if omni.fluid_levels_per_tier*(i-fluid.tier-1)+omni.fluid_dependency <= omni.fluid_levels then

@@ -205,7 +205,7 @@ local function generate_solvation_icon(fluid)
 	)
 end
 
-for _,tier in pairs(omnifluid) do
+for _,tier in pairs(omni.omnifluid) do
 	for _, fluid in pairs(tier) do
 		local cost = OmniGen:create():
 			setYield(fluid.name):

@@ -1,7 +1,7 @@
 require("prototypes.bob-compensation")
 
 local m = 3
-for _,om in pairs({omnisource,omnifluid}) do
+for _,om in pairs({omni.omnisource,omni.omnifluid}) do
 	for i, tier in pairs(om) do
 		if tonumber(i)> m then m=tonumber(i) end
 	end
@@ -119,12 +119,12 @@ end
 
 if omni.rocket_locked then
 --"rocket-silo"
-	for _,tier in pairs(omnisource) do
+	for _,tier in pairs(omni.omnisource) do
 		for _,ore in pairs(tier) do
 			omni.lib.add_prerequisite("rocket-silo","omnitech-extraction-"..ore.name.."-"..3*omni.pure_levels_per_tier)
 		end
 	end
-	for _,tier in pairs(omnifluid) do
+	for _,tier in pairs(omni.omnifluid) do
 		for _,fluid in pairs(tier) do
 			omni.lib.add_prerequisite("rocket-silo","omnitech-distillation-"..fluid.name.."-"..omni.fluid_levels)
 		end

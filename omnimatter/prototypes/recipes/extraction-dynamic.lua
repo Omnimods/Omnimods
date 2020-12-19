@@ -59,7 +59,7 @@ end
 
 local get_impurities = function(ore,tier)
     local tierores = {}
-    for _,o in pairs(omnisource) do
+    for _,o in pairs(omni.omnisource) do
         if o.tier == tier and o.ore.name ~= ore then
             tierores[#tierores+1]=o.ore.name
         end
@@ -109,7 +109,7 @@ local proper_result = function(tier, level,focus)
 end
 
 local get_omnimatter_split = function(tier,focus,level)
-    local source = table.deepcopy(omnisource[tostring(tier)])
+    local source = table.deepcopy(omni.omnisource[tostring(tier)])
     level = level or 0
     local aligned_ores = {}
     local source_count = table_size(source)
@@ -229,7 +229,7 @@ end
 
 
 --Pure extraction
-for i, tier in pairs(omnisource) do
+for i, tier in pairs(omni.omnisource) do
     for ore_name, ore in pairs(tier) do
         --Check for hidden flag to skip later
         
@@ -297,7 +297,7 @@ for i, tier in pairs(omnisource) do
 end
 
 --Impure recipies
-for _,ore_tiers in pairs(omnisource) do
+for _,ore_tiers in pairs(omni.omnisource) do
     --Base mix
     local t = select(2, next(ore_tiers)).tier
     local base_split = get_omnimatter_split(t, nil, nil)
