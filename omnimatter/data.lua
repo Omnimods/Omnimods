@@ -13,18 +13,11 @@ require("prototypes.generation.omnite-inf")
 require("prototypes.generation.omnite")
 require("prototypes.compat.extraction-resources")
 
-require("prototypes.buildings.omnitractor-dynamic")
+require("prototypes.buildings.omnitractor")
 require("prototypes.buildings.omniphlog")
 require("prototypes.buildings.steam-omni")
-
 require("prototypes.buildings.omnifurnace")
+
 require("prototypes.recipes.omnicium")
 require("prototypes.recipes.omnibrick")
 require("prototypes.recipes.omnic-acid")
-
-
-
---require("prototypes.generation.omniston")
---require("prototypes.omnitractor-dynamic")
---require("prototypes.recipes.extraction-dynamic")
---require("prototypes.recipes.solvation-dynamic")
