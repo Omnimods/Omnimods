@@ -3,6 +3,8 @@ if not omni then omni = {} end
 omni.omnisource={}
 omni.omnifluid={}
 
+--Manipulation of the extraction tables
+--Open for modders to use to add compatibility
 function omni.add_resource(n, t, s, m)
 	if not omni.omnisource[tostring(t)] then omni.omnisource[tostring(t)] = {} end
 	omni.omnisource[tostring(t)][n]={mod=m, tier = t, name = n, techicon = s}
@@ -17,15 +19,43 @@ function omni.remove_resource(n)
 	for t, tiers in pairs(omni.omnisource) do
 		if omni.omnisource[t][n] then
 			omni.omnisource[t][n] = nil
+			return true
 		end
 	end
+	return nil
 end
 
 function omni.remove_fluid(n)
 	for t, tiers in pairs(omni.omnifluid) do
 		if omni.omnifluid[t][n] then
 			omni.omnifluid[t][n] = nil
+			return true
 		end
+	end
+	return nil
+end
+
+function omni.get_ore_tier(n)
+	for _, tiers in pairs(omni.omnisource) do
+		for _,ores in pairs(tiers) do
+			if ores.name == n then
+				return ores.tier
+			end
+		end
+	end
+	return nil
+end
+
+function omni.set_ore_tier(n,t)
+	local tier = omni.get_ore_tier(n)
+	if tier then
+		local res = table.deepcopy(omni.omnisource[tostring(tier)][n])
+		omni.omnisource[tostring(tier)][n] = nil
+		if not omni.omnisource[tostring(t)] then omni.omnisource[tostring(t)] = {} end
+		omni.omnisource[tostring(t)][n] = res
+		return true
+	else
+		return nil
 	end
 end
 
