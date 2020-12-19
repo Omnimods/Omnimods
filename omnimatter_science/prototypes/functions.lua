@@ -79,6 +79,12 @@ function omni.science.omnipack_tech_post_update()
       end
       if contains == true then goto continue end
 
+      --When this tech has no prereqs, remove it from the list
+      if not data.raw.technology.prerequisites or not next(data.raw.technology.prerequisites) then
+        omni.lib.remove_from_table(techname, omni.science.remaining_techs)
+        goto continue
+      end
+
       --Check if prereqs contains omnipacks
       local found = false
       for _,prereq in pairs(tech.prerequisites) do
@@ -98,6 +104,7 @@ function omni.science.omnipack_tech_post_update()
           if found == true then break end
         end
       end
+
       if found == true then
         omni.lib.add_science_pack(techname)
         contains_omnipack[techname] = true

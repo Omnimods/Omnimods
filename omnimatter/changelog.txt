@@ -4,6 +4,8 @@ Date: 2020.12.xx
   Changes:
     - Properly localised omnic water recycling recipes (searchable now!)
     - Moved omnic water recycling recipes into their own item group
+  Bugfixes:
+    - Fixed a crash with mods that addd techs with an empty prereq table
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.3
 Date: 2020.12.14

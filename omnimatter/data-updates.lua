@@ -161,9 +161,9 @@ for i,tech in pairs(data.raw.technology) do
 	if string.find(tech.name,"pumpjack") then
 		--table.remove(data.raw.technology,i)
 		data.raw.technology[tech.name].enabled=false
-	elseif tech.prerequisites then
+	elseif tech.prerequisites and next(tech.prerequisites) then
 		for j=1,#tech.prerequisites do
-			if string.find(tech.prerequisites[j],"pumpjack") then
+			if tech.prerequisites[j] and string.find(tech.prerequisites[j],"pumpjack") then
 				data.raw.technology[tech.name].prerequisites[j]=nil
 			end
 		end
