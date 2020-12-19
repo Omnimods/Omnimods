@@ -32,3 +32,5 @@ end
 --Extraction & solvation recipes (allow other mods to interact between our data and data-updates)
 require("prototypes.recipes.extraction-dynamic")
 require("prototypes.recipes.solvation-dynamic")
+
+require("prototypes.compat.bob-burnerphase")

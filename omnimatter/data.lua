@@ -15,7 +15,6 @@ require("prototypes.compat.extraction-resources")
 
 require("prototypes.buildings.omnitractor")
 require("prototypes.buildings.omniphlog")
-require("prototypes.buildings.steam-omni")
 require("prototypes.buildings.omnifurnace")
 
 require("prototypes.recipes.omnicium")
