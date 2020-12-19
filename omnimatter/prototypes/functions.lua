@@ -7,14 +7,30 @@ uniomnitiers={}
 
 phlog = false
 
-function omni.add_resource(r,t,s,m)
+function omni.add_resource(n, t, s, m)
 	if not omnisource[tostring(t)] then omnisource[tostring(t)] = {} end
-	omnisource[tostring(t)][r]={mod=m,tier = t, name = r,techicon = s}
+	omnisource[tostring(t)][n]={mod=m, tier = t, name = n, techicon = s}
 end
 
-function omni.add_fluid(r,t,q,s,m)
+function omni.add_fluid(n ,t, r, s, m)
 	if not omnifluid[tostring(t)] then omnifluid[tostring(t)] = {} end
-	omnifluid[tostring(t)][r]={mod=m,tier = t,ratio=q, name = r,techicon = s}
+	omnifluid[tostring(t)][n]={mod=m, tier = t, ratio=r, name = n,techicon = s}
+end
+
+function omni.remove_resource(n)
+	for t, tiers in pairs(omnisource) do
+		if omnisource[t][n] then
+			omnisource[t][n] = nil
+		end
+	end
+end
+
+function omni.remove_fluid(n)
+	for t, tiers in pairs(omnifluid) do
+		if omnifluid[t][n] then
+			omnifluid[t][n] = nil
+		end
+	end
 end
 
 function omni.add_omnicium_alloy(name,plate,ingot)

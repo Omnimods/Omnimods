@@ -20,6 +20,7 @@ require("prototypes.buildings.omnifurnace")
 require("prototypes.recipes.omnicium")
 require("prototypes.recipes.omnibrick")
 require("prototypes.recipes.omnic-acid")
+require("prototypes.extraction-resources")
 
 --require("prototypes.generation.omniston")
 --require("prototypes.omnitractor-dynamic")

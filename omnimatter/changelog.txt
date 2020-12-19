@@ -4,6 +4,10 @@ Date: 2020.12.xx
   Changes:
     - Properly localised omnic water recycling recipes (searchable now!)
     - Moved omnic water recycling recipes into their own item group
+    - Moved extraction resource additions to the data stage
+    - Added omni.remove_resource(n) and omni.remove_fluid(n)
+    -   -This allows modders to easily manage for which resources extractions are being generated
+    -   -They can call omni.[add/remove]_[resource/fluid]()  in their data.lua to add omni compat
   Bugfixes:
     - Fixed a crash with mods that addd techs with an empty prereq table
 ---------------------------------------------------------------------------------------------------
