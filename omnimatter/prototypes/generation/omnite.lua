@@ -1,3 +1,8 @@
+ItemGen:create("omnimatter","omnite"):
+	setFuelValue(2):
+	setStacksize(500):
+  extend()
+  
 data:extend(
 {
   {

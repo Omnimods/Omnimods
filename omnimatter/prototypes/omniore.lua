@@ -1,8 +1,3 @@
-ItemGen:create("omnimatter","omnite"):
-	setFuelValue(2):
-	setStacksize(500):
-	extend()
-
 RecGen:create("omnimatter","stone"):
 	setSubgroup("omni-solids"):
 	setStacksize(200):
