@@ -14,7 +14,7 @@
 - Remove an ore from omnimatter (no extraction recipes will be created):
   - omni.remove_resource(orename)
 
-- Remove a fluid to omnimatter (no extraction recipes will be created):
+- Remove a fluid from omnimatter (no extraction recipes will be created):
   - omni.remove_fluid(fluidname)
 
 - Create an omnicium plate alloy recipe & item:
