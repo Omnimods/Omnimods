@@ -27,7 +27,7 @@
   - omni.get_ore_tier(orename)
 
 - Set the tier of an ore that is already added to omnimatter;
-  - omni.get_ore_tier(orename,tier)
+  - omni.set_ore_tier(orename,tier)
 
 - Add initial extraction (starter/burner) recipes for an ore:
   - omni.add_initial(orename,ore_amount,omnite_amount)
