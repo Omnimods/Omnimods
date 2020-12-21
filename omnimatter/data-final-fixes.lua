@@ -14,14 +14,9 @@ require("prototypes.generation.autoplace-removal")
 --Add last extraction techs as rocket silo prereq
 if omni.rocket_locked then
 	--Get highest ore and fluid tier
-	local max_tier = 0
-	for _,tier in pairs(omni.omnisource) do
-		max_tier = max_tier + 1
-	end
-	local max_fluid_tier = 0
-	for _,tier in pairs(omni.omnifluid) do
-		max_fluid_tier = max_fluid_tier + 1
-	end
+	local max_tier = table_size(omni.omnisource) or 0
+	local max_fluid_tier = table_size(omni.omnifluid) or 0
+
 	--Check if there is a higher fluid than ore tier
 	if max_tier > max_fluid_tier then
 		local pure_extractions = 3 * omni.pure_levels_per_tier
