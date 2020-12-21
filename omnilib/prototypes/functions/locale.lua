@@ -305,8 +305,9 @@ function lib.of_item(prototype)
                 lib.of_generic(
                     lib.find(
                         prototype.place_result,
-                        'entity'
-                    ),
+                        'entity',
+                        true
+                    ) or prototype,
                     'entity'
                 )
                 or false
@@ -318,8 +319,9 @@ function lib.of_item(prototype)
                 lib.of_generic( -- Find the type and locale of our equipment result
                     lib.find(
                         prototype.placed_as_equipment_result,
-                        'equipment'
-                    ),
+                        'equipment',
+                        true
+                    ) or prototype,
                     'equipment'
                 )
                 or false
