@@ -1,4 +1,4 @@
--- As of 0.18.0
+-- As of 1.1.6 (experimental)
 -- Many thanks to TheRustyKnife for working out the inheritance tree
 -- Top down: Start with our type and find the parent
 -- Bottom up: Start with a parent and find it's children
@@ -127,6 +127,7 @@ return {
 		gate = 'entity-with-health',
 		loader = 'transport-belt-connectable',
 		['loader-1x1'] = 'loader',
+		['linked-belt'] = 'transport-belt-connectable',
 		['offshore-pump'] = 'entity-with-health',
 		['power-switch'] = 'entity-with-health',
 		['rail-chain-signal'] = 'rail-signal-base',
@@ -192,6 +193,7 @@ return {
 		achievement = 'prototype-base',
 		tutorial = 'prototype-base',
 		['custom-input'] = 'prototype-base',
+		['linked-container'] = 'entity-with-health',
 	},
 	bottom_up = {
 		['prototype-base'] = {
@@ -271,6 +273,7 @@ return {
 					['transport-belt-connectable'] = {
 						splitter = {},
 						['transport-belt'] = {},
+						['linked-belt'] = {},
 						['underground-belt'] = {},
 						loader = {
 							['loader-1x1'] = {},
@@ -295,6 +298,7 @@ return {
 					['simple-entity-with-force'] = {},
 					['simple-entity-with-owner'] = {},
 					['heat-interface'] = {},
+					['linked-container'] = {},
 				},
 				arrow = {},
 				corpse = {
