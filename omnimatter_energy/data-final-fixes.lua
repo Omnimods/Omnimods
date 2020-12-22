@@ -27,7 +27,8 @@ local burnerEntities = {
 	"burner-assembling-machine",
 	"burner-mining-drill",
 	"omnitor-lab",
-	"omnitor-assembling-machine"
+	"omnitor-assembling-machine",
+	"burner-omni-furnace"
 }
 local fuelcats = {
 	"omnite",
