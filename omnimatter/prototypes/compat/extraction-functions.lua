@@ -1,20 +1,69 @@
-if not omni then omni = {} end
+omni.omnitial={}
+omni.omnisource={}
+omni.omnifluid={}
 
-omnisource={}
-tiercount={0,0,0}
-omnifluid={}
-uniomnitiers={}
-
-phlog = false
-
-function omni.add_resource(r,t,s,m)
-	if not omnisource[tostring(t)] then omnisource[tostring(t)] = {} end
-	omnisource[tostring(t)][r]={mod=m,tier = t, name = r,techicon = s}
+--Manipulation of the extraction tables
+--Open for modders to use to add compatibility
+function omni.add_resource(n, t, s, m)
+	if not omni.omnisource[tostring(t)] then omni.omnisource[tostring(t)] = {} end
+	omni.omnisource[tostring(t)][n]={mod=m, tier = t, name = n, techicon = s}
 end
 
-function omni.add_fluid(r,t,q,s,m)
-	if not omnifluid[tostring(t)] then omnifluid[tostring(t)] = {} end
-	omnifluid[tostring(t)][r]={mod=m,tier = t,ratio=q, name = r,techicon = s}
+function omni.add_fluid(n ,t, r, s, m)
+	if not omni.omnifluid[tostring(t)] then omni.omnifluid[tostring(t)] = {} end
+	omni.omnifluid[tostring(t)][n]={mod=m, tier = t, ratio=r, name = n,techicon = s}
+end
+
+function omni.remove_resource(n)
+	for t, tiers in pairs(omni.omnisource) do
+		if omni.omnisource[t][n] then
+			omni.omnisource[t][n] = nil
+			return true
+		end
+	end
+	return nil
+end
+
+function omni.remove_fluid(n)
+	for t, tiers in pairs(omni.omnifluid) do
+		if omni.omnifluid[t][n] then
+			omni.omnifluid[t][n] = nil
+			return true
+		end
+	end
+	return nil
+end
+
+function omni.get_ore_tier(n)
+	for _, tiers in pairs(omni.omnisource) do
+		for _,ores in pairs(tiers) do
+			if ores.name == n then
+				return ores.tier
+			end
+		end
+	end
+	return nil
+end
+
+function omni.set_ore_tier(n,t)
+	local tier = omni.get_ore_tier(n)
+	if tier then
+		local res = table.deepcopy(omni.omnisource[tostring(tier)][n])
+		omni.omnisource[tostring(tier)][n] = nil
+		if not omni.omnisource[tostring(t)] then omni.omnisource[tostring(t)] = {} end
+		omni.omnisource[tostring(t)][n] = res
+		return true
+	else
+		return nil
+	end
+end
+
+--Add initial extraction ores
+function omni.add_initial(ore_name,ore_amount,omnite_amount)
+	omni.omnitial[ore_name] = {
+		ingredients ={{name = "omnite", amount = omnite_amount}},
+		results = {{name = ore_name, amount = ore_amount}, {name = "stone-crushed", amount = (omnite_amount-ore_amount) or 6}}
+	}
 end
 
 function omni.add_omnicium_alloy(name,plate,ingot)

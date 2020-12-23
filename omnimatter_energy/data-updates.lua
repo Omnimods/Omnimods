@@ -20,7 +20,7 @@ omni.lib.add_recipe_ingredient("electric-furnace", {"steel-furnace", 1})
 
 RecGen:import("burner-inserter"):
 	setIngredients({"omnitor",1},{"iron-plate",1},{"iron-gear-wheel",1}):
-	setTechName("basic-automation"):
+	addBurnerIcon():
 	extend()
 
 --Move the Basic Inserter to its own tech (Red Packs only) to avoid deadlocks

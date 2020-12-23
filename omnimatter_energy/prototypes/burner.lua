@@ -443,7 +443,3 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter"):
 	ifAddTechPrereq(data.raw.technology["omnitech-basic-belt-logistics"], "omnitech-basic-belt-logistics"):
 	ifAddTechPrereq(data.raw.technology["omnitech-belt-logistics"], "omnitech-belt-logistics"):
 	extend()
-
-RecGen:import("burner-inserter"):
-	addBurnerIcon():
-	extend()

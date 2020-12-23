@@ -1,4 +1,19 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.4
+Date: 2020.12.23
+  Changes:
+    - Properly localised omnic water recycling recipes (searchable now!)
+    - Moved omnic water recycling recipes into their own item group
+    - Moved extraction resource additions to the data stage
+    - Added omni.remove_resource(name) and omni.remove_fluid(name)
+    - Added omni.get_ore_tier(name) and omni.set_ore_tier(name,tier)
+    - Added omni.add_initial(ore_name,ore_amount,omnite_amount) to add initial omnitractions
+    -   -This allows modders to easily manage for which resources extractions are being generated
+    -   -They can call omni.[add/remove]_[resource/fluid]()  in their data.lua to add omni compat
+  Bugfixes:
+    - Fixed a crash with mods that addd techs with an empty prereq table
+    - Fixed burner omnitractor and burner omniphlog recipe order
+---------------------------------------------------------------------------------------------------
 Version: 4.1.3
 Date: 2020.12.14
   Features:

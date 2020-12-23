@@ -145,6 +145,7 @@ local cost = OmniGen:create():
 		setWaste():
 		yieldQuant(function(levels,grade) return 26/15*(120+(grade-1)*120/(omni.fluid_levels-1)) end ):
 		wasteQuant(function(levels,grade) return math.max(12-extraction_value(levels,grade),0) end)
+
 local omnisludge = RecChain:create("omnimatter","omnisludge"):
 		setLocName("recipe-name.omnisludge"):
 		setIngredients({
@@ -205,7 +206,7 @@ local function generate_solvation_icon(fluid)
 	)
 end
 
-for _,tier in pairs(omnifluid) do
+for _,tier in pairs(omni.omnifluid) do
 	for _, fluid in pairs(tier) do
 		local cost = OmniGen:create():
 			setYield(fluid.name):

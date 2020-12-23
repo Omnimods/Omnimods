@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.2
+Date: 2020.12.23
+  Bugfixes:
+    - Fixed a rare crash with mods that add techs with an empty prereq table
+    - Fixed an issue with SCT where the omni-pack was added twice to their labs
+    - Removed OmniSea as dependency to avoid a circular dependency with SCT
+---------------------------------------------------------------------------------------------------
 Version: 4.1.1
 Date: 2020.12.14
   Features:

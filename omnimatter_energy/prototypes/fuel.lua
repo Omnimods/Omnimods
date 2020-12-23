@@ -1,4 +1,11 @@
---Fuels to ignore, no Omnified Fuel will be created, Fuel Value will be decreased by 10%
+--Save item names where the fuel values should be nilled, nil in final-fixes
+omni.nil_fuels = {}
+
+----------------------
+-----IGNORE LISTS-----
+----------------------
+
+--Fuels to ignore, no Omnified Fuel will be created, Fuel Value will be decreased by 20%
 local ignore = {
 	"omnite",
     "crushed-omnite",
@@ -19,6 +26,7 @@ local fuelcats = {
     "vehicle-fuel" --K2 thing
 }
 
+-- Things to only insert if certain mods are present
 if mods["omnimatter_wood"] then
     table.insert(nilfuel, "wood")
 end
@@ -27,19 +35,22 @@ if mods["angelspetrochem"] then
     table.insert(nilfuel, "carbon")
 end
 
+-----------------------
+-----FUEL CREATION-----
+-----------------------
+
 for _,fuelitem in pairs(data.raw.item) do  
     --Check if item is on the "ignore" list
     for _,blockeditem in pairs(ignore) do
         if fuelitem.name == blockeditem and fuelitem.fuel_category then
-            fuelitem.fuel_value = omni.lib.mult_fuel_value(fuelitem.fuel_value, 0.9)
+            fuelitem.fuel_value = omni.lib.mult_fuel_value(fuelitem.fuel_value, 0.8)
             goto continue 
         end
     end
     --Check if item is on the "to nil" list
     for _,nilit in pairs(nilfuel) do
         if fuelitem.name == nilit and fuelitem.fuel_category then
-            --fuelitem.fuel_value = "1kJ"
-            fuelitem.fuel_category = "omni-0"
+            omni.nil_fuels[#omni.nil_fuels+1] = fuelitem.name
             goto continue 
         end
     end
@@ -51,11 +62,11 @@ for _,fuelitem in pairs(data.raw.item) do
         --Get fuel number in MJ (divide by 10^6)
         local FV=omni.lib.get_fuel_number(fuelitem.fuel_value)/10^6
         local props={
-            [5]={ing_add={"crushed-omnite",2}, cat="crafting", sub="omnienergy-fuel-1", time=1.0, tech="omnitech-omnium-power-1", fuelmult = 1.30},
-            [10]={ing_add={"pulverized-omnite",4}, cat="omnite-extraction", sub="omnienergy-fuel-2", time=2.0,tech="omnitech-omnium-power-2", fuelmult = 1.25},
-            [40]={ing_add={type = "fluid", name = "omnic-acid", amount = 20}, cat="omniphlog", sub="omnienergy-fuel-3", time=2.0,tech="omnitech-omnium-power-3", fuelmult = 1.20},
-            [250]={ing_add={type = "fluid", name = "omnisludge", amount = 80}, cat="omniplant", sub="omnienergy-fuel-4", time=4.0,tech="omnitech-omnium-power-4", fuelmult = 1.15},
-            [300]={ing_add={type = "fluid", name = "omniston", amount = 40}, cat="omniplant", sub="omnienergy-fuel-5", time=4.0,tech="omnitech-omnium-power-5", fuelmult = 1.10},}
+            [5]={ing_add={"crushed-omnite",2}, cat="crafting", sub="omnienergy-fuel-1", time=1.0, tech="omnitech-omnium-power-1", fuelmult = 1.50},
+            [10]={ing_add={"pulverized-omnite",4}, cat="omnite-extraction", sub="omnienergy-fuel-2", time=2.0,tech="omnitech-omnium-power-2", fuelmult = 1.45},
+            [40]={ing_add={type = "fluid", name = "omnic-acid", amount = 20}, cat="omniphlog", sub="omnienergy-fuel-3", time=2.0,tech="omnitech-omnium-power-3", fuelmult = 1.40},
+            [250]={ing_add={type = "fluid", name = "omnisludge", amount = 80}, cat="omniplant", sub="omnienergy-fuel-4", time=4.0,tech="omnitech-omnium-power-4", fuelmult = 1.35},
+            [300]={ing_add={type = "fluid", name = "omniston", amount = 40}, cat="omniplant", sub="omnienergy-fuel-5", time=4.0,tech="omnitech-omnium-power-5", fuelmult = 1.30},}
             local props_add={}
         if FV<=5 then
             props_add=props[5]
@@ -93,13 +104,11 @@ for _,fuelitem in pairs(data.raw.item) do
         data.raw.item["omnified-"..fuelitem.name].fuel_top_speed = fuelitem.fuel_top_speed
         data.raw.item["omnified-"..fuelitem.name].fuel_top_speed_multiplier = fuelitem.fuel_top_speed_multiplier
         data.raw.item["omnified-"..fuelitem.name].fuel_emissions = fuelitem.fuel_emissions
-        data.raw.item["omnified-"..fuelitem.name].fuel_glow_color = fuelitem.fuel_glow_color
+        data.raw.item["omnified-"..fuelitem.name].fuel_emissions_multiplier = fuelitem.fuel_emissions_multiplier
+        data.raw.item["omnified-"..fuelitem.name].fuel_glow_color = fuelitem.fuel_glow_color 
 
-        --fuelitem.fuel_value = "1kJ" not needed since the fuel category is changed
-        fuelitem.fuel_category = "omni-0"
-
-
-       --log("Created Omnified "..fuelitem.name)
+        --Nil fuel related values
+        omni.nil_fuels[#omni.nil_fuels+1] = fuelitem.name
     end
 ::continue::
 end

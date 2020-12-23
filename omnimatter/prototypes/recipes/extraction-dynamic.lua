@@ -59,7 +59,7 @@ end
 
 local get_impurities = function(ore,tier)
     local tierores = {}
-    for _,o in pairs(omnisource) do
+    for _,o in pairs(omni.omnisource) do
         if o.tier == tier and o.ore.name ~= ore then
             tierores[#tierores+1]=o.ore.name
         end
@@ -109,7 +109,7 @@ local proper_result = function(tier, level,focus)
 end
 
 local get_omnimatter_split = function(tier,focus,level)
-    local source = table.deepcopy(omnisource[tostring(tier)])
+    local source = table.deepcopy(omni.omnisource[tostring(tier)])
     level = level or 0
     local aligned_ores = {}
     local source_count = table_size(source)
@@ -227,9 +227,25 @@ local function generate_pure_icon(ore)
     )
 end
 
+--Initial omnitraction
+for n, ore in pairs(omni.omnitial) do
+	RecGen:create("omnimatter","initial-omnitraction-" .. n):
+		setCategory("omnite-extraction-burner"):
+		setEnergy(5):
+		setEnabled(true):
+		noItem():
+		setSubgroup("omni-basic"):
+		setIngredients(ore.ingredients):
+		setResults(ore.results):
+		setIcons(n):
+		marathon():
+		setLocName("recipe-name.initial-omni","item-name."..n):
+		addSmallIcon("stone-crushed", 3):
+		extend()
+end
 
 --Pure extraction
-for i, tier in pairs(omnisource) do
+for i, tier in pairs(omni.omnisource) do
     for ore_name, ore in pairs(tier) do
         --Check for hidden flag to skip later
         
@@ -296,8 +312,8 @@ for i, tier in pairs(omnisource) do
     end
 end
 
---Impure recipies
-for _,ore_tiers in pairs(omnisource) do
+--Impure recipes
+for _,ore_tiers in pairs(omni.omnisource) do
     --Base mix
     local t = select(2, next(ore_tiers)).tier
     local base_split = get_omnimatter_split(t, nil, nil)
@@ -431,4 +447,47 @@ for _,ore_tiers in pairs(omnisource) do
             end
         end
     end
+end
+
+--Set omnitractor extraction prereqs
+local function get_tractor_req(i)
+	local r = {}
+	for j,tier in pairs(omni.omnisource) do
+		if tonumber(j) < i and tonumber(j) >= i-3 then
+			for _,ore in pairs(tier) do
+				r[#r+1]="omnitech-extraction-"..ore.name.."-"..omni.pure_levels_per_tier*(i-ore.tier-1)+omni.pure_dependency
+			end
+		end
+		if tonumber(j) == i then
+			for _,ore in pairs(tier) do
+				r[#r+1]="omnitech-focused-extraction-"..ore.name.."-"..omni.impure_dependency
+			end
+		end
+	end
+	if i>1 and i*omni.fluid_levels_per_tier < omni.fluid_levels then
+		--r[#r+1]="omnitech-solvation-omniston-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
+		--r[#r+1]="omnitech-omnic-acid-hydrolyzation-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
+		--r[#r+1]="omnitech-omnisolvent-omnisludge-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
+	end
+	if i == 2 then
+		if data.raw.technology["omnitech-omnisolvent-omnisludge-"..(i-2)] then
+			r[#r+1]="omnitech-omnisolvent-omnisludge-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
+		end
+	end
+	for j,tier in pairs(omni.omnifluid) do
+		if tonumber(j) < i and tonumber(j) >= i-3 then
+			for _,fluid in pairs(tier) do
+				if omni.fluid_levels_per_tier*(i-fluid.tier-1)+omni.fluid_dependency <= omni.fluid_levels then
+					r[#r+1]="omnitech-distillation-"..fluid.name.."-"..omni.fluid_levels_per_tier*(i-fluid.tier-1)+omni.fluid_dependency
+				elseif omni.fluid_levels_per_tier*(i-fluid.tier-1)+omni.fluid_dependency > omni.fluid_levels then
+					r[#r+1]="omnitech-distillation-"..fluid.name.."-"..omni.fluid_levels
+				end
+			end
+		end
+	end
+	return r
+end
+
+for i=1,omni.max_tier,1 do
+    omni.lib.add_prerequisite("omnitech-omnitractor-electric-"..i, get_tractor_req(i))
 end

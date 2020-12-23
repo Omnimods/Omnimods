@@ -20,6 +20,7 @@ noTech():
 setBurner(0.75,1):
 setStacksize(10):
 setSubgroup("omniphlog"):
+setOrder("a[omniphlog-burner]"):
 setReplace("omniphlog"):
 setNextUpgrade("omniphlog-1"):
 setSize(3):

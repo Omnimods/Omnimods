@@ -8,7 +8,24 @@ data:extend(
     icon = "__omnimatter__/graphics/technology/omnimatter-category.png",
     icon_size = 128,
   },
+  {
+    type = "item-group",
+    name = "omnic-water-distilation",
+    order = "zz",
+    inventory_order = "zz",
+    icons={{
+      icon = "__omnimatter__/graphics/icons/omnic-water.png",
+      icon_size = 32,
+      scale = 0.1,
+    }}
+  },
   
+  {
+    type = "item-subgroup",
+    name = "omnilation",
+    group = "omnic-water-distilation",
+    order = "aa",
+  },
   {
     type = "item-subgroup",
     name = "omnitractor",

@@ -9,12 +9,12 @@ if mods["omnimatter_crystal"] then
 	--UPDATE LABS INPUT
 	for i, labs in pairs(data.raw["lab"]) do
 		local found = false
-		for i,v in ipairs(labs.inputs) do
+		for _,v in pairs(labs.inputs) do
 			if v == "omni-pack" then
 				found = true
 			end
 		end
-		if not lab_ignore_pack[labs.name] and not found then
+		if not lab_ignore_pack[labs.name] and found == false then
 				table.insert(labs.inputs, "omni-pack")
 		end
 	end

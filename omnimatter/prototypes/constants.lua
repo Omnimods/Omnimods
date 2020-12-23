@@ -1,3 +1,4 @@
+--Set constants
 omni.max_tier = settings.startup["omnimatter-max-tier"].value
 omni.impure_dependency = settings.startup["omnimatter-tier-impure-dependency"].value
 omni.pure_dependency = settings.startup["omnimatter-tier-pure-dependency"].value
@@ -18,9 +19,12 @@ omni.science_constant = settings.startup["omnimatter-science-pack-constant"].val
 omni.rocket_locked = settings.startup["omnimatter-rocket-locked"].value
 
 if omni.linear_science and omni.science_constant < 1 then omni.science_constant = 1 end
+if omni.pure_dependency > omni.pure_levels_per_tier then omni.pure_dependency = omni.pure_levels_per_tier end
+if omni.impure_dependency > omni.impure_levels_per_tier then omni.impure_dependency = omni.impure_levels_per_tier end
+if omni.fluid_dependency > omni.fluid_levels_per_tier then omni.fluid_dependency = omni.fluid_levels_per_tier end
 
-if not omni.matter then omni.matter = {} end
 
+--constant functions
 function omni.matter.get_constant(kind)
 	if kind == "acid" then
 		return omni.acid_ratio
@@ -32,6 +36,7 @@ end
 function omni.matter.get_ore_production(level)
 	return (-13+24*omni.pure_levels_per_tier+5*lvl)/(-1+3*omni.pure_levels_per_tier)*(-4+9*omni.pure_levels_per_tier+lvl)/(-4+12*omni.pure_levels_per_tier)
 end
+
 function omni.matter.get_fluid_production(level,fluid)
 	local lvl_amount = (120+(level-1)*120/(omni.fluid_levels-1))
 	if fluid == "omnic acid" then
@@ -40,13 +45,4 @@ function omni.matter.get_fluid_production(level,fluid)
 		lvl_amount=lvl_amount*omni.sludge_ratio
 	end
 	return lvl_amount
-end
-
-function omni.matter.ore_tier(ore)
-	for _,s in pairs(omnisource) do
-		if s.ore.name == ore then
-			return s.tier
-		end
-	end
-	return nil
 end

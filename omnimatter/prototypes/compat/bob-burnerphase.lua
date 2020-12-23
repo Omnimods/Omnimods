@@ -87,3 +87,8 @@ if mods["bobassembly"] and data.raw.recipe["steam-science-pack"] then
     omni.lib.add_unlock_recipe("steam-automation", "steam-omnitractor")
     omni.lib.add_unlock_recipe("steam-automation", "steam-omniphlog")
 end
+
+-- Fix for Steam SP Bob's Tech introduces sometimes
+if data.raw.recipe["steam-science-pack"] then
+    omni.lib.replace_recipe_ingredient("steam-science-pack","coal","omnite")
+end

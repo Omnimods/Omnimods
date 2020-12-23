@@ -14,6 +14,7 @@ end
 BuildGen:create("omnimatter","omnitractor"):
 	noTech():
 	setSubgroup("omnitractor"):
+	setOrder("a[omnitractor-burner]"):
 	setIngredients(burner_ingredients):
 	setEnergy(10):
 	setBurner(1,1):
@@ -44,44 +45,6 @@ BuildGen:create("omnimatter","omnitractor"):
 	}):setOverlay("tractor-over",0):
 	setFluidBox("WXW.XXX.KXK",true):
 	extend()
-
-local get_pure_req = function(levels,i)
-	local r = {}
-	for j,tier in pairs(omnisource) do
-		if tonumber(j) < i and tonumber(j) >= i-3 then
-			for _,ore in pairs(tier) do
-				r[#r+1]="omnitech-extraction-"..ore.name.."-"..omni.pure_levels_per_tier*(i-ore.tier-1)+omni.pure_dependency
-			end
-		end
-		if tonumber(j) == i then
-			for _,ore in pairs(tier) do
-				r[#r+1]="omnitech-focused-extraction-"..ore.name.."-"..omni.impure_dependency
-			end
-		end
-	end
-	if i>1 and i*omni.fluid_levels_per_tier < omni.fluid_levels then
-		--r[#r+1]="omnitech-solvation-omniston-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
-		--r[#r+1]="omnitech-omnic-acid-hydrolyzation-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
-		--r[#r+1]="omnitech-omnisolvent-omnisludge-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
-	end
-	if i == 2 then
-		if data.raw.technology["omnitech-omnisolvent-omnisludge-"..(i-2)] then
-			r[#r+1]="omnitech-omnisolvent-omnisludge-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
-		end
-	end
-	for j,tier in pairs(omnifluid) do
-		if tonumber(j) < i and tonumber(j) >= i-3 then
-			for _,fluid in pairs(tier) do
-				if omni.fluid_levels_per_tier*(i-fluid.tier-1)+omni.fluid_dependency <= omni.fluid_levels then
-					r[#r+1]="omnitech-distillation-"..fluid.name.."-"..omni.fluid_levels_per_tier*(i-fluid.tier-1)+omni.fluid_dependency
-				elseif omni.fluid_levels_per_tier*(i-fluid.tier-1)+omni.fluid_dependency > omni.fluid_levels then
-					r[#r+1]="omnitech-distillation-"..fluid.name.."-"..omni.fluid_levels
-				end
-			end
-		end
-	end
-	return r
-end
 
 function timestier(row,col)
 	local first_row = {1,0.5,0.2}
@@ -133,8 +96,6 @@ else
 	end
 end
 
-
---log("omnitractor testing")
 BuildChain:create("omnimatter","omnitractor"):
 	setSubgroup("omnitractor"):
 	setIcons("omnitractor","omnimatter"):
@@ -144,14 +105,19 @@ BuildChain:create("omnimatter","omnitractor"):
 	setUsage(function(level,grade) return (100+25*grade).."kW" end):
 	addElectricIcon():
 	setTechName("omnitech-omnitractor"):
-	setTechPrereq(get_pure_req):
+	--setTechPrereq(): done in data-updates (extraction-dynamic) after extractions have been created
 	setTechSuffix("electric"):
 	setTechIcons("omnitractor-electric","omnimatter"):
 	setTechCost(get_tech_times):
 	setTechPacks(function(levels,grade) return grade end):
 	setReplace("omnitractor"):
 	setTechTime(function(levels,grade) return 15*grade end):
-	ifModsAddTechPrereq("omnimatter_crystal",function(levels,grade) if grade > 2 and (grade-2)*omni.fluid_levels_per_tier+omni.fluid_dependency<=omni.fluid_levels then return "omnitech-omnisolvent-omnisludge-"..(grade-2)*omni.fluid_levels_per_tier+omni.fluid_dependency else return nil end end):
+	ifModsAddTechPrereq("omnimatter_crystal",
+		function(levels,grade)
+			if grade > 2 and ((grade-2)*omni.fluid_levels_per_tier + omni.fluid_dependency) <= omni.fluid_levels then
+				return "omnitech-omnisolvent-omnisludge-"..(grade-2)*omni.fluid_levels_per_tier+omni.fluid_dependency else return nil 
+			end
+		end):
 	setStacksize(10):
 	allowProductivity():
 	setLevel(settings.startup["omnimatter-max-tier"].value):
@@ -177,6 +143,7 @@ BuildChain:create("omnimatter","omnitractor"):
 	},
 	}):setOverlay("tractor-over"):
 	extend()
+
 if mods["angelsindustries"] and angelsmods.industries.components then
 	for i=1,math.min(settings.startup["omnimatter-max-tier"].value,5) do
 		-- Add omniblock unlocks

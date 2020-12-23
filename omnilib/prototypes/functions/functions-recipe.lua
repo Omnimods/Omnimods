@@ -107,7 +107,7 @@ function omni.lib.add_recipe_ingredient(recipename, ingredient)
         end
         local found = false
         --rec.ingredients --If only .normal needs to be modified, keep ingredients, else copy into .normal/.expensive
-        if rec.ingredients and  norm ~= expens  then
+        if rec.ingredients and  not omni.lib.equal(norm, expens) then
             rec.normal = {}
             rec.expensive = {}
             rec.normal.ingredients = table.deepcopy(rec.ingredients)
@@ -242,7 +242,7 @@ function omni.lib.add_recipe_result(recipename, result)
             rec.expensive.result_count = nil
         end
         --rec.results --If only .normal needs to be modified, keep results, else copy into .normal/.expensive
-        if rec.results and norm ~= expens  then
+        if rec.results and not omni.lib.equal(norm, expens)  then
             rec.normal = {}
             rec.expensive = {}
             rec.normal.results = table.deepcopy(rec.results)

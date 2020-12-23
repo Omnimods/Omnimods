@@ -28,3 +28,8 @@ if bobmods and bobmods.ores then
 
     bobmods.lib.module.add_productivity_limitation("sort-gem-ore")
 end
+
+if mods["bobplates"] then
+	omni.add_omnicium_alloy("aluminium","aluminium-plate","ingot-aluminium")
+	omni.add_omnicium_alloy("tungsten","tungsten-plate","casting-powder-tungsten")
+end
