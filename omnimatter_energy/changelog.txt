@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.3
 Date: 2020.12.xx
+  Changes:
+    - Fuel values of fuels that cant be used are now being nilled
   Bugfixes:
     - Fixed that the burner omnifurnace mk1 did not accept (crushed-) omnite as fuel
 ---------------------------------------------------------------------------------------------------

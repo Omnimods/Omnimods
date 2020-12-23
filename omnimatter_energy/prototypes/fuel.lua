@@ -1,4 +1,11 @@
---Fuels to ignore, no Omnified Fuel will be created, Fuel Value will be decreased by 10%
+--Save item names where the fuel values should be nilled, nil in final-fixes
+omni.nil_fuels = {}
+
+----------------------
+-----IGNORE LISTS-----
+----------------------
+
+--Fuels to ignore, no Omnified Fuel will be created, Fuel Value will be decreased by 20%
 local ignore = {
 	"omnite",
     "crushed-omnite",
@@ -19,6 +26,7 @@ local fuelcats = {
     "vehicle-fuel" --K2 thing
 }
 
+-- Things to only insert if certain mods are present
 if mods["omnimatter_wood"] then
     table.insert(nilfuel, "wood")
 end
@@ -27,19 +35,22 @@ if mods["angelspetrochem"] then
     table.insert(nilfuel, "carbon")
 end
 
+-----------------------
+-----FUEL CREATION-----
+-----------------------
+
 for _,fuelitem in pairs(data.raw.item) do  
     --Check if item is on the "ignore" list
     for _,blockeditem in pairs(ignore) do
         if fuelitem.name == blockeditem and fuelitem.fuel_category then
-            fuelitem.fuel_value = omni.lib.mult_fuel_value(fuelitem.fuel_value, 0.9)
+            fuelitem.fuel_value = omni.lib.mult_fuel_value(fuelitem.fuel_value, 0.8)
             goto continue 
         end
     end
     --Check if item is on the "to nil" list
     for _,nilit in pairs(nilfuel) do
         if fuelitem.name == nilit and fuelitem.fuel_category then
-            --fuelitem.fuel_value = "1kJ"
-            fuelitem.fuel_category = "omni-0"
+            omni.nil_fuels[#omni.nil_fuels+1] = fuelitem.name
             goto continue 
         end
     end
@@ -93,13 +104,11 @@ for _,fuelitem in pairs(data.raw.item) do
         data.raw.item["omnified-"..fuelitem.name].fuel_top_speed = fuelitem.fuel_top_speed
         data.raw.item["omnified-"..fuelitem.name].fuel_top_speed_multiplier = fuelitem.fuel_top_speed_multiplier
         data.raw.item["omnified-"..fuelitem.name].fuel_emissions = fuelitem.fuel_emissions
-        data.raw.item["omnified-"..fuelitem.name].fuel_glow_color = fuelitem.fuel_glow_color
+        data.raw.item["omnified-"..fuelitem.name].fuel_emissions_multiplier = fuelitem.fuel_emissions_multiplier
+        data.raw.item["omnified-"..fuelitem.name].fuel_glow_color = fuelitem.fuel_glow_color 
 
-        --fuelitem.fuel_value = "1kJ" not needed since the fuel category is changed
-        fuelitem.fuel_category = "omni-0"
-
-
-       --log("Created Omnified "..fuelitem.name)
+        --Nil fuel related values
+        omni.nil_fuels[#omni.nil_fuels+1] = fuelitem.name
     end
 ::continue::
 end
