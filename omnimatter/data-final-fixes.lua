@@ -1,7 +1,6 @@
 -----------------
 -----COMPATS-----
 -----------------
-require("prototypes.compat.bob-compensation")
 require("prototypes.compat.bob-burnerphase")
 
 -----------------------
