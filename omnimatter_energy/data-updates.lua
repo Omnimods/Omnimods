@@ -172,7 +172,9 @@ else
 end
 
 if mods["angelsindustries"] and angelsmods.industries.components then
-	--skip if angels components
+	--Move water treatment behind anbaricity(red sp only) since its required for reds (inserters)
+	omni.lib.replace_prerequisite("water-treatment","electronics","omnitech-anbaricity")
+	omni.lib.replace_prerequisite("omnitech-anbaric-inserter","omnitech-anbaricity","tech-red-circuit")
 else
 	if mods["angelsrefining"] then
 		RecGen:import("burner-ore-crusher"):
