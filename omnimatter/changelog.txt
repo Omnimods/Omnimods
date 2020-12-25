@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.5
 Date: 2020.12.xx
+  Changes:
+    - Added support for Krastorio2 + Angels
   Bugfixes:
     - Fixed that Bob´s omnicium alloys were created too late to work with Py
 ---------------------------------------------------------------------------------------------------
