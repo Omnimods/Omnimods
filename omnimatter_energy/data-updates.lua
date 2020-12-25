@@ -246,12 +246,6 @@ for i,inputs in pairs(data.raw["lab"]["omnitor-lab"].inputs) do
 	end
 end
 
--- Deadlock compatibility
-if data.raw.technology["basic-transport-belt-beltbox"] then
-	omni.lib.add_unlock_recipe("omnitech-basic-belt-logistics", "basic-transport-belt-loader")
-	omni.lib.set_prerequisite("basic-transport-belt-beltbox", {"omnitech-basic-splitter-logistics","omnitech-basic-underground-logistics"})
-end
-
 --Miniloader compatibility
 --(The Chute recipe is based on basic belt ingredients (mostly just iron), so we need to add omnitors to that recipe aswell)
 if data.raw.recipe["chute-miniloader"] then
