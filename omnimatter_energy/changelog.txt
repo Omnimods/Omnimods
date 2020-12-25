@@ -4,6 +4,7 @@ Date: 2020.12.xx
   Bugfixes:
     - Fixed that certain loader recipes were unlockable
     - Fixed that the basic splitter and underground tech was not localised porperly
+    - Fixed a green science deadlock with angels industries component mode
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.3
 Date: 2020.12.23
