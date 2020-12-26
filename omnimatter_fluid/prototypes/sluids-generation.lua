@@ -21,7 +21,8 @@ Generator fluids
 Mining fluids
 Fuel fluids
 Boiler/HX fluids
-possibly pumpjacks]]
+possibly pumpjacks
+flamer turrets (and other fluid turrets)]]
 --==These fluids should still get replaced in all other recipes, and have a solid-fluid conversion boiler recipe
 
 --[[Build a database of fluids to keep, fluids to become solids and fluids which need both (i.e. conversion)]]
