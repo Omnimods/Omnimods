@@ -1,9 +1,5 @@
 if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].value then
 	log("OmniEnergy: Bobs Belt Overhaul found")
-
-	--Remove logistics-0 Tech
-	TechGen:import("logistics-0"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():sethidden():extend()
-
 	--Create seperate techs for Basic Belt, Splitter and UG
 	RecGen:import("basic-transport-belt"):
 		setEnabled(false):
@@ -22,6 +18,7 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
 	RecGen:import("basic-splitter"):
 		setEnabled(false):
 		setTechName("omnitech-basic-splitter-logistics"):
+		setTechLocName("omnitech-basic-splitter-logistics"):
 		setTechIcons("logistics","omnimatter_energy"):
 		setTechPrereq("omnitech-basic-belt-logistics"):
 		setTechPacks(1):
@@ -30,6 +27,7 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
 	RecGen:import("basic-underground-belt"):
 		setEnabled(false):
 		setTechName("omnitech-basic-underground-logistics"):
+		setTechLocName("omnitech-basic-underground-logistics"):
 		setTechIcons("logistics","omnimatter_energy"):
 		setTechPrereq("omnitech-basic-belt-logistics"):
 	 	setTechPacks(1):
@@ -47,10 +45,16 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
 		end
 	end
 
-else
-	--Remove logistics Tech
-	TechGen:import("logistics"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():sethidden():extend()
+	--Move all remaining logistic-0 unlocks to belt logistics
+	for _,eff in pairs(data.raw.technology["logistics-0"].effects) do
+		if eff and eff.type == "unlock-recipe" and not (string.find(eff.recipe,"splitter") or string.find(eff.recipe,"underground") or string.find(eff.recipe,"transport-belt")) then
+			omni.lib.add_unlock_recipe("omnitech-basic-belt-logistics", eff.recipe)
+		end
+	end
 
+	--Remove logistics-0 Tech
+	TechGen:import("logistics-0"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():sethidden():extend()
+else
 	--Create seperate techs for Belt, Splitter and UG
 	RecGen:import("transport-belt"):
 		setEnabled(false):
@@ -88,8 +92,16 @@ else
 			omni.lib.add_prerequisite(t.name,"omnitech-splitter-logistics")
 			omni.lib.add_prerequisite(t.name,"omnitech-underground-logistics")
 		end
-	end	
+	end
 
+	--Move all remaining logistic unlocks to belt logistics
+	for _,eff in pairs(data.raw.technology["logistics"].effects) do
+		if eff and eff.type == "unlock-recipe" and not (string.find(eff.recipe,"splitter") or string.find(eff.recipe,"underground") or string.find(eff.recipe,"transport-belt")) then
+			omni.lib.add_unlock_recipe("omnitech-belt-logistics", eff.recipe)
+		end
+	end
+	--Remove logistics Tech
+	TechGen:import("logistics"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():sethidden():extend()
 end
 
 RecGen:create("omnimatter_energy","omni-tablet"):

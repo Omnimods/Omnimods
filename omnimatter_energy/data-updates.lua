@@ -24,10 +24,18 @@ RecGen:import("burner-inserter"):
 	extend()
 
 --Move the Basic Inserter to its own tech (Red Packs only) to avoid deadlocks
+--mod check
+local condition=3
+if mods["PyCoalTBaA"] then
+	condition=1
+elseif mods["bobelectronics"] then
+	condition=2
+end
 RecGen:import("inserter"):
 	setIngredients({"burner-inserter",1},{"anbaric-omnitor",1}):
-	ifAddIngredients(mods["bobelectronics"],{"basic-circuit-board",1}):
-	ifAddIngredients(not mods["bobelectronics"],{"electronic-circuit",1}):
+	ifAddIngredients(condition==1,{"pcb1",1}):
+	ifAddIngredients(condition==2,{"basic-circuit-board",1}):
+	ifAddIngredients(condition==3,{"electronic-circuit",1}):
 	setEnabled(false):
 	setTechName("omnitech-anbaric-inserter"):
 	setTechCost(60):
@@ -172,7 +180,9 @@ else
 end
 
 if mods["angelsindustries"] and angelsmods.industries.components then
-	--skip if angels components
+	--Move water treatment behind anbaricity(red sp only) since its required for reds (inserters)
+	omni.lib.replace_prerequisite("water-treatment","electronics","omnitech-anbaricity")
+	omni.lib.replace_prerequisite("omnitech-anbaric-inserter","omnitech-anbaricity","tech-red-circuit")
 else
 	if mods["angelsrefining"] then
 		RecGen:import("burner-ore-crusher"):
@@ -244,12 +254,6 @@ for i,inputs in pairs(data.raw["lab"]["omnitor-lab"].inputs) do
 			table.remove(data.raw["lab"]["omnitor-lab"].inputs,i, pack)
 		end
 	end
-end
-
--- Deadlock compatibility
-if data.raw.technology["basic-transport-belt-beltbox"] then
-	omni.lib.add_unlock_recipe("omnitech-basic-belt-logistics", "basic-transport-belt-loader")
-	omni.lib.set_prerequisite("basic-transport-belt-beltbox", {"omnitech-basic-splitter-logistics","omnitech-basic-underground-logistics"})
 end
 
 --Miniloader compatibility
