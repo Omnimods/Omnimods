@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.5
+Date: ????
+  Changes:
+    - Small omnicium & iron electric poles require 2 copper wires
+    - You get 2 omnicium / iron electric poles per craft now (lib bugfix)
+  Bugfixes:
+    - Fixed that the burner filter inserter was in the wrong subgroup with boblogistics
+---------------------------------------------------------------------------------------------------
 Version: 2.1.4
 Date: 2020.12.27
   Bugfixes:
