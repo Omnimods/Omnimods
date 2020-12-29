@@ -2865,18 +2865,6 @@ function BuildGen:import(name)
 
 		--if build.energy_source and build.energy_source.fuel_category then b:setFuelCategory(build.energy_source.fuel_category) end
 
-	--local rec = name
-	-- for _,r in pairs(data.raw.recipe) do
-	-- 	omni.marathon.standardise(r)
-	-- 	for _,res in pairs(r.normal.results) do
-	-- 		if res.name == name then
-	-- 			rec = res.name
-	-- 			break
-	-- 		end
-	-- 	end
-	-- end
-
-	--local r = RecGen:import(rec)
 	local r = RecGen:import(name)
 
 	local notFields = {}
@@ -3578,9 +3566,10 @@ function BuildGen:generateBuilding()
 		self.rtn[#self.rtn].animation.layers[#self.rtn[#self.rtn].animation.layers].filename = "__"..self.mod.."__/graphics/entity/buildings/"..self.overlay.name..".png"
 		self.rtn[#self.rtn].animation.layers[#self.rtn[#self.rtn].animation.layers].tint = omni.tint_level[self.overlay.level]
 	end
+
 	local stuff = RecGen:create(self.mod,self.name):
 	setIngredients(self.ingredients):
-	setResults(self.name):
+	setResults({self.name, self.results(0,0,0)[1].amount or 1}):
 	setIcons(self.icons(0,0)):
 	setOrder(self.order(0,0)):
 	setBuildProto(self.rtn[#self.rtn]):
