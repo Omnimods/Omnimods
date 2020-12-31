@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.6
 Date: ????
+  Changes:
+    - Changed the omnicium gear wheel normal difficulty recipe from 2i n-->2 out to 1 in-->1 out
   Bugfixes:
     - Fixed that stone loot was not replaced on all rocks with omnite
 ---------------------------------------------------------------------------------------------------
