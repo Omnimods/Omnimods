@@ -4,6 +4,7 @@ Date: ????
   Bugfixes:
     - Fixed that BuildGen:import() overwrote the result amount to 1
     - Fixed that BuildGen:setOnAnimation() was pointing to off_animation
+    - Fixed that InsertGen:setAnimation() created non-rotateable inserter platforms
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.2
 Date: 2020.12.23

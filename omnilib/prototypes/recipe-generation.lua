@@ -4401,19 +4401,21 @@ function InsertGen:setAnimation(platform,base,baseShadow,open,openShadow,closed,
 		self.platform_picture = function(levels,grade) return platform end
 	elseif type(platform)=="string" then
 		self.platform_picture = function(levels,grade) return {
-        filename = "__"..self.mod.."__/graphics/entity/inserter/"..platform.."-platform.png",
-        priority = "extra-high",
-        width = 46,
-        height = 46,
-        shift = {0.09375, 0},
-        hr_version = {
-          filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..platform.."-platform.png",
-          priority = "extra-high",
-          width = 105,
-          height = 79,
-          shift = util.by_pixel(1.5, 7.5-1),
-          scale = 0.5
-        }
+		sheet = {
+		  filename = "__"..self.mod.."__/graphics/entity/inserter/"..platform.."-platform.png",
+		  priority = "extra-high",
+		  width = 46,
+		  height = 46,
+		  shift = {0.09375, 0},
+		  hr_version = {
+			filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..platform.."-platform.png",
+			priority = "extra-high",
+			width = 105,
+			height = 79,
+			shift = util.by_pixel(1.5, 7.5-1),
+			scale = 0.5
+		  }
+		}
       } end
 	end
 	if type(base)=="function" then
