@@ -5,6 +5,7 @@ Date: ????
     - Small omnicium & iron electric poles require 2 copper wires
     - You get 2 omnicium / iron electric poles per craft now (lib bugfix)
     - Replaced coal in rock loot with omnified fuel
+    - Increased the omni tablet output from 1 to 2 per omnite brick
   Bugfixes:
     - Fixed that the burner filter inserter was in the wrong subgroup with boblogistics
 ---------------------------------------------------------------------------------------------------

@@ -105,12 +105,14 @@ else
 end
 
 RecGen:create("omnimatter_energy","omni-tablet"):
-	setIngredients("omnite-brick"):
-	setStacksize(200):
-	setSubgroup("omnienergy-intermediates"):
-	setEnabled():
-	setEnergy(0.5):extend()
-	
+    setIngredients("omnite-brick"):
+    setResults({"omni-tablet",2}):
+    setStacksize(200):
+    setSubgroup("omnienergy-intermediates"):
+    setEnabled(true):
+    setEnergy(0.5):
+    extend()
+
 if mods["angelsindustries"] and angelsmods.industries.components then
 	BuildGen:import("burner-mining-drill"):
 		setIngredients(
