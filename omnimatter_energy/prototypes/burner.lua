@@ -358,6 +358,29 @@ BuildGen:import("lab"):
       }
     },
     {
+      filename = "__base__/graphics/entity/lab/lab-light.png",
+      width = 106,
+      height = 100,
+      frame_count = 33,
+      line_length = 11,      
+      animation_speed = 1 / 3,
+      blend_mode = "additive",
+      draw_as_light = true,
+      shift = {-0.03125, 0.03125},
+      hr_version = {
+        filename = "__base__/graphics/entity/lab/hr-lab-light.png",
+        width = 216,
+        height = 194, 
+        frame_count = 33,
+        line_length = 11,
+        animation_speed = 1 / 3,
+        blend_mode = "additive",
+        draw_as_light = true,
+        shift = {0, 0},
+        scale = 0.5
+      }
+    }, 
+    {
       filename = "__base__/graphics/entity/lab/lab-shadow.png",
       width = 122,
       height = 68,
@@ -381,7 +404,8 @@ BuildGen:import("lab"):
       }
     }
   }
-}):setOffAnimation({
+}):
+setOffAnimation({
   layers =
   {
     {
@@ -432,7 +456,8 @@ BuildGen:import("lab"):
       }
     }
   }
-}):extend()
+}):
+extend()
 
 --Set fast replaceable group for the vanilla lab
 if data.raw["lab"]["lab"] then
