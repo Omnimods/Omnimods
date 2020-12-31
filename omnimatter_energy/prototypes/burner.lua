@@ -34,7 +34,7 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
 		setTechCost(30):extend()
 
 	--Add new Techs as Prereq for vanilla logistics
-	omni.lib.set_prerequisite("logistics",{"omnitech-basic-splitter-logistics","omnitech-basic-underground-logistics"})
+	omni.lib.set_prerequisite("logistics", "omnitech-anbaricity")
 
 	--Move all Techs that have logistics-0 as Prereq behind Basic Splitter & UG Techs
 	for _,t in pairs(data.raw.technology) do
