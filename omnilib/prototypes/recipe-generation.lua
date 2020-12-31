@@ -3556,7 +3556,7 @@ function BuildGen:generateBuilding()
 		resource_categories=self.resource_categories(0,0),
 		inputs=self.inputs(0,0),
 		off_animation=self.off_animation(0,0),
-		on_animation=self.off_animation(0,0)
+		on_animation=self.on_animation(0,0)
     }
 
 	if self.fluid_boxes(0,0) and type(self.fluid_boxes(0,0))=="table" and type(self.fluid_boxes(0,0)[1])=="table" then self.rtn[#self.rtn].fluid_box = self.fluid_boxes(0,0)[1] end
