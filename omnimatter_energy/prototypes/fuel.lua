@@ -92,7 +92,7 @@ for _,fuelitem in pairs(data.raw.item) do
             addTechPrereq(omni.lib.get_tech_name(fuelitem.name)):
             setEnabled(false):
             setStacksize(fuelitem.stack_size):
-            setOrder("b"):
+            setOrder("b["omnified-"..fuelitem.name]"):
             setFuelCategory(fuelitem.fuel_category):
             setFuelValue(omni.lib.mult_fuel_value(fuelitem.fuel_value, props_add.fuelmult)):
             extend()
