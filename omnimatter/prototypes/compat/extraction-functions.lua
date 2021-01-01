@@ -139,7 +139,7 @@ function omni.add_omnicium_alloy(name,plate,ingot)
 end
 
 function omni.add_omniwater_extraction(mod, element, lvls, tier, gain, starter_recipe)
-	local get_prereq = function(grade,element,tier)
+	local function get_prereq(grade,element,tier)
 		local req = {}
 		local tractor_lvl = ((grade-1)/omni.fluid_levels_per_tier)+tier-1 
 		--Add previous tech as prereq if its in the same tier
@@ -157,13 +157,18 @@ function omni.add_omniwater_extraction(mod, element, lvls, tier, gain, starter_r
 		return req
 	end
 	
-	local get_tech_packs = function(grade,tier)
+	local function get_tech_packs(grade,tier)
 		local packs = {}
 		local pack_tier = math.ceil(grade/omni.fluid_levels_per_tier) + tier-1
 		for i=1,pack_tier do
 			packs[#packs+1] = {omni.sciencepacks[i],1}
 		end
 		return packs
+	end
+
+	local function get_tech_cost(levels,grade,tier,start,constant)
+		local lvl = grade + (tier-1) * omni.fluid_levels_per_tier
+		return  start*lvl + constant*lvl*get_tier_mult(levels,grade,1)
 	end
 
 	--Starter recipe
@@ -174,7 +179,7 @@ function omni.add_omniwater_extraction(mod, element, lvls, tier, gain, starter_r
 			setIngredients({type="fluid",name="omnic-water",amount=720}):
 			setResults({
 				{type = "fluid", name = element, amount = gain*0.5},
-				{type = "fluid", name = "omnic-waste", amount = gain*1.5}}):
+				{type = "fluid", name = "omnic-waste", amount = gain*1.3}}):
 			setSubgroup("omni-fluid-basic"):
 			setOrder("b[basic-"..element.."-omnitraction]"):
 			setCategory("omnite-extraction-both"):
@@ -204,8 +209,8 @@ function omni.add_omniwater_extraction(mod, element, lvls, tier, gain, starter_r
 		setEnabled(false):
 		setTechIcons(element.."-omnitraction",mod):
 		setTechPrereq(function(levels,grade) return get_prereq(grade,element,tier) end):
-    	setTechPacks(function(levels,grade) return get_tech_packs(grade,tier,true) end):
-    	setTechCost(function(levels,grade) return get_tier_mult(levels,grade,1,true) end):
+    	setTechPacks(function(levels,grade) return get_tech_packs(grade,tier) end):
+    	setTechCost(function(levels,grade) return get_tech_cost(levels,grade,tier,18,1.2) end):
 		setTechTime(15):
 		setTechLocName("omnitech-omniwater-omnitraction",{"fluid-name."..element}):
 		extend()
