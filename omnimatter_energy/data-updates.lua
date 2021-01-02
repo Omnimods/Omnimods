@@ -43,8 +43,6 @@ RecGen:import("inserter"):
 	setTechPacks(1):
 	setTechPrereq("omnitech-anbaricity"):extend()
 
-	omni.lib.add_prerequisite("logistic-science-pack", "omnitech-anbaric-inserter")
-
 RecGen:import("boiler"):
 	setTechName("omnitech-steam-power"):
 	setTechCost(120):
@@ -269,6 +267,10 @@ if data.raw.technology["logistics-0"] then
 	omni.lib.remove_prerequisite("logistics","logistics-0")
 	data.raw.technology["logistics-0"] = nil
 end
+
+--Add new logistic sp prereqs
+omni.lib.add_prerequisite("logistic-science-pack", "omnitech-anbaric-inserter")
+omni.lib.add_prerequisite("logistic-science-pack", "omnitech-anbaric-lab")
 
 require("prototypes.compat.bobs_burner_phase")
 require("prototypes.compat.py")

@@ -5,6 +5,7 @@
 if mods["bobtech"] and settings.startup["bobmods-burnerphase"].value then
     --Make the omnitor lab only accept steam sp
     data.raw["lab"]["omnitor-lab"].inputs = {"steam-science-pack"}
+
     --omnitor lab-->burner-lab(steam)-->normal lab
     omni.lib.remove_recipe_ingredient("lab", "omnitor-lab")
 
@@ -51,10 +52,11 @@ if mods["bobtech"] and settings.startup["bobmods-burnerphase"].value then
     data.raw.technology["lab"].localised_name = {"recipe-name.steam-powered-lab"}
     data.raw.item["burner-lab"].localised_name = {"recipe-name.steam-powered-lab"}
     data.raw.recipe["burner-lab"].localised_name = {"recipe-name.steam-powered-lab"}
+    data.raw.recipe["burner-lab"].order = "g[lab-steam]"
     omni.lib.remove_unlock_recipe("lab","lab")
 
     --reuse bobs lab tech for it (move logi sp from prereqing lab to anbaric lab tech)
-    omni.lib.replace_prerequisite("logistic-science-pack","lab","omnitech-anbaric-lab")
+    omni.lib.remove_prerequisite("logistic-science-pack","lab")
     --replace electricity prereq with steam
     omni.lib.replace_prerequisite("lab","electricity","steam-power")
 
