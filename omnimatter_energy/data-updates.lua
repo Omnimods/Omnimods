@@ -96,6 +96,7 @@ end
 if mods["bobassembly"] and settings.startup["bobmods-assembly-burner"].value then
 	omni.lib.add_prerequisite("basic-automation", "omnitech-simple-automation")
 	omni.lib.remove_prerequisite("automation", "basic-automation")
+	data.raw.technology["basic-automation"].localised_name = {"technology-name.omnitech-basic-automation"}
 	BuildGen:import("omnitor-assembling-machine"):
 		setSpeed(0.1):
 		setFuelCategory("omnite"):extend()

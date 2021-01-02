@@ -63,7 +63,7 @@ for _,entity in pairs(burnerEntities) do
 	end
 end
 
---Find all remaining Techs that unlock entities that require electricity and move them behind anbaricity
+--Find all remaining Techs without any prereqs that unlock entities that require electricity and move them behind anbaricity
 for _,tech in pairs(data.raw.technology) do 
 	local ent
 	if tech.effects and (tech.prerequisites == nil or next(tech.prerequisites) == nil) then

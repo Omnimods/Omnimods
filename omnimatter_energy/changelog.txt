@@ -7,6 +7,7 @@ Date: ????
     - Replaced coal in rock loot with omnified fuel
     - Increased the omni tablet output from 1 to 2 per omnite brick
     - Move logistics behind anbaricity with bobs belt overhaul (early basic belts)
+    - Reworked compatibility with bobs burner phase
   Bugfixes:
     - Fixed that the burner filter inserter was in the wrong subgroup with boblogistics
 ---------------------------------------------------------------------------------------------------
