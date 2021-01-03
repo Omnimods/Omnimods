@@ -210,7 +210,7 @@ function omni.add_omniwater_extraction(mod, element, lvls, tier, gain, starter_r
 		setTechIcons(element.."-omnitraction",mod):
 		setTechPrereq(function(levels,grade) return get_prereq(grade,element,tier) end):
     	setTechPacks(function(levels,grade) return get_tech_packs(grade,tier) end):
-    	setTechCost(function(levels,grade) return get_tech_cost(levels,grade,tier,18,1.2) end):
+    	setTechCost(function(levels,grade) return get_tech_cost(levels,grade,tier,18,0.8) end):
 		setTechTime(15):
 		setTechLocName("omnitech-omniwater-omnitraction",{"fluid-name."..element}):
 		extend()
