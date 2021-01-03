@@ -3,6 +3,9 @@
 ## Join our Discord for questions & discussions
 ![Discord Banner 2](https://discordapp.com/api/guilds/351216213327609858/widget.png?style=banner2)
 
+## Translations for all Omnimods can be found in this crowdin project. Help us to translate them into your language!
+https://crowdin.com/project/factorio-mods-localization
+
 ## Adding Omni compatibility to your mod:
 
 - Add an ore to omnimatter (creates extraction recipes):
