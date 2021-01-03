@@ -63,7 +63,7 @@ for _,entity in pairs(burnerEntities) do
 	end
 end
 
---Find all remaining Techs that unlock entities that require electricity and move them behind anbaricity
+--Find all remaining Techs without any prereqs that unlock entities that require electricity and move them behind anbaricity
 for _,tech in pairs(data.raw.technology) do 
 	local ent
 	if tech.effects and (tech.prerequisites == nil or next(tech.prerequisites) == nil) then
@@ -74,6 +74,16 @@ for _,tech in pairs(data.raw.technology) do
 					omni.lib.add_prerequisite(tech.name, "omnitech-anbaricity")
 				end
 			end
+		end
+	end
+end
+
+--Add all normal lab inputs to bobs burner lab since its a steam lab now (Needs to be in final fixes)
+if mods["bobtech"] and settings.startup["bobmods-burnerphase"].value then
+	for _,input in pairs(data.raw["lab"]["lab"].inputs) do
+		local new_inputs = data.raw["lab"]["burner-lab"].inputs 
+		if not omni.lib.is_in_table(input,new_inputs) then
+			new_inputs[#new_inputs+1] = input
 		end
 	end
 end

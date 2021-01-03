@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.6
+Date: 2021.01.03
+  Changes:
+    - Changed the omnicium gear wheel normal difficulty recipe from 2i n-->2 out to 1 in-->1 out
+  Bugfixes:
+    - Fixed that stone loot was not replaced on all rocks with omnite
+    - Fixed that water omnitraction tech cost was pretty low
+    - Fixed that the last two levels of extraction techs got cheaper
+---------------------------------------------------------------------------------------------------
 Version: 4.1.5
 Date: 2020.12.27
   Changes:

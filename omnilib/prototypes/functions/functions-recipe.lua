@@ -753,17 +753,6 @@ function omni.lib.recipe_result_contains(recipename, itemname)
     end
 end
 
-function omni.lib.find_recipe(itemname)
-	if type(itemname)=="table" then return itemname elseif type(itemname)~="string" then return nil end
-	for _, rec in pairs(data.raw.recipe) do
-        if omni.lib.recipe_result_contains(rec.name,itemname) then
-			return rec
-		end
-	end
-	--log("Could not find "..item.."'s recipe prototype, check it's type.")
-	return nil
-end
-
 function omni.lib.get_tech_name(recipename)
 	for _,tech in pairs(data.raw.technology) do
 		if tech.effects then

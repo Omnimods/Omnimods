@@ -29,8 +29,8 @@ for _,boiler in pairs(data.raw.boiler) do
 			type = "recipe-category",
 			name = "boiler-omnifluid-"..boiler.name,
 		}
-		if standardized_recipes[boiler.name] == nil then
-			omni.marathon.standardise(data.raw.recipe[boiler.name])
+		if standardized_recipes[rec.name] == nil then
+			omni.marathon.standardise(data.raw.recipe[rec.name])
 		end
 		fix_boilers_recipe[#fix_boilers_recipe+1]=rec.name
 		fix_boilers_item[boiler.minable.result]=true

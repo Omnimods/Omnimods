@@ -2865,18 +2865,6 @@ function BuildGen:import(name)
 
 		--if build.energy_source and build.energy_source.fuel_category then b:setFuelCategory(build.energy_source.fuel_category) end
 
-	--local rec = name
-	-- for _,r in pairs(data.raw.recipe) do
-	-- 	omni.marathon.standardise(r)
-	-- 	for _,res in pairs(r.normal.results) do
-	-- 		if res.name == name then
-	-- 			rec = res.name
-	-- 			break
-	-- 		end
-	-- 	end
-	-- end
-
-	--local r = RecGen:import(rec)
 	local r = RecGen:import(name)
 
 	local notFields = {}
@@ -3568,7 +3556,7 @@ function BuildGen:generateBuilding()
 		resource_categories=self.resource_categories(0,0),
 		inputs=self.inputs(0,0),
 		off_animation=self.off_animation(0,0),
-		on_animation=self.off_animation(0,0)
+		on_animation=self.on_animation(0,0)
     }
 
 	if self.fluid_boxes(0,0) and type(self.fluid_boxes(0,0))=="table" and type(self.fluid_boxes(0,0)[1])=="table" then self.rtn[#self.rtn].fluid_box = self.fluid_boxes(0,0)[1] end
@@ -3578,9 +3566,10 @@ function BuildGen:generateBuilding()
 		self.rtn[#self.rtn].animation.layers[#self.rtn[#self.rtn].animation.layers].filename = "__"..self.mod.."__/graphics/entity/buildings/"..self.overlay.name..".png"
 		self.rtn[#self.rtn].animation.layers[#self.rtn[#self.rtn].animation.layers].tint = omni.tint_level[self.overlay.level]
 	end
+
 	local stuff = RecGen:create(self.mod,self.name):
 	setIngredients(self.ingredients):
-	setResults(self.name):
+	setResults({self.name, self.results(0,0,0)[1].amount or 1}):
 	setIcons(self.icons(0,0)):
 	setOrder(self.order(0,0)):
 	setBuildProto(self.rtn[#self.rtn]):
@@ -4412,19 +4401,21 @@ function InsertGen:setAnimation(platform,base,baseShadow,open,openShadow,closed,
 		self.platform_picture = function(levels,grade) return platform end
 	elseif type(platform)=="string" then
 		self.platform_picture = function(levels,grade) return {
-        filename = "__"..self.mod.."__/graphics/entity/inserter/"..platform.."-platform.png",
-        priority = "extra-high",
-        width = 46,
-        height = 46,
-        shift = {0.09375, 0},
-        hr_version = {
-          filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..platform.."-platform.png",
-          priority = "extra-high",
-          width = 105,
-          height = 79,
-          shift = util.by_pixel(1.5, 7.5-1),
-          scale = 0.5
-        }
+		sheet = {
+		  filename = "__"..self.mod.."__/graphics/entity/inserter/"..platform.."-platform.png",
+		  priority = "extra-high",
+		  width = 46,
+		  height = 46,
+		  shift = {0.09375, 0},
+		  hr_version = {
+			filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..platform.."-platform.png",
+			priority = "extra-high",
+			width = 105,
+			height = 79,
+			shift = util.by_pixel(1.5, 7.5-1),
+			scale = 0.5
+		  }
+		}
       } end
 	end
 	if type(base)=="function" then

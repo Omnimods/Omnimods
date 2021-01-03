@@ -22,26 +22,25 @@ local reqpure = function(tier,level,item)
     return req
 end
 
-local techcost = function(levels, grade,tier)
-    local c = {}
-    local size = tier+((lvl-1)-(grade-1)%(levels/pure_levels_per_tier))/omni.pure_levels_per_tier
-    local length = math.min(size,#omni.sciencepacks)
-    for l=1,length do
-        local q = 0
-        if omni.linear_science then
-            q = 1+omni.science_constant*(size-l)
-        else
-            q=round(math.pow(omni.science_constant,size-l))
-        end
-        c[#c+1] = {omni.sciencepacks[l],q}
-    end
-    return c
-end
+-- local techcost = function(levels, grade,tier)
+--     local c = {}
+--     local size = tier+((lvl-1)-(grade-1)%(levels/pure_levels_per_tier))/omni.pure_levels_per_tier
+--     local length = math.min(size,#omni.sciencepacks)
+--     for l=1,length do
+--         local q = 0
+--         if omni.linear_science then
+--             q = 1+omni.science_constant*(size-l)
+--         else
+--             q=round(math.pow(omni.science_constant,size-l))
+--         end
+--         c[#c+1] = {omni.sciencepacks[l],q}
+--     end
+--     return c
+-- end
 
 local function tech_cost(levels,grade,tier)
-    return omni.lib.round(25*math.pow(omni.pure_tech_tier_increase,tier)*get_tier_mult(levels,grade,1))
+    return omni.lib.round(20*math.pow(omni.pure_tech_tier_increase,tier)*get_tier_mult(levels,grade,1))
 end
-
 
 local impure_icons =function(t,kind)
     local icons = {}

@@ -34,7 +34,7 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
 		setTechCost(30):extend()
 
 	--Add new Techs as Prereq for vanilla logistics
-	omni.lib.set_prerequisite("logistics",{"omnitech-basic-splitter-logistics","omnitech-basic-underground-logistics"})
+	omni.lib.set_prerequisite("logistics", "omnitech-anbaricity")
 
 	--Move all Techs that have logistics-0 as Prereq behind Basic Splitter & UG Techs
 	for _,t in pairs(data.raw.technology) do
@@ -105,12 +105,14 @@ else
 end
 
 RecGen:create("omnimatter_energy","omni-tablet"):
-	setIngredients("omnite-brick"):
-	setStacksize(200):
-	setSubgroup("omnienergy-intermediates"):
-	setEnabled():
-	setEnergy(0.5):extend()
-	
+    setIngredients("omnite-brick"):
+    setResults({"omni-tablet",2}):
+    setStacksize(200):
+    setSubgroup("omnienergy-intermediates"):
+    setEnabled(true):
+    setEnergy(0.5):
+    extend()
+
 if mods["angelsindustries"] and angelsmods.industries.components then
 	BuildGen:import("burner-mining-drill"):
 		setIngredients(
@@ -206,11 +208,14 @@ if mods["angelsindustries"] and angelsmods.industries.components then
 	omni.lib.replace_recipe_ingredient("block-omni-1",component["omniplate"][1],"anbaric-omnitor")
 end
 
-RecGen:import("small-electric-pole"):setEnabled(false):setTechName("omnitech-anbaricity"):extend()
+RecGen:import("small-electric-pole"):
+	setEnabled(false):
+	setTechName("omnitech-anbaricity"):
+	extend()
 
 BuildGen:import("small-electric-pole"):
 	setName("small-iron-electric-pole"):
-	setIngredients({"iron-plate", 1},{"copper-cable", 1}):
+	setIngredients({"iron-plate", 1},{"copper-cable", 2}):
 	setPictures({
       filename = "__omnimatter_energy__/graphics/entity/small-iron-electric-pole.png",
       priority = "extra-high",
@@ -223,10 +228,10 @@ BuildGen:import("small-electric-pole"):
 	setTechName("omnitech-anbaricity"):
 	setOrder("a[energy]-a[small-electric-pole]-iron"):
 	extend()
-	
+
 BuildGen:import("small-electric-pole"):
 	setName("small-omnicium-electric-pole"):
-	setIngredients({"omnicium-plate", 1},{"copper-cable", 1}):
+	setIngredients({"omnicium-plate", 1},{"copper-cable", 2}):
 	setArea(3.5):
 	setWireDistance(9):
 	setPictures({
@@ -355,6 +360,29 @@ BuildGen:import("lab"):
       }
     },
     {
+      filename = "__base__/graphics/entity/lab/lab-light.png",
+      width = 106,
+      height = 100,
+      frame_count = 33,
+      line_length = 11,      
+      animation_speed = 1 / 3,
+      blend_mode = "additive",
+      draw_as_light = true,
+      shift = {-0.03125, 0.03125},
+      hr_version = {
+        filename = "__base__/graphics/entity/lab/hr-lab-light.png",
+        width = 216,
+        height = 194, 
+        frame_count = 33,
+        line_length = 11,
+        animation_speed = 1 / 3,
+        blend_mode = "additive",
+        draw_as_light = true,
+        shift = {0, 0},
+        scale = 0.5
+      }
+    }, 
+    {
       filename = "__base__/graphics/entity/lab/lab-shadow.png",
       width = 122,
       height = 68,
@@ -378,7 +406,8 @@ BuildGen:import("lab"):
       }
     }
   }
-}):setOffAnimation({
+}):
+setOffAnimation({
   layers =
   {
     {
@@ -429,12 +458,18 @@ BuildGen:import("lab"):
       }
     }
   }
-}):extend()
+}):
+extend()
 
 --Set fast replaceable group for the vanilla lab
 if data.raw["lab"]["lab"] then
 	data.raw["lab"]["lab"].fast_replaceable_group = "lab"
 end
+
+
+local inserter_subgroup = "inserter"
+local inserter_order = "ab[burner-filter-inserter]"
+if mods["boblogistics"] then inserter_subgroup = "bob-logistic-tier-0" inserter_order = "e[inserter]-a[filter-burner]"end
 
 InsertGen:create("omnimatter_energy","burner-filter-inserter"):
 	setIngredients({"burner-inserter",1},{"omnitor",2},{"omnicium-gear-wheel",2}):
@@ -445,8 +480,8 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter"):
 	setFuelCategory("omnite"): --not working...
 	setBurner(0.75,1):
 	setNextUpgrade("filter-inserter"):
-	setSubgroup("inserter"):
-	setOrder("ab[burner-filter-inserter]"):
+	setSubgroup(inserter_subgroup):
+	setOrder(inserter_order):
 	setTechName("omnitech-burner-filter"):
 	setTechLocName("omnitech-burner-filter"):
 	setTechIcons("burner-filter","omnimatter_energy"):

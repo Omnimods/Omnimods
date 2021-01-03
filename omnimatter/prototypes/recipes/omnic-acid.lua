@@ -1,5 +1,5 @@
 function get_tier_mult(levels,r,c)
-	local peak = math.floor(levels/2)+1
+	local peak = math.floor(levels/2)+1.5 --1
 	if r==1 and c==1 then
 		return 1
 	elseif r==c and r<=peak then

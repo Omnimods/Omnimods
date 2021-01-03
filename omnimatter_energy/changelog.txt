@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.5
+Date: 2021.01.03
+  Changes:
+    - Small omnicium & iron electric poles require 2 copper wires
+    - You get 2 omnicium / iron electric poles per craft now (lib bugfix)
+    - Replaced coal in rock loot with omnified fuel
+    - Increased the omni tablet output from 1 to 2 per omnite brick
+    - Move logistics behind anbaricity with bobs belt overhaul (early basic belts)
+    - Reworked compatibility with bobs burner phase
+  Bugfixes:
+    - Fixed that the burner filter inserter was in the wrong subgroup with boblogistics
+---------------------------------------------------------------------------------------------------
 Version: 2.1.4
 Date: 2020.12.27
   Bugfixes:
