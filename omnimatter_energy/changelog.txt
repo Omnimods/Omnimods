@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.5
-Date: ????
+Date: 2021.01.03
   Changes:
     - Small omnicium & iron electric poles require 2 copper wires
     - You get 2 omnicium / iron electric poles per craft now (lib bugfix)
