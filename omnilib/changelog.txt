@@ -1,6 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.4
+Date: ????
+  Bugfixes:
+    - Fixed that omni.lib.replace_prerequisite() did not check if the tech already required 
+    -   - the new prerequisite
+---------------------------------------------------------------------------------------------------
 Version: 4.1.3
-Date: 2021.01.03
+Date: ????
   Bugfixes:
     - Fixed that BuildGen:import() overwrote the result amount to 1
     - Fixed that BuildGen:setOnAnimation() was pointing to off_animation
