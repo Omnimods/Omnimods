@@ -133,20 +133,24 @@ if mods["pyrawores"] then
 	-- Beyond
 	omni.add_resource("ore-zinc", 3)
 end
+
 if mods["Krastorio2"] then
 	--disable vanilla coal & stone, need a lower tier
 	all_time_ores = false
 	-- T1
-	omni.add_resource("stone",1)
 	omni.add_resource("coal",1)
-	--omni.add_fluid("crude-oil", 1, 1)
 	-- T2
 	omni.add_resource("raw-rare-metals", 2)
 	omni.add_fluid("mineral-water", 2, 1)
-	-- T3
-	omni.add_resource("uranium-ore", 3)
 	-- T5
 	omni.add_resource("raw-imersite", 5)
+	-- Only add stone and uranium when angels is not present
+	if not (angelsmods and angelsmods.refining) then
+		-- T1
+		omni.add_resource("stone",1)
+		-- T3
+		omni.add_resource("uranium-ore", 3)
+	end
 end
 
 ----------------------------------------------------------------------------

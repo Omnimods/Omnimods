@@ -82,7 +82,7 @@ for _,rec in pairs(data.raw.recipe) do
 						if ingOrders[dif][i] and #ingOrders[dif][i] > 0 then new[dif].ingredients = omni.lib.union(ingOrders[dif][i],solids[dif].ingredients) end
 						if resOrders[dif][j] and #resOrders[dif][j] > 0 then new[dif].results = omni.lib.union(resOrders[dif][j],solids[dif].results) end
 					end
-					if not new.localised_name and new.main_product==nil then new.localised_name = {"recipe-name."..rec.name} end
+					if not new.localised_name and new.main_product==nil then new.localised_name = omni.locale.of(rec).name end
 					new.name=new.name.."-omniperm-"..i.."-"..j
 					techRec[rec.name][#techRec[rec.name]+1]=new.name
 					new.hidden = true

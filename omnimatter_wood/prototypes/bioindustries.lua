@@ -2,7 +2,7 @@ if mods["Bio_Industries"] then
 
 	if not mods["bobgreenhouse"] then
 		ItemGen:create("omnimatter_wood","omniseedling"):
-			setFuelValue(1):
+			setFuelValue(0.7):
 			setSubgroup("omnimutator-items"):
 			setStacksize(100):extend()
 	end

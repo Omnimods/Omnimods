@@ -734,7 +734,7 @@ local create_void = function(recipe)
       local new_cat = "crafting-compressed"
       if recipe.normal.category then
         new_cat = recipe.normal.category.."-compressed"
-        if not data.raw["recipe-category"] then
+        if not data.raw["recipe-category"][new_cat] then
           data:extend({{
             type = "recipe-category",
             name = new_cat

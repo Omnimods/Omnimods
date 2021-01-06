@@ -20,22 +20,28 @@ omni.lib.add_recipe_ingredient("electric-furnace", {"steel-furnace", 1})
 
 RecGen:import("burner-inserter"):
 	setIngredients({"omnitor",1},{"iron-plate",1},{"iron-gear-wheel",1}):
-	setTechName("basic-automation"):
+	addBurnerIcon():
 	extend()
 
 --Move the Basic Inserter to its own tech (Red Packs only) to avoid deadlocks
+--mod check
+local condition=3
+if mods["PyCoalTBaA"] then
+	condition=1
+elseif mods["bobelectronics"] then
+	condition=2
+end
 RecGen:import("inserter"):
 	setIngredients({"burner-inserter",1},{"anbaric-omnitor",1}):
-	ifAddIngredients(mods["bobelectronics"],{"basic-circuit-board",1}):
-	ifAddIngredients(not mods["bobelectronics"],{"electronic-circuit",1}):
+	ifAddIngredients(condition==1,{"pcb1",1}):
+	ifAddIngredients(condition==2,{"basic-circuit-board",1}):
+	ifAddIngredients(condition==3,{"electronic-circuit",1}):
 	setEnabled(false):
 	setTechName("omnitech-anbaric-inserter"):
 	setTechCost(60):
 	setTechIcons("electric-inserter","omnimatter_energy"):
 	setTechPacks(1):
 	setTechPrereq("omnitech-anbaricity"):extend()
-
-	omni.lib.add_prerequisite("logistic-science-pack", "omnitech-anbaric-inserter")
 
 RecGen:import("boiler"):
 	setTechName("omnitech-steam-power"):
@@ -88,6 +94,7 @@ end
 if mods["bobassembly"] and settings.startup["bobmods-assembly-burner"].value then
 	omni.lib.add_prerequisite("basic-automation", "omnitech-simple-automation")
 	omni.lib.remove_prerequisite("automation", "basic-automation")
+	data.raw.technology["basic-automation"].localised_name = {"technology-name.omnitech-basic-automation"}
 	BuildGen:import("omnitor-assembling-machine"):
 		setSpeed(0.1):
 		setFuelCategory("omnite"):extend()
@@ -172,7 +179,9 @@ else
 end
 
 if mods["angelsindustries"] and angelsmods.industries.components then
-	--skip if angels components
+	--Move water treatment behind anbaricity(red sp only) since its required for reds (inserters)
+	omni.lib.replace_prerequisite("water-treatment","electronics","omnitech-anbaricity")
+	omni.lib.replace_prerequisite("omnitech-anbaric-inserter","omnitech-anbaricity","tech-red-circuit")
 else
 	if mods["angelsrefining"] then
 		RecGen:import("burner-ore-crusher"):
@@ -246,12 +255,6 @@ for i,inputs in pairs(data.raw["lab"]["omnitor-lab"].inputs) do
 	end
 end
 
--- Deadlock compatibility
-if data.raw.technology["basic-transport-belt-beltbox"] then
-	omni.lib.add_unlock_recipe("omnitech-basic-belt-logistics", "basic-transport-belt-loader")
-	omni.lib.set_prerequisite("basic-transport-belt-beltbox", {"omnitech-basic-splitter-logistics","omnitech-basic-underground-logistics"})
-end
-
 --Miniloader compatibility
 --(The Chute recipe is based on basic belt ingredients (mostly just iron), so we need to add omnitors to that recipe aswell)
 if data.raw.recipe["chute-miniloader"] then
@@ -264,6 +267,10 @@ if data.raw.technology["logistics-0"] then
 	omni.lib.remove_prerequisite("logistics","logistics-0")
 	data.raw.technology["logistics-0"] = nil
 end
+
+--Add new logistic sp prereqs
+omni.lib.add_prerequisite("logistic-science-pack", "omnitech-anbaric-inserter")
+omni.lib.add_prerequisite("logistic-science-pack", "omnitech-anbaric-lab")
 
 require("prototypes.compat.bobs_burner_phase")
 require("prototypes.compat.py")

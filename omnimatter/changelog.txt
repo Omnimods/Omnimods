@@ -1,17 +1,34 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.6
+Date: 2021.01.03
+  Changes:
+    - Changed the omnicium gear wheel normal difficulty recipe from 2i n-->2 out to 1 in-->1 out
+  Bugfixes:
+    - Fixed that stone loot was not replaced on all rocks with omnite
+    - Fixed that water omnitraction tech cost was pretty low
+    - Fixed that the last two levels of extraction techs got cheaper
+---------------------------------------------------------------------------------------------------
+Version: 4.1.5
+Date: 2020.12.27
+  Changes:
+    - Added support for Krastorio2 + Angels
+  Bugfixes:
+    - Fixed that Bob´s omnicium alloys were created too late to work with Py
+---------------------------------------------------------------------------------------------------
 Version: 4.1.4
-Date: 2020.12.xx
+Date: 2020.12.23
   Changes:
     - Properly localised omnic water recycling recipes (searchable now!)
     - Moved omnic water recycling recipes into their own item group
     - Moved extraction resource additions to the data stage
-    - Added omni.remove_resource(n) and omni.remove_fluid(n)
-    - Added omni.get_ore_tier(n) and omni.set_ore_tier(n,t)
+    - Added omni.remove_resource(name) and omni.remove_fluid(name)
+    - Added omni.get_ore_tier(name) and omni.set_ore_tier(name,tier)
     - Added omni.add_initial(ore_name,ore_amount,omnite_amount) to add initial omnitractions
     -   -This allows modders to easily manage for which resources extractions are being generated
     -   -They can call omni.[add/remove]_[resource/fluid]()  in their data.lua to add omni compat
   Bugfixes:
     - Fixed a crash with mods that addd techs with an empty prereq table
+    - Fixed burner omnitractor and burner omniphlog recipe order
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.3
 Date: 2020.12.14

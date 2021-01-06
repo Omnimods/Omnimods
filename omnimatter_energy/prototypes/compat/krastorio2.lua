@@ -47,8 +47,8 @@ if mods["Krastorio2"] then
     omni.lib.add_prerequisite("optics","omnitech-anbaricity")
     omni.lib.add_prerequisite("electronics","omnitech-anbaricity")
 
-    --Put Logi Tech behind anbaric lab
-    omni.lib.replace_prerequisite("logistic-science-pack","automation-science-pack","omnitech-anbaric-lab")
+    --Remove automation sp as prereq from logistic sp (duplicate now)
+    omni.lib.remove_prerequisite("logistic-science-pack","automation-science-pack")
 
     --Fix fast inserter prereqs (red sp not needed, requires hidden logistic tech)
     omni.lib.remove_prerequisite("fast-inserter","logistics")

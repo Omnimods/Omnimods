@@ -832,24 +832,23 @@ local entproto = {
 	"spider-leg"
 }
 
-function omni.lib.find_entity_prototype(item)
-	if type(item)=="table" then return item elseif type(item)~="string" then return nil end
+function omni.lib.find_entity_prototype(itemname)
+	if type(itemname)=="table" then return itemname elseif type(itemname)~="string" then return nil end
 	for _, p in pairs(entproto) do
-		if data.raw[p][item] then return data.raw[p][item] end
+		if data.raw[p][itemname] then return data.raw[p][itemname] end
 	end
-	--log("Could not find "..item.."'s entity prototype, check it's type.")
+	--log("Could not find "..itemname.."'s entity prototype, check it's type.")
 	return nil
 end
 
-function omni.lib.find_recipe(item)
-	if type(item)=="table" then return item elseif type(item)~="string" then return nil end
-	for _, p in pairs(data.raw.recipe) do
-		if standardized_recipes[p.name] == nil then omni.marathon.standardise(p) end
-		for _,r in pairs(p.normal.results) do
-			if r.name == item then return p end
+function omni.lib.find_recipe(itemname)
+	if type(itemname)=="table" then return itemname elseif type(itemname)~="string" then return nil end
+	for _, rec in pairs(data.raw.recipe) do
+        if omni.lib.recipe_result_contains(rec.name,itemname) then
+			return rec
 		end
 	end
-	--log("Could not find "..item.."'s recipe prototype, check it's type.")
+	--log("Could not find "..itemname.."'s recipe prototype, check it's type.")
 	return nil
 end
 
