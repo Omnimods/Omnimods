@@ -97,44 +97,6 @@ function omni.lib.remove_science_pack(techname,pack)
 	end
 end
 
-function omni.lib.replace_prerequisite(techname,old, new)
-	if data.raw.technology[techname] and data.raw.technology[techname].prerequisites then
-		for i,req in pairs(data.raw.technology[techname].prerequisites) do
-			if req==old then
-				data.raw.technology[techname].prerequisites[i]=new
-			end
-		end
-	else
-		log("Can not find tech "..techname.." to replace prerequisite "..old.." with "..new)
-	end
-end
-
-function omni.lib.remove_prerequisite(techname,prereq)
-	if data.raw.technology[techname] and data.raw.technology[techname].prerequisites then
-		local pr={}
-		for i,req in pairs(data.raw.technology[techname].prerequisites) do
-			if req~=prereq then
-				pr[#pr+1]=req
-			end
-		end
-		data.raw.technology[techname].prerequisites=pr
-	else
-		log("Can not find tech "..techname.." to remove prerequisite "..prereq)
-	end
-end
-
-function omni.lib.set_prerequisite(techname, req)
-	if data.raw.technology[techname] then
-		if type(req) == "table" then
-			data.raw.technology[techname].prerequisites = req
-		else
-			data.raw.technology[techname].prerequisites = {req}
-		end
-	else
-		log("Can not find tech "..techname.." to set prerequisite "..prereq)
-	end
-end
-
 --Add a prerequisite to a tech, force will jump checks if that prereq exists
 function omni.lib.add_prerequisite(techname, req, force)
 	local found = nil
@@ -173,5 +135,48 @@ function omni.lib.add_prerequisite(techname, req, force)
 		end
 	else
 		log("There is no prerequisities to add to "..techname)
+	end
+end
+
+function omni.lib.remove_prerequisite(techname,prereq)
+	if data.raw.technology[techname] and data.raw.technology[techname].prerequisites then
+		local pr={}
+		for i,req in pairs(data.raw.technology[techname].prerequisites) do
+			if req~=prereq then
+				pr[#pr+1]=req
+			end
+		end
+		data.raw.technology[techname].prerequisites=pr
+	else
+		log("Can not find tech "..techname.." to remove prerequisite "..prereq)
+	end
+end
+
+-- Replaces old with new. If new is already a prerequisite, old gets just removed and a warning gets logged
+function omni.lib.replace_prerequisite(techname,old, new)
+	if data.raw.technology[techname] and data.raw.technology[techname].prerequisites then
+		for i,req in pairs(data.raw.technology[techname].prerequisites) do
+			if req == new then -- Might want to just call remove & add here...
+				omni.lib.remove_prerequisite(techname,new)
+				log("WARNING: "..new.." is already a prerequisite of "..techname)
+			end
+			if req == old then
+				data.raw.technology[techname].prerequisites[i]=new
+			end
+		end
+	else
+		log("Can not find tech "..techname.." to replace prerequisite "..old.." with "..new)
+	end
+end
+
+function omni.lib.set_prerequisite(techname, req)
+	if data.raw.technology[techname] then
+		if type(req) == "table" then
+			data.raw.technology[techname].prerequisites = req
+		else
+			data.raw.technology[techname].prerequisites = {req}
+		end
+	else
+		log("Can not find tech "..techname.." to set prerequisite "..prereq)
 	end
 end
