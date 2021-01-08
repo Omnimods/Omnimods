@@ -33,33 +33,34 @@ script.on_event(defines.events.on_player_selected_area, function(event)
 				centre.x=centre.x+pos.x
 				centre.y=centre.y+pos.y
 				ore_to_move[event.player_index].ore[#ore_to_move[event.player_index].ore+1]={name=entity.name,pos=pos,surface = entity.surface}
-
 				local extra = entity
-				--extra.destroy()
-							
-					--surf.create_entity({name = "compressed-"..name.."-ore" , position = pos, force = force, amount = quant})
+				--extra.destroy()	
+				--surf.create_entity({name = "compressed-"..name.."-ore" , position = pos, force = force, amount = quant})
 			end
 		end
-		centre.x=round(centre.x/qnt)
-		centre.y=round(centre.y/qnt)
-		ore_to_move[event.player_index].centre.x=centre.x
-		ore_to_move[event.player_index].centre.y=centre.y
-		ore_to_move[event.player_index].catch.samples = {}
-		local found=false
-		for _, ore in pairs(ore_to_move[event.player_index].ore) do
-			ore.pos.x=ore.pos.x-centre.x
-			ore.pos.y=ore.pos.y-centre.y
-			for i,s in pairs(ore_to_move[event.player_index].samples) do
-				local p = {}
-				p.x = s.pos.x
-				p.y = s.pos.y
-				if p.x==ore_to_move[event.player_index].centre.x+ore.pos.x and p.y==ore_to_move[event.player_index].centre.y+ore.pos.y then
-					ore_to_move[event.player_index].catch.found = true
-					table.insert(ore_to_move[event.player_index].catch.samples,i)
+		--check if something was actually selected
+		if qnt > 0 then
+			centre.x=round(centre.x/qnt)
+			centre.y=round(centre.y/qnt)
+			ore_to_move[event.player_index].centre.x=centre.x
+			ore_to_move[event.player_index].centre.y=centre.y
+			ore_to_move[event.player_index].catch.samples = {}
+			local found=false
+			for _, ore in pairs(ore_to_move[event.player_index].ore) do
+				ore.pos.x=ore.pos.x-centre.x
+				ore.pos.y=ore.pos.y-centre.y
+				for i,s in pairs(ore_to_move[event.player_index].samples) do
+					local p = {}
+					p.x = s.pos.x
+					p.y = s.pos.y
+					if p.x==ore_to_move[event.player_index].centre.x+ore.pos.x and p.y==ore_to_move[event.player_index].centre.y+ore.pos.y then
+						ore_to_move[event.player_index].catch.found = true
+						table.insert(ore_to_move[event.player_index].catch.samples,i)
+					end
 				end
 			end
 		end
-			--player.insert({name = resource, count = miscount})
+		--player.insert({name = resource, count = miscount})
 	end
 end)
 
