@@ -182,6 +182,11 @@ script.on_event(defines.events.on_console_chat, function(event)
 	end
 end)
 
+--Refresh planner activation when map config is changed (required to update after the setting is changed mid-save)
+script.on_event(defines.events.on_runtime_mod_setting_changed, function(event)
+	refresh_planner_status()
+end)
+
 --spawn ore-move planner when a player clicks the shortcut
 script.on_event(defines.events.on_lua_shortcut, function(event)
 	if event.prototype_name and event.prototype_name == "ore-move-planner-shortcut" then 
