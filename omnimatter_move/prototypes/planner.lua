@@ -21,15 +21,13 @@ data:extend({
     name = "give-ore-move-planner",
     key_sequence = "ALT + M",
     consuming = "game-only",
-    item_to_spawn = "ore-move-planner",
-    action = "spawn-item"
+    action = "lua"
   },
   {
     type = "shortcut",
     name = "ore-move-planner-shortcut",
     localised_name = {"item-name.ore-move-planner"},
-    action = "spawn-item",
-    item_to_spawn = "ore-move-planner",
+    action = "lua",
     associated_control_input = "give-ore-move-planner",
     technology_to_unlock = "rocket-silo",
 	  icon = {
