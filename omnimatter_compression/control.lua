@@ -307,7 +307,6 @@ end)
 
 --spawn compression planner when the hotkey is pressed (check unlock status)
 script.on_event("give-compression-planner", function(event)
-	game.print(get_planner_status(game.players[event.player_index]))
 	if get_planner_status(game.players[event.player_index]) == true then
 		spawn_planner(event.player_index)
 	end

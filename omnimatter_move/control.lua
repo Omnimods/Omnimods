@@ -194,7 +194,6 @@ end)
 
 --spawn ore-move planner when the hotkey is pressed
 script.on_event("give-ore-move-planner", function(event)
-	game.print(get_planner_status(game.players[event.player_index]))
 	if get_planner_status(game.players[event.player_index]) == true then
 		spawn_planner(event.player_index)
 	end
