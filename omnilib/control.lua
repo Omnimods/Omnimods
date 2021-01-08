@@ -292,14 +292,6 @@ function omni_update(game, silent)
 		update_force(force, silent)
 	end	
 	update_building_recipes(silent)
-	if game.shortcut_prototypes["compression-planner-shortcut"] then
-		for _, ply in pairs(game.players) do
-			ply.set_shortcut_available(
-				"compression-planner-shortcut", 
-				not not ply.force.technologies["compression-mining"].researched
-			)
-		end
-	end
 	local printer = silent and log or game.print
 	printer({
 		"",
@@ -480,11 +472,5 @@ script.on_event(defines.events.on_player_created, function(event)
 		ply.print{"message.omni-angelstech", {200,15,15}}
 	else
 		ply.print{"message.omni-difficulty"}
-	end
-	if game.shortcut_prototypes["compression-planner-shortcut"] then
-		ply.set_shortcut_available(
-			"compression-planner-shortcut", 
-			not not ply.force.technologies["compression-mining"].researched
-		)
 	end
 end)

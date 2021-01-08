@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.7
+Date: 2021.01.08
+  Bugfixes:
+    - Fixed that the output of electric offshore pumps of some mods like K2 was not
+    -   - changed to omnic water
+---------------------------------------------------------------------------------------------------
 Version: 4.1.6
 Date: 2021.01.03
   Changes:

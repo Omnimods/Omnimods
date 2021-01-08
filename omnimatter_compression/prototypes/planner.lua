@@ -27,17 +27,14 @@ data:extend({
     name = "give-compression-planner",
     key_sequence = "ALT + C",
     consuming = "game-only",
-    item_to_spawn = "compression-planner",
-    action = "spawn-item"
+    action = "lua"
   },
   {
     type = "shortcut",
     name = "compression-planner-shortcut",
     localised_name = {"item-name.compression-planner"},
-    action = "spawn-item",
-    item_to_spawn = "compression-planner",
+    action = "lua",
     associated_control_input = "give-compression-planner",
-    technology_to_unlock = "compression-mining",
 	  icon = {
       filename = "__omnimatter_compression__/graphics/planner-shortcut.png",
       size = 128,
