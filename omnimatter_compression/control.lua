@@ -245,3 +245,61 @@ script.on_event(defines.events.on_player_alt_selected_area, function(event)
 	compression_planner(event, true)
 end)
 
+-------------------------
+---Planner spawn logic---
+-------------------------
+
+local function refresh_planner_status()
+	for _, ply in pairs(game.players) do
+		ply.set_shortcut_available("compression-planner-shortcut", not not ply.force.technologies["compression-mining"].researched)
+	end
+end
+
+local function spawn_planner(player_index)
+	local player = game.players[player_index]
+	local stack = player.cursor_stack
+	--check if the cursor is valid and clear it before inserting (lets not void held items :) )
+	if stack and stack.valid then
+		player.clear_cursor()
+		player.cursor_stack.set_stack({type="selection-tool",name = "compression-planner",count=1})
+	end
+end
+
+--unlock compression planner after the tech is researtched
+script.on_event(defines.events.on_research_finished, function(event)
+	local research = event.research
+	if research.name == "compression-mining" then
+		refresh_planner_status()
+	end
+end)
+
+--Refresh planner activation when a player is created
+script.on_event(defines.events.on_player_created, function(event)
+	refresh_planner_status()
+end)
+
+--Refresh planner activation when tech effects are reset
+script.on_event(defines.events.on_technology_effects_reset, function(event)
+	refresh_planner_status()
+end)
+
+--Refresh planner activation when omnidate is activated
+script.on_event(defines.events.on_console_chat, function(event)
+	if event.player_index and game.players[event.player_index] then
+		if event.message=="omnidate" then
+			refresh_planner_status()
+		end
+	end
+end)
+
+--spawn compression planner when a player clicks the shortcut
+script.on_event(defines.events.on_lua_shortcut, function(event)
+	if event.prototype_name and event.prototype_name == "compression-planner-shortcut" then 
+		spawn_planner(event.player_index)
+	end
+end)
+
+--spawn compression planner when the hotkey is pressed
+script.on_event("give-compression-planner", function(event)
+	spawn_planner(event.player_index)
+end)
