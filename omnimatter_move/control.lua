@@ -158,8 +158,13 @@ script.on_event(defines.events.on_research_finished, function(event)
 	end
 end)
 
---Refresh planner activation when a player is created
+--Refresh planner activation when a player is created (doesnt work for sp, thanks cutscene)
 script.on_event(defines.events.on_player_created, function(event)
+	refresh_planner_status()
+end)
+
+--Refresh planner activation when the cutscene is canceled
+script.on_event(defines.events.on_cutscene_cancelled, function(event)
 	refresh_planner_status()
 end)
 
@@ -190,4 +195,3 @@ script.on_event("give-ore-move-planner", function(event)
 		spawn_planner(event.player_index)
 	end
 end)
-
