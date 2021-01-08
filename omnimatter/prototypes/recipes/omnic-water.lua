@@ -1,8 +1,19 @@
 --Offshore pump should output omnic water
 for _,pump in pairs(data.raw["offshore-pump"]) do
 	if pump.fluid == "water" then
-		pump.fluid="omnic-water"
-		pump.fluid_box.filter="omnic-water"
+		pump.fluid = "omnic-water"
+		pump.fluid_box.filter = "omnic-water"
+	end
+end
+--Check assemblers aswell, some mods add electric "offshore pumps"
+for _,pump in pairs(data.raw["assembling-machine"]) do
+	if pump.fixed_recipe and pump.fluid and pump.fluid  == "water" then
+		local rec = data.raw.recipe[pump.fixed_recipe]
+		if omni.lib.recipe_result_contains(rec.name, "water") then
+			omni.lib.replace_recipe_result(rec.name, "water", "omnic-water")
+			pump.fluid = "omnic-water"
+			pump.fluid_box.filter = "omnic-water"
+		end
 	end
 end
 
