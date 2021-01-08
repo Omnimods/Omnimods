@@ -29,7 +29,6 @@ data:extend({
     localised_name = {"item-name.ore-move-planner"},
     action = "lua",
     associated_control_input = "give-ore-move-planner",
-    technology_to_unlock = "rocket-silo",
 	  icon = {
       filename = "__omnimatter_move__/graphics/planner-shortcut.png",
       size = 128,
