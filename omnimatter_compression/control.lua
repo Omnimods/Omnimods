@@ -249,9 +249,14 @@ end)
 ---Planner spawn logic---
 -------------------------
 
+local function get_planner_status(player)
+	--return ["compression-mining"].researched
+	return not not player.force.technologies["compression-mining"].researched
+end
+
 local function refresh_planner_status()
 	for _, ply in pairs(game.players) do
-		ply.set_shortcut_available("compression-planner-shortcut", not not ply.force.technologies["compression-mining"].researched)
+		ply.set_shortcut_available("compression-planner-shortcut", get_planner_status(ply))
 	end
 end
 
@@ -294,12 +299,16 @@ end)
 
 --spawn compression planner when a player clicks the shortcut
 script.on_event(defines.events.on_lua_shortcut, function(event)
+	-- dont need to check unlock status here since we enable/disable the button
 	if event.prototype_name and event.prototype_name == "compression-planner-shortcut" then 
 		spawn_planner(event.player_index)
 	end
 end)
 
---spawn compression planner when the hotkey is pressed
+--spawn compression planner when the hotkey is pressed (check unlock status)
 script.on_event("give-compression-planner", function(event)
-	spawn_planner(event.player_index)
+	game.print(get_planner_status(game.players[event.player_index]))
+	if get_planner_status(game.players[event.player_index]) == true then
+		spawn_planner(event.player_index)
+	end
 end)
