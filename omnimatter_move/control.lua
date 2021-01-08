@@ -121,14 +121,6 @@ script.on_event(defines.events.on_player_alt_selected_area, function(event)
 	end
 end)
 
-script.on_event(defines.events.on_cutscene_cancelled, function(event)
-	local ply = game.players[event.player_index]
-	if game.shortcut_prototypes["ore-move-planner-shortcut"] then
-		ply.set_shortcut_available("ore-move-planner-shortcut", not not ply.force.technologies["rocket-silo"].researched)
-	end
-end)
-
-
 -------------------------
 ---Planner spawn logic---
 -------------------------
