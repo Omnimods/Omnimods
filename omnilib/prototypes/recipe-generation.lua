@@ -2545,14 +2545,26 @@ function TechGen:setAllow(m)
 	self.allowed = m or m==nil
 	return self
 end
-function TechGen:setLocName(n,m)
-	self.loc_name = n
-	self.loc_name_keys = m
+function TechGen:setLocName(n)
+	if type(n) == "table" then
+		self.loc_name = n
+	else
+		self.loc_name = {n}
+	end
+	if self.loc_name[1] and not string.find(self.loc_name[1],"name.") then
+		self.loc_name[1]="technology-name."..self.loc_name[1]
+	end
 	return self
 end
-function TechGen:setLocDesc(n,m)
-	self.loc_desc =n
-	self.loc_desc_keys = m
+function TechGen:setLocDesc(n)
+	if type(n) == "table" then
+		self.loc_desc = n
+	else
+		self.loc_desc = {n}
+	end
+	if self.loc_desc[1] and not string.find(self.loc_desc[1],"name.") then
+		self.loc_desc[1]="technology-description."..self.loc_desc[1]
+	end
 	return self
 end
 function TechGen:setPacks(p)
@@ -2676,8 +2688,6 @@ function TechGen:generate_tech()
 	end
 	local tech = {
 	name = self.name,
-    --localised_name = self.locname(0,0),
-	--localised_description = self.locdesc(0,0),
 	type = "technology",
 	icons = self.icons,
 	upgrade = self.upgrade,
@@ -2699,16 +2709,12 @@ function TechGen:generate_tech()
 	--	tech.icon = nil
 	--	tech.icon_size = nil
 	--end
-	if self.loc_name and #self.loc_name>0 then
-		if type(self.loc_name[1]) == "string" and not string.find(self.loc_name[1],".") and not string.find(self.loc_name[1],"name") then
-			self.loc_name[1]="technology-name."..self.loc_name[1]
-		end
+	if self.loc_name and next(self.loc_name) then
 		tech.localised_name = self.loc_name
-		if self.loc_name[1] then
-			tech.localised_name[1]="technology-name."..tech.localised_name[1]
-		end
 	end
-	if self.loc_desc and self.loc_desc then tech.localised_description = {"technology-description."..self.loc_desc,self.loc_desc_keys} end
+	if self.loc_desc and next(self.loc_desc) then
+		tech.localised_description = self.loc_desc
+	end
 	self.rtn[#self.rtn+1] = tech
 end
 function TechGen:return_array()
