@@ -3,6 +3,7 @@ Version: 4.1.6
 Date: 2021.01.xx
   Bugfixes:
     - Fixed TechGen:setLocName() / setLocDesc() ignoring keys and always adding "Technology-name."
+    - Fix locale crashes with types added in latest experimental
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.5
 Date: 2021.01.08
