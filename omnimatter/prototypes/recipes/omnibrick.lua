@@ -17,20 +17,20 @@ local omnitile = table.deepcopy(data.raw.tile["stone-path"])
 omnitile.name="omnite-brick"
 omnitile.walking_speed_modifier = 1.5
 omnitile.minable.result="omnite-brick"
-omnitile.variants.main[1].picture="__omnimatter__/graphics/terrain/stone-path/stone-path-1.png"
-omnitile.variants.main[1].hr_version.picture="__omnimatter__/graphics/terrain/stone-path/hr-stone-path-1.png"
-omnitile.variants.main[2].picture="__omnimatter__/graphics/terrain/stone-path/stone-path-2.png"
-omnitile.variants.main[2].hr_version.picture="__omnimatter__/graphics/terrain/stone-path/hr-stone-path-2.png"
-omnitile.variants.main[3].picture="__omnimatter__/graphics/terrain/stone-path/stone-path-4.png"
-omnitile.variants.main[3].hr_version.picture="__omnimatter__/graphics/terrain/stone-path/hr-stone-path-4.png"
-omnitile.variants.inner_corner.picture="__omnimatter__/graphics/terrain/stone-path/stone-path-inner-corner.png"
-omnitile.variants.inner_corner.hr_version.picture="__omnimatter__/graphics/terrain/stone-path/hr-stone-path-inner-corner.png"
-omnitile.variants.outer_corner.picture="__omnimatter__/graphics/terrain/stone-path/stone-path-outer-corner.png"
-omnitile.variants.outer_corner.hr_version.picture="__omnimatter__/graphics/terrain/stone-path/hr-stone-path-outer-corner.png"
-omnitile.variants.side.picture="__omnimatter__/graphics/terrain/stone-path/stone-path-side.png"
-omnitile.variants.side.hr_version.picture="__omnimatter__/graphics/terrain/stone-path/hr-stone-path-side.png"
-omnitile.variants.u_transition.picture="__omnimatter__/graphics/terrain/stone-path/stone-path-u.png"
-omnitile.variants.u_transition.hr_version.picture="__omnimatter__/graphics/terrain/stone-path/hr-stone-path-u.png"
-omnitile.variants.o_transition.picture="__omnimatter__/graphics/terrain/stone-path/stone-path-o.png"
-omnitile.variants.o_transition.hr_version.picture="__omnimatter__/graphics/terrain/stone-path/hr-stone-path-o.png"
+
+--Point (all) graphics to our folder
+for _,tab in pairs({omnitile.transitions, omnitile.transitions_between_transitions,omnitile.variants}) do
+	for _,trans in pairs(tab) do
+		for _,pic in pairs(trans) do
+			if pic and type(pic) == "table" and pic.picture then
+				if not string.find(pic.picture, "effect%-maps") then
+					pic.picture = string.gsub(pic.picture,"__base__","__omnimatter__")
+					if pic.hr_version then
+						pic.hr_version.picture = string.gsub(pic.hr_version.picture,"__base__","__omnimatter__")
+					end
+				end
+			end
+		end
+	end
+end
 data:extend({omnitile})
