@@ -2868,8 +2868,11 @@ function BuildGen:import(name)
 		if build.localised_description then
 			b:setLocDesc(build.localised_description)
 		end
-
-		--if build.energy_source and build.energy_source.fuel_category then b:setFuelCategory(build.energy_source.fuel_category) end
+		if build.energy_source and (build.energy_source.fuel_categories or build.energy_source.fuel_category) then
+			b:setFuelCategories(build.energy_source.fuel_categories or build.energy_source.fuel_category)
+			--Make sure that we nil fuel_category after we set fuel_categories
+			build.energy_source.fuel_category = nil
+		end
 
 	local r = RecGen:import(name)
 
@@ -3116,7 +3119,8 @@ function BuildGen:setResultInventory(h)
 	return self
 end
 function BuildGen:setBurner(efficiency,size)
-	self.energy_source = {type = "burner",
+	self.energy_source = {
+	  type = "burner",
       effectivity = efficiency or 0.5,
       fuel_inventory_size = size or 1,
       emissions = 0.01,
@@ -3177,6 +3181,14 @@ function BuildGen:setSteam(efficiency,size)
 	self:addSteamIcon()
 	if not string.find(self.name,"steam-") then
 		self:setName("steam-"..self.name)
+	end
+	return self
+end
+function BuildGen:setFuelCategories(cat)
+	if type(cat)== "table" then
+		self.fuel_categories = cat
+	else
+		self.fuel_categories = {cat or "chemical"}
 	end
 	return self
 end
@@ -3566,7 +3578,7 @@ function BuildGen:generateBuilding()
     }
 
 	if self.fluid_boxes(0,0) and type(self.fluid_boxes(0,0))=="table" and type(self.fluid_boxes(0,0)[1])=="table" then self.rtn[#self.rtn].fluid_box = self.fluid_boxes(0,0)[1] end
-	if self.fuel_category then self.rtn[#self.rtn].energy_source.fuel_category = self.fuel_category end
+	if self.fuel_categories and next(self.fuel_categories) then self.rtn[#self.rtn].energy_source.fuel_categories = self.fuel_categories end
 	if self.overlay.name then
 		self.rtn[#self.rtn].animation.layers[#self.rtn[#self.rtn].animation.layers+1] = table.deepcopy(self.rtn[#self.rtn].animation.layers[1])
 		self.rtn[#self.rtn].animation.layers[#self.rtn[#self.rtn].animation.layers].filename = "__"..self.mod.."__/graphics/entity/buildings/"..self.overlay.name..".png"
@@ -4631,7 +4643,7 @@ function InsertGen:generateInserter()
     circuit_wire_max_distance = inserter_circuit_wire_max_distance,
     default_stack_control_input_signal = inserter_default_stack_control_input_signal
   }
-  if self.fuel_category then self.rtn[#self.rtn].energy_source.fuel_category = self.fuel_category end
+  if self.fuel_categories and next(self.fuel_categories) then self.rtn[#self.rtn].energy_source.fuel_categories = self.fuel_categories end
 
 	local stuff = RecGen:create(self.mod,self.name):
 	setIngredients(self.ingredients):
