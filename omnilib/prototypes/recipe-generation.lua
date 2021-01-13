@@ -1192,7 +1192,7 @@ end
 
 function RecGen:import(recipe)
 	if type(recipe)=="string" then recipe = data.raw.recipe[recipe] or data.raw.recipe["burner-"..recipe] end
-	omni.marathon.standardise(recipe)
+	omni.lib.standardise(recipe)
 	local r = RecGen:create()
 	if recipe then
 		if #recipe.normal.results==1 or recipe.main_product then
@@ -1282,7 +1282,7 @@ function RecGen:importResult(result)
 		return RecGen:import(result)
 	else
 		for _,rec in pairs(data.raw.recipe) do
-			omni.marathon.standardise(rec)
+			omni.lib.standardise(rec)
 			for _,res in pairs(rec.normal.results) do
 				if res.name==result then
 					return RecGen:import(rec.name)

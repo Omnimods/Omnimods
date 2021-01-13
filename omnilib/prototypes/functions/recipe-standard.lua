@@ -2,7 +2,7 @@ if not omni then omni={} end
 if not omni.marathon then omni.marathon={} end
 standardized_recipes={}
 
-function omni.marathon.standardise(recipe)
+function omni.lib.standardise(recipe)
   if recipe == nil then return nil end
 	--Set table parts if they don't already exist
 	if not recipe.expensive then recipe.expensive={} end

@@ -46,7 +46,7 @@ for _,recipe in pairs(check_recipes) do
     --grab localisation before standardisation
     local loc = omni.locale.custom_name(data.raw.recipe[recipe], "compressed-recipe")
     --standardise
-    if not mods["omnimatter_marathon"] then omni.marathon.standardise(rec) end
+    if not mods["omnimatter_marathon"] then omni.lib.standardise(rec) end
     --double check shenanigans are not happening
     rec.ingredients=nil
     rec.ingredient=nil

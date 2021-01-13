@@ -143,7 +143,7 @@ end
 --find recipe
 local find_recipe = function(product)
   for _,recipe in pairs(data.raw.recipe) do
-    omni.marathon.standardise(recipe)
+    omni.lib.standardise(recipe)
     if #recipe.normal.results == 1 and recipe.normal.results[1].name == product then
       return recipe
     end

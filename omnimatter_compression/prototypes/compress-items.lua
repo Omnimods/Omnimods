@@ -91,7 +91,7 @@ for _, group in pairs({"fluid"}) do
           hide_from_player_crafting = omni.compression.hide_handcraft
         }
       }
-      --omni.marathon.standardise(compress)
+      --omni.lib.standardise(compress)
       standardized_recipes["compress-"..fluid.name] = true
       compress_recipes[#compress_recipes+1] = compress
 
@@ -132,7 +132,7 @@ for _, group in pairs({"fluid"}) do
           energy_required = concentrationRatio / speed_div,
         },
       }
-      --omni.marathon.standardise(uncompress)
+      --omni.lib.standardise(uncompress)
       standardized_recipes["uncompress-"..fluid.name] = true
 			uncompress_recipes[#uncompress_recipes+1] = uncompress
 		end
@@ -285,7 +285,7 @@ local function generate_compressed_item(item, norecipe)
       },
     }
 
-    --omni.marathon.standardise(compress)
+    --omni.lib.standardise(compress)
     standardized_recipes["compress-"..item.name] = true
     compress_recipes[#compress_recipes+1] = compress
     --The uncompress recipe
@@ -327,7 +327,7 @@ local function generate_compressed_item(item, norecipe)
         hide_from_player_crafting = omni.compression.hide_handcraft
       },
     }
-    --omni.marathon.standardise(uncompress)
+    --omni.lib.standardise(uncompress)
     standardized_recipes["uncompress-"..item.name] = true
     uncompress_recipes[#uncompress_recipes+1] = uncompress
   end

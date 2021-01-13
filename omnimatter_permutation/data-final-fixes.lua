@@ -50,7 +50,7 @@ end
 local recipesExpanded = {}
 local techRec = {}
 for _,rec in pairs(data.raw.recipe) do
-	omni.marathon.standardise(rec)
+	omni.lib.standardise(rec)
 	if fluidCount(rec.normal.results) > 1 or fluidCount(rec.normal.ingredients) > 1 then
 		techRec[rec.name] = {}
 		if not omni.lib.equalTableIgnore(rec.normal.ingredients,rec.expensive.ingredients,"amount") or not omni.lib.equalTableIgnore(rec.normal.results,rec.expensive.results,"amount") then

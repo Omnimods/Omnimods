@@ -39,7 +39,7 @@ for _, tech in pairs(data.raw.technology) do
 	if omni.lib.string_contained_entire_list(tech.name,{"omnitractor","electric"}) or omni.lib.string_contained_entire_list(tech.name,{"omnitech","extraction","impure","base"}) or tech.name == "omniwaste" then
 		for _, eff in pairs(tech.effects) do
 			if eff.type=="unlock-recipe" and (omni.lib.string_contained_entire_list(eff.recipe,{"base","extraction","omnirec"}) or omni.lib.is_in_table(eff.recipe,rec_list)) then
-				omni.marathon.standardise(data.raw.recipe[eff.recipe])
+				omni.lib.standardise(data.raw.recipe[eff.recipe])
 				for i,ex in pairs(omnissence_extraction) do
 					local str = omni.lib.split(ex[1],"-")
 					for _,res in pairs(data.raw.recipe[eff.recipe].normal.results) do
