@@ -62,7 +62,7 @@ if not mods["angelsrefining"] then
 			local metal = string.gsub(ore,"-ore","")
 
 			local tier = 1
-			for i,t in pairs(omni.omnisource) do
+			for i,t in pairs(omni.matter.omnisource) do
 				for _,o in pairs(t) do
 					if o.name == ore then
 						tier = math.min(o.tier,omni.max_tier - 1)

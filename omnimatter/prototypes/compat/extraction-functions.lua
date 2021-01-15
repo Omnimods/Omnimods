@@ -1,41 +1,41 @@
-omni.omnitial={}
-omni.omnisource={}
-omni.omnifluid={}
+omni.matter.omnitial = {}
+omni.matter.omnisource = {}
+omni.matter.omnifluid = {}
 
 --Manipulation of the extraction tables
 --Open for modders to use to add compatibility
-function omni.add_resource(n, t, s, m)
-	if not omni.omnisource[tostring(t)] then omni.omnisource[tostring(t)] = {} end
-	omni.omnisource[tostring(t)][n]={mod=m, tier = t, name = n, techicon = s}
+function omni.matter.add_resource(n, t, s, m)
+	if not omni.matter.omnisource[tostring(t)] then omni.matter.omnisource[tostring(t)] = {} end
+	omni.matter.omnisource[tostring(t)][n]={mod=m, tier = t, name = n, techicon = s}
 end
 
-function omni.add_fluid(n ,t, r, s, m)
-	if not omni.omnifluid[tostring(t)] then omni.omnifluid[tostring(t)] = {} end
-	omni.omnifluid[tostring(t)][n]={mod=m, tier = t, ratio=r, name = n,techicon = s}
+function omni.matter.add_fluid(n ,t, r, s, m)
+	if not omni.matter.omnifluid[tostring(t)] then omni.matter.omnifluid[tostring(t)] = {} end
+	omni.matter.omnifluid[tostring(t)][n]={mod=m, tier = t, ratio=r, name = n,techicon = s}
 end
 
-function omni.remove_resource(n)
-	for t, tiers in pairs(omni.omnisource) do
-		if omni.omnisource[t][n] then
-			omni.omnisource[t][n] = nil
+function omni.matter.remove_resource(n)
+	for t, tiers in pairs(omni.matter.omnisource) do
+		if omni.matter.omnisource[t][n] then
+			omni.matter.omnisource[t][n] = nil
 			return true
 		end
 	end
 	return nil
 end
 
-function omni.remove_fluid(n)
-	for t, tiers in pairs(omni.omnifluid) do
-		if omni.omnifluid[t][n] then
-			omni.omnifluid[t][n] = nil
+function omni.matter.remove_fluid(n)
+	for t, tiers in pairs(omni.matter.omnifluid) do
+		if omni.matter.omnifluid[t][n] then
+			omni.matter.omnifluid[t][n] = nil
 			return true
 		end
 	end
 	return nil
 end
 
-function omni.get_ore_tier(n)
-	for _, tiers in pairs(omni.omnisource) do
+function omni.matter.get_ore_tier(n)
+	for _, tiers in pairs(omni.matter.omnisource) do
 		for _,ores in pairs(tiers) do
 			if ores.name == n then
 				return ores.tier
@@ -45,13 +45,13 @@ function omni.get_ore_tier(n)
 	return nil
 end
 
-function omni.set_ore_tier(n,t)
-	local tier = omni.get_ore_tier(n)
+function omni.matter.set_ore_tier(n,t)
+	local tier = omni.matter.get_ore_tier(n)
 	if tier then
-		local res = table.deepcopy(omni.omnisource[tostring(tier)][n])
-		omni.omnisource[tostring(tier)][n] = nil
-		if not omni.omnisource[tostring(t)] then omni.omnisource[tostring(t)] = {} end
-		omni.omnisource[tostring(t)][n] = res
+		local res = table.deepcopy(omni.matter.omnisource[tostring(tier)][n])
+		omni.matter.omnisource[tostring(tier)][n] = nil
+		if not omni.matter.omnisource[tostring(t)] then omni.matter.omnisource[tostring(t)] = {} end
+		omni.matter.omnisource[tostring(t)][n] = res
 		return true
 	else
 		return nil
@@ -59,14 +59,14 @@ function omni.set_ore_tier(n,t)
 end
 
 --Add initial extraction ores
-function omni.add_initial(ore_name,ore_amount,omnite_amount)
-	omni.omnitial[ore_name] = {
+function omni.matter.add_initial(ore_name,ore_amount,omnite_amount)
+	omni.matter.omnitial[ore_name] = {
 		ingredients ={{name = "omnite", amount = omnite_amount}},
 		results = {{name = ore_name, amount = ore_amount}, {name = "stone-crushed", amount = (omnite_amount-ore_amount) or 6}}
 	}
 end
 
-function omni.add_omnicium_alloy(name,plate,ingot)
+function omni.matter.add_omnicium_alloy(name,plate,ingot)
 	local reg = {}
 	ItemGen:create("omnimatter","omnicium-"..name.."-alloy"):
 		setSubgroup("omnicium"):
@@ -138,7 +138,7 @@ function omni.add_omnicium_alloy(name,plate,ingot)
   if #reg > 0 then data:extend(reg) end
 end
 
-function omni.add_omniwater_extraction(mod, element, lvls, tier, gain, starter_recipe)
+function omni.matter.add_omniwater_extraction(mod, element, lvls, tier, gain, starter_recipe)
 	local function get_prereq(grade,element,tier)
 		local req = {}
 		local tractor_lvl = ((grade-1)/omni.fluid_levels_per_tier)+tier-1 

@@ -5,8 +5,8 @@ require("prototypes.recipes.solvation-dynamic")
 --Compats that add Items/Recipes/Entities
 require("prototypes.compat.bob-compensation")
 
-omni.add_omnicium_alloy("steel","steel-plate","ingot-steel")
-omni.add_omnicium_alloy("iron","iron-plate","ingot-iron")
+omni.matter.add_omnicium_alloy("steel","steel-plate","ingot-steel")
+omni.matter.add_omnicium_alloy("iron","iron-plate","ingot-iron")
 
 --Add crushing recipes to base impure extraction
 omni.lib.add_unlock_recipe("omnitech-base-impure-extraction","crushed-omnite")

@@ -79,10 +79,10 @@ RecGen:create("omnimatter_water","basic-omnic-water-omnitraction"):
   extend()
 
 if mods["angelsrefining"] then
-  omni.add_omniwater_extraction("omnimatter_water", "water-viscous-mud", water_levels, 2, 90, false)
+  omni.matter.add_omniwater_extraction("omnimatter_water", "water-viscous-mud", water_levels, 2, 90, false)
 	for _,fluid in pairs(data.raw.fluid) do
 		if omni.lib.start_with(fluid.name,"water") and omni.lib.end_with(fluid.name,"waste") then
-      omni.add_omniwater_extraction("omnimatter_water", fluid.name, water_levels, 2, 30, false)
+      omni.matter.add_omniwater_extraction("omnimatter_water", fluid.name, water_levels, 2, 30, false)
 		end
 	end
 end
