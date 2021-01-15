@@ -183,7 +183,7 @@ local get_distillation_icon = function(fluid,tier)
 end
 
 local function generate_solvation_icon(fluid)
-	local fluid_icon = table.deepcopy(omni.icon.of(fluid.name, "fluid"))
+	local fluid_icon = table.deepcopy(omni.lib.icon.of(fluid.name, "fluid"))
 	local tint = table.deepcopy(data.raw.fluid[fluid.name].base_color)
 	if tint.r then
 		tint.a = 0.75

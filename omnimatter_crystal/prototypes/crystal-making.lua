@@ -25,7 +25,7 @@ local metal_omnide_icon = function(metal)
 			icon = "__omnimatter_crystal__/graphics/icons/omnide-solution.png",
 			icon_size = 32
 		}},
-		omni.icon.of(data.raw.item[metal]),
+		omni.lib.icon.of(data.raw.item[metal]),
 		{}
 	)
 	for I=2, #icons do
@@ -42,7 +42,7 @@ local salt_omnide_icon = function(metal)
 			icon = "__omnimatter_crystal__/graphics/icons/omnide-salt.png",
 			icon_size = 32
 		}},
-		omni.icon.of(data.raw.item[metal]),
+		omni.lib.icon.of(data.raw.item[metal]),
 		{}
 	)
 	for I=2, #icons do

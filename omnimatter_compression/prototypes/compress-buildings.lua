@@ -105,11 +105,11 @@ end
 local recipe_results = {}
 
 for _, recipe in pairs(data.raw.recipe) do
-  local product = omni.locale.get_main_product(recipe)
+  local product = omni.lib.locale.get_main_product(recipe)
   product = product and data.raw[product.type][product.name]
   if product then
     local place_result = (data.raw[product.type][product.name] or {}).place_result
-    place_result = place_result and omni.locale.find(place_result, 'entity', true)
+    place_result = place_result and omni.lib.locale.find(place_result, 'entity', true)
     if place_result and -- Valid
     building_list[place_result.type] and
     not omni.lib.string_contained_list(place_result.name, black_list) and --not on exclusion list
@@ -164,7 +164,7 @@ end
 local create_concentrated_fluid = function(fluid,tier)
   local new_fluid = table.deepcopy(data.raw.fluid[fluid])
 
-  new_fluid.localised_name = omni.locale.custom_name(new_fluid, "compressed-fluid", tier)
+  new_fluid.localised_name = omni.lib.locale.custom_name(new_fluid, "compressed-fluid", tier)
   new_fluid.name = new_fluid.name.."-concentrated-grade-"..tier
   if new_fluid.heat_capacity then
     new_fluid.heat_capacity = new_effect(new_fluid.heat_capacity, tier, nil, multiplier^tier)
@@ -205,7 +205,7 @@ local create_concentrated_fluid = function(fluid,tier)
   local grade = {
     type = "recipe",
     name = fluid.."-concentrated-grade-"..tier,
-    --localised_name = omni.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
+    --localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
     category = "fluid-condensation",
     enabled = false,
     icons = new_fluid.icons,
@@ -214,7 +214,7 @@ local create_concentrated_fluid = function(fluid,tier)
   local ungrade = {
     type = "recipe",
     name = "uncompress-"..fluid.."-concentrated-grade-"..tier,
-    --localised_name = omni.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
+    --localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
     icons = omni.lib.add_overlay(fluid,"uncompress"),
     category = "fluid-condensation",
     subgroup = "concentrator-fluids",
@@ -606,8 +606,8 @@ for build_name, values in pairs(recipe_results) do
           -------------------------------------------------------------------------------
           --[[ENTITY CREATION]]--
           new.name = new.name.."-compressed-"..string.lower(compress_level[i])
-          new.localised_name = omni.locale.custom_name(details.base, "compressed-building", compress_level[i])
-          new.localised_description = omni.locale.custom_name(
+          new.localised_name = omni.lib.locale.custom_name(details.base, "compressed-building", compress_level[i])
+          new.localised_description = omni.lib.locale.custom_name(
             details.base,
             "entity-description.compressed-building",
             multiplier^i,
@@ -665,8 +665,8 @@ for build_name, values in pairs(recipe_results) do
           local uncompress = {
             type = "recipe",
             name = "uncompress-"..string.lower(compress_level[i]).."-"..rc.name,
-            localised_name = omni.locale.custom_name(build, 'recipe-name.uncompress-item'),
-            localised_description = omni.locale.custom_description(build, 'recipe-description.uncompress-item'),
+            localised_name = omni.lib.locale.custom_name(build, 'recipe-name.uncompress-item'),
+            localised_description = omni.lib.locale.custom_description(build, 'recipe-description.uncompress-item'),
             icons = omni.lib.add_overlay(rc,"uncompress"),
             subgroup = rc.subgroup,
             order = (rc.order or details.item.order or "") .. "-compressed",

@@ -26,7 +26,7 @@ local more_than_one = function(recipe)
   if #results > 1 then
     return true
   end
-  local product = omni.locale.get_main_product(recipe)
+  local product = omni.lib.locale.get_main_product(recipe)
   -- ???
   if not product then
     return false
@@ -35,7 +35,7 @@ local more_than_one = function(recipe)
   if product.amount == 0 then
     return false
   end
-  product = omni.locale.find(product.name, product.type, true)
+  product = omni.lib.locale.find(product.name, product.type, true)
   -- Main product is >1, this covers cases of .result as well
   if product and omni.lib.find_stacksize(product) > 1 then
     return true
@@ -260,8 +260,8 @@ function adjustOutput(recipe)
       ) 
       and recipe.name:find("-compression$")
     then
-      local old_recipe = omni.locale.find(recipe.name:gsub("-compression$", ""), "recipe")
-      local old_item = omni.locale.find(omni.locale.get_main_product(old_recipe).name, "item")
+      local old_recipe = omni.lib.locale.find(recipe.name:gsub("-compression$", ""), "recipe")
+      local old_item = omni.lib.locale.find(omni.lib.locale.get_main_product(old_recipe).name, "item")
       local product = (proto.rocket_parts_required / old_item.stack_size)
       local old_req = proto.rocket_parts_required
       silos[#silos+1] = proto -- For later reference
@@ -324,9 +324,9 @@ function adjustOutput(recipe)
         res.amount = res.amount * rocket_mult -- Rockets
         if res.type == "item" then
           -- Case: satellite
-          if dif == "normal" and omni.locale.get_main_product(recipe) then
+          if dif == "normal" and omni.lib.locale.get_main_product(recipe) then
             -- Satellite
-            local launch_item = omni.locale.find(res.name, "item")
+            local launch_item = omni.lib.locale.find(res.name, "item")
             local product_table = launch_item.rocket_launch_product and
               {launch_item.rocket_launch_product}
               or launch_item.rocket_launch_products
@@ -334,7 +334,7 @@ function adjustOutput(recipe)
             for _, product in pairs(product_table) do           
               -- Scale
               if product.name and product.amount then
-                local product_proto = product.name:find("compressed") and omni.locale.find(product.name:gsub("compressed%-", ""), "item") or omni.locale.find(product.name, "item")
+                local product_proto = product.name:find("compressed") and omni.lib.locale.find(product.name:gsub("compressed%-", ""), "item") or omni.lib.locale.find(product.name, "item")
                 product.amount = math.max(1, (res.amount * product.amount) / product_proto.stack_size)
                 for _, silo_prototype in pairs(silos) do -- Update according to stack size
                   silo_prototype.rocket_parts_required = math.min(silo_prototype.rocket_parts_required * product.amount, 2^32-1)
@@ -375,7 +375,7 @@ local is_void = function(recipe)
   then
     return true
   end
-  local product = omni.locale.get_main_product(recipe) 
+  local product = omni.lib.locale.get_main_product(recipe) 
   if product and (product.name:find("void") or product.amount == 0) then
     return true
   end
@@ -465,8 +465,8 @@ function create_compression_recipe(recipe)
                   for c, component in pairs(recipe[recipe_difficulty][io_type]) do
                     --temp fix for non-standard stuff sneaking through
                     component = (io_type == "results"
-                    and omni.locale.parse_product(component)
-                    or omni.locale.parse_ingredient(component)
+                    and omni.lib.locale.parse_product(component)
+                    or omni.lib.locale.parse_ingredient(component)
                     )
                     if component.type ~= "fluid" then
                       if not single_stack then -- No math on single bois
@@ -478,7 +478,7 @@ function create_compression_recipe(recipe)
                         end
                       end
                       parts.solid[a][b][#parts.solid[a][b]+1] = component
-                      if not omni.locale.find("compressed-"..component.name, component.type, true) then
+                      if not omni.lib.locale.find("compressed-"..component.name, component.type, true) then
                         --log("["..component.type.."]".."[compressed-"..component.name.."]")       
                         missing_solids = true
                       end
@@ -568,7 +568,7 @@ function create_compression_recipe(recipe)
                   type = "recipe",
                   icons = icons,
                   name = recipe.name.."-compression",
-                  localised_name = omni.locale.custom_name(recipe, 'compressed-recipe'),
+                  localised_name = omni.lib.locale.custom_name(recipe, 'compressed-recipe'),
                   enabled = false,
                   hidden = recipe.hidden,
                   normal = {
@@ -642,7 +642,7 @@ function create_compression_recipe(recipe)
               local r = table.deepcopy(recipe)
 
               r.name = r.name.."-compression"
-              r.localised_name = omni.locale.custom_name(recipe, 'compressed-recipe')
+              r.localised_name = omni.lib.locale.custom_name(recipe, 'compressed-recipe')
               r.icons = icons
               r.icon = nil
               for _, dif in pairs({"normal","expensive"}) do
@@ -713,8 +713,8 @@ end
 local create_void = function(recipe)
   local continue = false
   local prefix = "compressed-"
-  local product = omni.locale.get_main_product(recipe)
-  local ingredient = omni.locale.get_main_ingredient(recipe)
+  local product = omni.lib.locale.get_main_product(recipe)
+  local ingredient = omni.lib.locale.get_main_ingredient(recipe)
   --local prob = 1
   if not omni.lib.is_in_table(recipe.name, excluded_recipes) then --not excluded
     if not more_than_one(recipe) then -- Verify products
@@ -749,7 +749,7 @@ local create_void = function(recipe)
       end
       local new_rc = table.deepcopy(recipe)
       new_rc.name = recipe.name.."-compression"
-      new_rc.localised_name = omni.locale.custom_name(new_rc, 'recipe-name.compressed-recipe')
+      new_rc.localised_name = omni.lib.locale.custom_name(new_rc, 'recipe-name.compressed-recipe')
       new_rc.icons = icons
       new_rc.category = new_cat
       new_rc.normal.ingredients[1].name = prefix .. ingredient.name
@@ -817,7 +817,7 @@ for name,fluid in pairs(generatorFluidRecipes) do
         end
         
         newFluid.name = newFluid.name.."-concentrated-grade-"..i
-        newFluid.localised_name = omni.locale.custom_name(data.raw.fluid[name], 'compressed-fluid', i)
+        newFluid.localised_name = omni.lib.locale.custom_name(data.raw.fluid[name], 'compressed-fluid', i)
         if not newFluid.heat_capacity then
           newFluid.heat_capacity = "1kJ"
         end

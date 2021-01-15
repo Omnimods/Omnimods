@@ -404,7 +404,7 @@ function omni.lib.change_icon_tint(item, tint)
 	else 
 		tint_table = tint 
 	end
-	local icons = omni.icon.of(item)
+	local icons = omni.lib.icon.of(item)
 	for i, layer in pais(icons) do
 		layer.tint = tint_table
 	end
@@ -863,7 +863,7 @@ omni.lib.add_overlay = function(it,overlay_type,level)
 	if type(it) == "string" then --parsed whole table not the name...
 		it = omni.lib.find_prototype(it)
 	end
-	local icons = omni.icon.of(it, true)
+	local icons = omni.lib.icon.of(it, true)
 	if not icons or type(it) ~= "table" then -- Why go on...
 		log("Invalid prototype specified")
 		return

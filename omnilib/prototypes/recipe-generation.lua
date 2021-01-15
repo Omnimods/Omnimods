@@ -531,7 +531,7 @@ function ItemGen:import(item)
 		setPlace(proto.place_result):
 		setSubgroup(proto.subgroup):
 		setFuelCategory(proto.fuel_category):
-		setIcons(proto.icons or proto.icon or omni.icon.of(proto, true)):
+		setIcons(proto.icons or proto.icon or omni.lib.icon.of(proto, true)):
 		setFuelValue(proto.fuel_value):
 		setOrder(proto.order)
 		if item.type == "fluid" then
@@ -747,7 +747,7 @@ function ItemGen:addSmallIcon(icon, nr)
 	if type(icon) == "table" and icon[1] and icon[1].icon then
 		icons = icon 
 	else
-		icons = omni.icon.of(icon, true)
+		icons = omni.lib.icon.of(icon, true)
 	end
 	if icons then
 		ic_sz = icons.icon_size or ic_sz
@@ -1203,7 +1203,7 @@ function RecGen:import(recipe)
 			setSubgroup(proto.subgroup):
 			setOrder(proto.order):
 			setFuelCategory(proto.fuel_category):
-			setIcons(proto.icons or proto.icon or omni.icon.of(proto, true)):
+			setIcons(proto.icons or proto.icon or omni.lib.icon.of(proto, true)):
 			setFuelValue(proto.fuel_value)
 			if proto.place_as_tile then r:tile():setPlace(proto.place_as_tile.result) end
 			if proto.type == "fluid" then
@@ -1225,7 +1225,7 @@ function RecGen:import(recipe)
 		setCategory(recipe.category):
 		setSubgroup(recipe.subgroup or r.subgroup(0,0)):
 		setOrder(recipe.order or r.order(0,0)):
-		setIcons(recipe.icons or recipe.icon or r.icons(0,0) or omni.icon.of(recipe, true)):
+		setIcons(recipe.icons or recipe.icon or r.icons(0,0) or omni.lib.icon.of(recipe, true)):
 		setHidden(recipe.hidden or false)
 
 		for _, module in pairs(data.raw.module) do
@@ -2881,7 +2881,7 @@ function BuildGen:import(name)
 		b[name]=table.deepcopy(data)
 	end
 	--if build.energy_source.type=="burner" then b:setBurner(self.energy_source.effectivity,self.energy_source.fuel_inventory_size) end
-	return b:setType(build.type):setFlags(build.flags):setIcons(build.icons or build.icon or omni.icon.of(build, true))
+	return b:setType(build.type):setFlags(build.flags):setIcons(build.icons or build.icon or omni.lib.icon.of(build, true))
 end
 function BuildGen:importIf(name)
 	local build = omni.lib.find_entity_prototype(name) or omni.lib.find_entity_prototype("burner-"..name)

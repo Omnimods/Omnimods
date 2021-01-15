@@ -193,7 +193,7 @@ local get_omnimatter_split = function(tier,focus,level)
 end
 
 local function generate_impure_icon(ore)
-    local ore_icon = table.deepcopy(omni.icon.of(ore.name, "item"))
+    local ore_icon = table.deepcopy(omni.lib.icon.of(ore.name, "item"))
     for _, layer in pairs(ore_icon) do
         layer.shift = {
             5 * (64 / layer.icon_size),
@@ -210,7 +210,7 @@ local function generate_impure_icon(ore)
 end
 
 local function generate_pure_icon(ore)
-    local ore_icon = table.deepcopy(omni.icon.of(ore.name, "item"))
+    local ore_icon = table.deepcopy(omni.lib.icon.of(ore.name, "item"))
     for _, layer in pairs(ore_icon) do
         layer.shift = {
             0,
@@ -323,7 +323,7 @@ for _,ore_tiers in pairs(omni.matter.omnisource) do
         end
         local result_names = " "
         local desc = ""
-        local icons = omni.icon.of("omnite", "item")
+        local icons = omni.lib.icon.of("omnite", "item")
         icons[1].tint = {1,1,1,0.8}-- Just a canvas but we want the right size
         local item_count = #split-1
         for I=1, #split do
@@ -337,7 +337,7 @@ for _,ore_tiers in pairs(omni.matter.omnisource) do
             deg = math.rad(deg % 360)
             icons = util.combine_icons(
                 icons,
-                omni.icon.of(split[I].name, "item"),
+                omni.lib.icon.of(split[I].name, "item"),
                 {
                     scale = 0.5,
                     shift = {

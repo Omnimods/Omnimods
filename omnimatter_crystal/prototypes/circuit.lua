@@ -298,8 +298,8 @@ function omni.crystal.generate_hybrid_circuit(control_crystal,electronic_circuit
 	local items = {}
 	--	icons[#icons+1]={icon="__omnimatter_crystal__/graphics/blank.png"}
 	local icons = util.combine_icons(
-		omni.icon.of(data.raw.item[cc]),
-		omni.icon.of(data.raw.item[electronic_circuit]),
+		omni.lib.icon.of(data.raw.item[cc]),
+		omni.lib.icon.of(data.raw.item[electronic_circuit]),
 		{}
 	)
 	icons[#icons].scale = 0.5
