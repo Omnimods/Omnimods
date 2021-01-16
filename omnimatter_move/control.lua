@@ -54,6 +54,9 @@ script.on_event(defines.events.on_player_selected_area, function(event)
 					end
 				end
 			end
+		else
+			--Nothing selected, nil player ore_move data
+			ore_to_move[event.player_index] = nil
 		end
 	end
 end)
