@@ -1,6 +1,5 @@
 ore_to_move = {}
 
-
 function start_with(a,b)
 	return string.sub(a,1,string.len(b)) == b
 end
@@ -21,9 +20,8 @@ script.on_event(defines.events.on_player_selected_area, function(event)
 	if event.item == "ore-move-planner" then
 		local player = game.players[event.player_index]
 		local surface = player.surface
-		if ore_to_move[event.player_index] == nil then
-			ore_to_move[event.player_index] = {ore={},centre={},samples = {},catch = {found = false, samples = {}}}
-		end
+		--Always set the ore player table back to default to clean up old data when copying a new ore
+		ore_to_move[event.player_index] = {ore={}, centre={}, samples = {}, catch = {found = false, samples = {}}}
 		local centre = {x=0,y=0}
 		local qnt = 0
 		for _,entity in pairs(event.entities) do
@@ -33,9 +31,6 @@ script.on_event(defines.events.on_player_selected_area, function(event)
 				centre.x=centre.x+pos.x
 				centre.y=centre.y+pos.y
 				ore_to_move[event.player_index].ore[#ore_to_move[event.player_index].ore+1]={name=entity.name,pos=pos,surface = entity.surface}
-				local extra = entity
-				--extra.destroy()	
-				--surf.create_entity({name = "compressed-"..name.."-ore" , position = pos, force = force, amount = quant})
 			end
 		end
 		--check if something was actually selected
@@ -60,7 +55,6 @@ script.on_event(defines.events.on_player_selected_area, function(event)
 				end
 			end
 		end
-		--player.insert({name = resource, count = miscount})
 	end
 end)
 
@@ -71,54 +65,86 @@ script.on_event(defines.events.on_player_alt_selected_area, function(event)
 		local centre = {x=round((event.area.left_top.x+event.area.right_bottom.x)/2),y=round((event.area.left_top.y+event.area.right_bottom.y)/2)}
 		local surface = player.surface
 		local dist = math.sqrt(math.pow(centre.x-ore_to_move[event.player_index].centre.x,2)+math.pow(centre.y-ore_to_move[event.player_index].centre.y,2))
-		if ore_to_move[event.player_index].catch.found then
-			dist=dist+ore_to_move[event.player_index].samples[ore_to_move[event.player_index].catch.samples[1]].dist
-		end
-		--dist=dist+ore_to_move[event.player_index].cost
+		-- if ore_to_move[event.player_index].catch.found == true then
+		-- 	dist=dist+ore_to_move[event.player_index].samples[ore_to_move[event.player_index].catch.samples[1]].dist
+		-- end
+
+		--Surface Checks
+		--Get the highest and lowest x/y coordinates to create the complete area the ore would be moved to
+		local max_x = 0
+		local max_y = 0
+		local min_x = 0
+		local min_y = 0
+		  
 		for _, ore in pairs(ore_to_move[event.player_index].ore) do
 			local entities = surface.find_entities_filtered{
-			  area= {{ore_to_move[event.player_index].centre.x+ore.pos.x -0.5, ore_to_move[event.player_index].centre.y+ore.pos.y -0.5},
-			  {ore_to_move[event.player_index].centre.x+ore.pos.x +0.5, ore_to_move[event.player_index].centre.y+ore.pos.y +0.5}},
-			  name=ore.name,
-			}
-			local cost = 1/(1+dist/5000)
+				area= {{ore_to_move[event.player_index].centre.x+ore.pos.x -0.5, ore_to_move[event.player_index].centre.y+ore.pos.y -0.5},
+				{ore_to_move[event.player_index].centre.x+ore.pos.x +0.5, ore_to_move[event.player_index].centre.y+ore.pos.y +0.5}},
+				name=ore.name}
 			for _, ent in pairs(entities) do
-				local pos = {}
-				pos.x = centre.x+ore.pos.x
-				pos.y = centre.y+ore.pos.y
-				local amount = round(ent.amount*cost)-3
-				if amount > 0 then
-					ore.surface.create_entity({name = ore.name , position = pos, force = ent.force, amount = round(ent.amount*cost)})
-				end
-				ent.destroy()
+				if ore.pos.x > max_x then max_x = ore.pos.x end
+				if ore.pos.y > max_y then max_y = ore.pos.y end
+				if ore.pos.x < min_x then min_x = ore.pos.x end
+				if ore.pos.y < min_y then min_y = ore.pos.y end
 			end
 		end
-		if ore_to_move[event.player_index].catch.found then
-			for _, s in pairs(ore_to_move[event.player_index].catch.samples) do
-				ore_to_move[event.player_index].samples[s].pos.x = ore_to_move[event.player_index].samples[s].pos.x -ore_to_move[event.player_index].centre.x+centre.x
-				ore_to_move[event.player_index].samples[s].pos.y = ore_to_move[event.player_index].samples[s].pos.y -ore_to_move[event.player_index].centre.y+centre.y
-				ore_to_move[event.player_index].samples[s].dist=dist
-			end
-			ore_to_move[event.player_index].catch.found=false
+
+		--Define blocker tiles / entities
+		local area = {{centre.x + min_x, centre.y + min_y},{centre.x + max_x, centre.y + max_y}}
+		local blocker_tile = surface.find_tiles_filtered{area = area, collision_mask = {"water-tile"}}
+		local blocker_ent = surface.find_entities_filtered{area = area, type= {"cliff","resource"}}
+
+		--Dont do anything if a blocking entity / tile was found (print info msg)
+		if next(blocker_ent) or next(blocker_tile) then
+			local ent = blocker_ent[next(blocker_ent)] or blocker_tile[next(blocker_tile)]
+			game.print("[OmnimatterMove]: "..ent.name.." is in the way.")
 		else
-			local sample_size = math.min(#ore_to_move[event.player_index].ore,5)
-			math.randomseed(#ore_to_move[event.player_index].ore)
-			local picked = {}
-			for i=1,sample_size do
-				local chosen = 0
-				while picked[chosen] ~= nil or chosen==0 do
-					chosen = math.random(1,#ore_to_move[event.player_index].ore)
+			--If the surface has no blocking entities / tiles , continue
+			for _, ore in pairs(ore_to_move[event.player_index].ore) do
+				local entities = surface.find_entities_filtered{
+			  	area= {{ore_to_move[event.player_index].centre.x+ore.pos.x -0.5, ore_to_move[event.player_index].centre.y+ore.pos.y -0.5},
+			  	{ore_to_move[event.player_index].centre.x+ore.pos.x +0.5, ore_to_move[event.player_index].centre.y+ore.pos.y +0.5}},
+			  	name=ore.name}
+			
+				local cost = 1/(1+dist/5000)
+				for _, ent in pairs(entities) do
+					local pos = {}
+					pos.x = centre.x+ore.pos.x
+					pos.y = centre.y+ore.pos.y
+					local amount = round(ent.amount*cost)-3
+					if amount > 0 then
+						ore.surface.create_entity({name = ore.name , position = pos, force = ent.force, amount = round(ent.amount*cost)})
+					end
+					ent.destroy()
 				end
-				picked[chosen]= true
-				local pos = {}
-				pos.x = centre.x+ore_to_move[event.player_index].ore[chosen].pos.x
-				pos.y = centre.y+ore_to_move[event.player_index].ore[chosen].pos.y
-				table.insert(ore_to_move[event.player_index].samples,{pos=pos,dist = dist})
 			end
+			if ore_to_move[event.player_index].catch.found then
+				for _, s in pairs(ore_to_move[event.player_index].catch.samples) do
+					ore_to_move[event.player_index].samples[s].pos.x = ore_to_move[event.player_index].samples[s].pos.x -ore_to_move[event.player_index].centre.x+centre.x
+					ore_to_move[event.player_index].samples[s].pos.y = ore_to_move[event.player_index].samples[s].pos.y -ore_to_move[event.player_index].centre.y+centre.y
+					ore_to_move[event.player_index].samples[s].dist=dist
+				end
+				ore_to_move[event.player_index].catch.found=false
+			else
+				local sample_size = math.min(#ore_to_move[event.player_index].ore,5)
+				math.randomseed(#ore_to_move[event.player_index].ore)
+				local picked = {}
+				for i=1,sample_size do
+					local chosen = 0
+					while picked[chosen] ~= nil or chosen==0 do
+						chosen = math.random(1,#ore_to_move[event.player_index].ore)
+					end
+					picked[chosen]= true
+					local pos = {}
+					pos.x = centre.x+ore_to_move[event.player_index].ore[chosen].pos.x
+					pos.y = centre.y+ore_to_move[event.player_index].ore[chosen].pos.y
+					table.insert(ore_to_move[event.player_index].samples,{pos=pos,dist = dist})
+				end
+			end
+			ore_to_move[event.player_index].ore={}
+			ore_to_move[event.player_index].centre.x=centre.x
+			ore_to_move[event.player_index].centre.y=centre.y
 		end
-		ore_to_move[event.player_index].ore={}
-		ore_to_move[event.player_index].centre.x=centre.x
-		ore_to_move[event.player_index].centre.y=centre.y
 	end
 end)
 

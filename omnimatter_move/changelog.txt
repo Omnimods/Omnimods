@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.2
+Date: 2021.01.xx
+  Changes:
+    - Added surface checks to prevent moving ores over cliffs, water or other ores
+  Bugfixes:
+    - Fixed a crash that could happen when alt-selecting an area without copying someththing first
+---------------------------------------------------------------------------------------------------
 Version: 1.1.1
 Date: 2021.01.08
   Changes:
