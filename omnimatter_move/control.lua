@@ -105,15 +105,20 @@ script.on_event(defines.events.on_player_alt_selected_area, function(event)
 			  	area= {{ore_to_move[event.player_index].centre.x+ore.pos.x -0.5, ore_to_move[event.player_index].centre.y+ore.pos.y -0.5},
 			  	{ore_to_move[event.player_index].centre.x+ore.pos.x +0.5, ore_to_move[event.player_index].centre.y+ore.pos.y +0.5}},
 			  	name=ore.name}
-			
-				local cost = 1/(1+dist/5000)
+				
+				--Get settings value (determines the tile amount where 50% of the moved ore is lost)
+				local cost_factor = settings.global["ore-tile-loss"].value 
+				local cost = 1 / ( 1 + (dist / cost_factor))
 				for _, ent in pairs(entities) do
 					local pos = {}
 					pos.x = centre.x+ore.pos.x
 					pos.y = centre.y+ore.pos.y
-					local amount = round(ent.amount*cost)-3
+					local amount = ent.amount
+					if settings.global["enable-ore-tile-loss"].value == true then
+						amount = round(amount*cost)	--3
+					end
 					if amount > 0 then
-						ore.surface.create_entity({name = ore.name , position = pos, force = ent.force, amount = round(ent.amount*cost)})
+						ore.surface.create_entity({name = ore.name , position = pos, force = ent.force, amount = amount})
 					end
 					ent.destroy()
 				end
