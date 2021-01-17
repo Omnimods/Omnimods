@@ -69,9 +69,34 @@ if settings.startup["omnimatter-infinite"].value then
                 name ="infinite-omnite",
                 patch_set_name = "omnite",
                 order = "b",
-                base_density = 5,
+                base_density = 30, --base density of of normal omnite is 35, if this is the same roughly every patch has infinite omnite
 			    regular_rq_factor_multiplier = 0.3,
-			    starting_rq_factor_multiplier = 0.5,
+                starting_rq_factor_multiplier = 0.5,
+                richness_multiplier_distance_bonus = 20,
+                peaks = {
+                    {
+                        noise_layer = "infinite-omnite",
+                        noise_octaves_difference = -2.5,
+                        noise_persistence = 0.3,
+                        starting_area_weight_optimal = 0,
+                        starting_area_weight_range = 0,
+                        starting_area_weight_max_range = 2,
+                    },
+                    {
+                        noise_layer = "infinite-omnite",
+                        noise_octaves_difference = -2,
+                        noise_persistence = 0.3,
+                        starting_area_weight_optimal = 1,
+                        starting_area_weight_range = 0,
+                        starting_area_weight_max_range = 2,
+                    },
+                    {
+                        influence = 0.15,
+                        starting_area_weight_optimal = 0,
+                        starting_area_weight_range = 0,
+                        starting_area_weight_max_range = 2,
+                    }
+                }
             }),
             --autoplace = {
                 --control = "infinite-omnite",
