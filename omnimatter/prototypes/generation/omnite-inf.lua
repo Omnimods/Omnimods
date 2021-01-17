@@ -39,15 +39,9 @@ if settings.startup["omnimatter-infinite"].value then
             type = "autoplace-control",
             name = "infinite-omnite",
             richness = true,
-            order = "b",
+            order = "b-b",
             category = "resource"
         },
-
-        --{
-        --    type = "noise-layer",
-        --    name = "infinite-omnite"
-        --},
-
         {
             type = "resource",
             name = "infinite-omnite",
@@ -58,7 +52,7 @@ if settings.startup["omnimatter-infinite"].value then
             tree_removal_max_distance = 32 * 32,
             infinite_depletion_amount = 10,
             resource_patch_search_radius = 12,
-            order="a-b-a",
+            order="b",
             --map_color = {r=0.34, g=0.00, b=0.51},
             map_color = {r=0.22, g=0.00, b=0.255},
             infinite=true,
@@ -75,8 +69,9 @@ if settings.startup["omnimatter-infinite"].value then
                 name ="infinite-omnite",
                 patch_set_name = "omnite",
                 order = "b",
-                base_density = 10,
-			    regular_rq_factor_multiplier = 1.10,
+                base_density = 5,
+			    regular_rq_factor_multiplier = 0.3,
+			    starting_rq_factor_multiplier = 0.5,
             }),
             --autoplace = {
                 --control = "infinite-omnite",

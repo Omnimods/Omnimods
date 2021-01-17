@@ -147,7 +147,7 @@ data:extend{
     name = "omnite",
     richness = true,
     category = "resource",
-    order = "a"
+    order = "b-a"
   },
   {
     type = "resource",
@@ -179,12 +179,12 @@ data:extend{
     autoplace =
       resource_autoplace.resource_autoplace_settings({
         name = "omnite",
-        order = "a",
-        base_density = 10, --8
+        order = "b-da",
         has_starting_area_placement = true,
-        regular_rq_factor_multiplier = 1.5,
-        starting_rq_factor_multiplier = 3,
-        candidate_spot_count = 22,
+        base_density = 10,
+        regular_rq_factor_multiplier = 1.0,
+        starting_rq_factor_multiplier = 1.5,
+        --candidate_spot_count = 22
       }),
 
     -- {
