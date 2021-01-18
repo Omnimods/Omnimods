@@ -188,11 +188,7 @@ data:extend{
         base_density = 35,    -- ~richness
         regular_rq_factor_multiplier = 1.8, --Size
         starting_rq_factor_multiplier = 2.4,
-        --sharpness = 1,
-        --richness_base = 5000,
-        --richness_multiplier = 30000,
         richness_multiplier_distance_bonus = 20,
-        -- coverage = 0.03,
         base_spots_per_km2 = 10, -- ~frequency
         peaks =
         {
@@ -202,8 +198,6 @@ data:extend{
             noise_persistence = 0.3,
           },
         },
-        --starting_area_size = 600 * 0.01,
-        --starting_area_amount = 1000
       }),
 
     -- {

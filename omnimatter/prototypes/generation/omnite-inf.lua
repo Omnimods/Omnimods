@@ -57,7 +57,7 @@ if settings.startup["omnimatter-infinite"].value then
             map_color = {r=0.22, g=0.00, b=0.255},
             infinite=true,
             glow = true,
-            minimum = 50,
+            minimum = 375,
             normal = 1500,
             maximum = 6000,
             minable = mine,
@@ -69,34 +69,11 @@ if settings.startup["omnimatter-infinite"].value then
                 name ="infinite-omnite",
                 patch_set_name = "omnite",
                 order = "b",
-                base_density = 30, --base density of of normal omnite is 35, if this is the same roughly every patch has infinite omnite
-			    regular_rq_factor_multiplier = 0.3,
+                base_density = 25, -- ~ richness
+                base_spots_per_km2 = 7, --base spots of of normal omnite is 10, if this is the same roughly every patch has infinite omnite
+			    regular_rq_factor_multiplier = 0.4,
                 starting_rq_factor_multiplier = 0.5,
                 richness_multiplier_distance_bonus = 20,
-                peaks = {
-                    {
-                        noise_layer = "infinite-omnite",
-                        noise_octaves_difference = -2.5,
-                        noise_persistence = 0.3,
-                        starting_area_weight_optimal = 0,
-                        starting_area_weight_range = 0,
-                        starting_area_weight_max_range = 2,
-                    },
-                    {
-                        noise_layer = "infinite-omnite",
-                        noise_octaves_difference = -2,
-                        noise_persistence = 0.3,
-                        starting_area_weight_optimal = 1,
-                        starting_area_weight_range = 0,
-                        starting_area_weight_max_range = 2,
-                    },
-                    {
-                        influence = 0.15,
-                        starting_area_weight_optimal = 0,
-                        starting_area_weight_range = 0,
-                        starting_area_weight_max_range = 2,
-                    }
-                }
             }),
             --autoplace = {
                 --control = "infinite-omnite",
