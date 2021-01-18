@@ -8,6 +8,10 @@ Date: 2021.01.xx
     - remove_fluid(), get_ore_tier(), set_ore_tier(), add_initial(), add_omniwater_extraction()
   Bugfixes:
     - Fixed that omnitiles used the stone path transitions
+    - Complete rewrite of omnite´s autoplace control
+    - Fixes infinite omnite spawing in the starting area
+    - Fixes map gen presets not affecting omnite generator settings
+    - Fixes infinite omnite patches not spawning in the middle of normal omnite patches
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.7
 Date: 2021.01.08

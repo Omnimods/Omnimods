@@ -71,43 +71,10 @@ if settings.startup["omnimatter-infinite"].value then
                 order = "b",
                 base_density = 25, -- ~ richness
                 base_spots_per_km2 = 7, --base spots of of normal omnite is 10, if this is the same roughly every patch has infinite omnite
-			    regular_rq_factor_multiplier = 0.4,
+                regular_rq_factor_multiplier = 0.4,
                 starting_rq_factor_multiplier = 0.5,
                 richness_multiplier_distance_bonus = 20,
             }),
-            --autoplace = {
-                --control = "infinite-omnite",
-                -- sharpness = 1,
-                -- richness_multiplier = 5000,
-                -- richness_multiplier_distance_bonus = 20,
-                -- richness_base = 2000,
-                -- coverage = 0.01,
-                -- starting_rq_factor_multiplier = 1.5
-                -- peaks = {
-                --     {
-                --         noise_layer = "infinite-omnite",
-                --         noise_octaves_difference = -2.5,
-                --         noise_persistence = 0.3,
-                --         starting_area_weight_optimal = 0,
-                --         starting_area_weight_range = 0,
-                --         starting_area_weight_max_range = 2,
-                --     },
-                --     {
-                --         noise_layer = "infinite-omnite",
-                --         noise_octaves_difference = -2,
-                --         noise_persistence = 0.3,
-                --         starting_area_weight_optimal = 1,
-                --         starting_area_weight_range = 0,
-                --         starting_area_weight_max_range = 2,
-                --     },
-                --     {
-                --         influence = 0.15,
-                --         starting_area_weight_optimal = 0,
-                --         starting_area_weight_range = 0,
-                --         starting_area_weight_max_range = 2,
-                --     }
-                -- }
-            --},
             stage_counts = {1000, 600, 400, 200, 100, 50, 20, 1},
             stages = {
                 sheet = {

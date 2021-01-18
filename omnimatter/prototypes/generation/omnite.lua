@@ -190,8 +190,7 @@ data:extend{
         starting_rq_factor_multiplier = 2.4,
         richness_multiplier_distance_bonus = 20,
         base_spots_per_km2 = 10, -- ~frequency
-        peaks =
-        {
+        peaks = {
           {
             noise_layer = "omnite",
             noise_octaves_difference = -1.5,
@@ -199,32 +198,9 @@ data:extend{
           },
         },
       }),
-
-    -- {
-    --   control = "omnite",
-    --   sharpness = 1,
-    --   richness_multiplier = 2000,
-    --   richness_multiplier_distance_bonus = 15,
-    --   richness_base = 1000,
-    --   coverage = 0.03,
-    --   peaks =
-    --   {
-    --     {
-    --       noise_layer = "omnite",
-    --       noise_octaves_difference = -1.5,
-    --       noise_persistence = 0.3,
-    --     },
-    --   },
-    --   starting_area_size = 600 * 0.01,
-    --   starting_area_amount = 1000
-    -- },
-
-
     stage_counts = {1000, 600, 400, 200, 100, 50, 20, 1},
-    stages =
-    {
-      sheet =
-      {
+    stages = {
+      sheet = {
         filename = "__omnimatter__/graphics/entity/ores/omnite.png",
         priority = "extra-high",
         width = 64,
@@ -242,10 +218,8 @@ data:extend{
         }
       }
     },
-    stages_effect =
-    {
-      sheet =
-      {
+    stages_effect = {
+      sheet = {
         filename = "__omnimatter__/graphics/entity/ores/omnite-glow.png",
         priority = "extra-high",
         width = 64,
@@ -274,7 +248,6 @@ data:extend{
     max_effect_alpha = 0.3,
     map_color = {r=0.34, g=0.00, b=0.51},
   }
-
 }
 
 --Apply preset configs to omnite and infinite omnite if it exists
