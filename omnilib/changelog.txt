@@ -1,11 +1,13 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.6
 Date: 2021.01.xx
+  Info:
+    - Moved omni.locale and omni.icon to omni.lib.locale and omni.lib.icon
+    - Renamed omni.marathon.standardise() to omni.lib.standardise()
   Features:
     - Add BuildGen:setFuelCategories(), replaces setFuelCategory for entities
   Changes:
     - fuel_categories (instead of fuel_category) is now used for all entities 
-    - renamed omni.marathon.standardise() to omni.lib.standardise()
   Bugfixes:
     - Fixed TechGen:setLocName() / setLocDesc() ignoring keys and always adding "Technology-name."
     - Fix locale crashes with types added in latest experimental

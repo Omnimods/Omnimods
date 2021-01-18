@@ -687,7 +687,7 @@ end
 for _,f in pairs(temperature_fluids) do
 	--log("pyc is shit")
 	for _,r in pairs(f.recipes) do
-		if omni.lib.cardTable(f.used) > 1 and omni.lib.cardTable(f.temperatures) > 1 then
+		if #f.used > 1 and #f.temperatures > 1 then
 			for _,ingres in pairs({"ingredients","results"}) do
 				for _, dif in pairs({"normal","expensive"}) do
 					for _,p in pairs(r[dif][ingres]) do
@@ -862,7 +862,7 @@ for _, recipe in pairs(extra_fluid_rec) do
 					component.amount = fluids[dif][ingres][j].amount*mult[dif]/sluid_contain_fluid
 					component.type="item"
 					local new_name = "solid-"..component.name
-					if temperature_fluids[component.name] and omni.lib.cardTable(temperature_fluids[component.name].used) > 1 and (component.temperature or component.maximum_temperature or component.minimum_temperature) then
+					if temperature_fluids[component.name] and #temperature_fluids[component.name].used > 1 and (component.temperature or component.maximum_temperature or component.minimum_temperature) then
 						local tp = component.temperature or component.minimum_temperature or component.maximum_temperature
 						new_name=new_name.."-"..tp
 						if not temperature_fluids[component.name] then
