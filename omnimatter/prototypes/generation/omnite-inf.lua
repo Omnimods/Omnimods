@@ -65,7 +65,7 @@ if settings.startup["omnimatter-infinite"].value then
             selection_box = {{ -0.5, -0.5}, {0.5, 0.5}},
             autoplace = 
                 resource_autoplace.resource_autoplace_settings({
-                starting_area = false,
+                has_starting_area_placement = false,
                 name ="infinite-omnite",
                 patch_set_name = "omnite",
                 order = "b",
