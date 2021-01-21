@@ -1,4 +1,18 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.8
+Date: 2021.01.21
+  Info:
+    - Moved the following functions/ tables into omnimatters namespace
+    - (from omni.fname to omni.matter.fname) :
+    - omnisource, omnitial, omnifluid, add_resource(), remove_resource(), add_fluid(),
+    - remove_fluid(), get_ore_tier(), set_ore_tier(), add_initial(), add_omniwater_extraction()
+  Bugfixes:
+    - Fixed that omnitiles used the stone path transitions
+    - Complete rewrite of omnite´s autoplace control
+    - Fixes infinite omnite spawing in the starting area
+    - Fixes map gen presets not affecting omnite generator settings
+    - Fixes infinite omnite patches not spawning in the middle of normal omnite patches
+---------------------------------------------------------------------------------------------------
 Version: 4.1.7
 Date: 2021.01.08
   Bugfixes:
@@ -27,9 +41,9 @@ Date: 2020.12.23
     - Properly localised omnic water recycling recipes (searchable now!)
     - Moved omnic water recycling recipes into their own item group
     - Moved extraction resource additions to the data stage
-    - Added omni.remove_resource(name) and omni.remove_fluid(name)
-    - Added omni.get_ore_tier(name) and omni.set_ore_tier(name,tier)
-    - Added omni.add_initial(ore_name,ore_amount,omnite_amount) to add initial omnitractions
+    - Added omni.matter.remove_resource(name) and omni.matter.remove_fluid(name)
+    - Added omni.matter.get_ore_tier(name) and omni.matter.set_ore_tier(name,tier)
+    - Added omni.matter.add_initial(ore_name,ore_amount,omnite_amount) to add initial omnitractions
     -   -This allows modders to easily manage for which resources extractions are being generated
     -   -They can call omni.[add/remove]_[resource/fluid]()  in their data.lua to add omni compat
   Bugfixes:

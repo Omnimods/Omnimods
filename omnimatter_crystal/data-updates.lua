@@ -31,7 +31,7 @@ local salt_omnide_icon = function(metal)
 			icon = "__omnimatter_crystal__/graphics/icons/omnide-salt.png",
 			icon_size = 32
 		}},
-		omni.icon.of(data.raw.item[metal]),
+		omni.lib.icon.of(data.raw.item[metal]),
 		{}
 	)
 	for I=2, #icons do
@@ -62,7 +62,7 @@ if not mods["angelsrefining"] then
 			local metal = string.gsub(ore,"-ore","")
 
 			local tier = 1
-			for i,t in pairs(omni.omnisource) do
+			for i,t in pairs(omni.matter.omnisource) do
 				for _,o in pairs(t) do
 					if o.name == ore then
 						tier = math.min(o.tier,omni.max_tier - 1)
@@ -108,7 +108,7 @@ if not mods["angelsrefining"] then
 			rec.normal.results[1].name = "crystal-powder-"..metal
 			rec.icon=nil
 			rec.icon_size=nil
-			rec.icons = omni.icon.of(data.raw.item["crystal-powder-"..metal])
+			rec.icons = omni.lib.icon.of(data.raw.item["crystal-powder-"..metal])
 			rec.localised_name = {"recipe-name.crystal-powder", {metal}}
 		end
 	end
@@ -126,7 +126,7 @@ if not mods["angelsrefining"] then
 				end
 				r:replaceIngredients(ore, "crystal-powder-"..metal):
 				setEnabled(false):
-				setLocName({"recipe-name.crystalline", omni.locale.of(rec).name })
+				setLocName({"recipe-name.crystalline", omni.lib.locale.of(rec).name })
 				if (rec.hidden and rec.hidden == true) or (rec.normal and rec.normal.hidden and rec.normal.hidden ==true) then
 					r:setHidden(rec.hidden)
 				else

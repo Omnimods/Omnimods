@@ -58,7 +58,7 @@ end
 
 local get_impurities = function(ore,tier)
     local tierores = {}
-    for _,o in pairs(omni.omnisource) do
+    for _,o in pairs(omni.matter.omnisource) do
         if o.tier == tier and o.ore.name ~= ore then
             tierores[#tierores+1]=o.ore.name
         end
@@ -108,7 +108,7 @@ local proper_result = function(tier, level,focus)
 end
 
 local get_omnimatter_split = function(tier,focus,level)
-    local source = table.deepcopy(omni.omnisource[tostring(tier)])
+    local source = table.deepcopy(omni.matter.omnisource[tostring(tier)])
     level = level or 0
     local aligned_ores = {}
     local source_count = table_size(source)
@@ -193,7 +193,7 @@ local get_omnimatter_split = function(tier,focus,level)
 end
 
 local function generate_impure_icon(ore)
-    local ore_icon = table.deepcopy(omni.icon.of(ore.name, "item"))
+    local ore_icon = table.deepcopy(omni.lib.icon.of(ore.name, "item"))
     for _, layer in pairs(ore_icon) do
         layer.shift = {
             5 * (64 / layer.icon_size),
@@ -210,7 +210,7 @@ local function generate_impure_icon(ore)
 end
 
 local function generate_pure_icon(ore)
-    local ore_icon = table.deepcopy(omni.icon.of(ore.name, "item"))
+    local ore_icon = table.deepcopy(omni.lib.icon.of(ore.name, "item"))
     for _, layer in pairs(ore_icon) do
         layer.shift = {
             0,
@@ -227,7 +227,7 @@ local function generate_pure_icon(ore)
 end
 
 --Initial omnitraction
-for n, ore in pairs(omni.omnitial) do
+for n, ore in pairs(omni.matter.omnitial) do
 	RecGen:create("omnimatter","initial-omnitraction-" .. n):
 		setCategory("omnite-extraction-burner"):
 		setEnergy(5):
@@ -244,7 +244,7 @@ for n, ore in pairs(omni.omnitial) do
 end
 
 --Pure extraction
-for i, tier in pairs(omni.omnisource) do
+for i, tier in pairs(omni.matter.omnisource) do
     for ore_name, ore in pairs(tier) do
         --Check for hidden flag to skip later
         
@@ -312,7 +312,7 @@ for i, tier in pairs(omni.omnisource) do
 end
 
 --Impure recipes
-for _,ore_tiers in pairs(omni.omnisource) do
+for _,ore_tiers in pairs(omni.matter.omnisource) do
     --Base mix
     local t = select(2, next(ore_tiers)).tier
     local base_split = get_omnimatter_split(t, nil, nil)
@@ -323,7 +323,7 @@ for _,ore_tiers in pairs(omni.omnisource) do
         end
         local result_names = " "
         local desc = ""
-        local icons = omni.icon.of("omnite", "item")
+        local icons = omni.lib.icon.of("omnite", "item")
         icons[1].tint = {1,1,1,0.8}-- Just a canvas but we want the right size
         local item_count = #split-1
         for I=1, #split do
@@ -337,7 +337,7 @@ for _,ore_tiers in pairs(omni.omnisource) do
             deg = math.rad(deg % 360)
             icons = util.combine_icons(
                 icons,
-                omni.icon.of(split[I].name, "item"),
+                omni.lib.icon.of(split[I].name, "item"),
                 {
                     scale = 0.5,
                     shift = {
@@ -451,7 +451,7 @@ end
 --Set omnitractor extraction prereqs
 local function get_tractor_req(i)
 	local r = {}
-	for j,tier in pairs(omni.omnisource) do
+	for j,tier in pairs(omni.matter.omnisource) do
 		if tonumber(j) < i and tonumber(j) >= i-3 then
 			for _,ore in pairs(tier) do
 				r[#r+1]="omnitech-extraction-"..ore.name.."-"..omni.pure_levels_per_tier*(i-ore.tier-1)+omni.pure_dependency
@@ -473,7 +473,7 @@ local function get_tractor_req(i)
 			r[#r+1]="omnitech-omnisolvent-omnisludge-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
 		end
 	end
-	for j,tier in pairs(omni.omnifluid) do
+	for j,tier in pairs(omni.matter.omnifluid) do
 		if tonumber(j) < i and tonumber(j) >= i-3 then
 			for _,fluid in pairs(tier) do
 				if omni.fluid_levels_per_tier*(i-fluid.tier-1)+omni.fluid_dependency <= omni.fluid_levels then

@@ -404,4 +404,4 @@ lib.custom_description = function(prototype, desc_key, ...)
         ...
     }
 end
-omni.locale = lib
+omni.lib.locale = lib

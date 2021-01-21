@@ -30,6 +30,6 @@ if bobmods and bobmods.ores then
 end
 
 if mods["bobplates"] then
-	omni.add_omnicium_alloy("aluminium","aluminium-plate","ingot-aluminium")
-	omni.add_omnicium_alloy("tungsten","tungsten-plate","casting-powder-tungsten")
+	omni.matter.add_omnicium_alloy("aluminium","aluminium-plate","ingot-aluminium")
+	omni.matter.add_omnicium_alloy("tungsten","tungsten-plate","casting-powder-tungsten")
 end

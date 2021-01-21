@@ -7,7 +7,7 @@ local equal_type = {"lab","assembling-machine","furnace","boiler","generator","m
 --log("why tok, WHY!?")
 for _, rec in pairs(data.raw.recipe) do
 	if standardized_recipes[rec.name] == nil then
-		omni.marathon.standardise(rec)
+		omni.lib.standardise(rec)
 	end
 	if string.find(rec.name,"creative") or #rec.normal.ingredients == 0 or (string.find(rec.name,"aspect") and string.find(rec.name,"extraction")) then omni.marathon.exclude_recipe(rec.name) end
 	if expo then

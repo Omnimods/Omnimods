@@ -531,7 +531,7 @@ function ItemGen:import(item)
 		setPlace(proto.place_result):
 		setSubgroup(proto.subgroup):
 		setFuelCategory(proto.fuel_category):
-		setIcons(proto.icons or proto.icon or omni.icon.of(proto, true)):
+		setIcons(proto.icons or proto.icon or omni.lib.icon.of(proto, true)):
 		setFuelValue(proto.fuel_value):
 		setOrder(proto.order)
 		if item.type == "fluid" then
@@ -747,7 +747,7 @@ function ItemGen:addSmallIcon(icon, nr)
 	if type(icon) == "table" and icon[1] and icon[1].icon then
 		icons = icon 
 	else
-		icons = omni.icon.of(icon, true)
+		icons = omni.lib.icon.of(icon, true)
 	end
 	if icons then
 		ic_sz = icons.icon_size or ic_sz
@@ -1192,7 +1192,7 @@ end
 
 function RecGen:import(recipe)
 	if type(recipe)=="string" then recipe = data.raw.recipe[recipe] or data.raw.recipe["burner-"..recipe] end
-	omni.marathon.standardise(recipe)
+	omni.lib.standardise(recipe)
 	local r = RecGen:create()
 	if recipe then
 		if #recipe.normal.results==1 or recipe.main_product then
@@ -1203,7 +1203,7 @@ function RecGen:import(recipe)
 			setSubgroup(proto.subgroup):
 			setOrder(proto.order):
 			setFuelCategory(proto.fuel_category):
-			setIcons(proto.icons or proto.icon or omni.icon.of(proto, true)):
+			setIcons(proto.icons or proto.icon or omni.lib.icon.of(proto, true)):
 			setFuelValue(proto.fuel_value)
 			if proto.place_as_tile then r:tile():setPlace(proto.place_as_tile.result) end
 			if proto.type == "fluid" then
@@ -1225,7 +1225,7 @@ function RecGen:import(recipe)
 		setCategory(recipe.category):
 		setSubgroup(recipe.subgroup or r.subgroup(0,0)):
 		setOrder(recipe.order or r.order(0,0)):
-		setIcons(recipe.icons or recipe.icon or r.icons(0,0) or omni.icon.of(recipe, true)):
+		setIcons(recipe.icons or recipe.icon or r.icons(0,0) or omni.lib.icon.of(recipe, true)):
 		setHidden(recipe.hidden or false)
 
 		for _, module in pairs(data.raw.module) do
@@ -1282,7 +1282,7 @@ function RecGen:importResult(result)
 		return RecGen:import(result)
 	else
 		for _,rec in pairs(data.raw.recipe) do
-			omni.marathon.standardise(rec)
+			omni.lib.standardise(rec)
 			for _,res in pairs(rec.normal.results) do
 				if res.name==result then
 					return RecGen:import(rec.name)
@@ -2545,14 +2545,26 @@ function TechGen:setAllow(m)
 	self.allowed = m or m==nil
 	return self
 end
-function TechGen:setLocName(n,m)
-	self.loc_name = n
-	self.loc_name_keys = m
+function TechGen:setLocName(n)
+	if type(n) == "table" then
+		self.loc_name = n
+	else
+		self.loc_name = {n}
+	end
+	if self.loc_name[1] and not string.find(self.loc_name[1],"name.") then
+		self.loc_name[1]="technology-name."..self.loc_name[1]
+	end
 	return self
 end
-function TechGen:setLocDesc(n,m)
-	self.loc_desc =n
-	self.loc_desc_keys = m
+function TechGen:setLocDesc(n)
+	if type(n) == "table" then
+		self.loc_desc = n
+	else
+		self.loc_desc = {n}
+	end
+	if self.loc_desc[1] and not string.find(self.loc_desc[1],"name.") then
+		self.loc_desc[1]="technology-description."..self.loc_desc[1]
+	end
 	return self
 end
 function TechGen:setPacks(p)
@@ -2676,8 +2688,6 @@ function TechGen:generate_tech()
 	end
 	local tech = {
 	name = self.name,
-    --localised_name = self.locname(0,0),
-	--localised_description = self.locdesc(0,0),
 	type = "technology",
 	icons = self.icons,
 	upgrade = self.upgrade,
@@ -2699,16 +2709,12 @@ function TechGen:generate_tech()
 	--	tech.icon = nil
 	--	tech.icon_size = nil
 	--end
-	if self.loc_name and #self.loc_name>0 then
-		if type(self.loc_name[1]) == "string" and not string.find(self.loc_name[1],".") and not string.find(self.loc_name[1],"name") then
-			self.loc_name[1]="technology-name."..self.loc_name[1]
-		end
+	if self.loc_name and next(self.loc_name) then
 		tech.localised_name = self.loc_name
-		if self.loc_name[1] then
-			tech.localised_name[1]="technology-name."..tech.localised_name[1]
-		end
 	end
-	if self.loc_desc and self.loc_desc then tech.localised_description = {"technology-description."..self.loc_desc,self.loc_desc_keys} end
+	if self.loc_desc and next(self.loc_desc) then
+		tech.localised_description = self.loc_desc
+	end
 	self.rtn[#self.rtn+1] = tech
 end
 function TechGen:return_array()
@@ -2862,8 +2868,11 @@ function BuildGen:import(name)
 		if build.localised_description then
 			b:setLocDesc(build.localised_description)
 		end
-
-		--if build.energy_source and build.energy_source.fuel_category then b:setFuelCategory(build.energy_source.fuel_category) end
+		if build.energy_source and (build.energy_source.fuel_categories or build.energy_source.fuel_category) then
+			b:setFuelCategories(build.energy_source.fuel_categories or build.energy_source.fuel_category)
+			--Make sure that we nil fuel_category after we set fuel_categories
+			build.energy_source.fuel_category = nil
+		end
 
 	local r = RecGen:import(name)
 
@@ -2872,7 +2881,7 @@ function BuildGen:import(name)
 		b[name]=table.deepcopy(data)
 	end
 	--if build.energy_source.type=="burner" then b:setBurner(self.energy_source.effectivity,self.energy_source.fuel_inventory_size) end
-	return b:setType(build.type):setFlags(build.flags):setIcons(build.icons or build.icon or omni.icon.of(build, true))
+	return b:setType(build.type):setFlags(build.flags):setIcons(build.icons or build.icon or omni.lib.icon.of(build, true))
 end
 function BuildGen:importIf(name)
 	local build = omni.lib.find_entity_prototype(name) or omni.lib.find_entity_prototype("burner-"..name)
@@ -3110,7 +3119,8 @@ function BuildGen:setResultInventory(h)
 	return self
 end
 function BuildGen:setBurner(efficiency,size)
-	self.energy_source = {type = "burner",
+	self.energy_source = {
+	  type = "burner",
       effectivity = efficiency or 0.5,
       fuel_inventory_size = size or 1,
       emissions = 0.01,
@@ -3171,6 +3181,14 @@ function BuildGen:setSteam(efficiency,size)
 	self:addSteamIcon()
 	if not string.find(self.name,"steam-") then
 		self:setName("steam-"..self.name)
+	end
+	return self
+end
+function BuildGen:setFuelCategories(cat)
+	if type(cat)== "table" then
+		self.fuel_categories = cat
+	else
+		self.fuel_categories = {cat or "chemical"}
 	end
 	return self
 end
@@ -3560,7 +3578,7 @@ function BuildGen:generateBuilding()
     }
 
 	if self.fluid_boxes(0,0) and type(self.fluid_boxes(0,0))=="table" and type(self.fluid_boxes(0,0)[1])=="table" then self.rtn[#self.rtn].fluid_box = self.fluid_boxes(0,0)[1] end
-	if self.fuel_category then self.rtn[#self.rtn].energy_source.fuel_category = self.fuel_category end
+	if self.fuel_categories and next(self.fuel_categories) then self.rtn[#self.rtn].energy_source.fuel_categories = self.fuel_categories end
 	if self.overlay.name then
 		self.rtn[#self.rtn].animation.layers[#self.rtn[#self.rtn].animation.layers+1] = table.deepcopy(self.rtn[#self.rtn].animation.layers[1])
 		self.rtn[#self.rtn].animation.layers[#self.rtn[#self.rtn].animation.layers].filename = "__"..self.mod.."__/graphics/entity/buildings/"..self.overlay.name..".png"
@@ -4625,7 +4643,7 @@ function InsertGen:generateInserter()
     circuit_wire_max_distance = inserter_circuit_wire_max_distance,
     default_stack_control_input_signal = inserter_default_stack_control_input_signal
   }
-  if self.fuel_category then self.rtn[#self.rtn].energy_source.fuel_category = self.fuel_category end
+  if self.fuel_categories and next(self.fuel_categories) then self.rtn[#self.rtn].energy_source.fuel_categories = self.fuel_categories end
 
 	local stuff = RecGen:create(self.mod,self.name):
 	setIngredients(self.ingredients):

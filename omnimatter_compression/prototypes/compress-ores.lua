@@ -4,7 +4,7 @@ local blacklist = {{"creative","mode"}}--{"stone",{"creative","mode"}}
 
 local add_fluid_boxes = false
 
-local get_icons = omni.icon.of
+local get_icons = omni.lib.icon.of
 log("start ore compression")
 local compensation_c = 500/120
 for name,ore in pairs(data.raw.resource) do
@@ -12,7 +12,7 @@ for name,ore in pairs(data.raw.resource) do
     if ore.name then
 			local compressed = false
       local new = table.deepcopy(ore)
-      new.localised_name = omni.locale.custom_name(ore, "compressed-ore")
+      new.localised_name = omni.lib.locale.custom_name(ore, "compressed-ore")
       if new.autoplace then new.autoplace = nil end
       local minable_type = "item"
       if new.minable.results then

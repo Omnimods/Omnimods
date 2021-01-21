@@ -25,14 +25,14 @@ for _, fluid in pairs(data.raw.fluid) do
 			setIngredients({type="fluid",amount=360,name=fluid.name}):
 			setResults({type="fluid",amount=60,name="omnic-water"}):
 			setIcons("omnic-water"):
-			addSmallIcon(omni.icon.of(fluid.name, "fluid"),3):
+			addSmallIcon(omni.lib.icon.of(fluid.name, "fluid"),3):
 			setCategory("omniphlog"):
 			setEnabled(fluid.name=="omnic-waste"):
 			--setSubgroup(fluid.subgroup):
 			setSubgroup("omnilation"):
 			--Same subgroup & order, but put the omnic water block behind all other recipes in that subgroup
 			setOrder("zzz"..(fluid.order or "")):
-			setLocName({"recipe-name.omnilation", omni.locale.of(fluid).name }):
+			setLocName({"recipe-name.omnilation", omni.lib.locale.of(fluid).name }):
 			extend()
 		fluids[#fluids+1] = fluid.name
 	end

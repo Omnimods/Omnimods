@@ -50,7 +50,7 @@ end
 local recipesExpanded = {}
 local techRec = {}
 for _,rec in pairs(data.raw.recipe) do
-	omni.marathon.standardise(rec)
+	omni.lib.standardise(rec)
 	if fluidCount(rec.normal.results) > 1 or fluidCount(rec.normal.ingredients) > 1 then
 		techRec[rec.name] = {}
 		if not omni.lib.equalTableIgnore(rec.normal.ingredients,rec.expensive.ingredients,"amount") or not omni.lib.equalTableIgnore(rec.normal.results,rec.expensive.results,"amount") then
@@ -82,7 +82,7 @@ for _,rec in pairs(data.raw.recipe) do
 						if ingOrders[dif][i] and #ingOrders[dif][i] > 0 then new[dif].ingredients = omni.lib.union(ingOrders[dif][i],solids[dif].ingredients) end
 						if resOrders[dif][j] and #resOrders[dif][j] > 0 then new[dif].results = omni.lib.union(resOrders[dif][j],solids[dif].results) end
 					end
-					if not new.localised_name and new.main_product==nil then new.localised_name = omni.locale.of(rec).name end
+					if not new.localised_name and new.main_product==nil then new.localised_name = omni.lib.locale.of(rec).name end
 					new.name=new.name.."-omniperm-"..i.."-"..j
 					techRec[rec.name][#techRec[rec.name]+1]=new.name
 					new.hidden = true

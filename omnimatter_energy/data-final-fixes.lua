@@ -87,3 +87,13 @@ if mods["bobtech"] and settings.startup["bobmods-burnerphase"].value then
 		end
 	end
 end
+
+--Make sure there are no leftover techs that prereq logistics (hidden without bobs belts)
+--Want to make sure we reuse that in the future to avoid these fixes
+if data.raw.technology["omnitech-belt-logistics"] then
+	for _,tech in pairs(data.raw.technology) do
+		if tech.prerequisites and omni.lib.is_in_table("logistics", tech.prerequisites) then
+			omni.lib.replace_prerequisite(tech.name, "logistics", "omnitech-belt-logistics")
+		end
+	end
+end

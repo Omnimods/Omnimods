@@ -113,7 +113,7 @@ local get_solvation_tech_packs = function(grade)
 end
 
 --Add water-omnitraction recipe
-omni.add_omniwater_extraction("omnimatter", "water", omni.fluid_levels, 1, 360, true)
+omni.matter.add_omniwater_extraction("omnimatter", "water", omni.fluid_levels, 1, 360, true)
 
 local quant = 24
 local cost = OmniGen:create():
@@ -183,7 +183,7 @@ local get_distillation_icon = function(fluid,tier)
 end
 
 local function generate_solvation_icon(fluid)
-	local fluid_icon = table.deepcopy(omni.icon.of(fluid.name, "fluid"))
+	local fluid_icon = table.deepcopy(omni.lib.icon.of(fluid.name, "fluid"))
 	local tint = table.deepcopy(data.raw.fluid[fluid.name].base_color)
 	if tint.r then
 		tint.a = 0.75
@@ -206,7 +206,7 @@ local function generate_solvation_icon(fluid)
 	)
 end
 
-for _,tier in pairs(omni.omnifluid) do
+for _,tier in pairs(omni.matter.omnifluid) do
 	for _, fluid in pairs(tier) do
 		local cost = OmniGen:create():
 			setYield(fluid.name):

@@ -248,7 +248,7 @@ function omni.crystal.generate_control_crystal(board_crystal,circuit_crystal,con
 			--log("crystal effect: "..eff.recipe)
 			if eff.type=="unlock-recipe" and string.find(eff.recipe,"omnitraction") and data.raw.recipe[eff.recipe] then
 				--log("Circuit: "..eff.recipe)
-				omni.marathon.standardise(data.raw.recipe[eff.recipe])
+				omni.lib.standardise(data.raw.recipe[eff.recipe])
 				for _,res in pairs(data.raw.recipe[eff.recipe].normal.results) do
 					tech_unlock[i][#tech_unlock[i]+1]=res.name
 				end
@@ -298,8 +298,8 @@ function omni.crystal.generate_hybrid_circuit(control_crystal,electronic_circuit
 	local items = {}
 	--	icons[#icons+1]={icon="__omnimatter_crystal__/graphics/blank.png"}
 	local icons = util.combine_icons(
-		omni.icon.of(data.raw.item[cc]),
-		omni.icon.of(data.raw.item[electronic_circuit]),
+		omni.lib.icon.of(data.raw.item[cc]),
+		omni.lib.icon.of(data.raw.item[electronic_circuit]),
 		{}
 	)
 	icons[#icons].scale = 0.5
