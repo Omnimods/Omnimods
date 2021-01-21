@@ -1,3 +1,5 @@
+local resource_autoplace = require("resource-autoplace")
+
 ItemGen:create("omnimatter","omnite"):
 	setFuelValue(2):
 	setStacksize(500):
@@ -140,59 +142,65 @@ data:extend(
 }
 )
 data:extend{
-  	{
-	type = "autoplace-control",
-	name = "omnite",
-	richness = true,
+  {
+    type = "autoplace-control",
+    name = "omnite",
+    richness = true,
     category = "resource",
-	order = "b-e"
-	},
-	{
-	type = "noise-layer",
-	name = "omnite"
-	},
+    order = "b-a"
+  },
+  {
+    type = "noise-layer",
+    name = "omnite"
+  },
   {
     type = "resource",
     name = "omnite",
     icon = "__omnimatter__/graphics/icons/omnite.png",
     icon_size = 32,
     flags = {"placeable-neutral"},
-    order="a-b-e",
-    minable =
-    {
+    tree_removal_probability = 0.8,
+    tree_removal_max_distance = 32 * 32,
+    infinite_depletion_amount = 10,
+    resource_patch_search_radius = 10,
+    order="b-da",
+    infinite = false,
+    minable = {
       hardness = 0.9,
-      mining_particle = "stone-particle",
+      mining_particle = "omnite-particle",
       mining_time = 1,
-      result = "omnite",
-      --fluid_amount = 10,
-      --required_fluid = "sulfuric-acid"
+      results = {
+        {
+          type = "item",
+          name = "omnite",
+          amount_min = 1,
+          amount_max = 1
+        }
+      }
     },
     collision_box = {{ -0.1, -0.1}, {0.1, 0.1}},
     selection_box = {{ -0.5, -0.5}, {0.5, 0.5}},
     autoplace =
-    {
-      control = "omnite",
-      sharpness = 1,
-      richness_multiplier = 2000,
-      richness_multiplier_distance_bonus = 15,
-      richness_base = 1000,
-      coverage = 0.03,
-      peaks =
-      {
-        {
-          noise_layer = "omnite",
-          noise_octaves_difference = -1.5,
-          noise_persistence = 0.3,
+      resource_autoplace.resource_autoplace_settings({
+        name = "omnite",
+        order = "b-da",
+        has_starting_area_placement = true,
+        base_density = 35,    -- ~richness
+        regular_rq_factor_multiplier = 1.8, --Size
+        starting_rq_factor_multiplier = 2.4,
+        richness_multiplier_distance_bonus = 20,
+        base_spots_per_km2 = 10, -- ~frequency
+        peaks = {
+          {
+            noise_layer = "omnite",
+            noise_octaves_difference = -1.5,
+            noise_persistence = 0.3,
+          },
         },
-      },
-      starting_area_size = 600 * 0.01,
-      starting_area_amount = 1000
-    },
+      }),
     stage_counts = {1000, 600, 400, 200, 100, 50, 20, 1},
-    stages =
-    {
-      sheet =
-      {
+    stages = {
+      sheet = {
         filename = "__omnimatter__/graphics/entity/ores/omnite.png",
         priority = "extra-high",
         width = 64,
@@ -210,10 +218,8 @@ data:extend{
         }
       }
     },
-    stages_effect =
-    {
-      sheet =
-      {
+    stages_effect = {
+      sheet = {
         filename = "__omnimatter__/graphics/entity/ores/omnite-glow.png",
         priority = "extra-high",
         width = 64,
@@ -242,5 +248,22 @@ data:extend{
     max_effect_alpha = 0.3,
     map_color = {r=0.34, g=0.00, b=0.51},
   }
-
 }
+
+--Apply preset configs to omnite and infinite omnite if it exists
+function omni.matter.apply_presets(resource)
+  local presets = {
+    ["rich-resources"] = {richness = "very-good"},
+    ["rail-world"] = {frequency = 0.33333333333, size = 3},
+    ["ribbon-world"] = {frequency = 3, size = 0.5, richness = 2}
+  }
+
+  for preset, conf in pairs(presets) do
+    local set = data.raw["map-gen-presets"]["default"][preset]
+    if set and set.basic_settings and set.basic_settings.autoplace_controls then
+        set.basic_settings.autoplace_controls[resource] = conf
+    end
+  end
+end
+
+omni.matter.apply_presets("omnite")

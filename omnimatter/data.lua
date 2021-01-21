@@ -9,8 +9,8 @@ require("prototypes.compat.extraction-functions")
 
 --LOAD ALL OTHER PROTOTYPES
 require("prototypes.omniore")
-require("prototypes.generation.omnite-inf")
 require("prototypes.generation.omnite")
+require("prototypes.generation.omnite-inf")
 require("prototypes.compat.extraction-resources")
 
 require("prototypes.buildings.omnitractor")
