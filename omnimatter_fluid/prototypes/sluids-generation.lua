@@ -687,7 +687,7 @@ end
 for _,f in pairs(temperature_fluids) do
 	--log("pyc is shit")
 	for _,r in pairs(f.recipes) do
-		if #f.used > 1 and table_size(f.temperatures) > 1 then
+		if table_size(f.used) > 1 and table_size(f.temperatures) > 1 then
 			for _,ingres in pairs({"ingredients","results"}) do
 				for _, dif in pairs({"normal","expensive"}) do
 					for _,p in pairs(r[dif][ingres]) do
