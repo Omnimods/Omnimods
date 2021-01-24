@@ -107,6 +107,7 @@ function omni.lib.equal(tab1,tab2)
 	end
 	return v
 end
+
 function omni.lib.equalTableIgnore(tab1,tab2,...)
 	local arg = {...}
 	if type(arg[1])=="table" then arg = arg[1] end
@@ -419,21 +420,12 @@ function omni.lib.remove_from_table(element, tab)
 end
 
 --A function that takes two tables and gives out the elements they have in common
-function omni.lib.table_intersection(t, d)
+function omni.lib.table_intersection(tab, d)
 	local inter={}
-	for i=1,#t do
-		if omni.lib.is_in_table(t[i],d) then inter[#inter+1]=t[i] end
+	for i=1,#tab do
+		if omni.lib.is_in_table(tab[i],d) then inter[#inter+1]=tab[i] end
 	end
 	if #inter > 0 then return inter else return nil end
-end
-
---Check if tabels are the same
-function omni.lib.tables_equal(t, d)
-	local inter={}
-	for i=1,#t do
-		if t[i] ~=d[i] then return false end
-	end
-	return true
 end
 
 --Check if tabels are the same
