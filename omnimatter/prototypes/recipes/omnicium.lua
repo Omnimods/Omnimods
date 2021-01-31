@@ -233,8 +233,9 @@ if mods["angelssmelting"] then
   })
   data.raw.item["omnicium-plate"].subgroup = "omnicium-casting"
 end
-if mods["only-smelting"] then
-else
-	data.raw.recipe["iron-plate"].hidden = false
-	data.raw.recipe["copper-plate"].hidden = false
-end
+
+-- if mods["only-smelting"] then
+-- else
+-- 	data.raw.recipe["iron-plate"].hidden = false
+-- 	data.raw.recipe["copper-plate"].hidden = false
+-- end

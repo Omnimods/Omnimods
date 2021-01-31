@@ -8,12 +8,11 @@
 "dependencies":[
   "base",
   "omnilib >= 4.1.0",
-  "?bobores",
-  "?angelspetrochem",
-  "?only-smelting",
   "?angelsrefining",
-  "?bobtech",
   "?angelssmelting",
+  "?angelspetrochem",
+  "?bobores",
+  "?bobtech",
   "?Krastorio2",
   "(?)bobassembly"
 ]
