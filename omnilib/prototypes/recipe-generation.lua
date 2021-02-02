@@ -1195,25 +1195,27 @@ function RecGen:import(recipe)
 	omni.lib.standardise(recipe)
 	local r = RecGen:create()
 	if recipe then
-		if #recipe.normal.results==1 or recipe.main_product then
+		if #recipe.normal.results==1 or recipe.main_product and recipe.main_produc ~= "" then
 			local proto = omni.lib.find_prototype(recipe.main_product or recipe.normal.results[1].name)
-			r:setStacksize(proto.stack_size):
-			setFlags(proto.flags):
-			setPlace(proto.place_result):
-			setSubgroup(proto.subgroup):
-			setOrder(proto.order):
-			setFuelCategory(proto.fuel_category):
-			setIcons(proto.icons or proto.icon or omni.lib.icon.of(proto, true)):
-			setFuelValue(proto.fuel_value)
-			if proto.place_as_tile then r:tile():setPlace(proto.place_as_tile.result) end
-			if proto.type == "fluid" then
-				r:fluid():
-				setFlowColour(proto.flow_color):
-				setBaseColour(proto.base_color)
-			elseif proto.type == "tool" then
-				r:tool():
-				setDurability(proto.durability):
-				setDurabilityDesc(proto.durability_description_key)
+			if proto then
+				r:setStacksize(proto.stack_size):
+				setFlags(proto.flags):
+				setPlace(proto.place_result):
+				setSubgroup(proto.subgroup):
+				setOrder(proto.order):
+				setFuelCategory(proto.fuel_category):
+				setIcons(proto.icons or proto.icon or omni.lib.icon.of(proto, true)):
+				setFuelValue(proto.fuel_value)
+				if proto.place_as_tile then r:tile():setPlace(proto.place_as_tile.result) end
+				if proto.type == "fluid" then
+					r:fluid():
+					setFlowColour(proto.flow_color):
+					setBaseColour(proto.base_color)
+				elseif proto.type == "tool" then
+					r:tool():
+					setDurability(proto.durability):
+					etDurabilityDesc(proto.durability_description_key)
+				end
 			end
 		end
 		r:setName(recipe.name):
