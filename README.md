@@ -6,7 +6,7 @@
 ## Translations for all Omnimods can be found in this crowdin project. Help us to translate them into your language!
 https://crowdin.com/project/factorio-mods-localization
 
-## Adding Omni compatibility to your mod:
+## Adding Omnimatter compatibility to your mod:
 
 - Add an ore to omnimatter (creates extraction recipes):
   - omni.matter.add_resource(orename, tier)
@@ -34,3 +34,9 @@ https://crowdin.com/project/factorio-mods-localization
 
 - Add initial extraction (starter/burner) recipes for an ore:
   - omni.matter.add_initial(orename,ore_amount,omnite_amount)
+  
+- Add a resource to our autoplace removal blacklist (The resource will not be removed by us):
+  - omni.matter.add_ignore_resource(name)
+  
+- Remove a resource from our autoplace removal blacklist:
+  - omni.matter.remove_ignore_resource(name)
