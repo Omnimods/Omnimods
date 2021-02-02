@@ -1,9 +1,19 @@
 omni.matter.omnitial = {}
 omni.matter.omnisource = {}
 omni.matter.omnifluid = {}
+omni.matter.res_to_keep = {
+	"omnite",
+	"infinite-omnite",
+	"trees",
+	"enemy-base"
+}
 
+--------------------------
+---Extraction functions---
+--------------------------
 --Manipulation of the extraction tables
 --Open for modders to use to add compatibility
+
 function omni.matter.add_resource(n, t, s, m)
 	if not omni.matter.omnisource[tostring(t)] then omni.matter.omnisource[tostring(t)] = {} end
 	omni.matter.omnisource[tostring(t)][n]={mod=m, tier = t, name = n, techicon = s}
@@ -217,4 +227,22 @@ function omni.matter.add_omniwater_extraction(mod, element, lvls, tier, gain, st
 
   	--Add the last tier as prereq for the rocket silo
   	omni.lib.add_prerequisite("rocket-silo", "omnitech-"..element.."-omnitraction-"..lvls)
+end
+
+--------------------------
+---Other functions---
+--------------------------
+
+--Add a resource to our whitelist. Whitelisted resources will not be removed from autoplace control
+function omni.matter.add_ignore_resource(name)
+	if not omni.lib.is_in_table(name, omni.matter.res_to_keep) then
+		omni.matter.res_to_keep[#omni.matter.res_to_keep+1] = name
+	end
+end
+
+--Remove a resource from our whitelist.
+function omni.matter.remove_ignore_resource(name)
+	if omni.lib.is_in_table(name, omni.matter.res_to_keep) then
+		omni.lib.remove_from_table(name, omni.matter.res_to_keep)
+	end
 end

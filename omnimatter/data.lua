@@ -5,7 +5,7 @@ if not omni.matter then omni.matter = {} end
 --LOAD CONSTANT, CATEGORY AND FUNCTION PROTOTYPES
 require("prototypes.constants")
 require("prototypes.categories")
-require("prototypes.compat.extraction-functions")
+require("prototypes.functions")
 
 --LOAD ALL OTHER PROTOTYPES
 require("prototypes.omniore")

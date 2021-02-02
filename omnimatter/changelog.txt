@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.9
+Date: 2021.xx.xx
+  Info:
+    - Added omni.matter.add_ignore_resource(name) and omni.matter.remove_ignore_resource(name)
+    - Mods can access those to have control over what gets (not) ignored by our autoplace removal
+---------------------------------------------------------------------------------------------------
 Version: 4.1.8
 Date: 2021.01.21
   Info:
