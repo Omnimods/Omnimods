@@ -40,3 +40,5 @@ https://crowdin.com/project/factorio-mods-localization
   
 - Remove a resource from our autoplace removal blacklist:
   - omni.matter.remove_ignore_resource(name)
+  
+- All functions are provided in our data stage, extraction functions are executed in data-updates and autoplace removal in data-final-fixes
