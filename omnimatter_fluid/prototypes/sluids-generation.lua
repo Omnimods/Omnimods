@@ -88,6 +88,66 @@ function omni.fluid.get_fluid_amount(subtable) --individual ingredient/result ta
 	log("an error has occured with this ingredient, please find logs to find out why")
 	log(serpent.block(subtable))
 end
+
+local function search_range(temp_cond,value,temp_set)
+	for _,val in pairs(temp_set) do
+		log(serpent.block(val))
+		log(serpent.block(temp_cond.." at "..value))
+		if temp_cond == "max" and val.ave then
+			if val.ave <= value then
+				return false --a lower value exists, remove condition
+			end
+		elseif temp_cond == "min" and val.ave then
+			if val.ave >= value then
+				return false --a higher value exists, remove condition
+			end
+		end
+	end
+	return true --keep limit as actual value
+end
+
+local function item_temperature_tab_cleanup(temp_sets)
+	--sort and filter out temperatures in the table
+	--will run iteratively for items, or just once for recipes
+	local temps = {} --set metatable of used temperatures to override later
+	--log(serpent.block(temp_sets))
+	for i,temperature in pairs(temp_sets) do
+		--temp.ave (common settings)
+		if temperature.ave and not omni.lib.is_in_table({ave = temperature.ave},temps) then
+			--log("ave temp copy")
+			temps[#temps+1] = {ave=temperature.ave} --basically copy it...
+		elseif (temperature.max and temperature.min) then --set average based on max and min
+			--log("min-max copy")
+			local aver = (temperature.max+temperature.min)/2
+			if not omni.lib.is_in_table({ave = aver},temps) then
+				temps[#temps+1] = {ave = aver}
+			--	log("replacing range with average: "..temperature.max.."+"..temperature.min.."="..aver)
+			--else --already in table
+			--	log("average of range in table already: "..temperature.max.."+"..temperature.min.."="..aver)
+			end
+		elseif temperature.max --[[and not temperature.min]] then
+		--log("max only")
+		--log(search_range("max",temperature.max,temp_sets))
+			--search subtable for a value lower than max...
+			if search_range("max",temperature.max,temp_sets) then
+				temps[#temps+1] = {max = temperature.max}
+			--else
+			--	log("removing max:"..temperature.max)
+			end
+		elseif temperature.min --[[and not temperature.max]] then
+			--log("min only")
+			--log(search_range("min",temperature.min,temp_sets))
+			--search subtable for a value higher than min...
+			if search_range("min",temperature.min,temp_sets) then
+				temps[#temps+1] = {min = temperature.min}
+			--else
+			--	log("removing min:"..temperature.min)
+			end
+		end
+	end
+	temp_sets = temps
+	return temps --override old table with new
+end
 --------------------------------------------------------------------------------------------------
 --Sluid generation code
 --------------------------------------------------------------------------------------------------
@@ -104,7 +164,9 @@ function generate_sluid()
 	for _, diff in pairs({"sluid","mush"}) do
 		for _, fluid in pairs(fluid_cats[diff]) do
 			local icn = omni.lib.icon.of_generic(data.raw.fluid[fluid.name])--get_icons(fluid)
-			if table_size(fluid.temperature) > 0 then --if table is not empty...
+			fluid.temperature = item_temperature_tab_cleanup(fluid.temperature)
+			if fluid.temperature and table_size(fluid.temperature) > 0 then --if table is not empty...
+				--clean-up the table
 				for _,temps in pairs(fluid.temperature) do
 					if temps.ave then
 						if not data.raw.item["solid-"..fluid.name.."-T-"..temps.ave] then
@@ -112,23 +174,6 @@ function generate_sluid()
 								type = "item",
 								name = "solid-"..fluid.name.."-T-"..temps.ave,
 								localised_name = {"item-name.solid-fluid-tmp", data.raw.fluid[fluid.name].localised_name or {"fluid-name."..fluid.name},"T="..temps.ave},
-								localised_description = {"item-description.solid-fluid", data.raw.fluid[fluid.name].localised_description or {"fluid-description."..fluid.name}},
-								icons = icn,
-								--icon_size = 32,
-								subgroup = "omni-solid-fluids",
-								order = "a",
-								stack_size = sluid_stack_size,
-								flags = {}
-								--inter_item_count = item_count,
-							}
-						end
-					elseif temps.max and temps.min then
-						local temp = (temps.max+temps.min)/2
-						if not data.raw.item["solid-"..fluid.name.."-T-"..temp] then
-							fluid_solid[#fluid_solid+1] = {
-								type = "item",
-								name = "solid-"..fluid.name.."-T-"..temp,
-								localised_name = {"item-name.solid-fluid-tmp", data.raw.fluid[fluid.name].localised_name or {"fluid-name."..fluid.name},"T="..temp},
 								localised_description = {"item-description.solid-fluid", data.raw.fluid[fluid.name].localised_description or {"fluid-description."..fluid.name}},
 								icons = icn,
 								--icon_size = 32,
@@ -155,25 +200,24 @@ function generate_sluid()
 								--inter_item_count = item_count,
 							}
 						end
+					elseif temps.min then
+						if not data.raw.item["solid-"..fluid.name.."-Th-"..temps.min] and not data.raw.item["solid-"..fluid.name.."-T-"..temps.min] then --don't duplicate
+							fluid_solid[#fluid_solid+1] = {
+								type = "item",
+								name = "solid-"..fluid.name.."-Tc-"..temps.min,
+								localised_name = {"item-name.solid-fluid-tmp", data.raw.fluid[fluid.name].localised_name or {"fluid-name."..fluid.name},"Tmin="..temps.min},
+								localised_description = {"item-description.solid-fluid", data.raw.fluid[fluid.name].localised_description or {"fluid-description."..fluid.name}},
+								icons = icn,
+								--icon_size = 32,
+								subgroup = "omni-solid-fluids",
+								order = "a",
+								stack_size = sluid_stack_size,
+								flags = {}
+								--inter_item_count = item_count,
+							}
+						end
 					end
 				end
-			--[[else
-				if not data.raw.item["solid-"..fluid.name] then --don't make it if it already exists
-					--get properties parsed if needed and append to key properties (name specifically)
-					fluid_solid[#fluid_solid+1] = {
-						type = "item",
-						name = "solid-"..fluid.name,
-						localised_name = {"item-name.solid-fluid", data.raw.fluid[fluid.name].localised_name or {"fluid-name."..fluid.name}},
-						localised_description = {"item-description.solid-fluid", data.raw.fluid[fluid.name].localised_description or {"fluid-description."..fluid.name}},
-						icons = icn,
-						--icon_size = 32,
-						subgroup = "omni-solid-fluids",
-						order = "a",
-						stack_size = sluid_stack_size,
-						flags = {}
-						--inter_item_count = item_count,
-					}
-				end]]
 			end
 			if not data.raw.item["solid-"..fluid.name] then --don't make it if it already exists
 				--get properties parsed if needed and append to key properties (name specifically)
@@ -198,41 +242,73 @@ end
 --------------------------------------------------------------------------------------------------
 --Temperature clean-up functions
 --------------------------------------------------------------------------------------------------
-local function temp_cleanup(temperatures)
-	--currently only needed to merge max only and a lower average...
-	--do something clever to clean up the lists, main examples are:
-	--generator steam, remove the 100C
-	--coolant, combine set values with min/max values (200=250-150) etc
-	  --This may be easier to deal with in the recipe fetch, if ing, get average value, if result, leave as is
+local function recipe_temperature_cleanup(recipe_temp,ingredient_name)
+	if recipe_temp == nil then
+		return nil
+	end
+	--checks the recipe temperature against the mush/sluid temperatures
+	if recipe_temp.ave then
+		if recipe_temp.ave <= 25 then
+			return nil
+		else
+			return recipe_temp --will always exist
+		end
+	elseif recipe_temp.max and recipe_temp.min then
+		return {ave=(recipe_temp.max+recipe_temp.min)/2}
+	elseif recipe_temp.max --[[and not min]] then
+		for _, diff in pairs({"sluid","mush"}) do
+			for _, fluid in pairs(fluid_cats[diff]) do --iterate through item generation table
+				if fluid==ingredient_name then --found you
+					for _,temps in pairs(fluid.temp) do
+					--iterate through "known" temperatures
+						if recipe_temp.max >= 25 then --works, skip all below 25, by removing the temperature setting --may fail if using sub-zero temperatures...
+							if temps.ave <= recipe_temp.max then
+								return temps
+							end
+						end
+						return recipe_temp
+					end
+					return nil
+				end
+				log("item not found")
+			end
+		end
+	elseif recipe_temp.min --[[and not max]] then
+		for _, diff in pairs({"sluid","mush"}) do
+			for _, fluid in pairs(fluid_cats[diff]) do --iterate through item generation table
+				if fluid==ingredient_name then --found you
+					for _,temps in pairs(fluid.temp) do
+					--iterate through "known" temperatures
+						if temps.ave >= recipe_temp.min then
+							return temps
+						end
+					end
+					return recipe_temp
+				end
+				log("item not found")
+			end
+		end
+	end
 end
 --------------------------------------------------------------------------------------------------
 --Recipe update code
 --------------------------------------------------------------------------------------------------
 local function mp_update(co_ord,new_names)
 	for _, res in pairs(new_names) do
-		log(serpent.block(res))
-		--log(serpent.block(new_names))
-		log(serpent.block(co_ord))
 		if res.name == co_ord then
 			co_ord = "solid-"..co_ord
 			if res.temp then --deal with temperature
-				local temps = res.temp --override name to carry correct tags
-				if temps.max then
-					local temp = temps.max
-					if temps.min then
-						temp = (temps.max+temps.min)/2
-						log("max-min: "..temp)
-						co_ord = co_ord.."-T-"..temp
-					else
-						log("max: "..temp)
+				local temps = recipe_temperature_cleanup(res.temp,res.name) --override name to carry correct tags
+				if temps then
+					if temps.ave then 
+						co_ord = co_ord.."-T-"..temps.ave
+					elseif temps.max then
 						co_ord = co_ord.."-Th-"..temp
+					elseif temps.min then
+						co_ord = co_ord.."-Tc-"..temp
 					end
-				elseif temps.ave then
-					log("ave: "..temps.ave)
-					co_ord = co_ord.."-T-"..temps.ave
 				end
 			end
-			log(co_ord)
 			return co_ord
 		end
 	end
@@ -260,28 +336,21 @@ function sluid_recipe_updates() --currently works with non-standardised recipes
 		for _,style in pairs(types) do
 			for i = 1, table_size(changes[style]) do
 				if data.raw.recipe[name][style] then
-					--log(serpent.block(data.raw.recipe[name][style]))
 					for n, ing in pairs(data.raw.recipe[name][style]) do
-					--	log(serpent.block(ing))
 						if ing.name == changes[style][i].name then
 							ing.type = "item"
 							ing.name = "solid-"..changes[style][i].name
 							ing.amount = omni.fluid.get_fluid_amount(ing)
-							--add in fluid property removal and temperature detection code stuffs here...
-						--	log(serpent.block(changes[style][i].temp))
 							if changes[style][i].temp then
-								local temps = changes[style][i].temp --override name to carry correct tags
-								if temps.max then
-									--temp_cleanup(temps)
-									local temp = temps.max
-									if temps.min then
-										temp = (temps.max+temps.min)/2
-										ing.name = "solid-"..changes[style][i].name.."-T-"..temp
-									else
-										ing.name = "solid-"..changes[style][i].name.."-Th-"..temp
+								local temps = recipe_temperature_cleanup(changes[style][i].temp,changes[style][i].name)
+								if temps then
+									if temps.ave then 
+										ing.name = "solid-"..changes[style][i].name.."-T-"..temps.ave
+									elseif temps.max then
+										ing.name = "solid-"..changes[style][i].name.."-Th-"..temps.max
+									elseif temps.min then
+										ing.name = "solid-"..changes[style][i].name.."-Tc-"..temps.min
 									end
-								elseif temps.ave then
-									ing.name = "solid-"..changes[style][i].name.."-T-"..temps.ave
 								end
 							end
 						end
@@ -289,7 +358,6 @@ function sluid_recipe_updates() --currently works with non-standardised recipes
 				else	--standardised recipes
 					for _, dif in pairs({"normal","expensive"}) do
 						for	n, ing in pairs(data.raw.recipe[name][dif][style]) do
-						--	log(serpent.block(ing))
 							if ing.name == changes[style][i].name then
 								--replace with solids equivalent
 								ing.type = "item"
@@ -300,7 +368,6 @@ function sluid_recipe_updates() --currently works with non-standardised recipes
 						end
 					end
 				end
-				log(serpent.block(data.raw.recipe[name][style]))
 			end
 		end
 		--main product tweaks
@@ -308,42 +375,32 @@ function sluid_recipe_updates() --currently works with non-standardised recipes
 	end
 end
 --DON'T forget to clobber the fluids not in mush/fluids once completed
-
+for _,disfluid in pairs(data.raw.fluid) do
+	if not fluid_cats.fluid[disfluid] then --not found in fluids exclusion list
+		if not fluid_cats.mush[disfluid] then --not found in mush either
+			disfluid.enabled = false
+			disfluid.hidden = true
+			disfluid.auto_barrel = false
+		end
+	end
+end
 --------------------------------------------------------------------------------------------------
 --List Generation Support functions
 --------------------------------------------------------------------------------------------------
 local function check_temperature_table(table,ing)--min,max,ave) --im sure this can be done better... its comparing subtables... in a messy way
-	local min=ing.minimum_temperature
-	local max=ing.maximum_temperature
-	local ave=ing.temperature
-	if min==nil and max==nil and ave==nil then
+	local vals={min=ing.minimum_temperature, max=ing.maximum_temperature, ave=ing.temperature}
+	if vals.min==nil and vals.max==nil and vals.ave==nil then
 		return true
 	end
-	if omni.lib.is_in_table(ing,table) then
+	--fix average temp here...
+	if vals.min and vals.max then
+		vals.ave=(vals.min+vals.max)/2
+		vals.min=nil
+		vals.max=nil
+	end
+	if omni.lib.is_in_table(vals,table) then
 		return true
 	end
-	--I REALLY NEED TO DEAL WITH DIFFERENTIAL TEMPERATURES BETTER (possibly look at lines 1320+)
-	--[[if min==nil and ave==nil then
-		--find a lower average than the max
-		for _,temp in pairs(table) do
-			if temp.ave and temp.ave <= max then
-				return true
-			elseif temp.max and temp.max == max then
-				return true
-			end
-		end
-		return false
-	elseif max==nil and ave==nil then
-		--find a higher average than the max
-		for _,temp in pairs(table) do
-			if temp.ave and temp.ave >= min then
-				return true
-			elseif temp.min and temp.min == min then
-				return true
-			end
-		end
-		return false
-	end]]
 	return false
 end
 
@@ -358,6 +415,7 @@ local function ing_tab_check(table, ing)
 	end
 	return false
 end
+
 local function excluded(comparison) --checks fluid/recipe name against exclusion list
 	for _, str in pairs(excluded_strings) do
 		--deal with multiple values (multi search)
@@ -380,6 +438,7 @@ local function excluded(comparison) --checks fluid/recipe name against exclusion
 	end
 	return false
 end
+
 local function check_hidden(recipe_name)
 	local rec=data.raw.recipe[recipe_name]
 	if rec then
@@ -499,9 +558,22 @@ for _, rec in pairs(data.raw.recipe) do
 						else
 							table_addition(ing,"sluid")
 						end
-						--append recipe modification
 						if not ing_tab_check(recipe_mods[rec.name][diff], ing) then 
 							table.insert(recipe_mods[rec.name][diff], {name = ing.name, temp = {min = ing.minimum_temperature, max = ing.maximum_temperature, ave = ing.temperature}})
+							--check item is also being generated
+							if fluid_cats.sluid[ing.name] then
+								if not check_temperature_table(fluid_cats.sluid[ing.name].temperature, {min = ing.minimum_temperature, max = ing.maximum_temperature, ave = ing.temperature}) then
+									table.insert(fluid_cats.sluid[ing.name].temperature, {min = ing.minimum_temperature, max = ing.maximum_temperature, ave = ing.temperature})
+									log("2")
+								end
+							end
+							if fluid_cats.mush[ing.name] then
+								if not check_temperature_table(fluid_cats.mush[ing.name].temperature, {min = ing.minimum_temperature, max = ing.maximum_temperature, ave = ing.temperature}) then
+									table.insert(fluid_cats.mush[ing.name].temperature, {min = ing.minimum_temperature, max = ing.maximum_temperature, ave = ing.temperature})
+								end
+							end
+						else
+							log("ing in table")
 						end
 					end
 				end
@@ -519,6 +591,17 @@ for _, rec in pairs(data.raw.recipe) do
 							--append recipe modification
 							if not ing_tab_check(recipe_mods[rec.name][diff],ing) then 
 								table.insert(recipe_mods[rec.name][diff], {name = ing.name, temp = {min = ing.minimum_temperature, max = ing.maximum_temperature, ave = ing.temperature}})
+								--check item is also being generated
+								if fluid_cats.sluid[ing.name] then
+									if not check_temperature_table(fluid_cats.sluid[ing.name].temperature, {min = ing.minimum_temperature, max = ing.maximum_temperature, ave = ing.temperature}) then
+										table.insert(fluid_cats.sluid[ing.name].temperature, {min = ing.minimum_temperature, max = ing.maximum_temperature, ave = ing.temperature})
+									end
+								end
+								if fluid_cats.mush[ing.name] then
+									if not check_temperature_table(fluid_cats.mush[ing.name].temperature, {min = ing.minimum_temperature, max = ing.maximum_temperature, ave = ing.temperature}) then
+										table.insert(fluid_cats.mush[ing.name].temperature, {min = ing.minimum_temperature, max = ing.maximum_temperature, ave = ing.temperature})
+									end
+								end
 							end
 						end
 					end
@@ -530,9 +613,12 @@ end
 --log(serpent.block(fluid_cats.fluid))
 --log(serpent.block(fluid_cats.mush))
 --log(serpent.block(fluid_cats.sluid))
---log(serpent.block(recipe_mods))
+log(serpent.block(recipe_mods))
 generate_sluid()
+--log(serpent.block(fluid_cats.mush))
+--log(serpent.block(fluid_cats.sluid))
 sluid_recipe_updates()
+log(serpent.block(recipe_mods))
 
 --------------------------------------------------------------------------------------------------
 --Sluid Boiler tweaks
