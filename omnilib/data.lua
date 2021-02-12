@@ -5,11 +5,6 @@ omni.tint_level = {{r=0,g=0,b=0},{r=1,g=1,b=0},{r=1,g=0,b=0},{r=0,g=0,b=1},{r=1,
 sluid_contain_fluid = 60
 sluid_stack_size = 360
 
---check setting has actually been forced off
-if mods["bobtech"] then
-  settings.startup["bobmods-tech-colorupdate"].forced_value = false
-end
-
 require("prototypes.functions.locale")
 require("prototypes.functions.icon")
 require("prototypes.functions.functions-misc")
@@ -19,5 +14,3 @@ require("prototypes.functions.omnimarathon")
 require("prototypes.functions.recipe-standard")
 require("prototypes.recipe-generation")
 require("prototypes.ingredients-generation")
-
-
