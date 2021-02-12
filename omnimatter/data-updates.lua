@@ -4,7 +4,6 @@ require("prototypes.recipes.solvation-dynamic")
 
 --Compats that add Items/Recipes/Entities
 require("prototypes.compat.bob-compensation")
-require("prototypes.compat.angels")
 
 omni.matter.add_omnicium_alloy("steel","steel-plate","ingot-steel")
 omni.matter.add_omnicium_alloy("iron","iron-plate","ingot-iron")
