@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.7
+Date: 2021.02.11
+  Bugfixes:
+    - Fixed source_inventory_size, result_inventory_size, ingredient_count and result_count
+    - -defaultring to 3 on BuildGen:import() when not set
+    - Fixed a crash that could happen with recipes that had an empty main_product string set
+---------------------------------------------------------------------------------------------------
 Version: 4.1.6
 Date: 2021.01.21
   Info:

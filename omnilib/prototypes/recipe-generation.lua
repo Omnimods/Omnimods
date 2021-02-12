@@ -1195,25 +1195,27 @@ function RecGen:import(recipe)
 	omni.lib.standardise(recipe)
 	local r = RecGen:create()
 	if recipe then
-		if #recipe.normal.results==1 or recipe.main_product then
+		if #recipe.normal.results==1 or recipe.main_product and recipe.main_produc ~= "" then
 			local proto = omni.lib.find_prototype(recipe.main_product or recipe.normal.results[1].name)
-			r:setStacksize(proto.stack_size):
-			setFlags(proto.flags):
-			setPlace(proto.place_result):
-			setSubgroup(proto.subgroup):
-			setOrder(proto.order):
-			setFuelCategory(proto.fuel_category):
-			setIcons(proto.icons or proto.icon or omni.lib.icon.of(proto, true)):
-			setFuelValue(proto.fuel_value)
-			if proto.place_as_tile then r:tile():setPlace(proto.place_as_tile.result) end
-			if proto.type == "fluid" then
-				r:fluid():
-				setFlowColour(proto.flow_color):
-				setBaseColour(proto.base_color)
-			elseif proto.type == "tool" then
-				r:tool():
-				setDurability(proto.durability):
-				setDurabilityDesc(proto.durability_description_key)
+			if proto then
+				r:setStacksize(proto.stack_size):
+				setFlags(proto.flags):
+				setPlace(proto.place_result):
+				setSubgroup(proto.subgroup):
+				setOrder(proto.order):
+				setFuelCategory(proto.fuel_category):
+				setIcons(proto.icons or proto.icon or omni.lib.icon.of(proto, true)):
+				setFuelValue(proto.fuel_value)
+				if proto.place_as_tile then r:tile():setPlace(proto.place_as_tile.result) end
+				if proto.type == "fluid" then
+					r:fluid():
+					setFlowColour(proto.flow_color):
+					setBaseColour(proto.base_color)
+				elseif proto.type == "tool" then
+					r:tool():
+					setDurability(proto.durability):
+					etDurabilityDesc(proto.durability_description_key)
+				end
 			end
 		end
 		r:setName(recipe.name):
@@ -2740,9 +2742,6 @@ function setBuildingParameters(b,subpart)
 	  effects = function(levels,grade) return {"consumption", "speed", "pollution"} end
     }
 	b.crafting_speed=function(levels,grade) return 1 end
-	b.source_inventory_size = function(levels,grade) return 7 end
-	b.result_inventory_size = function(levels,grade) return 7 end
-	b.ingredient_count = function(levels,grade) return 7 end
 	b.energy_source =
     {
 	  type = "electric",
@@ -2821,8 +2820,6 @@ function BuildGen:import(name)
 		setModEffects(build.allowed_effects):
 		setSpeed(build.crafting_speed):
 		setEnergySource(build.energy_source):
-		setInventory(math.max(build.source_inventory_size or 3,build.ingredient_count or 3)):
-		setResultInventory(math.max(build.result_inventory_size or 3,build.result_count or 3)):
 		setOrder(build.order):
 		setNextUpgrade(build.next_upgrade):
 		setUsage(build.energy_usage):
@@ -2848,6 +2845,8 @@ function BuildGen:import(name)
 		setSearchRadius(build.resource_searching_radius):
 		setResourceCategory(build.resource_categories):
 		setInputs(build.inputs):
+		setInventory(build.ingredient_count or build.source_inventory_size):
+		setResultInventory(build.result_count or build.result_inventory_size):
 		setOffAnimation(build.off_animation):
 		setOnAnimation(build.on_animation)
 
@@ -2873,7 +2872,6 @@ function BuildGen:import(name)
 			--Make sure that we nil fuel_category after we set fuel_categories
 			build.energy_source.fuel_category = nil
 		end
-
 	local r = RecGen:import(name)
 
 	local notFields = {}
@@ -3099,23 +3097,13 @@ function BuildGen:setSpeed(h)
 	return self
 end
 function BuildGen:setInventory(h)
-	if type(h) == "function" then
-		self.source_inventory_size = h
-		self.ingredient_count=h
-	else
-		self.source_inventory_size = function(levels,grade) return h end
-		self.ingredient_count=function(levels,grade) return h end
-	end
+	self.source_inventory_size = h
+	self.ingredient_count = h
 	return self
 end
 function BuildGen:setResultInventory(h)
-	if type(h) == "function" then
-		self.result_inventory_size = h
-		self.result_count=h
-	else
-		self.result_inventory_size = function(levels,grade) return h end
-		self.result_count=function(levels,grade) return h end
-	end
+	self.result_inventory_size = h
+	self.result_count = h
 	return self
 end
 function BuildGen:setBurner(efficiency,size)
@@ -3504,8 +3492,10 @@ function BuildGen:generateBuilding()
 		end
 	end
 	if self.type=="furnace" then
-		self.source_inventory_size = function(levels,grade) return 1 end
-		self.result_inventory_size = function(levels,grade) return 1 end
+		self.source_inventory_size = self.source_inventory_size or 1
+		self.result_inventory_size = self.source_result_size or 1
+		self.ingredient_count = self.ingredient_count or 1
+		self.result_count = self.result_count or 1
 	end
 	local lname = {"entity-name."..self.name}
 	if self.loc_name(0,0) and type(self.loc_name(0,0))=="table" then
@@ -3540,13 +3530,14 @@ function BuildGen:generateBuilding()
 		allowed_effects = self.module.effects(0,0),
 		crafting_categories = craftcat,
 		crafting_speed = self.crafting_speed(0,0),
-		source_inventory_size = self.source_inventory_size(0,0),
-		result_inventory_size = self.result_inventory_size(0,0),
+		source_inventory_size = self.source_inventory_size,
+		result_inventory_size = self.result_inventory_size,
+		ingredient_count = self.ingredient_count,
+		result_count = self.result_count,
 		next_upgrade = self.next_upgrade(0,0),
 		energy_source = source,
 		smoke = self.smoke,
 		energy_usage = self.energy_usage(0,0),
-		ingredient_count = self.ingredient_count(0,0),
 		animation =self.animation(0,0),
 		animations =self.animations(0,0),
 		pictures =self.pictures(0,0),

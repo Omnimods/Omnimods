@@ -23,3 +23,6 @@ if mods["omnimatter_marathon"] then
 	omni.marathon.exclude_recipe("omnicium-plate-pure")
 	omni.marathon.exclude_recipe("crushing-omnite-by-hand")
 end
+
+--SET EXTERNAL PARAMETERS
+require("prototypes.compat.angels-updates")
