@@ -3,6 +3,7 @@
 "version": "2.1.8",
 "title":"Omnienergy",
 "author":"EmperorZelos",
+"contact": "https://discord.gg/WQYks7W",
 "description":"Start with limited access to fuel and research better refining methods up to renewable energy",
 "factorio_version":"1.1",
 "dependencies":[

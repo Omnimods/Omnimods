@@ -3,12 +3,15 @@
 "version":"3.18.0",
 "title":"Omniresearch",
 "author":"EmperorZelos",
+"contact": "https://discord.gg/WQYks7W",
 "description":"Lets you move orefields.",
 "factorio_version":"0.18",
-"dependencies":["base",
+"dependencies":[
+	"base",
 	"omnilib >= 3.18.0",
 	"omnimatter",
 	"angelssmelting",
 	"omnimatter_chemistry >= 3.18.0",
-	"?omnimatter_science"]
+	"?omnimatter_science"
+]
 }

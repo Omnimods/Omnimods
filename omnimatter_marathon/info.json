@@ -3,9 +3,11 @@
 "version":"3.18.0",
 "title":"Omnimarathon",
 "author":"EmperorZelos",
+"contact": "https://discord.gg/WQYks7W",
 "description":"Makes the game more challanging by increasing costs. The mod does a thourough analysis of items and chains.",
 "factorio_version":"0.18",
-"dependencies":["base",
+"dependencies":[
+	"base",
 	"?omnimatter",
 	"omnilib >= 3.18.0",
 	"?aai-industry",
@@ -15,5 +17,5 @@
 	"?omnimatter_fluid",
 	"?Thaumaturgic-Machinations",
 	"?ScienceCostTweakerM"
-	]
+]
 }
