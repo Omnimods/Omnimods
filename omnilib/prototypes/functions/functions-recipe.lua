@@ -753,6 +753,24 @@ function omni.lib.recipe_result_contains(recipename, itemname)
     end
 end
 
+--Checks if a recipe contains an item that contains the specified string in its name
+function omni.lib.recipe_result_contains_string(recipename, string)
+    local items_to_check = {}
+    --find all items that contain the specified string
+    for _, it in pairs(data.raw.item) do
+        if string.find(it.name, string) then
+            items_to_check[#items_to_check+1] = it.name
+        end
+    end
+    --check if the given recipe contains one of the items in our list
+    for _, it in pairs(items_to_check) do
+        if omni.lib.recipe_result_contains(recipename, it) then
+            return true
+        end
+    end
+    return nil
+end
+
 function omni.lib.get_tech_name(recipename)
 	for _,tech in pairs(data.raw.technology) do
 		if tech.effects then

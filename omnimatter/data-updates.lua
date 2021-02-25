@@ -2,7 +2,9 @@
 require("prototypes.recipes.extraction-dynamic")
 require("prototypes.recipes.solvation-dynamic")
 
---Compats that add Items/Recipes/Entities
+-----------------------
+-----EARLY COMPATS-----
+-----------------------
 require("prototypes.compat.bob-compensation")
 
 omni.matter.add_omnicium_alloy("steel","steel-plate","ingot-steel")

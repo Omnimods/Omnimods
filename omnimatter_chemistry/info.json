@@ -12,7 +12,7 @@
 	"omnilib >= 3.18.0",
 	"angelssmelting",
 	"omnimatter_wood >= 3.18.0",
-	?omnimatter_water"
+	"? omnimatter_water"
 ]
 }
 	

@@ -1,8 +1,9 @@
------------------
------COMPATS-----
------------------
+-----------------------
+-----LATE COMPATS-----
+-----------------------
 require("prototypes.compat.bob-burnerphase")
 require("prototypes.compat.angels-final-updates")
+require("prototypes.compat.general-compat")
 
 -----------------------
 -----Late requires-----
