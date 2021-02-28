@@ -2493,12 +2493,13 @@ function TechGen:create(mod,name)
 	end
 	return setmetatable(t,TechGen)
 end
+
 function TechGen:import(name)
 	local tech = data.raw.technology[name]
 	if tech then
 		local t = TechGen:create():
 		setName(name):
-		setIcons(tech.icons or tech.icons  or {{icon=tech.icon, icon_size=tech.icon_size or 128, icon_mipmaps = tech.icon_mipmaps or nil}}):
+		setIcons(omni.lib.icon.of(tech)):
 		setPacks(tech.unit.ingredients):
 		setCost(tech.unit.count):
 		setTime(tech.unit.time):
@@ -2536,7 +2537,7 @@ function TechGen:setEnabled(name)
 	return self
 end
 function TechGen:setIcon(m)
-	self.icons = {icon = m, icon_size = 128}
+	self.icons = {{icon = m, icon_size = 128}}
 	return self
 end
 function TechGen:setIcons(m)
