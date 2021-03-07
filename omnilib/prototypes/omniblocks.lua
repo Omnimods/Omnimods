@@ -8,6 +8,7 @@ if mods["angelsindustries"] and mods["omnimatter"] and angelsmods.industries.com
 	{
 		type = "item",
 		name = "block-omni-0",
+		localised_name = {"item-name.block-omni",{0}},
 		icons = {
 				{icon = "__angelsindustries__/graphics/icons/block-bprocessing-4.png",
 				tint = {255,0,255}},
@@ -21,6 +22,7 @@ if mods["angelsindustries"] and mods["omnimatter"] and angelsmods.industries.com
 	{
 		type = "recipe",
 		name = "block-omni-0",
+		localised_name = {"item-name.block-omni",{0}},
 		enabled = true,
 		category = "crafting",
 		energy_required = 5,
@@ -45,6 +47,7 @@ if mods["angelsindustries"] and mods["omnimatter"] and angelsmods.industries.com
 			{
 				type = "item",
 				name = "block-omni-"..i,
+				localised_name = {"item-name.block-omni",{i}},
 				icons = {
 					{icon = "__angelsindustries__/graphics/icons/block-bprocessing-4.png",
 					tint = {255,0,255}},
@@ -58,6 +61,7 @@ if mods["angelsindustries"] and mods["omnimatter"] and angelsmods.industries.com
 			{
 				type = "recipe",
 				name = "block-omni-"..i,
+				localised_name = {"item-name.block-omni",{i}},
 				enabled = false,
 				category = "crafting",
 				energy_required = 5,
