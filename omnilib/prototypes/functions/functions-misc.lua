@@ -28,10 +28,11 @@ omni.lib.ore_tints = {--can add to the tint table with table.insert(omni.lib.ore
   ["stone"]     = {r = 0.690, g = 0.611, b = 0.427}, -- vanilla
   ["uranium"]   = {r = 0    , g = 0.7  , b = 0    }, -- vanilla
   ["omnite"]    = {r = 0.396, g = 0    , b = 0.729}, -- omni
-  ["tin"]       = {r = 0.95 , g = 0.95 , b = 0.95 }, --map_color = {r = 0.600, g = 0.600, b = 0.600}
+  ["tin"]       = {r = 0.85 , g = 0.85 , b = 0.85 }, --made a bit darker, normally all 0.95, barely distinguishable from quartz tho. map_color = {r = 0.600, g = 0.600, b = 0.600}
   ["lead"]      = {r = 0.5  , g = 0.5  , b = 0.5  }, --map_color = {r=0.0, g=0.0, b=0.50}
   ["titanium"]  = {r = 0.8  , g = 0.55 , b = 0.7  }, --map_color = {r=0.610, g=0.325, b=0.500}
   ["silicon"]   = {r = 1    , g = 1    , b = 1    }, --map_color = {r = 1, g = 1, b = 1}
+  ["quartz"]   	= {r = 1    , g = 1    , b = 1    }, --map_color = {r = 1, g = 1, b = 1}
   ["nickel"]    = {r = 0.54 , g = 0.8  , b = 0.75 }, --map_color = {r=0.4, g=0.8, b=0.6}
   ["zinc"]      = {r = 0.34 , g = 0.9  , b = 0.81 }, --map_color = {r=0.5, g=1, b=1}
   ["silver"]    = {r = 0.875, g = 0.975, b = 1    }, --map_color = {r=0.7, g=0.9, b=0.9}
@@ -44,7 +45,11 @@ omni.lib.ore_tints = {--can add to the tint table with table.insert(omni.lib.ore
   ["cobalt"]    = {r = 0.3  , g = 0.53 , b = 0.77 }, --map_color = {r=0.18, g=0.35, b=0.53}
   ["aluminium"] = {r = 0.777, g = 0.7  , b = 0.333}, --map_color = {r=0.777, g=0.7, b=0.333}
   ["sulfur"]    = {r = 0.8  , g = 0.75 , b = 0.1  }, --map_color = {r=1, g=1, b=0}
+  ["bauxite"] 	= {r=0.777	, g=0.7	   , b=0.333  }, --<-- map_color only
+  ["rutile"]    = {r = 0.8  , g = 0.55 , b = 0.7  }, --map_color = {r=0.610, g=0.325, b=0.500}
   ["gems"]      = {r = 0.25 , g = 1    , b = 0.25 }, --<-- map_color only
+  ["raw-imersite"] = {r=1	, g=0.5	   , b=1	  }, --<-- map_color only
+  ["raw-rare-metals"] = {r = 0.6, g = 0.3, b = 1  }, --<-- map_color only
 }
 
 function omni.lib.add_ore_tint(icon,ore_name) --should work for a specific icon or icons table
@@ -54,16 +59,6 @@ function omni.lib.add_ore_tint(icon,ore_name) --should work for a specific icon 
     change_icons_tint(icon,tint) --icons tint, not icon tint...
   end
   return icon
-end
-
-function omni.lib.cardTable(tab)
-	local count = 0
-	if type(tab)=="table" then
-		for _,f in pairs(tab) do
-			count=count+1
-		end
-	end
-	return count
 end
 
 function omni.lib.factorize(nr)
@@ -112,6 +107,7 @@ function omni.lib.equal(tab1,tab2)
 	end
 	return v
 end
+
 function omni.lib.equalTableIgnore(tab1,tab2,...)
 	local arg = {...}
 	if type(arg[1])=="table" then arg = arg[1] end
@@ -150,6 +146,7 @@ function omni.lib.prime.lcm(...)
 	end
 	return union
 end
+
 function omni.lib.prime.gcd(...)
 	local arg = {...}
 	local inter = table.deepcopy(arg[1])
@@ -166,6 +163,7 @@ function omni.lib.prime.gcd(...)
 	end
 	return inter
 end
+
 function omni.lib.prime.div(...)
 	local arg = {...}
 	local div = table.deepcopy(arg[1])
@@ -178,6 +176,7 @@ function omni.lib.prime.div(...)
 	end
 	return div
 end
+
 function omni.lib.prime.mult(...)
 	local arg = {...}
 	local div = table.deepcopy(arg[1])
@@ -283,147 +282,16 @@ function omni.lib.omni_recipe_fluid_change_category(fluid, category)
 	end
 end
 
-local fit_ingredients = function(ingredients,multiple)
-	local substance = {}
-	local amount = {}
-	for i=1,#ingredients do
-		substance[#substance+1]=ingredients[i].name
-		amount[#amount]=ingredients[i].amount*multiple
-	end
-	return {name=substance,amount=amount}
-end
-
-local sort_dependency = function(list)
-	local l = {}
-	l[1] = list[1]
-
-end
-
-local fix_content_list = function(list)
-	local substance = {}
-	local amount = {}
-	for _,ing in pairs(list) do
-		substance[#substance+1]=ing.name
-		amount[#amount]=ing.amount
-	end
-	return {name=substance,amount=amount}
-end
-
-function omni.lib.achain_omnite_cost(item,chain)
-	local cost = 0
-	local target_amount = 0
-	local required_ingrediences = {}
-	for _,result in pairs(data.raw.recipe[chain[1]].results) do
-		if result.type == "item" and result.name == item then
-			if result.amount then
-				target_amount = math.ceil(1/result.amount)
-			else
-				target_amount = math.ceil(1/((result.amount_min+result.amount_max)/2*result.probability))
-			end
-			break
-		end
-	end
-	required_ingredients=data.raw.recipe[chain[1]].ingredients
-	required_ingredients=fit_ingredients(required_ingredients,target_amount)
-	local list = chain--sort_dependency(chain)
-	--table.remove(list,1)
-	for i=2,#chain do
-		local sorted_ingredients = fix_content_list(data.raw.recipe[chain[i]].ingredients)
-		local sorted_results = fix_content_list(data.raw.recipe[list[i]].results)
-		local intersect = omni.lib.table_intersection(sorted_results.name,required_ingredients.name)
-		if intersect then
-			for j,res in pairs(sorted_results.name) do
-
-			end
-		end
-	end
-	return cost
-end
-
-function omni.lib.chain_omnite_cost(item,chain)
-	local cost = 0
-	local target_amount = 0
-	local required_ingrediences = {}
-	for _,result in pairs(data.raw.recipe[chain[1]].results) do
-		if result.type == "item" and result.name == item then
-			if result.amount then
-				target_amount = math.ceil(1/result.amount)
-			else
-				target_amount = math.ceil(1/((result.amount_min+result.amount_max)/2*result.probability))
-			end
-			break
-		end
-	end
-
-	required_ingredients=data.raw.recipe[chain[1]].ingredients
-	required_ingredients=fit_ingredients(required_ingredients,target_amount)
-	local list = chain--sort_dependency(chain)
-	--table.remove(list,1)
-	for i=2,#chain do
-		local sorted_ingredients = fix_content_list(data.raw.recipe[chain[i]].ingredients)
-		local sorted_results = fix_content_list(data.raw.recipe[list[i]].results)
-		local intersect = omni.lib.table_intersection(sorted_results.name,required_ingredients.name)
-		if intersect then
-			for j,res in pairs(sorted_results.name) do
-
-			end
-		end
-	end
-
-	return cost
-end
-
---Modifications
-function omni.lib.add_number_item(item, val)
-	if data.raw.item[item] then
-		data.raw.item[item].icons  ={{icon = data.raw.item[item].icon, icon_size = data.raw.item[item].icon_size or 32},{icon = "__omnimatter__/graphics/icons/extraction-"..val..".png", icon_size = 32}}
-		data.raw.item[item].icon = nil
-		data.raw.item[item].icon_size = nil
-	end
-end
-
-function omni.lib.set_item_icon(item,icon, tint)
-	data.raw.item[item].icon = icon
-	if tint then omni.lib.change_icon_tint(item,tint) end
-end
-
-function omni.lib.change_icon_tint(item, tint)
-	local tint_table = {}
-	if tint[1] then
-		tint_table = {
-			r = tint[1],
-			g = tint[2],
-			b = tint[3],
-			a = tint[4]
-		}
-	else 
-		tint_table = tint 
-	end
-	local icons = omni.icon.of(item)
-	for i, layer in pais(icons) do
-		layer.tint = tint_table
-	end
-	data.raw.item[item].icons = icons
-	data.raw.item[item].icon = nil
-end
-
-function omni.lib.change_icons_tint(item, tint) --for changing a table of icons, not just a single icon
-  --BEST USED before adding small icon(s) or overlays, as this will tint everything
-  local t = {}
-  local icons=data.raw.item[item].icons
-	if tint.r then t=tint else t={r=tint[1],g=tint[2],b=tint[3],a=tint[4] or 1} end
-  for i,icon in pairs(icons) do
-    if icons[i].tint then
-      if icons[i].tint.r then tnt=icons[i].tint else tnt={r=tint[1],g=tint[2],b=tint[3],a=tint[4] or 1} end
-      tint={r=(tint.r+tnt.r)/2,g=(tint.g+tnt.g)/2,b=(tint.b+tnt.b)/2,a=(tint.a+tnt.a)/2} --average tint blending, may need to expand this to alpha channel blending
-      icons[i].tint=tint 
-    else
-      icons[i].tint=tint
+--Set tint values for a prototype
+function omni.lib.tint(proto, tint)
+    local t = {}
+    local icons = omin.lib.icon.of(proto)
+    if tint.r then t=tint else t={r=tint[1],g=tint[2],b=tint[3],a=tint[4] or 1} end
+    for i,icon in pairs(icons) do
+        icon.tint = t
     end
-  end
-  local icon = {{icon = data.raw.item[item].icons, tint=t}}
-	--data.raw.item[item].icon = icons
-	data.raw.item[item].icons = icons
+    proto.icons = icons
+    proto.icon = nil
 end
 
 function clone_function(fn)
@@ -517,16 +385,16 @@ function omni.lib.string_contained_entire_list(str, list)
 end
 
 function omni.lib.split(inputstr, sep)
-        if sep == nil then
-                sep = "%s"
-        end
-		local t={}
-		local i=1
-        for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
-                t[i] = str
-                i = i + 1
-        end
-        return t
+    local t={}
+    local i=1
+    if sep == nil then
+        sep = "%s"
+    end
+    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+        t[i] = str
+        i = i + 1
+    end
+    return t
 end
 
 --Checks if a table contains a specific element
@@ -552,21 +420,12 @@ function omni.lib.remove_from_table(element, tab)
 end
 
 --A function that takes two tables and gives out the elements they have in common
-function omni.lib.table_intersection(t, d)
+function omni.lib.table_intersection(tab, d)
 	local inter={}
-	for i=1,#t do
-		if omni.lib.is_in_table(t[i],d) then inter[#inter+1]=t[i] end
+	for i=1,#tab do
+		if omni.lib.is_in_table(tab[i],d) then inter[#inter+1]=tab[i] end
 	end
 	if #inter > 0 then return inter else return nil end
-end
-
---Check if tabels are the same
-function omni.lib.tables_equal(t, d)
-	local inter={}
-	for i=1,#t do
-		if t[i] ~=d[i] then return false end
-	end
-	return true
 end
 
 --Check if tabels are the same
@@ -812,6 +671,7 @@ local entproto = {
 	"electric-pole",
 	"furnace",
 	"generator",
+	"inserter",
 	"lab",
 	"lamp",
 	"loader",
@@ -826,24 +686,23 @@ local entproto = {
 	"spider-leg"
 }
 
-function omni.lib.find_entity_prototype(item)
-	if type(item)=="table" then return item elseif type(item)~="string" then return nil end
+function omni.lib.find_entity_prototype(itemname)
+	if type(itemname)=="table" then return itemname elseif type(itemname)~="string" then return nil end
 	for _, p in pairs(entproto) do
-		if data.raw[p][item] then return data.raw[p][item] end
+		if data.raw[p][itemname] then return data.raw[p][itemname] end
 	end
-	--log("Could not find "..item.."'s entity prototype, check it's type.")
+	--log("Could not find "..itemname.."'s entity prototype, check it's type.")
 	return nil
 end
 
-function omni.lib.find_recipe(item)
-	if type(item)=="table" then return item elseif type(item)~="string" then return nil end
-	for _, p in pairs(data.raw.recipe) do
-		if standardized_recipes[p.name] == nil then omni.marathon.standardise(p) end
-		for _,r in pairs(p.normal.results) do
-			if r.name == item then return p end
+function omni.lib.find_recipe(itemname)
+	if type(itemname)=="table" then return itemname elseif type(itemname)~="string" then return nil end
+	for _, rec in pairs(data.raw.recipe) do
+        if omni.lib.recipe_result_contains(rec.name,itemname) then
+			return rec
 		end
 	end
-	--log("Could not find "..item.."'s recipe prototype, check it's type.")
+	--log("Could not find "..itemname.."'s recipe prototype, check it's type.")
 	return nil
 end
 
@@ -851,14 +710,14 @@ end
 -- ICON FUNCTIONS --
 -----------------------------------------------------------------------------
 
-omni.lib.add_overlay = function(it,overlay_type,level) 
+function omni.lib.add_overlay(it, overlay_type, level) 
 	-- `it` is the item/recipe table, not the name (can search for it if wrong)
 	-- overlay_type is a string for type or an iconspecification table
 	-- level is required for extraction, building and compress-fluid and should be a number	
 	if type(it) == "string" then --parsed whole table not the name...
 		it = omni.lib.find_prototype(it)
 	end
-	local icons = omni.icon.of(it, true)
+	local icons = omni.lib.icon.of(it, true)
 	if not icons or type(it) ~= "table" then -- Why go on...
 		log("Invalid prototype specified")
 		return
@@ -1073,7 +932,6 @@ function omni.lib.fluid_box_conversion(kind,str,hide,tmp)
 end
 
 --Fuel functions
-
 --returns the fuel value unit
 function omni.lib.get_fuel_unit(fv)
     return string.match(fv, "%a+")
@@ -1121,4 +979,3 @@ function omni.lib.mult_fuel_value(fv, mult)
 		unit:sub(-1)
 	})
 end
-

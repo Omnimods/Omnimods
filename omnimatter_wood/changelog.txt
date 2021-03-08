@@ -1,4 +1,24 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.3
+Date: 2020.12.23
+  Changes:
+      - Nerfed the fuel values of omniwood, wood and omniseedling by 30%
+---------------------------------------------------------------------------------------------------
+Version: 4.1.2
+Date: 2020.12.16
+  Bugfixes:
+    - Fixed crashing with certain mods that add trees once again
+---------------------------------------------------------------------------------------------------
+Version: 4.1.1
+Date: 2020.12.14
+  Bugfixes:
+    - Fixed a crash that happened with mods that add trees with an icons table
+---------------------------------------------------------------------------------------------------
+Version: 4.1.0
+Date: 2020.11.26
+  Info:
+    - Updated for Factorio version 1.1.0
+---------------------------------------------------------------------------------------------------
 Version: 4.0.1
 Date: 2020.08.31
   Changes:
@@ -18,7 +38,7 @@ Date: 2020.08.13
 Version: 3.18.6
 Date: 2020.08.07
   Bugfixes:
-    - Multiple locae, recipe order and subgroup fixes
+    - Multiple locale, recipe order and subgroup fixes
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.5
 Date: 2020.06.19

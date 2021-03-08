@@ -42,6 +42,7 @@ local b = BuildGen:create("omnimatter_compression","auto-compressor"):
 	setUsage(225):
 	setSpeed(3):
 	setFurnace():
+	noTech():
 	setSize(minify(1, 3)):
 	setCrafting({"compression"}):
 	setAnimation({
@@ -99,6 +100,7 @@ local b = BuildGen:create("omnimatter_compression","auto-compressor"):
 	setUsage(225):
 	setSpeed(3):
 	setFurnace():
+	noTech():
 	setSize(minify(1, 3)):
 	setFluidBox(fluidbox):
 	setCrafting({"fluid-concentration"}):
@@ -123,7 +125,8 @@ local b = BuildGen:create("omnimatter_compression","auto-compressor"):
 	setModSlots(0):
 	setModEffects():
 	setUsage(225):
-	setSpeed(3):	
+	setSpeed(3):
+	noTech():
 	setIcons("auto-concentrator"):
 	setSize(minify(1, 3)):
 	setFluidBox(fluidbox):

@@ -107,7 +107,7 @@ function omni.lib.add_recipe_ingredient(recipename, ingredient)
         end
         local found = false
         --rec.ingredients --If only .normal needs to be modified, keep ingredients, else copy into .normal/.expensive
-        if rec.ingredients and  norm ~= expens  then
+        if rec.ingredients and  not omni.lib.equal(norm, expens) then
             rec.normal = {}
             rec.expensive = {}
             rec.normal.ingredients = table.deepcopy(rec.ingredients)
@@ -242,7 +242,7 @@ function omni.lib.add_recipe_result(recipename, result)
             rec.expensive.result_count = nil
         end
         --rec.results --If only .normal needs to be modified, keep results, else copy into .normal/.expensive
-        if rec.results and norm ~= expens  then
+        if rec.results and not omni.lib.equal(norm, expens)  then
             rec.normal = {}
             rec.expensive = {}
             rec.normal.results = table.deepcopy(rec.results)
@@ -691,6 +691,32 @@ function omni.lib.change_recipe_category(recipe, category)
 	data.raw.recipe[recipe].category=category
 end
 
+--Checks if a recipe contains a specific material as ingredient
+function omni.lib.recipe_ingredient_contains(recipename, itemname)
+    local rec = data.raw.recipe[recipename]
+    if rec then
+        --rec.ingredients
+        if rec.ingredients then
+            for i,ing in pairs(rec.ingredients) do
+                if omni.lib.is_in_table(itemname, ing) then return true end
+            end
+        end
+        --rec.normal.ingredients
+        if rec.normal and rec.normal.ingredients then
+            for i,ing in pairs(rec.normal.ingredients) do
+                if omni.lib.is_in_table(itemname, ing) then return true end
+           end
+        end
+        --rec.expensive.ingredients
+        if rec.expensive and rec.expensive.ingredients then
+            for i,ing in pairs(rec.expensive.ingredients) do
+                if omni.lib.is_in_table(itemname, ing) then return true end
+           end
+        end 
+        return nil
+    end
+end
+
 --Checks if a recipe contains a specific material as result
 function omni.lib.recipe_result_contains(recipename, itemname)
     local rec = data.raw.recipe[recipename]
@@ -727,15 +753,22 @@ function omni.lib.recipe_result_contains(recipename, itemname)
     end
 end
 
-function omni.lib.find_recipe(itemname)
-	if type(itemname)=="table" then return itemname elseif type(itemname)~="string" then return nil end
-	for _, rec in pairs(data.raw.recipe) do
-        if omni.lib.recipe_result_contains(rec.name,itemname) then
-			return rec
-		end
-	end
-	--log("Could not find "..item.."'s recipe prototype, check it's type.")
-	return nil
+--Checks if a recipe contains an item that contains the specified string in its name
+function omni.lib.recipe_result_contains_string(recipename, string)
+    local items_to_check = {}
+    --find all items that contain the specified string
+    for _, it in pairs(data.raw.item) do
+        if string.find(it.name, string) then
+            items_to_check[#items_to_check+1] = it.name
+        end
+    end
+    --check if the given recipe contains one of the items in our list
+    for _, it in pairs(items_to_check) do
+        if omni.lib.recipe_result_contains(recipename, it) then
+            return true
+        end
+    end
+    return nil
 end
 
 function omni.lib.get_tech_name(recipename)

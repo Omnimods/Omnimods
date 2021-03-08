@@ -105,11 +105,11 @@ end
 local recipe_results = {}
 
 for _, recipe in pairs(data.raw.recipe) do
-  local product = omni.locale.get_main_product(recipe)
+  local product = omni.lib.locale.get_main_product(recipe)
   product = product and data.raw[product.type][product.name]
   if product then
     local place_result = (data.raw[product.type][product.name] or {}).place_result
-    place_result = place_result and omni.locale.find(place_result, 'entity', true)
+    place_result = place_result and omni.lib.locale.find(place_result, 'entity', true)
     if place_result and -- Valid
     building_list[place_result.type] and
     not omni.lib.string_contained_list(place_result.name, black_list) and --not on exclusion list
@@ -143,7 +143,7 @@ end
 --find recipe
 local find_recipe = function(product)
   for _,recipe in pairs(data.raw.recipe) do
-    omni.marathon.standardise(recipe)
+    omni.lib.standardise(recipe)
     if #recipe.normal.results == 1 and recipe.normal.results[1].name == product then
       return recipe
     end
@@ -164,7 +164,7 @@ end
 local create_concentrated_fluid = function(fluid,tier)
   local new_fluid = table.deepcopy(data.raw.fluid[fluid])
 
-  new_fluid.localised_name = omni.locale.custom_name(new_fluid, "compressed-fluid", tier)
+  new_fluid.localised_name = omni.lib.locale.custom_name(new_fluid, "compressed-fluid", tier)
   new_fluid.name = new_fluid.name.."-concentrated-grade-"..tier
   if new_fluid.heat_capacity then
     new_fluid.heat_capacity = new_effect(new_fluid.heat_capacity, tier, nil, multiplier^tier)
@@ -205,7 +205,7 @@ local create_concentrated_fluid = function(fluid,tier)
   local grade = {
     type = "recipe",
     name = fluid.."-concentrated-grade-"..tier,
-    --localised_name = omni.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
+    --localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
     category = "fluid-condensation",
     enabled = false,
     icons = new_fluid.icons,
@@ -214,7 +214,7 @@ local create_concentrated_fluid = function(fluid,tier)
   local ungrade = {
     type = "recipe",
     name = "uncompress-"..fluid.."-concentrated-grade-"..tier,
-    --localised_name = omni.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
+    --localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
     icons = omni.lib.add_overlay(fluid,"uncompress"),
     category = "fluid-condensation",
     subgroup = "concentrator-fluids",
@@ -308,7 +308,7 @@ local run_entity_updates = function(new, kind, i)
       new,
       "slot_count", 
       function(x) 
-        return x and (x * (i + 1)) 
+        return x and (x * (i + 1))
       end
     )
     -- Make sure we don't occlude nearby entities
@@ -378,7 +378,7 @@ local run_entity_updates = function(new, kind, i)
         x = x - 0.05 * modspec(new, "gap_size") * scale_factor
         -- Apply scale
         x = x  / scale_factor
-        return x
+        return math.max(1, x)
       end
     )
     modspec(
@@ -398,7 +398,7 @@ local run_entity_updates = function(new, kind, i)
         x = x - 0.05 * modspec(new, "gap_size") * scale_factor
         -- Scale
         x = x / scale_factor
-        return x
+        return math.max(1, x)
       end
     )
   end
@@ -544,8 +544,10 @@ local run_entity_updates = function(new, kind, i)
       new.fixed_recipe = new.fixed_recipe .. "-compression"
     end
     new.light_blinking_speed = new.light_blinking_speed * math.pow(multiplier, i)
+    new.rocket_rising_delay = math.ceil((new.rocket_rising_delay or 30) / math.pow(multiplier, i)) -- Defaults are NOT present on the prototype!
+    new.launch_wait_time = math.ceil((new.launch_wait_time or 120) / math.pow(multiplier, i))
     local rocket = table.deepcopy(data.raw["rocket-silo-rocket"][new.rocket_entity])
-    rocket.name = "compressed-" .. rocket.name
+    rocket.name = "compressed-" .. rocket.name .. "-" .. i
     new.rocket_entity = rocket.name
     rocket.rising_speed = rocket.rising_speed * math.pow(multiplier, i)
     rocket.engine_starting_speed = rocket.engine_starting_speed * math.pow(multiplier, i)
@@ -604,8 +606,8 @@ for build_name, values in pairs(recipe_results) do
           -------------------------------------------------------------------------------
           --[[ENTITY CREATION]]--
           new.name = new.name.."-compressed-"..string.lower(compress_level[i])
-          new.localised_name = omni.locale.custom_name(details.base, "compressed-building", compress_level[i])
-          new.localised_description = omni.locale.custom_name(
+          new.localised_name = omni.lib.locale.custom_name(details.base, "compressed-building", compress_level[i])
+          new.localised_description = omni.lib.locale.custom_name(
             details.base,
             "entity-description.compressed-building",
             multiplier^i,
@@ -664,8 +666,8 @@ for build_name, values in pairs(recipe_results) do
           local uncompress = {
             type = "recipe",
             name = "uncompress-"..string.lower(compress_level[i]).."-"..rc.name,
-            localised_name = omni.locale.custom_name(build, 'recipe-name.uncompress-item'),
-            localised_description = omni.locale.custom_description(build, 'recipe-description.uncompress-item'),
+            localised_name = omni.lib.locale.custom_name(build, 'recipe-name.uncompress-item'),
+            localised_description = omni.lib.locale.custom_description(build, 'recipe-description.uncompress-item'),
             icons = omni.lib.add_overlay(rc,"uncompress"),
             subgroup = rc.subgroup,
             order = (rc.order or details.item.order or "") .. "-compressed",

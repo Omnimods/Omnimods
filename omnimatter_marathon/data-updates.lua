@@ -94,7 +94,7 @@ if mods["omnimatter_crystal"] then
 				end
 				if data.raw.recipe["angelsore-"..ang.."-mix"..i.."-processing"] then
 					local rec = data.raw.recipe["angelsore-"..ang.."-mix"..i.."-processing"]
-					omni.marathon.standardise(rec)
+					omni.lib.standardise(rec)
 					local target = rec.normal.results[1].name
 					if target ~= "angels-void" then
 						local source = {}

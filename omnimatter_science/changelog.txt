@@ -1,4 +1,21 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.2
+Date: 2020.12.23
+  Bugfixes:
+    - Fixed a rare crash with mods that add techs with an empty prereq table
+    - Fixed an issue with SCT where the omni-pack was added twice to their labs
+    - Removed OmniSea as dependency to avoid a circular dependency with SCT
+---------------------------------------------------------------------------------------------------
+Version: 4.1.1
+Date: 2020.12.14
+  Features:
+    - Added Krastorio 2 support
+---------------------------------------------------------------------------------------------------
+Version: 4.1.0
+Date: 2020.11.26
+  Info:
+    - Updated for Factorio version 1.1.0
+---------------------------------------------------------------------------------------------------
 Version: 4.0.3
 Date: 2020.10.04
   Changes:

@@ -19,14 +19,14 @@ if settings.startup["omniwood-pure-wood-only"].value then
 	end
 end
 
-
 if settings.startup["omniwood-all-mutated"].value then
 	for _,tree in pairs(data.raw.tree) do
-		if not string.find(tree.icon,"angelsbioprocessing") then
+		local i_path = tree.icon or (tree.icons and tree.icons[1] and (tree.icons[1].icon or tree.icons[1][1]))
+		if not string.find(i_path,"angelsbioprocessing") then
 			if tree.minable then
 				if tree.minable.result then
 					tree.minable.result="omniwood"
-				else
+				elseif tree.minable.results then
 					tree.minable.results[1].name="omniwood"
 				end
 			end

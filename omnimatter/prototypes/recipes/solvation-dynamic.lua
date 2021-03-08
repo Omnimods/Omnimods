@@ -113,7 +113,7 @@ local get_solvation_tech_packs = function(grade)
 end
 
 --Add water-omnitraction recipe
-omni.add_omniwater_extraction("omnimatter", "water", omni.fluid_levels, 1, 360, true)
+omni.matter.add_omniwater_extraction("omnimatter", "water", omni.fluid_levels, 1, 360, true)
 
 local quant = 24
 local cost = OmniGen:create():
@@ -131,7 +131,7 @@ local omniston = RecChain:create("omnimatter","omniston"):
 		setLevel(omni.fluid_levels):
 		setEnergy(function(levels,grade) return 5 end):
 		setTechPrefix("solvation"):
-		setTechIcon("omnimatter","omniston-tech"):
+		setTechIcons("omniston-tech","omnimatter"):
 		setTechCost(function(levels,grade) return 50*get_tier_mult(levels,grade,1) end):
 		setTechPacks(function(levels,grade) return get_solvation_tech_packs(grade) end):
 		setTechPrereq(function(levels,grade) return get_omniston_req(grade)  end):
@@ -145,6 +145,7 @@ local cost = OmniGen:create():
 		setWaste():
 		yieldQuant(function(levels,grade) return 26/15*(120+(grade-1)*120/(omni.fluid_levels-1)) end ):
 		wasteQuant(function(levels,grade) return math.max(12-extraction_value(levels,grade),0) end)
+
 local omnisludge = RecChain:create("omnimatter","omnisludge"):
 		setLocName("recipe-name.omnisludge"):
 		setIngredients({
@@ -158,7 +159,7 @@ local omnisludge = RecChain:create("omnimatter","omnisludge"):
 		setLevel(omni.fluid_levels):
 		setEnergy(function(levels,grade) return 3 end):
 		setTechPrefix("omnisolvent"):
-		setTechIcon("omnimatter","omni-sludge"):
+		setTechIcons("omni-sludge","omnimatter"):
 		setTechCost(function(levels,grade) return 25*get_tier_mult(levels,grade,1) end):
 		setTechPacks(function(levels,grade) return get_acid_tech_cost(grade) end):
 		setTechPrereq(function(levels,grade) return get_sludge_req(grade)  end):
@@ -182,7 +183,7 @@ local get_distillation_icon = function(fluid,tier)
 end
 
 local function generate_solvation_icon(fluid)
-	local fluid_icon = table.deepcopy(omni.icon.of(fluid.name, "fluid"))
+	local fluid_icon = table.deepcopy(omni.lib.icon.of(fluid.name, "fluid"))
 	local tint = table.deepcopy(data.raw.fluid[fluid.name].base_color)
 	if tint.r then
 		tint.a = 0.75
@@ -205,7 +206,7 @@ local function generate_solvation_icon(fluid)
 	)
 end
 
-for _,tier in pairs(omnifluid) do
+for _,tier in pairs(omni.matter.omnifluid) do
 	for _, fluid in pairs(tier) do
 		local cost = OmniGen:create():
 			setYield(fluid.name):
@@ -224,7 +225,7 @@ for _,tier in pairs(omnifluid) do
 			setIcons(fluid.name):
 			setResults(cost:results()):
 			setEnergy(function(levels,grade) return 5 end):
-			setTechIcon(generate_solvation_icon(fluid)):
+			setTechIcons(generate_solvation_icon(fluid)):
 			setTechCost(function(levels,grade) return 25*get_tier_mult(levels,grade,1) end):
 			setTechPacks(function(levels,grade) return get_generic_tech_packs(grade, fluid.tier) end):
 			setTechPrereq(function(levels,grade) return get_distillation_req(fluid.tier,fluid.name, grade)  end):

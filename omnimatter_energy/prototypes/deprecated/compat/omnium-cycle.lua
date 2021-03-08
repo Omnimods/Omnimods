@@ -63,7 +63,7 @@ RecGen:create("omnimatter_energy","oxyomnide-hydromnization"):
 	setIcons("hydromnide-salt"):
 	addSmallIcon("hydromnic-acid",3):
 	setTechCost(250):
-	setTechIcon("omnimatter_energy","omnium-power"):
+	setTechIcons("omnium-power","omnimatter_energy"):
 	setTechPrereq(
 		"omnicells",
 		"omnitech-crystallonics-2"):
@@ -90,7 +90,7 @@ for _,salt in pairs(salts) do
 	for i=1,4 do
 		for _,eff in pairs(data.raw.technology["omnitech-crystallology-"..i].effects) do
 			if eff.type == "unlock-recipe" and not string.find(eff.recipe,"hydronmization") then
-				omni.marathon.standardise(data.raw.recipe[eff.recipe])
+				omni.lib.standardise(data.raw.recipe[eff.recipe])
 				local recipe = data.raw.recipe[eff.recipe]
 				if #recipe.normal.results == 1 and recipe.normal.results[1].name == salt then
 					level = i

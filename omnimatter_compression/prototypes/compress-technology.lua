@@ -133,18 +133,18 @@ for _,tech in pairs(data.raw.technology) do
     local t = table.deepcopy(tech)
     t.name = "omnipressed-"..t.name
     local class, tier = splitTech(tech.name)
-    local locale = omni.locale.of(tech).name
+    local locale = omni.lib.locale.of(tech).name
     if tier and 
     tonumber(locale[#locale]) == nil
     and tech.level == tech.max_level then-- If the last key is a number, or there's multiple levels, it's already tiered.
-      t.localised_name = omni.locale.custom_name(tech, "compressed-tiered", tier)
+      t.localised_name = omni.lib.locale.custom_name(tech, "compressed-tiered", tier)
       t.localised_description = {
         "technology-description.compressed-tiered",
         locale,
         tier
       }
     else
-      t.localised_name = omni.locale.custom_name(tech, "compressed")
+      t.localised_name = omni.lib.locale.custom_name(tech, "compressed")
       t.localised_description = {
         "technology-description.compressed",
         locale

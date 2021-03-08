@@ -1,5 +1,5 @@
 function get_tier_mult(levels,r,c)
-	local peak = math.floor(levels/2)+1
+	local peak = math.floor(levels/2)+1.5 --1
 	if r==1 and c==1 then
 		return 1
 	elseif r==c and r<=peak then
@@ -66,7 +66,7 @@ local omnic_acid = RecChain:create("omnimatter","omnic-acid"):
 		setResults(cost:results()):
 		setEnergy(function(levels,grade) return 3 end):
 		setTechSuffix("hydrolyzation"):
-		setTechIcon("omnimatter","omnic-acid"):
+		setTechIcons("omnic-acid","omnimatter"):
 		setTechCost(function(levels,grade) return 25*get_tier_mult(levels,grade,1) end):
 		setTechPacks(function(levels,grade) return get_acid_tech_cost(grade) end):
 		setTechPrereq(function(levels,grade) return get_omnic_req(grade)  end):

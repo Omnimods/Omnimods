@@ -1,4 +1,70 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.9
+Date: 2021.02.XX
+  Bugfixes:
+    - Fixed TechGen:setIcons() ignoring tech.icon_size when tech.icons is set
+---------------------------------------------------------------------------------------------------
+Version: 4.1.8
+Date: 2021.02.25
+  Features:
+    - Added omni.lib.recipe_result_contains_string(recipename, string)
+---------------------------------------------------------------------------------------------------
+Version: 4.1.7
+Date: 2021.02.11
+  Bugfixes:
+    - Fixed source_inventory_size, result_inventory_size, ingredient_count and result_count
+    - -defaultring to 3 on BuildGen:import() when not set
+    - Fixed a crash that could happen with recipes that had an empty main_product string set
+---------------------------------------------------------------------------------------------------
+Version: 4.1.6
+Date: 2021.01.21
+  Info:
+    - Moved omni.locale and omni.icon to omni.lib.locale and omni.lib.icon
+    - Renamed omni.marathon.standardise() to omni.lib.standardise()
+  Features:
+    - Add BuildGen:setFuelCategories(), replaces setFuelCategory for entities
+  Changes:
+    - fuel_categories (instead of fuel_category) is now used for all entities 
+  Bugfixes:
+    - Fixed TechGen:setLocName() / setLocDesc() ignoring keys and always adding "Technology-name."
+    - Fix locale crashes with types added in latest experimental
+---------------------------------------------------------------------------------------------------
+Version: 4.1.5
+Date: 2021.01.08
+  Bugfixes:
+    - Fixed an control error related to shortcuts
+---------------------------------------------------------------------------------------------------
+Version: 4.1.4
+Date: 2021.01.04
+  Bugfixes:
+    - Fixed that omni.lib.replace_prerequisite() did not check if the tech already required 
+    -   - the new prerequisite
+---------------------------------------------------------------------------------------------------
+Version: 4.1.3
+Date: 2021.01.03
+  Bugfixes:
+    - Fixed that BuildGen:import() overwrote the result amount to 1
+    - Fixed that BuildGen:setOnAnimation() was pointing to off_animation
+    - Fixed that InsertGen:setAnimation() created non-rotateable inserter platforms
+---------------------------------------------------------------------------------------------------
+Version: 4.1.2
+Date: 2020.12.23
+  Bugfixes:
+    - Fixed that certain functions compared tables with "==" and caused unwanted sideeffects
+---------------------------------------------------------------------------------------------------
+Version: 4.1.1
+Date: 2020.12.14
+  Features:
+    - Added Krastorio 2 support
+  Bugfixes:
+    - Fixed that setDurabilityDesc() was not setting durability_description_value
+    - Fixed that recipe & item order were overwritten on entity import
+---------------------------------------------------------------------------------------------------
+Version: 4.1.0
+Date: 2020.11.26
+  Info:
+    - Updated for Factorio version 1.1.0
+---------------------------------------------------------------------------------------------------
 Version: 4.0.4
 Date: 2020.10.04
   Features:

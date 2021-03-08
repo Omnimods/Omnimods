@@ -531,8 +531,9 @@ function ItemGen:import(item)
 		setPlace(proto.place_result):
 		setSubgroup(proto.subgroup):
 		setFuelCategory(proto.fuel_category):
-		setIcons(proto.icons or proto.icon or omni.icon.of(proto, true)):
-		setFuelValue(proto.fuel_value)
+		setIcons(proto.icons or proto.icon or omni.lib.icon.of(proto, true)):
+		setFuelValue(proto.fuel_value):
+		setOrder(proto.order)
 		if item.type == "fluid" then
 			it:fluid():
 			setFlowColour(proto.flow_color):
@@ -630,6 +631,7 @@ function ItemGen:setIcons(icons,mod)
 		end
 		if type(icons)=="string" and string.match(icons, "%_%_(.-)%_%_") then
 			local name=string.match(icons,".*%/(.-).png")
+			local setup = {}
 			proto = omni.lib.find_prototype(name)
 			if proto then
 				setup={{icon=proto.icon,icon_size=proto.icon_size,mipmaps=proto.mipmaps or nil}}
@@ -745,7 +747,7 @@ function ItemGen:addSmallIcon(icon, nr)
 	if type(icon) == "table" and icon[1] and icon[1].icon then
 		icons = icon 
 	else
-		icons = omni.icon.of(icon, true)
+		icons = omni.lib.icon.of(icon, true)
 	end
 	if icons then
 		ic_sz = icons.icon_size or ic_sz
@@ -818,7 +820,8 @@ end
 function ItemGen:tool()
 	self.type="tool"
 	self.durability=1
-	self.durability_description_key="description.science-pack-remaining-amount"
+	self.durability_description_key="description.science-pack-remaining-amount-key"
+	self.durability_description_value="description.science-pack-remaining-amount-value"
 	return self
 end
 function ItemGen:tile(tog)
@@ -837,7 +840,12 @@ function ItemGen:setDurability(tmp)
 end
 function ItemGen:setDurabilityDesc(tmp)
 	if self.type=="tool" then
-		self.durability_description_key=tmp
+		local name = tmp
+		if string.find(tmp,"-key") then
+			tmp = string.gsub(tmp,"-key","")
+		end
+		self.durability_description_key=tmp.."-key"
+		self.durability_description_value=tmp.."-value"
 	end
 	return self
 end
@@ -1118,7 +1126,8 @@ function ItemGen:generate_item()
 		pressure_to_speed_ratio = self.pressure_to_speed_ratio,
 		flow_to_energy_ratio = self.flow_to_energy_ratio,
 		durability=self.durability,
-		durability_description_key=self.durability_description_key
+		durability_description_key=self.durability_description_key,
+		durability_description_value=self.durability_description_value
 	}
 	if  self.isTile then
 		self.rtn[#self.rtn].place_as_tile={
@@ -1156,6 +1165,7 @@ function RecGen:create(mod,name,efficency)
 	r.add_prod = false
 	r.hidden = function(levels,grade) return nil end
 	r.tech = {
+		noTech = false,
 		cost = function(levels,grade) return 50 end,
 		packs = function(levels,grade) return 1 end,
 		time=function(levels,grade) return 20 end,
@@ -1163,7 +1173,7 @@ function RecGen:create(mod,name,efficency)
 		name = function(levels,grade) return self.name end,
 		loc_name = function(levels,grade) return nil end,
 		loc_desc = function(levels,grade) return nil end,
-		icon = function(levels,grade) return nil end,
+		icons = function(levels,grade) return nil end,
 		prerequisites = function(level,grade) return nil end,
 		effects = {}}
 	return setmetatable(r,RecGen)
@@ -1182,28 +1192,30 @@ end
 
 function RecGen:import(recipe)
 	if type(recipe)=="string" then recipe = data.raw.recipe[recipe] or data.raw.recipe["burner-"..recipe] end
-	omni.marathon.standardise(recipe)
+	omni.lib.standardise(recipe)
 	local r = RecGen:create()
 	if recipe then
-		if #recipe.normal.results==1 or recipe.main_product then
+		if #recipe.normal.results==1 or recipe.main_product and recipe.main_produc ~= "" then
 			local proto = omni.lib.find_prototype(recipe.main_product or recipe.normal.results[1].name)
-			r:setStacksize(proto.stack_size):
-			setFlags(proto.flags):
-			setPlace(proto.place_result):
-			setSubgroup(proto.subgroup):
-			setOrder(proto.order):
-			setFuelCategory(proto.fuel_category):
-			setIcons(proto.icons or proto.icon or omni.icon.of(proto, true)):
-			setFuelValue(proto.fuel_value)
-			if proto.place_as_tile then r:tile():setPlace(proto.place_as_tile.result) end
-			if proto.type == "fluid" then
-				r:fluid():
-				setFlowColour(proto.flow_color):
-				setBaseColour(proto.base_color)
-			elseif proto.type == "tool" then
-				r:tool():
-				setDurability(proto.durability):
-				setDurabilityDesc(proto.durability_description_key)
+			if proto then
+				r:setStacksize(proto.stack_size):
+				setFlags(proto.flags):
+				setPlace(proto.place_result):
+				setSubgroup(proto.subgroup):
+				setOrder(proto.order):
+				setFuelCategory(proto.fuel_category):
+				setIcons(proto.icons or proto.icon or omni.lib.icon.of(proto, true)):
+				setFuelValue(proto.fuel_value)
+				if proto.place_as_tile then r:tile():setPlace(proto.place_as_tile.result) end
+				if proto.type == "fluid" then
+					r:fluid():
+					setFlowColour(proto.flow_color):
+					setBaseColour(proto.base_color)
+				elseif proto.type == "tool" then
+					r:tool():
+					setDurability(proto.durability):
+					etDurabilityDesc(proto.durability_description_key)
+				end
 			end
 		end
 		r:setName(recipe.name):
@@ -1215,7 +1227,7 @@ function RecGen:import(recipe)
 		setCategory(recipe.category):
 		setSubgroup(recipe.subgroup or r.subgroup(0,0)):
 		setOrder(recipe.order or r.order(0,0)):
-		setIcons(recipe.icons or recipe.icon or r.icons(0,0) or omni.icon.of(recipe, true)):
+		setIcons(recipe.icons or recipe.icon or r.icons(0,0) or omni.lib.icon.of(recipe, true)):
 		setHidden(recipe.hidden or false)
 
 		for _, module in pairs(data.raw.module) do
@@ -1248,7 +1260,7 @@ function RecGen:import(recipe)
 			if tech then
 				r:setTechName(tech.name):
 				setTechCost(tech.unit.count):
-				setTechIcon(tech.icon):
+				setTechIcons(tech.icons  or {{icon=tech.icon, icon_size=tech.icon_size or 128, icon_mipmaps = tech.icon_mipmaps or nil}}):
 				setTechLocName(tech.localised_name):
 				setTechLocDesc(tech.localised_description):
 				setTechPacks(tech.unit.ingredients):
@@ -1272,7 +1284,7 @@ function RecGen:importResult(result)
 		return RecGen:import(result)
 	else
 		for _,rec in pairs(data.raw.recipe) do
-			omni.marathon.standardise(rec)
+			omni.lib.standardise(rec)
 			for _,res in pairs(rec.normal.results) do
 				if res.name==result then
 					return RecGen:import(rec.name)
@@ -1353,6 +1365,10 @@ function RecGen:setHidden(en)
 end
 function RecGen:noItem()
 	self.noItem=true
+	return self
+end
+function RecGen:noTech(b)
+	self.tech.noTech = (b == nil) or b
 	return self
 end
 function RecGen:setItemName(en)
@@ -1910,7 +1926,7 @@ function RecGen:generate_recipe()
 			end
 		end
 	end
-	if self.tech.name(0,0) ~= nil and not self.enabled(0,0) then
+	if self.tech.name(0,0) ~= nil and not self.enabled(0,0) and self.tech.noTech ~= true then
 		local tname = self.tech.name(0,0)
 		--Add way to make this optional
 		--omni.lib.remove_recipe_all_techs(tname)
@@ -1921,13 +1937,13 @@ function RecGen:generate_recipe()
 				tname = "omnitech-"..tname.."-1"
 			end
 		end
-		if not data.raw.technology[tname] and self.tech.icon(0,0)~= nil then
+		if not data.raw.technology[tname] and self.tech.icons(0,0)~= nil then
 			--omni.lib.remove_unlock_recipe(self.tech.name(0,0),self.name)
 			self.rtn[#self.rtn+1]=TechGen:create(self.mod,self.tech.name(0,0)):
 			setCost(self.tech.cost(0,0)):
 			setPacks(self.tech.packs(0,0)):
 			setTime(self.tech.time(0,0)):
-			setIcon(self.tech.icon(0,0)):
+			setIcons(self.tech.icons(0,0)):
 			setUpgrade(self.tech.upgrade(0,0) or false):
 			addUnlocks(omni.lib.union(self.tech.effects,{self.name})):
 			setPrereq(self.tech.prerequisites(0,0)):
@@ -2143,25 +2159,44 @@ function RecGen:setTechCost(cost)
 	end
 	return self
 end
-function RecGen:setTechIcon(mod,icon)
-	if icon then
-		self.tech.icon = function(levels,grade) return "__"..mod.."__/graphics/technology/"..icon..".png" end
-	elseif type(mod) == "string" then
-		if not string.match(mod, "%_%_(.-)%_%_") then
-			local proto = omni.lib.find_prototype(mod)
-			if proto then
-				self.tech.icon = function(levels,grade) return proto.icon end
+--setTechIcons() can be called with either:
+	--icon name (mod=nil, mod from RecGen() call is used as dir path)
+	--icon name + modname
+	--(icon name, icon_size) if mod is defined in the RecGen call
+	--the full path to the icon (mod=nil)
+	--with an icons table where icon and icon_size are specified (mod=nil)
+	--with an (icons) table consisting of {{namestring, icon_size}} or {{namestring, icon_size=XXX}} (+ modname if not already defined)
+function RecGen:setTechIcons(icons,mod)
+	if type(icons)~= "function" then
+		local ic = {}
+		local ic_sz = 128
+		--if not mod and not self.mod then log("RecGen:setTechIcons() mod not defined") return nil end
+		if type(icons)=="string" then
+			if string.match(icons, "%_%_(.-)%_%_") then
+				ic[#ic+1]={icon=icons, icon_size=ic_sz}
+			elseif type(mod) == "number" and self.mod then
+				ic[#ic+1]={icon = "__"..self.mod.."__/graphics/technology/"..icons..".png", icon_size=mod}
 			else
-				self.tech.icon = function(levels,grade) return "__"..self.mod.."__/graphics/technology/"..mod..".png" end
+				ic[#ic+1]={icon = "__"..(mod or self.mod).."__/graphics/technology/"..icons..".png", icon_size=ic_sz}
 			end
-		else
-			self.tech.icon = function(levels,grade) return mod end
+		elseif type(icons)=="table" then
+			for _, c in pairs(icons) do
+				-- .icon is just a namestring
+				if c.icon and not string.match(c.icon, "%_%_(.-)%_%_") then
+					ic[#ic+1]={icon = "__"..(mod or self.mod).."__/graphics/technology/"..c.icon..".png", icon_size=c.icon_size or ic_sz}
+				--table consists of {namestring,icon_size} or {namestring, icon_size=XXX}
+				elseif not c.icon and c[1] and type(c[1])=="string" then
+					ic[#ic+1]={icon = "__"..(mod or self.mod).."__/graphics/technology/"..c[1]..".png", icon_size=c[2] or c.icon_size or ic_sz}
+				-- table should be fine
+				else
+					ic[#ic+1] = c
+				end
+			end
 		end
-	elseif type(mod) == "function" then
-		self.tech.icon = mod
-	elseif type(mod) == "table" then
-		self.tech.icon = function(levels,grade) return mod end
-	end
+		self.tech.icons = function(levels,grade) return ic end
+	else
+		self.tech.icons = icons
+	end	
 	return self
 end
 function RecGen:setTechPacks(cost)
@@ -2356,11 +2391,12 @@ function RecChain:generate_chain()
 		setSubgroup(self.subgroup(0,0)):
 		setOrder(self.order(0,0)):
 		setEnergy(self.energy_required(self.levels,i)):
+		noTech(self.tech.noTech):
 		setTechCost(omni.lib.round(self.tech.cost(self.levels,i))):
 		setTechTime(omni.lib.round(self.tech.time(self.levels,i))):
 		setTechPacks(self.tech.packs(self.levels,i)):
 		setTechUpgrade(i>1):
-		setTechIcon(self.tech.icon(levels,i)):
+		setTechIcons(self.tech.icons(levels,i)):
 		setTechLocName(self.tech.loc_name(levels,grade)):
 		setTechLocDesc(self.tech.loc_desc,self.tech.loc_desc_keys):
 		--setTechName("omnitech-"..techname.."-"..i-techDifEnabled):
@@ -2373,10 +2409,10 @@ function RecChain:generate_chain()
 		end
 
 
-		if self.tech.icon(levels,i) then
-			r:setTechIcon(self.tech.icon(levels,i))
+		if self.tech.icons(levels,i) then
+			r:setTechIcons(self.tech.icons(levels,i))
 		else
-			r:setTechIcon(self.mod,self.tech.name)
+			r:setTechIcons(self.tech.name,self.mod)
 		end
 		if self.add_prod then
 			r:addProductivity()
@@ -2457,12 +2493,13 @@ function TechGen:create(mod,name)
 	end
 	return setmetatable(t,TechGen)
 end
+
 function TechGen:import(name)
 	local tech = data.raw.technology[name]
 	if tech then
 		local t = TechGen:create():
 		setName(name):
-		setIcon(tech.icons or tech.icon):
+		setIcons(omni.lib.icon.of(tech)):
 		setPacks(tech.unit.ingredients):
 		setCost(tech.unit.count):
 		setTime(tech.unit.time):
@@ -2500,21 +2537,37 @@ function TechGen:setEnabled(name)
 	return self
 end
 function TechGen:setIcon(m)
-	self.icon = m
+	self.icons = {{icon = m, icon_size = 128}}
+	return self
+end
+function TechGen:setIcons(m)
+	self.icons = m
 	return self
 end
 function TechGen:setAllow(m)
 	self.allowed = m or m==nil
 	return self
 end
-function TechGen:setLocName(n,m)
-	self.loc_name = n
-	self.loc_name_keys = m
+function TechGen:setLocName(n)
+	if type(n) == "table" then
+		self.loc_name = n
+	else
+		self.loc_name = {n}
+	end
+	if self.loc_name[1] and not string.find(self.loc_name[1],"name.") then
+		self.loc_name[1]="technology-name."..self.loc_name[1]
+	end
 	return self
 end
-function TechGen:setLocDesc(n,m)
-	self.loc_desc =n
-	self.loc_desc_keys = m
+function TechGen:setLocDesc(n)
+	if type(n) == "table" then
+		self.loc_desc = n
+	else
+		self.loc_desc = {n}
+	end
+	if self.loc_desc[1] and not string.find(self.loc_desc[1],"name.") then
+		self.loc_desc[1]="technology-description."..self.loc_desc[1]
+	end
 	return self
 end
 function TechGen:setPacks(p)
@@ -2638,12 +2691,10 @@ function TechGen:generate_tech()
 	end
 	local tech = {
 	name = self.name,
-    --localised_name = self.locname(0,0),
-	--localised_description = self.locdesc(0,0),
 	type = "technology",
-	icon = self.icon,
+	icons = self.icons,
 	upgrade = self.upgrade,
-	icon_size = 128,
+	--icon_size = 128,
 	prerequisites = self.prereq,
 	enabled = self.enabled,
 	hidden = self.hidden,
@@ -2656,21 +2707,17 @@ function TechGen:generate_tech()
 	},
 	order = "c-a"
 	}
-	if type(tech.icon) == "table" and tech.icon[1] then
-		tech.icons = self.icon
-		tech.icon = nil
-		tech.icon_size = nil
-	end
-	if self.loc_name and #self.loc_name>0 then
-		if type(self.loc_name[1]) == "string" and not string.find(self.loc_name[1],".") and not string.find(self.loc_name[1],"name") then
-			self.loc_name[1]="technology-name."..self.loc_name[1]
-		end
+	--if type(tech.icon) == "table" and tech.icon[1] then
+	--	tech.icons = self.icon
+	--	tech.icon = nil
+	--	tech.icon_size = nil
+	--end
+	if self.loc_name and next(self.loc_name) then
 		tech.localised_name = self.loc_name
-		if self.loc_name[1] then
-			tech.localised_name[1]="technology-name."..tech.localised_name[1]
-		end
 	end
-	if self.loc_desc and self.loc_desc then tech.localised_description = {"technology-description."..self.loc_desc,self.loc_desc_keys} end
+	if self.loc_desc and next(self.loc_desc) then
+		tech.localised_description = self.loc_desc
+	end
 	self.rtn[#self.rtn+1] = tech
 end
 function TechGen:return_array()
@@ -2696,9 +2743,6 @@ function setBuildingParameters(b,subpart)
 	  effects = function(levels,grade) return {"consumption", "speed", "pollution"} end
     }
 	b.crafting_speed=function(levels,grade) return 1 end
-	b.source_inventory_size = function(levels,grade) return 7 end
-	b.result_inventory_size = function(levels,grade) return 7 end
-	b.ingredient_count = function(levels,grade) return 7 end
 	b.energy_source =
     {
 	  type = "electric",
@@ -2777,8 +2821,7 @@ function BuildGen:import(name)
 		setModEffects(build.allowed_effects):
 		setSpeed(build.crafting_speed):
 		setEnergySource(build.energy_source):
-		setInventory(math.max(build.source_inventory_size or 3,build.ingredient_count or 3)):
-		setResultInventory(math.max(build.result_inventory_size or 3,build.result_count or 3)):
+		setOrder(build.order):
 		setNextUpgrade(build.next_upgrade):
 		setUsage(build.energy_usage):
 		setAnimation(build.animation):
@@ -2803,6 +2846,8 @@ function BuildGen:import(name)
 		setSearchRadius(build.resource_searching_radius):
 		setResourceCategory(build.resource_categories):
 		setInputs(build.inputs):
+		setInventory(build.ingredient_count or build.source_inventory_size):
+		setResultInventory(build.result_count or build.result_inventory_size):
 		setOffAnimation(build.off_animation):
 		setOnAnimation(build.on_animation)
 
@@ -2817,21 +2862,17 @@ function BuildGen:import(name)
 		else
 			b:setModSlots(0)
 		end
-
-		--if build.energy_source and build.energy_source.fuel_category then b:setFuelCategory(build.energy_source.fuel_category) end
-
-	--local rec = name
-	-- for _,r in pairs(data.raw.recipe) do
-	-- 	omni.marathon.standardise(r)
-	-- 	for _,res in pairs(r.normal.results) do
-	-- 		if res.name == name then
-	-- 			rec = res.name
-	-- 			break
-	-- 		end
-	-- 	end
-	-- end
-
-	--local r = RecGen:import(rec)
+		if build.localised_name then
+			b:setLocName(build.localised_name)
+		end
+		if build.localised_description then
+			b:setLocDesc(build.localised_description)
+		end
+		if build.energy_source and (build.energy_source.fuel_categories or build.energy_source.fuel_category) then
+			b:setFuelCategories(build.energy_source.fuel_categories or build.energy_source.fuel_category)
+			--Make sure that we nil fuel_category after we set fuel_categories
+			build.energy_source.fuel_category = nil
+		end
 	local r = RecGen:import(name)
 
 	local notFields = {}
@@ -2839,7 +2880,7 @@ function BuildGen:import(name)
 		b[name]=table.deepcopy(data)
 	end
 	--if build.energy_source.type=="burner" then b:setBurner(self.energy_source.effectivity,self.energy_source.fuel_inventory_size) end
-	return b:setType(build.type):setFlags(build.flags):setIcons(build.icons or build.icon or omni.icon.of(build, true))
+	return b:setType(build.type):setFlags(build.flags):setIcons(build.icons or build.icon or omni.lib.icon.of(build, true))
 end
 function BuildGen:importIf(name)
 	local build = omni.lib.find_entity_prototype(name) or omni.lib.find_entity_prototype("burner-"..name)
@@ -3057,27 +3098,18 @@ function BuildGen:setSpeed(h)
 	return self
 end
 function BuildGen:setInventory(h)
-	if type(h) == "function" then
-		self.source_inventory_size = h
-		self.ingredient_count=h
-	else
-		self.source_inventory_size = function(levels,grade) return h end
-		self.ingredient_count=function(levels,grade) return h end
-	end
+	self.source_inventory_size = h
+	self.ingredient_count = h
 	return self
 end
 function BuildGen:setResultInventory(h)
-	if type(h) == "function" then
-		self.result_inventory_size = h
-		self.result_count=h
-	else
-		self.result_inventory_size = function(levels,grade) return h end
-		self.result_count=function(levels,grade) return h end
-	end
+	self.result_inventory_size = h
+	self.result_count = h
 	return self
 end
 function BuildGen:setBurner(efficiency,size)
-	self.energy_source = {type = "burner",
+	self.energy_source = {
+	  type = "burner",
       effectivity = efficiency or 0.5,
       fuel_inventory_size = size or 1,
       emissions = 0.01,
@@ -3138,6 +3170,14 @@ function BuildGen:setSteam(efficiency,size)
 	self:addSteamIcon()
 	if not string.find(self.name,"steam-") then
 		self:setName("steam-"..self.name)
+	end
+	return self
+end
+function BuildGen:setFuelCategories(cat)
+	if type(cat)== "table" then
+		self.fuel_categories = cat
+	else
+		self.fuel_categories = {cat or "chemical"}
 	end
 	return self
 end
@@ -3453,8 +3493,10 @@ function BuildGen:generateBuilding()
 		end
 	end
 	if self.type=="furnace" then
-		self.source_inventory_size = function(levels,grade) return 1 end
-		self.result_inventory_size = function(levels,grade) return 1 end
+		self.source_inventory_size = self.source_inventory_size or 1
+		self.result_inventory_size = self.source_result_size or 1
+		self.ingredient_count = self.ingredient_count or 1
+		self.result_count = self.result_count or 1
 	end
 	local lname = {"entity-name."..self.name}
 	if self.loc_name(0,0) and type(self.loc_name(0,0))=="table" then
@@ -3489,13 +3531,14 @@ function BuildGen:generateBuilding()
 		allowed_effects = self.module.effects(0,0),
 		crafting_categories = craftcat,
 		crafting_speed = self.crafting_speed(0,0),
-		source_inventory_size = self.source_inventory_size(0,0),
-		result_inventory_size = self.result_inventory_size(0,0),
+		source_inventory_size = self.source_inventory_size,
+		result_inventory_size = self.result_inventory_size,
+		ingredient_count = self.ingredient_count,
+		result_count = self.result_count,
 		next_upgrade = self.next_upgrade(0,0),
 		energy_source = source,
 		smoke = self.smoke,
 		energy_usage = self.energy_usage(0,0),
-		ingredient_count = self.ingredient_count(0,0),
 		animation =self.animation(0,0),
 		animations =self.animations(0,0),
 		pictures =self.pictures(0,0),
@@ -3523,20 +3566,22 @@ function BuildGen:generateBuilding()
 		resource_categories=self.resource_categories(0,0),
 		inputs=self.inputs(0,0),
 		off_animation=self.off_animation(0,0),
-		on_animation=self.off_animation(0,0)
+		on_animation=self.on_animation(0,0)
     }
 
 	if self.fluid_boxes(0,0) and type(self.fluid_boxes(0,0))=="table" and type(self.fluid_boxes(0,0)[1])=="table" then self.rtn[#self.rtn].fluid_box = self.fluid_boxes(0,0)[1] end
-	if self.fuel_category then self.rtn[#self.rtn].energy_source.fuel_category = self.fuel_category end
+	if self.fuel_categories and next(self.fuel_categories) then self.rtn[#self.rtn].energy_source.fuel_categories = self.fuel_categories end
 	if self.overlay.name then
 		self.rtn[#self.rtn].animation.layers[#self.rtn[#self.rtn].animation.layers+1] = table.deepcopy(self.rtn[#self.rtn].animation.layers[1])
 		self.rtn[#self.rtn].animation.layers[#self.rtn[#self.rtn].animation.layers].filename = "__"..self.mod.."__/graphics/entity/buildings/"..self.overlay.name..".png"
 		self.rtn[#self.rtn].animation.layers[#self.rtn[#self.rtn].animation.layers].tint = omni.tint_level[self.overlay.level]
 	end
+
 	local stuff = RecGen:create(self.mod,self.name):
 	setIngredients(self.ingredients):
-	setResults(self.name):
+	setResults({self.name, self.results(0,0,0)[1].amount or 1}):
 	setIcons(self.icons(0,0)):
+	setOrder(self.order(0,0)):
 	setBuildProto(self.rtn[#self.rtn]):
 	setEnergy(self.energy_required(0,0)):
 	setCategory(self.category(0,0)):
@@ -3545,10 +3590,11 @@ function BuildGen:generateBuilding()
 	setEnabled(self.enabled(0,0)):
 	setMain(self.main_product(0,0)):
 	setPlace(self.name):
+	noTech(self.tech.noTech):
 	setTechName(self.tech.name(0,0)):
 	setTechUpgrade(self.tech.upgrade(0,0)):
 	setTechCost(self.tech.cost(0,0)):
-	setTechIcon(self.tech.icon(0,0)):
+	setTechIcons(self.tech.icons(0,0)):
 	setTechPacks(self.tech.packs(0,0)):
 	setSubgroup(self.subgroup(0,0)):
 	setTechTime(self.tech.time(0,0)):
@@ -3665,7 +3711,7 @@ function BuildChain:generate_building_chain()
 		setNextUpgrade(function(levels,grade) return nextname end):
 		setTechUpgrade(self.tech.upgrade(levels,i)):
 		setTechCost(self.tech.cost(levels,i)):
-		setTechIcon(self.tech.icon(levels,i)):
+		setTechIcons(self.tech.icons(levels,i)):
 		setEnabled(self.enabled(levels,i)):
 		setTechPacks(self.tech.packs(levels,i)):
 		setTechTime(self.tech.time(levels,i)):
@@ -4365,19 +4411,21 @@ function InsertGen:setAnimation(platform,base,baseShadow,open,openShadow,closed,
 		self.platform_picture = function(levels,grade) return platform end
 	elseif type(platform)=="string" then
 		self.platform_picture = function(levels,grade) return {
-        filename = "__"..self.mod.."__/graphics/entity/inserter/"..platform.."-platform.png",
-        priority = "extra-high",
-        width = 46,
-        height = 46,
-        shift = {0.09375, 0},
-        hr_version = {
-          filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..platform.."-platform.png",
-          priority = "extra-high",
-          width = 105,
-          height = 79,
-          shift = util.by_pixel(1.5, 7.5-1),
-          scale = 0.5
-        }
+		sheet = {
+		  filename = "__"..self.mod.."__/graphics/entity/inserter/"..platform.."-platform.png",
+		  priority = "extra-high",
+		  width = 46,
+		  height = 46,
+		  shift = {0.09375, 0},
+		  hr_version = {
+			filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..platform.."-platform.png",
+			priority = "extra-high",
+			width = 105,
+			height = 79,
+			shift = util.by_pixel(1.5, 7.5-1),
+			scale = 0.5
+		  }
+		}
       } end
 	end
 	if type(base)=="function" then
@@ -4587,7 +4635,7 @@ function InsertGen:generateInserter()
     circuit_wire_max_distance = inserter_circuit_wire_max_distance,
     default_stack_control_input_signal = inserter_default_stack_control_input_signal
   }
-  if self.fuel_category then self.rtn[#self.rtn].energy_source.fuel_category = self.fuel_category end
+  if self.fuel_categories and next(self.fuel_categories) then self.rtn[#self.rtn].energy_source.fuel_categories = self.fuel_categories end
 
 	local stuff = RecGen:create(self.mod,self.name):
 	setIngredients(self.ingredients):
@@ -4601,10 +4649,11 @@ function InsertGen:generateInserter()
 	setEnabled(self.enabled(0,0)):
 	setMain(self.main_product(0,0)):
 	setPlace(self.name):
+	noTech(self.tech.noTech):
 	setTechName(self.tech.name(0,0)):
 	setTechUpgrade(self.tech.upgrade(0,0)):
 	setTechCost(self.tech.cost(0,0)):
-	setTechIcon(self.tech.icon(0,0)):
+	setTechIcons(self.tech.icons(0,0)):
 	setTechPacks(self.tech.packs(0,0)):
 	setSubgroup(self.subgroup(0,0)):
 	setOrder(self.order(0,0)):
@@ -4736,7 +4785,7 @@ hand_base_picture
 --[[
 setTechUpgrade(value)
 setTechCost(cost)
-setTechIcon(mod,icon)
+setTechIcons(mod,icon)
 setTechPacks(cost)
 setTechTime(t)
 setTechPrereq(prereq)

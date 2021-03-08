@@ -29,8 +29,8 @@ for _,boiler in pairs(data.raw.boiler) do
 			type = "recipe-category",
 			name = "boiler-omnifluid-"..boiler.name,
 		}
-		if standardized_recipes[boiler.name] == nil then
-			omni.marathon.standardise(data.raw.recipe[boiler.name])
+		if standardized_recipes[rec.name] == nil then
+			omni.lib.standardise(data.raw.recipe[rec.name])
 		end
 		fix_boilers_recipe[#fix_boilers_recipe+1]=rec.name
 		fix_boilers_item[boiler.minable.result]=true
@@ -263,7 +263,7 @@ fluid_solid[#fluid_solid+1]={
 }
 data:extend(fluid_solid)
 for _,rec in pairs(data.raw.recipe) do
-	omni.marathon.standardise(rec)
+	omni.lib.standardise(rec)
 	if rec.category then
 		cat_add[rec.category] = {ingredients = 0,results=0}
 		for _, dif in pairs({"normal","expensive"}) do
@@ -363,7 +363,7 @@ for _,pump in pairs(data.raw["offshore-pump"]) do
 			new[#new+1] = new_item
 
 			if standardized_recipes[rec.name] == nil then
-				omni.marathon.standardise(rec)
+				omni.lib.standardise(rec)
 			end
 			dont_remove[pump.fluid]={true}
 			
@@ -532,7 +532,7 @@ local energy_fluid = {}
 omni.fluid.SetRoundFluidValues()
 --log("zombie damn it!")
 for _,recipe in pairs(data.raw.recipe) do
-	omni.marathon.standardise(recipe)
+	omni.lib.standardise(recipe)
 	if generator_recipe[recipe.name] then extra_fluid_rec[#extra_fluid_rec+1]=table.deepcopy(recipe) end
 	if not forbidden_recipe[recipe.name] and omni.fluid.has_fluid(recipe) and not omni.lib.is_in_table(recipe.subgroup,excluded_subgroups) and not omni.lib.is_in_table(recipe.name,excluded_names) and recipe.category ~= "creative-mode_free-fluids" and recipe.category ~= "general-omni-boiler" and ((recipe.category and not omni.lib.start_with(recipe.category,"boiler-omnifluid-")) or recipe.category==nil) then
 		local fluids = {normal={ingredients={},results={}},expensive={ingredients={},results={}}}
@@ -687,7 +687,7 @@ end
 for _,f in pairs(temperature_fluids) do
 	--log("pyc is shit")
 	for _,r in pairs(f.recipes) do
-		if omni.lib.cardTable(f.used) > 1 and omni.lib.cardTable(f.temperatures) > 1 then
+		if table_size(f.used) > 1 and table_size(f.temperatures) > 1 then
 			for _,ingres in pairs({"ingredients","results"}) do
 				for _, dif in pairs({"normal","expensive"}) do
 					for _,p in pairs(r[dif][ingres]) do
@@ -862,7 +862,7 @@ for _, recipe in pairs(extra_fluid_rec) do
 					component.amount = fluids[dif][ingres][j].amount*mult[dif]/sluid_contain_fluid
 					component.type="item"
 					local new_name = "solid-"..component.name
-					if temperature_fluids[component.name] and omni.lib.cardTable(temperature_fluids[component.name].used) > 1 and (component.temperature or component.maximum_temperature or component.minimum_temperature) then
+					if temperature_fluids[component.name] and table_size(temperature_fluids[component.name].used) > 1 and (component.temperature or component.maximum_temperature or component.minimum_temperature) then
 						local tp = component.temperature or component.minimum_temperature or component.maximum_temperature
 						new_name=new_name.."-"..tp
 						if not temperature_fluids[component.name] then
@@ -1011,7 +1011,7 @@ for _,fix in pairs(data.raw.recipe) do
 			end
 		end
 	end
-	omni.marathon.standardise(fix)
+	omni.lib.standardise(fix)
 end
 
 

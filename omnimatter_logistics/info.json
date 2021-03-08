@@ -3,10 +3,12 @@
 "version":"0.18.1",
 "title":"Omnilogistics",
 "author":"EmperorZelos",
+"contact": "https://discord.gg/WQYks7W",
 "description":"Adds early game logistics that is fuel heavy.",
 "factorio_version":"0.18",
 "dependencies":[
     "base",
     "omnilib >= 3.18.13",
-    "omnimatter"]
+    "omnimatter"
+]
 }

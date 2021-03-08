@@ -45,8 +45,8 @@ function icon.of_recipe(prototype, silent)
     if icons then return icons; end
 
     local product
-    if prototype.normal ~= nil then product = omni.locale.partial.get_main_product(prototype.normal)
-    else product = omni.locale.partial.get_main_product(prototype); end
+    if prototype.normal ~= nil then product = omni.lib.locale.partial.get_main_product(prototype.normal)
+    else product = omni.lib.locale.partial.get_main_product(prototype); end
 
     if not product then
         if silent then
@@ -63,7 +63,7 @@ end
 function icon.of(prototype, ptype, silent)
     --- Get the icons of the given prototype.
     if type(ptype) == 'string' then
-        prototype = omni.locale.find(prototype, ptype, silent)
+        prototype = omni.lib.locale.find(prototype, ptype, silent)
     elseif prototype == nil then
         if silent then
             return nil 
@@ -76,11 +76,11 @@ function icon.of(prototype, ptype, silent)
     if type(prototype) == "table" and prototype[1] and prototype[1].icon then
         return prototype
     end
-    if omni.locale.inherits(prototype.type, 'recipe') then
+    if omni.lib.locale.inherits(prototype.type, 'recipe') then
         return icon.of_recipe(prototype, silent)
     else
         return icon.of_generic(prototype, silent)
     end
 end
 
-omni.icon = icon
+omni.lib.icon = icon

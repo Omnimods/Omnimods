@@ -25,7 +25,7 @@ local metal_omnide_icon = function(metal)
 			icon = "__omnimatter_crystal__/graphics/icons/omnide-solution.png",
 			icon_size = 32
 		}},
-		omni.icon.of(data.raw.item[metal]),
+		omni.lib.icon.of(data.raw.item[metal]),
 		{}
 	)
 	for I=2, #icons do
@@ -42,7 +42,7 @@ local salt_omnide_icon = function(metal)
 			icon = "__omnimatter_crystal__/graphics/icons/omnide-salt.png",
 			icon_size = 32
 		}},
-		omni.icon.of(data.raw.item[metal]),
+		omni.lib.icon.of(data.raw.item[metal]),
 		{}
 	)
 	for I=2, #icons do
@@ -125,6 +125,7 @@ local ingrediences_solvation=function(recipe)
 	end
 	return ing
 end
+
 local results_solvation=function(recipe)
 	local ing = {}
 	--ing[#ing+1]={type = "fluid", name = "hydromnic-acid", amount = 120}

@@ -2,7 +2,7 @@
 if not mods["omnimatter_marathon"] then
 	for _, rec in pairs(data.raw.recipe) do
 		if standardized_recipes[rec.name] == nil then
-			omni.marathon.standardise(rec) --standardise what has not already been done
+			omni.lib.standardise(rec) --standardise what has not already been done
 		end
 	end
 end

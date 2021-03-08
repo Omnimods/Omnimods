@@ -47,13 +47,10 @@ function pickFluidOrder(fluids)
 	return table.deepcopy(alla)
 end
 
---error("meep")
-log("test ordering")
 local recipesExpanded = {}
 local techRec = {}
-log(serpent.block(data.raw.recipe["ingot-mingnisium"]))
 for _,rec in pairs(data.raw.recipe) do
-	omni.marathon.standardise(rec)
+	omni.lib.standardise(rec)
 	if fluidCount(rec.normal.results) > 1 or fluidCount(rec.normal.ingredients) > 1 then
 		techRec[rec.name] = {}
 		if not omni.lib.equalTableIgnore(rec.normal.ingredients,rec.expensive.ingredients,"amount") or not omni.lib.equalTableIgnore(rec.normal.results,rec.expensive.results,"amount") then
@@ -85,7 +82,7 @@ for _,rec in pairs(data.raw.recipe) do
 						if ingOrders[dif][i] and #ingOrders[dif][i] > 0 then new[dif].ingredients = omni.lib.union(ingOrders[dif][i],solids[dif].ingredients) end
 						if resOrders[dif][j] and #resOrders[dif][j] > 0 then new[dif].results = omni.lib.union(resOrders[dif][j],solids[dif].results) end
 					end
-					if not new.localised_name and new.main_product==nil then new.localised_name = {"recipe-name."..rec.name} end
+					if not new.localised_name and new.main_product==nil then new.localised_name = omni.lib.locale.of(rec).name end
 					new.name=new.name.."-omniperm-"..i.."-"..j
 					techRec[rec.name][#techRec[rec.name]+1]=new.name
 					new.hidden = true
@@ -106,8 +103,6 @@ for _,rec in pairs(data.raw.recipe) do
 		data.raw.recipe[rec.name]=nil
 	end
 end
-log(serpent.block(data.raw.recipe["ingot-mingnisium"]))
---error("derp")
 
 local rawsize = table_size(data.raw.recipe) + #recipesExpanded
 if rawsize > 65535 then
@@ -131,8 +126,6 @@ for _,tech in pairs(data.raw.technology) do
 	end
 end
 
-
-
 for _,mod in pairs(data.raw.module) do
 	if mod.limitation then
 		local newRestrict = {}
@@ -144,5 +137,16 @@ for _,mod in pairs(data.raw.module) do
 			end
 		end
 		mod.limitation = table.deepcopy(newRestrict)
+	end
+end
+
+--Fix assemblers that have fixed recipes set
+for _,e in pairs(data.raw["assembling-machine"]) do
+	if e.fixed_recipe then
+		local rec_old = e.fixed_recipe
+		local rec_new = rec_old.."-omniperm-1-1"
+		if data.raw.recipe[rec_new] then
+			e.fixed_recipe = rec_new
+		end
 	end
 end

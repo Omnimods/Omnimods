@@ -1,22 +1,82 @@
-if not omni then omni = {} end
+omni.matter.omnitial = {}
+omni.matter.omnisource = {}
+omni.matter.omnifluid = {}
+omni.matter.res_to_keep = {
+	"omnite",
+	"infinite-omnite",
+	"trees",
+	"enemy-base"
+}
 
-omnisource={}
-tiercount={0,0,0}
-omnifluid={}
-uniomnitiers={}
+--------------------------
+---Extraction functions---
+--------------------------
+--Manipulation of the extraction tables
+--Open for modders to use to add compatibility
 
-phlog = false
-
-function omni.add_resource(r,t,s,m)
-	if not omnisource[tostring(t)] then omnisource[tostring(t)] = {} end
-	omnisource[tostring(t)][r]={mod=m,tier = t, name = r,techicon = s}
+function omni.matter.add_resource(n, t, s, m)
+	if not omni.matter.omnisource[tostring(t)] then omni.matter.omnisource[tostring(t)] = {} end
+	omni.matter.omnisource[tostring(t)][n]={mod=m, tier = t, name = n, techicon = s}
 end
-function omni.add_fluid(r,t,q,s,m)
-	if not omnifluid[tostring(t)] then omnifluid[tostring(t)] = {} end
-	omnifluid[tostring(t)][r]={mod=m,tier = t,ratio=q, name = r,techicon = s}
+
+function omni.matter.add_fluid(n ,t, r, s, m)
+	if not omni.matter.omnifluid[tostring(t)] then omni.matter.omnifluid[tostring(t)] = {} end
+	omni.matter.omnifluid[tostring(t)][n]={mod=m, tier = t, ratio=r, name = n,techicon = s}
 end
 
-function omni.add_omnicium_alloy(name,plate,ingot)
+function omni.matter.remove_resource(n)
+	for t, tiers in pairs(omni.matter.omnisource) do
+		if omni.matter.omnisource[t][n] then
+			omni.matter.omnisource[t][n] = nil
+			return true
+		end
+	end
+	return nil
+end
+
+function omni.matter.remove_fluid(n)
+	for t, tiers in pairs(omni.matter.omnifluid) do
+		if omni.matter.omnifluid[t][n] then
+			omni.matter.omnifluid[t][n] = nil
+			return true
+		end
+	end
+	return nil
+end
+
+function omni.matter.get_ore_tier(n)
+	for _, tiers in pairs(omni.matter.omnisource) do
+		for _,ores in pairs(tiers) do
+			if ores.name == n then
+				return ores.tier
+			end
+		end
+	end
+	return nil
+end
+
+function omni.matter.set_ore_tier(n,t)
+	local tier = omni.matter.get_ore_tier(n)
+	if tier then
+		local res = table.deepcopy(omni.matter.omnisource[tostring(tier)][n])
+		omni.matter.omnisource[tostring(tier)][n] = nil
+		if not omni.matter.omnisource[tostring(t)] then omni.matter.omnisource[tostring(t)] = {} end
+		omni.matter.omnisource[tostring(t)][n] = res
+		return true
+	else
+		return nil
+	end
+end
+
+--Add initial extraction ores
+function omni.matter.add_initial(ore_name,ore_amount,omnite_amount)
+	omni.matter.omnitial[ore_name] = {
+		ingredients ={{name = "omnite", amount = omnite_amount}},
+		results = {{name = ore_name, amount = ore_amount}, {name = "stone-crushed", amount = (omnite_amount-ore_amount) or 6}}
+	}
+end
+
+function omni.matter.add_omnicium_alloy(name,plate,ingot)
 	local reg = {}
 	ItemGen:create("omnimatter","omnicium-"..name.."-alloy"):
 		setSubgroup("omnicium"):
@@ -34,7 +94,7 @@ function omni.add_omnicium_alloy(name,plate,ingot)
 		setSubgroup("omnicium-casting"):
 		setEnergy(4):
 		setTechName("omnitech-angels-omnicium-"..name.."-alloy-smelting"):
-		setTechIcon("smelting-omnicium-"..name):
+		setTechIcons("smelting-omnicium-"..name):
 		setTechPacks("angels-"..name.."-smelting-1"):
 		setTechCost(50):
 		setTechTime(30):
@@ -88,8 +148,8 @@ function omni.add_omnicium_alloy(name,plate,ingot)
   if #reg > 0 then data:extend(reg) end
 end
 
-function omni.add_omniwater_extraction(mod, element, lvls, tier, gain, starter_recipe)
-	local get_prereq = function(grade,element,tier)
+function omni.matter.add_omniwater_extraction(mod, element, lvls, tier, gain, starter_recipe)
+	local function get_prereq(grade,element,tier)
 		local req = {}
 		local tractor_lvl = ((grade-1)/omni.fluid_levels_per_tier)+tier-1 
 		--Add previous tech as prereq if its in the same tier
@@ -107,13 +167,18 @@ function omni.add_omniwater_extraction(mod, element, lvls, tier, gain, starter_r
 		return req
 	end
 	
-	local get_tech_packs = function(grade,tier)
+	local function get_tech_packs(grade,tier)
 		local packs = {}
 		local pack_tier = math.ceil(grade/omni.fluid_levels_per_tier) + tier-1
 		for i=1,pack_tier do
 			packs[#packs+1] = {omni.sciencepacks[i],1}
 		end
 		return packs
+	end
+
+	local function get_tech_cost(levels,grade,tier,start,constant)
+		local lvl = grade + (tier-1) * omni.fluid_levels_per_tier
+		return  start*lvl + constant*lvl*get_tier_mult(levels,grade,1)
 	end
 
 	--Starter recipe
@@ -124,7 +189,7 @@ function omni.add_omniwater_extraction(mod, element, lvls, tier, gain, starter_r
 			setIngredients({type="fluid",name="omnic-water",amount=720}):
 			setResults({
 				{type = "fluid", name = element, amount = gain*0.5},
-				{type = "fluid", name = "omnic-waste", amount = gain*1.5}}):
+				{type = "fluid", name = "omnic-waste", amount = gain*1.3}}):
 			setSubgroup("omni-fluid-basic"):
 			setOrder("b[basic-"..element.."-omnitraction]"):
 			setCategory("omnite-extraction-both"):
@@ -152,14 +217,32 @@ function omni.add_omniwater_extraction(mod, element, lvls, tier, gain, starter_r
 		setLevel(lvls):
 		setEnergy(function(levels,grade) return 0.5 end):
 		setEnabled(false):
-		setTechIcon(mod,element.."-omnitraction"):
+		setTechIcons(element.."-omnitraction",mod):
 		setTechPrereq(function(levels,grade) return get_prereq(grade,element,tier) end):
-    	setTechPacks(function(levels,grade) return get_tech_packs(grade,tier,true) end):
-    	setTechCost(function(levels,grade) return get_tier_mult(levels,grade,1,true) end):
+    	setTechPacks(function(levels,grade) return get_tech_packs(grade,tier) end):
+    	setTechCost(function(levels,grade) return get_tech_cost(levels,grade,tier,18,0.8) end):
 		setTechTime(15):
 		setTechLocName("omnitech-omniwater-omnitraction",{"fluid-name."..element}):
 		extend()
 
   	--Add the last tier as prereq for the rocket silo
   	omni.lib.add_prerequisite("rocket-silo", "omnitech-"..element.."-omnitraction-"..lvls)
+end
+
+--------------------------
+---Other functions---
+--------------------------
+
+--Add a resource to our whitelist. Whitelisted resources will not be removed from autoplace control
+function omni.matter.add_ignore_resource(name)
+	if not omni.lib.is_in_table(name, omni.matter.res_to_keep) then
+		omni.matter.res_to_keep[#omni.matter.res_to_keep+1] = name
+	end
+end
+
+--Remove a resource from our whitelist.
+function omni.matter.remove_ignore_resource(name)
+	if omni.lib.is_in_table(name, omni.matter.res_to_keep) then
+		omni.lib.remove_from_table(name, omni.matter.res_to_keep)
+	end
 end

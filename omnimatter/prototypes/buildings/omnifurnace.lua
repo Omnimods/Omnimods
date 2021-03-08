@@ -1,4 +1,5 @@
 BuildGen:create("omnimatter","omni-furnace"):
+  noTech():
 	setEnergy(5):
 	setIngredients({ "omnicium-plate", 5},{ "omnite-brick", 5},{ "stone-furnace", 1}):
 	setStacksize(20):
@@ -109,7 +110,7 @@ BuildGen:create("omnimatter","omni-furnace"):
           priority = "high",
           line_length = 8,
           width = 64,
-          height = 75,
+          height = 74,
           frame_count = 1,
           axially_symmetrical = false,
           direction_count = 1,
@@ -119,8 +120,8 @@ BuildGen:create("omnimatter","omni-furnace"):
             filename = "__base__/graphics/entity/steel-furnace/hr-steel-furnace-working.png",
             priority = "high",
             line_length = 8,
-            width = 130,
-            height = 149,
+            width = 128,
+            height = 150,
             frame_count = 1,
             axially_symmetrical = false,
             direction_count = 1,

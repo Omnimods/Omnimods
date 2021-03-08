@@ -6,7 +6,7 @@ RecGen:create("omnimatter_energy","naturize-omnicell"):
 	setTechName("omnicells"):
 	setTechPacks(4):
 	setTechCost(250):
-	setTechIcon("omnimatter_energy","omnicell"):
+	setTechIcons("omnicell","omnimatter_energy"):
 	setTechPrereq("fluid-handling"):
 	setCategory("omniphlog"):
 	setIngredients(

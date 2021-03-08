@@ -26,7 +26,7 @@ local b = BuildGen:create("omnimatter_wood","omnimutator"):
 	setCrafting({"omnimutator"}):
 	setFluidBox("XWX.XXX.XSX"):
 	setTechName("omnitech-omnimutator"):
-	setTechIcon("omnimatter_wood","mutator"):
+	setTechIcons("mutator","omnimatter_wood"):
 	setTechCost(50):
 	setTechTime(15):
 	setTechPrereq({"omnitech-omnic-acid-hydrolyzation-1"}):
@@ -53,7 +53,7 @@ local b = BuildGen:create("omnimatter_wood","omnimutator"):
     }):extend()
 
 RecGen:create("omnimatter_wood","wasteMutation"):
-	setFuelValue(3):
+	setFuelValue(2):
 	setSubgroup("omnimutator-items"):
 	setStacksize(100):
 	setIcons("omniwood","omnimatter_wood"):
@@ -97,7 +97,7 @@ RecGen:create("omnimatter_wood","basic-wood-mutation"):
 	setTechName("omnitech-omnimutator"):extend()
 	
 	RecGen:create("omnimatter_wood","omniseedling"):
-	setFuelValue(1):
+	setFuelValue(0.7):
 	setSubgroup("omnimutator-items"):
 	setStacksize(100):
 	marathon():
@@ -142,3 +142,8 @@ RecGen:create("omnimatter_wood","basic-wood-mutation"):
 	setTechName("bob-greenhouse"):
 	setGenerationCondition(mods["bobgreenhouse"]~= nil and not mods["angelsbioprocessing"]):
 	setResults({type = "item", name = "omniwood", amount_min = 20, amount_max = 60}):extend()
+
+--Nerf normal wood´s fuel value
+ItemGen:import("wood"):
+	setFuelValue(1.3):
+	extend()

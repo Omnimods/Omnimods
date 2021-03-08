@@ -1,19 +1,20 @@
 {
 "name":"omnimatter",
-"version": "4.0.3",
+"version": "4.1.10",
 "title":"Omnimatter",
 "author":"EmperorZelos",
+"contact": "https://discord.gg/WQYks7W",
 "description":"This mod condenses all ores into a single ore from which everything is extracted.",
-"factorio_version":"1.0",
+"factorio_version":"1.1",
 "dependencies":[
   "base",
-  "omnilib >= 4.0.0",
-  "?bobores",
-  "?angelspetrochem",
-  "?only-smelting",
+  "omnilib >= 4.1.0",
   "?angelsrefining",
-  "?bobtech",
   "?angelssmelting",
+  "?angelspetrochem",
+  "?bobores",
+  "?bobtech",
+  "?Krastorio2",
   "(?)bobassembly"
 ]
 }

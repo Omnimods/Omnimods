@@ -1,4 +1,34 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.4
+Date: 2021.02.11
+  Bugfixes:
+    - Fixed that "Crystalline" was added multiple times to certain recipe localised names
+---------------------------------------------------------------------------------------------------
+Version: 4.1.3
+Date: 2021.01.21
+  Info:
+    - Updated for omnilib 4.1.6
+    - Updated for Omnimatter 4.1.8
+---------------------------------------------------------------------------------------------------
+Version: 4.1.2
+Date: 2020.12.23
+  Changes:
+      - Internal cleanup
+---------------------------------------------------------------------------------------------------
+Version: 4.1.1
+Date: 2020.12.14
+  Features:
+    - Added Krastorio 2 support
+  Bugfixes:
+    - Fixed a crash with certain mods when the max tier setting was set to <= 3
+---------------------------------------------------------------------------------------------------
+Version: 4.1.0
+Date: 2020.11.26
+  Info:
+    - Updated for Factorio version 1.1.0
+  Features:
+    - Crystallogy now outputs "crystal powder" when playing without angels
+---------------------------------------------------------------------------------------------------
 Version: 4.0.2
 Date: 2020.09.04
   Bugfixes:

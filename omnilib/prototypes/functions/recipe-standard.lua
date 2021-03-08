@@ -2,7 +2,7 @@ if not omni then omni={} end
 if not omni.marathon then omni.marathon={} end
 standardized_recipes={}
 
-function omni.marathon.standardise(recipe)
+function omni.lib.standardise(recipe)
   if recipe == nil then return nil end
 	--Set table parts if they don't already exist
 	if not recipe.expensive then recipe.expensive={} end
@@ -194,8 +194,8 @@ function omni.marathon.standardise(recipe)
 	-- Localisation
 	---------------------------------------------------------------------------
 	--Update loc. name if there is no localised name or no main product set
-	if not recipe.localised_name and not omni.locale.get_main_product(recipe) then
-		recipe.localised_name = recipe.localised_name or omni.locale.of(recipe).name
+	if not recipe.localised_name and not omni.lib.locale.get_main_product(recipe) then
+		recipe.localised_name = recipe.localised_name or omni.lib.locale.of(recipe).name
 	end
 	---------------------------------------------------------------------------
 	-- Move Flags to difficulty zone
@@ -265,7 +265,7 @@ function omni.marathon.standardise(recipe)
 	-- Icons standardisation
 	---------------------------------------------------------------------------
 	-- case both, replace icon with icons. Case none, we set the icon.
-	recipe.icons = omni.icon.of(recipe)
+	recipe.icons = omni.lib.icon.of(recipe)
 	-- nil out non-compliant
 	recipe.icon = nil
 	recipe.icon_size = nil

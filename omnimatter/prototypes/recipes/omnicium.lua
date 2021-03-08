@@ -32,8 +32,8 @@ RecGen:create("omnimatter","omnicium-plate-mix"):
 
 RecGen:create("omnimatter","omnicium-gear-wheel"):
 	setStacksize(100):
-	setIngredients({normal = {{"omnicium-plate", 2}},expensive={{"omnicium-plate",2}}}):
-	setResults({normal = {{"omnicium-gear-wheel", 2}},expensive={{"omnicium-gear-wheel",1}}}):
+	setIngredients({normal = {{"omnicium-plate", 1}},expensive={{"omnicium-plate",2}}}):
+	setResults({normal = {{"omnicium-gear-wheel", 1}},expensive={{"omnicium-gear-wheel",1}}}):
 	addProductivity():
 	setSubgroup("omni-gears"):
 	setOrder("aa"):
@@ -94,7 +94,7 @@ RecGen:import("iron-ore-smelting"):
 	addSmallIcon("iron-ore",3):
 	addSmallIcon("copper-ore",1):
 	setTechName("omnitech-angels-omnicium-smelting-1"):
-	setTechIcon("smelting-omnicium"):
+	setTechIcons("smelting-omnicium"):
 	extend()
 
 RecGen:import("molten-iron-smelting-1"):
@@ -132,7 +132,7 @@ RecGen:import("iron-ore-processing"):
 	setReqAllMods("angelssmelting"):
 	setTechName("omnitech-angels-omnicium-smelting-2"):
 	setTechPrereq("omnitech-angels-omnicium-smelting-1"):
-	setTechIcon("smelting-omnicium"):extend()
+	setTechIcons("smelting-omnicium"):extend()
 
 RecGen:import("processed-iron-smelting"):
 	setName("processed-omnicium-smelting","omnimatter"):
@@ -158,7 +158,7 @@ RecGen:import("iron-processed-processing"):
 	setReqAllMods("angelssmelting"):
 	setTechName("omnitech-angels-omnicium-smelting-3"):
 	setTechPrereq("omnitech-angels-omnicium-smelting-2"):
-	setTechIcon("smelting-omnicium"):extend()
+	setTechIcons("smelting-omnicium"):extend()
 
 RecGen:import("pellet-iron-smelting"):
 	setName("pellet-omnicium-smelting","omnimatter"):
@@ -172,7 +172,7 @@ RecGen:import("pellet-iron-smelting"):
 	addSmallIcon("pellet-omnicium",3):
 	setReqAllMods("angelssmelting"):
 	setTechName("omnitech-angels-omnicium-smelting-3"):
-	setTechIcon("smelting-omnicium"):extend()
+	setTechIcons("smelting-omnicium"):extend()
 
 RecGen:import("roll-iron-casting"):
 	setName("roll-omnicium-casting","omnimatter"):
@@ -233,8 +233,9 @@ if mods["angelssmelting"] then
   })
   data.raw.item["omnicium-plate"].subgroup = "omnicium-casting"
 end
-if mods["only-smelting"] then
-else
-	data.raw.recipe["iron-plate"].hidden = false
-	data.raw.recipe["copper-plate"].hidden = false
-end
+
+-- if mods["only-smelting"] then
+-- else
+-- 	data.raw.recipe["iron-plate"].hidden = false
+-- 	data.raw.recipe["copper-plate"].hidden = false
+-- end

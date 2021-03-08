@@ -1,6 +1,40 @@
 ---------------------------------------------------------------------------------------------------
-Version: 4.0.5
-Date: ???
+Version: 4.1.5
+Date: 2021.01.21
+  Changes:
+    - Updated for omnilib 4.1.6
+---------------------------------------------------------------------------------------------------
+Version: 4.1.4
+Date: 2021.01.08
+  Bugfixes:
+    - Fixed a crash related to the compression planner shortcut
+    - Fixed that the compression planner did not properly lock / unlock with compression minsing
+---------------------------------------------------------------------------------------------------
+Version: 4.1.3
+Date: 2021.01.03
+  Bugfixes:
+    - Fixed a crash with certain mod combinations caused by a missing recipe category
+---------------------------------------------------------------------------------------------------
+Version: 4.1.2
+Date: 2020.12.02
+  Features:
+    - Silos now also scale the forced wait between "ready" and "launching" states
+  Bugfixes:
+    - Fix crash from compressed rocket silos calling a removed interface
+    - Fix module counts on compressed buildings ending up negative
+    - Fix compressed rocket-silo-rocket only having one variant
+---------------------------------------------------------------------------------------------------
+Version: 4.1.1
+Date: 2020.11.26
+  Features:
+    - Added an hotkey for the compression planner
+  Bugfixes:
+    - Fix that the compression planner was not spawnable
+---------------------------------------------------------------------------------------------------
+Version: 4.1.0
+Date: 2020.11.26
+  Info:
+    - Updated for Factorio version 1.1.0
   Bugfixes:
     - Fix highly compressed heat exchanger underperforming 
     - Fix reactor and heat pipe heat buffer not compressing
