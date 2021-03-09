@@ -104,10 +104,6 @@ end
 local cmpn = {"vanilla-circuit","crystallonics","vanilla-gear-wheel","bob-gear-wheel","vanilla-gear-box","bob-gear-box","plate","bob-plate","angel-plate","angel-bob-plate","angels-gear-wheel","omni-bob-alloys",
 "omni-plate","vanilla-pipe","bob-pipe","bob-logistics","bob-circuit","omni-alloys","bob-crystallo-circuit","vanilla-crystallo-circuit","angels-comp-circuit","angels-crystallo-circuit","angels-comp-plate"}
 
--- DEFINE BLOCKS
-require("prototypes.omniblocks")
-
-
 for _, c in pairs(cmpn) do
 	--component[c]=setmetatable(component[c],BuildMat)
 end

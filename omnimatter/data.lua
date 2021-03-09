@@ -8,6 +8,7 @@ require("prototypes.categories")
 require("prototypes.functions")
 
 --LOAD ALL OTHER PROTOTYPES
+require("prototypes.compat.angels-omniblocks")
 require("prototypes.omniore")
 require("prototypes.generation.omnite")
 require("prototypes.generation.omnite-inf")

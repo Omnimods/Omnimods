@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.9
+Date: 2021.03.08
+  Info:
+    - Moved Angels component mode "omniblocks" from lib to matter
+  Bugfixes:
+    - Fixed TechGen:setIcons() ignoring tech.icon_size when tech.icons is set
+---------------------------------------------------------------------------------------------------
 Version: 4.1.8
 Date: 2021.02.25
   Features:

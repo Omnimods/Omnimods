@@ -1,4 +1,4 @@
-if mods["angelsindustries"] and mods["omnimatter"] and angelsmods.industries.components then
+if mods["angelsindustries"] and angelsmods.industries.components then
 
 	data:extend(
 	{
@@ -6,21 +6,29 @@ if mods["angelsindustries"] and mods["omnimatter"] and angelsmods.industries.com
 	-- OMNI BLOCKS --------------------------------------------------------------
 	-----------------------------------------------------------------------------
 	{
+		type = "item-subgroup",
+		name = "omniblocks",
+		group = "omnimatter",
+		order = "aga",
+	},
+	{
 		type = "item",
 		name = "block-omni-0",
+		localised_name = {"item-name.block-omni", 0},
 		icons = {
 				{icon = "__angelsindustries__/graphics/icons/block-bprocessing-4.png",
 				tint = {255,0,255}},
 				{icon = "__omnilib__/graphics/icons/small/lvl0.png"}
 				},
 		icon_size = 32,
-		subgroup = "omnitractor",
+		subgroup = "omniblocks",
 		order = "a",
 		stack_size = 200,
 	},
 	{
 		type = "recipe",
 		name = "block-omni-0",
+		localised_name = {"item-name.block-omni", 0},
 		enabled = true,
 		category = "crafting",
 		energy_required = 5,
@@ -45,19 +53,21 @@ if mods["angelsindustries"] and mods["omnimatter"] and angelsmods.industries.com
 			{
 				type = "item",
 				name = "block-omni-"..i,
+				localised_name = {"item-name.block-omni", i},
 				icons = {
 					{icon = "__angelsindustries__/graphics/icons/block-bprocessing-4.png",
 					tint = {255,0,255}},
 					{icon = "__omnilib__/graphics/icons/small/lvl"..i..".png"}
 					},
 				icon_size = 32,
-				subgroup = "omnitractor",
+				subgroup = "omniblocks",
 				order = "a",
 				stack_size = 200,
 			},
 			{
 				type = "recipe",
 				name = "block-omni-"..i,
+				localised_name = {"item-name.block-omni", i},
 				enabled = false,
 				category = "crafting",
 				energy_required = 5,
