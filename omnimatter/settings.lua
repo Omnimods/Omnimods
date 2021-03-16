@@ -106,15 +106,6 @@ data:extend({
   },
   {
     type = "double-setting",
-    name = "omnimatter-start-richness",
-    setting_type = "startup",
-    default_value = 1,
-    maximum_value = 10,
-    minimum_value = 0.05,
-    per_user = false,
-  },
-  {
-    type = "double-setting",
     name = "omnimatter-beginner-multiplier",
     setting_type = "startup",
     default_value = 1,

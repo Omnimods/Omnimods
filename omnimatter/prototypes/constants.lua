@@ -10,7 +10,6 @@ omni.fluid_dependency = settings.startup["omnimatter-fluid-dependency"].value
 omni.pure_tech_tier_increase = settings.startup["omnimatter-pure-tech-tier-cost-increase"].value
 omni.pure_tech_level_increase = settings.startup["omnimatter-pure-tech-level-cost-increase"].value
 omni.beginning_tech_help = settings.startup["omnimatter-beginner-multiplier"].value
-omni.richness = settings.startup["omnimatter-start-richness"].value
 omni.acid_ratio = 1/1--9/13
 omni.sludge_ratio = 1/1--8/15
 omni.omniston_ratio = 1/1
