@@ -12,6 +12,7 @@ omni.pure_tech_level_increase = settings.startup["omnimatter-pure-tech-level-cos
 omni.beginning_tech_help = settings.startup["omnimatter-beginner-multiplier"].value
 omni.acid_ratio = 1/1--9/13
 omni.sludge_ratio = 1/1--8/15
+omni.omniston_ratio = 1/1
 omni.linear_science = settings.startup["omnimatter-linear-science-packs"].value
 omni.science_constant = settings.startup["omnimatter-science-pack-constant"].value
 omni.rocket_locked = settings.startup["omnimatter-rocket-locked"].value
