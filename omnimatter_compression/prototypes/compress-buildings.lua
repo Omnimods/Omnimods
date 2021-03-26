@@ -540,9 +540,6 @@ local run_entity_updates = function(new, kind, i)
   if kind == "rocket-silo" and new.fixed_recipe then
     new.door_opening_speed = new.door_opening_speed * math.pow(multiplier, i)
     new.rocket_result_inventory_size = 8
-    if data.raw.recipe[new.fixed_recipe.."-compression"] then -- check if silo recipe is compressed first
-      new.fixed_recipe = new.fixed_recipe .. "-compression"
-    end
     new.light_blinking_speed = new.light_blinking_speed * math.pow(multiplier, i)
     new.rocket_rising_delay = math.ceil((new.rocket_rising_delay or 30) / math.pow(multiplier, i)) -- Defaults are NOT present on the prototype!
     new.launch_wait_time = math.ceil((new.launch_wait_time or 120) / math.pow(multiplier, i))

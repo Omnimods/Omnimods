@@ -7,6 +7,7 @@ require("prototypes/technologies")
 require("prototypes/auto-compressor")
 require("prototypes/planner")
 require("prototypes/functions")
+require("prototypes/early_compat")
 data:extend({
   {
     type = "custom-input",
