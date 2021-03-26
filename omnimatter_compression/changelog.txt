@@ -5,7 +5,7 @@ Date: ????
     - You can now compress buildings in compressed assemblers
     - Allow compressor & co in SE space
   Bugfixes:
-    - Fixed global variable naming
+    - Fixed that compressed rocket silos had no fixed recipe set
     - Fixed recipes with the word 'compress' in its name not having a compressed version
     - Fixed compressed recipe results for a certain configuration for probability
 ---------------------------------------------------------------------------------------------------

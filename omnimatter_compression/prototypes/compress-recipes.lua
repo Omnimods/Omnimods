@@ -887,7 +887,7 @@ local assemblers = {"assembling-machine", "rocket-silo"}
 
 for _, type in pairs(assemblers) do
   for _, ent in pairs(data.raw[type]) do
-    if ent.fixed_recipe and string.find(ent.name, "-compressed") and not string.find(ent.fixed_recipe, "-compressed") then
+    if ent.fixed_recipe and string.find(ent.name, "-compressed") and string.find(ent.crafting_categories[1],"-compressed") and not string.find(ent.fixed_recipe, "-compressed") then
       if data.raw.recipe[ent.fixed_recipe.."-compression"] then
         ent.fixed_recipe = ent.fixed_recipe.."-compression"
       end
