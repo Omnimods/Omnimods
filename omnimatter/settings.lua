@@ -45,7 +45,7 @@ data:extend({
     type = "int-setting",
     name = "omnimatter-impure-lvls",
     setting_type = "startup",
-    default_value = 4,
+    default_value = 3,
     maximum_value = 6,
     minimum_value = 2,
     per_user = false,
