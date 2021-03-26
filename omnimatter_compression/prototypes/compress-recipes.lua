@@ -878,5 +878,22 @@ if #compress_based_recipe ~= 0 then
   data:extend(compress_based_recipe)
 end
 module_limits()
+
+-------------------------------------------------------------------------------
+--[[Fix fixed_recipes]]--
+-------------------------------------------------------------------------------
+
+local assemblers = {"assembling-machine", "rocket-silo"}
+
+for _, type in pairs(assemblers) do
+  for _, ent in pairs(data.raw[type]) do
+    if ent.fixed_recipe and string.find(ent.name, "-compressed") and not string.find(ent.fixed_recipe, "-compressed") then
+      if data.raw.recipe[ent.fixed_recipe.."-compression"] then
+        ent.fixed_recipe = ent.fixed_recipe.."-compression"
+      end
+    end
+  end
+end
+
 --log("Finished compressing recipes")
 log("end recipe compression")
