@@ -2,7 +2,7 @@
 omni.max_tier = settings.startup["omnimatter-max-tier"].value
 omni.pure_dependency = settings.startup["omnimatter-tier-pure-dependency"].value
 omni.pure_levels_per_tier = settings.startup["omnimatter-pure-lvl-per-tier"].value
-omni.impure_levels_per_tier = settings.startup["omnimatter-impure-lvl-per-tier"].value
+omni.impure_levels = settings.startup["omnimatter-impure-lvls"].value
 omni.fluid_levels_per_tier = settings.startup["omnimatter-fluid-lvl-per-tier"].value
 omni.fluid_levels = settings.startup["omnimatter-fluid-lvl"].value
 omni.fluid_dependency = settings.startup["omnimatter-fluid-dependency"].value

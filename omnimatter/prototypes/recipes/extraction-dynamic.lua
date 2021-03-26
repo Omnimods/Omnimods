@@ -66,7 +66,7 @@ local get_impurities = function(ore,tier)
         c = string.byte(ore, math.random(string.len(ore))) % 12
     end
     math.randomseed(
-        c + omni.impure_levels_per_tier - omni.pure_levels_per_tier + tier * #tierores
+        c + omni.impure_levels - omni.pure_levels_per_tier + tier * #tierores
     )
     while #tierores > 0 and #pickedores < 4 do
         local pick = math.random(1, #tierores)
@@ -97,7 +97,7 @@ local proper_result = function(tier, level,focus)
             end
         end
     else
-        local p = (2+2*level/omni.impure_levels_per_tier)/4
+        local p = (2+2*level/omni.impure_levels)/4
         res[#res+1] = {type = "item", name = impurities[1], amount_min = 3, amount_max = 5, probability = p}
     end
     res[#res+1]={type = "item", name = "stone-crushed", amount=6}
@@ -157,14 +157,14 @@ local get_omnimatter_split = function(tier,focus,level)
             local ore = split_ores[I]
             -- Handle "focus"
             if focus and ore.name == focus then
-                ore.amount = 2+level/omni.impure_levels_per_tier
+                ore.amount = 2+level/omni.impure_levels
                 -- Make the focus first in the list
                 if I ~= 1 then
                     split_ores[1], split_ores[I] = ore, split_ores[1]
                 end
                 split_ores[1] = table.deepcopy(result_round(ore))
             else
-                ore.amount = focus and (2-level/omni.impure_levels_per_tier) or 4 / math.max(2, total_quantity * ore.amount)
+                ore.amount = focus and (2-level/omni.impure_levels) or 4 / math.max(2, total_quantity * ore.amount)
                 split_ores[I] = table.deepcopy(result_round(ore))
             end
             stone_amount = stone_amount - ore.amount
@@ -383,7 +383,7 @@ for _,ore_tiers in pairs(omni.matter.omnisource) do
 
     for _,ore in pairs(ore_tiers) do
         local level_splits = {}
-        for l=1,omni.impure_levels_per_tier do
+        for l=1,omni.impure_levels do
             level_splits[l]=get_omnimatter_split(t,ore.name,l)
         end
         for i, sp in pairs(level_splits) do
@@ -457,7 +457,7 @@ local function get_tractor_req(i)
 		end
 		if tier_int == i then
 			for _,ore in pairs(tier) do
-				r[#r+1]="omnitech-focused-extraction-"..ore.name.."-"..omni.impure_levels_per_tier
+				r[#r+1]="omnitech-focused-extraction-"..ore.name.."-"..omni.impure_levels
 			end
 		end
 	end
