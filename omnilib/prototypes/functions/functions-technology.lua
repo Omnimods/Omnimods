@@ -81,7 +81,7 @@ function omni.lib.add_science_pack(techname,pack)
 			--log("Ingredient "..pack.." already exists.")
 		end
 	else
-		log("Cannot find "..tetechnamech..", ignoring it.")
+		log("Cannot find "..techname..", ignoring it.")
 	end
 end
 

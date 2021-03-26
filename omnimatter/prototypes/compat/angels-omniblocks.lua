@@ -1,10 +1,16 @@
-if mods["angelsindustries"] and mods["omnimatter"] and angelsmods.industries.components then
+if mods["angelsindustries"] and angelsmods.industries.components then
 
 	data:extend(
 	{
 	-----------------------------------------------------------------------------
 	-- OMNI BLOCKS --------------------------------------------------------------
 	-----------------------------------------------------------------------------
+	{
+		type = "item-subgroup",
+		name = "omniblocks",
+		group = "omnimatter",
+		order = "aga",
+	},
 	{
 		type = "item",
 		name = "block-omni-0",
@@ -15,7 +21,7 @@ if mods["angelsindustries"] and mods["omnimatter"] and angelsmods.industries.com
 				{icon = "__omnilib__/graphics/icons/small/lvl0.png"}
 				},
 		icon_size = 32,
-		subgroup = "omnitractor",
+		subgroup = "omniblocks",
 		order = "a",
 		stack_size = 200,
 	},
@@ -54,7 +60,7 @@ if mods["angelsindustries"] and mods["omnimatter"] and angelsmods.industries.com
 					{icon = "__omnilib__/graphics/icons/small/lvl"..i..".png"}
 					},
 				icon_size = 32,
-				subgroup = "omnitractor",
+				subgroup = "omniblocks",
 				order = "a",
 				stack_size = 200,
 			},

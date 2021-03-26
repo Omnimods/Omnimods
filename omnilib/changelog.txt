@@ -1,6 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.10
+Date: 2021.03.11
+  Bugfixes:
+    - Fixed a concat typo in omni.lib.add_science_pack() causing a crash in rare cases
+---------------------------------------------------------------------------------------------------
 Version: 4.1.9
-Date: 2021.02.XX
+Date: 2021.03.08
+  Info:
+    - Moved Angels component mode "omniblocks" from lib to matter
   Bugfixes:
     - Fixed TechGen:setIcons() ignoring tech.icon_size when tech.icons is set
 ---------------------------------------------------------------------------------------------------

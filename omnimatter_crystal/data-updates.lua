@@ -128,10 +128,11 @@ if not mods["angelsrefining"] then
 			--If yes, copy the recipe
 			if found == true then
 				local r = RecGen:import(rec)
+				local iproto = omni.lib.find_prototype(rec.name)
 				r:setName("crystal-powder-"..rec.name):
 				setLocName({"recipe-name.crystalline", omni.lib.locale.of(rec).name}):
 				setEnabled(false):
-				setOrder((rec.order or omni.lib.find_prototype(rec.name).order or "ab-").."[crystalline]")
+				setOrder((rec.order or (iproto and iproto.order) or "ab-") .. "[crystalline]")
 
 				--Check the recipe ingredients for all ores and replace them with powder
 				for _,ore in pairs(added_ores) do
