@@ -52,15 +52,6 @@ data:extend({
   },
   {
     type = "int-setting",
-    name = "omnimatter-tier-impure-dependency",
-    setting_type = "startup",
-    default_value = 2,
-    maximum_value = 6,
-    minimum_value = 1,
-    per_user = false,
-  },
-  {
-    type = "int-setting",
     name = "omnimatter-fluid-lvl-per-tier",
     setting_type = "startup",
     default_value = 2,

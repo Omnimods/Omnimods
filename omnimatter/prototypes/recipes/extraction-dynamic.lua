@@ -9,15 +9,12 @@ end
 local reqpure = function(tier,level,item)
     local req = {}
     if level%omni.pure_levels_per_tier==1 or omni.pure_levels_per_tier==1 then
-        req[#req+1]="omnitech-omnitractor-electric-"..math.min((level-1)/omni.pure_levels_per_tier+tier, omni.max_tier)
+        req[#req+1]="omnitech-omnitractor-electric-"..math.min((level-1)/omni.pure_levels_per_tier + tier - 1, omni.max_tier)
         if level > 1 and omni.pure_dependency < omni.pure_levels_per_tier then
             req[#req+1]="omnitech-extraction-"..item.."-"..(level-1)
         end
     elseif level > 1 then
         req[#req+1]="omnitech-extraction-"..item.."-"..(level-1)
-    end
-    if omni.impure_dependency<omni.impure_levels_per_tier and level==1 then
-        req[#req+1]="omnitech-focused-extraction-"..item.."-"..omni.impure_levels_per_tier
     end
     return req
 end
@@ -69,7 +66,7 @@ local get_impurities = function(ore,tier)
         c = string.byte(ore, math.random(string.len(ore))) % 12
     end
     math.randomseed(
-        c + omni.impure_levels_per_tier * omni.impure_dependency - omni.pure_levels_per_tier + tier * #tierores
+        c + omni.impure_levels_per_tier - omni.pure_levels_per_tier + tier * #tierores
     )
     while #tierores > 0 and #pickedores < 4 do
         local pick = math.random(1, #tierores)
@@ -249,7 +246,7 @@ for i, tier in pairs(omni.matter.omnisource) do
         --Check for hidden flag to skip later
         
         local item = ore.name
-        local tier_int = tonumber(i)
+        local tier_int = tonumber(i) + 1
         
         --Automated subcategories
         local cost = (
@@ -452,14 +449,15 @@ end
 local function get_tractor_req(i)
 	local r = {}
 	for j,tier in pairs(omni.matter.omnisource) do
-		if tonumber(j) < i and tonumber(j) >= i-3 then
+        local tier_int = tonumber(j)
+		if tier_int < i and tier_int >= i-3 then
 			for _,ore in pairs(tier) do
-				r[#r+1]="omnitech-extraction-"..ore.name.."-"..omni.pure_levels_per_tier*(i-ore.tier-1)+omni.pure_dependency
+				r[#r+1]="omnitech-extraction-"..ore.name.."-"..omni.pure_levels_per_tier*(i-ore.tier-1) + omni.pure_dependency
 			end
 		end
-		if tonumber(j) == i then
+		if tier_int == i then
 			for _,ore in pairs(tier) do
-				r[#r+1]="omnitech-focused-extraction-"..ore.name.."-"..omni.impure_dependency
+				r[#r+1]="omnitech-focused-extraction-"..ore.name.."-"..omni.impure_levels_per_tier
 			end
 		end
 	end
