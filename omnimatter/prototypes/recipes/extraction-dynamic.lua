@@ -33,7 +33,7 @@ end
 -- end
 
 local function tech_cost(levels,grade,tier)
-    return omni.lib.round(20*math.pow(omni.pure_tech_tier_increase,tier)*get_tier_mult(levels,grade,1))
+    return omni.lib.round(20*math.pow(omni.pure_tech_tier_increase,tier)*omni.matter.get_tier_mult(levels,grade,1))
 end
 
 local impure_icons =function(t,kind)

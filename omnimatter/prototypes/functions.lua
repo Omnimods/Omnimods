@@ -148,6 +148,20 @@ function omni.matter.add_omnicium_alloy(name,plate,ingot)
   if #reg > 0 then data:extend(reg) end
 end
 
+function omni.matter.get_tier_mult(levels,r,c)
+	local peak = math.floor(levels/2)+1.5 --1
+	if r==1 and c==1 then
+		return 1
+	elseif r==c and r<=peak then
+		return omni.pure_tech_level_increase
+	elseif r>peak and c==2*peak-r+levels%2 then
+		return -omni.pure_tech_level_increase
+	else
+		local val = omni.matter.get_tier_mult(levels,r-1,c)+omni.matter.get_tier_mult(levels,r,c+1)
+		return val
+	end
+end
+
 function omni.matter.add_omniwater_extraction(mod, element, lvls, tier, gain, starter_recipe)
 	local function get_prereq(grade,element,tier)
 		local req = {}
@@ -166,7 +180,7 @@ function omni.matter.add_omniwater_extraction(mod, element, lvls, tier, gain, st
 		end
 		return req
 	end
-	
+
 	local function get_tech_packs(grade,tier)
 		local packs = {}
 		local pack_tier = math.ceil(grade/omni.fluid_levels_per_tier) + tier-1
@@ -178,7 +192,7 @@ function omni.matter.add_omniwater_extraction(mod, element, lvls, tier, gain, st
 
 	local function get_tech_cost(levels,grade,tier,start,constant)
 		local lvl = grade + (tier-1) * omni.fluid_levels_per_tier
-		return  start*lvl + constant*lvl*get_tier_mult(levels,grade,1)
+		return  start*lvl + constant*lvl*omni.matter.get_tier_mult(levels,grade,1)
 	end
 
 	--Starter recipe

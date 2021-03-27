@@ -178,3 +178,7 @@ end
 if vanilla_fluids then
 	omni.matter.add_fluid("crude-oil",1,1)
 end
+
+
+--Water-omnitraction 
+omni.matter.add_omniwater_extraction("omnimatter", "water", omni.fluid_levels, 1, 360, true)
