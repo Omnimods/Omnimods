@@ -33,11 +33,7 @@ end
 local get_omniston_req = function(lvl)
 	local req = {}
 	req[#req+1]="omnitech-omnic-acid-hydrolyzation-"..lvl
-	if (lvl-1)%omni.fluid_levels_per_tier == 0 then
-		if lvl > 1 and omni.fluid_dependency < omni.fluid_levels_per_tier then
-			req[#req+1]="omnitech-solvation-omniston-"..(lvl-1)
-		end
-	else
+	if (lvl-1)%omni.fluid_levels_per_tier ~= 0 and lvl > 1 then
 		req[#req+1]="omnitech-solvation-omniston-"..(lvl-1)
 	end
 	return req
@@ -48,13 +44,6 @@ local get_sludge_req = function(lvl)
   req[#req+1]="omnitech-omnic-acid-hydrolyzation-"..lvl
   if (lvl-1)%omni.fluid_levels_per_tier == 0 then
     req[#req+1]="omnitech-omnitractor-electric-"..((lvl-1)/omni.fluid_levels_per_tier+1)
-    if lvl > 1 and omni.fluid_dependency < omni.fluid_levels_per_tier then
-      if data.raw.technology["omnitech-omnisolvent-omnisludge-"..(lvl-1)] then
-        req[#req+1]="omnitech-omnisolvent-omnisludge-"..(lvl-1)
-      else
-        log("no sludge here")
-      end
-    end
   else
     if data.raw.technology["omnitech-omnisolvent-omnisludge-"..(lvl-1)] then
       req[#req+1]="omnitech-omnisolvent-omnisludge-"..(lvl-1)
@@ -84,9 +73,6 @@ local get_distillation_req = function(tier,item, level)
 	if (level-1)%omni.fluid_levels_per_tier == 0 then
 		if data.raw.technology["omnitech-omnitractor-electric-"..((level-1)/omni.fluid_levels_per_tier+tier)] then
 			req[#req+1]="omnitech-omnitractor-electric-"..((level-1)/omni.fluid_levels_per_tier+tier)
-			if level > 1 and omni.fluid_dependency < omni.fluid_levels_per_tier then
-				req[#req+1]="omnitech-distillation-"..item.."-"..(level-1)
-			end
 		else
 			req[#req+1]="omnitech-distillation-"..item.."-"..(level-1)
 		end

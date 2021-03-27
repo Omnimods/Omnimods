@@ -60,15 +60,6 @@ data:extend({
     per_user = false,
   },
   {
-    type = "int-setting",
-    name = "omnimatter-fluid-dependency",
-    setting_type = "startup",
-    default_value = 2,
-	maximum_value = 10,
-	minimum_value = 1,
-    per_user = false,
-  },
-  {
     type = "double-setting",
     name = "omnimatter-pure-tech-tier-cost-increase",
     setting_type = "startup",

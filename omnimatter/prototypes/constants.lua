@@ -4,7 +4,6 @@ omni.pure_levels_per_tier = settings.startup["omnimatter-pure-lvl-per-tier"].val
 omni.impure_levels = settings.startup["omnimatter-impure-lvls"].value
 omni.fluid_levels_per_tier = settings.startup["omnimatter-fluid-lvl-per-tier"].value
 omni.fluid_levels = settings.startup["omnimatter-fluid-lvl"].value
-omni.fluid_dependency = settings.startup["omnimatter-fluid-dependency"].value
 omni.pure_tech_tier_increase = settings.startup["omnimatter-pure-tech-tier-cost-increase"].value
 omni.pure_tech_level_increase = settings.startup["omnimatter-pure-tech-level-cost-increase"].value
 omni.beginning_tech_help = settings.startup["omnimatter-beginner-multiplier"].value
@@ -16,8 +15,6 @@ omni.science_constant = settings.startup["omnimatter-science-pack-constant"].val
 omni.rocket_locked = settings.startup["omnimatter-rocket-locked"].value
 
 if omni.linear_science and omni.science_constant < 1 then omni.science_constant = 1 end
-if omni.fluid_dependency > omni.fluid_levels_per_tier then omni.fluid_dependency = omni.fluid_levels_per_tier end
-
 
 --constant functions
 function omni.matter.get_constant(kind)
