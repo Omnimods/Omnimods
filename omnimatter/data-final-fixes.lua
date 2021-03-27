@@ -18,21 +18,24 @@ if omni.rocket_locked then
 	local max_tier = 0
 	local max_fluid_tier = 0
 	for k,v in pairs(omni.matter.omnisource) do
-		max_tier = k
+		max_tier = tonumber(k)
 	end
+	--Pure extractions are +1 tier
+	max_tier = max_tier + 1
+
 	for k,v in pairs(omni.matter.omnifluid) do
-		max_fluid_tier = k
+		max_fluid_tier = tonumber(k)
 	end
 
-	--Check if there is a higher fluid than ore tier
-	if max_tier > max_fluid_tier then
+	--Check if there is a higher ore than fluid tier
+	if max_tier >= max_fluid_tier then
 		local pure_extractions = 3 * omni.pure_levels_per_tier
 		for _,ore in pairs(omni.matter.omnisource[tostring(max_tier)]) do
 			omni.lib.add_prerequisite("rocket-silo","omnitech-extraction-"..ore.name.."-"..pure_extractions)
 		end
 	end
-	--Check if there is a higher ore than fluid tier
-	if max_fluid_tier > max_tier then
+	--Check if there is a higher fluid than ore tier
+	if max_fluid_tier >= max_tier then
 		for _,fluid in pairs(omni.matter.omnifluid[tostring(max_fluid_tier)]) do
 			omni.lib.add_prerequisite("rocket-silo","omnitech-distillation-"..fluid.name.."-"..omni.fluid_levels)
 		end
