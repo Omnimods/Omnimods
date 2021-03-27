@@ -1,6 +1,5 @@
 --Set constants
 omni.max_tier = settings.startup["omnimatter-max-tier"].value
-omni.pure_dependency = settings.startup["omnimatter-tier-pure-dependency"].value
 omni.pure_levels_per_tier = settings.startup["omnimatter-pure-lvl-per-tier"].value
 omni.impure_levels = settings.startup["omnimatter-impure-lvls"].value
 omni.fluid_levels_per_tier = settings.startup["omnimatter-fluid-lvl-per-tier"].value
@@ -17,7 +16,6 @@ omni.science_constant = settings.startup["omnimatter-science-pack-constant"].val
 omni.rocket_locked = settings.startup["omnimatter-rocket-locked"].value
 
 if omni.linear_science and omni.science_constant < 1 then omni.science_constant = 1 end
-if omni.pure_dependency > omni.pure_levels_per_tier then omni.pure_dependency = omni.pure_levels_per_tier end
 if omni.fluid_dependency > omni.fluid_levels_per_tier then omni.fluid_dependency = omni.fluid_levels_per_tier end
 
 

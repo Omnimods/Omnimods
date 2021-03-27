@@ -34,15 +34,6 @@ data:extend({
   },
   {
     type = "int-setting",
-    name = "omnimatter-tier-pure-dependency",
-    setting_type = "startup",
-    default_value = 2,
-    maximum_value = 6,
-    minimum_value = 1,
-    per_user = false,
-  },
-  {
-    type = "int-setting",
     name = "omnimatter-impure-lvls",
     setting_type = "startup",
     default_value = 3,

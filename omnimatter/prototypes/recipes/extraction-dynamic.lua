@@ -10,9 +10,6 @@ local reqpure = function(tier,level,item)
     local req = {}
     if level%omni.pure_levels_per_tier==1 or omni.pure_levels_per_tier==1 then
         req[#req+1]="omnitech-omnitractor-electric-"..math.min((level-1)/omni.pure_levels_per_tier + tier - 1, omni.max_tier)
-        if level > 1 and omni.pure_dependency < omni.pure_levels_per_tier then
-            req[#req+1]="omnitech-extraction-"..item.."-"..(level-1)
-        end
     elseif level > 1 then
         req[#req+1]="omnitech-extraction-"..item.."-"..(level-1)
     end
@@ -452,7 +449,7 @@ local function get_tractor_req(i)
         local tier_int = tonumber(j)
 		if tier_int < i and tier_int >= i-3 then
 			for _,ore in pairs(tier) do
-				r[#r+1]="omnitech-extraction-"..ore.name.."-"..omni.pure_levels_per_tier*(i-ore.tier-1) + omni.pure_dependency
+				r[#r+1]="omnitech-extraction-"..ore.name.."-"..omni.pure_levels_per_tier*(i-ore.tier-1) + omni.pure_levels_per_tier
 			end
 		end
 		if tier_int == i then
@@ -461,11 +458,11 @@ local function get_tractor_req(i)
 			end
 		end
 	end
-	if i>1 and i*omni.fluid_levels_per_tier < omni.fluid_levels then
+	--if i>1 and i*omni.fluid_levels_per_tier < omni.fluid_levels then
 		--r[#r+1]="omnitech-solvation-omniston-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
 		--r[#r+1]="omnitech-omnic-acid-hydrolyzation-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
 		--r[#r+1]="omnitech-omnisolvent-omnisludge-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
-	end
+	--end
 	if i == 2 then
 		if data.raw.technology["omnitech-omnisolvent-omnisludge-"..(i-2)] then
 			r[#r+1]="omnitech-omnisolvent-omnisludge-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
