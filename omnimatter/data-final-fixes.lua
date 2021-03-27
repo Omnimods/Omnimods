@@ -17,14 +17,12 @@ if omni.rocket_locked then
 	--Get highest ore and fluid tier
 	local max_tier = 0
 	local max_fluid_tier = 0
+	
 	for k,v in pairs(omni.matter.omnisource) do
-		max_tier = tonumber(k)
+		max_tier = math.max(max_tier, tonumber(k))
 	end
-	--Pure extractions are +1 tier
-	max_tier = max_tier + 1
-
 	for k,v in pairs(omni.matter.omnifluid) do
-		max_fluid_tier = tonumber(k)
+		max_fluid_tier = math.max(max_fluid_tier, tonumber(k))
 	end
 
 	--Check if there is a higher ore than fluid tier
@@ -41,12 +39,3 @@ if omni.rocket_locked then
 		end
 	end
 end
-
-for _,f in pairs(data.raw.fluid) do
-	data.raw.recipe["angels-fluid-splitter-"..f.name]=nil
-end
-
-RecGen:import("coal-liquefaction"):
-	replaceIngredients("heavy-oil","omniston"):
-	replaceIngredients("liquid-naphtha","omniston"):
-	extend()

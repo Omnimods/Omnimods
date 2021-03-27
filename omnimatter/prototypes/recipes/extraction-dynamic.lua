@@ -445,43 +445,22 @@ end
 --Set omnitractor extraction prereqs
 local function get_tractor_req(i)
 	local r = {}
-	for j,tier in pairs(omni.matter.omnisource) do
+	for j, tier in pairs(omni.matter.omnisource) do
         local tier_int = tonumber(j)
 		if tier_int < i and tier_int >= i-3 then
 			for _,ore in pairs(tier) do
-				r[#r+1]="omnitech-extraction-"..ore.name.."-"..omni.pure_levels_per_tier*(i-ore.tier-1) + omni.pure_levels_per_tier
+				r[#r+1] = "omnitech-extraction-"..ore.name.."-"..omni.pure_levels_per_tier * (i-ore.tier-1) + omni.pure_levels_per_tier
 			end
 		end
 		if tier_int == i then
 			for _,ore in pairs(tier) do
-				r[#r+1]="omnitech-focused-extraction-"..ore.name.."-"..omni.impure_levels
-			end
-		end
-	end
-	--if i>1 and i*omni.fluid_levels_per_tier < omni.fluid_levels then
-		--r[#r+1]="omnitech-solvation-omniston-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
-		--r[#r+1]="omnitech-omnic-acid-hydrolyzation-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
-		--r[#r+1]="omnitech-omnisolvent-omnisludge-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
-	--end
-	if i == 2 then
-		if data.raw.technology["omnitech-omnisolvent-omnisludge-"..(i-2)] then
-			r[#r+1]="omnitech-omnisolvent-omnisludge-"..(i-2)*omni.fluid_levels_per_tier*2
-		end
-	end
-	for j,tier in pairs(omni.matter.omnifluid) do
-		if tonumber(j) < i and tonumber(j) >= i-3 then
-			for _,fluid in pairs(tier) do
-				if omni.fluid_levels_per_tier*(i-fluid.tier-1)*2 <= omni.fluid_levels then
-					r[#r+1]="omnitech-distillation-"..fluid.name.."-"..omni.fluid_levels_per_tier*(i-fluid.tier-1)*2
-				elseif omni.fluid_levels_per_tier*(i-fluid.tier-1)*2 > omni.fluid_levels then
-					r[#r+1]="omnitech-distillation-"..fluid.name.."-"..omni.fluid_levels
-				end
+				r[#r+1] = "omnitech-focused-extraction-"..ore.name.."-"..omni.impure_levels
 			end
 		end
 	end
 	return r
 end
 
-for i=1,omni.max_tier,1 do
+for i=1, omni.max_tier, 1 do
     omni.lib.add_prerequisite("omnitech-omnitractor-electric-"..i, get_tractor_req(i))
 end

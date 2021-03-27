@@ -180,5 +180,7 @@ if vanilla_fluids then
 end
 
 
---Water-omnitraction 
+----------------------------------------------------------------------------
+-- Water extractions --
+----------------------------------------------------------------------------
 omni.matter.add_omniwater_extraction("omnimatter", "water", omni.fluid_levels, 1, 360, true)

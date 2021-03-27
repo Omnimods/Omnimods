@@ -165,17 +165,22 @@ end
 function omni.matter.add_omniwater_extraction(mod, element, lvls, tier, gain, starter_recipe)
 	local function get_prereq(grade,element,tier)
 		local req = {}
-		local tractor_lvl = ((grade-1)/omni.fluid_levels_per_tier)+tier-1 
+		local tractor_lvl = math.floor((grade-1) / omni.fluid_levels_per_tier) * tier
+
 		--Add previous tech as prereq if its in the same tier
-		if grade > 1 and grade%omni.fluid_levels_per_tier~=1 then
+		if grade > 1 and grade%omni.fluid_levels_per_tier ~= 1 then
 			req[#req+1]="omnitech-"..element.."-omnitraction-"..(grade-1)
 		end
+		
 		--Add an electric omnitractor tech as prereq if this is the first tech of a new tier
-		if grade%omni.fluid_levels_per_tier== 1 and (tractor_lvl <=omni.max_tier) and (tractor_lvl >= 1)then
+		if grade%omni.fluid_levels_per_tier == 1 and (tractor_lvl <=omni.max_tier) and (tractor_lvl >= 1) then
 			req[#req+1]="omnitech-omnitractor-electric-"..tractor_lvl
-			--Add the last tech as prereq for this omnitractor tech
-			if (grade-1) > 0 then
-				omni.lib.add_prerequisite("omnitech-omnitractor-electric-"..tractor_lvl, "omnitech-"..element.."-omnitraction-"..(grade-1), true)
+		--Add the last tech of a tier as prereq for the next omnitractor
+		elseif grade > 0 and grade%omni.fluid_levels_per_tier == 0 and (tractor_lvl+1 <=omni.max_tier) then
+			omni.lib.add_prerequisite("omnitech-omnitractor-electric-"..tractor_lvl+1, "omnitech-"..element.."-omnitraction-"..(grade), true)
+			--Add the last tier as prereq for the rocket silo if its the highest tier
+			if omni.rocket_locked and tractor_lvl == omni.max_tier then
+  				omni.lib.add_prerequisite("rocket-silo", "omnitech-"..element.."-omnitraction-"..grade,true)
 			end
 		end
 		return req
@@ -239,8 +244,7 @@ function omni.matter.add_omniwater_extraction(mod, element, lvls, tier, gain, st
 		setTechLocName("omnitech-omniwater-omnitraction",{"fluid-name."..element}):
 		extend()
 
-  	--Add the last tier as prereq for the rocket silo
-  	omni.lib.add_prerequisite("rocket-silo", "omnitech-"..element.."-omnitraction-"..lvls)
+  	
 end
 
 --------------------------

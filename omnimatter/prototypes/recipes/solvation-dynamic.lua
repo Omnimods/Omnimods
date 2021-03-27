@@ -179,3 +179,21 @@ for _,tier in pairs(omni.matter.omnifluid) do
 			extend()
 	end
 end
+
+--Set omnitractor extraction prereqs
+local function get_tractor_req(i)
+	local r = {}
+	for j, tier in pairs(omni.matter.omnifluid) do
+        local tier_int = tonumber(j)
+		if tier_int < i and tier_int >= i-3 then
+			for _,fluid in pairs(tier) do
+                r[#r+1] = "omnitech-distillation-"..fluid.name.."-"..omni.fluid_levels_per_tier * (i-fluid.tier-1) + omni.fluid_levels_per_tier
+			end
+		end
+	end
+	return r
+end
+
+for i=1, omni.max_tier, 1 do
+    omni.lib.add_prerequisite("omnitech-omnitractor-electric-"..i, get_tractor_req(i))
+end
