@@ -114,8 +114,10 @@ BuildChain:create("omnimatter","omnitractor"):
 	setTechTime(function(levels,grade) return 15*grade end):
 	ifModsAddTechPrereq("omnimatter_crystal",
 		function(levels,grade)
-			if grade > 2 and ((grade-2)*omni.fluid_levels_per_tier + omni.fluid_dependency) <= omni.fluid_levels then
-				return "omnitech-omnisolvent-omnisludge-"..(grade-2)*omni.fluid_levels_per_tier+omni.fluid_dependency else return nil 
+			if grade > 1 and ((grade-1)*omni.fluid_levels_per_tier) <= omni.fluid_levels then
+				return "omnitech-omnisolvent-omnisludge-"..(grade-1)*omni.fluid_levels_per_tier 
+			else 
+				return nil 
 			end
 		end):
 	setStacksize(10):

@@ -9,15 +9,9 @@ end
 local reqpure = function(tier,level,item)
     local req = {}
     if level%omni.pure_levels_per_tier==1 or omni.pure_levels_per_tier==1 then
-        req[#req+1]="omnitech-omnitractor-electric-"..math.min((level-1)/omni.pure_levels_per_tier+tier, omni.max_tier)
-        if level > 1 and omni.pure_dependency < omni.pure_levels_per_tier then
-            req[#req+1]="omnitech-extraction-"..item.."-"..(level-1)
-        end
+        req[#req+1]="omnitech-omnitractor-electric-"..math.min((level-1)/omni.pure_levels_per_tier + tier - 1, omni.max_tier)
     elseif level > 1 then
         req[#req+1]="omnitech-extraction-"..item.."-"..(level-1)
-    end
-    if omni.impure_dependency<omni.impure_levels_per_tier and level==1 then
-        req[#req+1]="omnitech-focused-extraction-"..item.."-"..omni.impure_levels_per_tier
     end
     return req
 end
@@ -39,7 +33,7 @@ end
 -- end
 
 local function tech_cost(levels,grade,tier)
-    return omni.lib.round(20*math.pow(omni.pure_tech_tier_increase,tier)*get_tier_mult(levels,grade,1))
+    return omni.lib.round(20*math.pow(omni.pure_tech_tier_increase,tier)*omni.matter.get_tier_mult(levels,grade,1))
 end
 
 local impure_icons =function(t,kind)
@@ -69,7 +63,7 @@ local get_impurities = function(ore,tier)
         c = string.byte(ore, math.random(string.len(ore))) % 12
     end
     math.randomseed(
-        c + omni.impure_levels_per_tier * omni.impure_dependency - omni.pure_levels_per_tier + tier * #tierores
+        c + omni.impure_levels - omni.pure_levels_per_tier + tier * #tierores
     )
     while #tierores > 0 and #pickedores < 4 do
         local pick = math.random(1, #tierores)
@@ -100,7 +94,7 @@ local proper_result = function(tier, level,focus)
             end
         end
     else
-        local p = (2+2*level/omni.impure_levels_per_tier)/4
+        local p = (2+2*level/omni.impure_levels)/4
         res[#res+1] = {type = "item", name = impurities[1], amount_min = 3, amount_max = 5, probability = p}
     end
     res[#res+1]={type = "item", name = "stone-crushed", amount=6}
@@ -160,14 +154,14 @@ local get_omnimatter_split = function(tier,focus,level)
             local ore = split_ores[I]
             -- Handle "focus"
             if focus and ore.name == focus then
-                ore.amount = 2+level/omni.impure_levels_per_tier
+                ore.amount = 2+level/omni.impure_levels
                 -- Make the focus first in the list
                 if I ~= 1 then
                     split_ores[1], split_ores[I] = ore, split_ores[1]
                 end
                 split_ores[1] = table.deepcopy(result_round(ore))
             else
-                ore.amount = focus and (2-level/omni.impure_levels_per_tier) or 4 / math.max(2, total_quantity * ore.amount)
+                ore.amount = focus and (2-level/omni.impure_levels) or 4 / math.max(2, total_quantity * ore.amount)
                 split_ores[I] = table.deepcopy(result_round(ore))
             end
             stone_amount = stone_amount - ore.amount
@@ -249,7 +243,7 @@ for i, tier in pairs(omni.matter.omnisource) do
         --Check for hidden flag to skip later
         
         local item = ore.name
-        local tier_int = tonumber(i)
+        local tier_int = tonumber(i) + 1
         
         --Automated subcategories
         local cost = (
@@ -386,7 +380,7 @@ for _,ore_tiers in pairs(omni.matter.omnisource) do
 
     for _,ore in pairs(ore_tiers) do
         local level_splits = {}
-        for l=1,omni.impure_levels_per_tier do
+        for l=1,omni.impure_levels do
             level_splits[l]=get_omnimatter_split(t,ore.name,l)
         end
         for i, sp in pairs(level_splits) do
@@ -451,42 +445,22 @@ end
 --Set omnitractor extraction prereqs
 local function get_tractor_req(i)
 	local r = {}
-	for j,tier in pairs(omni.matter.omnisource) do
-		if tonumber(j) < i and tonumber(j) >= i-3 then
+	for j, tier in pairs(omni.matter.omnisource) do
+        local tier_int = tonumber(j)
+		if tier_int < i and tier_int >= i-3 then
 			for _,ore in pairs(tier) do
-				r[#r+1]="omnitech-extraction-"..ore.name.."-"..omni.pure_levels_per_tier*(i-ore.tier-1)+omni.pure_dependency
+				r[#r+1] = "omnitech-extraction-"..ore.name.."-"..omni.pure_levels_per_tier * (i-ore.tier-1) + omni.pure_levels_per_tier
 			end
 		end
-		if tonumber(j) == i then
+		if tier_int == i then
 			for _,ore in pairs(tier) do
-				r[#r+1]="omnitech-focused-extraction-"..ore.name.."-"..omni.impure_dependency
-			end
-		end
-	end
-	if i>1 and i*omni.fluid_levels_per_tier < omni.fluid_levels then
-		--r[#r+1]="omnitech-solvation-omniston-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
-		--r[#r+1]="omnitech-omnic-acid-hydrolyzation-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
-		--r[#r+1]="omnitech-omnisolvent-omnisludge-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
-	end
-	if i == 2 then
-		if data.raw.technology["omnitech-omnisolvent-omnisludge-"..(i-2)] then
-			r[#r+1]="omnitech-omnisolvent-omnisludge-"..(i-2)*omni.fluid_levels_per_tier+omni.fluid_dependency
-		end
-	end
-	for j,tier in pairs(omni.matter.omnifluid) do
-		if tonumber(j) < i and tonumber(j) >= i-3 then
-			for _,fluid in pairs(tier) do
-				if omni.fluid_levels_per_tier*(i-fluid.tier-1)+omni.fluid_dependency <= omni.fluid_levels then
-					r[#r+1]="omnitech-distillation-"..fluid.name.."-"..omni.fluid_levels_per_tier*(i-fluid.tier-1)+omni.fluid_dependency
-				elseif omni.fluid_levels_per_tier*(i-fluid.tier-1)+omni.fluid_dependency > omni.fluid_levels then
-					r[#r+1]="omnitech-distillation-"..fluid.name.."-"..omni.fluid_levels
-				end
+				r[#r+1] = "omnitech-focused-extraction-"..ore.name.."-"..omni.impure_levels
 			end
 		end
 	end
 	return r
 end
 
-for i=1,omni.max_tier,1 do
+for i=1, omni.max_tier, 1 do
     omni.lib.add_prerequisite("omnitech-omnitractor-electric-"..i, get_tractor_req(i))
 end

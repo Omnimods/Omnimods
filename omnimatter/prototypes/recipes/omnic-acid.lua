@@ -1,17 +1,3 @@
-function get_tier_mult(levels,r,c)
-	local peak = math.floor(levels/2)+1.5 --1
-	if r==1 and c==1 then
-		return 1
-	elseif r==c and r<=peak then
-		return omni.pure_tech_level_increase
-	elseif r>peak and c==2*peak-r+levels%2 then
-		return -omni.pure_tech_level_increase
-	else
-		local val = get_tier_mult(levels,r-1,c)+get_tier_mult(levels,r,c+1)
-		return val
-	end
-end
-
 function get_acid_tech_cost(lvl)
 	local c = {}
 	local size = 1+((lvl-1)-(lvl-1)%omni.fluid_levels_per_tier)/omni.fluid_levels_per_tier
@@ -32,9 +18,6 @@ local get_omnic_req=function(lvl)
 	local req = {}
 	if (lvl-1)%omni.fluid_levels_per_tier == 0 then
 		req[#req+1]="omnitech-omnitractor-electric-"..math.min((lvl-1)/omni.fluid_levels_per_tier+1,5)
-		if lvl > 1 and omni.fluid_dependency < omni.fluid_levels_per_tier then
-			req[#req+1]="omnitech-omnic-acid-hydrolyzation-"..(lvl-1)
-		end
 	else
 		req[#req+1]="omnitech-omnic-acid-hydrolyzation-"..(lvl-1)
 	end
@@ -67,7 +50,7 @@ local omnic_acid = RecChain:create("omnimatter","omnic-acid"):
 		setEnergy(function(levels,grade) return 3 end):
 		setTechSuffix("hydrolyzation"):
 		setTechIcons("omnic-acid","omnimatter"):
-		setTechCost(function(levels,grade) return 25*get_tier_mult(levels,grade,1) end):
+		setTechCost(function(levels,grade) return 25*omni.matter.get_tier_mult(levels,grade,1) end):
 		setTechPacks(function(levels,grade) return get_acid_tech_cost(grade) end):
 		setTechPrereq(function(levels,grade) return get_omnic_req(grade)  end):
 		setTechLocName("omnitech-omnic-acid"):

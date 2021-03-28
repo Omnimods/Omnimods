@@ -54,7 +54,7 @@ RecChain:create("omnimatter_water","omnic-water-omnitraction"):
 	setTechIcons("omnic-water-omnitraction","omnimatter_water"):
 	setTechPrereq(function(levels,grade) return get_omniwater_prereq(grade,"omnic-water",1) end):
   setTechPacks(function(levels,grade) return get_omniwater_tech_packs(grade,1) end):
-  setTechCost(function(levels,grade) return 18*get_tier_mult(levels,grade,1) end):
+  setTechCost(function(levels,grade) return 18*omni.matter.get_tier_mult(levels,grade,1) end):
   setTechTime(15):
   setTechLocName("omnitech-omniwater-omnitraction",{"fluid-name.omnic-water"}):
   extend()
