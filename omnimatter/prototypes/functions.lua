@@ -189,7 +189,7 @@ function omni.matter.add_omniwater_extraction(mod, element, lvls, tier, gain, st
 	local function get_tech_packs(grade,tier)
 		local packs = {}
 		local pack_tier = math.ceil(grade/omni.fluid_levels_per_tier) + tier-1
-		for i=1,pack_tier do
+		for i=1, math.min(pack_tier, #omni.sciencepacks) do
 			packs[#packs+1] = {omni.sciencepacks[i],1}
 		end
 		return packs
