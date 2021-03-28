@@ -148,25 +148,44 @@ function omni.matter.add_omnicium_alloy(name,plate,ingot)
   if #reg > 0 then data:extend(reg) end
 end
 
+function omni.matter.get_tier_mult(levels,r,c)
+	local peak = math.floor(levels/2)+1.5 --1
+	if r==1 and c==1 then
+		return 1
+	elseif r==c and r<=peak then
+		return omni.pure_tech_level_increase
+	elseif r>peak and c==2*peak-r+levels%2 then
+		return -omni.pure_tech_level_increase
+	else
+		local val = omni.matter.get_tier_mult(levels,r-1,c)+omni.matter.get_tier_mult(levels,r,c+1)
+		return val
+	end
+end
+
 function omni.matter.add_omniwater_extraction(mod, element, lvls, tier, gain, starter_recipe)
 	local function get_prereq(grade,element,tier)
 		local req = {}
-		local tractor_lvl = ((grade-1)/omni.fluid_levels_per_tier)+tier-1 
+		local tractor_lvl = math.floor((grade-1) / omni.fluid_levels_per_tier) * tier
+
 		--Add previous tech as prereq if its in the same tier
-		if grade > 1 and grade%omni.fluid_levels_per_tier~=1 then
+		if grade > 1 and grade%omni.fluid_levels_per_tier ~= 1 then
 			req[#req+1]="omnitech-"..element.."-omnitraction-"..(grade-1)
 		end
+		
 		--Add an electric omnitractor tech as prereq if this is the first tech of a new tier
-		if grade%omni.fluid_levels_per_tier== 1 and (tractor_lvl <=omni.max_tier) and (tractor_lvl >= 1)then
+		if grade%omni.fluid_levels_per_tier == 1 and (tractor_lvl <=omni.max_tier) and (tractor_lvl >= 1) then
 			req[#req+1]="omnitech-omnitractor-electric-"..tractor_lvl
-			--Add the last tech as prereq for this omnitractor tech
-			if (grade-1) > 0 then
-				omni.lib.add_prerequisite("omnitech-omnitractor-electric-"..tractor_lvl, "omnitech-"..element.."-omnitraction-"..(grade-1), true)
+		--Add the last tech of a tier as prereq for the next omnitractor
+		elseif grade > 0 and grade%omni.fluid_levels_per_tier == 0 and (tractor_lvl+1 <=omni.max_tier) then
+			omni.lib.add_prerequisite("omnitech-omnitractor-electric-"..tractor_lvl+1, "omnitech-"..element.."-omnitraction-"..(grade), true)
+			--Add the last tier as prereq for the rocket silo if its the highest tier
+			if omni.rocket_locked and tractor_lvl == omni.max_tier then
+  				omni.lib.add_prerequisite("rocket-silo", "omnitech-"..element.."-omnitraction-"..grade,true)
 			end
 		end
 		return req
 	end
-	
+
 	local function get_tech_packs(grade,tier)
 		local packs = {}
 		local pack_tier = math.ceil(grade/omni.fluid_levels_per_tier) + tier-1
@@ -178,7 +197,7 @@ function omni.matter.add_omniwater_extraction(mod, element, lvls, tier, gain, st
 
 	local function get_tech_cost(levels,grade,tier,start,constant)
 		local lvl = grade + (tier-1) * omni.fluid_levels_per_tier
-		return  start*lvl + constant*lvl*get_tier_mult(levels,grade,1)
+		return  start*lvl + constant*lvl*omni.matter.get_tier_mult(levels,grade,1)
 	end
 
 	--Starter recipe
@@ -225,8 +244,7 @@ function omni.matter.add_omniwater_extraction(mod, element, lvls, tier, gain, st
 		setTechLocName("omnitech-omniwater-omnitraction",{"fluid-name."..element}):
 		extend()
 
-  	--Add the last tier as prereq for the rocket silo
-  	omni.lib.add_prerequisite("rocket-silo", "omnitech-"..element.."-omnitraction-"..lvls)
+  	
 end
 
 --------------------------

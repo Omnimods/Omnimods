@@ -1,3 +1,14 @@
+if mods["angelsrefining"] then
+	for _,f in pairs(data.raw.fluid) do
+		data.raw.recipe["angels-fluid-splitter-"..f.name]=nil
+	end
+	
+	RecGen:import("coal-liquefaction"):
+		replaceIngredients("heavy-oil","omniston"):
+		replaceIngredients("liquid-naphtha","omniston"):
+		extend()
+end
+
 --Tech Overhaul setting is currently hidden and forced to false until compat is playable
 if mods["angelsindustries"] and settings.startup["angels-enable-tech"].value then
   -------------------------------------------------------------------------------
