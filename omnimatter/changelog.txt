@@ -1,12 +1,12 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.12
-Date: 2021.03.xx
+Date: 2021.03.28
   Changes:
-      - Moved all Pure omnitraction 1 tier up. You cant jump through impure omnitractions now :)
-      - Removed the "omnimatter-tier-impure-dependency" setting
-      - Removed the "omnimatter-tier-pure-dependency" setting
-      - Removed the "omnimatter-fluid-dependency" setting 
-      - Renamed "omnimatter-impure-lvl-per-tier" to o"mnimatter-impure-lvls", check your settings!
+    - Moved all Pure omnitraction 1 tier up. You cant jump through impure omnitractions now :)
+    - Removed the "omnimatter-tier-impure-dependency" setting
+    - Removed the "omnimatter-tier-pure-dependency" setting
+    - Removed the "omnimatter-fluid-dependency" setting 
+    - Renamed "omnimatter-impure-lvl-per-tier" to o"mnimatter-impure-lvls", check your settings!
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.11
 Date: 2021.03.08
