@@ -107,12 +107,12 @@ local get_distillation_req = function(tier,item, level)
 	if omni.fluid_levels >= (tier-1)*omni.fluid_levels_per_tier + level then
 		req[#req+1]="omnitech-solvation-omniston-"..(tier-1)*omni.fluid_levels_per_tier + level
 	end
-	--Prereq last lvl if on the same tier
-	if (level-1)%omni.fluid_levels_per_tier ~= 0 then
-		req[#req+1]="omnitech-distillation-"..item.."-"..(level-1)
-	--Prereq omnitractor if 1. on the tier and if there is no omniston prereq available
-	elseif #req == 0 then
+	--Prereq omnitractor if its the firs tech of a new tier and if there is no omniston prereq
+	if #req == 0 and (level-1)%omni.fluid_levels_per_tier == 0 and ((level-1) / omni.fluid_levels_per_tier + tier) <= omni.max_tier then
 		req[#req+1]="omnitech-omnitractor-electric-"..((level-1) / omni.fluid_levels_per_tier + tier)
+	--Prereq last lvl if on the same tier
+	elseif level > 1 and  (level-1)%omni.fluid_levels_per_tier ~= 0 then
+		req[#req+1]="omnitech-distillation-"..item.."-"..(level-1)
 	end
 	return req
 end
@@ -120,7 +120,7 @@ end
 --Dynamically calc tech packs dependant on tier and grade
 local get_distillation_tech_packs = function(grade,tier)
 	local packs = {}
-	local pack_tier = math.ceil(grade/omni.fluid_levels_per_tier) + tier-1
+	local pack_tier = math.min(math.ceil(grade/omni.fluid_levels_per_tier) + tier-1, #omni.sciencepacks)
 	for i=1,pack_tier do
 		packs[#packs+1] = {omni.sciencepacks[i],1}
 	end

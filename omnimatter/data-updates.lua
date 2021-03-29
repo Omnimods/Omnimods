@@ -2,6 +2,9 @@
 require("prototypes.recipes.extraction-dynamic")
 require("prototypes.recipes.solvation-dynamic")
 
+-- Add water extraction recipes (needs to be done after extraction-dynamic)
+omni.matter.add_omniwater_extraction("omnimatter", "water", omni.fluid_levels, 1, 360, true)
+
 -----------------------
 -----EARLY COMPATS-----
 -----------------------
