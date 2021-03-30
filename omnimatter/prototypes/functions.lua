@@ -163,33 +163,38 @@ function omni.matter.get_tier_mult(levels,r,c)
 end
 
 function omni.matter.add_omniwater_extraction(mod, element, lvls, tier, gain, starter_recipe)
+
 	local function get_prereq(grade,element,tier)
 		local req = {}
-		local tractor_lvl = math.floor((grade-1) / omni.fluid_levels_per_tier) * tier
+		--local tractor_lvl = math.floor((grade-1) / omni.fluid_levels_per_tier) * tier
+		local tractor_lvl = math.floor((grade-1) / omni.fluid_levels_per_tier) + tier - 1
 
+		-- Add basic omnitraction as prereq if grade and tier == 1
+		if grade == 1 and tier == 1 then
+			req[#req+1]="omnitech-base-impure-extraction"
+		end
 		--Add previous tech as prereq if its in the same tier
 		if grade > 1 and grade%omni.fluid_levels_per_tier ~= 1 then
 			req[#req+1]="omnitech-"..element.."-omnitraction-"..(grade-1)
 		end
-		
 		--Add an electric omnitractor tech as prereq if this is the first tech of a new tier
 		if grade%omni.fluid_levels_per_tier == 1 and (tractor_lvl <=omni.max_tier) and (tractor_lvl >= 1) then
 			req[#req+1]="omnitech-omnitractor-electric-"..tractor_lvl
 		--Add the last tech of a tier as prereq for the next omnitractor
 		elseif grade > 0 and grade%omni.fluid_levels_per_tier == 0 and (tractor_lvl+1 <=omni.max_tier) then
-			omni.lib.add_prerequisite("omnitech-omnitractor-electric-"..tractor_lvl+1, "omnitech-"..element.."-omnitraction-"..(grade), true)
-			--Add the last tier as prereq for the rocket silo if its the highest tier
-			if omni.rocket_locked and tractor_lvl == omni.max_tier then
-  				omni.lib.add_prerequisite("rocket-silo", "omnitech-"..element.."-omnitraction-"..grade,true)
-			end
+			omni.lib.add_prerequisite("omnitech-omnitractor-electric-"..tractor_lvl+1, "omnitech-"..element.."-omnitraction-"..(grade), true)	
 		end
+		--Add the last tier as prereq for the rocket silo if its the highest tier
+		if omni.rocket_locked and tractor_lvl >= omni.max_tier and grade == lvls then
+			omni.lib.add_prerequisite("rocket-silo", "omnitech-"..element.."-omnitraction-"..grade,true)
+	  	end
 		return req
 	end
 
 	local function get_tech_packs(grade,tier)
 		local packs = {}
 		local pack_tier = math.ceil(grade/omni.fluid_levels_per_tier) + tier-1
-		for i=1,pack_tier do
+		for i=1, math.min(pack_tier, #omni.sciencepacks) do
 			packs[#packs+1] = {omni.sciencepacks[i],1}
 		end
 		return packs

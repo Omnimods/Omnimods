@@ -339,7 +339,7 @@ RecChain:create("omnimatter_crystal","pseudoliquid-amorphous-crystal"):
 			req={"omnitech-pseudoliquid-amorphous-crystal-"..grade-1}
 		end
 		local c = omni.lib.round(levels/3)
-		if grade%c==0 and grade>1 then
+		if grade%c==0 and grade>1 and grade <= omni.max_tier then
 			req[#req+1]="omnitech-crystallonics-"..math.floor(grade/c)+1
 		end
 		return req

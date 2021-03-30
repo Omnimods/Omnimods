@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.4
+Date: 2021.03.29
+  Bugfixes:
+    - Fixed that setting the levels of water extraction too high could cause a crash
+    - Fixed various tech tree issues caused by setting the max omnitractor tier to its lowest value
+---------------------------------------------------------------------------------------------------
 Version: 4.1.3
 Date: 2021.03.28
   Info:
