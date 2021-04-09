@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.7
+Date: 2021.04.08
+  Bugfixes:
+    - Fixed that crystal-rod and impure-crystal-rod required copper crystals and coal instead of
+    - tin crystals and lead with bobs mods and only certain angels mods
+---------------------------------------------------------------------------------------------------
 Version: 4.1.6
 Date: 2021.03.29
   Bugfixes:
