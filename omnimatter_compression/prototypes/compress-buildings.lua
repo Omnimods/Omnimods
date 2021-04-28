@@ -481,6 +481,11 @@ local run_entity_updates = function(new, kind, i)
     if new.energy_source.usage_priority == "tertiary" then
       new.energy_source.output_flow_limit = new_effect(new.energy_source.output_flow_limit,i)
     end
+  else
+  --double check...input_flow_limit on non acumulators
+    if new.energy_source and new.energy_source.input_flow_limit and type(new.energy_source.input_flow_limit)=="string" then
+      new.energy_source.input_flow_limit = new_effect(new.energy_source.input_flow_limit,i)
+    end
   end
   --[[Support type updates]]--
   --energy usage
