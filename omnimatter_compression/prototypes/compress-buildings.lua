@@ -700,7 +700,11 @@ for fluidname, fluid in pairs(data.raw.fluid) do
 end
 
 --extend new categories
-data:extend(recipe_category)
+if #recipe_category > 0 then
+  data:extend(recipe_category)
+end
 --extend new buildings
-data:extend(compressed_buildings)
+if #compressed_buildings > 0 then
+  data:extend(compressed_buildings)
+end
 log("end building compression")
