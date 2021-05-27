@@ -254,7 +254,7 @@ RecGen:create("omnimatter_crystal","omnine-distillation-slow"):
 	setIngredients({type = "fluid", name = "omnisludge", amount=2000}):
 	setResults({type = "item", name = "omnine", amount=1}):extend()
 
-local cat = "ore-sorting-t1"
+local cat = "ore-refining-t1"
 if not mods["angelsrefining"] then cat = nil end
 RecGen:create("omnimatter_crystal","omnine-shards"):
 	setSubgroup("omnine"):
