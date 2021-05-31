@@ -118,7 +118,8 @@ for _, recipe in pairs(data.raw.recipe) do
         compress_entity[place_result] and (
           not compress_entity[place_result].exclude or compress_entity[place_result].include
         ) -- Not excluded or included
-      )) then
+      )) 
+    then
       local top_result =  find_top_tier(place_result, place_result.type)
       if top_result and building_list[top_result.type] then
         recipe_results[top_result.name] = recipe_results[top_result.name] or {}
@@ -573,8 +574,8 @@ for build_name, values in pairs(recipe_results) do
         and not details.recipe.name:find("^uncompress%-")
         and details.base
         and build.minable 
-        and build.minable.result 
-        and data.raw.item[build.minable.result] 
+        -- and build.minable.result 
+        -- and data.raw.item[build.minable.result] 
       then --check that it is a minable entity
         category_exists(build)
         already_compressed[build_name] = true
