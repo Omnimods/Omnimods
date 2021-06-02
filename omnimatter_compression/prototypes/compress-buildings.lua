@@ -118,7 +118,8 @@ for _, recipe in pairs(data.raw.recipe) do
         compress_entity[place_result] and (
           not compress_entity[place_result].exclude or compress_entity[place_result].include
         ) -- Not excluded or included
-      )) then
+      )) 
+    then
       local top_result =  find_top_tier(place_result, place_result.type)
       if top_result and building_list[top_result.type] then
         recipe_results[top_result.name] = recipe_results[top_result.name] or {}
@@ -481,6 +482,11 @@ local run_entity_updates = function(new, kind, i)
     if new.energy_source.usage_priority == "tertiary" then
       new.energy_source.output_flow_limit = new_effect(new.energy_source.output_flow_limit,i)
     end
+  else
+  --double check...input_flow_limit on non acumulators
+    if new.energy_source and new.energy_source.input_flow_limit and type(new.energy_source.input_flow_limit)=="string" then
+      new.energy_source.input_flow_limit = new_effect(new.energy_source.input_flow_limit,i)
+    end
   end
   --[[Support type updates]]--
   --energy usage
@@ -568,8 +574,8 @@ for build_name, values in pairs(recipe_results) do
         and not details.recipe.name:find("^uncompress%-")
         and details.base
         and build.minable 
-        and build.minable.result 
-        and data.raw.item[build.minable.result] 
+        -- and build.minable.result 
+        -- and data.raw.item[build.minable.result] 
       then --check that it is a minable entity
         category_exists(build)
         already_compressed[build_name] = true
@@ -695,7 +701,11 @@ for fluidname, fluid in pairs(data.raw.fluid) do
 end
 
 --extend new categories
-data:extend(recipe_category)
+if #recipe_category > 0 then
+  data:extend(recipe_category)
+end
 --extend new buildings
-data:extend(compressed_buildings)
+if #compressed_buildings > 0 then
+  data:extend(compressed_buildings)
+end
 log("end building compression")

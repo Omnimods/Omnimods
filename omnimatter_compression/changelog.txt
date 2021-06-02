@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.7
+Date: 2021.06.02
+  Bugfixes:
+    - Fixed that certain entities were not compressed with angels component mode turned on
+---------------------------------------------------------------------------------------------------
 Version: 4.1.6
 Date: 2021.03.28
   Changes:
