@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.11
+Date: 2021.06.04
+  Changes:
+    - Recipe standardisation now nils empty main_product strings to avoid errors in recipe gen.
+---------------------------------------------------------------------------------------------------
 Version: 4.1.10
 Date: 2021.03.11
   Bugfixes:
