@@ -190,6 +190,17 @@ function omni.lib.standardise(recipe)
 			recipe.expensive.main_product=nil
 		end
 	end
+
+	--nil empty main product strings
+	if recipe.main_product == "" then
+		recipe.main_product = nil
+	end
+	if recipe.normal.main_product == "" then
+		recipe.normal.main_product = nil
+	end
+	if recipe.expensive.main_product == "" then
+		recipe.expensive.main_product = nil
+	end
 	---------------------------------------------------------------------------
 	-- Localisation
 	---------------------------------------------------------------------------

@@ -24,7 +24,7 @@ for _,boiler in pairs(data.raw.boiler) do
 	end
 
 	if not forbidden_boilers[boiler.name] and data.raw.fluid[boiler.fluid_box.filter] and data.raw.fluid[boiler.fluid_box.filter].heat_capacity and boiler.minable then
-		local rec = omni.lib.find_recipe(boiler.minable.result)
+		local rec = omni.lib.find_recipe(boiler.minable.result or boiler.name)
 		new_boiler[#new_boiler+1]={
 			type = "recipe-category",
 			name = "boiler-omnifluid-"..boiler.name,
@@ -33,7 +33,7 @@ for _,boiler in pairs(data.raw.boiler) do
 			omni.lib.standardise(data.raw.recipe[rec.name])
 		end
 		fix_boilers_recipe[#fix_boilers_recipe+1]=rec.name
-		fix_boilers_item[boiler.minable.result]=true
+		fix_boilers_item[omni.lib.find_prototype(boiler.minable.result or rec.normal.results[1].name)]=true
 
 		data.raw.recipe[rec.name].normal.results[1].name=boiler.name.."-converter"
 		data.raw.recipe[rec.name].normal.main_product=boiler.name.."-converter"

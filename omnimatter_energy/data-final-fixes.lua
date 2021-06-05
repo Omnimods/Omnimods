@@ -63,10 +63,18 @@ for _,entity in pairs(burnerEntities) do
 	end
 end
 
+-- Techs to not move behind anbaricity - usually startup techs by other mods that have custom compat
+local noloops = {
+	"sb-startup1",
+	"sb-startup2", 
+	"sb-startup3",
+	"sct-automation-science-pack"
+}
+
 --Find all remaining Techs without any prereqs that unlock entities that require electricity and move them behind anbaricity
 for _,tech in pairs(data.raw.technology) do 
 	local ent
-	if tech.effects and (tech.prerequisites == nil or next(tech.prerequisites) == nil) then
+	if tech.effects and (tech.prerequisites == nil or next(tech.prerequisites) == nil) and not omni.lib.is_in_table(tech.name, noloops) then
 		for _,eff in pairs(tech.effects) do
 			if eff.type == "unlock-recipe" then
 				ent = omni.lib.find_entity_prototype(eff.recipe)
