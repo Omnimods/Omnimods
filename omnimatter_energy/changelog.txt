@@ -90,7 +90,7 @@ Version: 2.0.2
 Date: 2020.08.31
   Features:
     - Added heretical scripts to allow Pyanodons to work with this...even without the AB patch mod
-    -   Confirmed to work up to green science... be warned, burner phase lasts a log while
+      Confirmed to work up to green science... be warned, burner phase lasts a log while
   Changes:
     - Renamed technology "basic-omnium-power" to "omnitech-basic-omnium-power"
     - Renamed technology "anbaricity" to "omnitech-anbaricity"
@@ -107,8 +107,8 @@ Date: 2020.08.31
     - Renamed technology "basic-splitter-logistics" to "omnitech-basic-splitter-logistics"
     - Renamed technology "underground-logistics" to "omnitech-underground-logistics"
     - Renamed technology "basic-underground-logistics" to "omnitech-basic-underground-logistics"
-    - Added some heretical scripts to allow Pyanodons to work with this mod... even without the AB patch mod
-      - Not recommended, confirmed to work up to green science... be warned, burner phase lasts a log while
+    - Added some heretical scripts to allow Pyanodons to work with this mod...
+      Not recommended, confirmed to work up to green science... be warned, burner phase lasts long
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.1
 Date: 2020.08.24
@@ -127,14 +127,6 @@ Date: 2020.08.22
     - Rebalanced crystal solar panel recipes
     - Added the required crystallonics tech as prereq for each new tier of crystal solar panels
     - Made the Omnifurnace mk2 and mk3 recipe slightly cheaper
----------------------------------------------------------------------------------------------------
-Version: 1.18.11
-Date: 2020.08.07
-  Changes:
-    - Made the omnifurnace mk 3 electric
-    - Moved fuel related functions into omnilib
-  Bugfixes:
-    - Fixed multiple locale, subgroup and recipe order issues
 ---------------------------------------------------------------------------------------------------
 Version: 1.18.11
 Date: 2020.08.07
@@ -229,7 +221,7 @@ Date: 2020.04.13
     - Added Crystal Solar Panels (Max Size & Tier configurable)
     - Added Solar Road (Tiles that produce & distribute energy)
     - Added Omnified Fuel, Omnified Fuel has a boosted Fuel value. 
-    -   All available Fuels have to be Omnified before they can be used
+      All available Fuels have to be Omnified before they can be used
     - Lowered the crafting Speed of the Omnitor Assembling Machine
     - Added 2 new Omnifurnace Tiers
     - Starter Burner Entities only accept (crushed-) Omnite as fuel

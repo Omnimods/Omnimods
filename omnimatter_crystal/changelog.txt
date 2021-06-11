@@ -8,7 +8,7 @@ Version: 4.1.7
 Date: 2021.04.08
   Bugfixes:
     - Fixed that crystal-rod and impure-crystal-rod required copper crystals and coal instead of
-    - tin crystals and lead with bobs mods and only certain angels mods
+      tin crystals and lead with bobs mods and only certain angels mods
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.6
 Date: 2021.03.29
@@ -34,7 +34,7 @@ Date: 2021.01.21
 Version: 4.1.2
 Date: 2020.12.23
   Changes:
-      - Internal cleanup
+    - Internal cleanup
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.1
 Date: 2020.12.14
@@ -61,7 +61,7 @@ Date: 2020.08.31
     - Renamed technology "crystallology-x" to "omnitech-crystallology-x"
     - Renamed technology "crystallonics-y" to "omnitech-crystallonics-x"
     - Renamed technology "pseudoliquid-amorphous-crystal-x" to 
-    - "omnitech-pseudoliquid-amorphous-crystal-x"
+      "omnitech-pseudoliquid-amorphous-crystal-x"
 ---------------------------------------------------------------------------------------------------
 Version: 4.0.0
 Date: 2020.08.22
@@ -142,28 +142,26 @@ Version: 2.0.0
   Features:
     - Updated to the new API!
   Info:
-    - UPDATING TO THIS WILL BREAK SAVES!
-      - Again, sorry
+    - UPDATING TO THIS WILL BREAK SAVES! Again, sorry
 ---------------------------------------------------------------------------------------------------
 Version: 0.2.6
   Features:
     - Further overhauling of the mod
-      - the crystallonics never felt proper and well made, made it more wholesome.
+    - the crystallonics never felt proper and well made, made it more wholesome.
     - Thanks redalert for sprites.
     - Crystallonics is now more elaborated.
   Info:
-    - Warning! Any existing file will suffer massive loss in items.
-      - migration script not included
+    - Warning! Any existing file will suffer massive loss in items. migration script not included!
     - Currently only guaranteed to work with full Angel and bobs
-      - if you try without, if it doesn't work, please contact me ON THE DISCORD!
-      - DISCORD server link in description
+    - if you try without, if it doesn't work, please contact me ON THE DISCORD!
+    - DISCORD server link in description
 ---------------------------------------------------------------------------------------------------
 Version: 0.3.0
   Features:
     - Huge structural overhaul.
   Info:
     - WARNING! RECIPE DISAPPEARENCE IS EXPECTED! UPDATE AT YOUR OWN RISK!
-      - migration script not included
+    - migration script not included
 ---------------------------------------------------------------------------------------------------
 Version: 0.2.5
   Bugfixes:
@@ -171,8 +169,8 @@ Version: 0.2.5
     - Fixed so omniplants uses omnicium.
     - Removed Omniserter and Crystal Reactors, will be elsewhere
   Info:
-    - Warning, shards are replaced by other names and due to how it is structured they will not be transferred.
-      - Use them up and stop producing before updating.
+    - Warning, shards are replaced by other names and they will not be transferred.
+    - Use them up and stop producing before updating.
 ---------------------------------------------------------------------------------------------------
 Version: 0.2.1
   Bugfixes:
@@ -205,7 +203,7 @@ Version: 0.1.14
 Version: 0.1.13
   Features:
     - Seperated circuit requirement for crystallonics so hybrids are created instead when needed,
-      - otherwise just crystallonics, thereby reducing cost of certain things.
+      otherwise just crystallonics, thereby reducing cost of certain things.
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.12
   Bugfixes:

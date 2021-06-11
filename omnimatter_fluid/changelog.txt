@@ -107,7 +107,8 @@ Version: 0.2.15
 ---------------------------------------------------------------------------------------------------
 Version: 0.2.6
   Features:
-    - Fixed now so it works with angels coolant and temperature sensitive fluids in general that are chained.
+    - Fixed now so it works with angels coolant and temperature sensitive fluids in general
+      that are chained.
 ---------------------------------------------------------------------------------------------------
 Version: 0.2.1
   Features:

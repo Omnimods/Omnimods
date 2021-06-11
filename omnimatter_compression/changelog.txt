@@ -167,14 +167,13 @@ Date: 2020.06.09
   Bugfixes:
     - Fixed that some ores could not be compressed with the planner
     - Fixed that multi-level tech (and infinite tech) with compressed equivalents would try to
-      - complete all of them causing a crash in the case of infinite tech
+      complete all of them causing a crash in the case of infinite tech
     - Fixed probability not transferring to the compressed recipe correctly
     - Fixed localisations and icons not being made correct
     - Fixed potential non-contigious tech level error if a higher tier tech removed a science pack
-      - used in a previous tier
+      used in a previous tier
     - Fixed that science-pack-3 was being referenced in place of chemical-science-pack in settings
-      - No migration has been added for this, so you may need to change this manually in your
-        - settings (sorry)
+      No migration for this, so you may need to change this manually in your settings
     - Fixed rounding errors on some recipes giving 0 outputs in some cases
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.5
@@ -233,7 +232,7 @@ Version: 2.0.0
 Version: 1.3.0
   Features:
     - Added compressed science packs and sciences,
-      - whenever whether compressed tech is research or normal, the other is also unlocked.
+      whenever whether compressed tech is research or normal, the other is also unlocked.
 ---------------------------------------------------------------------------------------------------
 Version: 1.2.0
   Features:
@@ -344,7 +343,7 @@ Version: 0.3.1
 Version: 0.3.0:
   Features:
     - Now can be made so you mine compressed ores directly! Just use the compression planner to
-      - turn ore into compressed ore!
+      turn ore into compressed ore!
 ---------------------------------------------------------------------------------------------------
 Version: 0.2.3
   Bugfixes:
@@ -376,8 +375,8 @@ Version: 0.1.3
   Bugfixes:
     - Fixed bugs causing some recipes to not be calculated (angels smelting f.e. lacked some)
     - Fixed so recipes do not show up in tech tree but are enabled as things are unlocked anyway.
-      - They will not show up until compression tech has been research and once it is researched,
-        - every recipe you have is unlocked in it's compressed form.
+      They will not show up until compression tech has been research and once it is researched,
+      every recipe you have is unlocked in it's compressed form.
     - Fixed bug where temperature of fluids were ignored.
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.2
