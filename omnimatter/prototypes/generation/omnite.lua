@@ -10,7 +10,7 @@ data:extend(
   {
     type = "optimized-particle",
     name = "omnite-particle",
-    flags = {"not-on-map"},
+    --flags = {"not-on-map"},
     life_time = 180,
     pictures =
     {
