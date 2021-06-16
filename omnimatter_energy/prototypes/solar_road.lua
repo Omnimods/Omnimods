@@ -52,7 +52,7 @@ data:extend({
 	  icon = "__omnimatter_energy__/graphics/icons/omni-solar-tile.png",
 	  icon_size = 32,
 	  needs_correction = false,
-	  minable = {hardness = 0.1, mining_time = 0.25, result = "omni-solar-road"},
+	  minable = {mining_time = 0.25, result = "omni-solar-road"},
 	  mined_sound = { filename = "__base__/sound/deconstruct-bricks.ogg" },
 	  collision_mask = {"ground-tile", "not-colliding-with-itself"},
 	  collision_box = {{-0.5, -0.5}, {0.5, 0.5}},

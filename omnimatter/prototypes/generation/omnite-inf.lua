@@ -4,7 +4,7 @@ if settings.startup["omnimatter-infinite"].value then
     local mine={}
     if settings.startup["omnimatter-infinite-omnic-acid"].value then
         mine = {
-            hardness = 0.9,
+            --hardness = 0.9,
             mining_particle = "omnite-particle",
             mining_time = 1,
             fluid_amount = 10,
@@ -20,7 +20,7 @@ if settings.startup["omnimatter-infinite"].value then
         }
     else
         mine = {
-            hardness = 0.9,
+            --hardness = 0.9,
             mining_particle = "omnite-particle",
             mining_time = 1,
             results = {

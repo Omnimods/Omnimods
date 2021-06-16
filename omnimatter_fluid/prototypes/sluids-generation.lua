@@ -116,7 +116,7 @@ for _,boiler in pairs(data.raw.boiler) do
 		icons = boiler.icons,
 		icon_size = boiler.icon_size or 32,
 		flags = {"placeable-neutral","placeable-player", "player-creation"},
-		minable = {hardness = 0.2, mining_time = 0.5, result = boiler.name.."-converter"},
+		minable = {mining_time = 0.5, result = boiler.name.."-converter"},
 		max_health = 300,
 		corpse = "big-remnants",
 		dying_explosion = "medium-explosion",

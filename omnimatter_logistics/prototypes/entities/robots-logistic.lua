@@ -77,7 +77,7 @@ for i=1,nr_bots do
     icon_size = 32,
 	  localised_name = {"item-name.omni-logistic-bot", i},
     flags = {"placeable-player", "player-creation", "placeable-off-grid", "not-on-map"},
-    minable = {hardness = 0.1, mining_time = 0.1, result = "omni-logistic-robot-"..i},
+    minable = {mining_time = 0.1, result = "omni-logistic-robot-"..i},
     resistances = { { type = "fire", percent = 85 } },
     max_health = 100*i/2,
     collision_box = {{0, 0}, {0, 0}},

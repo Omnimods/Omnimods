@@ -180,7 +180,7 @@ for j=1,nr_tiers do
 			icons = icons,
 			icon_size = 32,
 			flags = {"placeable-neutral", "player-creation"},
-			minable = {hardness = 0.2, mining_time = 0.5, result = "crystal-solar-panel-tier-"..j.."-size-"..i},
+			minable = {mining_time = 0.5, result = "crystal-solar-panel-tier-"..j.."-size-"..i},
 			max_health = 200,
 			corpse = "big-remnants",
 			collision_box = {{-i*0.5+0.1, -i*0.5+0.1}, {i*0.5-0.1, i*0.5-0.1}},
