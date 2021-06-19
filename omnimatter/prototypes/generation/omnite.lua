@@ -166,7 +166,6 @@ data:extend{
     order="b-da",
     infinite = false,
     minable = {
-      --hardness = 0.9,
       mining_particle = "omnite-particle",
       mining_time = 1,
       results = {

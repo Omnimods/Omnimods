@@ -4121,14 +4121,6 @@ function ResourceGen:setMiningTime(val)
 	end
 	return self
 end
-function ResourceGen:setMiningHardness(val) --this should no longer be a thing... hardness has been removed.
-	if type(val) == "number" then
-		r.hardness = function(levels,grade) return val end
-	elseif type(val)=="function" then
-		r.hardness = val
-	end
-	return self
-end
 function ResourceGen:setRichMult(val)
 	if type(val) == "number" then
 		r.richness.multiplier = function(levels,grade) return val end
