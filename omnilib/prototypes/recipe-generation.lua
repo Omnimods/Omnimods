@@ -2747,7 +2747,7 @@ function setBuildingParameters(b,subpart)
     {
 	  type = "electric",
 	  usage_priority = "secondary-input",
-	  emissions = 0.04 / 3.5
+	  emissions_per_minute = 0.04 / 3.5
 	}
 	b.energy_usage = function(levels,grade) return "150kW" end
 	b.animation = function(levels,grade) return {} end
@@ -3112,7 +3112,7 @@ function BuildGen:setBurner(efficiency,size)
 	  type = "burner",
       effectivity = efficiency or 0.5,
       fuel_inventory_size = size or 1,
-      emissions = 0.01,
+      emissions_per_minute = 1.0,
       smoke =
       {
         {
@@ -3635,7 +3635,7 @@ function BuildChain:setInitialBurner(efficiency,size)
 	self.burner = {type = "burner",
       effectivity = efficiency or 0.5,
       fuel_inventory_size = size or 1,
-      emissions = 0.01,
+      emissions_per_minute = 0.01,
       smoke =
       {
         {
