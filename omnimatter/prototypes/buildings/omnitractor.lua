@@ -18,6 +18,7 @@ BuildGen:create("omnimatter","omnitractor"):
 	setIngredients(burner_ingredients):
 	setEnergy(10):
 	setBurner(1,1):
+	setEmissions(4.5):
 	setUsage(100):
 	setEnabled():
 	setReplace("omnitractor"):
@@ -103,6 +104,7 @@ BuildChain:create("omnimatter","omnitractor"):
 	setIngredients(cost:ingredients()):
 	setEnergy(5):
 	setUsage(function(level,grade) return (100+25*grade).."kW" end):
+	setEmissions(function(level,grade) return math.max(3 - ((grade-1) * 0.2), 0.1) end):
 	addElectricIcon():
 	setTechName("omnitech-omnitractor"):
 	--setTechPrereq(): done in data-updates (extraction-dynamic) after extractions have been created

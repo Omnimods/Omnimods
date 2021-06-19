@@ -2742,12 +2742,12 @@ function setBuildingParameters(b,subpart)
       slots = function(levels,grade) return 3 end,
 	  effects = function(levels,grade) return {"consumption", "speed", "pollution"} end
     }
-	b.crafting_speed=function(levels,grade) return 1 end
+	b.crafting_speed = function(levels,grade) return 1 end
 	b.energy_source =
     {
 	  type = "electric",
 	  usage_priority = "secondary-input",
-	  emissions_per_minute = 0.04 / 3.5
+	  emissions_per_minute = 1
 	}
 	b.energy_usage = function(levels,grade) return "150kW" end
 	b.animation = function(levels,grade) return {} end
@@ -2810,6 +2810,7 @@ end
 function BuildGen:import(name)
 	local build = omni.lib.find_entity_prototype(name) or omni.lib.find_entity_prototype("burner-"..name)
 	if not build then return nil end
+
 	local b = BuildGen:create():
 		setName(build.name):
 		setEffectivity(build.effectivity):
@@ -2868,11 +2869,13 @@ function BuildGen:import(name)
 		if build.localised_description then
 			b:setLocDesc(build.localised_description)
 		end
+
 		if build.energy_source and (build.energy_source.fuel_categories or build.energy_source.fuel_category) then
 			b:setFuelCategories(build.energy_source.fuel_categories or build.energy_source.fuel_category)
 			--Make sure that we nil fuel_category after we set fuel_categories
 			build.energy_source.fuel_category = nil
 		end
+
 	local r = RecGen:import(name)
 
 	local notFields = {}
@@ -3188,14 +3191,17 @@ function BuildGen:setEnergySupply()
     }
 	return self
 end
-function BuildGen:setEnergySource(eff)
-	self.energy_source = eff
-	return self
-end
+
 function BuildGen:setEmissions(em)
-	self.energy_source.emissions_per_minute = em or 1
+	self.energy_source.emissions_per_minute = em
 	return self
 end
+
+function BuildGen:setEnergySource(eff)
+	self.energy_source = table.deepcopy(eff)
+	return self
+end
+
 function BuildGen:setBurnEfficiency(eff)
 	if type(eff) == "function" then
 		self.energy_source.effectivity = eff
@@ -3605,7 +3611,8 @@ function BuildGen:generateBuilding()
 	setTechLocName(self.tech.loc_name(0,0)):
 	setTechLocDesc(self.tech.loc_desc(0,0)):
 	setForce(self.force):
-	setTechPrereq(self.tech.prerequisites(0,0)):return_array()
+	setTechPrereq(self.tech.prerequisites(0,0)):
+	return_array()
 	for _, p in pairs(stuff) do
 		self.rtn[#self.rtn+1] = table.deepcopy(p)
 	end
@@ -3635,7 +3642,7 @@ function BuildChain:setInitialBurner(efficiency,size)
 	self.burner = {type = "burner",
       effectivity = efficiency or 0.5,
       fuel_inventory_size = size or 1,
-      emissions_per_minute = 0.01,
+      emissions_per_minute = 1.0,
       smoke =
       {
         {
@@ -3701,6 +3708,7 @@ function BuildChain:generate_building_chain()
 		setPlace(self.name.."-"..i):
 		setEnergy(self.energy_required(levels,i)):
 		setUsage(self.energy_usage(levels,i)):
+		setEmissions(self.energy_source.emissions_per_minute(levels,i)):
 		setCrafting(self.category(levels,i)):
 		setLocName(self.loc_name(levels,i)):
 		addLocName(i):
