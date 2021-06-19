@@ -3192,6 +3192,10 @@ function BuildGen:setEnergySource(eff)
 	self.energy_source = eff
 	return self
 end
+function BuildGen:setEmissions(em)
+	self.energy_source.emissions_per_minute = em or 1
+	return self
+end
 function BuildGen:setBurnEfficiency(eff)
 	if type(eff) == "function" then
 		self.energy_source.effectivity = eff
