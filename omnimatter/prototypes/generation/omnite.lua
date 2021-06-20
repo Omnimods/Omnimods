@@ -10,7 +10,7 @@ data:extend(
   {
     type = "optimized-particle",
     name = "omnite-particle",
-    flags = {"not-on-map"},
+    --flags = {"not-on-map"},
     life_time = 180,
     pictures =
     {
@@ -166,7 +166,6 @@ data:extend{
     order="b-da",
     infinite = false,
     minable = {
-      hardness = 0.9,
       mining_particle = "omnite-particle",
       mining_time = 1,
       results = {

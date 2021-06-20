@@ -17,7 +17,6 @@ data:extend({
         type = "item-group",
         name = "omnienergy",
         order = "z",
-        inventory_order = "z",
         icon = "__omnimatter_energy__/graphics/technology/omnimatter-energy.png",
         icon_size = 128,
     },

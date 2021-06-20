@@ -36,7 +36,7 @@ if mods["Bio_Industries"] then
 	data.raw.recipe["bi-seedling-3"].icon=nil
 	data.raw.recipe["bi-seedling-3"].icons={
 		{icon="__omnimatter_wood__/graphics/icons/Seedling.png", icon_size=32},
-		{icon="__Bio_Industries__/graphics/icons/fertiliser_64.png",
+		{icon="__Bio_Industries__/graphics/icons/fertilizer_64.png",
 		scale = 0.4375,
 		shift = { 10, 10},
 		icon_size=64,}
@@ -46,7 +46,7 @@ if mods["Bio_Industries"] then
 	data.raw.recipe["bi-seedling-4"].icon=nil
 	data.raw.recipe["bi-seedling-4"].icons={
 		{icon="__omnimatter_wood__/graphics/icons/Seedling.png", icon_size=32},
-		{icon="__Bio_Industries__/graphics/icons/advanced_fertiliser_64.png",
+		{icon="__Bio_Industries__/graphics/icons/advanced_fertilizer_64.png",
 		scale = 0.4375,
 		shift = { 10, 10},
 		icon_size=64,}
@@ -78,7 +78,7 @@ if mods["Bio_Industries"] then
 	data.raw.recipe["bi-logs-3"].icon=nil
 	data.raw.recipe["bi-logs-3"].icons={
 		{icon="__omnimatter_wood__/graphics/icons/mutated-wood2.png", icon_size=32},
-		{icon="__Bio_Industries__/graphics/icons/fertiliser_64.png",
+		{icon="__Bio_Industries__/graphics/icons/fertilizer_64.png",
 		scale = 0.4375,
 		shift = { 10, 10},
 		icon_size=64,}
@@ -88,7 +88,7 @@ if mods["Bio_Industries"] then
 	data.raw.recipe["bi-logs-4"].icon=nil
 	data.raw.recipe["bi-logs-4"].icons={
 		{icon="__omnimatter_wood__/graphics/icons/mutated-wood2.png", icon_size=32},
-		{icon="__Bio_Industries__/graphics/icons/advanced_fertiliser_64.png",
+		{icon="__Bio_Industries__/graphics/icons/advanced_fertilizer_64.png",
 		scale = 0.4375,
 		shift = { 10, 10},
 		icon_size=64,}

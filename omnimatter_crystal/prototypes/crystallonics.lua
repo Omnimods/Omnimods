@@ -40,7 +40,9 @@ RecGen:create("omnimatter_crystal","hydromnic-acid"):
 BuildGen:create("omnimatter_crystal","omniplant"):
 	noTech():
 	setBurner(0.75,2):
+	setEmissions(3.5):
 	setSubgroup("omniplant"):
+	setOrder("a[omniplant-burner]"):
 	setIngredients(burner_ings):
 	setEnergy(5):
 	setUsage(function(level,grade) return "750kW" end):
@@ -111,6 +113,7 @@ BuildChain:create("omnimatter_crystal","omniplant"):
 	setIngredients(cost_plant:ingredients()):
 	setEnergy(5):
 	setUsage(function(level,grade) return (200+50*grade).."kW" end):
+	setEmissions(function(level,grade) return math.max(2.6 - ((grade-1) * 0.2), 0.1) end):
 	setTechPrereq(get_pure_req):
 	addElectricIcon():
 	setTechName(function(levels,grade) if grade == 1 then return "omnitech-omnic-acid-hydrolyzation-1" else return "omnitech-crystallology" end end):
@@ -162,6 +165,7 @@ BuildChain:create("omnimatter_crystal","crystallomnizer"):
 	setIngredients(cost_omnizer:ingredients()):
 	setEnergy(5):
 	setUsage(function(level,grade) return (200+50*grade).."kW" end):
+	setEmissions(function(level,grade) return math.max(2.0 - ((grade-1) * 0.2), 0.1) end):
 	setTechPrereq(get_pure_req):
 	addElectricIcon():
 	allowProductivity():

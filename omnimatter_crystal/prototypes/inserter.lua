@@ -28,7 +28,7 @@ data:extend({
     name = "omni-inserter",
     icon = "__omnimatter_crystal__/graphics/icons/omni-inserter.png",
     flags = {"placeable-neutral", "placeable-player", "player-creation"},
-    minable = {hardness = 0.2, mining_time = 0.5, result = "omni-inserter"},
+    minable = {mining_time = 0.5, result = "omni-inserter"},
     max_health = 150,
     allow_custom_vectors = true,
 	stack = true,

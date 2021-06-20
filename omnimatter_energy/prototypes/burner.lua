@@ -260,6 +260,7 @@ end
 
 BuildGen:import("assembling-machine-1"):
 	setBurner(0.9,1):
+	setEmissions(5.0):
 	setName("omnitor-assembling-machine"):
 	setIcons("omnitor-assembling-machine","omnimatter_energy"):
 	setEnabled(false):
@@ -305,6 +306,7 @@ end
 
 BuildGen:import("lab"):
 	setBurner(0.9):
+	setEmissions(2.0):
 	setName("omnitor-lab"):
 	setIcons("omnitor-lab","omnimatter_energy"):
 	setEnabled():

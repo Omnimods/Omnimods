@@ -23,7 +23,6 @@ armour[#armour+1]= {
   type = "item-group",
   name = "omnilogistics",
   order = "z",
-  inventory_order = "z",
   icon = "__omnimatter_logistics__/graphics/omnilogistics.png",
   icon_size = 128,
 }

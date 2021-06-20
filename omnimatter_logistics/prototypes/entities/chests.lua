@@ -77,7 +77,7 @@ if not mods["angelsindustries"] then --no need to add duplicates
       icon = "__omnimatter_logistics__/graphics/icons/chest-big-"..ctype.."-ico.png",
       icon_size = 32,
       flags = {"placeable-player", "player-creation"},
-      minable = {hardness = 0.2, mining_time = 0.5, result = "angels-logistic-chest-"..ctype},
+      minable = {mining_time = 0.5, result = "angels-logistic-chest-"..ctype},
       max_health = 350,
       corpse = "small-remnants",
       collision_box = {{-0.75, -0.75}, {0.75, 0.75}},
