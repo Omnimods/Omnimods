@@ -105,3 +105,7 @@ if data.raw.technology["omnitech-belt-logistics"] then
 		end
 	end
 end
+
+if mods['angelsindustries'] and angelsmods.industries.components then 
+	omni.lib.angels_component_patch()
+end
