@@ -52,30 +52,32 @@ if not mods["angelsindustries"] then --no need to add duplicates
     circuit_connector_sprites = omni.logistics.circuit_connector_definitions["angels-big-chest"].sprites,
     circuit_wire_max_distance = default_circuit_wire_max_distance
   }
-  for _,type in pairs(logistic_list) do
+  for _,ctype in pairs(logistic_list) do
     chests[#chests+1]={
       type = "item",
-      name = "angels-logistic-chest-"..type,
-      icon = "__omnimatter_logistics__/graphics/icons/chest-big-"..type.."-ico.png",
+      name = "angels-logistic-chest-"..ctype,
+      icon = "__omnimatter_logistics__/graphics/icons/chest-big-"..ctype.."-ico.png",
       icon_size = 32,
       subgroup = "omni-chests",
-      order = "b[angels-big-chest-"..type.."]",
-      place_result = "angels-logistic-chest-"..type,
+      order = "b[angels-big-chest-"..ctype.."]",
+      place_result = "angels-logistic-chest-"..ctype,
       stack_size = 50
     }
+
     local slot_count=nil --allow for special case of requester/storage having filters
-    if type=="requester" or type=="buffer" then
+    if ctype == "requester" or ctype == "buffer" then
       slot_count=12
-    elseif type=="storage" then
+    elseif ctype == "storage" then
       slot_count=1
     end
+
     chests[#chests+1]={
       type = "logistic-container",
-      name = "angels-logistic-chest-"..type,
-      icon = "__omnimatter_logistics__/graphics/icons/chest-big-"..type.."-ico.png",
+      name = "angels-logistic-chest-"..ctype,
+      icon = "__omnimatter_logistics__/graphics/icons/chest-big-"..ctype.."-ico.png",
       icon_size = 32,
       flags = {"placeable-player", "player-creation"},
-      minable = {hardness = 0.2, mining_time = 0.5, result = "angels-logistic-chest-"..type},
+      minable = {mining_time = 0.5, result = "angels-logistic-chest-"..ctype},
       max_health = 350,
       corpse = "small-remnants",
       collision_box = {{-0.75, -0.75}, {0.75, 0.75}},
@@ -93,14 +95,15 @@ if not mods["angelsindustries"] then --no need to add duplicates
       },
       fast_replaceable_group = "container",
       inventory_size = 60,
-      logistic_slots_count = slot_count,
-      logistic_mode = type,
+      --logistic_slots_count = slot_count,
+      max_logistic_slots = slot_count,
+      logistic_mode = ctype,
       open_sound = { filename = "__base__/sound/metallic-chest-open.ogg", volume=0.65 },
       close_sound = { filename = "__base__/sound/metallic-chest-close.ogg", volume = 0.7 },
       vehicle_impact_sound =  { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 },
       picture =
       {
-        filename = "__omnimatter_logistics__/graphics/entity/chests/chest-big-"..type..".png",
+        filename = "__omnimatter_logistics__/graphics/entity/chests/chest-big-"..ctype..".png",
         priority = "extra-high",
         width = 128,
         height = 128,

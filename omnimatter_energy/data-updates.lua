@@ -97,7 +97,7 @@ if mods["bobassembly"] and settings.startup["bobmods-assembly-burner"].value the
 	data.raw.technology["basic-automation"].localised_name = {"technology-name.omnitech-basic-automation"}
 	BuildGen:import("omnitor-assembling-machine"):
 		setSpeed(0.1):
-		setFuelCategory("omnite"):extend()
+		setFuelCategories("omnite"):extend()
 	if mods["angelsindustries"] and angelsmods.industries.components then
 		RecGen:import("burner-assembling-machine"):
 			setTechCost(15):extend()

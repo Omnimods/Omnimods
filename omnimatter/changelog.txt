@@ -1,9 +1,55 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.15
+Date: 2021.06.20
+  Features:
+    - Added pollution values for all buildings
+---------------------------------------------------------------------------------------------------
+Version: 4.1.14
+Date: 2021.06.02
+  Bugfixes:
+    - Updated crafting categories for crushing to match angels update
+---------------------------------------------------------------------------------------------------
+Version: 4.1.13
+Date: 2021.03.29
+  Bugfixes:
+    - Fixed that setting the levels of fluid extraction too high could cause a crash
+    - Fixed various tech tree issues caused by setting the max omnitractor tier to its lowest value
+---------------------------------------------------------------------------------------------------
+Version: 4.1.12
+Date: 2021.03.28
+  Changes:
+    - Moved all Pure omnitraction 1 tier up. You cant jump through impure omnitractions now :)
+    - Removed the "omnimatter-tier-impure-dependency" setting
+    - Removed the "omnimatter-tier-pure-dependency" setting
+    - Removed the "omnimatter-fluid-dependency" setting 
+    - Renamed "omnimatter-impure-lvl-per-tier" to o"mnimatter-impure-lvls", check your settings!
+---------------------------------------------------------------------------------------------------
+Version: 4.1.11
+Date: 2021.03.08
+  Info:
+    - Moved Angels component mode "omniblocks" from lib to matter
+  Bugfixes:
+    - Fixed various setting description typos and wrong numbers
+---------------------------------------------------------------------------------------------------
+Version: 4.1.10
+Date: 2021.02.25
+  Bugfixes:
+    - Fixed that oil-processing had a hidden prerequisite with certain mods
+---------------------------------------------------------------------------------------------------
+Version: 4.1.9
+Date: 2021.02.11
+  Info:
+    - Added omni.matter.add_ignore_resource(name) and omni.matter.remove_ignore_resource(name)
+    - Mods can access those to have control over what gets (not) ignored by our autoplace removal
+  Changes:
+    - Angels industries tech overhaul setting is now hidden and forced to false
+    - Various settings related to ore spawning that have no functionality with omni are now hidden
+---------------------------------------------------------------------------------------------------
 Version: 4.1.8
 Date: 2021.01.21
   Info:
     - Moved the following functions/ tables into omnimatters namespace
-    - (from omni.fname to omni.matter.fname) :
+      (from omni.fname to omni.matter.fname) :
     - omnisource, omnitial, omnifluid, add_resource(), remove_resource(), add_fluid(),
     - remove_fluid(), get_ore_tier(), set_ore_tier(), add_initial(), add_omniwater_extraction()
   Bugfixes:
@@ -17,7 +63,7 @@ Version: 4.1.7
 Date: 2021.01.08
   Bugfixes:
     - Fixed that the output of electric offshore pumps of some mods like K2 was not
-    -   - changed to omnic water
+      changed to omnic water
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.6
 Date: 2021.01.03
@@ -44,8 +90,8 @@ Date: 2020.12.23
     - Added omni.matter.remove_resource(name) and omni.matter.remove_fluid(name)
     - Added omni.matter.get_ore_tier(name) and omni.matter.set_ore_tier(name,tier)
     - Added omni.matter.add_initial(ore_name,ore_amount,omnite_amount) to add initial omnitractions
-    -   -This allows modders to easily manage for which resources extractions are being generated
-    -   -They can call omni.[add/remove]_[resource/fluid]()  in their data.lua to add omni compat
+      This allows modders to easily manage for which resources extractions are being generated
+      They can call omni.[add/remove]_[resource/fluid]()  in their data.lua to add omni compat
   Bugfixes:
     - Fixed a crash with mods that addd techs with an empty prereq table
     - Fixed burner omnitractor and burner omniphlog recipe order
@@ -99,13 +145,13 @@ Date: 2020.08.31
     - Renamed technology "base-impure-extraction" to "omnitech-base-impure-extraction"
     - Renamed technology "angels-omnicium-smelting-x" to "omnitech-angels-omnicium-smelting-x"
     - Renamed technology "angels-omnicium-iron-alloy-smelting" to 
-      - "omnitech-angels-omnicium-iron-alloy-smelting"
+      "omnitech-angels-omnicium-iron-alloy-smelting"
     - Renamed technology "angels-omnicium-steel-alloy-smelting" to 
-      - "omnitech-angels-omnicium-steel-alloy-smelting"
+      "omnitech-angels-omnicium-steel-alloy-smelting"
     - Renamed technology "angels-omnicium-aluminium-alloy-smelting" to 
-      - "omnitech-angels-omnicium-aluminium-alloy-smelting"
+      "omnitech-angels-omnicium-aluminium-alloy-smelting"
     - Renamed technology "angels-omnicium-tungsten-alloy-smelting" to 
-      - "omnitech-angels-omnicium-tungsten-alloy-smelting"
+      "omnitech-angels-omnicium-tungsten-alloy-smelting"
   Info:
     - This recipe change could require changes to early-game omnitraction setups on existing saves.
 ---------------------------------------------------------------------------------------------------
@@ -247,7 +293,8 @@ Version: 1.3.15
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.12
   Features:
-    - Fixed costs to be more automatable to make omnitractors, with it came added gear boxes to not lower the price of it.
+    - Fixed costs to be more automatable to make omnitractors, with it came added gear boxes to
+      not lower the price of it.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.10
   Bugfixes:
@@ -255,7 +302,8 @@ Version: 1.3.10
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.4
   Features:
-    - Introduces a new metal which is made from copper iron and omnite to use in all omni-related devices.
+    - Introduces a new metal which is made from copper iron and omnite to use in all omni-related
+      devices.
 ---------------------------------------------------------------------------------------------------
 Version: 1.2.0
   Features:
@@ -268,7 +316,8 @@ Version: 1.2.11
 ---------------------------------------------------------------------------------------------------
 Version: 1.2.9
   Features:
-    - Added special compatibility with omniwatter, when omniwater is present sulfur cannot be gotten through omnitractor tech. Has to use wastewater from omniwater
+    - Added special compatibility with omniwatter, when omniwater is present sulfur cannot be gotten
+      through omnitractor tech. Has to use wastewater from omniwater
     - Made fluid speed static.
 ---------------------------------------------------------------------------------------------------
 Version: 1.2.8
@@ -294,7 +343,8 @@ Version: 1.2.4
 ---------------------------------------------------------------------------------------------------
 Version: 1.2.3
   Bugfixes:
-    - Fixed where the omnitractor technologies didn't adhere to the constants of science packs like the extraction technologies.
+    - Fixed where the omnitractor technologies didn't adhere to the constants of science packs like
+      the extraction technologies.
 ---------------------------------------------------------------------------------------------------
 Version: 1.2.2
   Features:
@@ -329,7 +379,7 @@ Version: 1.1.7
     - Made it fit with the new additions.
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.6
-  features:
+  Features:
     - -Fixed AAI Industry incompatibility
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.5
@@ -338,7 +388,8 @@ Version: 1.1.5
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.4
   Bugfixes:
-    - Fixed issue when you play vanilla where recipes remained the same for impure extractions due to no other ores being present.
+    - Fixed issue when you play vanilla where recipes remained the same for impure extractions due
+      to no other ores being present.
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.3
   Bugfixes:
@@ -354,7 +405,7 @@ Version: 1.1.2
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.1
   Bugfixes:
-    - Think I finally resolved the migration issue, still advise against updating in general though.
+    - Finally resolved the migration issue, still advise against updating in general though.
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.0
   Bugfixes:
@@ -367,7 +418,7 @@ Version: 1.0.10
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.9
   Features:
-    - Added a setting such that the rocket silo tech can get locked behind all extraction technologies.
+    - Added a setting such that the rocket silo tech can get locked behind all extraction techs.
   Bugfixes:
     - Fixed the migration so it does it properly
 ---------------------------------------------------------------------------------------------------
@@ -378,7 +429,8 @@ Version: 1.0.8
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.7
   Bugfixes:
-    - Fixed Stone reproessing, it is no longer progressive but a steady one that at half way through Omnic acid tech gives a net gain in omnite.
+    - Fixed Stone reproessing, it is no longer progressive but a steady one that at half way
+      through Omnic acid tech gives a net gain in omnite.
     - Fixed Icon bug.
     - Fixed so last tech is more expensive than the second to last.
 ---------------------------------------------------------------------------------------------------
@@ -406,13 +458,15 @@ Version: 1.0.1
 Version: 1.0.0
   Features:
     - Big release!
-    - Added configuration options that makes you able to change the appearence of the tech tree and difficulty!
-    - Changed the manner which omniston is made and made a way to turn all that excess stone into omnite again, at a loss over all but better than nothing right?
+    - Added configuration options that makes you able to change the appearence of the tech tree
+      and difficulty!
+    - Changed the manner which omniston is made and made a way to turn all that excess stone into
+      omnite again, at a loss over all but better than nothing right?
   Bugfixes:
     - Fixed a few mishaps of forgetting things
-      - bobs alone not getting lithia water
-      - Sulfur still appearing
-      - Fixed the gem stones of bobs to not clutter it and make more sense.
+    - bobs alone not getting lithia water
+    - Sulfur still appearing
+    - Fixed the gem stones of bobs to not clutter it and make more sense.
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.7
   Bugfixes:

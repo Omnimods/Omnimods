@@ -1,8 +1,9 @@
 {
 "name":"omnimatter_compression",
-"version": "4.1.5",
+"version": "4.1.7",
 "title":"Omnicompression",
 "author":"EmperorZelos",
+"contact": "https://discord.gg/WQYks7W",
 "description":"Adds compressed items, buildings and recipes that uses compressed items.",
 "factorio_version":"1.1",
 "dependencies":[

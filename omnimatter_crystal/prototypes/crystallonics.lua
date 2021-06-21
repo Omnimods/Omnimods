@@ -40,7 +40,9 @@ RecGen:create("omnimatter_crystal","hydromnic-acid"):
 BuildGen:create("omnimatter_crystal","omniplant"):
 	noTech():
 	setBurner(0.75,2):
+	setEmissions(3.5):
 	setSubgroup("omniplant"):
+	setOrder("a[omniplant-burner]"):
 	setIngredients(burner_ings):
 	setEnergy(5):
 	setUsage(function(level,grade) return "750kW" end):
@@ -111,6 +113,7 @@ BuildChain:create("omnimatter_crystal","omniplant"):
 	setIngredients(cost_plant:ingredients()):
 	setEnergy(5):
 	setUsage(function(level,grade) return (200+50*grade).."kW" end):
+	setEmissions(function(level,grade) return math.max(2.6 - ((grade-1) * 0.2), 0.1) end):
 	setTechPrereq(get_pure_req):
 	addElectricIcon():
 	setTechName(function(levels,grade) if grade == 1 then return "omnitech-omnic-acid-hydrolyzation-1" else return "omnitech-crystallology" end end):
@@ -162,6 +165,7 @@ BuildChain:create("omnimatter_crystal","crystallomnizer"):
 	setIngredients(cost_omnizer:ingredients()):
 	setEnergy(5):
 	setUsage(function(level,grade) return (200+50*grade).."kW" end):
+	setEmissions(function(level,grade) return math.max(2.0 - ((grade-1) * 0.2), 0.1) end):
 	setTechPrereq(get_pure_req):
 	addElectricIcon():
 	allowProductivity():
@@ -254,7 +258,7 @@ RecGen:create("omnimatter_crystal","omnine-distillation-slow"):
 	setIngredients({type = "fluid", name = "omnisludge", amount=2000}):
 	setResults({type = "item", name = "omnine", amount=1}):extend()
 
-local cat = "ore-sorting-t1"
+local cat = "ore-refining-t1"
 if not mods["angelsrefining"] then cat = nil end
 RecGen:create("omnimatter_crystal","omnine-shards"):
 	setSubgroup("omnine"):
@@ -275,7 +279,7 @@ RecGen:create("omnimatter_crystal","omnine-shards"):
 --[[                         ]]
 
 local crystal_cat = "crystallomnizer"
-if mods["bobmods"] or (mods["angelsindustries"] and angelsmods.industries and angelsmods.industries.overhaul) then
+if mods["bobplates"] or (mods["angelsindustries"] and angelsmods.industries and angelsmods.industries.overhaul) then
   ore_circuit = "lead-ore"
   cry_rod = "tin-ore-crystal"
 else
@@ -339,7 +343,7 @@ RecChain:create("omnimatter_crystal","pseudoliquid-amorphous-crystal"):
 			req={"omnitech-pseudoliquid-amorphous-crystal-"..grade-1}
 		end
 		local c = omni.lib.round(levels/3)
-		if grade%c==0 and grade>1 then
+		if grade%c==0 and grade>1 and grade <= omni.max_tier then
 			req[#req+1]="omnitech-crystallonics-"..math.floor(grade/c)+1
 		end
 		return req

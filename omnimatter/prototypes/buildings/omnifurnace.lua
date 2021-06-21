@@ -1,6 +1,8 @@
 BuildGen:create("omnimatter","omni-furnace"):
+  setBurner(1,1):
   noTech():
 	setEnergy(5):
+  setEmissions(2.0):
 	setIngredients({ "omnicium-plate", 5},{ "omnite-brick", 5},{ "stone-furnace", 1}):
 	setStacksize(20):
 	setSubgroup("omni-buildings"):
@@ -8,7 +10,6 @@ BuildGen:create("omnimatter","omni-furnace"):
 	setCrafting("smelting","omnifurnace"):
 	setUsage(45):
 	setEnabled():
-	setBurner(1,1):
 	setAnimation({
       layers = {
         {

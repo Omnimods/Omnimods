@@ -163,39 +163,6 @@ if angelsmods and angelsmods.petrochem then
 	if not mods["omnimatter_water"] and not mods["pypetroleumhandling"] then omni.matter.add_resource("sulfur",2) end
 end
 
-for i,tech in pairs(data.raw.technology) do
-	if string.find(tech.name,"pumpjack") then
-		--table.remove(data.raw.technology,i)
-		data.raw.technology[tech.name].enabled=false
-	elseif tech.prerequisites and next(tech.prerequisites) then
-		for j=1,#tech.prerequisites do
-			if tech.prerequisites[j] and string.find(tech.prerequisites[j],"pumpjack") then
-				data.raw.technology[tech.name].prerequisites[j]=nil
-			end
-		end
-		if tech and tech.effects then
-			for i,eff in pairs(tech.effects) do
-				if eff.type == "unlock-recipe" and string.find(eff.recipe,"pumpjack") then
-					table.remove(data.raw.technology[tech.name].effects,i)
-				end
-			end
-		end
-	end
-end
-for _,recipe in pairs(data.raw.recipe) do
-	if (recipe.result and string.find(recipe.result,"pumpjack"))
-	or (recipe.results and recipe.results[1] and recipe.results[1].name
-		and string.find( recipe.results[1].name,"pumpjack")) then
-		data.raw.recipe[recipe.name].enabled=false
-	end
-end
-for _, item in pairs(data.raw.item) do
-	if string.find(item.name,"pumpjack") then
-		--data.raw.item[item.name]=nil
-		--data.raw["mining-drill"][item.place_result]=nil
-	end
-end
-
 ----------------------------------------------------------------------------
 -- Add vanilla resources --
 ----------------------------------------------------------------------------

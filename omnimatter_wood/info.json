@@ -1,8 +1,9 @@
 {
 "name":"omnimatter_wood",
-"version": "4.1.1",
+"version": "4.1.4",
 "title":"Omniwood",
 "author":"EmperorZelos",
+"contact": "https://discord.gg/WQYks7W",
 "description":"Adds a wood production method for omnimatter",
 "factorio_version":"1.1",
 "dependencies":[

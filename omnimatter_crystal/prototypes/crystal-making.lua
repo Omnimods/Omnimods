@@ -59,7 +59,7 @@ omni.crystal.add_crystal=function(metal,name,recipe)
 		omni.crystal.metals[#omni.crystal.metals+1]=data.raw.item[metal]
 
 		RecGen:create("omnimatter_crystal",metal.."-crystal"):
-			setLocName("crystal",name):
+			setLocName("recipe-name.crystal",name):
 			setFuelValue(35):
 			setFuelCategory("crystal"):
 			setSubgroup("crystallization"):
@@ -85,7 +85,7 @@ omni.crystal.add_crystal=function(metal,name,recipe)
 
 
 		RecGen:create("omnimatter_crystal",metal.."-omnide-solution"):
-			setLocName("ore-solvation",name):
+			setLocName("recipe-name.ore-solvation",name):
 			fluid():
 			setBothColour(1,1,1):
 			setSubgroup("solvation"):
@@ -102,7 +102,7 @@ omni.crystal.add_crystal=function(metal,name,recipe)
 			setEnergy(2.5):extend()
 
 		RecGen:create("omnimatter_crystal",metal.."-crystal-omnitraction"):
-			setLocName("crystal-omnitraction","item-name."..metal):
+			setLocName("recipe-name.crystal-omnitraction","item-name."..metal):
 			setSubgroup("traction"):
 			setOrder("a["..metal.."-crystal-omnitraction]"):
 			marathon():

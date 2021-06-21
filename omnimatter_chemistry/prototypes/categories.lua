@@ -4,7 +4,6 @@ data:extend(
     type = "item-group",
     name = "omnichem",
     order = "z",
-    inventory_order = "z",
     icon = "__omnimatter_chemistry__/graphics/technology/omnichem.png",
 	icon_size = 128,
   },

@@ -1,4 +1,41 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.12
+Date: 2021.06.20
+  Features:
+    - Added setEmmisions() to set emmision_per_minute for entities
+  Bugfixes:
+    - Fixed omni.lib.replace_recipe_result() crashing with amount_min and amount_max recipes
+    - Fixed omni.lib.multiply_recipe_result() crashing with amount_min and amount_max recipes
+---------------------------------------------------------------------------------------------------
+Version: 4.1.11
+Date: 2021.06.04
+  Changes:
+    - Recipe standardisation now nils empty main_product strings to avoid errors in recipe gen.
+---------------------------------------------------------------------------------------------------
+Version: 4.1.10
+Date: 2021.03.11
+  Bugfixes:
+    - Fixed a concat typo in omni.lib.add_science_pack() causing a crash in rare cases
+---------------------------------------------------------------------------------------------------
+Version: 4.1.9
+Date: 2021.03.08
+  Info:
+    - Moved Angels component mode "omniblocks" from lib to matter
+  Bugfixes:
+    - Fixed TechGen:setIcons() ignoring tech.icon_size when tech.icons is set
+---------------------------------------------------------------------------------------------------
+Version: 4.1.8
+Date: 2021.02.25
+  Features:
+    - Added omni.lib.recipe_result_contains_string(recipename, string)
+---------------------------------------------------------------------------------------------------
+Version: 4.1.7
+Date: 2021.02.11
+  Bugfixes:
+    - Fixed source_inventory_size, result_inventory_size, ingredient_count and result_count
+    - -defaultring to 3 on BuildGen:import() when not set
+    - Fixed a crash that could happen with recipes that had an empty main_product string set
+---------------------------------------------------------------------------------------------------
 Version: 4.1.6
 Date: 2021.01.21
   Info:
@@ -21,7 +58,7 @@ Version: 4.1.4
 Date: 2021.01.04
   Bugfixes:
     - Fixed that omni.lib.replace_prerequisite() did not check if the tech already required 
-    -   - the new prerequisite
+      the new prerequisite
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.3
 Date: 2021.01.03
@@ -184,7 +221,8 @@ Date: 2020.04.16
 Version: 3.18.4
 Date: 2020.04.14
   Bugfixes:
-    - Fixed that recipe-standard function was forcing icon overrides even when not needed, causing icon size mismatch
+    - Fixed that recipe-standard function was forcing icon overrides even when not needed,
+      causing icon size mismatch
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.3
 Date: 2020.04.13

@@ -1,8 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.4
+Date: 2021.06.20
+  Bugfixes:
+    - Fixed a crash with BioIndustries due to a renamed icon
+---------------------------------------------------------------------------------------------------
 Version: 4.1.3
 Date: 2020.12.23
   Changes:
-      - Nerfed the fuel values of omniwood, wood and omniseedling by 30%
+    - Nerfed the fuel values of omniwood, wood and omniseedling by 30%
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.2
 Date: 2020.12.16
@@ -132,7 +137,8 @@ Version: 0.1.9
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.8
   Bugfixes:
-    - Fixed the time to make seedlings when bobs greenhouses are active. Reduced it to be 2 seconds instead of 20.
+    - Fixed the time to make seedlings when bobs greenhouses are active.
+      Reduced it to be 2 seconds instead of 20.
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.7
   Bugfixes:
@@ -154,7 +160,7 @@ Version: 0.1.4
 Version: 0.1.3
   Features:
     - Finally an update
-    - Added compatibility with bobs greenhouses, have both if you want a real challange in wood production.
+    - Added compatibility with bobs greenhouses, have both for a real challange in wood production.
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.2
   Bugfixes:
@@ -162,7 +168,8 @@ Version: 0.1.2
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.1
   Features:
-    - Configured so one can choose when the initial wood mutation is profitable energy wise with respect to omnic acid production.
+    - Configured so one can choose when the initial wood mutation is profitable energy wise with
+      respect to omnic acid production.
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.0
   Features:

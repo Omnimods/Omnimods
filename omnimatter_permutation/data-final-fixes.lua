@@ -3,7 +3,6 @@ data:extend({
     type = "item-group",
     name = "omnipermutation",
     order = "z",
-    inventory_order = "z",
     icon = "__omnimatter_permutation__/graphics/permutation.png",
 	icon_size = 128,
   }

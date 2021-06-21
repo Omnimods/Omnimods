@@ -12,6 +12,7 @@ omni.science.exclude_tech = {}
 omni.science.remaining_techs = {}
 --add techs to omni-pack exclusion list (this is to simplify the below tech_post_find_update function)
 local build_tech_list = function()
+  log("Building technology list")
   for _,tech in pairs(data.raw.technology) do
   -- if modules
     if string.find(tech.name,"-module") or tech.name == "module-merging" then
@@ -53,6 +54,7 @@ function omni.science.omnipack_tech_post_update()
 
   local index = 0
   --Repeat looping through omni.science.remaining_tech until its empty
+  log("Adding Omni packs to technologies.")
   while next(omni.science.remaining_techs) do
 
     index = index +1
@@ -178,6 +180,7 @@ end
 ------------------
 omni.science.tech_list = { name = {}, cost = {}, height = {}} --list of tech and key properties
 function omni.science.tech_updates()
+  log("Updating technology costs.")
 	local tech_list = omni.science.tech_list
 	local check_techs = {} --list of checks
 	--tech_list.name={}
@@ -271,7 +274,9 @@ function omni.science.tech_updates()
 					else
 						local lv = 1
             local t = techno.prerequisites[1]
+            local count = 0
 						while data.raw.technology[t].prerequisites and #data.raw.technology[t].prerequisites >= 1 do
+              if count > 100 then error("Technology loop detected with:"..data.raw.technology[t].name) end
               if data.raw.technology[t].prerequisites[1] == nil then --what the heck is going on here
                 log("nil detected in pre-req table of "..t)
                 log(serpent.block(data.raw.technology[t].prerequisites))
@@ -279,6 +284,7 @@ function omni.science.tech_updates()
               else
                 lv = lv+1
                 t = data.raw.technology[t].prerequisites[1]
+                count = count + 1
               end
 						end
 						cost = cost*(math.pow(1+chain*c/(c+1),1+lv/(lv+1)))

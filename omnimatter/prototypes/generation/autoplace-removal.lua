@@ -1,17 +1,10 @@
 ---------------------
 --Autoplace Removal--
 ---------------------
---remove everything that is not on this whitelist from all autoplace controls
-local ores_to_keep ={
-	"omnite",
-	"infinite-omnite",
-	"trees",
-	"enemy-base"
-}
 
 --autoplace-control
 for _,ore in pairs(data.raw["autoplace-control"]) do
-	if ore.category  and ore.category  == "resource" and ore.name and not omni.lib.is_in_table(ore.name, ores_to_keep) then
+	if ore.category  and ore.category  == "resource" and ore.name and not omni.lib.is_in_table(ore.name, omni.matter.res_to_keep) then
 		data.raw["autoplace-control"][ore.name] = nil
 		--log("Removed "..ore.name.." from autoplace control")
 	end
@@ -21,7 +14,7 @@ end
 for _,preset in pairs(data.raw["map-gen-presets"]["default"]) do
 	if type(preset) == "table" and preset.basic_settings and preset.basic_settings.autoplace_controls then
 		for ore_name,ore in pairs(preset.basic_settings.autoplace_controls) do
-			if ore_name and not omni.lib.is_in_table(ore_name, ores_to_keep) then
+			if ore_name and not omni.lib.is_in_table(ore_name, omni.matter.res_to_keep) then
 				preset.basic_settings.autoplace_controls[ore_name] = nil
 				--log("Removed "..ore_name.." ´s autoplace controls from presets")
 			end
@@ -31,7 +24,7 @@ end
 
 --resources
 for _,ore in pairs(data.raw["resource"]) do
-	if ore.autoplace and ore.name and not omni.lib.is_in_table(ore.name, ores_to_keep) then
+	if ore.autoplace and ore.name and not omni.lib.is_in_table(ore.name, omni.matter.res_to_keep) then
 		data.raw["resource"][ore.name].autoplace = nil
 		--log("Removed "..ore.name.." ´s resource autoplace")
 	end

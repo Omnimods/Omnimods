@@ -399,6 +399,8 @@ function omni.lib.replace_recipe_result(recipename, result, replacement)
         if type(replacement) == "table" then
             repname = replacement.name or replacement[1]
             repamount = replacement.amount or replacement[2]
+            repamount_min = replacement.amount_min
+            repamount_max = replacement.amount_max
             reptype = replacement.type
         else
             repname = replacement
@@ -415,58 +417,80 @@ function omni.lib.replace_recipe_result(recipename, result, replacement)
         end
 
         --rec.results
+        --Move all results tables into a combined one
         local ress = {}
         if rec.results then ress[#ress+1] = rec.results end
         if rec.normal and rec.normal.results then ress[#ress+1] = rec.normal.results end
         if rec.expensive and rec.expensive.results then ress[#ress+1] = rec.expensive.results end
-
         for _,diff in pairs(ress) do
             local found = false
             local num = 0
             --create a new variable that gets reset to repamount for each diff
             local amount = repamount
-            --check if the replacement is already an result
+            local amount_min = replacement.amount_min
+            local amount_max = replacement.amount_max
+
+            --check if the replacement is already an result, add up the current amount
             for i,res in pairs(diff) do
                 if (res.name or res[1]) == repname then        
                     found = true
                     num=i
-                    amount = (repamount or 1) + (res.amount or res[2])
+                    if res.amount_min or res.amount_max then
+                        amount_min = (amount_min or 0) + res.amount_min
+                        amount_max = (amount_max or 0) + res.amount_max
+                    else
+                        amount = (repamount or 0) + (res.amount or res[2])
+                    end
                     break
                 end
             end
 
+            --Check all results to find the one that has to be replaced
             for i,res in pairs(diff) do
                 --check if nametags exist (only check res[i] when no name tags exist)
                 if res.name and res.name == result then
+                    --if the replacement was found above, set the calculated amount and nil this result, otherwise replace the result
                     if found then
-                        if diff[num].amount then
+                        if diff[num].amount_min or diff[num].amount_max then
+                            diff[num].amount_min = amount_max
+                            diff[num].amount_max = amount_min
+                        elseif diff[num].amount then
                             diff[num].amount = amount          
                         else        
-                            diff[num][2] = repamount
+                            diff[num][2] = amount
                         end
                         diff[i] = nil
                     else
                         res.name = repname
-                        res.amount = repamount or res.amount
-                        res.type = reptype or res.type  
+                        res.type = reptype or res.type
+                        if res.amount_min or res.amount_max then
+                            res.amount_min = amount_min or res.amount_min
+                            res.amount_max = amount_max or res.amount_max
+                        else
+                            res.amount = amount or res.amount
+                        end
                     end
                     break
                 elseif not res.name and res[1] and res[1] == result then
                     if found then
-                        if diff[num].amount then
+                        if diff[num].amount_min or diff[num].amount_max then
+                            diff[num].amount_min = amount_max
+                            diff[num].amount_max = amount_min
+                        elseif diff[num].amount then
                             diff[num].amount = amount          
                         else        
-                            diff[num][2] = repamount
+                            diff[num][2] = amount
                         end
                         diff[i] = nil
                     else
                         res[1] = repname
-                        res[2] = repamount or res[2]
+                        res[2] = amount or res[2]
                     end
                     break
                 end
             end
         end
+        
         --Check if the main product was replaced
         if rec.main_product and rec.main_product == result then
             rec.main_product = repname
@@ -648,7 +672,12 @@ function omni.lib.multiply_recipe_result(recipename, result, mult)
                 --check if nametags exist (only check res[i] when no name tags exist)
                 if res.name then
                     if res.name == result then
-                        res.amount = omni.lib.round(res.amount * mult)
+                        if res.amount_min or res.amount_max then
+                            res.amount_min = omni.lib.round(res.amount_min * mult)
+                            res.amount_max = omni.lib.round(res.amount_max * mult)
+                        else
+                            res.amount = omni.lib.round(res.amount * mult)
+                        end
                         break
                     end
                 elseif res[1] and res[1] == result then
@@ -663,7 +692,12 @@ function omni.lib.multiply_recipe_result(recipename, result, mult)
                 --check if nametags exist (only check res[i] when no name tags exist)
                 if res.name then
                     if res.name == result then
-                        res.amount = omni.lib.round(res.amount * mult)
+                        if res.amount_min or res.amount_max then
+                            res.amount_min = omni.lib.round(res.amount_min * mult)
+                            res.amount_max = omni.lib.round(res.amount_max * mult)
+                        else
+                            res.amount = omni.lib.round(res.amount * mult)
+                        end
                         break
                     end
                 elseif res[1] and res[1] == result then
@@ -751,6 +785,24 @@ function omni.lib.recipe_result_contains(recipename, itemname)
         end 
         return nil
     end
+end
+
+--Checks if a recipe contains an item that contains the specified string in its name
+function omni.lib.recipe_result_contains_string(recipename, string)
+    local items_to_check = {}
+    --find all items that contain the specified string
+    for _, it in pairs(data.raw.item) do
+        if string.find(it.name, string) then
+            items_to_check[#items_to_check+1] = it.name
+        end
+    end
+    --check if the given recipe contains one of the items in our list
+    for _, it in pairs(items_to_check) do
+        if omni.lib.recipe_result_contains(recipename, it) then
+            return true
+        end
+    end
+    return nil
 end
 
 function omni.lib.get_tech_name(recipename)

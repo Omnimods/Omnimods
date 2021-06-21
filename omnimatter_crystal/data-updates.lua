@@ -113,24 +113,39 @@ if not mods["angelsrefining"] then
 		end
 	end
 
+	--Copy all smelting / processing recipes, make a copy and replace the ore ingredient with crystal-powder (exclude salting recipes!!!)
 	for _,rec in pairs(data.raw.recipe) do
-		for _,ore in pairs(added_ores) do
-			--Copy all smelting / processing recipes, make a copy and replace the ore ingredient with crystal-powder (exclude salting recipes!!!)
-			if omni.lib.recipe_ingredient_contains(rec.name, ore) and rec.subgroup~="salting" then --and (string.find(rec.name, "plate") or string.find(rec.name, "processing") ) then
-				local metal = string.gsub(ore,"-ore","")
+		if rec.subgroup ~= "salting" and not string.find(rec.name, "crystal%-powder") then
+			local found = false
+			--Check if the recipe contains any ores
+			for _,ore in pairs(added_ores) do
+				if omni.lib.recipe_ingredient_contains(rec.name, ore) then
+					found = true
+					break
+				end	
+			end
 
-				--Check if its already a crystal-powder recipe (recipes with multiple ores as ingredients) to avoid the creation of nested powder recipes
-				local r= RecGen:import(rec)
-				if not string.find(rec.name, "crystal%-powder") then
-					r:setName("crystal-powder-"..rec.name)
-				end
-				r:replaceIngredients(ore, "crystal-powder-"..metal):
+			--If yes, copy the recipe
+			if found == true then
+				local r = RecGen:import(rec)
+				local iproto = omni.lib.find_prototype(rec.name)
+				r:setName("crystal-powder-"..rec.name):
+				setLocName({"recipe-name.crystalline", omni.lib.locale.of(rec).name}):
 				setEnabled(false):
-				setLocName({"recipe-name.crystalline", omni.lib.locale.of(rec).name })
-				if (rec.hidden and rec.hidden == true) or (rec.normal and rec.normal.hidden and rec.normal.hidden ==true) then
-					r:setHidden(rec.hidden)
-				else
-					r:setTechName(omni.lib.get_tech_name(ore.."-crystal"))
+				setOrder((rec.order or (iproto and iproto.order) or "ab-") .. "[crystalline]")
+
+				--Check the recipe ingredients for all ores and replace them with powder
+				for _,ore in pairs(added_ores) do
+					if omni.lib.recipe_ingredient_contains(rec.name, ore) then
+						local metal = string.gsub(ore,"-ore","")
+						r:replaceIngredients(ore, "crystal-powder-"..metal)
+
+						if (rec.hidden and rec.hidden == true) or (rec.normal and rec.normal.hidden and rec.normal.hidden ==true) then
+							r:setHidden(rec.hidden)
+						else
+							r:setTechName(omni.lib.get_tech_name(ore.."-crystal"))
+						end
+					end
 				end
 				r:extend()
 			end

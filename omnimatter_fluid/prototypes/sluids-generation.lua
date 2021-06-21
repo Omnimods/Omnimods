@@ -768,16 +768,16 @@ for _, boiler in pairs(data.raw.boiler) do
 	end
 
 	if not forbidden_boilers[boiler.name] and data.raw.fluid[boiler.fluid_box.filter] and data.raw.fluid[boiler.fluid_box.filter].heat_capacity and boiler.minable then
-		local rec = omni.lib.find_recipe(boiler.minable.result)
-		new_boiler[#new_boiler+1] = {
+		local rec = omni.lib.find_recipe(boiler.minable.result or boiler.name)
+		new_boiler[#new_boiler+1]={
 			type = "recipe-category",
 			name = "boiler-omnifluid-"..boiler.name,
 		}
 		if standardized_recipes[rec.name] == nil then
 			omni.lib.standardise(data.raw.recipe[rec.name])
 		end
-		fix_boilers_recipe[#fix_boilers_recipe+1] = rec.name
-		fix_boilers_item[boiler.minable.result] = true
+		fix_boilers_recipe[#fix_boilers_recipe+1]=rec.name
+		fix_boilers_item[omni.lib.find_prototype(boiler.minable.result or rec.normal.results[1].name)]=true
 
 		data.raw.recipe[rec.name].normal.results[1].name = boiler.name.."-converter"
 		data.raw.recipe[rec.name].normal.main_product = boiler.name.."-converter"
@@ -840,70 +840,57 @@ for _, boiler in pairs(data.raw.boiler) do
 		loc_key = {"entity-name."..boiler.name}
 		forbidden_assembler[boiler.name.."-converter"] = true
 		local new = {
-			type = "assembling-machine",
-			name = boiler.name.."-converter",
-			localised_name = {"entity-name.boiler-converter", loc_key},
-			icon = boiler.icon,
-			icons = boiler.icons,
-			icon_size = boiler.icon_size or 32,
-			flags = {"placeable-neutral","placeable-player", "player-creation"},
-			minable = {hardness = 0.2, mining_time = 0.5, result = boiler.name.."-converter"},
-			max_health = 300,
-			corpse = "big-remnants",
-			dying_explosion = "medium-explosion",
-			collision_box = {{-1.29, -1.29}, {1.29, 1.29}},
-			selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
+		type = "assembling-machine",
+		name = boiler.name.."-converter",
+		localised_name = {"entity-name.boiler-converter", loc_key},
+		icon = boiler.icon,
+		icons = boiler.icons,
+		icon_size = boiler.icon_size or 32,
+		flags = {"placeable-neutral","placeable-player", "player-creation"},
+		minable = {mining_time = 0.5, result = boiler.name.."-converter"},
+		max_health = 300,
+		corpse = "big-remnants",
+		dying_explosion = "medium-explosion",
+		collision_box = {{-1.29, -1.29}, {1.29, 1.29}},
+		selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
 
-			animation = make_4way_animation_from_spritesheet({
-				layers = {
-					{
-						filename = "__omnimatter_fluid__/graphics/boiler-off.png",
-						width = 160,
-						height = 160,
-						frame_count = 1,
-						shift = util.by_pixel(-5, -4.5),
-					},
-				}
-			}),
-			working_visualisations = {
-				{
-					north_position = util.by_pixel(30, -24),
-					west_position = util.by_pixel(1, -49.5),
-					south_position = util.by_pixel(-30, -48),
-					east_position = util.by_pixel(-11, -1),
-					apply_recipe_tint = "primary",
-					{
-						apply_recipe_tint = "tertiary",
-						north_position = {0, 0},
-						west_position = {0, 0},
-						south_position = {0, 0},
-						east_position = {0, 0},
-						north_animation = {
-							filename = "__omnimatter_fluid__/graphics/boiler-north-off.png",
-							frame_count = 1,
-							width = 160,
-							height = 160,
-						},
-						east_animation = {
-							filename = "__omnimatter_fluid__/graphics/boiler-east-off.png",
-							frame_count = 1,
-							width = 160,
-							height = 160,
-						},
-						west_animation = {
-							filename = "__omnimatter_fluid__/graphics/boiler-west-off.png",
-							frame_count = 1,
-							width = 160,
-							height = 160,
-						},
-						south_animation = {
-							filename = "__omnimatter_fluid__/graphics/boiler-south-off.png",
-							frame_count = 1,
-							width = 160,
-							height = 160,
-						}
-					}
-				}
+		animation = make_4way_animation_from_spritesheet({ layers =
+		{
+		  {
+			filename = "__omnimatter_fluid__/graphics/boiler-off.png",
+			width = 160,
+			height = 160,
+			frame_count = 1,
+			shift = util.by_pixel(-5, -4.5),
+		  },
+		}}),
+		working_visualisations =
+		{
+		  {
+			north_position = util.by_pixel(30, -24),
+			west_position = util.by_pixel(1, -49.5),
+			south_position = util.by_pixel(-30, -48),
+			east_position = util.by_pixel(-11, -1),
+			apply_recipe_tint = "primary",
+		  {
+			apply_recipe_tint = "tertiary",
+			north_position = {0, 0},
+			west_position = {0, 0},
+			south_position = {0, 0},
+			east_position = {0, 0},
+			north_animation =
+			{
+			  filename = "__omnimatter_fluid__/graphics/boiler-north-off.png",
+			  frame_count = 1,
+			  width = 160,
+			  height = 160,
+			},
+			east_animation =
+			{
+			  filename = "__omnimatter_fluid__/graphics/boiler-east-off.png",
+			  frame_count = 1,
+			  width = 160,
+			  height = 160,
 			},
 			vehicle_impact_sound =  { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 },
 			working_sound =

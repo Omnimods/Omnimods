@@ -1,9 +1,19 @@
 omni.matter.omnitial = {}
 omni.matter.omnisource = {}
 omni.matter.omnifluid = {}
+omni.matter.res_to_keep = {
+	"omnite",
+	"infinite-omnite",
+	"trees",
+	"enemy-base"
+}
 
+--------------------------
+---Extraction functions---
+--------------------------
 --Manipulation of the extraction tables
 --Open for modders to use to add compatibility
+
 function omni.matter.add_resource(n, t, s, m)
 	if not omni.matter.omnisource[tostring(t)] then omni.matter.omnisource[tostring(t)] = {} end
 	omni.matter.omnisource[tostring(t)][n]={mod=m, tier = t, name = n, techicon = s}
@@ -138,29 +148,53 @@ function omni.matter.add_omnicium_alloy(name,plate,ingot)
   if #reg > 0 then data:extend(reg) end
 end
 
+function omni.matter.get_tier_mult(levels,r,c)
+	local peak = math.floor(levels/2)+1.5 --1
+	if r==1 and c==1 then
+		return 1
+	elseif r==c and r<=peak then
+		return omni.pure_tech_level_increase
+	elseif r>peak and c==2*peak-r+levels%2 then
+		return -omni.pure_tech_level_increase
+	else
+		local val = omni.matter.get_tier_mult(levels,r-1,c)+omni.matter.get_tier_mult(levels,r,c+1)
+		return val
+	end
+end
+
 function omni.matter.add_omniwater_extraction(mod, element, lvls, tier, gain, starter_recipe)
+
 	local function get_prereq(grade,element,tier)
 		local req = {}
-		local tractor_lvl = ((grade-1)/omni.fluid_levels_per_tier)+tier-1 
+		--local tractor_lvl = math.floor((grade-1) / omni.fluid_levels_per_tier) * tier
+		local tractor_lvl = math.floor((grade-1) / omni.fluid_levels_per_tier) + tier - 1
+
+		-- Add basic omnitraction as prereq if grade and tier == 1
+		if grade == 1 and tier == 1 then
+			req[#req+1]="omnitech-base-impure-extraction"
+		end
 		--Add previous tech as prereq if its in the same tier
-		if grade > 1 and grade%omni.fluid_levels_per_tier~=1 then
+		if grade > 1 and grade%omni.fluid_levels_per_tier ~= 1 then
 			req[#req+1]="omnitech-"..element.."-omnitraction-"..(grade-1)
 		end
 		--Add an electric omnitractor tech as prereq if this is the first tech of a new tier
-		if grade%omni.fluid_levels_per_tier== 1 and (tractor_lvl <=omni.max_tier) and (tractor_lvl >= 1)then
+		if grade%omni.fluid_levels_per_tier == 1 and (tractor_lvl <=omni.max_tier) and (tractor_lvl >= 1) then
 			req[#req+1]="omnitech-omnitractor-electric-"..tractor_lvl
-			--Add the last tech as prereq for this omnitractor tech
-			if (grade-1) > 0 then
-				omni.lib.add_prerequisite("omnitech-omnitractor-electric-"..tractor_lvl, "omnitech-"..element.."-omnitraction-"..(grade-1), true)
-			end
+		--Add the last tech of a tier as prereq for the next omnitractor
+		elseif grade > 0 and grade%omni.fluid_levels_per_tier == 0 and (tractor_lvl+1 <=omni.max_tier) then
+			omni.lib.add_prerequisite("omnitech-omnitractor-electric-"..tractor_lvl+1, "omnitech-"..element.."-omnitraction-"..(grade), true)	
 		end
+		--Add the last tier as prereq for the rocket silo if its the highest tier
+		if omni.rocket_locked and tractor_lvl >= omni.max_tier and grade == lvls then
+			omni.lib.add_prerequisite("rocket-silo", "omnitech-"..element.."-omnitraction-"..grade,true)
+	  	end
 		return req
 	end
-	
+
 	local function get_tech_packs(grade,tier)
 		local packs = {}
 		local pack_tier = math.ceil(grade/omni.fluid_levels_per_tier) + tier-1
-		for i=1,pack_tier do
+		for i=1, math.min(pack_tier, #omni.sciencepacks) do
 			packs[#packs+1] = {omni.sciencepacks[i],1}
 		end
 		return packs
@@ -168,7 +202,7 @@ function omni.matter.add_omniwater_extraction(mod, element, lvls, tier, gain, st
 
 	local function get_tech_cost(levels,grade,tier,start,constant)
 		local lvl = grade + (tier-1) * omni.fluid_levels_per_tier
-		return  start*lvl + constant*lvl*get_tier_mult(levels,grade,1)
+		return  start*lvl + constant*lvl*omni.matter.get_tier_mult(levels,grade,1)
 	end
 
 	--Starter recipe
@@ -215,6 +249,23 @@ function omni.matter.add_omniwater_extraction(mod, element, lvls, tier, gain, st
 		setTechLocName("omnitech-omniwater-omnitraction",{"fluid-name."..element}):
 		extend()
 
-  	--Add the last tier as prereq for the rocket silo
-  	omni.lib.add_prerequisite("rocket-silo", "omnitech-"..element.."-omnitraction-"..lvls)
+  	
+end
+
+--------------------------
+---Other functions---
+--------------------------
+
+--Add a resource to our whitelist. Whitelisted resources will not be removed from autoplace control
+function omni.matter.add_ignore_resource(name)
+	if not omni.lib.is_in_table(name, omni.matter.res_to_keep) then
+		omni.matter.res_to_keep[#omni.matter.res_to_keep+1] = name
+	end
+end
+
+--Remove a resource from our whitelist.
+function omni.matter.remove_ignore_resource(name)
+	if omni.lib.is_in_table(name, omni.matter.res_to_keep) then
+		omni.lib.remove_from_table(name, omni.matter.res_to_keep)
+	end
 end

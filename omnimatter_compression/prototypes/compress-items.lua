@@ -34,8 +34,8 @@ for _, group in pairs({"fluid"}) do
 	--Loop through all of the items in the category
 	for _, fluid in pairs(data.raw[group]) do
     --Check for hidden flag to skip later
-    omni.compression.is_hidden(fluid) --check hidden
-    if not (hidden or fluid.name:find("creative-mode")) then--and
+    local hidden = omni.compression.is_hidden(fluid) --check hidden
+    if not (--[[hidden or ]]fluid.name:find("creative-mode")) then--and
     --string.find(fluid.name,"^compress") ==nil and string.find(fluid.name,"^concentrat") ==nil then --not already compressed
       --copy original
       local new_fluid = table.deepcopy(fluid)

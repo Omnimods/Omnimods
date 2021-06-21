@@ -18,6 +18,7 @@ BuildGen:create("omnimatter","omnitractor"):
 	setIngredients(burner_ingredients):
 	setEnergy(10):
 	setBurner(1,1):
+	setEmissions(4.5):
 	setUsage(100):
 	setEnabled():
 	setReplace("omnitractor"):
@@ -103,6 +104,7 @@ BuildChain:create("omnimatter","omnitractor"):
 	setIngredients(cost:ingredients()):
 	setEnergy(5):
 	setUsage(function(level,grade) return (100+25*grade).."kW" end):
+	setEmissions(function(level,grade) return math.max(3 - ((grade-1) * 0.2), 0.1) end):
 	addElectricIcon():
 	setTechName("omnitech-omnitractor"):
 	--setTechPrereq(): done in data-updates (extraction-dynamic) after extractions have been created
@@ -114,8 +116,10 @@ BuildChain:create("omnimatter","omnitractor"):
 	setTechTime(function(levels,grade) return 15*grade end):
 	ifModsAddTechPrereq("omnimatter_crystal",
 		function(levels,grade)
-			if grade > 2 and ((grade-2)*omni.fluid_levels_per_tier + omni.fluid_dependency) <= omni.fluid_levels then
-				return "omnitech-omnisolvent-omnisludge-"..(grade-2)*omni.fluid_levels_per_tier+omni.fluid_dependency else return nil 
+			if grade > 1 and ((grade-1)*omni.fluid_levels_per_tier) <= omni.fluid_levels then
+				return "omnitech-omnisolvent-omnisludge-"..(grade-1)*omni.fluid_levels_per_tier 
+			else 
+				return nil 
 			end
 		end):
 	setStacksize(10):

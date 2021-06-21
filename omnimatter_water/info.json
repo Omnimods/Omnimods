@@ -1,8 +1,9 @@
 {
 "name":"omnimatter_water",
-"version": "4.1.2",
+"version": "4.1.4",
 "title":"Omniwater",
 "author":"EmperorZelos",
+"contact": "https://discord.gg/WQYks7W",
 "description":"Adds water extraction from omnite",
 "factorio_version":"1.1",
 "dependencies":[
