@@ -24,18 +24,11 @@ RecGen:import("burner-inserter"):
 	extend()
 
 --Move the Basic Inserter to its own tech (Red Packs only) to avoid deadlocks
---mod check
-local condition=3
-if mods["PyCoalTBaA"] then
-	condition=1
-elseif mods["bobelectronics"] then
-	condition=2
-end
+
 RecGen:import("inserter"):
 	setIngredients({"burner-inserter",1},{"anbaric-omnitor",1}):
-	ifAddIngredients(condition==1,{"pcb1",1}):
-	ifAddIngredients(condition==2,{"basic-circuit-board",1}):
-	ifAddIngredients(condition==3,{"electronic-circuit",1}):
+	ifModsAddIngredients("PyCoalTBaA",{"pcb1",1}):
+	ifAddIngredients(not mods["PyCoalTBaA"],{component["circuit"][1],1}):
 	setEnabled(false):
 	setTechName("omnitech-anbaric-inserter"):
 	setTechCost(60):
