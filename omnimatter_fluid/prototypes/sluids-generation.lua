@@ -28,6 +28,7 @@ flamer turrets (and other fluid turrets)]]
 --ADD an OVERLAY for remaining fluids
 
 --[[Build a database of fluids to keep, fluids to become solids and fluids which need both (i.e. conversion)]]
+-- Ensure that buildings which are "removing" fluid boxes are checked for ingredient counts and that property is removed or augmented
 --------------------------------------------------------------------------------------------------
 --set local lists and category parameters
 local fuel_fluid = {} --is a fuel type fluid
@@ -738,7 +739,7 @@ end
 --------------------------------------------------------------------------------------------------
 --Entity Fluidbox Reduction(don't clobber all in case some recipes still have them)
 --------------------------------------------------------------------------------------------------
-
+-- do i trawl through recipe categories and work out "maximum" fluid count for in/out (for the mixed or fluids) and remove other fluid boxes?
 --------------------------------------------------------------------------------------------------
 --OLD CODE BASE
 --------------------------------------------------------------------------------------------------
