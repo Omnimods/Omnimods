@@ -93,7 +93,7 @@ function omni.lib.remove_science_pack(techname,pack)
 			end
 		end
 	else
-		log("Can not find tech "..tech.." to replace science pack "..pack)
+		log("Can not find tech "..techname.." to replace science pack "..pack)
 	end
 end
 
