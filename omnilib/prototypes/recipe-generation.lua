@@ -161,7 +161,6 @@ setmetatable(BuildChain, {
 	end
 })
 
-local ord={"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"}
 --[[
 	Takes an input and checks if is of the a table and then
 	if the input is a table, checks if it has a subtable
@@ -2381,7 +2380,7 @@ function RecChain:generate_chain()
 			lname = {self.name,actualTier}
 		end
 		--if self.loc_desc(m,i) == nil and self.main_product then lname=nil end
-		local r = RecGen:create(self.mod,"omnirec-"..self.name.."-"..ord[i]):
+		local r = RecGen:create(self.mod,"omnirec-"..self.name.."-"..omni.lib.alpha(i)]):
 		setCategory(self.category):
 		setSubgroup(self.subgroup(self.levels,i)):
 		setLocName(lname):
@@ -2453,7 +2452,7 @@ function RecChain:generate_chain()
 		local techname = self.tech.name
 		if self.tech.prefix then techname=self.tech.prefix..techname end
 		if self.tech.suffix then techname=techname..self.tech.suffix end
-		local t = TechGen:create(self.mod,"omnirec-"..techname.."-"..ord[i]):
+		local t = TechGen:create(self.mod,"omnirec-"..techname.."-"..omni.lib.alpha(i)):
 		set_packs(self.tech.packs(self.levels,i)):
 		set_cost(self.tech.cost(self.levels,i))]]
 	end

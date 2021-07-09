@@ -1,5 +1,3 @@
-local ord={"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r"}
-
 omni.sciencepacks = {"automation-science-pack","logistic-science-pack","chemical-science-pack","military-science-pack", "production-science-pack","utility-science-pack"}
 
 if mods["omnimatter_crystal"] and mods["omnimatter_science"] then
@@ -268,6 +266,17 @@ function omni.lib.insert(array, ins)
 	array[#array+1]=ins
 end
 
+---alpha
+---@param alphabet_position number
+---@return string
+function omni.lib.alpha(alphabet_position)
+	local remainder = alphabet_position % 26
+	if remainder == 0 then
+		remainder = 26
+	end
+	return string.char(96 + remainder)
+end
+
 --mathematics
 function omni.lib.round(number)
 return math.floor(number+0.5)
@@ -277,7 +286,7 @@ end
 function omni.lib.omni_recipe_fluid_change_category(fluid, category)
 	if data.raw.recipe["omnirec-"..fluid.."-a"] then
 		for i=1,omni.matter.get_constant("fluid level") do
-			data.raw.recipe["omnirec-"..fluid.."-"..ord[i]].category = category
+			data.raw.recipe["omnirec-"..fluid.."-"..omni.lib.alpha(i)]].category = category
 		end
 	end
 end

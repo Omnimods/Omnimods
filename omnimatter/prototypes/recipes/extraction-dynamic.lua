@@ -1,7 +1,5 @@
 --Loop through all of the items in the category
 
-local ord = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r"}
-
 function extraction_value(levels, grade)
     return (8 * levels + 5 * grade - 13) * (3 * levels + grade - 4) / (4 * math.pow(levels - 1, 2))
 end
@@ -376,7 +374,7 @@ for _,ore_tiers in pairs(omni.matter.omnisource) do
                 end
                 local focused_ore =
                 (
-                    RecGen:create("omnimatter", "omnirec-focus-" .. j .. "-" .. ore.name .. "-" .. ord[i]):
+                    RecGen:create("omnimatter", "omnirec-focus-" .. j .. "-" .. ore.name .. "-" .. omni.lib.alpha(i)]):
                     setLocName("recipe-name.impure-omnitraction", {"item-name." .. ore.name}):
                     setLocDesc(desc):
                     setIngredients({name = "omnite", type = "item", amount = 10}):
