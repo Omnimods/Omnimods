@@ -2380,7 +2380,7 @@ function RecChain:generate_chain()
 			lname = {self.name,actualTier}
 		end
 		--if self.loc_desc(m,i) == nil and self.main_product then lname=nil end
-		local r = RecGen:create(self.mod,"omnirec-"..self.name.."-"..omni.lib.alpha(i)]):
+		local r = RecGen:create(self.mod,"omnirec-"..self.name.."-"..omni.lib.alpha(i)):
 		setCategory(self.category):
 		setSubgroup(self.subgroup(self.levels,i)):
 		setLocName(lname):

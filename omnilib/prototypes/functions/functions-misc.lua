@@ -286,7 +286,7 @@ end
 function omni.lib.omni_recipe_fluid_change_category(fluid, category)
 	if data.raw.recipe["omnirec-"..fluid.."-a"] then
 		for i=1,omni.matter.get_constant("fluid level") do
-			data.raw.recipe["omnirec-"..fluid.."-"..omni.lib.alpha(i)]].category = category
+			data.raw.recipe["omnirec-"..fluid.."-"..omni.lib.alpha(i)].category = category
 		end
 	end
 end

@@ -374,7 +374,7 @@ for _,ore_tiers in pairs(omni.matter.omnisource) do
                 end
                 local focused_ore =
                 (
-                    RecGen:create("omnimatter", "omnirec-focus-" .. j .. "-" .. ore.name .. "-" .. omni.lib.alpha(i)]):
+                    RecGen:create("omnimatter", "omnirec-focus-" .. j .. "-" .. ore.name .. "-" .. omni.lib.alpha(i)):
                     setLocName("recipe-name.impure-omnitraction", {"item-name." .. ore.name}):
                     setLocDesc(desc):
                     setIngredients({name = "omnite", type = "item", amount = 10}):
