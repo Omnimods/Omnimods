@@ -1213,7 +1213,7 @@ function RecGen:import(recipe)
 				elseif proto.type == "tool" then
 					r:tool():
 					setDurability(proto.durability):
-					etDurabilityDesc(proto.durability_description_key)
+					setDurabilityDesc(proto.durability_description_key)
 				end
 			end
 		end
