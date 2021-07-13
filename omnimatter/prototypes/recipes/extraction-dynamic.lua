@@ -54,6 +54,19 @@ end
 local function split_omnisource_tier(tier)
     local source = omni.matter.omnisource[tostring(tier)]
     local source_count = table_size(source)
+
+    --special case: Only 1 ore in the current tier --> Reuse max. 2 ores of the previous tier
+    if source_count == 1 and omni.matter.omnisource[tostring(tier-1)] then
+        local prev_source = omni.matter.omnisource[tostring(tier-1)]
+        local toadd = 0
+        for k, v in pairs(prev_source) do
+            toadd = toadd + 1
+            source[k] = v
+            if toadd == 2 then break end
+        end
+        source_count = table_size(source)
+    end
+
     -- Put all ore names of source in a table
     local ore_names = {}
     for name, content in pairs(source) do
