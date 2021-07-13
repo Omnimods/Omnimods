@@ -32,6 +32,7 @@ RecGen:create("omnimatter","crushed-omnite"):
 	setFuelValue(0.85):
 	setIngredients({"omnite",5}):
 	setResults({type="item", name="crushed-omnite", amount=10}):
+	setIcons({{icon ="crushed-omnite", icon_size = 32}}, "omnimatter"):
 	extend()
 
 RecGen:create("omnimatter","crushing-omnite-by-hand"):
@@ -45,7 +46,7 @@ RecGen:create("omnimatter","crushing-omnite-by-hand"):
 		  {type="item", name="crushed-omnite", amount=4},
 		  {type="item", name="stone-crushed", amount=1}
 		}):
-	setIcons("crushed-omnite","omnimatter"):
+	setIcons({{icon ="crushed-omnite", icon_size = 32}}, "omnimatter"):
 	extend()
 	
 RecGen:create("omnimatter","pulverized-omnite"):
