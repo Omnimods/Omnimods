@@ -1273,12 +1273,12 @@ function RecGen:import(rec)
 				setTechUpgrade(tech.upgrade)
 			end
 		end
+		return table.deepcopy(r)
 	elseif rec then
 		error("Could not find "..rec.." to import it.")
 	else
 		error("You input nothing to import, terminating.")
 	end
-	return table.deepcopy(r)
 end
 function RecGen:importIf(rec)
 	if data.raw.recipe[rec] then
