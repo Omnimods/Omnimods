@@ -580,16 +580,19 @@ function ItemGen:setIcons(icons,mod)
 		proto = omni.lib.find_prototype(icons)
 	end
 	if type(icons)~= "function" and mod and (type(icons)~= "string" or not string.match(icons, "%_%_(.-)%_%_")) then
-		if type(icons)=="table" then
+		if type(icons) == "table" then
 			local ic = {}
-			local ic_sz=32
+			local ic_scale
+			local ic_sz = 64
 			for _, c in pairs(icons) do
 				if c.icon_size then	ic_sz=c.icon_size end
-				if type(icons)=="table" then
-					ic[#ic+1]={icon = "__"..(mod or self.mod).."__/graphics/icons/"..c.name..".png",
-					icon_size=ic_sz,
-						scale=c.scale*32/ic_sz,
-						shift=c.shift}
+				if c.scale then ic_scale = c.scale*32/ic_sz end
+				if type(c)=="table" then
+					ic[#ic+1] = {icon = "__"..(mod or self.mod).."__/graphics/icons/"..(c.name or c.icon)..".png",
+						icon_size = ic_sz,
+						--optional
+						scale = ic_scale,
+						shift = c.shift}
 				else
 					ic[#ic+1]={icon = "__"..(mod or self.mod).."__/graphics/icons/"..c..".png",icon_size=c.icon_size}
 				end
@@ -606,7 +609,7 @@ function ItemGen:setIcons(icons,mod)
 	elseif type(icons)~= "function" then
 		--find icon_size
 		if type(icons)=="table" and type(icons[1].icon)=="string" then
-			local ic_sz=32
+			local ic_sz = 64
 			if icons[1].icon_size then
 				ic_sz=icons[1].icon_size
 			elseif type(icons[1].icon)=="string" then --try to find item name by extracting icon name
