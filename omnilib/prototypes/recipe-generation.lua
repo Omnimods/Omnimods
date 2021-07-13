@@ -521,7 +521,7 @@ function FluidGen:create(mod,name)
 end
 
 function ItemGen:import(item)
-	local proto = omni.lib.find_prototype(item) or item
+	local proto = omni.lib.find_prototype(item)
 	if proto then
 		local it = ItemGen:create():
 		setName(proto.name):
@@ -575,11 +575,12 @@ function ItemGen:importIf(item)
 end
 
 function ItemGen:setIcons(icons,mod)
+	if not icons then error("No icons specified for "..(self.name or "No Name")) end
 	local proto = nil
 	if type(icons)=="string" then
 		proto = omni.lib.find_prototype(icons)
 	end
-	if type(icons)~= "function" and mod and (type(icons)~= "string" or not string.match(icons, "%_%_(.-)%_%_")) then
+	if type(icons)~= "function" and (mod or self.mod) and (type(icons)~= "string" or not string.match(icons, "%_%_(.-)%_%_")) then
 		if type(icons) == "table" then
 			local ic = {}
 			local ic_scale
@@ -600,6 +601,7 @@ function ItemGen:setIcons(icons,mod)
 			self.icons = function(levels,grade) return ic end
 		else
 			local ic_size=32
+			local check = {}
 			if data.raw.item[icons] then
 				check=data.raw.item[icons]
 				if check.icon_size then ic_size=check.icon_size end
@@ -1192,11 +1194,11 @@ function RecGen:addSmallResIcon(nr,place)
 	return self
 end
 
-function RecGen:import(recipe)
-	if type(recipe)=="string" then recipe = data.raw.recipe[recipe] or data.raw.recipe["burner-"..recipe] end
-	omni.lib.standardise(recipe)
-	local r = RecGen:create()
+function RecGen:import(rec)
+	local recipe = data.raw.recipe[rec] or data.raw.recipe["burner-"..rec]
 	if recipe then
+		omni.lib.standardise(recipe)
+		local r = RecGen:create()
 		if #recipe.normal.results==1 or recipe.main_product and recipe.main_produc ~= "" then
 			local proto = omni.lib.find_prototype(recipe.main_product or recipe.normal.results[1].name)
 			if proto then
@@ -1271,6 +1273,10 @@ function RecGen:import(recipe)
 				setTechUpgrade(tech.upgrade)
 			end
 		end
+	elseif rec then
+		error("Could not find "..rec.." to import it.")
+	else
+		error("You input nothing to import, terminating.")
 	end
 	return table.deepcopy(r)
 end
