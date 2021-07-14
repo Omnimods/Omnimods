@@ -1,3 +1,94 @@
+RecGen:import("automation-science-pack"):
+    setEnabled(false):
+    setOrder("ab[automation-science-pack]"):
+    setTechName("automation-science-pack"):
+    setTechLocName("automation-science-pack"):
+    setTechIcons(omni.lib.icon.of("automation-science-pack","tool")):
+    setTechPacks({{"energy-science-pack", 1}}):
+    setTechCost(30):
+    setTechPrereq("omnitech-anbaric-inserter","omnitech-anbaric-lab","omnitech-anbaric-mining"):
+    extend()
+
+
+RecGen:import("inserter"):
+    setIngredients({"burner-inserter",1},{"anbaric-omnitor",1}):
+    ifModsAddIngredients("PyCoalTBaA",{"pcb1",1}):
+    ifAddIngredients(not mods["PyCoalTBaA"],{component["circuit"][1],1}):
+    setEnabled(false):
+    setTechName("omnitech-anbaric-inserter"):
+    setTechCost(60):
+    setTechIcons("electric-inserter","omnimatter_energy"):
+    setTechPacks({{"energy-science-pack", 1}}):
+    setTechPrereq("omnitech-anbaricity"):
+    extend()
+
+RecGen:import("electric-mining-drill"):
+    ifSetIngredients(not (mods["angelsindustries"] and angelsmods.industries.components),
+    {
+        {type="item", name="iron-gear-wheel", amount=4},
+        {type="item", name="anbaric-omnitor", amount=2},
+        {type="item", name="burner-mining-drill", amount=1}}):
+    setEnabled(false):
+    setTechName("omnitech-anbaric-mining"):
+    setTechCost(100):
+    setTechIcons("mining-drill","omnimatter_energy"):
+    setTechPacks({{"energy-science-pack", 1}}):
+    setTechPrereq("omnitech-anbaricity"):
+    extend()
+
+RecGen:import("boiler"):
+    addIngredients("burner-omnitractor"):
+    equalize("burner-omnitractor"):
+    setEnabled(false):
+    setTechName("omnitech-steam-power"):
+    setTechCost(120):
+    setTechLocName("omnitech-steam-power"):
+    setTechPrereq("automation-science-pack","omnitech-basic-omnium-power"):
+    setTechIcons("steam-power","omnimatter_energy"):
+    setTechPacks(1):
+    extend()
+    
+RecGen:import("steam-engine"):
+    ifSetIngredients(not (mods["angelsindustries"] and angelsmods.industries.components),
+    {
+        {type="item", name="iron-plate", amount=10},
+        {type="item", name="iron-gear-wheel", amount=5},
+        {type="item", name="anbaric-omnitor", amount=3},
+        {type="item",name="omni-heat-burner",amount=1}}):
+    equalize("omni-heat-burner"):
+    setEnabled(false):
+    setTechName("omnitech-steam-power"):
+    extend()
+
+
+
+--Check if the vanilla lab is locked behind a tech /disabled. If yes, modify the tech
+if data.raw.recipe["lab"].enabled == false then
+    RecGen:import("lab"):
+        setTechLocName("omnitech-anbaric-lab"):
+        addIngredients({"omnitor-lab",1}):
+        setTechIcons("lab","omnimatter_energy"):
+        setTechCost(100):
+        extend()
+
+    omni.lib.add_prerequisite(omni.lib.get_tech_name("lab"), "omnitech-anbaricity")
+else
+--Create a new tech
+    RecGen:import("lab"):
+        setEnabled(false):
+        setTechName("omnitech-anbaric-lab"):
+        setTechLocName("omnitech-anbaric-lab"):
+        addIngredients({"omnitor-lab",1}):
+        setTechCost(100):
+        setTechIcons("lab","omnimatter_energy"):
+        setTechPacks({{"energy-science-pack", 1}}):
+        setTechPrereq("omnitech-anbaricity"):
+        extend()
+end
+
+--Move logi SP behind electronics (seems weird if it just prereqs automation SP)
+omni.lib.add_prerequisite("logistic-science-pack", "electronics")
+
 local function get_packs(tier)
   local c = {}
   local length = math.min(tier,#omni.sciencepacks)
@@ -17,7 +108,8 @@ data:extend({
         icon_size = 128,
         prerequisites =
         {
-            "omnitech-steam-power",
+            "omnitech-basic-omnium-power",
+            "automation-science-pack"
         },
         effects =
         {
@@ -25,7 +117,7 @@ data:extend({
         unit =
         {
           count = 80,
-          ingredients = get_packs(2),
+          ingredients = get_packs(1),
           time = 30
         },
         order = "c-a"
@@ -118,7 +210,7 @@ data:extend({
         },
         order = "c-a"
     },
-    { 
+    {
       type = "technology",
       name = "omnitech-omni-solar-road",
       localised_name = {"technology-name.omnitech-omni-solar-road"},

@@ -7,7 +7,7 @@ omni.nil_fuels = {}
 
 --Fuels to ignore, no Omnified Fuel will be created, Fuel Value will be decreased by 20%
 local ignore = {
-	"omnite",
+    "omnite",
     "crushed-omnite",
     "omniwood",
     "seedling",
@@ -133,20 +133,20 @@ end
 RecGen:create("omnimatter_energy","purified-omnite"):
     setIngredients({type="item", name="crushed-omnite", amount=5}):
     setResults({type="item", name="purified-omnite", amount=2}):
-	setStacksize(200):
+    setStacksize(200):
     setCategory("omnifurnace"):
     setSubgroup("omnienergy-fuel-1"):
     setOrder("a"):
-	setFuelCategory("chemical"):
-	setFuelValue(2.4):
+    setFuelCategory("chemical"):
+    setFuelValue(2.4):
     setEnergy(2.0):
     setEnabled(false):
     setTechName("omnitech-basic-omnium-power"):
-	setTechCost(55):
-	setTechIcons("purified-omnite","omnimatter_energy"):
-    setTechPrereq("omnitech-anbaricity"):extend()
-  
-omni.lib.add_prerequisite("omnitech-omnium-power-1","omnitech-basic-omnium-power")
+    setTechCost(55):
+    setTechPacks({{"energy-science-pack", 1}}):
+    setTechIcons("purified-omnite","omnimatter_energy"):
+    setTechPrereq("omnitech-anbaricity"):
+    extend()
 
 --remove upper omnium-power techs that unlock nothing
 for i=5,2,-1 do
@@ -157,28 +157,4 @@ for i=5,2,-1 do
     else
         break
     end
-end
-
---Replace all coal from rocks with purified omnite
-for _,rock in pairs(data.raw["simple-entity"]) do
-	if string.find(rock.name,"rock") then
-		if rock.minable then
-			if rock.minable.results then
-				for _,res in pairs(rock.minable.results) do
-					if res.name == "coal" then
-						res.name = "purified-omnite"
-					end
-				end
-			elseif rock.minable.result and rock.minable.result == "coal" then
-				rock.minable.result = "purified-omnite"
-			end
-		end
-		if rock.loot then
-			for _,loot in pairs(rock.loot) do
-				if loot.name == "coal" then
-					loot.name = "purified-omnite"
-				end
-			end
-		end
-	end
 end

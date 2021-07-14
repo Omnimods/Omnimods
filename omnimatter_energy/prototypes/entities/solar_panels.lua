@@ -229,9 +229,9 @@ for j=1,nr_tiers do
 		
 		if i == 1 and j > 1 then
 			RecGen:create("omnimatter_energy", "crystal-solar-panel-tier-"..j.."-size-"..i.."-upgrade"):
-            setLocName({"recipe-name.crystal-solar-panel", j, i}):
-			setIcons(icons):
 			noItem():
+            setLocName({"recipe-name.crystal-solar-panel", j, i}):
+			setIcons(omni.lib.icon.of("crystal-solar-panel-tier-"..j.."-size-"..i, "item")):
 			setIngredients(get_cost(j,i)):
 			removeIngredients("crystal-solar-panel-tier-"..(j-1).."-size-"..i):
 			multiplyIngredients(max_size*max_size):
