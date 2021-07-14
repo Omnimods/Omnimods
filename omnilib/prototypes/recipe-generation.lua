@@ -3802,10 +3802,10 @@ function BuildChain:extend()
 end
 
 function BotGen:create(mod,name)
-    local b = BuildGen:create(mod,name)
-    b.max_payload_size = function(levels,grade) return 1 end
-    b.speed = function(levels,grade) return 1 end
-    b.transfer_distance = function(levels,grade) return 0.5 end
+	local b = BuildGen:create(mod,name)
+	b.max_payload_size = function(levels,grade) return 1 end
+	b.speed = function(levels,grade) return 1 end
+	--b.transfer_distance = function(levels,grade) return 0.5 end
     b.max_energy = function(levels,grade) return "1MJ" end
     b.energy_per_tick = function(levels,grade) return "0.075kJ" end
     b.speed_multiplier_when_out_of_energy = function(levels,grade) return 0.5 end
@@ -4063,14 +4063,14 @@ function BotGen:setPayload(n)
     end
     return self
 end
-function BotGen:setTransfer(n)
-    if type(n)=="function" then
-        self.transfer_distance = n
-    else
-        self.transfer_distance = function(levels,grade) return n end
-    end
-    return self
-end
+--[[function BotGen:setTransfer(n)
+	if type(n)=="function" then
+		self.transfer_distance = n
+	else
+		self.transfer_distance = function(levels,grade) return n end
+	end
+	return self
+end]]
 function BotGen:setMaxEnergy(n)
     if type(n)=="function" then
         self.max_energy = n

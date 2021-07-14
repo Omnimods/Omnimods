@@ -83,7 +83,6 @@ for i=1,nr_bots do
     selection_box = {{-0.5, -1.5}, {0.5, -0.5}},
     max_payload_size = 2*i,
     speed = 0.10*i/nr_bots,
-    transfer_distance = 0.5,
     max_energy = "1MJ",
     energy_per_tick = "0.075kJ",
     speed_multiplier_when_out_of_energy = 0.5,
