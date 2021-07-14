@@ -50,12 +50,14 @@ RecGen:create("omnimatter","omnicium-iron-gear-box"):
     setEnergy(0.25):
     extend()
 
+if mods["bobplates"] then
+
 local plates = {"steel","brass","titanium","tungsten","nitinol"}
 local plateTech = {"steel-processing","zinc-processing","titanium-processing","tungsten-processing","nitinol-processing"}
+
 for i,p in pairs(plates) do
     RecGen:create("omnimatter","omnicium-"..p.."-gear-box"):
         setStacksize(100):
-        setReqAllMods("bobplates"):
         setEnergy(0.25):
         addProductivity():
         setIngredients("omnicium-gear-wheel",p.."-gear-wheel"):
@@ -64,7 +66,8 @@ for i,p in pairs(plates) do
         setTechName(plateTech[i]):
         extend()
 end
-if mods["bobplates"] then
+
+
     data.raw.item["brass-gear-wheel"].icon="__omnimatter__/graphics/icons/brass-gear-wheel.png"
     data.raw.item["brass-gear-wheel"].icon_size=32
     data.raw.item["steel-gear-wheel"].icon="__omnimatter__/graphics/icons/steel-gear-wheel.png"
@@ -90,7 +93,6 @@ if mods["angelssmelting"] then
         replaceResults("ingot-iron","ingot-omnicium"):
         setSubgroup("angels-omnicium"):
         setOrder("rc"):
-        setReqAllMods("angelssmelting"):
         setIcons("ingot-omnicium","omnimatter"):
         addSmallIcon("iron-ore",3):
         addSmallIcon("copper-ore",1):
