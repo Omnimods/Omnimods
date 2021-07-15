@@ -3,6 +3,7 @@ Version: 4.1.13
 Date: 2021.07.xx
   Features:
     - Added omni.lib.alpha(alphabet_position) which returns the corresponding lettter as string
+    - Added omni.lib.recipe_is_enabled(recipename)
   Bugfixes:
     - Multiple fixes, typos and fallbacks in recipe generation
     - Fixed that certain settings were not forced properly
