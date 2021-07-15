@@ -842,6 +842,31 @@ function omni.lib.replace_recipe_all_techs(recipename,replacement)
 	end
 end
 
+--Checks if the recipe is enabled
+function omni.lib.recipe_is_enabled(recipename)
+    local rec = data.raw.recipe[recipename]
+    if rec then
+        --Check rec.enabled which has prio
+        if rec.enabled ~= nil then
+            if rec.enabled == true then
+                return true
+            else
+                return false
+            end
+        elseif (rec.normal and rec.normal.enabled ~= nil) or (rec.expensive and rec.expensive.enabled ~= nil) then
+            if (rec.normal and rec.normal.enabled == true) or (rec.expensive and rec.expensive.enabled == true) then
+                return true
+            else
+                return false
+            end
+        --nothing is set --> recipe is enabled by default
+        else 
+            return true
+        end
+    end
+    return nil
+end
+
 function omni.lib.enable_recipe(recipename)
     local rec = data.raw.recipe[recipename]
     if rec then

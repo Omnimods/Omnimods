@@ -155,7 +155,9 @@ BuildChain:create("omnimatter_crystal","omniplant"):
 	setFluidBox("XWXWX.XXXXX.XXXXX.XXXXX.XKXKX"):
 	extend()
 
-RecGen:import("omniplant-1"):addIngredients({"burner-omniplant",1}):extend()
+RecGen:import("omniplant-1"):
+	addIngredients({"burner-omniplant",1}):
+	extend()
 
 local tmp = {{"advanced-electronics"}}
 BuildChain:create("omnimatter_crystal","crystallomnizer"):
