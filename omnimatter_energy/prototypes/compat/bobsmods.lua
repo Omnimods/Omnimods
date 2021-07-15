@@ -22,7 +22,7 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
     data.raw.recipe["splitter"].subgroup = "bob-logistic-tier-1"
 
     data.raw.recipe["omnitor-assembling-machine"].subgroup = "bob-assembly-machine"
-    data.raw.recipe["assembling-machine"].subgroup = "bob-assembly-machine"
+    data.raw.recipe["assembling-machine-1"].subgroup = "bob-assembly-machine"
 end
 
 
