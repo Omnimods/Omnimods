@@ -91,6 +91,8 @@ data:extend({ebelt, eunder, esplitter})
 -----------------
 -----Recipes-----
 -----------------
+--Nil logistics-0 if it already exists, RecGen doesnt overwrite tech values atm for some reason
+if data.raw.technology["logistics-0"] then data.raw.technology["logistics-0"] = nil end
 
 RecGen:create("omnimatter_energy", "basic-transport-belt"):
     setIngredients({"omnicium-gear-wheel", 1}, {"omni-tablet", 1}):
@@ -99,6 +101,7 @@ RecGen:create("omnimatter_energy", "basic-transport-belt"):
     setEnergy(0.5):
     setIcons({{icon = "basic-transport-belt", icon_size = 64}}, "omnimatter_energy"):
     setOrder("a[basic-transport-belt]-a[basic-transport-belt]"):
+    setEnabled(false):
     setTechName("logistics-0"):
     setTechLocName("technology-name.logistics-0"):
     setTechIcons("logistics","omnimatter_energy"):
@@ -140,7 +143,6 @@ RecGen:create("omnimatter_energy", "basic-splitter"):
 -----Modify higher tier belt recipes-----
 -----------------------------------------
 
-
 --Create seperate techs for Belt, Splitter and UG TODO Create 7.5 speed belt like bob???
 RecGen:import("transport-belt"):
     setEnabled(false):
@@ -159,6 +161,3 @@ RecGen:import("underground-belt"):
 RecGen:import("splitter"):
     setIngredients({"basic-splitter", 1}, {"iron-gear-wheel", 5}, {"electronic-circuit", 5}):
     extend()
-
-
---Modify existing belt recipes , replace iron gear with omnicium gear box

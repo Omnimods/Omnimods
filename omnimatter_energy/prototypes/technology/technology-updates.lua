@@ -48,7 +48,6 @@ omni.lib.add_prerequisite("omnitech-omnitractor-electric-1", "automation-science
 --Add the energy pack to all Red/Green SP techs
 for _,tech in pairs(data.raw.technology) do
     if tech.unit and tech.unit.ingredients and #tech.unit.ingredients <= 2 and omni.lib.is_in_table("automation-science-pack", tech.unit.ingredients[1]) then
-
         omni.lib.add_science_pack(tech.name, "energy-science-pack")
     end
 end

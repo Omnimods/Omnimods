@@ -11,13 +11,13 @@ RecGen:import("automation-science-pack"):
 
 --Create new "anbaric" electronic tech which unlocks electornic circuits and other early entities which require them that are enabled by default
 RecGen:import("electronic-circuit"):
-  setEnabled(false):
-  setTechName("omnitech-anbaric-electronics"):
-  setTechCost(35):
-  setTechIcons({{"anbaric-electronics",256}},"omnimatter_energy"):
-  setTechPacks({{"energy-science-pack", 1}}):
-  setTechPrereq("omnitech-anbaricity"):
-  extend()
+    setEnabled(false):
+    setTechName("omnitech-anbaric-electronics"):
+    setTechCost(35):
+    setTechIcons({{"anbaric-electronics",256}},"omnimatter_energy"):
+    setTechPacks({{"energy-science-pack", 1}}):
+    setTechPrereq("omnitech-anbaricity"):
+    extend()
 omni.lib.add_unlock_recipe("omnitech-anbaric-electronics", "radar") 
 
 RecGen:import("inserter"):
@@ -79,9 +79,10 @@ if data.raw.recipe["lab"].enabled == false then
         addIngredients({"omnitor-lab",1}):
         setTechIcons("lab","omnimatter_energy"):
         setTechCost(45):
+        setTechPrereq("omnitech-anbaric-electronics"):
         extend()
 
-    omni.lib.add_prerequisite(omni.lib.get_tech_name("lab"), "omnitech-anbaric-electronics")
+    --omni.lib.add_prerequisite(omni.lib.get_tech_name("lab"), "omnitech-anbaric-electronics")
 else
 --Create a new tech
     RecGen:import("lab"):
@@ -100,12 +101,12 @@ end
 omni.lib.add_prerequisite("logistic-science-pack", "electronics")
 
 local function get_packs(tier)
-  local c = {}
-  local length = math.min(tier,#omni.sciencepacks)
-  for l=1,length do
-    c[#c+1] = {omni.sciencepacks[l],1}
-  end
-  return c
+    local c = {}
+    local length = math.min(tier,#omni.sciencepacks)
+    for l=1,length do
+        c[#c+1] = {omni.sciencepacks[l],1}
+    end
+    return c
 end
 
 data:extend({

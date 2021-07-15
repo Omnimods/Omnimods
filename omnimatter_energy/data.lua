@@ -13,6 +13,5 @@ require("prototypes.entities.burner")
 require("prototypes.entities.solar_road")
 
 
-
 --require("prototypes.vehicles")
 --require("prototypes.omnicell")
