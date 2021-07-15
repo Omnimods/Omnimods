@@ -17,4 +17,4 @@ end
 
 if mods["angelssmelting"] then
     omni.lib.add_prerequisite("angels-metallurgy-1", "omnitech-basic-omnium-power")
-end	
+end

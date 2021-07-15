@@ -9,16 +9,17 @@ RecGen:import("automation-science-pack"):
     setTechPrereq("omnitech-anbaric-inserter","omnitech-anbaric-lab","omnitech-anbaric-mining"):
     extend()
 
---Create new "anbaric" electronic tech which unlocks electornic circuits and other early entities which require them that are enabled by default
-RecGen:import("electronic-circuit"):
-    setEnabled(false):
-    setTechName("omnitech-anbaric-electronics"):
-    setTechCost(35):
-    setTechIcons({{"anbaric-electronics",256}},"omnimatter_energy"):
-    setTechPacks({{"energy-science-pack", 1}}):
-    setTechPrereq("omnitech-anbaricity"):
+--Create new "anbaric" electronic tech which unlocks electornic circuits and other early entities that are enabled by default
+TechGen:create("omnimatter_energy","omnitech-anbaric-electronics"):
+    setCost(35):
+    setIcons({{icon = "__omnimatter_energy__/graphics/technology/anbaric-electronics.png", icon_size=256}}):
+    setPacks({{"energy-science-pack", 1}}):
+    setPrereq("omnitech-anbaricity"):
     extend()
-omni.lib.add_unlock_recipe("omnitech-anbaric-electronics", "radar") 
+
+--CHeck if enabled before adding, could be behind a later tech (bobs), replacements are added in compat files
+if omni.lib.recipe_is_enabled("electronic-circuit") then omni.lib.add_unlock_recipe("omnitech-anbaric-electronics", "electronic-circuit") end
+if omni.lib.recipe_is_enabled("radar") then omni.lib.add_unlock_recipe("omnitech-anbaric-electronics", "radar") end
 
 RecGen:import("inserter"):
     setIngredients({"burner-inserter",1},{"anbaric-omnitor",1}):

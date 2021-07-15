@@ -12,6 +12,9 @@ if mods["bobmining"] then
 end
 
 if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].value then
+    --move logistics behind red SP tech again
+    omni.lib.replace_prerequisite("logistics", "logistics-0", "automation-science-pack")
+
     --Update subgroup
     data.raw.recipe["burner-filter-inserter"].subgroup = "bob-logistic-tier-0"
     data.raw.recipe["basic-transport-belt"].subgroup = "bob-logistic-tier-0"
@@ -28,7 +31,8 @@ end
 
 if mods["bobelectronics"] then
     omni.lib.add_recipe_ingredient("wooden-board", {normal = {"omni-tablet",1}, expensive = {"omni-tablet",2}})
-    omni.lib.add_unlock_recipe("omnitech-anbaricity", "wooden-board")
+    omni.lib.add_unlock_recipe("omnitech-anbaric-electronics", "wooden-board")
+    omni.lib.add_unlock_recipe("omnitech-anbaric-electronics", "basic-circuit-board")
 end
 
 if mods["bobassembly"] then

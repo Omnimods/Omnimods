@@ -5,8 +5,6 @@ RecGen:import("repair-pack"):
 
 
 omni.lib.add_recipe_ingredient("electric-furnace", {"steel-furnace", 1})
-omni.lib.add_unlock_recipe("omnitech-anbaricity", "basic-circuit-board")
-
 
 --Add omnitors to various recipes
 --omnitor
