@@ -1,9 +1,9 @@
 require("prototypes.entities.solar_panels")
 require("prototypes.recipes.fuel")
-require("prototypes.technology.technology-updates")
---Updates
-require("prototypes.recipes.recipe-updates")
 
+--Updates
+require("prototypes.technology.technology-updates")
+require("prototypes.recipes.recipe-updates")
 
 --Early compats
 --require("prototypes.compat.omnium-cycle")

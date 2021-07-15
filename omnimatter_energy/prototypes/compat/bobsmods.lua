@@ -12,7 +12,17 @@ if mods["bobmining"] then
 end
 
 if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].value then
-    --omni.lib.remove_prerequisite("logistics-0", "automation")
+    --Update subgroup
+    data.raw.recipe["burner-filter-inserter"].subgroup = "bob-logistic-tier-0"
+    data.raw.recipe["basic-transport-belt"].subgroup = "bob-logistic-tier-0"
+    data.raw.recipe["basic-underground-belt"].subgroup = "bob-logistic-tier-0"
+    data.raw.recipe["basic-splitter"].subgroup = "bob-logistic-tier-0"
+    data.raw.recipe["transport-belt"].subgroup = "bob-logistic-tier-1"
+    data.raw.recipe["underground-belt"].subgroup = "bob-logistic-tier-1"
+    data.raw.recipe["splitter"].subgroup = "bob-logistic-tier-1"
+
+    data.raw.recipe["omnitor-assembling-machine"].subgroup = "bob-assembly-machine"
+    data.raw.recipe["assembling-machine"].subgroup = "bob-assembly-machine"
 end
 
 

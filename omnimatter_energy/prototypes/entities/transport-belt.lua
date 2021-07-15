@@ -148,8 +148,6 @@ RecGen:import("transport-belt"):
     setEnabled(false):
     setTechName("logistics"):
     setTechPrereq("automation-science-pack"):
-    -- ifAddTechPrereq(data.raw.technology["basic-automation"], "basic-automation"):
-    -- ifAddTechPrereq(not data.raw.technology["basic-automation"], "omnitech-simple-automation"):
     setIngredients(
         {"basic-transport-belt", 1}, {"omnitor", 1}):
     extend()
