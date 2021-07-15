@@ -70,7 +70,7 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter"):
     setTechLocName("omnitech-burner-filter"):
     setTechIcons("burner-filter","omnimatter_energy"):
     setTechPacks({{"energy-science-pack", 1}}):
-    setTechCost(50):
+    setTechCost(25):
     setTechPrereq("basic-splitter-logistics", "basic-underground-logistics"):
     extend()
 
@@ -87,7 +87,7 @@ BuildGen:import("lab"):
     setName("omnitor-lab"):
     setIcons("omnitor-lab","omnimatter_energy"):
     setEnabled():
-    setInputs("automation-science-pack"):
+    setInputs("energy-science-pack"):
     setFuelCategory("omnite"):
     setIngredients({"omnitor", 10},{"copper-plate", 10},{"omnite-brick", 5}):
     setReplace("lab"):

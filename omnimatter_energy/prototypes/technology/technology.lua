@@ -5,10 +5,20 @@ RecGen:import("automation-science-pack"):
     setTechLocName("automation-science-pack"):
     setTechIcons(omni.lib.icon.of("automation-science-pack","tool")):
     setTechPacks({{"energy-science-pack", 1}}):
-    setTechCost(30):
+    setTechCost(60):
     setTechPrereq("omnitech-anbaric-inserter","omnitech-anbaric-lab","omnitech-anbaric-mining"):
     extend()
 
+--Create new "anbaric" electronic tech which unlocks electornic circuits and other early entities which require them that are enabled by default
+RecGen:import("electronic-circuit"):
+  setEnabled(false):
+  setTechName("omnitech-anbaric-electronics"):
+  setTechCost(35):
+  setTechIcons({{"anbaric-electronics",256}},"omnimatter_energy"):
+  setTechPacks({{"energy-science-pack", 1}}):
+  setTechPrereq("omnitech-anbaricity"):
+  extend()
+omni.lib.add_unlock_recipe("omnitech-anbaric-electronics", "radar") 
 
 RecGen:import("inserter"):
     setIngredients({"burner-inserter",1},{"anbaric-omnitor",1}):
@@ -16,10 +26,10 @@ RecGen:import("inserter"):
     ifAddIngredients(not mods["PyCoalTBaA"],{component["circuit"][1],1}):
     setEnabled(false):
     setTechName("omnitech-anbaric-inserter"):
-    setTechCost(60):
+    setTechCost(45):
     setTechIcons("electric-inserter","omnimatter_energy"):
     setTechPacks({{"energy-science-pack", 1}}):
-    setTechPrereq("omnitech-anbaricity"):
+    setTechPrereq("omnitech-anbaric-electronics"):
     extend()
 
 RecGen:import("electric-mining-drill"):
@@ -30,7 +40,7 @@ RecGen:import("electric-mining-drill"):
         {type="item", name="burner-mining-drill", amount=1}}):
     setEnabled(false):
     setTechName("omnitech-anbaric-mining"):
-    setTechCost(100):
+    setTechCost(40):
     setTechIcons("mining-drill","omnimatter_energy"):
     setTechPacks({{"energy-science-pack", 1}}):
     setTechPrereq("omnitech-anbaricity"):
@@ -68,10 +78,10 @@ if data.raw.recipe["lab"].enabled == false then
         setTechLocName("omnitech-anbaric-lab"):
         addIngredients({"omnitor-lab",1}):
         setTechIcons("lab","omnimatter_energy"):
-        setTechCost(100):
+        setTechCost(45):
         extend()
 
-    omni.lib.add_prerequisite(omni.lib.get_tech_name("lab"), "omnitech-anbaricity")
+    omni.lib.add_prerequisite(omni.lib.get_tech_name("lab"), "omnitech-anbaric-electronics")
 else
 --Create a new tech
     RecGen:import("lab"):
@@ -79,10 +89,10 @@ else
         setTechName("omnitech-anbaric-lab"):
         setTechLocName("omnitech-anbaric-lab"):
         addIngredients({"omnitor-lab",1}):
-        setTechCost(100):
+        setTechCost(45):
         setTechIcons("lab","omnimatter_energy"):
         setTechPacks({{"energy-science-pack", 1}}):
-        setTechPrereq("omnitech-anbaricity"):
+        setTechPrereq("omnitech-anbaric-electronics"):
         extend()
 end
 

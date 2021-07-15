@@ -22,7 +22,7 @@ RecGen:create("omnimatter_energy","anbaric-omnitor"):
     setTechName("omnitech-anbaricity"):
     setTechIcons(omni.lib.icon.of("electric-engine", "technology")):
     setTechPrereq("basic-splitter-logistics", "basic-underground-logistics"):
-    setTechCost(40):
+    setTechCost(30):
     setTechPacks({{"energy-science-pack", 1}}):
     extend()
 

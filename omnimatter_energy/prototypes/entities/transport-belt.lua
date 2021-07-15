@@ -100,9 +100,10 @@ RecGen:create("omnimatter_energy", "basic-transport-belt"):
     setIcons({{icon = "basic-transport-belt", icon_size = 64}}, "omnimatter_energy"):
     setOrder("a[basic-transport-belt]-a[basic-transport-belt]"):
     setTechName("logistics-0"):
+    setTechLocName("technology-name.logistics-0"):
     setTechIcons("logistics","omnimatter_energy"):
     setTechPacks({{"energy-science-pack", 1}}):
-    setTechCost(50):
+    setTechCost(15):
     setTechPrereq("omnitech-simple-automation"):
     extend()
 
@@ -116,7 +117,7 @@ RecGen:create("omnimatter_energy", "basic-underground-belt"):
     setTechName("basic-underground-logistics"):
     setTechIcons("logistics","omnimatter_energy"):
     setTechPacks({{"energy-science-pack", 1}}):
-    setTechCost(50):
+    setTechCost(20):
     setTechPrereq("logistics-0"):
     extend()
 
@@ -130,7 +131,7 @@ RecGen:create("omnimatter_energy", "basic-splitter"):
     setTechName("basic-splitter-logistics"):
     setTechIcons("logistics","omnimatter_energy"):
     setTechPacks({{"energy-science-pack", 1}}):
-    setTechCost(50):
+    setTechCost(20):
     setTechPrereq("logistics-0"):
     extend()
 

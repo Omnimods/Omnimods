@@ -12,6 +12,7 @@ omni.lib.add_unlock_recipe("omnitech-anbaricity", "basic-circuit-board")
 --omnitor
 omni.lib.add_recipe_ingredient("gun-turret",{"omnitor",4})
 omni.lib.add_recipe_ingredient("engine-unit",{"omnitor",1})
+omni.lib.replace_recipe_ingredient("offshore-pump", "electronic-circuit", {"omnitor",4})
 
 --anbaric omnitor
 omni.lib.replace_recipe_ingredient("assembling-machine-1", "iron-gear-wheel", {"anbaric-omnitor",4})

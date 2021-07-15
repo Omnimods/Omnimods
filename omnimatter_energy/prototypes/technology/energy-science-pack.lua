@@ -12,6 +12,18 @@ RecGen:create("omnimatter_energy","energy-science-pack"):
 	}):
 	setSubgroup("science-pack"):
 	setCategory("crafting"):
-	setOrder("aa[energy-science-pack]"):
+	setOrder("a[aa-energy-science-pack]"):
 	setEnabled(true):
     extend()
+
+--Add it to the vanilla lab inputs
+table.insert(data.raw["lab"]["lab"].inputs, 1, "energy-science-pack")
+-- --Add all normal lab inputs to bobs burner lab since its a steam lab now (Needs to be in final fixes)
+-- if mods["bobtech"] and settings.startup["bobmods-burnerphase"].value then
+-- 	for _,input in pairs(data.raw["lab"]["lab"].inputs) do
+-- 		local new_inputs = data.raw["lab"]["burner-lab"].inputs 
+-- 		if not omni.lib.is_in_table(input,new_inputs) then
+-- 			new_inputs[#new_inputs+1] = input
+-- 		end
+-- 	end
+-- end
