@@ -17,14 +17,12 @@ TechGen:create("omnimatter_energy","omnitech-anbaric-electronics"):
     setPrereq("omnitech-anbaricity"):
     extend()
 
---CHeck if enabled before adding, could be behind a later tech (bobs), replacements are added in compat files
+--Check if enabled before adding, could be behind a later tech (bobs), replacements are added in compat files
 if omni.lib.recipe_is_enabled("electronic-circuit") then omni.lib.add_unlock_recipe("omnitech-anbaric-electronics", "electronic-circuit") end
 if omni.lib.recipe_is_enabled("radar") then omni.lib.add_unlock_recipe("omnitech-anbaric-electronics", "radar") end
 
 RecGen:import("inserter"):
-    setIngredients({"burner-inserter",1},{"anbaric-omnitor",1}):
-    ifModsAddIngredients("PyCoalTBaA",{"pcb1",1}):
-    ifAddIngredients(not mods["PyCoalTBaA"],{component["circuit"][1],1}):
+    setIngredients({"burner-inserter",1},{"anbaric-omnitor",1},{component["circuit"][1],1}):
     setEnabled(false):
     setTechName("omnitech-anbaric-inserter"):
     setTechCost(45):

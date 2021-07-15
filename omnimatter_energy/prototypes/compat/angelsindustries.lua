@@ -7,4 +7,7 @@ if mods["angelsindustries"] and angelsmods.industries.components then
 
     omni.lib.set_recipe_ingredients("omnitor-assembling-machine", {"block-omni-0", 2}, {"construction-frame-1"})
     omni.lib.set_recipe_ingredients("omnitor-lab", {"block-omni-0", 4}, {"cable-harness-1", 5}, {"omnite-brick", 5})
+
+    omni.lib.set_recipe_ingredients("steam-turbine", {"stone-furnace", 1}, {"block-omni-1", 4}, {"construction-frame-1", 4}, {"block-fluidbox-1", 4})
+    
 end
