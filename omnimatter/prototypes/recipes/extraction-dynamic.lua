@@ -2,9 +2,9 @@ function extraction_value(levels, grade)
     return (8 * levels + 5 * grade - 13) * (3 * levels + grade - 4) / (4 * math.pow(levels - 1, 2))
 end
 
-local reqpure = function(tier,level,item)
+local function reqpure(tier,level,item)
     local req = {}
-    if (level%omni.pure_levels_per_tier == 1 or omni.pure_levels_per_tier == 1) and ((level-1)/omni.pure_levels_per_tier + tier - 1) <= omni.max_tier then
+    if (level%omni.pure_levels_per_tier == 1 or omni.pure_levels_per_tier == 1) and ((level-1)/omni.pure_levels_per_tier + tier) <= omni.max_tier then
         req[#req+1]="omnitech-omnitractor-electric-"..(level-1) / omni.pure_levels_per_tier + tier
     elseif level > 1 then
         req[#req+1]="omnitech-extraction-"..item.."-"..(level-1)
