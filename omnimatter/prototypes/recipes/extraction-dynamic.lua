@@ -367,20 +367,21 @@ end
 --Recipe Creation
 --Go up tier by tier to make sure we start with the lowest tier
 for tier = 1, max_omnisource_tier do
-    --Split the current tier
-    local splits = split_omnisource_tier(tier)
-    
-    --Go throug each split
-    for i, split in pairs(splits) do
-        --Create Basic extractions
-        create_base_extraction(tier, split, i)
+    --Split the current tier if it exists
+    if omni.matter.omnisource[tostring(tier)] then
+        local splits = split_omnisource_tier(tier)
+        --Go throug each split
+        for i, split in pairs(splits) do
+            --Create Basic extractions
+            create_base_extraction(tier, split, i)
 
-        --Go through each ore
-        for j, ore in pairs(split) do
-            --Create pure extraction recipes
-            create_pure_extraction(tier, ore)
-            --Create impure extraction recipes
-            create_impure_extraction(tier, split, ore)
+            --Go through each ore
+            for j, ore in pairs(split) do
+                --Create pure extraction recipes
+                create_pure_extraction(tier, ore)
+                --Create impure extraction recipes
+                create_impure_extraction(tier, split, ore)
+            end
         end
     end
 end
