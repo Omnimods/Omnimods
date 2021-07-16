@@ -2,9 +2,9 @@ function extraction_value(levels, grade)
     return (8 * levels + 5 * grade - 13) * (3 * levels + grade - 4) / (4 * math.pow(levels - 1, 2))
 end
 
-local reqpure = function(tier,level,item)
+local function reqpure(tier,level,item)
     local req = {}
-    if (level%omni.pure_levels_per_tier == 1 or omni.pure_levels_per_tier == 1) and ((level-1)/omni.pure_levels_per_tier + tier - 1) <= omni.max_tier then
+    if (level%omni.pure_levels_per_tier == 1 or omni.pure_levels_per_tier == 1) and ((level-1)/omni.pure_levels_per_tier + tier) <= omni.max_tier then
         req[#req+1]="omnitech-omnitractor-electric-"..(level-1) / omni.pure_levels_per_tier + tier
     elseif level > 1 then
         req[#req+1]="omnitech-extraction-"..item.."-"..(level-1)
@@ -367,20 +367,21 @@ end
 --Recipe Creation
 --Go up tier by tier to make sure we start with the lowest tier
 for tier = 1, max_omnisource_tier do
-    --Split the current tier
-    local splits = split_omnisource_tier(tier)
-    
-    --Go throug each split
-    for i, split in pairs(splits) do
-        --Create Basic extractions
-        create_base_extraction(tier, split, i)
+    --Split the current tier if it exists
+    if omni.matter.omnisource[tostring(tier)] then
+        local splits = split_omnisource_tier(tier)
+        --Go throug each split
+        for i, split in pairs(splits) do
+            --Create Basic extractions
+            create_base_extraction(tier, split, i)
 
-        --Go through each ore
-        for j, ore in pairs(split) do
-            --Create pure extraction recipes
-            create_pure_extraction(tier, ore)
-            --Create impure extraction recipes
-            create_impure_extraction(tier, split, ore)
+            --Go through each ore
+            for j, ore in pairs(split) do
+                --Create pure extraction recipes
+                create_pure_extraction(tier, ore)
+                --Create impure extraction recipes
+                create_impure_extraction(tier, split, ore)
+            end
         end
     end
 end
