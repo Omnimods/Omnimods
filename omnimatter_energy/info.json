@@ -10,10 +10,10 @@
     "base",
     "omnilib >= 4.1.0",
     "omnimatter",
-    "omnimatter_crystal",
-    "?boblogistics",
-    "?bobassembly",
-    "(?)bobplates",
-    "!aai-industry"
+    "? omnimatter_crystal",
+    "? boblogistics",
+    "? bobassembly",
+    "(?) bobplates",
+    "! aai-industry"
 ]
 }

@@ -9,47 +9,48 @@ for _, sol in pairs(data.raw["solar-panel"]) do
     end
 end
 
-local parts={"plate","crystal","circuit"}
+local parts = {"plate","crystal","circuit"}
 
-local quant={}
-quant["plate"]=5
-quant["crystal"]=5
-quant["circuit"]=5
+local quant = {}
+quant["plate"] = 8
+quant["crystal"] = 4
+quant["circuit"] = 6
 
 local component={}
-component["plate"]= {"steel-plate"}
-component["crystal"]={"iron-ore-crystal"}
-component["circuit"]={"basic-crystallonic","basic-oscillo-crystallonic"}
+component["plate"] = {"omnicium-plate", "omnicium-iron-alloy", "omnicium-steel-alloy"}
+component["crystal"] = {}
+component["circuit"] = {}
+
+if mods["omnimatter_crystal"] then
+    component["crystal"] = {"iron-ore-crystal"}
+    component["circuit"] = {"basic-crystallonic", "basic-oscillo-crystallonic"}
+else
+    component["crystal"] = {"iron-plate"}
+    component["circuit"] = {"electronic-circuit", "advanced-circuit", "processing-unit"}
+end
+
 if data.raw.item["lead-ore-crystal"] then component["crystal"][#component["crystal"]+1] = "lead-ore-crystal" end
 if data.raw.item["quartz-crystal"] then component["crystal"][#component["crystal"]+1] = "quartz-crystal" end
 if data.raw.item["cobalt-ore-crystal"] then component["crystal"][#component["crystal"]+1] = "cobalt-ore-crystal" end
 if data.raw.item["silver-ore-crystal"] then component["crystal"][#component["crystal"]+1] = "silver-ore-crystal" end
 
-local crystallonics = {"crystal-rod","oscillocrystal","electrocrystal"}
+if data.raw.item["omnicium-aluminium-alloy"] then component["plate"][#component["plate"]+1] = "omnicium-aluminium-alloy" end
+if data.raw.item["omnicium-tungsten-alloy"] then component["plate"][#component["plate"]+1] = "omnicium-tungsten-alloy" end
+
 
 local get_cost = function(tier, size)
     local ing = {}
-
-    ing[#ing+1]={type="item",name="omnicium-plate", amount = 6 + (size-1)*(size-1) + (tier-1)*4}
-
     --Add components to each crystal panel recipe
     for _,part in pairs(parts) do
         local amount = quant[part]
         for i=tier, 1, -1 do
+
             if component[part] and component[part][i] then
                 ing[#ing+1]={type="item",name=component[part][i],amount=amount}
                 break
             else
                 amount = amount + 2
             end
-        end
-    end
-
-    --Add crystallonics to each crystal panel with size > 1
-    for i=tier, 1, -1 do
-        if size > 1 and crystallonics[i] then
-            ing[#ing+1]={type="item",name=crystallonics[i],amount=math.pow(size-1,2)-math.pow(size-2,2)}
-            break
         end
     end
 
@@ -73,11 +74,15 @@ end
 
 local get_req = function(tier, size)
     local req = {}
+    local crystal = mods["omnimatter_crystal"]
+
     if tier == 1 and size == 1 then
-        req = {"solar-energy", "omnitech-crystallonics-1"}
+        req = {"solar-energy"}
+        if crystal then req[2] = "omnitech-crystallonics-1" end
     elseif size == 1 then
         if tier <= 5 then
-            req = {"omnitech-crystal-solar-panel-tier-"..(tier-1).."-size-"..max_size, "omnitech-crystallonics-"..tier}
+            req = {"omnitech-crystal-solar-panel-tier-"..(tier-1).."-size-"..max_size}
+            if crystal then req[2] = "omnitech-crystallonics-"..tier end
         else
             req = {"omnitech-crystal-solar-panel-tier-"..(tier-1).."-size-"..max_size}
         end
