@@ -1,6 +1,6 @@
 {
 "name":"omnimatter_energy",
-"version": "2.1.10",
+"version": "3.1.0",
 "title":"Omnienergy",
 "author":"EmperorZelos",
 "contact": "https://discord.gg/WQYks7W",
@@ -10,10 +10,10 @@
     "base",
     "omnilib >= 4.1.0",
     "omnimatter",
-    "omnimatter_crystal",
-    "?boblogistics",
-    "?bobassembly",
-    "(?)bobplates",
-    "!aai-industry"
+    "? omnimatter_crystal",
+    "? boblogistics",
+    "? bobassembly",
+    "(?) bobplates",
+    "! aai-industry"
 ]
 }

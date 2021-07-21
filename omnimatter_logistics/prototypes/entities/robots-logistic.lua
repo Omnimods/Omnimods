@@ -84,7 +84,6 @@ for i=1,nr_bots do
     selection_box = {{-0.5, -1.5}, {0.5, -0.5}},
     max_payload_size = omni.lib.round(25/nr_bots*i),
     speed = 0.05*i/nr_bots,
-    transfer_distance = 0.5,
     max_energy = 10*2/3*i.."MJ",
     energy_per_tick = 0.075*2/3*i.."kJ",
     speed_multiplier_when_out_of_energy = 0.9-(i-1)*0.1,
