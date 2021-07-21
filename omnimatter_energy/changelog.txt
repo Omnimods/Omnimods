@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.1.0
+Date: 2021.07.21
+  Features:
+    - Complete rewrite
+    - Added a new science pack that is gated before automation science and leads you to electricity
+    - Added basic belt / underground belt / splitter (7.5 speed)
+  Changes:
+    - Complete tech tree overhaul
+    - Crystal Solar panel recipe overhaul
+    - Omnimatter crystal is an optional dependency now
+---------------------------------------------------------------------------------------------------
 Version: 2.1.10
 Date: 2021.06.20
   Features:

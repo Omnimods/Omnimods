@@ -7,7 +7,7 @@ omni.nil_fuels = {}
 
 --Fuels to ignore, no Omnified Fuel will be created, Fuel Value will be decreased by 20%
 local ignore = {
-	"omnite",
+    "omnite",
     "crushed-omnite",
     "omniwood",
     "seedling",
@@ -63,10 +63,12 @@ for _,fuelitem in pairs(data.raw.item) do
         local FV=omni.lib.get_fuel_number(fuelitem.fuel_value)/10^6
         local props={
             [5]={ing_add={"crushed-omnite",2}, cat="crafting", sub="omnienergy-fuel-1", time=1.0, tech="omnitech-omnium-power-1", fuelmult = 1.50},
-            [10]={ing_add={"pulverized-omnite",4}, cat="omnite-extraction", sub="omnienergy-fuel-2", time=2.0,tech="omnitech-omnium-power-2", fuelmult = 1.45},
-            [40]={ing_add={type = "fluid", name = "omnic-acid", amount = 20}, cat="omniphlog", sub="omnienergy-fuel-3", time=2.0,tech="omnitech-omnium-power-3", fuelmult = 1.40},
-            [250]={ing_add={type = "fluid", name = "omnisludge", amount = 80}, cat="omniplant", sub="omnienergy-fuel-4", time=4.0,tech="omnitech-omnium-power-4", fuelmult = 1.35},
-            [300]={ing_add={type = "fluid", name = "omniston", amount = 40}, cat="omniplant", sub="omnienergy-fuel-5", time=4.0,tech="omnitech-omnium-power-5", fuelmult = 1.30},}
+            [10]={ing_add={"pulverized-omnite",4}, cat="omnifurnace", sub="omnienergy-fuel-2", time=2.0,tech="omnitech-omnium-power-2", fuelmult = 1.45},
+            [40]={ing_add={type = "fluid", name = "omnic-acid", amount = 20}, cat="omnite-extraction", sub="omnienergy-fuel-3", time=2.0,tech="omnitech-omnium-power-3", fuelmult = 1.40},
+            [250]={ing_add={type = "fluid", name = "omnisludge", amount = 80}, cat="omniphlog", sub="omnienergy-fuel-4", time=4.0,tech="omnitech-omnium-power-4", fuelmult = 1.35},
+            [300]={ing_add={type = "fluid", name = "omniston", amount = 40}, cat="omniphlog", sub="omnienergy-fuel-5", time=4.0,tech="omnitech-omnium-power-5", fuelmult = 1.30}
+        }
+        if mods["omnimatter_crystal"] then props[300].cat = "omniplant" end
             local props_add={}
         if FV<=5 then
             props_add=props[5]
@@ -133,20 +135,20 @@ end
 RecGen:create("omnimatter_energy","purified-omnite"):
     setIngredients({type="item", name="crushed-omnite", amount=5}):
     setResults({type="item", name="purified-omnite", amount=2}):
-	setStacksize(200):
+    setStacksize(200):
     setCategory("omnifurnace"):
     setSubgroup("omnienergy-fuel-1"):
     setOrder("a"):
-	setFuelCategory("chemical"):
-	setFuelValue(2.4):
+    setFuelCategory("chemical"):
+    setFuelValue(2.4):
     setEnergy(2.0):
     setEnabled(false):
     setTechName("omnitech-basic-omnium-power"):
-	setTechCost(55):
-	setTechIcons("purified-omnite","omnimatter_energy"):
-    setTechPrereq("omnitech-anbaricity"):extend()
-  
-omni.lib.add_prerequisite("omnitech-omnium-power-1","omnitech-basic-omnium-power")
+    setTechCost(55):
+    setTechPacks({{"energy-science-pack", 1}}):
+    setTechIcons("purified-omnite","omnimatter_energy"):
+    setTechPrereq("omnitech-anbaricity"):
+    extend()
 
 --remove upper omnium-power techs that unlock nothing
 for i=5,2,-1 do
@@ -157,28 +159,4 @@ for i=5,2,-1 do
     else
         break
     end
-end
-
---Replace all coal from rocks with purified omnite
-for _,rock in pairs(data.raw["simple-entity"]) do
-	if string.find(rock.name,"rock") then
-		if rock.minable then
-			if rock.minable.results then
-				for _,res in pairs(rock.minable.results) do
-					if res.name == "coal" then
-						res.name = "purified-omnite"
-					end
-				end
-			elseif rock.minable.result and rock.minable.result == "coal" then
-				rock.minable.result = "purified-omnite"
-			end
-		end
-		if rock.loot then
-			for _,loot in pairs(rock.loot) do
-				if loot.name == "coal" then
-					loot.name = "purified-omnite"
-				end
-			end
-		end
-	end
 end
