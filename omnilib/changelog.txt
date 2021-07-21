@@ -7,6 +7,7 @@ Date: 2021.07.21
   Bugfixes:
     - Multiple fixes, typos and fallbacks in recipe generation
     - Fixed that certain settings were not forced properly
+    - Fixed omni.lib.hide_setting() not properly forcing bool settings to false
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.12
 Date: 2021.06.20
