@@ -1,12 +1,13 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.16
-Date: 2021.07.XX
+Date: 2021.07.21
   Changes:
     - If a tier only contains a single ore, base and focused extractions of that ore include up to
       2 ores of the previous tier
   Bugfixes:
     - Complete rewrite of the extraction recipe generation logic to fix an issue where ore groups
       of base - and impure extractions were different if there were too many ores in one tier
+    - Added a missing check for angels smelting in add_omnicium_alloy()
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.15
 Date: 2021.06.20
