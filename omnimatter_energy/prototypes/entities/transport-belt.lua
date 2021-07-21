@@ -31,7 +31,7 @@ local ebelt = table.deepcopy(data.raw["transport-belt"]["transport-belt"])
 ebelt.name = "basic-transport-belt"
 ebelt.belt_animation_set.animation_set.filename = "__omnimatter_energy__/graphics/entity/basic-transport-belt/basic-transport-belt.png"
 ebelt.belt_animation_set.animation_set.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-transport-belt/hr-basic-transport-belt.png"
---ebelt.corpse = "basic-transport-belt-remnants" TODO
+ebelt.corpse = "basic-transport-belt-remnants"
 
 ebelt.icon = "__omnimatter_energy__/graphics/icons/basic-transport-belt.png"
 ebelt.minable.result = "basic-transport-belt"
@@ -44,7 +44,7 @@ local eunder= table.deepcopy(data.raw["underground-belt"]["underground-belt"])
 eunder.name = "basic-underground-belt"
 eunder.belt_animation_set.animation_set.filename = "__omnimatter_energy__/graphics/entity/basic-transport-belt/basic-transport-belt.png"
 eunder.belt_animation_set.animation_set.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-transport-belt/hr-basic-transport-belt.png"
---eunder.corpse = "basic-underground-belt-remnants" TODO
+eunder.corpse = "basic-underground-belt-remnants"
 
 eunder.structure.direction_in.sheet.filename = "__omnimatter_energy__/graphics/entity/basic-underground-belt/basic-underground-belt-structure.png"
 eunder.structure.direction_in.sheet.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-underground-belt/hr-basic-underground-belt-structure.png"
@@ -65,7 +65,7 @@ local esplitter= table.deepcopy(data.raw["splitter"]["splitter"])
 esplitter.name = "basic-splitter"
 esplitter.belt_animation_set.animation_set.filename = "__omnimatter_energy__/graphics/entity/basic-transport-belt/basic-transport-belt.png"
 esplitter.belt_animation_set.animation_set.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-transport-belt/hr-basic-transport-belt.png"
---esplitter.corpse = "basic-splitter-belt-remnants" TODO
+esplitter.corpse = "basic-splitter-remnants"
 
 esplitter.structure.east.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/basic-splitter-east.png"
 esplitter.structure.east.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/hr-basic-splitter-east.png"
@@ -86,6 +86,57 @@ esplitter.next_upgrade = "splitter"
 esplitter.speed = 0.015625
 
 data:extend({ebelt, eunder, esplitter})
+
+
+------------------
+-----Remnants-----
+------------------
+--Basic Belt
+local rbelt= table.deepcopy(data.raw["corpse"]["transport-belt-remnants"])
+rbelt.name = "basic-transport-belt-remnants"
+rbelt.icon = "__omnimatter_energy__/graphics/icons/basic-transport-belt.png"
+rbelt.animation = make_rotated_animation_variations_from_sheet (2,
+{
+    filename = "__omnimatter_energy__/graphics/entity/basic-transport-belt/remnants/basic-transport-belt-remnants.png",
+    line_length = 1,
+    width = 54,
+    height = 52,
+    frame_count = 1,
+    variation_count = 1,
+    axially_symmetrical = false,
+    direction_count = 4,
+    shift = util.by_pixel(1, 0),
+    hr_version =
+    {
+        filename = "__omnimatter_energy__/graphics/entity/basic-transport-belt/remnants/hr-basic-transport-belt-remnants.png",
+        line_length = 1,
+        width = 106,
+        height = 102,
+        frame_count = 1,
+        variation_count = 1,
+        axially_symmetrical = false,
+        direction_count = 4,
+        shift = util.by_pixel(1, -0.5),
+        scale = 0.5
+    }
+})
+
+--Basic UG
+local runder= table.deepcopy(data.raw["corpse"]["underground-belt-remnants"])
+runder.name = "basic-underground-belt-remnants"
+runder.icon = "__omnimatter_energy__/graphics/icons/basic-underground-belt.png"
+runder.animation.filename = "__omnimatter_energy__/graphics/entity/basic-underground-belt/remnants/basic-underground-belt-remnants.png"
+runder.animation.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-underground-belt/remnants/hr-basic-underground-belt-remnants.png"
+
+
+--Basic Splitter
+local rsplitter= table.deepcopy(data.raw["corpse"]["splitter-remnants"])
+rsplitter.name = "basic-splitter-remnants"
+rsplitter.icon = "__omnimatter_energy__/graphics/icons/basic-splitter.png"
+rsplitter.animation.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/remnants/basic-splitter-remnants.png"
+rsplitter.animation.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/remnants/hr-basic-splitter-remnants.png"
+
+data:extend({rbelt, runder, rsplitter})
 
 
 -----------------

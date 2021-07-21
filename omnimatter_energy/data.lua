@@ -1,3 +1,5 @@
+if not omni then omni = {} end
+if not omni.energy then omni.energy = {} end
 require("prototypes.functions")
 require("prototypes.categories")
 
