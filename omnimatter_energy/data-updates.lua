@@ -1,4 +1,4 @@
-require("prototypes.entities.solar_panels")
+
 require("prototypes.recipes.fuel")
 
 --Updates
@@ -12,4 +12,4 @@ require("prototypes.compat.angels")
 require("prototypes.compat.angelsindustries")
 require("prototypes.compat.miniloaders")
 require("prototypes.compat.py")
---require("prototypes.compat.krastorio2") --K2 has to fix things on their side first
+require("prototypes.compat.krastorio2")

@@ -2,71 +2,54 @@ if mods["Krastorio2"] then
     ----------------------
     ----- Tech compat-----
     ----------------------
-    --Fix Tech order
-    omni.lib.remove_prerequisite("electronics","logistic-science-pack")
-    omni.lib.remove_science_pack("electronics","logistic-science-pack")
-    omni.lib.remove_prerequisite("electronics","automation")
-    
-    --Move simple automation behind automation core (basic tech cards) and add it as prereq for automation card
-    omni.lib.remove_science_pack("omnitech-simple-automation","automation-science-pack")
-    omni.lib.add_prerequisite("omnitech-simple-automation","kr-automation-core")
-    omni.lib.replace_prerequisite("automation-science-pack","kr-automation-core","omnitech-simple-automation")
-    omni.lib.remove_prerequisite("omnitech-belt-logistics","omnitech-simple-automation")
 
-    --Move Automation behind automation tech card and add back automation sp
-    omni.lib.remove_prerequisite("automation","logistic-science-pack")
-    omni.lib.remove_science_pack("automation","logistic-science-pack")
-    omni.lib.add_science_pack("automation","automation-science-pack")
-    omni.lib.replace_prerequisite("automation","kr-automation-core","omnitech-anbaricity")
+    --Create a new tech for basic tech card
+    RecGen:import("basic-tech-card"):
+        setEnabled(false):
+        setTechName("basic-tech-card"):
+        setTechCost(45):
+        setTechIcons({{icon = "__Krastorio2__/graphics/icons/cards/basic-tech-card.png",icon_size = 64}}):
+        setTechPacks({{"energy-science-pack", 1}}):
+        setTechPrereq("omnitech-anbaric-lab"):
+        extend()
 
-    --Add automation as prereq for logi sp and remove electronics as prereq from automation 2
-    omni.lib.add_prerequisite("logistic-science-pack","automation")
-    omni.lib.remove_prerequisite("automation-2","electronics")
+    --Turn the energy SP into a "card", thanks to the K2 team for letting us use a changed version of their card icon
+    RecGen:import("energy-science-pack"):
+        setIcons({{icon = "__omnimatter_energy__/graphics/icons/energy-tech-card.png",icon_size = 64}}):
+        setTechIcons({{icon = "__omnimatter_energy__/graphics/icons/energy-tech-card.png",icon_size = 64}}):
+        setLocName({"technology-name.energy-tech-card"}):
+        setTechLocName({"technology-name.energy-tech-card"}):
+        extend()
 
-    --unify kr and omni mining drill tech
-    omni.lib.replace_prerequisite("kr-electric-mining-drill","automation-science-pack","omnitech-anbaricity")
+    data.raw.tool["energy-science-pack"].icons = {{icon = "__omnimatter_energy__/graphics/icons/energy-tech-card.png",icon_size = 64}}
+    data.raw.tool["energy-science-pack"].localised_name = {"technology-name.energy-tech-card"}
+
+    --Move lab behind anbaricity again
+    omni.lib.replace_prerequisite("omnitech-anbaric-lab", "omnitech-anbaric-electronics", "omnitech-anbaricity")
+
+    --Move basic tech card techs without prereq behind that
+    omni.lib.add_prerequisite("kr-automation-core", "basic-tech-card")
+    omni.lib.add_prerequisite("kr-iron-pickaxe", "basic-tech-card")
+    omni.lib.add_prerequisite("military", "basic-tech-card")
+
+    --Remove anbaric-electronics, K2 fixed up vanilla electronics
+    omni.lib.replace_prerequisite("omnitech-anbaric-inserter", "omnitech-anbaric-electronics", "electronics")
+    --omni.lib.replace_prerequisite("omnitech-anbaric-lab", "omnitech-anbaric-electronics", "electronics")
+    TechGen:import("omnitech-anbaric-electronics"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():sethidden():extend()
+
+    --remove omni mining drill tech
     TechGen:import("omnitech-anbaric-mining"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():sethidden():extend()
 
-    --unify kr-steam-engine techand omni steam-engine tech
+    --remove omni inserter tech
+    TechGen:import("omnitech-anbaric-inserter"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():sethidden():extend()
+
+    --unify kr-steam-engine tech and omni steam-engine tech
     omni.lib.replace_prerequisite("nuclear-power","kr-steam-engine","omnitech-steam-power")
-    TechGen:import("kr-steam-engine"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():sethidden():extend()
+    omni.lib.add_prerequisite("kr-steam-engine", "omnitech-basic-omnium-power")
+    TechGen:import("omnitech-steam-power"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():sethidden():extend()
 
-    --Move crusher behind anbaricity and add automation cards to it and following techs
-    omni.lib.replace_prerequisite("kr-crusher","kr-automation-core","omnitech-anbaricity")
-    omni.lib.add_science_pack("kr-crusher","automation-science-pack")
-    omni.lib.add_science_pack("kr-stone-processing","automation-science-pack")
-    omni.lib.add_science_pack("kr-greenhouse","automation-science-pack")
-    omni.lib.add_science_pack("kr-decorations","automation-science-pack")
-    omni.lib.remove_prerequisite("kr-greenhouse","kr-automation-core")
-
-    --Move basic fluid handling behind automation science
-    omni.lib.replace_prerequisite("kr-basic-fluid-handling","kr-automation-core","automation-science-pack")
-    omni.lib.add_science_pack("kr-basic-fluid-handling","automation-science-pack")
-
-    --Move electric opener techs behind anbaricity
-    omni.lib.add_prerequisite("optics","omnitech-anbaricity")
-    omni.lib.add_prerequisite("electronics","omnitech-anbaricity")
-
-    --Remove automation sp as prereq from logistic sp (duplicate now)
-    omni.lib.remove_prerequisite("logistic-science-pack","automation-science-pack")
-
-    --Fix fast inserter prereqs (red sp not needed, requires hidden logistic tech)
-    omni.lib.remove_prerequisite("fast-inserter","logistics")
-    omni.lib.remove_prerequisite("fast-inserter","automation-science-pack")
-
-    -- Lock omnitor lab behind a basic tech card tech (crash site lab --> omnitor lab --> normal lab)
-    RecGen:import("omnitor-lab"):
-        setEnabled(false):
-        setTechName("omnitech-simple-research"):
-	    setTechCost(30):
-        setTechPacks({{"basic-tech-card",1}}):
-        setTechIcons("lab","omnimatter_energy"):
-        setTechPrereq("kr-automation-core"):
-        extend()
-    omni.lib.add_prerequisite("automation-science-pack","omnitech-simple-research")
-
-    --Fix that the omnitor lab doesnt accept basic tech cards:
-    table.insert(data.raw["lab"]["omnitor-lab"].inputs,"basic-tech-card")
+    --Fix automation SP locales
+    data.raw.technology["automation-science-pack"].localised_name = {"technology-name.automation-tech-card"}
 
     --Move wind turbine to anbaricity
     RecGen:import("kr-wind-turbine"):
@@ -98,25 +81,7 @@ if mods["Krastorio2"] then
             }}
         }
     end
-
-    --Add Basic tech card to all omni science up to t2(greens)
-    --Baic tech cards are not used for mid-late game techs, thats why we cant add them as t1 pack to lib
-    for _,tech in pairs(data.raw.technology) do
-        if tech.unit.ingredients and #tech.unit.ingredients < 3 then
-            omni.lib.add_science_pack(tech.name,"basic-tech-card")
-        end
-    end
-
-    --Balance out early tech cost (mainly moved stuff)
-    data.raw.technology["omnitech-simple-automation"].unit.count = 30
-    data.raw.technology["omnitech-anbaric-lab"].unit.count = 65
-    data.raw.technology["kr-crusher"].unit.count = 45
-    data.raw.technology["optics"].unit.count = 75
-    data.raw.technology["electronics"].unit.count = 65
-    data.raw.technology["kr-electric-mining-drill"].unit.count = 65
-    data.raw.technology["automation"].unit.count = 60
-    data.raw.technology["automation"].unit.count = 90
-
+    
     ----------------------
     ----- Item compat-----
     ----------------------
@@ -144,7 +109,7 @@ if mods["Krastorio2"] then
     omni.lib.add_recipe_ingredient("kr-superior-long-filter-inserter","long-handed-inserter")
 
 
-    --Add vehicle fuel cat to burner inserter 2 and burner filter 2
+    --Add vehicle fuel cat to burner filter inserter
     data.raw["inserter"]["burner-filter-inserter"].energy_source.fuel_category = nil
     data.raw["inserter"]["burner-filter-inserter"].energy_source.fuel_categories = {"chemical","vehicle-fuel"}
 end

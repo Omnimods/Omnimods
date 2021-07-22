@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.1.1
+Date: 2021.07.22
+  Features:
+    - Readded Krastorio2 compatibility
+  Changes:
+    - The energy science pack is now added to all technologies
+    - Adjusted the energy and automation science pack recipes
+  Bugfixes:
+    - Fixed that basic underground belts had the wrong length set
+---------------------------------------------------------------------------------------------------
 Version: 3.1.0
 Date: 2021.07.21
   Features:
