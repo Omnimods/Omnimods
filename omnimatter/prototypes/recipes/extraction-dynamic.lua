@@ -278,7 +278,7 @@ local function create_impure_extraction(tier, split, ore_name)
         else
             focused_ore:setTechPrereq("omnitech-focused-extraction-"..ore_name.."-"..(i-1))
         end
-        focused_ore:setResults(r)
+        focused_ore:setResults(res)
         focused_ore:extend()
     end      
 end
