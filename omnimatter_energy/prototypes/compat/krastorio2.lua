@@ -13,6 +13,17 @@ if mods["Krastorio2"] then
         setTechPrereq("omnitech-anbaric-lab"):
         extend()
 
+    --Turn the energy SP into a "card", thanks to the K2 team for letting us use a changed version of their card icon
+    RecGen:import("energy-science-pack"):
+        setIcons({{icon = "__omnimatter_energy__/graphics/icons/energy-tech-card.png",icon_size = 64}}):
+        setTechIcons({{icon = "__omnimatter_energy__/graphics/icons/energy-tech-card.png",icon_size = 64}}):
+        setLocName({"technology-name.energy-tech-card"}):
+        setTechLocName({"technology-name.energy-tech-card"}):
+        extend()
+
+    data.raw.tool["energy-science-pack"].icons = {{icon = "__omnimatter_energy__/graphics/icons/energy-tech-card.png",icon_size = 64}}
+    data.raw.tool["energy-science-pack"].localised_name = {"technology-name.energy-tech-card"}
+
     --Move lab behind anbaricity again
     omni.lib.replace_prerequisite("omnitech-anbaric-lab", "omnitech-anbaric-electronics", "omnitech-anbaricity")
 
