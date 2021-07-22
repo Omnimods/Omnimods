@@ -13,6 +13,7 @@ require("prototypes.entities.omnifurnace")
 require("prototypes.entities.transport-belt")
 require("prototypes.entities.burner")
 require("prototypes.entities.solar_road")
+require("prototypes.entities.solar_panels")
 
 --Old
 --require("prototypes.vehicles")

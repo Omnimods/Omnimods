@@ -7,8 +7,8 @@ RecGen:create("omnimatter_energy","energy-science-pack"):
     setEnergy(5):
     addProductivity():
     setIngredients({
-        {type = "item", name = "omnicium-plate", amount = 2},
-        {type = "item", name = "burner-inserter", amount = 1}
+        {type = "item", name = "omnicium-plate", amount = 1},
+        {type = "item", name = "omnitor", amount = 1}
     }):
     setSubgroup("science-pack"):
     setCategory("crafting"):
@@ -16,6 +16,7 @@ RecGen:create("omnimatter_energy","energy-science-pack"):
     setEnabled(true):
     extend()
 
+omni.lib.set_recipe_ingredients("automation-science-pack",{{"burner-inserte",1}, {"copper-plate", 1}})
 --Add the energy SP to all labs that accept the automation Sp aswell (dont mess up late game labs!)
 for _,lab in pairs(data.raw["lab"]) do
     if omni.lib.is_in_table("automation-science-pack", lab.inputs) then
