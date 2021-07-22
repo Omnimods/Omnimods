@@ -59,7 +59,7 @@ eunder.icon = "__omnimatter_energy__/graphics/icons/basic-underground-belt.png"
 eunder.minable.result = "basic-underground-belt"
 eunder.next_upgrade = "underground-belt"
 eunder.speed = 0.015625
-eunder.max_distance = 2
+eunder.max_distance = 3
 
 --Basic splitter
 local esplitter= table.deepcopy(data.raw["splitter"]["splitter"])
