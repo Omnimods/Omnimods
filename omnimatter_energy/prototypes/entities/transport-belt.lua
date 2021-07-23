@@ -195,19 +195,27 @@ RecGen:create("omnimatter_energy", "basic-splitter"):
 -----Modify higher tier belt recipes-----
 -----------------------------------------
 
---Create seperate techs for Belt, Splitter and UG TODO Create 7.5 speed belt like bob???
+--Move the belt to logistics
 RecGen:import("transport-belt"):
     setEnabled(false):
     setTechName("logistics"):
     setTechPrereq("automation-science-pack"):
-    setIngredients(
-        {"basic-transport-belt", 1}, {"omnitor", 1}):
     extend()
 
-RecGen:import("underground-belt"):
-    setIngredients({"basic-underground-belt", 2}, {"iron-gear-wheel", 20}):
-    extend()
+--Adjust recipes
+omni.lib.replace_recipe_ingredient("transport-belt", "iron-gear-wheel", {"omnitor",1})
 
-RecGen:import("splitter"):
-    setIngredients({"basic-splitter", 1}, {"iron-gear-wheel", 5}, {"electronic-circuit", 5}):
-    extend()
+--Check if gears are already added, angel/bob replace plates with something else
+if not omni.lib.recipe_ingredient_contains("underground-belt", "iron-gear-wheel") then
+    omni.lib.replace_recipe_ingredient("underground-belt", "iron-plate", {"iron-gear-wheel",20})
+end
+if not omni.lib.recipe_ingredient_contains("splitter", "iron-gear-wheel") then
+    omni.lib.replace_recipe_ingredient("splitter", "iron-plate", {"iron-gear-wheel",5})
+end
+
+--check if some mod already added basic belts, if not, add them (assume the splitter/ug is not touched in this case aswell)
+if not omni.lib.recipe_ingredient_contains("transport-belt", "basic-transport-belt") then
+    omni.lib.add_recipe_ingredient("transport-belt", {"basic-transport-belt", 1})
+    omni.lib.add_recipe_ingredient("underground-belt", {"basic-underground-belt", 2})
+    omni.lib.add_recipe_ingredient("splitter", {"basic-splitter", 1})
+end
