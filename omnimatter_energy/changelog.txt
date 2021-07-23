@@ -6,6 +6,7 @@ Date: 2021.07.XX
   Bugfixes:
     - Fixed a crash with certain combinations of bobsmods
     - Fixed that the basic belt item had a normal belt icon with bob reskins
+    - Fixed that bobs logistics belt speed settings didnt affect basic belts
 ---------------------------------------------------------------------------------------------------
 Version: 3.1.3
 Date: 2021.07.23
