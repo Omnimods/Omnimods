@@ -7,7 +7,7 @@ Date: 2021.07.23
     - Fixed that bobs recipe changes on basic belts were overwritten
     - Fixed a crash when bobs burner electric generator setting was disabled
 ---------------------------------------------------------------------------------------------------
-Version: 3.1.1
+Version: 3.1.2
 Date: 2021.07.22
   Features:
     - Readded Krastorio2 compatibility
