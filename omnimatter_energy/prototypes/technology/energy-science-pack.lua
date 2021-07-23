@@ -6,17 +6,14 @@ RecGen:create("omnimatter_energy","energy-science-pack"):
     setDurabilityDesc("description.science-pack-remaining-amount"):
     setEnergy(5):
     addProductivity():
-    setIngredients({
-        {type = "item", name = "omnicium-plate", amount = 1},
-        {type = "item", name = "omnitor", amount = 1}
-    }):
+    setIngredients({{"omnicium-plate", 1}, {"omnite-brick", 1}}):
     setSubgroup("science-pack"):
     setCategory("crafting"):
     setOrder("a[aa-energy-science-pack]"):
     setEnabled(true):
     extend()
 
-omni.lib.set_recipe_ingredients("automation-science-pack" ,{"burner-inserter",1}, {"copper-plate", 1})
+omni.lib.replace_recipe_ingredient("automation-science-pack", "iron-gear-wheel", {"omnitor",1})
 
 --Add the energy SP to all labs that accept the automation Sp aswell (dont mess up late game labs!)
 for _,lab in pairs(data.raw["lab"]) do

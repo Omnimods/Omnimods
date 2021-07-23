@@ -1,7 +1,6 @@
 if mods["bobpower"] then
     omni.lib.add_prerequisite("bob-steam-engine-2", "omnitech-steam-power")
     omni.lib.add_prerequisite("bob-boiler-2", "omnitech-steam-power")
-    RecGen:import("bob-burner-generator"):setEnabled(false):extend()
 else
     omni.lib.add_recipe_ingredient("steam-turbine",{"anbaric-omnitor",10})
 end
@@ -34,6 +33,7 @@ if mods["bobelectronics"] then
     omni.lib.add_unlock_recipe("omnitech-anbaric-electronics", "wooden-board")
     omni.lib.add_unlock_recipe("omnitech-anbaric-electronics", "basic-circuit-board")
 end
+
 
 if mods["bobassembly"] then
     --Simple automation is between red SP and automation, move its steam assembler behind omnis basic automation, remoce bobs burner assembler
