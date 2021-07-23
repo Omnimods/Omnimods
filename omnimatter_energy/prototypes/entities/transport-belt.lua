@@ -4,18 +4,21 @@
 
 local ibelt = table.deepcopy(data.raw.item["transport-belt"])
 ibelt.name = "basic-transport-belt"
+ibelt.icons = nil
 ibelt.icon = "__omnimatter_energy__/graphics/icons/basic-transport-belt.png"
 ibelt.order = "a[basic-transport-belt]-a[basic-transport-belt]"
 ibelt.place_result = "basic-transport-belt"
 
 local iunder = table.deepcopy(data.raw.item["underground-belt"])
 iunder.name = "basic-underground-belt"
+iunder.icons = nil
 iunder.icon = "__omnimatter_energy__/graphics/icons/basic-underground-belt.png"
 iunder.order = "b[basic-underground-belt]-a[basic-underground-belt]"
 iunder.place_result = "basic-underground-belt"
 
 local isplitter = table.deepcopy(data.raw.item["splitter"])
 isplitter.name = "basic-splitter"
+isplitter.icons = nil
 isplitter.icon = "__omnimatter_energy__/graphics/icons/basic-splitter.png"
 isplitter.order = "c[basic-splitter]-a[basic-splitter]"
 isplitter.place_result = "basic-splitter"
