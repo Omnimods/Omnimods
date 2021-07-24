@@ -3,6 +3,7 @@ Version: 3.1.4
 Date: 2021.07.XX
   Changes:
     - Removed the automation sp requirement from gun turret and stone wall techs
+    - Omnitor AB compat: added omnitors to Angels/Bobs buildings that have "moving parts"
   Bugfixes:
     - Fixed a crash with certain combinations of bobsmods
     - Fixed that the basic belt item had a normal belt icon with bob reskins
