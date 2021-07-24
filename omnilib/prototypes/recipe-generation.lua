@@ -3384,6 +3384,12 @@ function BuildGen:returnSound(levels,grade)
     }
 end
 --Must come after the type decleration
+--s: building bounding box by size, e.g. for a 3x3 building --> s = "XXX.XXX.XXX" (From left to right)
+-- Fluidboxes can be added by replacing the corresponding "X" with a letter:
+--input: A, W, S, D
+--output: I, K, J, L
+--in-out: F, T, H, G
+--Depending on which side the fluidbox is added, the corresponding letters have to be used. E.g. on the North side the letters A, I and F are valid (East: W, K and T)...
 function BuildGen:setFluidBox(s,hide,tmp)
     if type(s) == "table" then
         self.fluid_boxes = function(levels,grade) return s end

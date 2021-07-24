@@ -805,9 +805,9 @@ end
 
 local c=0.9
 local dir={W={0,-c},S={0,c},A={-c,0},D={c,0},I={0,-c},K={0,c},J={-c,0},L={c,0},T={0,-c},G={0,c},F={-c,0},H={c,0}}
-local inflow={A=true,W=true,S=true,D=true}
-local passthrough={F=true,T=true,H=true,G=true}
-
+local inflow={A=true,W=true,S=true,D=true}		--North,East,South,West -->Letters have to be used for the given direction!!!
+local passthrough={F=true,T=true,H=true,G=true} --North,East,South,West
+--output: I, K, J, L
 function omni.lib.assemblingFluidBox(str,hide)
 	if str==nil then return nil end
 	local code=omni.lib.split(str,".")
