@@ -23,8 +23,8 @@ armour[#armour+1]= {
   type = "item-group",
   name = "omnilogistics",
   order = "z",
-  icon = "__omnimatter_logistics__/graphics/omnilogistics.png",
-  icon_size = 128,
+  icon = "__omnimatter_logistics__/graphics/technology/logistics-category.png",
+  icon_size = 132,
 }
 armour[#armour+1] = {
   type = "item-subgroup",
