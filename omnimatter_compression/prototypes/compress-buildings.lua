@@ -405,7 +405,7 @@ local run_entity_updates = function(new, kind, i)
   end
   --recipe category settings for assembly/furnace types
   if kind == "assembling-machine" or kind == "furnace" or kind == "rocket-silo" then
-    local new_cat = {} --clear each time
+    local new_cat = table.deepcopy(new.crafting_categories) --revert each time
     for j, cat in pairs(new.crafting_categories) do
       if not data.raw["recipe-category"][cat.."-compressed"] then --check if category exists
         if not omni.lib.is_in_table(cat.."-compressed", recipe_category) then --check not already in the to-expand table
