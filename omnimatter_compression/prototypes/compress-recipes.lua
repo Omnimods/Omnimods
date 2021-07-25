@@ -317,7 +317,8 @@ function adjustOutput(recipe)
 					end
 				end
       end
-      for _, res in pairs(recipe[dif].results) do
+      for resIndex=1, #recipe[dif].results do
+        local res = recipe[dif].results[resIndex]
         if div then
           res.amount = res.amount / div
         end
@@ -349,9 +350,14 @@ function adjustOutput(recipe)
               res.amount = (launch_item.stack_size == 1) and 1 or res.amount -- Revert amount if necessary
             end
           end
-          if res.amount > 10^16 then
-            res.amount = math.ceil(res.amount / 2)
-            table.insert(recipe[dif].results, table.deepcopy(res))
+          if res.amount >= 2^16 then
+            -- Split output into res/65535 + remainder different results to bypass limit
+            local newres = table.deepcopy(res)
+            newres.amount = 65535
+            for n=1, math.floor(res.amount / 65535) do
+              recipe[dif].results[#recipe[dif].results+1] = newres
+            end
+            res.amount = res.amount % 65535
           end
         end
 			end
