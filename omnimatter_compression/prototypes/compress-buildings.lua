@@ -500,7 +500,11 @@ local run_entity_updates = function(new, kind, i)
   end
   --mining speed and radius update
   if kind == "mining-drill" then
-    new.mining_speed = new.mining_speed * math.pow(multiplier,i/2)
+    local speed_divisor = 2
+    if new.energy_source and new.energy_source.type ~= "electric" then
+      speed_divisor = 1
+    end
+    new.mining_speed = new.mining_speed * math.pow(multiplier,i/speed_divisor)
     --new.mining_power = new.mining_power * math.pow(multiplier,i/2)
     new.resource_searching_radius = new.resource_searching_radius *(i+1)
   end
