@@ -349,6 +349,9 @@ for group in pairs(data.raw) do
       then
         generate_compressed_item(item)
       elseif not compressed_item_names["compressed-"..item.name] then--exclude item
+        if item.stack_size > max_stack_size_to_compress then
+          log("Excluding >max stack size: " .. item.name .. "(" .. item.stack_size .. ")")
+        end
         excluded_items[item.name] = true
       end      
     end
