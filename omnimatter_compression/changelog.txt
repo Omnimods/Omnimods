@@ -1,5 +1,5 @@
 Version: 4.1.8
-Date: 2021.07.24
+Date: 2021.07.26
   Changes:
     - Burner assemblers have less of a speed penalty compared to their electric brethren (they are still less efficient in ore/watt, and cannot take modules)
     - Add an entry to game log when not compressing items due to massive stack sizes
