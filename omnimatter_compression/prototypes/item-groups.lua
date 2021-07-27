@@ -43,14 +43,17 @@ for name, order in pairs(cat) do
     }
     data:extend({cat_in, cat_out})
 end
-data:extend({{
+data:extend({
+    {
         type = "item-subgroup",
         name = "concentrator-fluids",
         group = "compressor-uncompress",
         order = order
-    },{
+    },
+    {
         type = "item-subgroup",
         name = "compressor-out-fluids",
         group = "compressor-uncompress",
         order = order
-    }})
+    }
+})

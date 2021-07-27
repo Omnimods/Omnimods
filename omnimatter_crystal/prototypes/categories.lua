@@ -12,7 +12,7 @@ data:extend(
         type = "item-group",
         name = "crystallonics",
         order = "z",
-        icon = "__omnimatter_crystal__/graphics/technology/crystallonics.png",
+        icon = "__omnimatter_crystal__/graphics/technology/crystallonics-category.png",
         icon_size = 128,
     },
     --Item Subgroups

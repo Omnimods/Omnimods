@@ -99,6 +99,10 @@ end
 --Move logi SP behind electronics (seems weird if it just prereqs automation SP)
 omni.lib.add_prerequisite("logistic-science-pack", "electronics")
 
+--Some vanilla techs to move from red to energy SP that are required early(turrets,walls,...)
+omni.lib.replace_science_pack("gun-turret", "automation-science-pack", "energy-science-pack")
+omni.lib.replace_science_pack("stone-wall", "automation-science-pack", "energy-science-pack")
+
 local function get_packs(tier)
     local c = {}
     local length = math.min(tier,#omni.sciencepacks)

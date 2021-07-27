@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.1.4
+Date: 2021.07.26
+  Changes:
+    - Removed the automation sp requirement from gun turret and stone wall techs
+    - Omnitor AB compat: added omnitors to Angels/Bobs buildings that have "moving parts"
+    - New icon + animation for the omnium heat turbine
+  Bugfixes:
+    - Fixed a crash with certain combinations of bobsmods
+    - Fixed that the basic belt item had a normal belt icon with bob reskins
+    - Fixed that bobs logistics belt speed settings didnt affect basic belts
+---------------------------------------------------------------------------------------------------
 Version: 3.1.3
 Date: 2021.07.23
   Changes:

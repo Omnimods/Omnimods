@@ -9,17 +9,17 @@ require("prototypes/planner")
 require("prototypes/functions")
 require("prototypes/early_compat")
 data:extend({
-  {
-    type = "custom-input",
-    name = "decompress-stack",
-    key_sequence = "CONTROL + SHIFT + D",
-    consuming = "none"
-  },
+    {
+        type = "custom-input",
+        name = "decompress-stack",
+        key_sequence = "CONTROL + SHIFT + D",
+        consuming = "none"
+    },
 })
 
 local compress_level = {"compact","nanite","quantum","singularity"}
 if settings.startup["omnicompression_building_levels"].value < 4 then
-	for i=4,settings.startup["omnicompression_building_levels"].value+1,-1 do
-		data.raw.technology["compression-"..compress_level[i].."-buildings"].enabled=false
-	end
+    for i=4,settings.startup["omnicompression_building_levels"].value+1,-1 do
+        data.raw.technology["compression-"..compress_level[i].."-buildings"].enabled=false
+    end
 end

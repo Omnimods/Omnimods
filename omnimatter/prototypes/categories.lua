@@ -5,16 +5,15 @@ data:extend(
     name = "omnimatter",
     order = "z",
     icon = "__omnimatter__/graphics/technology/omnimatter-category.png",
-    icon_size = 128,
+    icon_size = 144,
   },
   {
     type = "item-group",
     name = "omnic-water-distilation",
     order = "zz",
     icons={{
-      icon = "__omnimatter__/graphics/icons/omnic-water.png",
-      icon_size = 32,
-      scale = 0.1,
+      icon = "__omnimatter__/graphics/technology/omnic-water-distilation-category.png",
+      icon_size = 128,
     }}
   },
   

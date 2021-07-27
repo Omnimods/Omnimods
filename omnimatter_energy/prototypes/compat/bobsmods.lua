@@ -1,7 +1,13 @@
+--Dont mess with recipes when angels component mode is active
+local nocomps = true
+if mods["angelsindustries"] and angelsmods.industries.components then
+    nocomps = false
+end
+
 if mods["bobpower"] then
     omni.lib.add_prerequisite("bob-steam-engine-2", "omnitech-steam-power")
     omni.lib.add_prerequisite("bob-boiler-2", "omnitech-steam-power")
-else
+elseif nocomps then
     omni.lib.add_recipe_ingredient("steam-turbine",{"anbaric-omnitor",10})
 end
 
@@ -23,8 +29,6 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
     data.raw.recipe["underground-belt"].subgroup = "bob-logistic-tier-1"
     data.raw.recipe["splitter"].subgroup = "bob-logistic-tier-1"
 
-    data.raw.recipe["omnitor-assembling-machine"].subgroup = "bob-assembly-machine"
-    data.raw.recipe["assembling-machine-1"].subgroup = "bob-assembly-machine"
 end
 
 
@@ -41,4 +45,17 @@ if mods["bobassembly"] then
     omni.lib.replace_prerequisite("automation", "basic-automation", "automation-science-pack")
     omni.lib.remove_science_pack("basic-automation", "automation-science-pack")
     omni.lib.remove_unlock_recipe("basic-automation", "burner-assembling-machine")
+
+    --Update subgroup
+    data.raw.recipe["omnitor-assembling-machine"].subgroup = "bob-assembly-machine"
+    data.raw.recipe["assembling-machine-1"].subgroup = "bob-assembly-machine"
+end
+
+
+if mods["bobwarfare"] then
+    --Non component mode part
+    if nocpomps then
+        omni.lib.add_recipe_ingredient("bob-sniper-turret-1",{"omnitor", 4})
+        omni.lib.add_recipe_ingredient("bob-plasma-turret-1",{"anbaric-omnitor", 15})
+    end
 end
