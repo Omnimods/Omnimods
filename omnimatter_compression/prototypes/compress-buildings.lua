@@ -210,7 +210,7 @@ local create_concentrated_fluid = function(fluid,tier)
         category = "fluid-condensation",
         enabled = false,
         icons = new_fluid.icons,
-        order = new_fluid.order or "z".."[condensed-"..fluid .."]"
+        order = new_fluid.order or ("z".."[condensed-"..fluid .."]")
     }
     local ungrade = {
         type = "recipe",
@@ -220,7 +220,7 @@ local create_concentrated_fluid = function(fluid,tier)
         category = "fluid-condensation",
         subgroup = "concentrator-fluids",
         enabled = false,
-        order = new_fluid.order or "z".."[condensed-"..fluid .."]"
+        order = new_fluid.order or ("z".."[condensed-"..fluid .."]")
     }
     local grade_compressed = table.deepcopy(grade)
     grade_compressed.name = "concentrated-"..grade.name
@@ -600,7 +600,7 @@ for build_name, values in pairs(recipe_results) do
                     item.subgroup = "compressor-"..item.subgroup.."-"..build.type
                     rc.subgroup = item.subgroup
                 else --clean up item ordering
-                    item.order = item.order or "z"..i.."-compressed" --should force it to match, but be after it under all circumstances
+                    item.order = item.order or ("z"..i.."-compressed") --should force it to match, but be after it under all circumstances
                 end
 
                 -------------------------------------------------------------------------------
@@ -628,11 +628,6 @@ for build_name, values in pairs(recipe_results) do
                 item.name = new.name
                 item.place_result = new.name
                 item.stack_size = 5
-                if kind == "transport-belt" or kind=="loader" or kind== "splitter" or kind=="underground-belt" or kind=="loader-1x1" then
-                    item.stack_size = 10
-                else
-                    item.stack_size = 5
-                end
                 item.icons = omni.lib.add_overlay(item,"building",i)
                 item.icon = nil
 
@@ -682,7 +677,7 @@ for build_name, values in pairs(recipe_results) do
                     {new.name, 1}
                     },
                     results = ing,
-                    inter_item_count = item_count,
+                    --inter_item_count = item_count,
                     energy_required = 5*math.floor(math.pow(multiplier,i/2)),
                     hide_from_player_crafting = rc.hide_from_player_crafting or omni.compression.hide_handcraft
                 }

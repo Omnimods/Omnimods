@@ -5,7 +5,7 @@ data:extend(
         name = "omnicompression_one_list",
         setting_type = "startup",
         default_value = false,
-        order=a
+        order = "a"
     },
     {
         type = "int-setting",
@@ -14,7 +14,7 @@ data:extend(
         default_value = 2,
         min_value = 1,
         max_value = 4,
-        order=b
+        order = "b"
     },
     {
         type = "int-setting",
@@ -23,14 +23,14 @@ data:extend(
         default_value = 4,
         min_value = 2,
         max_value = 10,
-        order=c
+        order = "c"
     },
     {
         type = "bool-setting",
         name = "omnicompression_final_building",
         setting_type = "startup",
         default_value = false,
-        order=d
+        order = "d"
     },
     {
         type = "int-setting",
@@ -39,21 +39,21 @@ data:extend(
         default_value = 11000,
         min_value = 1200,
         max_value = 72000,
-        order=e
+        order = "e"
     },
     {
         type = "bool-setting",
         name = "omnicompression_compensate_stacksizes",
         setting_type = "startup",
         default_value = false,
-        order=f
+        order = "f"
     },
     {
         type = "bool-setting",
         name = "omnicompression_normalize_stacked_buildings",
         setting_type = "startup",
         default_value = false,
-        order=g
+        order = "g"
     },
     {
         type = "int-setting",
@@ -62,21 +62,21 @@ data:extend(
         default_value = 2000, --space science pack size
         min_value = 0,
         max_value = 250000000,
-        order=h
+        order = "h"
     },
     {
         type = "string-setting",
         name = "omnicompression_always_compress_sp",
         setting_type = "startup",
         default_value = "chemical-science-pack,high-tech-science-pack,production-science-pack,military-science-pack,space-science-pack,datacore-war-1,angels-science-pack-orange,angels-science-pack-blue,angels-science-pack-yellow,angels-science-pack-white,datacore-exploration-1",
-        order=i
+        order = "i"
     },
     {
         type = "bool-setting",
         name = "omnicompression_1x1_buildings",
         setting_type = "startup",
         default_value = false,
-        order=j
+        order = "j"
     },
     {
         type = "int-setting",
@@ -85,7 +85,7 @@ data:extend(
         default_value = 1,
         min_value = 1,
         max_value = 5,
-        order=k
+        order = "k"
     },
     {
         type = "int-setting",
@@ -94,13 +94,13 @@ data:extend(
         default_value = 1,
         min_value = 1,
         max_value = 5,
-        order=l
+        order = "l"
     },
     {
         type = "bool-setting",
         name = "omnicompression_hide_handcraft",
         setting_type = "startup",
         default_value = false,
-        order=aa
+        order = "aa"
   },
 })

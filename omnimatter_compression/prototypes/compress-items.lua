@@ -46,7 +46,7 @@ for _, group in pairs({"fluid"}) do
             new_fluid.name = "concentrated-"..new_fluid.name
             new_fluid.localised_name = omni.lib.locale.custom_name(fluid, 'concentrated-fluid')
             new_fluid.sub_group = "fluids"
-            new_fluid.order = fluid.order or "z".."[concentrated-"..fluid.name .."]"
+            new_fluid.order = fluid.order or ("z".."[concentrated-"..fluid.name .."]")
             new_fluid.icons = omni.lib.add_overlay(fluid, "compress")
             new_fluid.icon = nil
             -- This causes issues with boiler and fluid generator scaling
@@ -64,7 +64,7 @@ for _, group in pairs({"fluid"}) do
                 enabled = true,
                 hidden = true,
                 icons = omni.lib.add_overlay(fluid, "compress"),
-                order = fluid.order or "z".."[concentrated-"..fluid.name .."]",
+                order = fluid.order or ("z".."[concentrated-"..fluid.name .."]"),
                 subgroup = "concentrator-fluids",
                 normal = {
                 ingredients = {
@@ -106,7 +106,7 @@ for _, group in pairs({"fluid"}) do
                 category = "fluid-concentration",
                 enabled = true,
                 hidden = true,
-                order = fluid.order or "z".."[concentrated-"..fluid.name .."]",
+                order = fluid.order or ("z".."[concentrated-"..fluid.name .."]"),
                 normal = {
                 ingredients = {
                     {name = "concentrated-"..fluid.name,type = "fluid", amount = sluid_contain_fluid}
