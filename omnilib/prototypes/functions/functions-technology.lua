@@ -177,6 +177,6 @@ function omni.lib.set_prerequisite(techname, req)
 			data.raw.technology[techname].prerequisites = {req}
 		end
 	else
-		log("Can not find tech "..techname.." to set prerequisite "..prereq)
+		log("Can not find tech "..techname.." to set prerequisite "..req)
 	end
 end

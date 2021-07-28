@@ -112,6 +112,14 @@ function cache_mt:__index(key)
     end
   end
 end
+
+local function search (k, plist)
+    for i=1, table_size(plist) do
+        local v = plist[i][k]     -- try `i'-th superclass
+        if v then return v end
+    end
+end
+
 function createClass (...)
     local c = {}        -- new class
 
@@ -134,12 +142,7 @@ function createClass (...)
       -- return new class
     return c
 end
-local function search (k, plist)
-    for i=1, table.getn(plist) do
-        local v = plist[i][k]     -- try `i'-th superclass
-        if v then return v end
-    end
-end
+
 function cache_mt:__call(cls, ...)
     local self = setmetatable({}, cls)
     self:create(...)
@@ -434,7 +437,7 @@ function OmniGen:wasteYieldResults()
                     amount = max_yield-total
                 end
             else
-                amount = max_yield*portion
+                amount = max_yield*yield.portion
             end
             total = total+amount
             if amount > 0 then
@@ -556,7 +559,7 @@ function ItemGen:find(name)
     if Omni.Gen.Item[name] then
         return Omni.Gen.Item[name]:setForce()
     else
-        return ItemGen:importIf(item)
+        return ItemGen:importIf(name)
     end
 end
 function ItemGen:setForce(meep)
@@ -611,8 +614,8 @@ function ItemGen:setIcons(icons,mod)
         end
     elseif type(icons)~= "function" then
         --find icon_size
-        if type(icons)=="table" and type(icons[1].icon)=="string" then
-            local ic_sz = 32
+        local ic_sz = 32
+        if type(icons)=="table" and type(icons[1].icon)=="string" then   
             if icons[1].icon_size then
                 ic_sz=icons[1].icon_size
             elseif type(icons[1].icon)=="string" then --try to find item name by extracting icon name
@@ -666,37 +669,47 @@ function ItemGen:addIcon(icon)
     local a = nil
     if type(icon) == "table" and icon.icon then
         local f = string.match(icon.icon, "%_%_(.-)%_%_")
+        --Full Path is there
         if f then
             a = function(levels,grade) return {icon} end
+        --Just a name given
         else
             local proto = omni.lib.find_prototype(icon.icon)
             local ic_sz=32
+            --Find icon size
             if proto then
                 if proto.icon_size then
-                    ic_sz=proto.icon_size
+                    ic_sz = proto.icon_size
                 elseif proto.icons and proto.icons[1].icon_size then
-                    ic_sz=proto.icons[1].icon_size
+                    ic_sz = proto.icons[1].icon_size
                 end
             end
+            --Proto with .icon
             if proto and proto.icon then
                 a = function(levels,grade) return {{icon=proto.icon,icon_size=ic_sz,scale=icon.scale*32/ic_sz,shift=icon.shift}} end
-            elseif proto then
+            --Proto with .icons
+            elseif proto and proto.icons then
                 local ic = {}
                 for _, c in pairs(proto.icons) do
-                    local int_sz=c.icon_size or ic_sz
-                    ic[#ic+1] = {icon=c.icon,
-                    icon_scale=int_sz,
-                    scale = (c.scale or 32/int_sz)*(icon.scale or 32/int_sz),
-                    shift = {(c.shift or {0,0})[1]+(icon.shift or {0,0})[1],(c.shift or {0,0})[2]+(icon.shift or {0,0})[2]}}
+                    local int_sz = c.icon_size or ic_sz
+                    ic[#ic+1] = {
+                        icon=c.icon,
+                        icon_scale=int_sz,
+                        scale = (c.scale or (32/int_sz))*(icon.scale or (32/int_sz)),
+                        shift = {(c.shift or {0,0})[1]+(icon.shift or {0,0})[1],(c.shift or {0,0})[2]+(icon.shift or {0,0})[2]}
+                    }
                 end
                 a = function(levels,grade) return ic end
+            --No proto found, convert name into full path
             elseif icon.icon then
                 icon.icon = "__"..self.mod.."__/graphics/icons/"..icon.icon..".png"
-                a = function(levels,grade) return ic end
+                a = function(levels,grade) return {icon} end
             end
         end
-    elseif type(icon)=="table" then	a = function(levels,grade) return {{icon=icon[1]}} end
-    else a = function(levels,grade)	return {{icon=icon}}	end
+    elseif type(icon)=="table" then
+        a = function(levels,grade) return {{icon=icon[1]}} end
+    else
+        a = function(levels,grade)	return {{icon=icon}} end
     end
     local f = clone_function(self.icons)
     self.icons = function(levels,grade) return omni.lib.union(f(levels,grade),a(levels,grade)) end
@@ -762,7 +775,7 @@ function ItemGen:addSmallIcon(icon, nr)
             end
             self:addIcon({icon = ic.icon,
             icon_size=ic_sz,
-                scale = 0.4375*(ic.scale or 32/ic_sz),
+                scale = 0.4375*(ic.scale or (32/ic_sz)),
                 shift = quad[nr or 1], --currently "centres" the icon if it was already offset, may need to math that out
                 tint = ic.tint or nil})
         end
@@ -982,7 +995,7 @@ function ItemGen:addLocName(key)
     if type(key) == "function" then
         b = key
     elseif type(key)=="table" and not #key == 1 then
-        b = function(levels,grade) return inname[grade] end
+        b = function(levels,grade) return key[grade] end
     elseif type(key)=="string" and string.find(key,".") and (string.find(key,"name") or string.find(key,"description")) then
         b = function(levels,grade) return {key} end
     else
@@ -1339,7 +1352,6 @@ function RecGen:addProductivity(mod)
     end
     return self
 end
-
 function RecChain:create(mod,name)
     local r = RecGen:create(mod,name,0.5)
     r.tech.cost = function(levels,grade) return 50+50*grade end
@@ -1353,7 +1365,7 @@ function RecChain:find(name)
     if Omni.Chain.Rec[name] then
         return Omni.Chain.Rec[name]:setForce()
     else
-        return Chain:create(item):setGenerationCondition(false)
+        return RecChain:create(name):setGenerationCondition(false)
     end
 end
 function RecGen:setEnabled(en)
@@ -1739,7 +1751,7 @@ end
 function RecGen:addNormalResults(...)
     local arg = argTable({...},"string","name")
     local tmp = RecGen:create("mah","blah"):
-        setIngredients(array)
+        setIngredients(arg)
     local a = clone_function(self.results)
     local b = function(levels,grade,dif) if dif == 0 then return arg else return nil end end
     self.results = function(levels,grade,dif) return omni.table.union(a(levels,grade,dif),b(levels,grade,dif)) end
@@ -1748,7 +1760,7 @@ end
 function RecGen:addExpensiveResults(...)
     local arg = argTable({...},"string","name")
     local tmp = RecGen:create("mah","blah"):
-        setIngredients(array)
+        setIngredients(arg)
     local a = clone_function(self.results)
     local b = function(levels,grade,dif) if dif == 1 then return arg else return nil end end
     self.results = function(levels,grade,dif) return omni.table.union(a(levels,grade,dif),b(levels,grade,dif)) end
@@ -2028,7 +2040,7 @@ function RecGen:equalize(item,res)
     return self
 end
 function RecGen:equalizeMarathon(equalize)
-    return self:equalize(item)
+    return self:equalize(equalize)
 end
 function RecGen:exemptCompression()
 --to be fixed
@@ -2126,7 +2138,7 @@ function RecGen:addTechLocName(key)
     if type(key) == "function" then
         b = key
     elseif type(key)=="table" and not #key == 1 then
-        b = function(levels,grade) return inname[grade] end
+        b = function(levels,grade) return key[grade] end
     elseif type(key)=="string" and string.find(key,".") and (string.find(key,"name") or string.find(key,"description")) then
         b = function(levels,grade) return {key} end
     else
@@ -2405,11 +2417,11 @@ function RecChain:generate_chain()
         setTechTime(omni.lib.round(self.tech.time(self.levels,i))):
         setTechPacks(self.tech.packs(self.levels,i)):
         setTechUpgrade(i>1):
-        setTechIcons(self.tech.icons(levels,i)):
-        setTechLocName(self.tech.loc_name(levels,grade)):
+        setTechIcons(self.tech.icons(self.levels,i)):
+        setTechLocName(self.tech.loc_name(self.levels,i)):
         setTechLocDesc(self.tech.loc_desc,self.tech.loc_desc_keys):
         --setTechName("omnitech-"..techname.."-"..i-techDifEnabled):
-        setGenerationCondition(self.requiredMods(levels,grade))
+        setGenerationCondition(self.requiredMods(self.levels,i))
 
         if string.find(techname, "omnitech-") then
             r:setTechName(techname.."-"..i-techDifEnabled)
@@ -2428,7 +2440,7 @@ function RecChain:generate_chain()
         end
         if self.isTile then r:tile() end
         if self.loc_name(m,actualTier)~= nil then r:addLocName(actualTier) end
-        if self.tech.loc_name(levels,grade) ~= nil then r:addTechLocName(actualTier) end
+        if self.tech.loc_name(levels,i) ~= nil then r:addTechLocName(actualTier) end
 
         local prq = self.tech.prerequisites(m,i)
         if (not prq or #prq == 0) and i-techDifEnabled > 1 then
@@ -2905,7 +2917,7 @@ function BuildGen:find(name)
     if Omni.Gen.Build[name] then
         return Omni.Gen.Build[name]:setForce()
     else
-        return BuildGen:importIf(item)
+        return BuildGen:importIf(name)
     end
 end
 function BuildGen:allowProductivity(func)
@@ -3650,7 +3662,7 @@ function BuildChain:find(name)
     if Omni.Chain.Build[name] then
         return Omni.Chain.Build[name]:setForce()
     else
-        return BuildChain:create(item):setGenerationCondition(false)
+        return BuildChain:create(name):setGenerationCondition(false)
     end
 end
 function BuildChain:setInitialBurner(efficiency,size)
@@ -3669,7 +3681,7 @@ function BuildChain:setInitialBurner(efficiency,size)
           starting_frame_deviation = 60
         }
       }}
-    return setmetatable(setBuildingParameters(b),BuildChain)
+    return setmetatable(setBuildingParameters(self),BuildChain)
 end
 function BuildChain:generate_building_chain()
     local levels = tonumber(self.levels)
@@ -4014,7 +4026,7 @@ function BotGen:create(mod,name)
       shift = {1.09375, 0.59375},
       direction_count = 16
     } end
-    b.working_sound = function(levels,grade) return flying_robot_sounds() end
+    --b.working_sound = function(levels,grade) return flying_robot_sounds() end
     b.cargo_centered = function(levels,grade) return {0.0, 0.2} end
     b.construction_vector = function(levels,grade) return {0.30, 0.22} end
     return setmetatable(b,BotGen)
@@ -4105,7 +4117,7 @@ end
 function ResourceGen:setParticle(...)
     local arg = argTable({...},"string","filename")
     if type(arg)=="string" or type(arg)=="table" then
-        self.particle = function(levels,grade) return val end
+        self.particle = function(levels,grade) return arg end
     elseif type(arg)=="function" then
         self.particle = arg
     end
@@ -4133,57 +4145,57 @@ function ResourceGen:addParticles(...)
 end
 function ResourceGen:setMiningTime(val)
     if type(val) == "number" then
-        r.mining_time = function(levels,grade) return val end
+        self.mining_time = function(levels,grade) return val end
     elseif type(val)=="function" then
-        r.mining_time = val
+        self.mining_time = val
     end
     return self
 end
 function ResourceGen:setRichMult(val)
     if type(val) == "number" then
-        r.richness.multiplier = function(levels,grade) return val end
+        self.richness.multiplier = function(levels,grade) return val end
     elseif type(val)=="function" then
-        r.richness.multiplier = val
+        self.richness.multiplier = val
     end
     return self
 end
 function ResourceGen:setRichDistance(val)
     if type(val) == "number" then
-        r.richness.distance_bonus = function(levels,grade) return val end
+        self.richness.distance_bonus = function(levels,grade) return val end
     elseif type(val)=="function" then
-        r.richness.distance_bonus = val
+        self.richness.distance_bonus = val
     end
     return self
 end
 function ResourceGen:setRichBase(val)
     if type(val) == "number" then
-        r.richness.setRichBase = function(levels,grade) return val end
+        self.richness.setRichBase = function(levels,grade) return val end
     elseif type(val)=="function" then
-        r.richness.setRichBase = val
+        self.richness.setRichBase = val
     end
     return self
 end
 function ResourceGen:setRichBase(val)
     if type(val) == "number" then
-        r.coverage = function(levels,grade) return val end
+        self.coverage = function(levels,grade) return val end
     elseif type(val)=="function" then
-        r.coverage = val
+        self.coverage = val
     end
     return self
 end
 function ResourceGen:setSharpness(val)
     if type(val) == "number" then
-        r.sharpness = function(levels,grade) return val end
+        self.sharpness = function(levels,grade) return val end
     elseif type(val)=="function" then
-        r.sharpness = val
+        self.sharpness = val
     end
     return self
 end
 function ResourceGen:setPeaks(val)
     if type(val) == "number" then
-        r.sharpness = function(levels,grade) return val end
+        self.sharpness = function(levels,grade) return val end
     elseif type(val)=="function" then
-        r.sharpness = val
+        self.sharpness = val
     end
     return self
 end
