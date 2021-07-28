@@ -15,16 +15,16 @@ if mods["angelsindustries"] and settings.startup["angels-enable-tech"].value the
   -- GREY SCIENCE PACKS ---------------------------------------------------------
   -------------------------------------------------------------------------------
 	for _,tech_name in pairs({
-     --omnimatter
-    --"omnitech-omnic-acid-hydrolyzation-1",
-    "omnitech-omnisolvent-omnisludge-1",
-    "omnitech-focused-extraction-angels-ore3-2",
-    "omnitech-focused-extraction-angels-ore3-1",
-    "omnitech-focused-extraction-angels-ore1-2",
-    "omnitech-focused-extraction-angels-ore1-1",--consider making this mod dynamic based on levels settings
+		--omnimatter
+		--"omnitech-omnic-acid-hydrolyzation-1",
+		"omnitech-omnisolvent-omnisludge-1",
+		"omnitech-focused-extraction-angels-ore3-2",
+		"omnitech-focused-extraction-angels-ore3-1",
+		"omnitech-focused-extraction-angels-ore1-2",
+		"omnitech-focused-extraction-angels-ore1-1",--consider making this mod dynamic based on levels settings
 		"omnitech-water-omnitraction-1",
 		"omnitech-water-omnitraction-2"
-  }) do
+  	}) do
 		if data.raw.technology[tech_name] then
 			pack_replace(tech_name, "red", "grey")
 			core_replace(tech_name, "processing","basic")

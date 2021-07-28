@@ -104,7 +104,7 @@ local function build_result_table(tier, split, focused_ore_name, level)
     -- Add the proper number of products to our extraction recipe
     local split_ores = {}
     local aligned_ores = table.deepcopy(split)
-    local total_quantity = level or 0 + (focused_ore_name and 1 or 0)
+    local total_quantity = level or (0 + (focused_ore_name and 1 or 0))
     --Add focused ore to the result table if it is specified
     if focused_ore_name and aligned_ores[focused_ore_name] then
         split_ores[#split_ores + 1] = {

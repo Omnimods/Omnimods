@@ -47,7 +47,7 @@ BuildGen:create("omnimatter","omnitractor"):
 	setFluidBox("WXW.XXX.KXK",true):
 	extend()
 
-function timestier(row,col)
+local function timestier(row,col)
 	local first_row = {1,0.5,0.2}
 	if row == 1 then
 		return first_row[col]
@@ -61,22 +61,6 @@ end
 local get_tech_times = function(levels,tier)
 	local t = 50*timestier(tier,1)
 	return t
-end
-
-local techcost = function(lvl,tier)
-	local c = {}
-	local size = tier+((lvl-1)-(lvl-1)%omni.pure_levels_per_tier)/omni.pure_levels_per_tier
-	local length = math.min(size,#omni.sciencepacks)
-	for l=1,length do
-		local q = 0
-		if omni.linear_science then
-			q = 1+omni.science_constant*(size-l)
-		else
-			q=round(math.pow(omni.science_constant,size-l))
-		end
-		c[#c+1] = {omni.sciencepacks[l],q}
-	end
-	return c
 end
 
 local cost = OmniGen:create():
