@@ -40,7 +40,7 @@ for _, group in pairs({"fluid"}) do
             --Create the item
             new_fluid.name = "concentrated-"..new_fluid.name
             new_fluid.localised_name = omni.lib.locale.custom_name(fluid, 'concentrated-fluid')
-            new_fluid.sub_group = "fluids"
+            new_fluid.subgroup = "fluids"
             new_fluid.order = fluid.order or ("z".."[concentrated-"..fluid.name .."]")
             new_fluid.icons = omni.lib.add_overlay(fluid, "compress")
             new_fluid.icon = nil
