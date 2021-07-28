@@ -54,7 +54,7 @@ end
 
 if mods["bobwarfare"] then
     --Non component mode part
-    if nocpomps then
+    if nocomps then
         omni.lib.add_recipe_ingredient("bob-sniper-turret-1",{"omnitor", 4})
         omni.lib.add_recipe_ingredient("bob-plasma-turret-1",{"anbaric-omnitor", 15})
     end
