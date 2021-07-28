@@ -1,3 +1,19 @@
+local function timestier(row,col)
+	local first_row = {1,0.5,0.2}
+	if row == 1 then
+		return first_row[col]
+	elseif col == 3 then
+		return 0.2
+	else
+		return timestier(row-1,col)+timestier(row-1,col+1)
+	end
+end
+
+local function get_tech_times(levels,tier)
+	local t = 50*timestier(tier,1)
+	return t
+end
+
 local dif = 1
 if not mods["bobelectronics"] then dif=0 end
 
@@ -27,7 +43,6 @@ BuildChain:create("omnimatter_crystal","crystallomnizer"):
     setEnergy(5):
     setUsage(function(level,grade) return (200+50*grade).."kW" end):
     setEmissions(function(level,grade) return math.max(2.0 - ((grade-1) * 0.2), 0.1) end):
-    setTechPrereq(get_pure_req):
     addElectricIcon():
     allowProductivity():
     setTechName("omnitech-crystallonics"):

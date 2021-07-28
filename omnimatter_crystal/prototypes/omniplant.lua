@@ -1,21 +1,37 @@
-    -- Burner Omniplant
-    --SETTING VANILLA INGREDIENTS FIRST
-    local pipe="pipe"
-    local electronic="electronic-circuit"
-    if mods["boblogistics"] then pipe="copper-pipe" end
-    if mods["bobelectronics"] then electronic="basic-circuit-board" end
+local function timestier(row,col)
+	local first_row = {1,0.5,0.2}
+	if row == 1 then
+		return first_row[col]
+	elseif col == 3 then
+		return 0.2
+	else
+		return timestier(row-1,col)+timestier(row-1,col+1)
+	end
+end
 
-    local burner_ings = {}
-    if mods["angelsindustries"] and angelsmods.industries.components then
-        burner_ings = {
-        {name="block-construction-1", amount=5},
-        {name="block-electronics-0", amount=3},
-        {name="block-fluidbox-1", amount=5},
-        {name="block-omni-0", amount=5}
-        }
-    else
-        burner_ings = {{pipe,15},{"omnicium-plate",5},{electronic,5},{"omnite-brick",10},{"iron-gear-wheel",10}}
-    end
+local get_tech_times = function(levels,tier)
+	local t = 50*timestier(tier,1)
+	return t
+end
+
+-- Burner Omniplant
+--SETTING VANILLA INGREDIENTS FIRST
+local pipe="pipe"
+local electronic="electronic-circuit"
+if mods["boblogistics"] then pipe="copper-pipe" end
+if mods["bobelectronics"] then electronic="basic-circuit-board" end
+
+local burner_ings = {}
+if mods["angelsindustries"] and angelsmods.industries.components then
+    burner_ings = {
+    {name="block-construction-1", amount=5},
+    {name="block-electronics-0", amount=3},
+    {name="block-fluidbox-1", amount=5},
+    {name="block-omni-0", amount=5}
+    }
+else
+    burner_ings = {{pipe,15},{"omnicium-plate",5},{electronic,5},{"omnite-brick",10},{"iron-gear-wheel",10}}
+end
 
 BuildGen:create("omnimatter_crystal","omniplant"):
     noTech():
@@ -82,7 +98,6 @@ BuildChain:create("omnimatter_crystal","omniplant"):
     setEnergy(5):
     setUsage(function(level,grade) return (200+50*grade).."kW" end):
     setEmissions(function(level,grade) return math.max(2.6 - ((grade-1) * 0.2), 0.1) end):
-    setTechPrereq(get_pure_req):
     addElectricIcon():
     setTechName(function(levels,grade) if grade == 1 then return "omnitech-omnic-acid-hydrolyzation-1" else return "omnitech-crystallology" end end):
     setTechIcons("crystallology","omnimatter_crystal"):
