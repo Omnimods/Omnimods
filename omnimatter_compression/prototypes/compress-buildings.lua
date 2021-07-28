@@ -2,9 +2,6 @@
 --[[Inits, Local lists and variables]]--
 -------------------------------------------------------------------------------
 local multiplier = settings.startup["omnicompression_multiplier"].value
-omni.compression.bld_lvls = settings.startup["omnicompression_building_levels"].value --kind of local
-omni.compression.one_list = settings.startup["omnicompression_one_list"].value
-omni.compression.hide_handcraft =  settings.startup["omnicompression_hide_handcraft"].value or nil--Don't override to false
 local cost_multiplier = settings.startup["omnicompression_cost_mult"].value
 local energy_multiplier = settings.startup["omnicompression_energy_mult"].value
 local black_list = {--By name

@@ -1,8 +1,3 @@
--------------------------------------------------------------------------------
---[[Initialisation and Config Variables]]--
--------------------------------------------------------------------------------
-omni.compression.stack_compensate = settings.startup["omnicompression_compensate_stacksizes"].value --kind of local
-omni.compression.hide_handcraft =  settings.startup["omnicompression_hide_handcraft"].value or nil--Don't override to false
 local compress_recipes, uncompress_recipes, compress_items = {}, {}, {}
 compressed_item_names = {}  --global?
 local item_count = 0
