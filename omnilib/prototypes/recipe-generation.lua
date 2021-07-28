@@ -495,7 +495,7 @@ function ItemGen:create(mod_name, item_name)
         loc_name = function(levels,grade) return nil end,
         loc_desc =  function(levels,grade) return nil end,
         icons = function(levels,grade) return nil end,
-        flags = {},
+        flags = nil,
         order = function(levels,grade) return "y["..new_name.."]" end,
         stack_size = 100,
         subgroup = function(levels,grade) return "raw-resource" end,
@@ -831,6 +831,7 @@ function ItemGen:fluid()
     self.base_color = {r = 1, g = 0, b = 1}
     self.flow_color = {r = 1, g = 0, b = 1}
     self.type="fluid"
+    self.stack_size = nil
     return self
 end
 function ItemGen:tool()
