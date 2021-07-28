@@ -830,8 +830,6 @@ function ItemGen:fluid()
     self.heat_capacity = "0.7KJ"
     self.base_color = {r = 1, g = 0, b = 1}
     self.flow_color = {r = 1, g = 0, b = 1}
-    self.pressure_to_speed_ratio = 0.4
-    self.flow_to_energy_ratio = 0.59
     self.type="fluid"
     return self
 end
@@ -1141,17 +1139,15 @@ function ItemGen:generate_item()
         base_color=self.base_color,
         flow_color=self.flow_color,
         max_temperature=t,
-        pressure_to_speed_ratio = self.pressure_to_speed_ratio,
-        flow_to_energy_ratio = self.flow_to_energy_ratio,
         durability=self.durability,
         durability_description_key=self.durability_description_key,
         durability_description_value=self.durability_description_value
     }
     if  self.isTile then
         self.rtn[#self.rtn].place_as_tile={
-          result = self.place_result(0,0),
-          condition_size = 1,
-          condition = { "water-tile" }
+        result = self.place_result(0,0),
+        condition_size = 1,
+        condition = { "water-tile" }
         }
     else
         self.rtn[#self.rtn].place_result = self.place_result(0,0)
