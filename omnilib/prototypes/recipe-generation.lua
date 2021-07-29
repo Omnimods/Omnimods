@@ -71,15 +71,6 @@ setmetatable(BuildGen, {
   end,
 })
 
-setmetatable(ResourceGen, {
-  __index = ItemGen, -- this is what makes the inheritance work
-  __call = function (cls, ...)
-    local self = setmetatable({}, cls)
-    self:create(...)
-    return self
-  end,
-})
-
 setmetatable(BotGen, {
   __index = RecGen, -- this is what makes the inheritance work
   __call = function (cls, ...)
@@ -2795,7 +2786,6 @@ function setBuildingParameters(b,subpart)
     b.overlay={}
     b.place_result = function(levels,grade) return b.name end
     b.next_upgrade = function(levels,grade) return nil end
-    --b.resource_searching_radius = function(levels,grade) return 2.49 end
     b.vector_to_place_result = function(levels,grade) return {0, -1.85} end
     b.crafting_categories = function(levels,grade) return nil end
     b.working_visualisations = function(levels,grade) return nil end
@@ -4084,115 +4074,6 @@ function BotGen:setMaxEnergy(n)
         self.max_energy = function(levels,grade) return n.."MJ" end
     elseif type(n)=="string" then
         self.max_energy = function(levels,grade) return n end
-    end
-    return self
-end
-
-function ResourceGen:create(mod,name)
-    local r = ItemGen:create(mod,name)
-    r.richness = {
-        is = function(levels,grade) return true end,
-        multiplier = function(levels,grade) return 2000 end,
-        distance_bonus = function(levels,grade) return 15 end,
-        base = function(levels,grade) return 1000 end
-    }
-    r.particle = function(levels,grade) return "stone-particle" end
-    r.mining_time = function(levels,grade) return 1 end
-    r.coverage = function(levels,grade) return 0.03 end
-    r.sharpness = function(levels,grade) return 1 end
-    return setmetatable(r,ResourceGen)
-end
-
-function ResourceGen:setRichness(val)
-    if type(val)=="boolean" then
-        self.richness.is = function(levels,grade) return val end
-    elseif type(val)=="function" then
-        self.richness.is = val
-    end
-    return self
-end
-function ResourceGen:setParticle(...)
-    local arg = argTable({...},"string","filename")
-    if type(arg)=="string" or type(arg)=="table" then
-        self.particle = function(levels,grade) return arg end
-    elseif type(arg)=="function" then
-        self.particle = arg
-    end
-    return self
-end
-function ResourceGen:addParticles(...)
-    local a = clone_function(self.particle)
-    local arg = argTable({...},"string","filename")
-    local result = table.deepcopy(self.particle(0,0))
-
-    if type(arg)=="string" and type(result) == "string" then
-        self.particle = function(levels,grade) return {arg,result} end
-    elseif type(arg)=="string" and type(result) == "table" then
-        self.particle = function(levels,grade) return omni.lib.union({arg},a(levels,grade)) end
-    elseif type(arg)=="table" and type(result) == "string" then
-        self.particle = function(levels,grade) return omni.lib.union(arg,{result}) end
-    elseif type(arg)=="table" and type(result) == "table" then
-        self.particle = function(levels,grade) return omni.lib.union(arg,a(levels,grade)) end
-    elseif type(arg)=="function" and type(result) == "string" then
-        self.particle = function(levels,grade) return omni.lib.union(arg(levels,grade),{result}) end
-    elseif type(arg)=="function" and type(result) == "table"then
-        self.particle = function(levels,grade) return omni.lib.union(arg(levels,grade),a(levels,grade)) end
-    end
-    return self
-end
-function ResourceGen:setMiningTime(val)
-    if type(val) == "number" then
-        self.mining_time = function(levels,grade) return val end
-    elseif type(val)=="function" then
-        self.mining_time = val
-    end
-    return self
-end
-function ResourceGen:setRichMult(val)
-    if type(val) == "number" then
-        self.richness.multiplier = function(levels,grade) return val end
-    elseif type(val)=="function" then
-        self.richness.multiplier = val
-    end
-    return self
-end
-function ResourceGen:setRichDistance(val)
-    if type(val) == "number" then
-        self.richness.distance_bonus = function(levels,grade) return val end
-    elseif type(val)=="function" then
-        self.richness.distance_bonus = val
-    end
-    return self
-end
-function ResourceGen:setRichBase(val)
-    if type(val) == "number" then
-        self.richness.setRichBase = function(levels,grade) return val end
-    elseif type(val)=="function" then
-        self.richness.setRichBase = val
-    end
-    return self
-end
-function ResourceGen:setRichBase(val)
-    if type(val) == "number" then
-        self.coverage = function(levels,grade) return val end
-    elseif type(val)=="function" then
-        self.coverage = val
-    end
-    return self
-end
-function ResourceGen:setSharpness(val)
-    if type(val) == "number" then
-        self.sharpness = function(levels,grade) return val end
-    elseif type(val)=="function" then
-        self.sharpness = val
-    end
-    return self
-end
-function ResourceGen:setPeaks(val)
-    if type(val) == "number" then
-        self.sharpness = function(levels,grade) return val end
-    elseif type(val)=="function" then
-        self.sharpness = val
     end
     return self
 end

@@ -236,6 +236,7 @@ function omni.lib.standardise(recipe)
 		end
 	end
 	-- remove settings outside of difficulty
+	recipe.flags = nil
 	recipe.hidden = nil
 	recipe.enabled = nil
 	---------------------------------------------------------------------------
