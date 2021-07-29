@@ -1,14 +1,6 @@
 local nr_tiers = settings.startup["omnielectricity-solar-tiers"].value
 local max_size = settings.startup["omnielectricity-solar-size"].value
 
---Disable all Solar Panels
-for _, sol in pairs(data.raw["solar-panel"]) do
-    if sol.minable then
-        local recipe = omni.lib.find_recipe(sol.minable.result)
-        omni.lib.remove_recipe_all_techs(recipe.name)
-    end
-end
-
 local parts = {"plate","crystal","circuit"}
 
 local quant = {}

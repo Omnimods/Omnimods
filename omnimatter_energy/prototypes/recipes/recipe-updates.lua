@@ -1,3 +1,11 @@
+--Disable all Solar Panels
+for _, sol in pairs(data.raw["solar-panel"]) do
+    if sol.minable then
+        local recipe = omni.lib.find_recipe(sol.minable.result)
+        if recipe then omni.lib.remove_recipe_all_techs(recipe.name) end
+    end
+end
+
 RecGen:import("repair-pack"):
     setNormalIngredients({type="item", name="omnicium-plate", amount=6},{type="item", name="omni-tablet", amount=2}):
     setExpensiveIngredients({type="item", name="omnicium-plate", amount=15},{type="item", name="omni-tablet", amount=7}):
