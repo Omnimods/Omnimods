@@ -93,7 +93,6 @@ BuildGen:import("lab"):
     setReplace("lab"):
     setNextUpgrade("lab"):
     setOrder("g[lab-omnitor]"):
-    setModSlots(0):
     setOnAnimation({
   layers =
   {

@@ -3139,6 +3139,7 @@ function BuildGen:setBurner(efficiency,size)
     if not string.find(self.name,"burner-") then
         self:setName("burner-"..self.name)
     end
+    self:setModSlots(0)
     return self
 end
 function BuildGen:setSteam(efficiency,size)
