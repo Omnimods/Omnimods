@@ -36,7 +36,3 @@ BuildGen:import("small-electric-pole"):
     setTechName("omnitech-anbaricity"):
     setOrder("a[energy]-a[small-electric-pole]-omnicium"):
     extend()
-
-    --Temp sound fix until lib is fixed
-    data.raw["electric-pole"]["small-iron-electric-pole"].working_sound = nil
-    data.raw["electric-pole"]["small-omnicium-electric-pole"].working_sound = nil
