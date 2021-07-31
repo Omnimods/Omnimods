@@ -10,6 +10,7 @@ BuildGen:create("omnimatter","omni-furnace"):
 	setCrafting("smelting","omnifurnace"):
 	setUsage(45):
 	setEnabled():
+  setSoundWorking("steel-furnace"):
 	setAnimation({
       layers = {
         {
@@ -133,4 +134,5 @@ BuildGen:create("omnimatter","omni-furnace"):
         }
       },
     }):
-	setReplace("furnace"):extend()
+	setReplace("furnace"):
+  extend()
