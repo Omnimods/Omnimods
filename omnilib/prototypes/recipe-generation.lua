@@ -2763,20 +2763,21 @@ function setBuildingParameters(b,subpart)
     b.animations = function(levels,grade) return nil end
     b.pictures = function(levels,grade) return nil end
     b.vehicle_impact_sound =  { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 }
-    b.working_sound = {
-      sound = function(levels,grade) return {
-        {
-          filename = "__base__/sound/assembling-machine-t1-1.ogg",
-          volume = 0.8
+    b.working_sound = function(levels,grade) return {
+        sound = {
+            {
+            filename = "__base__/sound/assembling-machine-t1-1.ogg",
+            volume = 0.8
+            },
+            {
+            filename = "__base__/sound/assembling-machine-t1-2.ogg",
+            volume = 0.8
+            },
         },
-        {
-          filename = "__base__/sound/assembling-machine-t1-2.ogg",
-          volume = 0.8
-        },
-      } end,
-      idle_sound = function(levels,grade) return { filename = "__base__/sound/idle1.ogg", volume = 0.6 } end,
-      apparent_volume = function(levels,grade) return 2 end,
-    }
+        idle_sound = { filename = "__base__/sound/idle1.ogg", volume = 0.6 },
+        apparent_volume = 2,
+        }
+    end
     b.fluid_boxes = function(levels,grade) return nil end
     b.input_fluid_box = function(levels,grade) return nil end
     b.flags = {"placeable-neutral", "player-creation"}
@@ -2838,8 +2839,8 @@ function BuildGen:import(name)
         setWorkVis(build.working_visualisations):
         setDirectionAnimation(build.horizontal_animation,build.vertical_animation):
         setRadVisPic(build.radius_visualisation_picture):
-        setSound(build.sound):
         setLight(build.light):
+        setSoundWorking(build.working_sound):
         setSoundImpact(build.vehicle_impact_sound):
         setFluidBox(build.fluid_boxes or build.fluid_box):
         setFluidInput(build.input_fluid_box):
@@ -2861,11 +2862,9 @@ function BuildGen:import(name)
         setOnAnimation(build.on_animation)
 
         --if build.resource_searching_radius then b:setMiningRadius(build.resource_searching_radius*2+0.02) end
-        if build.working_sound then
-            b:setSoundWorking(build.working_sound.sound):
-            setSoundIdle(build.working_sound.idle_sound):
-            setSoundVolume(build.working_sound.apparent_volume)
-        end
+        -- if build.working_sound then
+        --     b:setSoundWorking(build.working_sound)
+        -- end
         if build.module_specification then
             b:setModSlots(build.module_specification.module_slots)
         else
@@ -3338,50 +3337,49 @@ function BuildGen:setSoundImpact(e)
     end
     return self
 end
-function BuildGen:setSoundWorking(e,i,mod)
-    if type(e)=="string" then
-        self.working_sound.sound = function(levels,grade) return {filename="__"..(mod or self.mod).."__/sound/"..e..".ogg",volume = i or 0.8} end
+function BuildGen:setSoundWorking(e,vol,mod)
+    --String given, try to find an entity with that name to grab all properties, otherwise just set the filename
+    if type(e) == "string" then
+        local proto = omni.lib.find_entity_prototype(e)
+        if proto and proto.working_sound then
+            self.working_sound = function(levels,grade) return proto.working_sound end
+        elseif e and (mod or self.mod) then
+            if not self.working_sound then self.working_sound = function(levels,grade) return {} end end
+            log(e)
+            log(mod)
+            log(self.mod)
+            self.working_sound(0,0).sound = {filename="__"..(mod or self.mod).."__/sound/"..e..".ogg",volume = vol or 0.8}
+        else
+            self.working_sound = nil
+        end
     elseif type(e) == "table" then
-        self.working_sound.sound = function(levels,grade) return e end
+        self.working_sound = function(levels,grade) return e end
+    elseif type(e) == "function" then
+        self.working_sound = e
     else
-        self.working_sound.sound = e
+        self.working_sound = nil
     end
     return self
 end
-function BuildGen:setSoundIdle(e,i,mod)
+function BuildGen:setSoundIdle(e,vol,mod)
     if type(e)=="string" then
-        self.working_sound.idle_sound = function(levels,grade) return {filename="__"..(mod or self.mod).."__/sound/"..e..".ogg",volume = i or 0.6} end
+        self.working_sound(0,0).idle_sound = {filename="__"..(mod or self.mod).."__/sound/"..e..".ogg",volume = vol or 0.6}
     elseif type(e) == "table" then
-        self.working_sound.idle_sound = function(levels,grade) return e end
+        self.working_sound(0,0).idle_sound = e
     elseif type(e) == "function" then
-        self.working_sound.idle_sound = e
+        self.working_sound(0,0).idle_sound = e
     else
-        self.working_sound.idle_sound = function(levels,grade) return nil end
+        self.working_sound(0,0).idle_sound = nil
     end
     return self
 end
 function BuildGen:setSoundVolume(e)
     if type(e)~="function" then
-        self.working_sound.apparent_volume = function(levels,grade) return e or 1 end
+        self.working_sound(0,0).apparent_volume = e or 1
     else
-        self.working_sound.apparent_volume = e
+        self.working_sound(0,0).apparent_volume = e
     end
     return self
-end
-function BuildGen:setSound(e)
-    if type(e)=="function" then
-        self.sound = e
-    else
-        self.sound = function(levels,grade) return e end
-    end
-    return self
-end
-function BuildGen:returnSound(levels,grade)
-    return {
-        sound = self.working_sound.sound(levels,grade),
-        idle_sound = self.working_sound.idle_sound(levels,grade),
-        apparent_volume = self.working_sound.apparent_volume(levels,grade)
-    }
 end
 --Must come after the type decleration
 --s: building bounding box by size, e.g. for a 3x3 building --> s = "XXX.XXX.XXX" (From left to right)
@@ -3471,14 +3469,6 @@ function BuildGen:setMiningTime(s)
     end
     return self
 end
-function BuildGen:setSound(s)
-    if type(s)=="function" then
-        self.sound = s
-    else
-        self.sound = function(grade,levels) return s end
-    end
-    return self
-end
 function BuildGen:setCrafting(...)
     local arg = argTable({...})
     if type(arg)=="table" then
@@ -3551,7 +3541,7 @@ function BuildGen:generateBuilding()
         selection_box = {{-size.width, -size.height}, {size.width, size.height}},
         module_specification =
         {
-          module_slots = self.module.slots(0,0)
+            module_slots = self.module.slots(0,0)
         },
         allowed_effects = self.module.effects(0,0),
         crafting_categories = craftcat,
@@ -3569,7 +3559,6 @@ function BuildGen:generateBuilding()
         pictures =self.pictures(0,0),
         working_visualisations = self.working_visualisations(0,0),
         vehicle_impact_sound =  self.vehicle_impact_sound,
-        working_sound =self:returnSound(0,0),
         burns_fluid=self.burns_fluid(0,0),
         fluid_boxes = self.fluid_boxes(0,0),
         effectivity = self.effectivity(0,0),
@@ -3581,7 +3570,6 @@ function BuildGen:generateBuilding()
         supply_area_distance = self.area(0,0),
         connection_points=self.connection_points(0,0),
         radius_visualisation_picture=self.radius_visualisation_picture(0,0),
-        sound=self.sound(0,0),
         light=self.light(0,0),
         fluid_box = self.fluid_boxes(0,0),
         vector_to_place_result = self.vector_to_place_result(0,0),
@@ -3596,6 +3584,7 @@ function BuildGen:generateBuilding()
 
     if self.fluid_boxes(0,0) and type(self.fluid_boxes(0,0))=="table" and type(self.fluid_boxes(0,0)[1])=="table" then self.rtn[#self.rtn].fluid_box = self.fluid_boxes(0,0)[1] end
     if self.fuel_categories and next(self.fuel_categories) then self.rtn[#self.rtn].energy_source.fuel_categories = self.fuel_categories end
+    if self.working_sound and next(self.working_sound(0,0)) then self.rtn[#self.rtn].working_sound = self.working_sound(0,0) end
     if self.overlay.name then
         self.rtn[#self.rtn].animation.layers[#self.rtn[#self.rtn].animation.layers+1] = table.deepcopy(self.rtn[#self.rtn].animation.layers[1])
         self.rtn[#self.rtn].animation.layers[#self.rtn[#self.rtn].animation.layers].filename = "__"..self.mod.."__/graphics/entity/buildings/"..self.overlay.name..".png"
@@ -3749,9 +3738,7 @@ function BuildChain:generate_building_chain()
         setFluidBox(self.fluid_boxes):
         setFluidBurn(self.burns_fluid(levels,i)):
         setSpeed(self.crafting_speed(levels,i)):
-        setSoundIdle(self:returnSound(levels,i).idle_sound):
-        setSoundWorking(self:returnSound(levels,i).sound):
-        setSoundVolume(self:returnSound(levels,i).volume):
+        setSoundWorking(self.working_sound(levels,i)):
         setAnimation(self.animation(levels,i)):
         setAnimations(self.animations(levels,i)):
         setWorkVis(self.working_visualisations(levels,i)):
@@ -3766,7 +3753,6 @@ function BuildChain:generate_building_chain()
         setArea(self.area(levels,i)):
         setConnectionPoints(self.connection_points(levels,i)):
         setRadVisPic(self.radius_visualisation_picture(levels,i)):
-        setSound(self.sound(levels,i)):
         setLight(self.light(levels,i)):
         setPlaceShift(self.vector_to_place_result(levels,i)):
         setSearchRadius(self.resource_searching_radius(levels,i)):
