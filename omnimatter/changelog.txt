@@ -3,6 +3,7 @@ Version: 4.1.18
 Date: ????
   Bugfixes:
     - Fixed that the omnifurnace had a wrong working sound set
+    - Fixed omnite bricks having the wrong map color
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.17
 Date: 2021.07.22
