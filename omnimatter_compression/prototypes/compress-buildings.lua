@@ -624,7 +624,7 @@ for build_name, values in pairs(recipe_results) do
                 item.localised_name = new.localised_name
                 item.name = new.name
                 item.place_result = new.name
-                if item.type == "transport-belt" or item.type == "loader" or item.type == "splitter" or item.type == "underground-belt" or item.type == "loader-1x1" then
+                if new.type == "transport-belt" or new.type == "loader" or new.type == "splitter" or new.type == "underground-belt" or new.type == "loader-1x1" then
                     item.stack_size = 25
                 else
                     item.stack_size = 5
