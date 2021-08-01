@@ -6,12 +6,12 @@ RecGen:create("omnimatter_energy","heat"):
     setCategory("omnite-extraction-burner"):
     setSubgroup("omnienergy-power"):
     setOrder("ab"):
-    setEnergy(20):
+    setEnergy(10):
     setMaxTemp(250):
     setFuelCategory("thermo"):
     setCapacity(1):
     setTechName("omnitech-anbaricity"):
-    setResults({type="fluid",name="heat",amount=2*60+1,temperature=250}):
+    setResults({type = "fluid", name = "heat", amount=150, temperature = 250}):
     extend()
 
 data.raw.fluid.heat.auto_barrel = false
