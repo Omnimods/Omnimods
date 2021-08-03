@@ -65,6 +65,7 @@ function omni.fluid.get_fluid_amount(subtable) --individual ingredient/result ta
 	-- "min-chance" parses minimum, sets mp_prob as min*prob
 	-- "zero-max" parses maximum only
 	-- "chance" parses average yield, sets prob as prob
+	-- does this interferre with the GCD functionallity?
 	if subtable.amount then
 		if subtable.probability then --normal style, priority over previous step
 			return omni.fluid.round_fluid((subtable.amount * subtable.probability) / sluid_contain_fluid)
@@ -92,8 +93,8 @@ end
 
 local function search_range(temp_cond,value,temp_set)
 	for _,val in pairs(temp_set) do
-		log(serpent.block(val))
-		log(serpent.block(temp_cond.." at "..value))
+		--log(serpent.block(val))
+		--log(serpent.block(temp_cond.." at "..value))
 		if temp_cond == "max" and val.ave then
 			if val.ave <= value then
 				return false --a lower value exists, remove condition
@@ -148,6 +149,53 @@ local function item_temperature_tab_cleanup(temp_sets)
 	end
 	temp_sets = temps
 	return temps --override old table with new
+end
+
+local function adjust_amounts(recipe_name,mult,dif,need_adjustment)
+	local modMult = mult[dif]*500/need_adjustment
+	local multPrimes = omni.lib.factorize(mult[dif])
+	local addPrimes = {}
+	local checkPrimes = mult[dif]
+	for i = 0, (multPrimes["2"] or 0) do
+		for j = 0, (multPrimes["3"] or 0) do
+			for k = 0, (multPrimes["5"] or 0) do
+				local c = math.pow(2,i)*math.pow(3,j)*math.pow(5,k)
+				if c > modMult and c < checkPrimes then
+					checkPrimes = c
+				end
+			end
+		end
+	end
+	local prime60 = {}
+	addPrimes = omni.lib.factorize(checkPrimes)
+	local totalPrimeVal = omni.lib.prime.value(omni.lib.prime.mult(addPrimes,gcd_primes))
+	for _,ingres in pairs({"ingredients","results"}) do
+		for j,component in pairs(data.raw.recipe[recipe_name][dif][ingres]) do
+			if component.type == "fluid" then
+				local fluid_amount = 0
+				for i=1,#roundFluidValues do
+					if roundFluidValues[i]%totalPrimeVal == 0 then
+						if ingres == "ingredients" then
+							if roundFluidValues[i] > fluids[dif][ingres][j].amount then
+								fluid_amount = roundFluidValues[i]
+								break
+							end
+						else
+							if roundFluidValues[i] < fluids[dif][ingres][j].amount then
+								fluid_amount = roundFluidValues[i]
+							else
+								break
+							end
+						end
+					elseif ingres == "results" and roundFluidValues[i] > fluids[dif][ingres][j].amount then
+						break
+					end
+				end
+				fluids[dif][ingres][j].amount = fluid_amount
+			end
+		end
+	end
+	mult[dif] = mult[dif]/checkPrimes
 end
 --------------------------------------------------------------------------------------------------
 --Sluid generation code
@@ -332,42 +380,89 @@ end
 
 function sluid_recipe_updates() --currently works with non-standardised recipes
 	for name, changes in pairs(recipe_mods) do
+		local rec = data.raw.recipe[name]
+		--check if needs standardisation
+		local std = false
+		for i,dif in pairs({"normal","expensive"}) do
+			if not (rec[dif] and rec[dif].ingredients and rec[dif].expensive) then
+				std = true
+			end
+		end
+		if std == true then
+			--standardise
+			omni.lib.standardise(rec)
+		end
+		if not rec then	return log("recipe not found:".. name) end
+		--declare sub-tabs
+		local fluids = {normal = {ingredients = {}, results = {}}, expensive = {ingredients = {}, results = {}}}
+		local primes = {normal = {ingredients = {}, results = {}}, expensive = {ingredients = {}, results = {}}}
+		local lcm = 1
+		local mult = {normal = 1,expensive = 1}
+		--start first layer of analysis
+		for _,dif in pairs({"normal","expensive"}) do
+			for _,ingres in pairs({"ingredients","results"}) do
+				for j,ing in pairs(rec[dif][ingres]) do
+					if ing.type == "fluid" then
+						if ing.amount then
+							fluids[dif][ingres][j] = {name= ing.name, amount = omni.fluid.get_fluid_amount(ing)}
+							mult[dif] = omni.lib.lcm(omni.lib.lcm(sluid_contain_fluid, fluids[dif][ingres][j].amount)/fluids[dif][ingres][j].amount, mult[dif])
+							primes[dif][ingres][j] = omni.lib.factorize(fluids[dif][ingres][j].amount)
+						else --throw error
+							log("invalid fluid amount found in: "..rec.name.. " part: ".. diff.."."..ingres)
+							log(serpent.block(rec[dif][ingres]))
+						end
+					end
+				end
+			end
+			--result value adjustments checker
+			local div = 1
+			local need_adjustment = nil
+			local gcd_primes = {}
+			for j,ing in pairs(rec[dif]["results"]) do
+				if ing.type == "fluid" then
+					local c = fluids[dif]["results"][j].amount*mult[dif]
+					if c > 500 and (not need_adjustment or c > need_adjustment) then
+						need_adjustment = c
+					end
+					if gcd_primes == {} then
+						gcd_primes = primes[dif]["results"][j]
+					else
+						gcd_primes = omni.lib.prime.gcd(primes[dif]["results"][j],gcd_primes)
+					end
+				end
+			end
+			if need_adjustment then
+				adjust_amounts(rec.name,mult,dif,need_adjustment)
+			end
+		end
 		--fix to pick up temperatures etc
-		local types = {"ingredients","results"}
-		for _,style in pairs(types) do
-			for i = 1, table_size(changes[style]) do
-				if data.raw.recipe[name][style] then
-					for n, ing in pairs(data.raw.recipe[name][style]) do
-						if ing.name == changes[style][i].name then
-							ing.type = "item"
-							ing.name = "solid-"..changes[style][i].name
-							ing.amount = omni.fluid.get_fluid_amount(ing)
-							if changes[style][i].temp then
-								local temps = recipe_temperature_cleanup(changes[style][i].temp,changes[style][i].name)
-								if temps then
-									if temps.ave then 
-										ing.name = "solid-"..changes[style][i].name.."-T-"..temps.ave
-									elseif temps.max then
-										ing.name = "solid-"..changes[style][i].name.."-Th-"..temps.max
-									elseif temps.min then
-										ing.name = "solid-"..changes[style][i].name.."-Tc-"..temps.min
-									end
+		for _, ingres in pairs({"ingredients","results"}) do
+			for i = 1, table_size(changes[ingres]) do
+				for _, dif in pairs({"normal","expensive"}) do
+					for	n, ing in pairs(data.raw.recipe[name][dif][ingres]) do
+						if ing.name == changes[ingres][i].name then --don't assume fully standarised
+							--replace with solids equivalent
+							local new_ing={}--start empty to remove all old props to add only what is needed
+							new_ing.type = "item"
+							--detect temperature
+							local temps = recipe_temperature_cleanup(changes[ingres][i].temp,changes[ingres][i].name)
+							if temps then
+								if temps.ave then 
+									new_ing.name = "solid-"..changes[ingres][i].name.."-T-"..temps.ave
+								elseif temps.max then
+									new_ing.name = "solid-"..changes[ingres][i].name.."-Th-"..temps.max
+								elseif temps.min then
+									new_ing.name = "solid-"..changes[ingres][i].name.."-Tc-"..temps.min
 								end
+							else --default
+								new_ing.name = "solid-"..changes[ingres][i].name
 							end
+							new_ing.amount = omni.fluid.get_fluid_amount(ing)
+							ing = new_ing
 						end
 					end
-				else	--standardised recipes
-					for _, dif in pairs({"normal","expensive"}) do
-						for	n, ing in pairs(data.raw.recipe[name][dif][style]) do
-							if ing.name == changes[style][i].name then
-								--replace with solids equivalent
-								ing.type = "item"
-								ing.name = "solid-"..changes[style][i].name
-								ing.amount = omni.fluid.get_fluid_amount(ing)
-								--add in fluid property removal and temperature detection code stuffs here...
-							end
-						end
-					end
+					--crafting time adjustment
+					rec[dif].energy_required=rec[dif].energy_required*mult[dif]
 				end
 			end
 		end
@@ -375,6 +470,7 @@ function sluid_recipe_updates() --currently works with non-standardised recipes
 		main_product_update(name,changes.results)
 	end
 end
+
 --DON'T forget to clobber the fluids not in mush/fluids once completed
 for _,disfluid in pairs(data.raw.fluid) do
 	if not fluid_cats.fluid[disfluid] then --not found in fluids exclusion list
@@ -385,6 +481,7 @@ for _,disfluid in pairs(data.raw.fluid) do
 		end
 	end
 end
+
 --------------------------------------------------------------------------------------------------
 --List Generation Support functions
 --------------------------------------------------------------------------------------------------
@@ -565,7 +662,6 @@ for _, rec in pairs(data.raw.recipe) do
 							if fluid_cats.sluid[ing.name] then
 								if not check_temperature_table(fluid_cats.sluid[ing.name].temperature, {min = ing.minimum_temperature, max = ing.maximum_temperature, ave = ing.temperature}) then
 									table.insert(fluid_cats.sluid[ing.name].temperature, {min = ing.minimum_temperature, max = ing.maximum_temperature, ave = ing.temperature})
-									log("2")
 								end
 							end
 							if fluid_cats.mush[ing.name] then
@@ -573,8 +669,8 @@ for _, rec in pairs(data.raw.recipe) do
 									table.insert(fluid_cats.mush[ing.name].temperature, {min = ing.minimum_temperature, max = ing.maximum_temperature, ave = ing.temperature})
 								end
 							end
-						else
-							log("ing in table")
+						else --ignore since ing is already in the table 
+							--log("ing in table")
 						end
 					end
 				end
@@ -614,12 +710,12 @@ end
 --log(serpent.block(fluid_cats.fluid))
 --log(serpent.block(fluid_cats.mush))
 --log(serpent.block(fluid_cats.sluid))
-log(serpent.block(recipe_mods))
+--log(serpent.block(recipe_mods))
 generate_sluid()
 --log(serpent.block(fluid_cats.mush))
 --log(serpent.block(fluid_cats.sluid))
 sluid_recipe_updates()
-log(serpent.block(recipe_mods))
+--log(serpent.block(recipe_mods))
 
 --------------------------------------------------------------------------------------------------
 --Sluid Boiler tweaks
@@ -627,6 +723,8 @@ log(serpent.block(recipe_mods))
 local new_boiler = {}
 local fix_boilers_recipe = {}
 local fix_boilers_item = {}
+local ing_replace={}
+local boiler_tech = {}
 
 for _, boiler in pairs(data.raw.boiler) do
 	-----------------------------------------
@@ -678,10 +776,83 @@ for _, boiler in pairs(data.raw.boiler) do
 			order = "g[hydromnic-acid]",
 			energy_required = tid,
 			enabled = true,
+			hidden_from_player_crafting = true,
 			main_product = steam,
 			ingredients = {{type = "item", name = "solid-"..water, amount = prod},},
 			results = {{type = "fluid", name = steam, amount = sluid_contain_fluid*prod, temperature = math.min(boiler.target_temperature, data.raw.fluid[steam].max_temperature)},},
 		}
+		for _, fugacity in pairs(fluid_cats.mush) do
+			if #fugacity.temperature >= 1 then
+				for temps in pairs(fugacity.temperature) do
+					log(serpent.block(temps))
+					log(fugacity.name)
+					--deal with each instance
+					if temps.ave and boiler.target_temperature >= temps.ave then
+						new_boiler[#new_boiler+1] = {
+							type = "recipe",
+							name = fugacity.name.."-fluidisation-"..temps.ave,
+							icons = omni.lib.icon.of_generic(fugacity.name),
+							subgroup = "fluid-recipes",
+							category = "boiler-omnifluid-"..boiler.name,
+							order = "g[hydromnic-acid]",
+							energy_required = tid,
+							enabled = true,--may change this to be linked to the boiler unlock if applicable
+							hidden_from_player_crafting = true,
+							main_product = fugacity.name,
+							ingredients = {{type = "item", name = "solid-"..fugacity.name.."-T-"..temps.ave, amount = prod}},
+							results = {{type = "fluid", name = fugacity.name, amount = sluid_contain_fluid*prod, temperature = temps.ave}},
+						}
+					elseif temps.min and boiler.target_temperature >= temps.min then
+						new_boiler[#new_boiler+1] = {
+							type = "recipe",
+							name = fugacity.name.."-fluidisation-"..temps.min,
+							icons = omni.lib.icon.of_generic(fugacity.name),
+							subgroup = "fluid-recipes",
+							category = "boiler-omnifluid-"..boiler.name,
+							order = "g[hydromnic-acid]",
+							energy_required = tid,
+							enabled = true,--may change this to be linked to the boiler unlock if applicable
+							hidden_from_player_crafting = true,
+							main_product = fugacity.name,
+							ingredients = {{type = "item", name = "solid-"..fugacity.name.."-Tmin-"..temps.min, amount = prod}},
+							results = {{type = "fluid", name = fugacity.name, amount = sluid_contain_fluid*prod, temperature = boiler.target_temperature}},
+						}
+					elseif temps.max and boiler.target_temperature <= temps.max then
+						new_boiler[#new_boiler+1] = {
+							type = "recipe",
+							name = fugacity.name.."-fluidisation-"..temps.max,
+							icons = omni.lib.icon.of_generic(fugacity.name),
+							subgroup = "fluid-recipes",
+							category = "boiler-omnifluid-"..boiler.name,
+							order = "g[hydromnic-acid]",
+							energy_required = tid,
+							enabled = true,--may change this to be linked to the boiler unlock if applicable
+							hidden_from_player_crafting = true,
+							main_product = fugacity.name,
+							ingredients = {{type = "item", name = "solid-"..fugacity.name.."-Tmax-"..temps.max, amount = prod}},
+							results = {{type = "fluid", name = fugacity.name, amount = sluid_contain_fluid*prod, temperature = boiler.temps.max}},
+						}
+					end
+				end
+			else
+				log(serpent.block(fugacity))
+				log(serpent.block(data.raw.fluid[fugacity.name]))
+				new_boiler[#new_boiler+1] = {
+					type = "recipe",
+					name = fugacity.name.."-fluidisation",
+					icons = omni.lib.icon.of_generic(fugacity.name),
+					subgroup = "fluid-recipes",
+					category = "boiler-omnifluid-"..boiler.name,
+					order = "g[hydromnic-acid]",
+					energy_required = tid,
+					enabled = true,--may change this to be linked to the boiler unlock if applicable
+					hidden_from_player_crafting = true,
+					main_product = fugacity.name,
+					ingredients = {{type = "item", name = "solid-"..fugacity.name, amount = prod}},
+					results = {{type = "fluid", name = fugacity.name, amount = sluid_contain_fluid*prod, temperature = boiler.target_temperature}},
+				}
+			end
+		end
 		--add solid conversion to new listing (boiling water for example)
 		--[[new_boiler[#new_boiler+1] = {
 			type = "recipe",
@@ -714,6 +885,7 @@ for _, boiler in pairs(data.raw.boiler) do
 		local new = table.deepcopy(data.raw.boiler[boiler.name])
 			new.type = "assembling-machine"
 			new.name = boiler.name.."-converter"
+			new.localised_name = {"item-name.boiler-converter", {"entity-name."..boiler.name}}
 			new.icon = boiler.icon
 			new.icons = boiler.icons
 			new.crafting_speed = 1
@@ -726,6 +898,30 @@ for _, boiler in pairs(data.raw.boiler) do
 			new.mode = nil --invalid for assemblers
 			new.minable.result = boiler.name.."-converter"
 		new_boiler[#new_boiler+1] = new
+		ing_replace[#ing_replace+1] = boiler.name
+		--find tech unlock
+		local found = false --if not found, force off (means enabled at start)
+		for i,tech in pairs(data.raw.technology) do
+			if tech.effects then
+				for j,k in pairs(tech.effects) do
+					if k.recipe_name and k.recipe_name == boiler.name then
+						boiler_tech[#boiler_tech+1] = {tech_name = tech.name, old_name = boiler.name}
+					end
+				end
+			end
+		end
+		if found == false then
+			--hide and disable starting items
+			local old = data.raw.boiler[boiler.name]
+			old.enabled = false
+			if old.flags then
+				if old.flags["hidden"] then--[[skip]]else	table.insert(old.flags,"hidden") end 
+			else
+				old.flags = {"hidden"}
+			end
+			data.raw.item[boiler.name].hidden = true
+			data.raw.item[boiler.name].enabled = false
+		end
 	end
 end
 
@@ -735,6 +931,14 @@ end
 	}
 if #new_boiler > 0 then --i don't know why this is needed...
 	data:extend(new_boiler)
+	--replace the item as an ingredient
+	for _,boiler in pairs(ing_replace) do
+		omni.lib.replace_all_ingredient(boiler, boiler.."-converter")
+	end
+	--replace in tech unlock
+	for _,boil in pairs(boiler_tech) do
+		omni.lib.replace_unlock_recipe(boil.tech_name,boil.old_name, boil.old_name.."-converter")
+	end
 end
 --------------------------------------------------------------------------------------------------
 --Entity Fluidbox Reduction(don't clobber all in case some recipes still have them)
