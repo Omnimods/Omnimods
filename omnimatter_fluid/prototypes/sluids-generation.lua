@@ -584,7 +584,7 @@ local function get_fluid_boxes(fluidboxes)
 			base_level = fluidboxes.base_level,
 			height = fluidboxes.height or nil,
 			pipe_connections = fluidboxes.pipe_connections,
-			filter = fluidboxes.filter or nil
+			filter = --[[fluidboxes.filter or]] nil  -- keeping the filter is likely to stop the crafting of mush
 		}}
 		return tabs
 	end
@@ -598,7 +598,7 @@ local function get_fluid_boxes(fluidboxes)
 				base_level = box.base_level,
 				height = box.height or nil,
 				pipe_connections = box.pipe_connections,
-				filter = box.filter or nil
+				filter = --[[box.filter or]] nil
 			}
 		end
 	end
@@ -745,7 +745,7 @@ for _, boiler in pairs(data.raw.boiler) do
 		generator_fluid[boiler.output_fluid_box.filter] = nil
 	end
 	--if exists, find recipe, item and entity
-	if not forbidden_boilers[boiler.name] and data.raw.fluid[boiler.fluid_box.filter] and data.raw.fluid[boiler.fluid_box.filter].heat_capacity and boiler.minable then
+	if not forbidden_boilers[boiler.name] --[[and data.raw.fluid[boiler.fluid_box.filter] and data.raw.fluid[boiler.fluid_box.filter].heat_capacity]] and boiler.minable then
 		local rec = omni.lib.find_recipe(boiler.minable.result)
 		new_boiler[#new_boiler+1] = {
 			type = "recipe-category",
@@ -776,28 +776,28 @@ for _, boiler in pairs(data.raw.boiler) do
 			order = "g[hydromnic-acid]",
 			energy_required = tid,
 			enabled = true,
-			hidden_from_player_crafting = true,
+			hide_from_player_crafting = true,
 			main_product = steam,
 			ingredients = {{type = "item", name = "solid-"..water, amount = prod},},
 			results = {{type = "fluid", name = steam, amount = sluid_contain_fluid*prod, temperature = math.min(boiler.target_temperature, data.raw.fluid[steam].max_temperature)},},
 		}
+		
 		for _, fugacity in pairs(fluid_cats.mush) do
-			if #fugacity.temperature >= 1 then
+			if #fugacity.temperature >= 1 then --not sure if i want to add another level of analysis to split them into temperature specific ranges which may make modded hard, or leave it as is.
 				for _, temps in pairs(fugacity.temperature) do
 					--deal with each instance
-					log(serpent.block(temps))
 					if temps.ave and boiler.target_temperature >= temps.ave then
 						if data.raw.item["solid-"..fugacity.name.."-T-"..temps.ave] then
 							new_boiler[#new_boiler+1] = {
 								type = "recipe",
-								name = fugacity.name.."-fluidisation-"..temps.ave,
+								name = boiler_name.."-"..fugacity.name.."-fluidisation-"..temps.ave,
 								icons = omni.lib.icon.of(fugacity.name,"fluid"),
 								subgroup = "fluid-recipes",
 								category = "boiler-omnifluid-"..boiler.name,
 								order = "g[hydromnic-acid]",
 								energy_required = tid,
 								enabled = true,--may change this to be linked to the boiler unlock if applicable
-								hidden_from_player_crafting = true,
+								hide_from_player_crafting = true,
 								main_product = fugacity.name,
 								ingredients = {{type = "item", name = "solid-"..fugacity.name.."-T-"..temps.ave, amount = prod}},
 								results = {{type = "fluid", name = fugacity.name, amount = sluid_contain_fluid*prod, temperature = temps.ave}},
@@ -809,14 +809,14 @@ for _, boiler in pairs(data.raw.boiler) do
 						if data.raw.item[fugacity.name.."-fluidisation-"..temps.min] then
 							new_boiler[#new_boiler+1] = {
 								type = "recipe",
-								name = fugacity.name.."-fluidisation-"..temps.min,
+								name = boiler_name.."-"..fugacity.name.."-fluidisation-"..temps.min,
 								icons = omni.lib.icon.of(fugacity.name,"fluid"),
 								subgroup = "fluid-recipes",
-								category = "boiler-omnifluid-"..boiler.name,
+								category = "general-omni-boiler",
 								order = "g[hydromnic-acid]",
 								energy_required = tid,
 								enabled = true,--may change this to be linked to the boiler unlock if applicable
-								hidden_from_player_crafting = true,
+								hide_from_player_crafting = true,
 								main_product = fugacity.name,
 								ingredients = {{type = "item", name = "solid-"..fugacity.name.."-Tmin-"..temps.min, amount = prod}},
 								results = {{type = "fluid", name = fugacity.name, amount = sluid_contain_fluid*prod, temperature = boiler.target_temperature}},
@@ -828,14 +828,14 @@ for _, boiler in pairs(data.raw.boiler) do
 						if data.raw.item[fugacity.name.."-fluidisation-"..temps.max] then
 							new_boiler[#new_boiler+1] = {
 								type = "recipe",
-								name = fugacity.name.."-fluidisation-"..temps.max,
+								name = boiler_name.."-"..fugacity.name.."-fluidisation-"..temps.max,
 								icons = omni.lib.icon.of(fugacity.name,"fluid"),
 								subgroup = "fluid-recipes",
-								category = "boiler-omnifluid-"..boiler.name,
+								category = "general-omni-boiler",
 								order = "g[hydromnic-acid]",
 								energy_required = tid,
 								enabled = true,--may change this to be linked to the boiler unlock if applicable
-								hidden_from_player_crafting = true,
+								hide_from_player_crafting = true,
 								main_product = fugacity.name,
 								ingredients = {{type = "item", name = "solid-"..fugacity.name.."-Tmax-"..temps.max, amount = prod}},
 								results = {{type = "fluid", name = fugacity.name, amount = sluid_contain_fluid*prod, temperature = boiler.target_temperature}},
@@ -846,40 +846,23 @@ for _, boiler in pairs(data.raw.boiler) do
 					end
 				end
 			else
-				log(serpent.block(fugacity))
-				log(serpent.block(data.raw.fluid[fugacity.name]))
 				new_boiler[#new_boiler+1] = {
 					type = "recipe",
 					name = fugacity.name.."-fluidisation",
 					icons = omni.lib.icon.of(fugacity.name,"fluid"),
 					subgroup = "fluid-recipes",
-					category = "boiler-omnifluid-"..boiler.name,
+					category = "general-omni-boiler",
 					order = "g[hydromnic-acid]",
 					energy_required = tid,
 					enabled = true,--may change this to be linked to the boiler unlock if applicable
-					hidden_from_player_crafting = true,
+					hide_from_player_crafting = true,
 					main_product = fugacity.name,
 					ingredients = {{type = "item", name = "solid-"..fugacity.name, amount = prod}},
 					results = {{type = "fluid", name = fugacity.name, amount = sluid_contain_fluid*prod, temperature = data.raw.fluid[fugacity.name].default_temperature}},
 				}
 			end
 		end
-		--add solid conversion to new listing (boiling water for example)
-		--[[new_boiler[#new_boiler+1] = {
-			type = "recipe",
-			name = boiler.name.."-boiling-solid-steam-"..boiler.target_temperature,
-			icons = {{icon = "__base__/graphics/icons/fluid/steam.png", icon_size = 64}},
-			subgroup = "fluid-recipes",
-			category = "boiler-omnifluid-"..boiler.name,
-			order = "g[hydromnic-acid]",
-			energy_required = tid,
-			enabled = true,
-			main_product= steam,
-			ingredients = {{type = "item", name = "solid-"..water, amount = prod},},
-			results =	{{type = "item", name = "solid-"..steam, amount = prod},},
-		}
-		if mods["omnimatter_marathon"] then omni.marathon.exclude_recipe(boiler.name.."-boiling-solid-steam-"..boiler.target_temperature) end]]
-		if mods["omnimatter_marathon"] then omni.marathon.exclude_recipe(boiler.name.."-boiling-steam-"..boiler.target_temperature) end
+		if mods["omnimatter_marathon"] then omni.marathon.exclude_recipe(boiler.name.."-boiling-steam-"..boiler.target_temperature) end --don't worry about the other ones...
 
 		--duplicate boiler for each corresponding one?
 		local new_item = table.deepcopy(data.raw.item[boiler.name])
@@ -893,6 +876,7 @@ for _, boiler in pairs(data.raw.boiler) do
 		forbidden_assembler[boiler.name.."-converter"] = true
 		--create entity
 		--log(serpent.block(data.raw.boiler[boiler.name]))
+		require("prototypes.sluids-boiler")
 		local new = table.deepcopy(data.raw.boiler[boiler.name])
 			new.type = "assembling-machine"
 			new.name = boiler.name.."-converter"
@@ -900,14 +884,38 @@ for _, boiler in pairs(data.raw.boiler) do
 			new.icon = boiler.icon
 			new.icons = boiler.icons
 			new.crafting_speed = 1
+			--change source location to deal with the new size
 			new.energy_source = boiler.energy_source
+			if new.energy_source and new.energy_source.connections --[[and new.energy_source[1].heat_pipe_covers]] then
+				local HS=boiler.energy_source
+				HS.connections = omni.fluid.heat_pipe_images.connections
+				HS.pipe_covers = omni.fluid.heat_pipe_images.pipe_covers
+				HS.heat_pipe_covers = omni.fluid.heat_pipe_images.heat_pipe_covers
+				HS.heat_picture = omni.fluid.heat_pipe_images.heat_picture
+				HS.heat_glow = omni.fluid.heat_pipe_images.heat_glow
+			end
 			new.energy_usage = boiler.energy_consumption
 			new.ingredient_count = 4
 			new.crafting_categories = {"boiler-omnifluid-"..boiler.name,"general-omni-boiler"}
-			new.fluid_boxes =	get_fluid_boxes(new.fluid_boxes or new.output_fluid_box)
+			new.fluid_boxes =	{
+				{
+					production_type = "output",
+					pipe_covers = pipecoverspictures(),
+					base_level = 1,
+					pipe_connections = {{type = "output", position = {0, -2}}}
+				}}--get_fluid_boxes(new.fluid_boxes or new.output_fluid_box)
 			new.fluid_box = nil --removes input box
 			new.mode = nil --invalid for assemblers
 			new.minable.result = boiler.name.."-converter"
+			if new.energy_source and new.energy_source.connections then --use HX graphics instead
+				new.animation = omni.fluid.exchanger_images.animation
+				new.working_visualisations = omni.fluid.exchanger_images.working_visualisations
+			else
+				new.animation = omni.fluid.boiler_images.animation
+				new.working_visualisations = omni.fluid.boiler_images.working_visualisations
+			end
+			new.collision_box = {{-1.29, -1.29}, {1.29, 1.29}}
+			new.selection_box = {{-1.5, -1.5}, {1.5, 1.5}}
 		new_boiler[#new_boiler+1] = new
 		ing_replace[#ing_replace+1] = boiler.name
 		--find tech unlock
@@ -951,6 +959,7 @@ if #new_boiler > 0 then --i don't know why this is needed...
 		omni.lib.replace_unlock_recipe(boil.tech_name,boil.old_name, boil.old_name.."-converter")
 	end
 end
+
 --------------------------------------------------------------------------------------------------
 --Entity Fluidbox Reduction(don't clobber all in case some recipes still have them)
 --------------------------------------------------------------------------------------------------
