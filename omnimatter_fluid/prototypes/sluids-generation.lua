@@ -93,8 +93,6 @@ end
 
 local function search_range(temp_cond,value,temp_set)
 	for _,val in pairs(temp_set) do
-		--log(serpent.block(val))
-		--log(serpent.block(temp_cond.." at "..value))
 		if temp_cond == "max" and val.ave then
 			if val.ave <= value then
 				return false --a lower value exists, remove condition
@@ -112,14 +110,11 @@ local function item_temperature_tab_cleanup(temp_sets)
 	--sort and filter out temperatures in the table
 	--will run iteratively for items, or just once for recipes
 	local temps = {} --set metatable of used temperatures to override later
-	--log(serpent.block(temp_sets))
 	for i,temperature in pairs(temp_sets) do
 		--temp.ave (common settings)
 		if temperature.ave and not omni.lib.is_in_table({ave = temperature.ave},temps) then
-			--log("ave temp copy")
 			temps[#temps+1] = {ave=temperature.ave} --basically copy it...
 		elseif (temperature.max and temperature.min) then --set average based on max and min
-			--log("min-max copy")
 			local aver = (temperature.max+temperature.min)/2
 			if not omni.lib.is_in_table({ave = aver},temps) then
 				temps[#temps+1] = {ave = aver}
@@ -368,13 +363,37 @@ local function main_product_update(rec_name,results_updates)
 	local rec=data.raw.recipe[rec_name]
 	--collect all main_product locations
 	if rec.main_product then
-		rec.main_product = mp_update(rec.main_product,results_updates)
+		--sanity check
+		for i,res in pairs(rec.results) do
+			for j,update in pairs(results_updates) do
+				if res.name=="solid-"..update.name then
+					rec.main_product = mp_update(rec.main_product,results_updates)
+					break
+				end
+			end
+		end
 	end
 	if rec.normal and rec.normal.main_product then
-		rec.normal.main_product = mp_update(rec.normal.main_product,results_updates)
+		--sanity check
+		for i,res in pairs(rec.normal.results) do
+			for j,update in pairs(results_updates) do
+				if res.name=="solid-"..update.name then
+					rec.normal.main_product = mp_update(rec.normal.main_product,results_updates)
+					break
+				end
+			end
+		end
 	end
 	if rec.expensive and rec.expensive.main_product then
-		rec.expensive.main_product = mp_update(rec.expensive.main_product,results_updates)
+		--sanity check
+		for i,res in pairs(rec.expensive.results) do
+			for j,update in pairs(results_updates) do
+				if res.name=="solid-"..update.name then
+					rec.expensive.main_product = mp_update(rec.expensive.main_product,results_updates)
+					break
+				end
+			end
+		end
 	end
 end
 
@@ -436,10 +455,10 @@ function sluid_recipe_updates() --currently works with non-standardised recipes
 			end
 		end
 		--fix to pick up temperatures etc
-		for _, ingres in pairs({"ingredients","results"}) do
-			for i = 1, table_size(changes[ingres]) do
-				for _, dif in pairs({"normal","expensive"}) do
-					for	n, ing in pairs(data.raw.recipe[name][dif][ingres]) do
+		for _, dif in pairs({"normal","expensive"}) do
+			for _, ingres in pairs({"ingredients","results"}) do
+				for i = 1, table_size(changes[ingres]) do
+					for	n, ing in pairs(rec[dif][ingres]) do
 						if ing.name == changes[ingres][i].name then --don't assume fully standarised
 							--replace with solids equivalent
 							local new_ing={}--start empty to remove all old props to add only what is needed
@@ -458,16 +477,17 @@ function sluid_recipe_updates() --currently works with non-standardised recipes
 								new_ing.name = "solid-"..changes[ingres][i].name
 							end
 							new_ing.amount = omni.fluid.get_fluid_amount(ing)
-							ing = new_ing
+							--ing = new_ing
+							rec[dif][ingres][n]=new_ing
 						end
 					end
-					--crafting time adjustment
-					rec[dif].energy_required=rec[dif].energy_required*mult[dif]
 				end
 			end
+			--crafting time adjustment
+			rec[dif].energy_required=rec[dif].energy_required*mult[dif]
 		end
 		--main product tweaks
-		main_product_update(name,changes.results)
+			main_product_update(name,changes.results)
 	end
 end
 
@@ -783,6 +803,7 @@ for _, boiler in pairs(data.raw.boiler) do
 		}
 		
 		for _, fugacity in pairs(fluid_cats.mush) do
+			--deal with non-water mush fluids, allow temperature and specific boiler systems
 			if #fugacity.temperature >= 1 then --not sure if i want to add another level of analysis to split them into temperature specific ranges which may make modded hard, or leave it as is.
 				for _, temps in pairs(fugacity.temperature) do
 					--deal with each instance
@@ -790,7 +811,7 @@ for _, boiler in pairs(data.raw.boiler) do
 						if data.raw.item["solid-"..fugacity.name.."-T-"..temps.ave] then
 							new_boiler[#new_boiler+1] = {
 								type = "recipe",
-								name = boiler_name.."-"..fugacity.name.."-fluidisation-"..temps.ave,
+								name = boiler.name.."-"..fugacity.name.."-fluidisation-"..temps.ave,
 								icons = omni.lib.icon.of(fugacity.name,"fluid"),
 								subgroup = "fluid-recipes",
 								category = "boiler-omnifluid-"..boiler.name,
@@ -809,7 +830,7 @@ for _, boiler in pairs(data.raw.boiler) do
 						if data.raw.item[fugacity.name.."-fluidisation-"..temps.min] then
 							new_boiler[#new_boiler+1] = {
 								type = "recipe",
-								name = boiler_name.."-"..fugacity.name.."-fluidisation-"..temps.min,
+								name = boiler.name.."-"..fugacity.name.."-fluidisation-"..temps.min,
 								icons = omni.lib.icon.of(fugacity.name,"fluid"),
 								subgroup = "fluid-recipes",
 								category = "general-omni-boiler",
@@ -828,7 +849,7 @@ for _, boiler in pairs(data.raw.boiler) do
 						if data.raw.item[fugacity.name.."-fluidisation-"..temps.max] then
 							new_boiler[#new_boiler+1] = {
 								type = "recipe",
-								name = boiler_name.."-"..fugacity.name.."-fluidisation-"..temps.max,
+								name = boiler.name.."-"..fugacity.name.."-fluidisation-"..temps.max,
 								icons = omni.lib.icon.of(fugacity.name,"fluid"),
 								subgroup = "fluid-recipes",
 								category = "general-omni-boiler",
@@ -845,7 +866,7 @@ for _, boiler in pairs(data.raw.boiler) do
 						end
 					end
 				end
-			else
+			else --no temperature specific fluid
 				new_boiler[#new_boiler+1] = {
 					type = "recipe",
 					name = fugacity.name.."-fluidisation",
@@ -875,7 +896,6 @@ for _, boiler in pairs(data.raw.boiler) do
 		--stop it from being analysed further (stop recursive updates)
 		forbidden_assembler[boiler.name.."-converter"] = true
 		--create entity
-		--log(serpent.block(data.raw.boiler[boiler.name]))
 		require("prototypes.sluids-boiler")
 		local new = table.deepcopy(data.raw.boiler[boiler.name])
 			new.type = "assembling-machine"
@@ -886,7 +906,7 @@ for _, boiler in pairs(data.raw.boiler) do
 			new.crafting_speed = 1
 			--change source location to deal with the new size
 			new.energy_source = boiler.energy_source
-			if new.energy_source and new.energy_source.connections --[[and new.energy_source[1].heat_pipe_covers]] then
+			if new.energy_source and new.energy_source.connections then
 				local HS=boiler.energy_source
 				HS.connections = omni.fluid.heat_pipe_images.connections
 				HS.pipe_covers = omni.fluid.heat_pipe_images.pipe_covers
@@ -959,6 +979,12 @@ if #new_boiler > 0 then --i don't know why this is needed...
 		omni.lib.replace_unlock_recipe(boil.tech_name,boil.old_name, boil.old_name.."-converter")
 	end
 end
+--------------------------------------------------------------------------------------------------
+--Update Fluid mining (offshore pumps/pumpjacks etc) to output solids
+--------------------------------------------------------------------------------------------------
+
+
+
 
 --------------------------------------------------------------------------------------------------
 --Entity Fluidbox Reduction(don't clobber all in case some recipes still have them)
