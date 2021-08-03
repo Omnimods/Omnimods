@@ -363,37 +363,13 @@ local function main_product_update(rec_name,results_updates)
 	local rec=data.raw.recipe[rec_name]
 	--collect all main_product locations
 	if rec.main_product then
-		--sanity check
-		for i,res in pairs(rec.results) do
-			for j,update in pairs(results_updates) do
-				if res.name=="solid-"..update.name then
-					rec.main_product = mp_update(rec.main_product,results_updates)
-					break
-				end
-			end
-		end
+		rec.main_product = mp_update(rec.main_product,results_updates)
 	end
 	if rec.normal and rec.normal.main_product then
-		--sanity check
-		for i,res in pairs(rec.normal.results) do
-			for j,update in pairs(results_updates) do
-				if res.name=="solid-"..update.name then
-					rec.normal.main_product = mp_update(rec.normal.main_product,results_updates)
-					break
-				end
-			end
-		end
+		rec.normal.main_product = mp_update(rec.normal.main_product,results_updates)
 	end
 	if rec.expensive and rec.expensive.main_product then
-		--sanity check
-		for i,res in pairs(rec.expensive.results) do
-			for j,update in pairs(results_updates) do
-				if res.name=="solid-"..update.name then
-					rec.expensive.main_product = mp_update(rec.expensive.main_product,results_updates)
-					break
-				end
-			end
-		end
+		rec.expensive.main_product = mp_update(rec.expensive.main_product,results_updates)
 	end
 end
 
@@ -927,6 +903,9 @@ for _, boiler in pairs(data.raw.boiler) do
 			new.fluid_box = nil --removes input box
 			new.mode = nil --invalid for assemblers
 			new.minable.result = boiler.name.."-converter"
+			if new.next_upgrade then
+				new.next_upgrade = new.next_upgrade.."-converter"
+			end
 			if new.energy_source and new.energy_source.connections then --use HX graphics instead
 				new.animation = omni.fluid.exchanger_images.animation
 				new.working_visualisations = omni.fluid.exchanger_images.working_visualisations
