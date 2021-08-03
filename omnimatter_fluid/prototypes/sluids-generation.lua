@@ -783,55 +783,66 @@ for _, boiler in pairs(data.raw.boiler) do
 		}
 		for _, fugacity in pairs(fluid_cats.mush) do
 			if #fugacity.temperature >= 1 then
-				for temps in pairs(fugacity.temperature) do
-					log(serpent.block(temps))
-					log(fugacity.name)
+				for _, temps in pairs(fugacity.temperature) do
 					--deal with each instance
+					log(serpent.block(temps))
 					if temps.ave and boiler.target_temperature >= temps.ave then
-						new_boiler[#new_boiler+1] = {
-							type = "recipe",
-							name = fugacity.name.."-fluidisation-"..temps.ave,
-							icons = omni.lib.icon.of_generic(fugacity.name),
-							subgroup = "fluid-recipes",
-							category = "boiler-omnifluid-"..boiler.name,
-							order = "g[hydromnic-acid]",
-							energy_required = tid,
-							enabled = true,--may change this to be linked to the boiler unlock if applicable
-							hidden_from_player_crafting = true,
-							main_product = fugacity.name,
-							ingredients = {{type = "item", name = "solid-"..fugacity.name.."-T-"..temps.ave, amount = prod}},
-							results = {{type = "fluid", name = fugacity.name, amount = sluid_contain_fluid*prod, temperature = temps.ave}},
-						}
+						if data.raw.item["solid-"..fugacity.name.."-T-"..temps.ave] then
+							new_boiler[#new_boiler+1] = {
+								type = "recipe",
+								name = fugacity.name.."-fluidisation-"..temps.ave,
+								icons = omni.lib.icon.of(fugacity.name,"fluid"),
+								subgroup = "fluid-recipes",
+								category = "boiler-omnifluid-"..boiler.name,
+								order = "g[hydromnic-acid]",
+								energy_required = tid,
+								enabled = true,--may change this to be linked to the boiler unlock if applicable
+								hidden_from_player_crafting = true,
+								main_product = fugacity.name,
+								ingredients = {{type = "item", name = "solid-"..fugacity.name.."-T-"..temps.ave, amount = prod}},
+								results = {{type = "fluid", name = fugacity.name, amount = sluid_contain_fluid*prod, temperature = temps.ave}},
+							}
+						else
+							log("item does not exist:".. fugacity.name.."-fluidisation-"..temps.ave)
+						end
 					elseif temps.min and boiler.target_temperature >= temps.min then
-						new_boiler[#new_boiler+1] = {
-							type = "recipe",
-							name = fugacity.name.."-fluidisation-"..temps.min,
-							icons = omni.lib.icon.of_generic(fugacity.name),
-							subgroup = "fluid-recipes",
-							category = "boiler-omnifluid-"..boiler.name,
-							order = "g[hydromnic-acid]",
-							energy_required = tid,
-							enabled = true,--may change this to be linked to the boiler unlock if applicable
-							hidden_from_player_crafting = true,
-							main_product = fugacity.name,
-							ingredients = {{type = "item", name = "solid-"..fugacity.name.."-Tmin-"..temps.min, amount = prod}},
-							results = {{type = "fluid", name = fugacity.name, amount = sluid_contain_fluid*prod, temperature = boiler.target_temperature}},
-						}
+						if data.raw.item[fugacity.name.."-fluidisation-"..temps.min] then
+							new_boiler[#new_boiler+1] = {
+								type = "recipe",
+								name = fugacity.name.."-fluidisation-"..temps.min,
+								icons = omni.lib.icon.of(fugacity.name,"fluid"),
+								subgroup = "fluid-recipes",
+								category = "boiler-omnifluid-"..boiler.name,
+								order = "g[hydromnic-acid]",
+								energy_required = tid,
+								enabled = true,--may change this to be linked to the boiler unlock if applicable
+								hidden_from_player_crafting = true,
+								main_product = fugacity.name,
+								ingredients = {{type = "item", name = "solid-"..fugacity.name.."-Tmin-"..temps.min, amount = prod}},
+								results = {{type = "fluid", name = fugacity.name, amount = sluid_contain_fluid*prod, temperature = boiler.target_temperature}},
+							}
+						else
+							log("item does not exist:".. fugacity.name.."-fluidisation-"..temps.min)
+						end
 					elseif temps.max and boiler.target_temperature <= temps.max then
-						new_boiler[#new_boiler+1] = {
-							type = "recipe",
-							name = fugacity.name.."-fluidisation-"..temps.max,
-							icons = omni.lib.icon.of_generic(fugacity.name),
-							subgroup = "fluid-recipes",
-							category = "boiler-omnifluid-"..boiler.name,
-							order = "g[hydromnic-acid]",
-							energy_required = tid,
-							enabled = true,--may change this to be linked to the boiler unlock if applicable
-							hidden_from_player_crafting = true,
-							main_product = fugacity.name,
-							ingredients = {{type = "item", name = "solid-"..fugacity.name.."-Tmax-"..temps.max, amount = prod}},
-							results = {{type = "fluid", name = fugacity.name, amount = sluid_contain_fluid*prod, temperature = boiler.temps.max}},
-						}
+						if data.raw.item[fugacity.name.."-fluidisation-"..temps.max] then
+							new_boiler[#new_boiler+1] = {
+								type = "recipe",
+								name = fugacity.name.."-fluidisation-"..temps.max,
+								icons = omni.lib.icon.of(fugacity.name,"fluid"),
+								subgroup = "fluid-recipes",
+								category = "boiler-omnifluid-"..boiler.name,
+								order = "g[hydromnic-acid]",
+								energy_required = tid,
+								enabled = true,--may change this to be linked to the boiler unlock if applicable
+								hidden_from_player_crafting = true,
+								main_product = fugacity.name,
+								ingredients = {{type = "item", name = "solid-"..fugacity.name.."-Tmax-"..temps.max, amount = prod}},
+								results = {{type = "fluid", name = fugacity.name, amount = sluid_contain_fluid*prod, temperature = boiler.target_temperature}},
+							}
+						else
+							log("item does not exist:".. fugacity.name.."-fluidisation-"..temps.max)
+						end
 					end
 				end
 			else
@@ -840,7 +851,7 @@ for _, boiler in pairs(data.raw.boiler) do
 				new_boiler[#new_boiler+1] = {
 					type = "recipe",
 					name = fugacity.name.."-fluidisation",
-					icons = omni.lib.icon.of_generic(fugacity.name),
+					icons = omni.lib.icon.of(fugacity.name,"fluid"),
 					subgroup = "fluid-recipes",
 					category = "boiler-omnifluid-"..boiler.name,
 					order = "g[hydromnic-acid]",
@@ -849,7 +860,7 @@ for _, boiler in pairs(data.raw.boiler) do
 					hidden_from_player_crafting = true,
 					main_product = fugacity.name,
 					ingredients = {{type = "item", name = "solid-"..fugacity.name, amount = prod}},
-					results = {{type = "fluid", name = fugacity.name, amount = sluid_contain_fluid*prod, temperature = boiler.target_temperature}},
+					results = {{type = "fluid", name = fugacity.name, amount = sluid_contain_fluid*prod, temperature = data.raw.fluid[fugacity.name].default_temperature}},
 				}
 			end
 		end
