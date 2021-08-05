@@ -185,7 +185,7 @@ for _,tech in pairs(data.raw.technology) do
         if t.unit.count then
             t.unit.time = omni.lib.round((t.unit.time * t.unit.count) / stacks_needed)
             t.unit.time = math.max(1, t.unit.time)
-            t.unit.count = stacks_needed
+            t.unit.count = math.min(stacks_needed, 2^64-1)
         else
             t.unit.time = t.unit.time * divisor
             t.unit.count_formula = "(" .. t.unit.count_formula..")*".. string.format("%f", 1 / divisor)
