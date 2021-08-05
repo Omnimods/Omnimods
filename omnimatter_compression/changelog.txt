@@ -3,6 +3,8 @@ Version: 4.1.9
 Date: 2021.08.XX
   Changes:
     - Increase stack sizes for compressed belts and variants of
+  Bugfixes:
+    - Fix failure to load on latest experimental caused by massive tech costs
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.8
 Date: 2021.07.26
