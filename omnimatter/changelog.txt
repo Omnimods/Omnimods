@@ -4,6 +4,8 @@ Date: ????
   Bugfixes:
     - Fixed that the omnifurnace had a wrong working sound set
     - Fixed omnite bricks having the wrong map color
+  Changes:
+    - Changed burner omnitractor and burner omniphlog crafting time to 5 s (10s / 1s before)
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.17
 Date: 2021.07.22

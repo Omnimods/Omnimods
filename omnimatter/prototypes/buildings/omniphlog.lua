@@ -25,6 +25,7 @@ setOrder("a[omniphlog-burner]"):
 setReplace("omniphlog"):
 setNextUpgrade("omniphlog-1"):
 setSize(3):
+setEnergy(5):
 setCrafting("omniphlog"):
 setFluidBox("XWX.XXX.XKX"):
 setUsage(300):
