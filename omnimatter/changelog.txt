@@ -6,7 +6,7 @@ Date: ????
     - Fixed omnite bricks having the wrong map color
   Changes:
     - Changed burner omnitractor and burner omniphlog crafting time to 5 s (10s / 1s before)
-    - Doubled crushed omnite crafting times
+    - Doubled crushed omnite, pulverized omnite and pulverized stone crafting times
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.17
 Date: 2021.07.22
