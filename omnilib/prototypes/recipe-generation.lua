@@ -28,80 +28,77 @@ InsertGen.__index = InsertGen
 OmniGen = {}
 OmniGen.__index = OmniGen
 
-ResourceGen = {}
-ResourceGen.__index = ResourceGen
-
 Omni = {
     Gen = {Rec = {},Item={},Bot={},Ins={},Tech={},Build={}},
-    Chain={Rec = {},Bot={},Ins={},Build={}}}
+    Chain={Rec = {},Bot={},Ins={},Build={}}
+}
 
 setmetatable(RecGen, {
-  __index = ItemGen, -- this is what makes the inheritance work
-  __call = function (cls, ...)
-    local self = setmetatable({}, cls)
-    self:create(...)
-    return self
-  end,
+    __index = ItemGen, -- this is what makes the inheritance work
+    __call = function (cls, ...)
+        local self = setmetatable({}, cls)
+        self:create(...)
+        return self
+    end,
 })
 
 setmetatable(InsertGen, {
-  __index = BuildGen, -- this is what makes the inheritance work
-  __call = function (cls, ...)
-    local self = setmetatable({}, cls)
-    self:create(...)
-    return self
-  end,
+    __index = BuildGen, -- this is what makes the inheritance work
+    __call = function (cls, ...)
+        local self = setmetatable({}, cls)
+        self:create(...)
+        return self
+    end,
 })
 
 setmetatable(RecChain, {
-  __index = RecGen, -- this is what makes the inheritance work
-  __call = function (cls, ...)
-    local self = setmetatable({}, cls)
-    self:create(...)
-    return self
-  end,
+    __index = RecGen, -- this is what makes the inheritance work
+    __call = function (cls, ...)
+        local self = setmetatable({}, cls)
+        self:create(...)
+        return self
+    end,
 })
 
 setmetatable(BuildGen, {
-  __index = RecGen, -- this is what makes the inheritance work
-  __call = function (cls, ...)
-    local self = setmetatable({}, cls)
-    self:create(...)
-    return self
-  end,
+    __index = RecGen, -- this is what makes the inheritance work
+    __call = function (cls, ...)
+        local self = setmetatable({}, cls)
+        self:create(...)
+        return self
+    end,
 })
 
 setmetatable(BotGen, {
-  __index = RecGen, -- this is what makes the inheritance work
-  __call = function (cls, ...)
-    local self = setmetatable({}, cls)
-    self:create(...)
-    return self
-  end,
+    __index = RecGen, -- this is what makes the inheritance work
+    __call = function (cls, ...)
+        local self = setmetatable({}, cls)
+        self:create(...)
+        return self
+    end,
 })
 
 setmetatable(InsGen, {
-  __index = BuildGen, -- this is what makes the inheritance work
-  __call = function (cls, ...)
-    local self = setmetatable({}, cls)
-    self:create(...)
-    return self
-  end,
+    __index = BuildGen, -- this is what makes the inheritance work
+    __call = function (cls, ...)
+        local self = setmetatable({}, cls)
+        self:create(...)
+        return self
+    end,
 })
 
 local parents  = {BuildGen,RecChain}
 local rawset   = rawset
 local cache_mt = {}
 function cache_mt:__index(key)
-  for i = 1, #parents do
-    local parent = parents[i]
-
-    local value = parent[key]
-    if value ~= nil then
-      rawset(self, key, value)
-      return value
+    for i = 1, #parents do
+        local parent = parents[i]
+        local value = parent[key]
+        if value ~= nil then
+            rawset(self, key, value)
+            return value
+        end
     end
-  end
 end
 
 local function search (k, plist)
@@ -114,23 +111,23 @@ end
 function createClass (...)
     local c = {}        -- new class
 
-      -- class will search for each method in the list of its
-      -- parents (`arg' is the list of parents)
+    -- class will search for each method in the list of its
+    -- parents (`arg' is the list of parents)
     setmetatable(c, {__index = function (t, k)
         return search(k, arg)
     end})
 
-      -- prepare `c' to be the metatable of its instances
+    -- prepare `c' to be the metatable of its instances
     c.__index = c
 
-      -- define a new constructor for this new class
+    -- define a new constructor for this new class
     function c:new (o)
         o = o or {}
         setmetatable(o, c)
         return o
     end
 
-      -- return new class
+    -- return new class
     return c
 end
 
@@ -527,11 +524,11 @@ function ItemGen:import(item)
         setIcons(proto.icons or proto.icon or omni.lib.icon.of(proto, true)):
         setFuelValue(proto.fuel_value):
         setOrder(proto.order)
-        if item.type == "fluid" then
+        if proto.type == "fluid" then
             it:fluid():
             setFlowColour(proto.flow_color):
             setBaseColour(proto.base_color)
-        elseif item.type == "tool" then
+        elseif proto.type == "tool" then
             it:tool():
             setDurability(proto.durability):
             setDurabilityDesc(proto.durability_description_key)
@@ -1152,10 +1149,9 @@ function ItemGen:return_array()
     return self.rtn
 end
 function ItemGen:extend()
-    if self.requiredMods(0,0) then
-    Omni.Gen.Item[self.name]=self
-        self:return_array()
-        data:extend(self.rtn)
+    if self.requiredMods(0,0) and self.name then
+        Omni.Gen.Item[self.name] = self
+        data:extend(self:return_array())
     end
 end
 
@@ -2042,8 +2038,7 @@ end
 function RecGen:extend()
     if self.requiredMods(0,0) and self.name then
         Omni.Gen.Rec[self.name] = self
-        self:return_array()
-        data:extend(self.rtn)
+        data:extend(self:return_array())
     end
 end
 
@@ -2884,11 +2879,10 @@ function BuildGen:import(name)
         end
 
     local r = RecGen:import(name)
-
-    local notFields = {}
     for name,data in pairs(r) do
         b[name]=table.deepcopy(data)
     end
+
     --if build.energy_source.type=="burner" then b:setBurner(self.energy_source.effectivity,self.energy_source.fuel_inventory_size) end
     return b:setType(build.type):setFlags(build.flags):setIcons(build.icons or build.icon or omni.lib.icon.of(build, true))
 end
@@ -3626,8 +3620,8 @@ function BuildGen:return_array()
     return self.rtn
 end
 function BuildGen:extend()
-    if self.requiredMods(0,0) then
-    Omni.Gen.Build[self.name]=self
+    if self.requiredMods(0,0) and self.name then
+        Omni.Gen.Build[self.name] = self
         data:extend(self:return_array())
     end
 end
@@ -3644,20 +3638,21 @@ function BuildChain:find(name)
 end
 function BuildChain:setInitialBurner(efficiency,size)
     self.burner = {type = "burner",
-      effectivity = efficiency or 0.5,
-      fuel_inventory_size = size or 1,
-      emissions_per_minute = 1.0,
-      smoke =
-      {
+        effectivity = efficiency or 0.5,
+        fuel_inventory_size = size or 1,
+        emissions_per_minute = 1.0,
+        smoke =
         {
-          name = "smoke",
-          deviation = {0.1, 0.1},
-          frequency = 5,
-          position = {1.0, -0.8},
-          starting_vertical_speed = 0.08,
-          starting_frame_deviation = 60
+            {
+                name = "smoke",
+                deviation = {0.1, 0.1},
+                frequency = 5,
+                position = {1.0, -0.8},
+                starting_vertical_speed = 0.08,
+                starting_frame_deviation = 60
+            }
         }
-      }}
+    }
     return setmetatable(setBuildingParameters(self),BuildChain)
 end
 function BuildChain:generate_building_chain()
