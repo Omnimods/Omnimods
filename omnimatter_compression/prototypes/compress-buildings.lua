@@ -612,7 +612,9 @@ for build_name, values in pairs(recipe_results) do
                     multiplier^i,
                     {"description-modifier." .. i}
                 )
-                new.max_health = new.max_health*math.pow(multiplier,i)
+                if new.max_health then
+                    new.max_health = new.max_health * math.pow(multiplier, i)
+                end
                 new.minable.result = new.name
                 new.minable.mining_time = (new.minable.mining_time or 10) * i
                 new.icons = omni.lib.add_overlay(build,"building",i)
