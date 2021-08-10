@@ -26,8 +26,8 @@ if mods["angelsindustries"] and settings.startup["angels-enable-tech"].value the
 		"omnitech-water-omnitraction-2"
   	}) do
 		if data.raw.technology[tech_name] then
-			pack_replace(tech_name, "red", "grey")
-			core_replace(tech_name, "processing","basic")
+			angelsmods.functions.AI.pack_replace(tech_name, "red", "grey")
+			angelsmods.functions.AI.core_replace(tech_name, "processing","basic")
 		end
 	end
 	angelsmods.functions.OV.execute()
@@ -42,7 +42,7 @@ if mods["angelsindustries"] and settings.startup["angels-enable-tech"].value the
 		}
 	for tweaks, tech_name in pairs(tech_tweaks) do
 		if data.raw.technology[tech_name] then
-			angelsmods.functions.pack_replace(tech_name, tweaks.old, tweaks.new)
+			angelsmods.functions.AI.pack_replace(tech_name, tweaks.old, tweaks.new)
 		end
 	end
 	angelsmods.functions.OV.execute() --this MUST BE DONE before core updates
@@ -58,7 +58,7 @@ if mods["angelsindustries"] and settings.startup["angels-enable-tech"].value the
 	for tweaks, tech_name in pairs(tech_tweaks) do
 		if data.raw.technology[tech_name] then
 			tier = tweaks.tier or 1
-			angelsmods.functions.core_replace(tech_name, tweaks.old, tweaks.new, tier)
+			angelsmods.functions.AI.core_replace(tech_name, tweaks.old, tweaks.new, tier)
 		end
 	end
 	angelsmods.functions.OV.execute()]]
