@@ -16,7 +16,7 @@ for _,cat in pairs(data.raw) do
     for _,proto in pairs(cat) do
         if proto.autoplace and proto.autoplace.control then
             omni.matter.res_to_keep[#omni.matter.res_to_keep+1] = proto.autoplace.control
-            log("Excluded "..proto.autoplace.control)
+            --log("Excluded "..proto.autoplace.control)
         end
     end
 end
