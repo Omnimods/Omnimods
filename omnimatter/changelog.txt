@@ -4,12 +4,13 @@ Date: ????
   Features:
     - Added new omnite item icons & variants
     - Added new omnite resource graphics
-  Bugfixes:
-    - Fixed that the omnifurnace had a wrong working sound set
-    - Fixed omnite bricks having the wrong map color
   Changes:
     - Changed burner omnitractor and burner omniphlog crafting time to 5 s (10s / 1s before)
     - Doubled crushed omnite, pulverized omnite and pulverized stone crafting times
+  Bugfixes:
+    - Fixed that the omnifurnace had a wrong working sound set
+    - Fixed omnite bricks having the wrong map color
+    - Exclude non-resources from autoplace removal
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.17
 Date: 2021.07.22

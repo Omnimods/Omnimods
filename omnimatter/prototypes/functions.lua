@@ -3,9 +3,7 @@ omni.matter.omnisource = {}
 omni.matter.omnifluid = {}
 omni.matter.res_to_keep = {
     "omnite",
-    "infinite-omnite",
-    "trees",
-    "enemy-base"
+    "infinite-omnite"
 }
 
 --------------------------
