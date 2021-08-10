@@ -74,7 +74,7 @@ ItemGen:create("omnimatter","omnic-waste"):
     fluid():
     setBothColour(0,0,1):
     extend()
-    
+
 ItemGen:create("omnimatter","omnic-water"):
     fluid():
     setBothColour(1,0,1):

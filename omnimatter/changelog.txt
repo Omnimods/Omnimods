@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.18
 Date: ????
+  Features:
+    - Added new omnite icons & variants
   Bugfixes:
     - Fixed that the omnifurnace had a wrong working sound set
     - Fixed omnite bricks having the wrong map color
