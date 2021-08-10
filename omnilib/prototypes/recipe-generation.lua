@@ -500,7 +500,8 @@ function ItemGen:create(mod_name, item_name)
         mod_name = "__" .. mod_name .. "__"
         t.icons = function(levels,grade)
             return {{
-                icon = mod_name.."/graphics/icons/"..item_name..".png"
+                icon = mod_name.."/graphics/icons/"..item_name..".png",
+                icon_size = 32
             }}
         end
     end
@@ -522,6 +523,7 @@ function ItemGen:import(item)
         setSubgroup(proto.subgroup):
         setFuelCategory(proto.fuel_category):
         setIcons(proto.icons or proto.icon or omni.lib.icon.of(proto, true)):
+        setItemPictures(proto.pictures):
         setFuelValue(proto.fuel_value):
         setOrder(proto.order)
         if proto.type == "fluid" then
@@ -778,11 +780,16 @@ function ItemGen:addSmallIcon(icon, nr)
     return self
 end
 function ItemGen:addBlankIcon()
-    self:addIcon({icon = "__omnilib__/graphics/icons/blank.png"})
+    self:addIcon({icon = "__omnilib__/graphics/icons/blank.png", icon_size = 32})
     return self
 end
 function ItemGen:nullIcon()
-    self:setIcons({icon = "__omnilib__/graphics/icons/blank.png"})
+    self:setIcons({icon = "__omnilib__/graphics/icons/blank.png", icon_size = 32})
+    return self
+end
+
+function ItemGen:setItemPictures(e)
+    self.item_pictures = e
     return self
 end
 
@@ -1116,12 +1123,13 @@ function ItemGen:generate_item()
         type = self.type,
         name = self.name,
         icons = self.icons(0,0),
+        pictures = self.item_pictures,
         flags = self.flags,
         fuel_value = self.fuel_value,
         fuel_category = self.fuel_category,
         subgroup = self.subgroup(0,0),
         order = self.order(0,0),
-        icon_size =self.icon_size or 32,
+        icon_size = self.icon_size or 32,
         stack_size = self.stack_size,
         default_temperature = self.default_temperature,
         heat_capacity=self.heat_capacity,
@@ -1920,14 +1928,14 @@ function RecGen:generate_recipe()
             if item.icons then
                 self.icons = function(levels,grade) return item.icons end
             elseif item.icon then
-                self.icons = function(levels,grade) return {{icon = item.icon}} end
+                self.icons = function(levels,grade) return {{icon = item.icon, icon_size = item.icon_size or 32}} end
             end
         elseif data.raw.fluid[self.main_product(0,0)] then
             local fluid = data.raw.fluid[self.main_product(0,0)]
             if fluid.icons then
                 self.icons = function(levels,grade) return fluid.icons end
             elseif fluid.icon then
-                self.icons = function(levels,grade) return {{icon = fluid.icon}} end
+                self.icons = function(levels,grade) return {{icon = fluid.icon, icon_size = fluid.icon_size or 32}} end
             end
         end
     end
@@ -2743,15 +2751,15 @@ function setBuildingParameters(b,subpart)
     b.mining_time = function(levels,grade) return 1 end
     b.module =
     {
-      slots = function(levels,grade) return 3 end,
-      effects = function(levels,grade) return {"consumption", "speed", "pollution"} end
+        slots = function(levels,grade) return 3 end,
+        effects = function(levels,grade) return {"consumption", "speed", "pollution"} end
     }
     b.crafting_speed = function(levels,grade) return 1 end
     b.energy_source =
     {
-      type = "electric",
-      usage_priority = "secondary-input",
-      emissions_per_minute = 1
+        type = "electric",
+        usage_priority = "secondary-input",
+        emissions_per_minute = 1
     }
     b.energy_usage = function(levels,grade) return "150kW" end
     b.animation = function(levels,grade) return {} end

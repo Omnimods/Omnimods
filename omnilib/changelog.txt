@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.14
 Date: ????
+  Features:
+    - Added ItemGen:setItemPictures()
   Bugfixes:
     - Fixed that setBurner() did not remove Module Slots
     - Fixed that BuildGen:import() set a default working_sound when the imported entity had none
