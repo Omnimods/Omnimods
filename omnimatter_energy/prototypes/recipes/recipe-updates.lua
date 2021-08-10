@@ -11,6 +11,8 @@ RecGen:import("repair-pack"):
     setExpensiveIngredients({type="item", name="omnicium-plate", amount=15},{type="item", name="omni-tablet", amount=7}):
     extend()
 
+--Replace lab belt ingredient
+omni.lib.replace_recipe_ingredient("lab", "transport-belt", "basic-transport-belt")
 
 if not (mods["angelsindustries"] and angelsmods.industries.components) then
     omni.lib.add_recipe_ingredient("electric-furnace", {"steel-furnace", 1})

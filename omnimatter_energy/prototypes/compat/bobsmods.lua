@@ -44,7 +44,7 @@ end
 
 
 if mods["bobassembly"] then
-    --Simple automation is between red SP and automation, move its steam assembler behind omnis basic automation, remoce bobs burner assembler
+    --Simple automation is between red SP and automation, move its steam assembler behind omnis basic automation, remove bobs burner assembler
     omni.lib.replace_prerequisite("basic-automation", "automation-science-pack", "omnitech-simple-automation")
     omni.lib.replace_prerequisite("automation", "basic-automation", "automation-science-pack")
     omni.lib.remove_science_pack("basic-automation", "automation-science-pack")
