@@ -7,9 +7,9 @@ end
 if mods["bobpower"] then
     omni.lib.add_prerequisite("bob-steam-engine-2", "omnitech-steam-power")
     omni.lib.add_prerequisite("bob-boiler-2", "omnitech-steam-power")
-    data.raw.technology["bob-solar-energy-2"].hidden = true
-    data.raw.technology["bob-solar-energy-3"].hidden = true
-    data.raw.technology["bob-solar-energy-4"].hidden = true
+    if data.raw.technology["bob-solar-energy-2"] then data.raw.technology["bob-solar-energy-2"].hidden = true end
+    if data.raw.technology["bob-solar-energy-3"] then data.raw.technology["bob-solar-energy-3"].hidden = true end
+    if data.raw.technology["bob-solar-energy-4"] then data.raw.technology["bob-solar-energy-4"].hidden = true end
 
 elseif nocomps then
     omni.lib.add_recipe_ingredient("steam-turbine",{"anbaric-omnitor",10})
