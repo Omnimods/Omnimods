@@ -1201,7 +1201,7 @@ function RecGen:addSmallResIcon(nr,place)
 end
 
 function RecGen:import(rec)
-    local recipe = data.raw.recipe[rec] or data.raw.recipe["burner-"..rec]
+    local recipe = data.raw.recipe[rec]
     if recipe then
         omni.lib.standardise(recipe)
         local r = RecGen:create()
@@ -2820,7 +2820,7 @@ function BuildGen:create(mod,name)
 end
 
 function BuildGen:import(name)
-    local build = omni.lib.find_entity_prototype(name) or omni.lib.find_entity_prototype("burner-"..name)
+    local build = omni.lib.find_entity_prototype(name)
     if not build then return nil end
 
     local b = BuildGen:create():
@@ -2895,7 +2895,7 @@ function BuildGen:import(name)
     return b:setType(build.type):setFlags(build.flags):setIcons(build.icons or build.icon or omni.lib.icon.of(build, true))
 end
 function BuildGen:importIf(name)
-    local build = omni.lib.find_entity_prototype(name) or omni.lib.find_entity_prototype("burner-"..name)
+    local build = omni.lib.find_entity_prototype(name)
     if build then
         return BuildGen:import(name):setForce()
     end
@@ -3121,25 +3121,22 @@ function BuildGen:setResultInventory(h)
 end
 function BuildGen:setBurner(efficiency,size)
     self.energy_source = {
-      type = "burner",
-      effectivity = efficiency or 0.5,
-      fuel_inventory_size = size or 1,
-      emissions_per_minute = 1.0,
-      smoke =
-      {
+        type = "burner",
+        effectivity = efficiency or 0.5,
+        fuel_inventory_size = size or 1,
+        emissions_per_minute = 1.0,
+        smoke =
         {
-          name = "smoke",
-          deviation = {0.1, 0.1},
-          frequency = 5,
-          position = {1.0, -0.8},
-          starting_vertical_speed = 0.08,
-          starting_frame_deviation = 60
-        }
-      }}
+            {
+            name = "smoke",
+            deviation = {0.1, 0.1},
+            frequency = 5,
+            position = {1.0, -0.8},
+            starting_vertical_speed = 0.08,
+            starting_frame_deviation = 60
+            }
+        }}
     self:addBurnerIcon()
-    if not string.find(self.name,"burner-") then
-        self:setName("burner-"..self.name)
-    end
     self:setModSlots(0)
     return self
 end
@@ -3147,43 +3144,40 @@ function BuildGen:setSteam(efficiency,size)
     -- Taken from Bob's steam assembling machine, might be a prereq...
     self.energy_source =
     {
-      type = "fluid",
-      effectivity = 1,
-      emissions_per_minute = 10, --fairly sure this scales, so it would be 2 at level 1 speed.
-      fluid_box =
-      {
-        base_area = 1,
-        height = 2,
-        base_level = -1,
-        pipe_connections =
+        type = "fluid",
+        effectivity = 1,
+        emissions_per_minute = 10, --fairly sure this scales, so it would be 2 at level 1 speed.
+        fluid_box =
         {
-          {type = "input-output", position = { 2, 0}},
-          {type = "input-output", position = {-2, 0}}
+            base_area = 1,
+            height = 2,
+            base_level = -1,
+            pipe_connections =
+            {
+                {type = "input-output", position = { 2, 0}},
+                {type = "input-output", position = {-2, 0}}
+            },
+            pipe_covers = pipecoverspictures(),
+            pipe_picture = assembler2pipepictures(),
+            production_type = "input-output",
+            filter = "steam"
         },
-        pipe_covers = pipecoverspictures(),
-        pipe_picture = assembler2pipepictures(),
-        production_type = "input-output",
-        filter = "steam"
-      },
-      burns_fluid = false,
-      scale_fluid_usage = false,
-      fluid_usage_per_tick = (2/60),
-      maximum_temperature = 765,
-      smoke =
-      {
+        burns_fluid = false,
+        scale_fluid_usage = false,
+        fluid_usage_per_tick = (2/60),
+        maximum_temperature = 765,
+        smoke =
         {
-          name = "light-smoke",
-          frequency = 10 / 32,
-          starting_vertical_speed = 0.08,
-          slow_down_factor = 1,
-          starting_frame_deviation = 60
+            {
+                name = "light-smoke",
+                frequency = 10 / 32,
+                starting_vertical_speed = 0.08,
+                slow_down_factor = 1,
+                starting_frame_deviation = 60
+            }
         }
-      }
     }
     self:addSteamIcon()
-    if not string.find(self.name,"steam-") then
-        self:setName("steam-"..self.name)
-    end
     return self
 end
 function BuildGen:setFuelCategories(cat)
@@ -3196,8 +3190,8 @@ function BuildGen:setFuelCategories(cat)
 end
 function BuildGen:setEnergySupply()
     self.energy_source = {
-      type = "electric",
-      usage_priority = "secondary-output"
+        type = "electric",
+        usage_priority = "secondary-output"
     }
     return self
 end
@@ -3645,7 +3639,8 @@ function BuildChain:find(name)
     end
 end
 function BuildChain:setInitialBurner(efficiency,size)
-    self.burner = {type = "burner",
+    self.burner = {
+        type = "burner",
         effectivity = efficiency or 0.5,
         fuel_inventory_size = size or 1,
         emissions_per_minute = 1.0,
@@ -3665,9 +3660,6 @@ function BuildChain:setInitialBurner(efficiency,size)
 end
 function BuildChain:generate_building_chain()
     local levels = tonumber(self.levels)
-    if self.burner then
-
-    end
     for i=1,levels do
         local tname = self.tech.name(levels,i) or self.name
         if not data.raw.technology[tname] then
