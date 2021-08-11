@@ -21,7 +21,7 @@ BuildGen:create("omnimatter","burner-omniphlog"):
     setIcons("omniphlog"):
     setBurner(0.75,1):
     setEmissions(5.5):
-    setStacksize(10):
+    setStacksize(50):
     setSubgroup("omniphlog"):
     setOrder("a[omniphlog-burner]"):
     setReplace("omniphlog"):
@@ -77,7 +77,7 @@ BuildChain:create("omnimatter","omniphlog"):
     setEmissions(function(level,grade) return math.max(3.8 - ((grade-1) * 0.2), 0.1) end):
     addElectricIcon():
     setReplace("omniphlog"):
-    setStacksize(10):
+    setStacksize(50):
     setSize(3):
     setTechName("omnitech-omnitractor-electric"):
     setFluidBox("XWX.XXX.XKX"):

@@ -40,7 +40,7 @@ BuildGen:import("electric-furnace"):
     setSpeed(3.0):
     setUsage(160):
     setEmissions(1.0):
-    setStacksize(20):
+    setStacksize(50):
     setSubgroup("omni-buildings"):
     setOrder("a[omni-furnace-3]"):
     setCrafting("smelting","omnifurnace"):

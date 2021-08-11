@@ -5,6 +5,7 @@ BuildGen:create("omnimatter_energy", "omni-heat-burner"):
     setIngredients({{"anbaric-omnitor",4},{"burner-omni-furnace",1},{"iron-gear-wheel",4},{"omnicium-plate",2}}):
     setReplace("heat-burner"):
     setSubgroup("omnienergy-power"):
+    setStacksize(20):
     setOrder("aa"):
     setTechName("omnitech-anbaricity"):
     setAnimation({
