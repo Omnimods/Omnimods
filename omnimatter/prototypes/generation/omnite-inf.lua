@@ -36,6 +36,7 @@ if settings.startup["omnimatter-infinite"].value then
         {
             type = "autoplace-control",
             name = "infinite-omnite",
+            localised_name = {"", "[entity=omnite] ", {"entity-name.infinite-omnite"}},
             richness = true,
             order = "b-b",
             category = "resource"

@@ -169,6 +169,7 @@ data:extend({
     {
         type = "autoplace-control",
         name = "omnite",
+        localised_name = {"", "[entity=omnite] ", {"entity-name.omnite"}},
         richness = true,
         category = "resource",
         order = "b-a"
