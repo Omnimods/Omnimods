@@ -10,10 +10,10 @@ if settings.startup["omnimatter-infinite"].value then
             required_fluid = "omnic-acid",
             results = {
                 {
-                  type = "item",
-                  name = "omnite",
-                  amount_min = 1,
-                  amount_max = 1
+                    type = "item",
+                    name = "omnite",
+                    amount_min = 1,
+                    amount_max = 1
                 }
             }
         }
@@ -22,12 +22,12 @@ if settings.startup["omnimatter-infinite"].value then
             mining_particle = "omnite-particle",
             mining_time = 1,
             results = {
-              {
-                type = "item",
-                name = "omnite",
-                amount_min = 1,
-                amount_max = 1
-              }
+                {
+                    type = "item",
+                    name = "omnite",
+                    amount_min = 1,
+                    amount_max = 1
+                }
             }
         }
     end
@@ -44,7 +44,7 @@ if settings.startup["omnimatter-infinite"].value then
             type = "resource",
             name = "infinite-omnite",
             icon = "__omnimatter__/graphics/icons/omnite.png",
-            icon_size = 32,
+            icon_size = 64,
             flags = {"placeable-neutral"},
             tree_removal_probability = 0.8,
             tree_removal_max_distance = 32 * 32,

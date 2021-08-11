@@ -25,10 +25,18 @@ local function generate_impure_icon(ore_name)
         }
     end
     return omni.lib.add_overlay(
-        {{
-            icon = "__omnimatter__/graphics/technology/omnimatter.png",
-            icon_size = 128
-        }},
+        {
+            {
+                icon = "__omnimatter__/graphics/technology/extraction-generic.png",
+                icon_size = 128
+            },
+            {
+                icon = "__omnimatter__/graphics/icons/omnite.png",
+                icon_size = 64,
+                scale = 0.5,
+                shift = {-8, 32}
+            }
+        },
         ore_icon
     )
 end
@@ -42,10 +50,12 @@ local function generate_pure_icon(ore_name)
         }
     end
     return omni.lib.add_overlay(
-        {{
-            icon = "__omnimatter__/graphics/technology/extraction-generic.png",
-            icon_size = 128
-        }},
+        {
+            {
+                icon = "__omnimatter__/graphics/technology/extraction-generic.png",
+                icon_size = 128
+            }
+        },
         ore_icon
     )
 end
@@ -187,8 +197,8 @@ local function create_base_extraction(tier, split, split_num)
             {
                 scale = 0.5,
                 shift = {
-                    math.cos(deg) * icons[1].icon_size * 0.33,
-                    math.sin(deg) * icons[1].icon_size * 0.33
+                    math.cos(deg) * icons[1].icon_size * 0.33 * 0.5,
+                    math.sin(deg) * icons[1].icon_size * 0.33 * 0.5
                 }
             }
         )
@@ -198,19 +208,30 @@ local function create_base_extraction(tier, split, split_num)
     result_names = result_names:sub(1, -2)
     local base_impure_ore = (
         RecGen:create("omnimatter", "omnirec-base-" .. split_num .. "-extraction-" .. tier):
-        setLocName("recipe-name.base-impure", {"", result_names}):
-        setLocDesc(desc):
-        setIngredients(
-            {name = "omnite", type = "item", amount = 10}
-        ):
-        setSubgroup("omni-impure-basic"):
-        setEnergy(5 * (math.floor(tier / 2 + 0.5))):
-        setTechUpgrade(tier > 1):
-        setTechCost(tc):
-        setEnabled(false):
-        setTechPacks(math.max(1, tier - 1)):
-        setTechIcons("omnimatter", "omnimatter"):
-        setIcons(icons)
+            setLocName("recipe-name.base-impure", {"", result_names}):
+            setLocDesc(desc):
+            setIcons(icons):
+            setIngredients(
+                {name = "omnite", type = "item", amount = 10}
+            ):
+            setSubgroup("omni-impure-basic"):
+            setEnergy(5 * (math.floor(tier / 2 + 0.5))):
+            setTechUpgrade(tier > 1):
+            setTechCost(tc):
+            setEnabled(false):
+            setTechPacks(math.max(1, tier - 1)):
+            setTechIcons({
+                {
+                    icon = "__omnimatter__/graphics/technology/extraction-generic.png",
+                    icon_size = 128
+                },
+                {
+                    icon = "__omnimatter__/graphics/icons/omnite.png",
+                    icon_size = 64,
+                    scale = 0.5,
+                    shift = {-8, 32}
+                }
+            })
     )
     if tier == 1 then
         base_impure_ore:setCategory("omnite-extraction-both"):
@@ -223,7 +244,7 @@ local function create_base_extraction(tier, split, split_num)
     end
     base_impure_ore:setResults(split_results):
         marathon():
-        extend()     
+        extend()
 end
 
 local function create_impure_extraction(tier, split, ore_name)
@@ -241,30 +262,30 @@ local function create_impure_extraction(tier, split, ore_name)
         local focused_ore =
         (
             RecGen:create("omnimatter", "omnirec-focus-" .. num .. "-" .. ore_name .. "-" .. omni.lib.alpha(i)):
-            setLocName("recipe-name.impure-omnitraction", {"item-name." .. ore_name}):
-            setLocDesc(desc):
-            setIngredients({name = "omnite", type = "item", amount = 10}):
-            setSubgroup("omni-impure"):
-            setEnergy(5 * (math.floor(tier / 2 + 0.5))):
-            setIcons("omnite"):
-            setEnabled(false):
-            addIcon(
-            {
-                icon = ore_name,
-                scale = 0.4375,
-                shift = {10, 10}
-            }):
-            addBlankIcon():
-            setTechName("omnitech-focused-extraction-" .. ore_name .. "-" .. i):
-            setTechCost(25 * i * tier):
-            setTechLocName(
-                "omnitech-impure-omnitraction",
-                "item-name." .. ore_name,
-                i
-            ):
-            setTechPacks(math.max(1, tier)):
-            setTechIcons(generate_impure_icon(ore_name)):
-            marathon()
+                setLocName("recipe-name.impure-omnitraction", {"item-name." .. ore_name}):
+                setLocDesc(desc):
+                setIngredients({name = "omnite", type = "item", amount = 10}):
+                setSubgroup("omni-impure"):
+                setEnergy(5 * (math.floor(tier / 2 + 0.5))):
+                setIcons("omnite"):
+                setEnabled(false):
+                addIcon(
+                {
+                    icon = ore_name,
+                    scale = 0.4375,
+                    shift = {10, 10}
+                }):
+                addBlankIcon():
+                setTechName("omnitech-focused-extraction-" .. ore_name .. "-" .. i):
+                setTechCost(25 * i * tier):
+                setTechLocName(
+                    "omnitech-impure-omnitraction",
+                    "item-name." .. ore_name,
+                    i
+                ):
+                setTechPacks(math.max(1, tier)):
+                setTechIcons(generate_impure_icon(ore_name)):
+                marathon()
         )
         if tier == 1 then
             focused_ore:setCategory("omnite-extraction-both")

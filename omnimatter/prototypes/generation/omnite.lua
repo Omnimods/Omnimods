@@ -181,7 +181,7 @@ data:extend({
         type = "resource",
         name = "omnite",
         icon = "__omnimatter__/graphics/icons/omnite.png",
-        icon_size = 32,
+        icon_size = 64,
         flags = {"placeable-neutral"},
         tree_removal_probability = 0.8,
         tree_removal_max_distance = 32 * 32,
