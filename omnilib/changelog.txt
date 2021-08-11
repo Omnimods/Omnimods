@@ -10,6 +10,7 @@ Date: ????
     - Fixed that setBurner() did not remove Module Slots
     - Fixed that BuildGen:import() set a default working_sound when the imported entity had none
     - Fixed that setStacksize() was ignored when used on BuildGen
+    - Fixed that BuildChain not passing down setStacksize()
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.13
 Date: 2021.07.21

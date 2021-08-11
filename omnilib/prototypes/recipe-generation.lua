@@ -3712,6 +3712,7 @@ function BuildChain:generate_building_chain()
         setLocDesc(self.loc_desc(levels,i)):
         setSubgroup(self.subgroup(levels,i)):
         setMain(self.main_product(levels,i)):
+        setStacksize(self.stack_size):
         setIcons(self.icons(levels,i)):
         addIconLevel(i):
         setSize(function(levels,grade) return self.size(self.levels,i) end):
