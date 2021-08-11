@@ -3341,9 +3341,6 @@ function BuildGen:setSoundWorking(e,vol,mod)
             self.working_sound = function(levels,grade) return proto.working_sound end
         elseif e and (mod or self.mod) then
             if not self.working_sound then self.working_sound = function(levels,grade) return {} end end
-            log(e)
-            log(mod)
-            log(self.mod)
             self.working_sound(0,0).sound = {filename="__"..(mod or self.mod).."__/sound/"..e..".ogg",volume = vol or 0.8}
         else
             self.working_sound = nil
@@ -3600,6 +3597,7 @@ function BuildGen:generateBuilding()
     setEnabled(self.enabled(0,0)):
     setMain(self.main_product(0,0)):
     setPlace(self.name):
+    setStacksize(self.stack_size):
     noTech(self.tech.noTech):
     setTechName(self.tech.name(0,0)):
     setTechUpgrade(self.tech.upgrade(0,0)):
