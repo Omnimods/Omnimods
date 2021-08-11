@@ -33,8 +33,9 @@ else
     burner_ings = {{pipe,15},{"omnicium-plate",5},{electronic,5},{"omnite-brick",10},{"iron-gear-wheel",10}}
 end
 
-BuildGen:create("omnimatter_crystal","omniplant"):
+BuildGen:create("omnimatter_crystal","burner-omniplant"):
     noTech():
+    setIcons("omniplant"):
     setBurner(0.75,2):
     setEmissions(3.5):
     setSubgroup("omniplant"):

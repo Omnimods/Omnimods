@@ -11,13 +11,14 @@ else
 	{name="iron-plate", amount=3}}
 end
 
-BuildGen:create("omnimatter","omnitractor"):
+BuildGen:create("omnimatter","burner-omnitractor"):
 	noTech():
+	setIcons("omniphlog"):
+	setBurner(1,1):
 	setSubgroup("omnitractor"):
 	setOrder("a[omnitractor-burner]"):
 	setIngredients(burner_ingredients):
 	setEnergy(5):
-	setBurner(1,1):
 	setEmissions(4.5):
 	setUsage(100):
 	setEnabled():
@@ -83,7 +84,7 @@ end
 
 BuildChain:create("omnimatter","omnitractor"):
 	setSubgroup("omnitractor"):
-	setIcons("omnitractor","omnimatter"):
+	addElectricIcon():
 	setLocName("omnitractor"):
 	setIngredients(cost:ingredients()):
 	setEnergy(5):

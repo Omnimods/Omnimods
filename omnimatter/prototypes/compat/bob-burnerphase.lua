@@ -24,8 +24,9 @@ if mods["bobassembly"] and data.raw.recipe["steam-science-pack"] then
         }
     end
 
-    BuildGen:create("omnimatter","omnitractor"):
+    BuildGen:create("omnimatter","steam-omnitractor"):
         noTech():
+        setIcons("omnitractor"):
         setSubgroup("omnitractor"):
         setIngredients(tractor_ingredients):
         setEnergy(10):
@@ -56,8 +57,9 @@ if mods["bobassembly"] and data.raw.recipe["steam-science-pack"] then
         setFluidBox("WXW.XXX.KXK",true):
         extend()
         
-        BuildGen:create("omnimatter","omniphlog"):
+        BuildGen:create("omnimatter","steam-omniphlog"):
         noTech():
+        setIcons("omniphlog"):
         setSteam(1,1):
         setStacksize(10):
         setSubgroup("omniphlog"):
