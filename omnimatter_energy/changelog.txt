@@ -4,6 +4,7 @@ Date: ????
   Changes:
     - Reduced the required omnite bricks for the burner mining drill from 4 to 1
     - Turned the omnium turbine into a burner generator
+    - Boilers now require an omnium turbine instead of a burner omnitractor
   Bugfixes:
     - Fixed that the belt required for a lab was not replaced with a basic belt
 ---------------------------------------------------------------------------------------------------
