@@ -197,8 +197,8 @@ local function create_base_extraction(tier, split, split_num)
             {
                 scale = 0.5,
                 shift = {
-                    math.cos(deg) * icons[1].icon_size * 0.33 * 0.5,
-                    math.sin(deg) * icons[1].icon_size * 0.33 * 0.5
+                    math.cos(deg) * 32 * 0.33,
+                    math.sin(deg) * 32 * 0.33
                 }
             }
         )
