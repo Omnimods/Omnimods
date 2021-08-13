@@ -24,6 +24,16 @@ if mods["boblogistics"] and settings.startup["bobmods-logistics-beltoverhaul"].v
     --move logistics behind red SP tech again
     omni.lib.replace_prerequisite("logistics", "logistics-0", "automation-science-pack")
 
+    --Replace normal inserter with a burner filter inserter (check if it contains one to not mess up bob)
+    if omni.lib.recipe_ingredient_contains("yellow-filter-inserter", "inserter") then
+        RecGen:import("yellow-filter-inserter"):
+            replaceIngredients("fast-inserter","burner-filter-inserter"):
+            addIngredients("anbaric-omnitor",2):
+            extend()
+
+        omni.lib.add_prerequisite(omni.lib.get_tech_name("yellow-filter-inserter"), "omnitech-burner-filter")
+    end
+
     --Update subgroup
     data.raw.recipe["burner-filter-inserter"].subgroup = "bob-logistic-tier-0"
     data.raw.recipe["basic-transport-belt"].subgroup = "bob-logistic-tier-0"

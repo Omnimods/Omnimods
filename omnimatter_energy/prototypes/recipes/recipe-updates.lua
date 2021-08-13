@@ -14,6 +14,16 @@ RecGen:import("repair-pack"):
 --Replace lab belt ingredient
 omni.lib.replace_recipe_ingredient("lab", "transport-belt", "basic-transport-belt")
 
+--Replace normal inserter with a burner filter inserter (check if it contains one to not mess up bob)
+if omni.lib.recipe_ingredient_contains("yellow-filter-inserter", "inserter") then
+    RecGen:import("yellow-filter-inserter"):
+        replaceIngredients("inserter", "burner-filter-inserter"):
+        addIngredients("anbaric-omnitor",2):
+        extend()
+
+    omni.lib.add_prerequisite(omni.lib.get_tech_name("yellow-filter-inserter"), "omnitech-burner-filter")
+end
+
 if not (mods["angelsindustries"] and angelsmods.industries.components) then
     omni.lib.add_recipe_ingredient("electric-furnace", {"steel-furnace", 1})
 

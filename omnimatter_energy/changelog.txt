@@ -5,6 +5,7 @@ Date: ????
     - Reduced the required omnite bricks for the burner mining drill from 4 to 1
     - Turned the omnium turbine into a burner generator
     - Boilers now require an omnium turbine instead of a burner omnitractor
+    - Filter inserters now require a burner filter inserter instead of a fast inserter
   Bugfixes:
     - Fixed that the belt required for a lab was not replaced with a basic belt
 ---------------------------------------------------------------------------------------------------
