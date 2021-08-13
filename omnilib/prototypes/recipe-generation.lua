@@ -1232,7 +1232,7 @@ function RecGen:import(rec)
         setResults({normal = table.deepcopy(recipe.normal.results),expensive=table.deepcopy(recipe.expensive.results)}):
         setIngredients({normal = table.deepcopy(recipe.normal.ingredients),expensive=table.deepcopy(recipe.expensive.ingredients)}):
         setMain(recipe.main_product):
-        setEnabled(recipe.enabled or recipe.normal.enabled or false):
+        setEnabled(recipe.normal.enabled or recipe.enabled or false):
         setEnergy(recipe.energy_required or recipe.normal.energy_required):
         setCategory(recipe.category):
         setSubgroup(recipe.subgroup or r.subgroup(0,0)):
@@ -1250,23 +1250,10 @@ function RecGen:import(rec)
             end
         end
 
-        if recipe.enabled==nil and recipe.normal.enabled==nil then r:setEnabled(true) end
+        if recipe.enabled == nil and recipe.normal.enabled==nil then r:setEnabled(true) end
 
-        if not recipe.enabled then
-            local tech = nil
-            local found = false
-            for _,t in pairs(data.raw.technology) do
-                if t.effects then
-                    for _,eff in pairs(t.effects) do
-                        if eff.type=="unlock-recipe" and eff.recipe == recipe.name then
-                            tech = t
-                            found = true
-                            break
-                        end
-                    end
-                    if found then break end
-                end
-            end
+        if recipe.normal.enabled == false then
+            local tech = data.raw.technology[omni.lib.get_tech_name(recipe.name)]
             if tech then
                 r:setTechName(tech.name):
                 setTechCost(tech.unit.count):
@@ -1943,6 +1930,7 @@ function RecGen:generate_recipe()
         local tname = self.tech.name(0,0)
         --Add way to make this optional
         --omni.lib.remove_recipe_all_techs(tname)
+
         if string.find(tname,"omnitech") == nil then
             if tonumber(string.sub(tname,string.len(tname),string.len(tname))) and data.raw.technology["omnitech-"..tname] then
                 tname = "omnitech-"..tname
@@ -1950,6 +1938,7 @@ function RecGen:generate_recipe()
                 tname = "omnitech-"..tname.."-1"
             end
         end
+
         if not data.raw.technology[tname] and self.tech.icons(0,0)~= nil then
             --omni.lib.remove_unlock_recipe(self.tech.name(0,0),self.name)
             self.rtn[#self.rtn+1]=TechGen:create(self.mod,self.tech.name(0,0)):
