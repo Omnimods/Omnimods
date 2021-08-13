@@ -6,6 +6,7 @@ Date: 2021.08.XX
   Bugfixes:
     - Fix failure to load on latest experimental caused by massive tech costs
     - Fix crash when compressing entities that don't specify max_health
+    - Fix compressed recipes with random results sometimes having the incorrect result amount
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.8
 Date: 2021.07.26
