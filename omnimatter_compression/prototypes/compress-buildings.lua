@@ -66,6 +66,8 @@ local find_top_tier = function(build, kind)
     local name = build.name
     if not settings.startup["omnicompression_final_building"].value then
         return build
+    elseif omni.compression.tierless_buildings[name] then
+        return build
     elseif omni.lib.is_number(omni.lib.get_end(name,2)) then
         name = string.sub(name,1,string.len(name)-2)
     elseif omni.lib.is_number(omni.lib.get_end(name,1)) then

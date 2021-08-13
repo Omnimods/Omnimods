@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.9
 Date: 2021.08.XX
+  Features:
+    - Compatibility for bob's nuclear power when using "compress only highest tier"
   Changes:
     - Increase stack sizes for compressed belts and variants of
   Bugfixes:
