@@ -62,9 +62,7 @@ for _, recipe in pairs(check_recipes) do
                 elseif result.amount and result.probability then --normal style, priority over previous step
                     stored_probabilities[difficulty][result_name].style = "chance"
                     stored_probabilities[difficulty][result_name].prob = result.probability
-                    log(recipe .. "|" .. result_name .. ":" .. result_amount .. "*" .. (result.probability or 1)*100 .. "%")
                     result_amount = math.max(result_amount,1) --stop it giving 0?
-                    log(recipe .. "|" .. result_name .. ":" .. result_amount .. "*" .. (result.probability or 1)*100 .. "%")
                 end
                 --set rec
                 result.amount = result_amount
