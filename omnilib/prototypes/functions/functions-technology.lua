@@ -139,14 +139,15 @@ function omni.lib.add_prerequisite(techname, req, force)
 end
 
 function omni.lib.remove_prerequisite(techname,prereq)
-	if data.raw.technology[techname] and data.raw.technology[techname].prerequisites then
+	local tech = data.raw.technology[techname]
+	if tech and tech.prerequisites then
 		local pr={}
-		for i,req in pairs(data.raw.technology[techname].prerequisites) do
-			if req~=prereq then
+		for _,req in pairs(tech.prerequisites) do
+			if req ~= prereq then
 				pr[#pr+1]=req
 			end
 		end
-		data.raw.technology[techname].prerequisites=pr
+		tech.prerequisites = pr
 	else
 		log("Can not find tech "..techname.." to remove prerequisite "..prereq)
 	end

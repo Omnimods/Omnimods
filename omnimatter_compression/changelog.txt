@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.9
-Date: 2021.08.XX
+Date: 2021.08.14
   Features:
     - Compatibility for bob's nuclear power when using "compress only highest tier"
   Changes:
