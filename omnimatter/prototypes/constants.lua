@@ -26,7 +26,7 @@ function omni.matter.get_constant(kind)
 end
 
 function omni.matter.get_ore_production(level)
-	return (-13+24*omni.pure_levels_per_tier+5*lvl)/(-1+3*omni.pure_levels_per_tier)*(-4+9*omni.pure_levels_per_tier+lvl)/(-4+12*omni.pure_levels_per_tier)
+	return (-13+24*omni.pure_levels_per_tier+5*level)/(-1+3*omni.pure_levels_per_tier)*(-4+9*omni.pure_levels_per_tier+level)/(-4+12*omni.pure_levels_per_tier)
 end
 
 function omni.matter.get_fluid_production(level,fluid)

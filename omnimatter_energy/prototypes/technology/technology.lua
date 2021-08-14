@@ -46,8 +46,7 @@ RecGen:import("electric-mining-drill"):
     extend()
 
 RecGen:import("boiler"):
-    addIngredients("burner-omnitractor"):
-    equalize("burner-omnitractor"):
+    addIngredients("omni-heat-burner"):
     setEnabled(false):
     setTechName("omnitech-steam-power"):
     setTechCost(120):
@@ -56,7 +55,7 @@ RecGen:import("boiler"):
     setTechIcons("steam-power","omnimatter_energy"):
     setTechPacks(1):
     extend()
-    
+
 RecGen:import("steam-engine"):
     ifSetIngredients(not (mods["angelsindustries"] and angelsmods.industries.components),
     {

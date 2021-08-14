@@ -2,9 +2,6 @@
 --[[Inits, Local lists and variables]]--
 -------------------------------------------------------------------------------
 local multiplier = settings.startup["omnicompression_multiplier"].value
-omni.compression.bld_lvls = settings.startup["omnicompression_building_levels"].value --kind of local
-omni.compression.one_list = settings.startup["omnicompression_one_list"].value
-omni.compression.hide_handcraft =  settings.startup["omnicompression_hide_handcraft"].value or nil--Don't override to false
 local cost_multiplier = settings.startup["omnicompression_cost_mult"].value
 local energy_multiplier = settings.startup["omnicompression_energy_mult"].value
 local black_list = {--By name
@@ -68,6 +65,8 @@ local compressed_buildings = {}
 local find_top_tier = function(build, kind)
     local name = build.name
     if not settings.startup["omnicompression_final_building"].value then
+        return build
+    elseif omni.compression.tierless_buildings[name] then
         return build
     elseif omni.lib.is_number(omni.lib.get_end(name,2)) then
         name = string.sub(name,1,string.len(name)-2)
@@ -210,7 +209,7 @@ local create_concentrated_fluid = function(fluid,tier)
         category = "fluid-condensation",
         enabled = false,
         icons = new_fluid.icons,
-        order = new_fluid.order or "z".."[condensed-"..fluid .."]"
+        order = new_fluid.order or ("z".."[condensed-"..fluid .."]")
     }
     local ungrade = {
         type = "recipe",
@@ -220,7 +219,7 @@ local create_concentrated_fluid = function(fluid,tier)
         category = "fluid-condensation",
         subgroup = "concentrator-fluids",
         enabled = false,
-        order = new_fluid.order or "z".."[condensed-"..fluid .."]"
+        order = new_fluid.order or ("z".."[condensed-"..fluid .."]")
     }
     local grade_compressed = table.deepcopy(grade)
     grade_compressed.name = "concentrated-"..grade.name
@@ -600,7 +599,7 @@ for build_name, values in pairs(recipe_results) do
                     item.subgroup = "compressor-"..item.subgroup.."-"..build.type
                     rc.subgroup = item.subgroup
                 else --clean up item ordering
-                    item.order = item.order or "z"..i.."-compressed" --should force it to match, but be after it under all circumstances
+                    item.order = item.order or ("z"..i.."-compressed") --should force it to match, but be after it under all circumstances
                 end
 
                 -------------------------------------------------------------------------------
@@ -615,7 +614,9 @@ for build_name, values in pairs(recipe_results) do
                     multiplier^i,
                     {"description-modifier." .. i}
                 )
-                new.max_health = new.max_health*math.pow(multiplier,i)
+                if new.max_health then
+                    new.max_health = new.max_health * math.pow(multiplier, i)
+                end
                 new.minable.result = new.name
                 new.minable.mining_time = (new.minable.mining_time or 10) * i
                 new.icons = omni.lib.add_overlay(build,"building",i)
@@ -627,9 +628,8 @@ for build_name, values in pairs(recipe_results) do
                 item.localised_name = new.localised_name
                 item.name = new.name
                 item.place_result = new.name
-                item.stack_size = 5
-                if kind == "transport-belt" or kind=="loader" or kind== "splitter" or kind=="underground-belt" or kind=="loader-1x1" then
-                    item.stack_size = 10
+                if new.type == "transport-belt" or new.type == "loader" or new.type == "splitter" or new.type == "underground-belt" or new.type == "loader-1x1" then
+                    item.stack_size = 25
                 else
                     item.stack_size = 5
                 end
@@ -682,7 +682,7 @@ for build_name, values in pairs(recipe_results) do
                     {new.name, 1}
                     },
                     results = ing,
-                    inter_item_count = item_count,
+                    --inter_item_count = item_count,
                     energy_required = 5*math.floor(math.pow(multiplier,i/2)),
                     hide_from_player_crafting = rc.hide_from_player_crafting or omni.compression.hide_handcraft
                 }

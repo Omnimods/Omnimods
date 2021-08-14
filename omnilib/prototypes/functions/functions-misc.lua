@@ -294,7 +294,7 @@ end
 --Set tint values for a prototype
 function omni.lib.tint(proto, tint)
     local t = {}
-    local icons = omin.lib.icon.of(proto)
+    local icons = omni.lib.icon.of(proto)
     if tint.r then t=tint else t={r=tint[1],g=tint[2],b=tint[3],a=tint[4] or 1} end
     for i,icon in pairs(icons) do
         icon.tint = t
@@ -305,7 +305,7 @@ end
 
 function clone_function(fn)
   local dumped = string.dump(fn)
-  local cloned = loadstring(dumped)
+  local cloned = load(dumped)
   local i = 1
   while true do
     local name = debug.getupvalue(fn, i)
@@ -467,6 +467,9 @@ end
 
 --Add barrels for fluid that are late.
 function omni.lib.create_barrel(fluid)
+	-- Alpha used for barrel masks
+	local side_alpha = 0.75
+	local top_hoop_alpha = 0.75
 	if type(fluid)=="string" then fluid = data.raw.fluid[fluid] end
 
 	local icons = {}
@@ -855,7 +858,7 @@ function omni.lib.replaceValue(tab,name,val,flags)
 			if type(t[sb2num or sb2])=="table" then
 				t[sb2num or sb2]=omni.lib.replaceValue(tab[sb2num or sb2],newname,val)
 			elseif string.find(newname,"%.") then
-				local s = string.split(newname,".")
+				local s = omni.lib.split(newname,".")
 				for i=2,#s do
 					if tab[s[i]] then
 						if i<#s then
@@ -981,7 +984,7 @@ function omni.lib.mult_fuel_value(fv, mult)
 	if fv == 0 then
 		return fv .. unit
 	end
-	fv = math.log10(fv * mult)
+	fv = math.log(fv * mult, 10)
 	return table.concat({
 		10^(fv%3),
 		energy_chars[math.floor(fv/3)] or "",

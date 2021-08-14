@@ -45,13 +45,12 @@ if mods["angelsbioprocessing"] then
     data.raw.recipe["algae-green"].icons = nil
     data.raw.recipe["algae-green"].icon = data.raw.recipe["algae-green-simple"].icon
     --data.raw.recipe["algae-green-simple"].hidden = true
-  
+
+    omni.lib.remove_unlock_recipe("bio-processing-brown", "algae-green-simple")
     RecGen:import("algae-green-simple"):
-        setTechName():
         setEnabled(false):
         setHidden():
         extend()
-
 end
 
 RecGen:importIf("solid-soil"):setCategory("omnimutator"):addIngredients({type="fluid",name="omnic-acid",amount=20}):setTechName("omnitech-omnimutator"):extend()

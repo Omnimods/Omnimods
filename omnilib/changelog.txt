@@ -1,4 +1,17 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.14
+Date: 2021.08.14
+  Features:
+    - Added ItemGen:setItemPictures()
+  Changes:
+    - setBurner() does not automatically add "burner-" infront of the proto name
+    - setSteam() does not automatically add "steam-" infront of the proto name
+  Bugfixes:
+    - Fixed that setBurner() did not remove Module Slots
+    - Fixed that BuildGen:import() set a default working_sound when the imported entity had none
+    - Fixed that setStacksize() was ignored when used on BuildGen
+    - Fixed that BuildChain not passing down setStacksize()
+---------------------------------------------------------------------------------------------------
 Version: 4.1.13
 Date: 2021.07.21
   Features:

@@ -1,6 +1,6 @@
 BuildGen:import("burner-mining-drill"):
     setIngredients(
-    {type="item", name="omnite-brick", amount=4},
+    {type="item", name="omnite-brick", amount=1},
     {type="item", name="iron-plate", amount=4},
     {type="item", name="omnitor", amount=1}):
     setEnabled():
@@ -93,7 +93,6 @@ BuildGen:import("lab"):
     setReplace("lab"):
     setNextUpgrade("lab"):
     setOrder("g[lab-omnitor]"):
-    setModSlots(0):
     setOnAnimation({
   layers =
   {

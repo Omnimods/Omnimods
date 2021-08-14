@@ -5,7 +5,7 @@ data:extend(
     name = "omnilib-autoupdate",
     setting_type = "runtime-global",
     default_value = true,
-	order=a
+	  order="a"
   },
 }
 )

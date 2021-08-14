@@ -1,98 +1,122 @@
---Heat
-RecGen:create("omnimatter_energy","heat"):
-    fluid():
-    setIcons({{icon = "__omnilib__/graphics/icons/small/burner.png", icon_size = 32}}):
-    setBothColour(1,0,0):
-    setCategory("omnite-extraction-burner"):
-    setSubgroup("omnienergy-power"):
-    setOrder("ab"):
-    setEnergy(20):
-    setMaxTemp(250):
-    setFuelCategory("thermo"):
-    setCapacity(1):
-    setTechName("omnitech-anbaricity"):
-    setResults({type="fluid",name="heat",amount=2*60+1,temperature=250}):
-    extend()
-
-data.raw.fluid.heat.auto_barrel = false
-
---Heat Burner
-BuildGen:import("steam-turbine"):
-    setName("omni-heat-burner","omnimatter_energy"):
-    --setFluidBox("XTX.XXX.XXX.XXX.XGX","heat",400):
-    setFluidBox("XXX.XXX.FXH.XXX.XXX"):
-    setLocName():
+BuildGen:create("omnimatter_energy", "omni-heat-burner"):
+    setType("burner-generator"):
+    setSize(5, 3):
     setIcons("omnium-turbine","omnimatter_energy"):
-    setFilter("heat"):
-    setIngredients({{"anbaric-omnitor",4},{"omnicium-gear-wheel",5},{"stone-furnace",1}}):
+    setIngredients({{"anbaric-omnitor",4},{"burner-omni-furnace",1},{"iron-gear-wheel",4},{"omnicium-plate",2}}):
     setReplace("heat-burner"):
     setSubgroup("omnienergy-power"):
+    setStacksize(20):
     setOrder("aa"):
     setTechName("omnitech-anbaricity"):
-    setFluidConsumption(1):
-    setEffectivity(2/13.5/2):
-    setMaxTemp(250):
-    setNextUpgrade():
-    setDirectionAnimation(
-        {
+    setAnimation({
+        north = {
             layers = {
-              {
-                filename = "__omnimatter_energy__/graphics/entity/buildings/omnium-turbine-h.png",
-                frame_count = 36,
-                height = 160,
-                line_length = 6,
-                run_mode = "backward",
-                shift = {
-                  0,
-                  -0.078125
+                {
+                    filename = "__omnimatter_energy__/graphics/entity/buildings/omnium-turbine-h.png",
+                    frame_count = 36,
+                    height = 160,
+                    line_length = 6,
+                    run_mode = "backward",
+                    shift = {
+                    0,
+                    -0.078125
+                    },
+                    width = 224
                 },
-                width = 224
-              },
-              {
-                draw_as_shadow = true,
-                filename = "__base__/graphics/entity/steam-turbine/steam-turbine-H-shadow.png",
-                frame_count = 1,
-                height = 74,
-                line_length = 1,
-                repeat_count = 36,
-                run_mode = "backward",
-                shift = {
-                  0.8984375,
-                  0.5625
-                },
-                width = 217
-              }
+                {
+                    draw_as_shadow = true,
+                    filename = "__base__/graphics/entity/steam-turbine/steam-turbine-H-shadow.png",
+                    frame_count = 1,
+                    height = 74,
+                    line_length = 1,
+                    repeat_count = 36,
+                    run_mode = "backward",
+                    shift = {
+                    0.8984375,
+                    0.5625
+                    },
+                    width = 217
+                }
             }
         },
+        east =
         {
             layers = {
-              {
-                filename = "__omnimatter_energy__/graphics/entity/buildings/omnium-turbine-v.png",
-                frame_count = 36,
-                height = 224,
-                line_length = 6,
-                run_mode = "backward",
-                shift = {
-                  -0.07,
-                  0.25
+                {
+                    filename = "__omnimatter_energy__/graphics/entity/buildings/omnium-turbine-v.png",
+                    frame_count = 36,
+                    height = 224,
+                    line_length = 6,
+                    run_mode = "backward",
+                    shift = {
+                    -0.07,
+                    0.25
+                    },
+                    scale = 0.92,
+                    width = 160
                 },
-                scale = 0.92,
-                width = 160
-              },
-              {
-                draw_as_shadow = true,
-                filename = "__base__/graphics/entity/steam-turbine/steam-turbine-V-shadow.png",
-                frame_count = 1,
-                height = 131,
-                line_length = 1,
-                repeat_count = 36,
-                run_mode = "backward",
-                shift = {
-                  1.234375,
-                  0.765625
-                },
-                width = 151
-              }
+                {
+                    draw_as_shadow = true,
+                    filename = "__base__/graphics/entity/steam-turbine/steam-turbine-V-shadow.png",
+                    frame_count = 1,
+                    height = 131,
+                    line_length = 1,
+                    repeat_count = 36,
+                    run_mode = "backward",
+                    shift = {
+                        1.234375,
+                        0.765625
+                        },
+                    width = 151
+                }
             }
-        }):
+        }}):
     extend()
+
+
+--Set special attributes that we dont have in our lib
+local turbine = data.raw["burner-generator"]["omni-heat-burner"]
+turbine.max_power_output = "1MW"
+turbine.energy_source = {
+    type = "electric",
+    usage_priority = "primary-output",
+}
+turbine.burner = {
+    type = "burner",
+    fuel_categories = {"omnite", "chemical"},
+    effectivity = 0.75,
+    fuel_inventory_size = 3,
+    emissions_per_minute = 40,
+    light_flicker =
+    {
+        minimum_light_size = 1,
+        light_intensity_to_size_coefficient = 0.35,
+        color = {r = 0.63, g = 0.03, b = 0.52},
+        minimum_intensity = 0.05,
+        maximum_intensity = 0.3
+    },
+    smoke =
+    {
+        {
+            name = "smoke",
+            north_position = util.by_pixel(5, -80),
+            south_position = util.by_pixel(5, -80),
+            east_position = util.by_pixel(5, -80),
+            west_position = util.by_pixel(5, -80),
+            frequency = 35,
+            starting_vertical_speed = 0.0,
+            starting_frame_deviation = 60,
+            deviation = {-1, 1},
+        }
+    }
+}
+turbine.working_sound = {
+    sound =
+    {
+        filename = "__base__/sound/furnace.ogg",
+        volume = 1.6
+    },
+    max_sounds_per_type = 3
+}
+turbine.min_perceived_performance = 0.25
+turbine.performance_to_sound_speedup = 0.5

@@ -28,118 +28,109 @@ InsertGen.__index = InsertGen
 OmniGen = {}
 OmniGen.__index = OmniGen
 
-ResourceGen = {}
-ResourceGen.__index = ResourceGen
-
 Omni = {
     Gen = {Rec = {},Item={},Bot={},Ins={},Tech={},Build={}},
-    Chain={Rec = {},Bot={},Ins={},Build={}}}
+    Chain={Rec = {},Bot={},Ins={},Build={}}
+}
 
 setmetatable(RecGen, {
-  __index = ItemGen, -- this is what makes the inheritance work
-  __call = function (cls, ...)
-    local self = setmetatable({}, cls)
-    self:create(...)
-    return self
-  end,
+    __index = ItemGen, -- this is what makes the inheritance work
+    __call = function (cls, ...)
+        local self = setmetatable({}, cls)
+        self:create(...)
+        return self
+    end,
 })
 
 setmetatable(InsertGen, {
-  __index = BuildGen, -- this is what makes the inheritance work
-  __call = function (cls, ...)
-    local self = setmetatable({}, cls)
-    self:create(...)
-    return self
-  end,
+    __index = BuildGen, -- this is what makes the inheritance work
+    __call = function (cls, ...)
+        local self = setmetatable({}, cls)
+        self:create(...)
+        return self
+    end,
 })
 
 setmetatable(RecChain, {
-  __index = RecGen, -- this is what makes the inheritance work
-  __call = function (cls, ...)
-    local self = setmetatable({}, cls)
-    self:create(...)
-    return self
-  end,
+    __index = RecGen, -- this is what makes the inheritance work
+    __call = function (cls, ...)
+        local self = setmetatable({}, cls)
+        self:create(...)
+        return self
+    end,
 })
 
 setmetatable(BuildGen, {
-  __index = RecGen, -- this is what makes the inheritance work
-  __call = function (cls, ...)
-    local self = setmetatable({}, cls)
-    self:create(...)
-    return self
-  end,
-})
-
-setmetatable(ResourceGen, {
-  __index = ItemGen, -- this is what makes the inheritance work
-  __call = function (cls, ...)
-    local self = setmetatable({}, cls)
-    self:create(...)
-    return self
-  end,
+    __index = RecGen, -- this is what makes the inheritance work
+    __call = function (cls, ...)
+        local self = setmetatable({}, cls)
+        self:create(...)
+        return self
+    end,
 })
 
 setmetatable(BotGen, {
-  __index = RecGen, -- this is what makes the inheritance work
-  __call = function (cls, ...)
-    local self = setmetatable({}, cls)
-    self:create(...)
-    return self
-  end,
+    __index = RecGen, -- this is what makes the inheritance work
+    __call = function (cls, ...)
+        local self = setmetatable({}, cls)
+        self:create(...)
+        return self
+    end,
 })
 
 setmetatable(InsGen, {
-  __index = BuildGen, -- this is what makes the inheritance work
-  __call = function (cls, ...)
-    local self = setmetatable({}, cls)
-    self:create(...)
-    return self
-  end,
+    __index = BuildGen, -- this is what makes the inheritance work
+    __call = function (cls, ...)
+        local self = setmetatable({}, cls)
+        self:create(...)
+        return self
+    end,
 })
 
 local parents  = {BuildGen,RecChain}
 local rawset   = rawset
 local cache_mt = {}
 function cache_mt:__index(key)
-  for i = 1, #parents do
-    local parent = parents[i]
-
-    local value = parent[key]
-    if value ~= nil then
-      rawset(self, key, value)
-      return value
+    for i = 1, #parents do
+        local parent = parents[i]
+        local value = parent[key]
+        if value ~= nil then
+            rawset(self, key, value)
+            return value
+        end
     end
-  end
 end
+
+local function search (k, plist)
+    for i=1, table_size(plist) do
+        local v = plist[i][k]     -- try `i'-th superclass
+        if v then return v end
+    end
+end
+
 function createClass (...)
     local c = {}        -- new class
 
-      -- class will search for each method in the list of its
-      -- parents (`arg' is the list of parents)
+    -- class will search for each method in the list of its
+    -- parents (`arg' is the list of parents)
     setmetatable(c, {__index = function (t, k)
         return search(k, arg)
     end})
 
-      -- prepare `c' to be the metatable of its instances
+    -- prepare `c' to be the metatable of its instances
     c.__index = c
 
-      -- define a new constructor for this new class
+    -- define a new constructor for this new class
     function c:new (o)
         o = o or {}
         setmetatable(o, c)
         return o
     end
 
-      -- return new class
+    -- return new class
     return c
 end
-local function search (k, plist)
-    for i=1, table.getn(plist) do
-        local v = plist[i][k]     -- try `i'-th superclass
-        if v then return v end
-    end
-end
+
 function cache_mt:__call(cls, ...)
     local self = setmetatable({}, cls)
     self:create(...)
@@ -434,7 +425,7 @@ function OmniGen:wasteYieldResults()
                     amount = max_yield-total
                 end
             else
-                amount = max_yield*portion
+                amount = max_yield*yield.portion
             end
             total = total+amount
             if amount > 0 then
@@ -492,7 +483,7 @@ function ItemGen:create(mod_name, item_name)
         loc_name = function(levels,grade) return nil end,
         loc_desc =  function(levels,grade) return nil end,
         icons = function(levels,grade) return nil end,
-        flags = {},
+        flags = nil,
         order = function(levels,grade) return "y["..new_name.."]" end,
         stack_size = 100,
         subgroup = function(levels,grade) return "raw-resource" end,
@@ -509,7 +500,8 @@ function ItemGen:create(mod_name, item_name)
         mod_name = "__" .. mod_name .. "__"
         t.icons = function(levels,grade)
             return {{
-                icon = mod_name.."/graphics/icons/"..item_name..".png"
+                icon = mod_name.."/graphics/icons/"..item_name..".png",
+                icon_size = 32
             }}
         end
     end
@@ -531,13 +523,14 @@ function ItemGen:import(item)
         setSubgroup(proto.subgroup):
         setFuelCategory(proto.fuel_category):
         setIcons(proto.icons or proto.icon or omni.lib.icon.of(proto, true)):
+        setItemPictures(proto.pictures):
         setFuelValue(proto.fuel_value):
         setOrder(proto.order)
-        if item.type == "fluid" then
+        if proto.type == "fluid" then
             it:fluid():
             setFlowColour(proto.flow_color):
             setBaseColour(proto.base_color)
-        elseif item.type == "tool" then
+        elseif proto.type == "tool" then
             it:tool():
             setDurability(proto.durability):
             setDurabilityDesc(proto.durability_description_key)
@@ -556,7 +549,7 @@ function ItemGen:find(name)
     if Omni.Gen.Item[name] then
         return Omni.Gen.Item[name]:setForce()
     else
-        return ItemGen:importIf(item)
+        return ItemGen:importIf(name)
     end
 end
 function ItemGen:setForce(meep)
@@ -611,8 +604,8 @@ function ItemGen:setIcons(icons,mod)
         end
     elseif type(icons)~= "function" then
         --find icon_size
-        if type(icons)=="table" and type(icons[1].icon)=="string" then
-            local ic_sz = 32
+        local ic_sz = 32
+        if type(icons)=="table" and type(icons[1].icon)=="string" then   
             if icons[1].icon_size then
                 ic_sz=icons[1].icon_size
             elseif type(icons[1].icon)=="string" then --try to find item name by extracting icon name
@@ -666,37 +659,47 @@ function ItemGen:addIcon(icon)
     local a = nil
     if type(icon) == "table" and icon.icon then
         local f = string.match(icon.icon, "%_%_(.-)%_%_")
+        --Full Path is there
         if f then
             a = function(levels,grade) return {icon} end
+        --Just a name given
         else
             local proto = omni.lib.find_prototype(icon.icon)
             local ic_sz=32
+            --Find icon size
             if proto then
                 if proto.icon_size then
-                    ic_sz=proto.icon_size
+                    ic_sz = proto.icon_size
                 elseif proto.icons and proto.icons[1].icon_size then
-                    ic_sz=proto.icons[1].icon_size
+                    ic_sz = proto.icons[1].icon_size
                 end
             end
+            --Proto with .icon
             if proto and proto.icon then
                 a = function(levels,grade) return {{icon=proto.icon,icon_size=ic_sz,scale=icon.scale*32/ic_sz,shift=icon.shift}} end
-            elseif proto then
+            --Proto with .icons
+            elseif proto and proto.icons then
                 local ic = {}
                 for _, c in pairs(proto.icons) do
-                    local int_sz=c.icon_size or ic_sz
-                    ic[#ic+1] = {icon=c.icon,
-                    icon_scale=int_sz,
-                    scale = (c.scale or 32/int_sz)*(icon.scale or 32/int_sz),
-                    shift = {(c.shift or {0,0})[1]+(icon.shift or {0,0})[1],(c.shift or {0,0})[2]+(icon.shift or {0,0})[2]}}
+                    local int_sz = c.icon_size or ic_sz
+                    ic[#ic+1] = {
+                        icon=c.icon,
+                        icon_scale=int_sz,
+                        scale = (c.scale or (32/int_sz))*(icon.scale or (32/int_sz)),
+                        shift = {(c.shift or {0,0})[1]+(icon.shift or {0,0})[1],(c.shift or {0,0})[2]+(icon.shift or {0,0})[2]}
+                    }
                 end
                 a = function(levels,grade) return ic end
+            --No proto found, convert name into full path
             elseif icon.icon then
                 icon.icon = "__"..self.mod.."__/graphics/icons/"..icon.icon..".png"
-                a = function(levels,grade) return ic end
+                a = function(levels,grade) return {icon} end
             end
         end
-    elseif type(icon)=="table" then	a = function(levels,grade) return {{icon=icon[1]}} end
-    else a = function(levels,grade)	return {{icon=icon}}	end
+    elseif type(icon)=="table" then
+        a = function(levels,grade) return {{icon=icon[1]}} end
+    else
+        a = function(levels,grade)	return {{icon=icon}} end
     end
     local f = clone_function(self.icons)
     self.icons = function(levels,grade) return omni.lib.union(f(levels,grade),a(levels,grade)) end
@@ -762,7 +765,7 @@ function ItemGen:addSmallIcon(icon, nr)
             end
             self:addIcon({icon = ic.icon,
             icon_size=ic_sz,
-                scale = 0.4375*(ic.scale or 32/ic_sz),
+                scale = 0.4375*(ic.scale or (32/ic_sz)),
                 shift = quad[nr or 1], --currently "centres" the icon if it was already offset, may need to math that out
                 tint = ic.tint or nil})
         end
@@ -777,11 +780,16 @@ function ItemGen:addSmallIcon(icon, nr)
     return self
 end
 function ItemGen:addBlankIcon()
-    self:addIcon({icon = "__omnilib__/graphics/icons/blank.png"})
+    self:addIcon({icon = "__omnilib__/graphics/icons/blank.png", icon_size = 32})
     return self
 end
 function ItemGen:nullIcon()
-    self:setIcons({icon = "__omnilib__/graphics/icons/blank.png"})
+    self:setIcons({icon = "__omnilib__/graphics/icons/blank.png", icon_size = 32})
+    return self
+end
+
+function ItemGen:setItemPictures(e)
+    self.item_pictures = e
     return self
 end
 
@@ -817,9 +825,8 @@ function ItemGen:fluid()
     self.heat_capacity = "0.7KJ"
     self.base_color = {r = 1, g = 0, b = 1}
     self.flow_color = {r = 1, g = 0, b = 1}
-    self.pressure_to_speed_ratio = 0.4
-    self.flow_to_energy_ratio = 0.59
     self.type="fluid"
+    self.stack_size = nil
     return self
 end
 function ItemGen:tool()
@@ -982,7 +989,7 @@ function ItemGen:addLocName(key)
     if type(key) == "function" then
         b = key
     elseif type(key)=="table" and not #key == 1 then
-        b = function(levels,grade) return inname[grade] end
+        b = function(levels,grade) return key[grade] end
     elseif type(key)=="string" and string.find(key,".") and (string.find(key,"name") or string.find(key,"description")) then
         b = function(levels,grade) return {key} end
     else
@@ -1116,29 +1123,28 @@ function ItemGen:generate_item()
         type = self.type,
         name = self.name,
         icons = self.icons(0,0),
+        pictures = self.item_pictures,
         flags = self.flags,
         fuel_value = self.fuel_value,
         fuel_category = self.fuel_category,
         subgroup = self.subgroup(0,0),
         order = self.order(0,0),
-        icon_size =self.icon_size or 32,
+        icon_size = self.icon_size or 32,
         stack_size = self.stack_size,
         default_temperature = self.default_temperature,
         heat_capacity=self.heat_capacity,
         base_color=self.base_color,
         flow_color=self.flow_color,
         max_temperature=t,
-        pressure_to_speed_ratio = self.pressure_to_speed_ratio,
-        flow_to_energy_ratio = self.flow_to_energy_ratio,
         durability=self.durability,
         durability_description_key=self.durability_description_key,
         durability_description_value=self.durability_description_value
     }
     if  self.isTile then
         self.rtn[#self.rtn].place_as_tile={
-          result = self.place_result(0,0),
-          condition_size = 1,
-          condition = { "water-tile" }
+        result = self.place_result(0,0),
+        condition_size = 1,
+        condition = { "water-tile" }
         }
     else
         self.rtn[#self.rtn].place_result = self.place_result(0,0)
@@ -1151,10 +1157,9 @@ function ItemGen:return_array()
     return self.rtn
 end
 function ItemGen:extend()
-    if self.requiredMods(0,0) then
-    Omni.Gen.Item[self.name]=self
-        self:return_array()
-        data:extend(self.rtn)
+    if self.requiredMods(0,0) and self.name then
+        Omni.Gen.Item[self.name] = self
+        data:extend(self:return_array())
     end
 end
 
@@ -1196,7 +1201,7 @@ function RecGen:addSmallResIcon(nr,place)
 end
 
 function RecGen:import(rec)
-    local recipe = data.raw.recipe[rec] or data.raw.recipe["burner-"..rec]
+    local recipe = data.raw.recipe[rec]
     if recipe then
         omni.lib.standardise(recipe)
         local r = RecGen:create()
@@ -1227,7 +1232,7 @@ function RecGen:import(rec)
         setResults({normal = table.deepcopy(recipe.normal.results),expensive=table.deepcopy(recipe.expensive.results)}):
         setIngredients({normal = table.deepcopy(recipe.normal.ingredients),expensive=table.deepcopy(recipe.expensive.ingredients)}):
         setMain(recipe.main_product):
-        setEnabled(recipe.enabled or recipe.normal.enabled or false):
+        setEnabled(recipe.normal.enabled or recipe.enabled or false):
         setEnergy(recipe.energy_required or recipe.normal.energy_required):
         setCategory(recipe.category):
         setSubgroup(recipe.subgroup or r.subgroup(0,0)):
@@ -1245,23 +1250,10 @@ function RecGen:import(rec)
             end
         end
 
-        if recipe.enabled==nil and recipe.normal.enabled==nil then r:setEnabled(true) end
+        if recipe.enabled == nil and recipe.normal.enabled==nil then r:setEnabled(true) end
 
-        if not recipe.enabled then
-            local tech = nil
-            local found = false
-            for _,t in pairs(data.raw.technology) do
-                if t.effects then
-                    for _,eff in pairs(t.effects) do
-                        if eff.type=="unlock-recipe" and eff.recipe == recipe.name then
-                            tech = t
-                            found = true
-                            break
-                        end
-                    end
-                    if found then break end
-                end
-            end
+        if recipe.normal.enabled == false then
+            local tech = data.raw.technology[omni.lib.get_tech_name(recipe.name)]
             if tech then
                 r:setTechName(tech.name):
                 setTechCost(tech.unit.count):
@@ -1339,7 +1331,6 @@ function RecGen:addProductivity(mod)
     end
     return self
 end
-
 function RecChain:create(mod,name)
     local r = RecGen:create(mod,name,0.5)
     r.tech.cost = function(levels,grade) return 50+50*grade end
@@ -1353,7 +1344,7 @@ function RecChain:find(name)
     if Omni.Chain.Rec[name] then
         return Omni.Chain.Rec[name]:setForce()
     else
-        return Chain:create(item):setGenerationCondition(false)
+        return RecChain:create(name):setGenerationCondition(false)
     end
 end
 function RecGen:setEnabled(en)
@@ -1739,7 +1730,7 @@ end
 function RecGen:addNormalResults(...)
     local arg = argTable({...},"string","name")
     local tmp = RecGen:create("mah","blah"):
-        setIngredients(array)
+        setIngredients(arg)
     local a = clone_function(self.results)
     local b = function(levels,grade,dif) if dif == 0 then return arg else return nil end end
     self.results = function(levels,grade,dif) return omni.table.union(a(levels,grade,dif),b(levels,grade,dif)) end
@@ -1748,7 +1739,7 @@ end
 function RecGen:addExpensiveResults(...)
     local arg = argTable({...},"string","name")
     local tmp = RecGen:create("mah","blah"):
-        setIngredients(array)
+        setIngredients(arg)
     local a = clone_function(self.results)
     local b = function(levels,grade,dif) if dif == 1 then return arg else return nil end end
     self.results = function(levels,grade,dif) return omni.table.union(a(levels,grade,dif),b(levels,grade,dif)) end
@@ -1924,14 +1915,14 @@ function RecGen:generate_recipe()
             if item.icons then
                 self.icons = function(levels,grade) return item.icons end
             elseif item.icon then
-                self.icons = function(levels,grade) return {{icon = item.icon}} end
+                self.icons = function(levels,grade) return {{icon = item.icon, icon_size = item.icon_size or 32}} end
             end
         elseif data.raw.fluid[self.main_product(0,0)] then
             local fluid = data.raw.fluid[self.main_product(0,0)]
             if fluid.icons then
                 self.icons = function(levels,grade) return fluid.icons end
             elseif fluid.icon then
-                self.icons = function(levels,grade) return {{icon = fluid.icon}} end
+                self.icons = function(levels,grade) return {{icon = fluid.icon, icon_size = fluid.icon_size or 32}} end
             end
         end
     end
@@ -1939,6 +1930,7 @@ function RecGen:generate_recipe()
         local tname = self.tech.name(0,0)
         --Add way to make this optional
         --omni.lib.remove_recipe_all_techs(tname)
+
         if string.find(tname,"omnitech") == nil then
             if tonumber(string.sub(tname,string.len(tname),string.len(tname))) and data.raw.technology["omnitech-"..tname] then
                 tname = "omnitech-"..tname
@@ -1946,6 +1938,7 @@ function RecGen:generate_recipe()
                 tname = "omnitech-"..tname.."-1"
             end
         end
+
         if not data.raw.technology[tname] and self.tech.icons(0,0)~= nil then
             --omni.lib.remove_unlock_recipe(self.tech.name(0,0),self.name)
             self.rtn[#self.rtn+1]=TechGen:create(self.mod,self.tech.name(0,0)):
@@ -2028,7 +2021,7 @@ function RecGen:equalize(item,res)
     return self
 end
 function RecGen:equalizeMarathon(equalize)
-    return self:equalize(item)
+    return self:equalize(equalize)
 end
 function RecGen:exemptCompression()
 --to be fixed
@@ -2042,8 +2035,7 @@ end
 function RecGen:extend()
     if self.requiredMods(0,0) and self.name then
         Omni.Gen.Rec[self.name] = self
-        self:return_array()
-        data:extend(self.rtn)
+        data:extend(self:return_array())
     end
 end
 
@@ -2126,7 +2118,7 @@ function RecGen:addTechLocName(key)
     if type(key) == "function" then
         b = key
     elseif type(key)=="table" and not #key == 1 then
-        b = function(levels,grade) return inname[grade] end
+        b = function(levels,grade) return key[grade] end
     elseif type(key)=="string" and string.find(key,".") and (string.find(key,"name") or string.find(key,"description")) then
         b = function(levels,grade) return {key} end
     else
@@ -2405,11 +2397,11 @@ function RecChain:generate_chain()
         setTechTime(omni.lib.round(self.tech.time(self.levels,i))):
         setTechPacks(self.tech.packs(self.levels,i)):
         setTechUpgrade(i>1):
-        setTechIcons(self.tech.icons(levels,i)):
-        setTechLocName(self.tech.loc_name(levels,grade)):
+        setTechIcons(self.tech.icons(self.levels,i)):
+        setTechLocName(self.tech.loc_name(self.levels,i)):
         setTechLocDesc(self.tech.loc_desc,self.tech.loc_desc_keys):
         --setTechName("omnitech-"..techname.."-"..i-techDifEnabled):
-        setGenerationCondition(self.requiredMods(levels,grade))
+        setGenerationCondition(self.requiredMods(self.levels,i))
 
         if string.find(techname, "omnitech-") then
             r:setTechName(techname.."-"..i-techDifEnabled)
@@ -2428,7 +2420,7 @@ function RecChain:generate_chain()
         end
         if self.isTile then r:tile() end
         if self.loc_name(m,actualTier)~= nil then r:addLocName(actualTier) end
-        if self.tech.loc_name(levels,grade) ~= nil then r:addTechLocName(actualTier) end
+        if self.tech.loc_name(levels,i) ~= nil then r:addTechLocName(actualTier) end
 
         local prq = self.tech.prerequisites(m,i)
         if (not prq or #prq == 0) and i-techDifEnabled > 1 then
@@ -2748,35 +2740,36 @@ function setBuildingParameters(b,subpart)
     b.mining_time = function(levels,grade) return 1 end
     b.module =
     {
-      slots = function(levels,grade) return 3 end,
-      effects = function(levels,grade) return {"consumption", "speed", "pollution"} end
+        slots = function(levels,grade) return 3 end,
+        effects = function(levels,grade) return {"consumption", "speed", "pollution"} end
     }
     b.crafting_speed = function(levels,grade) return 1 end
     b.energy_source =
     {
-      type = "electric",
-      usage_priority = "secondary-input",
-      emissions_per_minute = 1
+        type = "electric",
+        usage_priority = "secondary-input",
+        emissions_per_minute = 1
     }
     b.energy_usage = function(levels,grade) return "150kW" end
     b.animation = function(levels,grade) return {} end
     b.animations = function(levels,grade) return nil end
     b.pictures = function(levels,grade) return nil end
     b.vehicle_impact_sound =  { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 }
-    b.working_sound = {
-      sound = function(levels,grade) return {
-        {
-          filename = "__base__/sound/assembling-machine-t1-1.ogg",
-          volume = 0.8
+    b.working_sound = function(levels,grade) return {
+        sound = {
+            {
+            filename = "__base__/sound/assembling-machine-t1-1.ogg",
+            volume = 0.8
+            },
+            {
+            filename = "__base__/sound/assembling-machine-t1-2.ogg",
+            volume = 0.8
+            },
         },
-        {
-          filename = "__base__/sound/assembling-machine-t1-2.ogg",
-          volume = 0.8
-        },
-      } end,
-      idle_sound = function(levels,grade) return { filename = "__base__/sound/idle1.ogg", volume = 0.6 } end,
-      apparent_volume = function(levels,grade) return 2 end,
-    }
+        idle_sound = { filename = "__base__/sound/idle1.ogg", volume = 0.6 },
+        apparent_volume = 2,
+        }
+    end
     b.fluid_boxes = function(levels,grade) return nil end
     b.input_fluid_box = function(levels,grade) return nil end
     b.flags = {"placeable-neutral", "player-creation"}
@@ -2786,7 +2779,6 @@ function setBuildingParameters(b,subpart)
     b.overlay={}
     b.place_result = function(levels,grade) return b.name end
     b.next_upgrade = function(levels,grade) return nil end
-    --b.resource_searching_radius = function(levels,grade) return 2.49 end
     b.vector_to_place_result = function(levels,grade) return {0, -1.85} end
     b.crafting_categories = function(levels,grade) return nil end
     b.working_visualisations = function(levels,grade) return nil end
@@ -2817,7 +2809,7 @@ function BuildGen:create(mod,name)
 end
 
 function BuildGen:import(name)
-    local build = omni.lib.find_entity_prototype(name) or omni.lib.find_entity_prototype("burner-"..name)
+    local build = omni.lib.find_entity_prototype(name)
     if not build then return nil end
 
     local b = BuildGen:create():
@@ -2839,8 +2831,8 @@ function BuildGen:import(name)
         setWorkVis(build.working_visualisations):
         setDirectionAnimation(build.horizontal_animation,build.vertical_animation):
         setRadVisPic(build.radius_visualisation_picture):
-        setSound(build.sound):
         setLight(build.light):
+        setSoundWorking(build.working_sound):
         setSoundImpact(build.vehicle_impact_sound):
         setFluidBox(build.fluid_boxes or build.fluid_box):
         setFluidInput(build.input_fluid_box):
@@ -2862,11 +2854,9 @@ function BuildGen:import(name)
         setOnAnimation(build.on_animation)
 
         --if build.resource_searching_radius then b:setMiningRadius(build.resource_searching_radius*2+0.02) end
-        if build.working_sound then
-            b:setSoundWorking(build.working_sound.sound):
-            setSoundIdle(build.working_sound.idle_sound):
-            setSoundVolume(build.working_sound.apparent_volume)
-        end
+        -- if build.working_sound then
+        --     b:setSoundWorking(build.working_sound)
+        -- end
         if build.module_specification then
             b:setModSlots(build.module_specification.module_slots)
         else
@@ -2886,16 +2876,15 @@ function BuildGen:import(name)
         end
 
     local r = RecGen:import(name)
-
-    local notFields = {}
     for name,data in pairs(r) do
         b[name]=table.deepcopy(data)
     end
+
     --if build.energy_source.type=="burner" then b:setBurner(self.energy_source.effectivity,self.energy_source.fuel_inventory_size) end
     return b:setType(build.type):setFlags(build.flags):setIcons(build.icons or build.icon or omni.lib.icon.of(build, true))
 end
 function BuildGen:importIf(name)
-    local build = omni.lib.find_entity_prototype(name) or omni.lib.find_entity_prototype("burner-"..name)
+    local build = omni.lib.find_entity_prototype(name)
     if build then
         return BuildGen:import(name):setForce()
     end
@@ -2905,7 +2894,7 @@ function BuildGen:find(name)
     if Omni.Gen.Build[name] then
         return Omni.Gen.Build[name]:setForce()
     else
-        return BuildGen:importIf(item)
+        return BuildGen:importIf(name)
     end
 end
 function BuildGen:allowProductivity(func)
@@ -3121,68 +3110,63 @@ function BuildGen:setResultInventory(h)
 end
 function BuildGen:setBurner(efficiency,size)
     self.energy_source = {
-      type = "burner",
-      effectivity = efficiency or 0.5,
-      fuel_inventory_size = size or 1,
-      emissions_per_minute = 1.0,
-      smoke =
-      {
+        type = "burner",
+        effectivity = efficiency or 0.5,
+        fuel_inventory_size = size or 1,
+        emissions_per_minute = 1.0,
+        smoke =
         {
-          name = "smoke",
-          deviation = {0.1, 0.1},
-          frequency = 5,
-          position = {1.0, -0.8},
-          starting_vertical_speed = 0.08,
-          starting_frame_deviation = 60
-        }
-      }}
+            {
+            name = "smoke",
+            deviation = {0.1, 0.1},
+            frequency = 5,
+            position = {1.0, -0.8},
+            starting_vertical_speed = 0.08,
+            starting_frame_deviation = 60
+            }
+        }}
     self:addBurnerIcon()
-    if not string.find(self.name,"burner-") then
-        self:setName("burner-"..self.name)
-    end
+    self:setModSlots(0)
     return self
 end
 function BuildGen:setSteam(efficiency,size)
     -- Taken from Bob's steam assembling machine, might be a prereq...
     self.energy_source =
     {
-      type = "fluid",
-      effectivity = 1,
-      emissions_per_minute = 10, --fairly sure this scales, so it would be 2 at level 1 speed.
-      fluid_box =
-      {
-        base_area = 1,
-        height = 2,
-        base_level = -1,
-        pipe_connections =
+        type = "fluid",
+        effectivity = 1,
+        emissions_per_minute = 10, --fairly sure this scales, so it would be 2 at level 1 speed.
+        fluid_box =
         {
-          {type = "input-output", position = { 2, 0}},
-          {type = "input-output", position = {-2, 0}}
+            base_area = 1,
+            height = 2,
+            base_level = -1,
+            pipe_connections =
+            {
+                {type = "input-output", position = { 2, 0}},
+                {type = "input-output", position = {-2, 0}}
+            },
+            pipe_covers = pipecoverspictures(),
+            pipe_picture = assembler2pipepictures(),
+            production_type = "input-output",
+            filter = "steam"
         },
-        pipe_covers = pipecoverspictures(),
-        pipe_picture = assembler2pipepictures(),
-        production_type = "input-output",
-        filter = "steam"
-      },
-      burns_fluid = false,
-      scale_fluid_usage = false,
-      fluid_usage_per_tick = (2/60),
-      maximum_temperature = 765,
-      smoke =
-      {
+        burns_fluid = false,
+        scale_fluid_usage = false,
+        fluid_usage_per_tick = (2/60),
+        maximum_temperature = 765,
+        smoke =
         {
-          name = "light-smoke",
-          frequency = 10 / 32,
-          starting_vertical_speed = 0.08,
-          slow_down_factor = 1,
-          starting_frame_deviation = 60
+            {
+                name = "light-smoke",
+                frequency = 10 / 32,
+                starting_vertical_speed = 0.08,
+                slow_down_factor = 1,
+                starting_frame_deviation = 60
+            }
         }
-      }
     }
     self:addSteamIcon()
-    if not string.find(self.name,"steam-") then
-        self:setName("steam-"..self.name)
-    end
     return self
 end
 function BuildGen:setFuelCategories(cat)
@@ -3195,8 +3179,8 @@ function BuildGen:setFuelCategories(cat)
 end
 function BuildGen:setEnergySupply()
     self.energy_source = {
-      type = "electric",
-      usage_priority = "secondary-output"
+        type = "electric",
+        usage_priority = "secondary-output"
     }
     return self
 end
@@ -3338,50 +3322,46 @@ function BuildGen:setSoundImpact(e)
     end
     return self
 end
-function BuildGen:setSoundWorking(e,i,mod)
-    if type(e)=="string" then
-        self.working_sound.sound = function(levels,grade) return {filename="__"..(mod or self.mod).."__/sound/"..e..".ogg",volume = i or 0.8} end
+function BuildGen:setSoundWorking(e,vol,mod)
+    --String given, try to find an entity with that name to grab all properties, otherwise just set the filename
+    if type(e) == "string" then
+        local proto = omni.lib.find_entity_prototype(e)
+        if proto and proto.working_sound then
+            self.working_sound = function(levels,grade) return proto.working_sound end
+        elseif e and (mod or self.mod) then
+            if not self.working_sound then self.working_sound = function(levels,grade) return {} end end
+            self.working_sound(0,0).sound = {filename="__"..(mod or self.mod).."__/sound/"..e..".ogg",volume = vol or 0.8}
+        else
+            self.working_sound = nil
+        end
     elseif type(e) == "table" then
-        self.working_sound.sound = function(levels,grade) return e end
+        self.working_sound = function(levels,grade) return e end
+    elseif type(e) == "function" then
+        self.working_sound = e
     else
-        self.working_sound.sound = e
+        self.working_sound = nil
     end
     return self
 end
-function BuildGen:setSoundIdle(e,i,mod)
+function BuildGen:setSoundIdle(e,vol,mod)
     if type(e)=="string" then
-        self.working_sound.idle_sound = function(levels,grade) return {filename="__"..(mod or self.mod).."__/sound/"..e..".ogg",volume = i or 0.6} end
+        self.working_sound(0,0).idle_sound = {filename="__"..(mod or self.mod).."__/sound/"..e..".ogg",volume = vol or 0.6}
     elseif type(e) == "table" then
-        self.working_sound.idle_sound = function(levels,grade) return e end
+        self.working_sound(0,0).idle_sound = e
     elseif type(e) == "function" then
-        self.working_sound.idle_sound = e
+        self.working_sound(0,0).idle_sound = e
     else
-        self.working_sound.idle_sound = function(levels,grade) return nil end
+        self.working_sound(0,0).idle_sound = nil
     end
     return self
 end
 function BuildGen:setSoundVolume(e)
     if type(e)~="function" then
-        self.working_sound.apparent_volume = function(levels,grade) return e or 1 end
+        self.working_sound(0,0).apparent_volume = e or 1
     else
-        self.working_sound.apparent_volume = e
+        self.working_sound(0,0).apparent_volume = e
     end
     return self
-end
-function BuildGen:setSound(e)
-    if type(e)=="function" then
-        self.sound = e
-    else
-        self.sound = function(levels,grade) return e end
-    end
-    return self
-end
-function BuildGen:returnSound(levels,grade)
-    return {
-        sound = self.working_sound.sound(levels,grade),
-        idle_sound = self.working_sound.idle_sound(levels,grade),
-        apparent_volume = self.working_sound.apparent_volume(levels,grade)
-    }
 end
 --Must come after the type decleration
 --s: building bounding box by size, e.g. for a 3x3 building --> s = "XXX.XXX.XXX" (From left to right)
@@ -3471,14 +3451,6 @@ function BuildGen:setMiningTime(s)
     end
     return self
 end
-function BuildGen:setSound(s)
-    if type(s)=="function" then
-        self.sound = s
-    else
-        self.sound = function(grade,levels) return s end
-    end
-    return self
-end
 function BuildGen:setCrafting(...)
     local arg = argTable({...})
     if type(arg)=="table" then
@@ -3551,7 +3523,7 @@ function BuildGen:generateBuilding()
         selection_box = {{-size.width, -size.height}, {size.width, size.height}},
         module_specification =
         {
-          module_slots = self.module.slots(0,0)
+            module_slots = self.module.slots(0,0)
         },
         allowed_effects = self.module.effects(0,0),
         crafting_categories = craftcat,
@@ -3569,7 +3541,6 @@ function BuildGen:generateBuilding()
         pictures =self.pictures(0,0),
         working_visualisations = self.working_visualisations(0,0),
         vehicle_impact_sound =  self.vehicle_impact_sound,
-        working_sound =self:returnSound(0,0),
         burns_fluid=self.burns_fluid(0,0),
         fluid_boxes = self.fluid_boxes(0,0),
         effectivity = self.effectivity(0,0),
@@ -3581,7 +3552,6 @@ function BuildGen:generateBuilding()
         supply_area_distance = self.area(0,0),
         connection_points=self.connection_points(0,0),
         radius_visualisation_picture=self.radius_visualisation_picture(0,0),
-        sound=self.sound(0,0),
         light=self.light(0,0),
         fluid_box = self.fluid_boxes(0,0),
         vector_to_place_result = self.vector_to_place_result(0,0),
@@ -3596,6 +3566,7 @@ function BuildGen:generateBuilding()
 
     if self.fluid_boxes(0,0) and type(self.fluid_boxes(0,0))=="table" and type(self.fluid_boxes(0,0)[1])=="table" then self.rtn[#self.rtn].fluid_box = self.fluid_boxes(0,0)[1] end
     if self.fuel_categories and next(self.fuel_categories) then self.rtn[#self.rtn].energy_source.fuel_categories = self.fuel_categories end
+    if self.working_sound and next(self.working_sound(0,0)) then self.rtn[#self.rtn].working_sound = self.working_sound(0,0) end
     if self.overlay.name then
         self.rtn[#self.rtn].animation.layers[#self.rtn[#self.rtn].animation.layers+1] = table.deepcopy(self.rtn[#self.rtn].animation.layers[1])
         self.rtn[#self.rtn].animation.layers[#self.rtn[#self.rtn].animation.layers].filename = "__"..self.mod.."__/graphics/entity/buildings/"..self.overlay.name..".png"
@@ -3615,6 +3586,7 @@ function BuildGen:generateBuilding()
     setEnabled(self.enabled(0,0)):
     setMain(self.main_product(0,0)):
     setPlace(self.name):
+    setStacksize(self.stack_size):
     noTech(self.tech.noTech):
     setTechName(self.tech.name(0,0)):
     setTechUpgrade(self.tech.upgrade(0,0)):
@@ -3637,8 +3609,8 @@ function BuildGen:return_array()
     return self.rtn
 end
 function BuildGen:extend()
-    if self.requiredMods(0,0) then
-    Omni.Gen.Build[self.name]=self
+    if self.requiredMods(0,0) and self.name then
+        Omni.Gen.Build[self.name] = self
         data:extend(self:return_array())
     end
 end
@@ -3650,32 +3622,31 @@ function BuildChain:find(name)
     if Omni.Chain.Build[name] then
         return Omni.Chain.Build[name]:setForce()
     else
-        return BuildChain:create(item):setGenerationCondition(false)
+        return BuildChain:create(name):setGenerationCondition(false)
     end
 end
 function BuildChain:setInitialBurner(efficiency,size)
-    self.burner = {type = "burner",
-      effectivity = efficiency or 0.5,
-      fuel_inventory_size = size or 1,
-      emissions_per_minute = 1.0,
-      smoke =
-      {
+    self.burner = {
+        type = "burner",
+        effectivity = efficiency or 0.5,
+        fuel_inventory_size = size or 1,
+        emissions_per_minute = 1.0,
+        smoke =
         {
-          name = "smoke",
-          deviation = {0.1, 0.1},
-          frequency = 5,
-          position = {1.0, -0.8},
-          starting_vertical_speed = 0.08,
-          starting_frame_deviation = 60
+            {
+                name = "smoke",
+                deviation = {0.1, 0.1},
+                frequency = 5,
+                position = {1.0, -0.8},
+                starting_vertical_speed = 0.08,
+                starting_frame_deviation = 60
+            }
         }
-      }}
-    return setmetatable(setBuildingParameters(b),BuildChain)
+    }
+    return setmetatable(setBuildingParameters(self),BuildChain)
 end
 function BuildChain:generate_building_chain()
     local levels = tonumber(self.levels)
-    if self.burner then
-
-    end
     for i=1,levels do
         local tname = self.tech.name(levels,i) or self.name
         if not data.raw.technology[tname] then
@@ -3730,6 +3701,7 @@ function BuildChain:generate_building_chain()
         setLocDesc(self.loc_desc(levels,i)):
         setSubgroup(self.subgroup(levels,i)):
         setMain(self.main_product(levels,i)):
+        setStacksize(self.stack_size):
         setIcons(self.icons(levels,i)):
         addIconLevel(i):
         setSize(function(levels,grade) return self.size(self.levels,i) end):
@@ -3749,9 +3721,7 @@ function BuildChain:generate_building_chain()
         setFluidBox(self.fluid_boxes):
         setFluidBurn(self.burns_fluid(levels,i)):
         setSpeed(self.crafting_speed(levels,i)):
-        setSoundIdle(self:returnSound(levels,i).idle_sound):
-        setSoundWorking(self:returnSound(levels,i).sound):
-        setSoundVolume(self:returnSound(levels,i).volume):
+        setSoundWorking(self.working_sound(levels,i)):
         setAnimation(self.animation(levels,i)):
         setAnimations(self.animations(levels,i)):
         setWorkVis(self.working_visualisations(levels,i)):
@@ -3766,7 +3736,6 @@ function BuildChain:generate_building_chain()
         setArea(self.area(levels,i)):
         setConnectionPoints(self.connection_points(levels,i)):
         setRadVisPic(self.radius_visualisation_picture(levels,i)):
-        setSound(self.sound(levels,i)):
         setLight(self.light(levels,i)):
         setPlaceShift(self.vector_to_place_result(levels,i)):
         setSearchRadius(self.resource_searching_radius(levels,i)):
@@ -4014,7 +3983,7 @@ function BotGen:create(mod,name)
       shift = {1.09375, 0.59375},
       direction_count = 16
     } end
-    b.working_sound = function(levels,grade) return flying_robot_sounds() end
+    --b.working_sound = function(levels,grade) return flying_robot_sounds() end
     b.cargo_centered = function(levels,grade) return {0.0, 0.2} end
     b.construction_vector = function(levels,grade) return {0.30, 0.22} end
     return setmetatable(b,BotGen)
@@ -4075,115 +4044,6 @@ function BotGen:setMaxEnergy(n)
         self.max_energy = function(levels,grade) return n.."MJ" end
     elseif type(n)=="string" then
         self.max_energy = function(levels,grade) return n end
-    end
-    return self
-end
-
-function ResourceGen:create(mod,name)
-    local r = ItemGen:create(mod,name)
-    r.richness = {
-        is = function(levels,grade) return true end,
-        multiplier = function(levels,grade) return 2000 end,
-        distance_bonus = function(levels,grade) return 15 end,
-        base = function(levels,grade) return 1000 end
-    }
-    r.particle = function(levels,grade) return "stone-particle" end
-    r.mining_time = function(levels,grade) return 1 end
-    r.coverage = function(levels,grade) return 0.03 end
-    r.sharpness = function(levels,grade) return 1 end
-    return setmetatable(r,ResourceGen)
-end
-
-function ResourceGen:setRichness(val)
-    if type(val)=="boolean" then
-        self.richness.is = function(levels,grade) return val end
-    elseif type(val)=="function" then
-        self.richness.is = val
-    end
-    return self
-end
-function ResourceGen:setParticle(...)
-    local arg = argTable({...},"string","filename")
-    if type(arg)=="string" or type(arg)=="table" then
-        self.particle = function(levels,grade) return val end
-    elseif type(arg)=="function" then
-        self.particle = arg
-    end
-    return self
-end
-function ResourceGen:addParticles(...)
-    local a = clone_function(self.particle)
-    local arg = argTable({...},"string","filename")
-    local result = table.deepcopy(self.particle(0,0))
-
-    if type(arg)=="string" and type(result) == "string" then
-        self.particle = function(levels,grade) return {arg,result} end
-    elseif type(arg)=="string" and type(result) == "table" then
-        self.particle = function(levels,grade) return omni.lib.union({arg},a(levels,grade)) end
-    elseif type(arg)=="table" and type(result) == "string" then
-        self.particle = function(levels,grade) return omni.lib.union(arg,{result}) end
-    elseif type(arg)=="table" and type(result) == "table" then
-        self.particle = function(levels,grade) return omni.lib.union(arg,a(levels,grade)) end
-    elseif type(arg)=="function" and type(result) == "string" then
-        self.particle = function(levels,grade) return omni.lib.union(arg(levels,grade),{result}) end
-    elseif type(arg)=="function" and type(result) == "table"then
-        self.particle = function(levels,grade) return omni.lib.union(arg(levels,grade),a(levels,grade)) end
-    end
-    return self
-end
-function ResourceGen:setMiningTime(val)
-    if type(val) == "number" then
-        r.mining_time = function(levels,grade) return val end
-    elseif type(val)=="function" then
-        r.mining_time = val
-    end
-    return self
-end
-function ResourceGen:setRichMult(val)
-    if type(val) == "number" then
-        r.richness.multiplier = function(levels,grade) return val end
-    elseif type(val)=="function" then
-        r.richness.multiplier = val
-    end
-    return self
-end
-function ResourceGen:setRichDistance(val)
-    if type(val) == "number" then
-        r.richness.distance_bonus = function(levels,grade) return val end
-    elseif type(val)=="function" then
-        r.richness.distance_bonus = val
-    end
-    return self
-end
-function ResourceGen:setRichBase(val)
-    if type(val) == "number" then
-        r.richness.setRichBase = function(levels,grade) return val end
-    elseif type(val)=="function" then
-        r.richness.setRichBase = val
-    end
-    return self
-end
-function ResourceGen:setRichBase(val)
-    if type(val) == "number" then
-        r.coverage = function(levels,grade) return val end
-    elseif type(val)=="function" then
-        r.coverage = val
-    end
-    return self
-end
-function ResourceGen:setSharpness(val)
-    if type(val) == "number" then
-        r.sharpness = function(levels,grade) return val end
-    elseif type(val)=="function" then
-        r.sharpness = val
-    end
-    return self
-end
-function ResourceGen:setPeaks(val)
-    if type(val) == "number" then
-        r.sharpness = function(levels,grade) return val end
-    elseif type(val)=="function" then
-        r.sharpness = val
     end
     return self
 end

@@ -40,7 +40,7 @@ BuildGen:import("electric-furnace"):
     setSpeed(3.0):
     setUsage(160):
     setEmissions(1.0):
-    setStacksize(20):
+    setStacksize(50):
     setSubgroup("omni-buildings"):
     setOrder("a[omni-furnace-3]"):
     setCrafting("smelting","omnifurnace"):
@@ -53,44 +53,44 @@ BuildGen:import("electric-furnace"):
     setAnimation({
         layers = {
             {
-              filename = "__omnimatter_energy__/graphics/entity/buildings/electric-omni-furnace.png",
-              priority = "high",
-              width = 129,
-              height = 100,
-              frame_count = 1,
-              shift = util.by_pixel(1.5, 4.0),
-              shift = {0.46875, 0},
-              hr_version = {
-                filename = "__omnimatter_energy__/graphics/entity/buildings/hr-electric-omni-furnace.png",
+                filename = "__omnimatter_energy__/graphics/entity/buildings/electric-omni-furnace.png",
                 priority = "high",
-                width = 239,
-                height = 219,
+                width = 129,
+                height = 100,
                 frame_count = 1,
-                shift = util.by_pixel(1.25, 6.5),
-                scale = 0.5
-              }
+                shift = util.by_pixel(1.5, 4.0),
+                --shift = {0.46875, 0},
+                hr_version = {
+                    filename = "__omnimatter_energy__/graphics/entity/buildings/hr-electric-omni-furnace.png",
+                    priority = "high",
+                    width = 239,
+                    height = 219,
+                    frame_count = 1,
+                    shift = util.by_pixel(1.25, 6.5),
+                    scale = 0.5
+                }
             },
             {
-              filename = "__base__/graphics/entity/electric-furnace/electric-furnace-shadow.png",
-              priority = "high",
-              width = 129,
-              height = 100,
-              frame_count = 1,
-              draw_as_shadow = true,
-              shift = util.by_pixel(39.5, 11.5),
-              shift = {0.46875, 0},
-      
-              hr_version = {
-                filename = "__base__/graphics/entity/electric-furnace/hr-electric-furnace-shadow.png",
+                filename = "__base__/graphics/entity/electric-furnace/electric-furnace-shadow.png",
                 priority = "high",
-                width = 227,
-                height = 171,
+                width = 129,
+                height = 100,
                 frame_count = 1,
                 draw_as_shadow = true,
-                shift = util.by_pixel(39.25, 11.25),
-                scale = 0.5
-              }
+                shift = util.by_pixel(39.5, 11.5),
+                --shift = {0.46875, 0},
+
+                hr_version = {
+                    filename = "__base__/graphics/entity/electric-furnace/hr-electric-furnace-shadow.png",
+                    priority = "high",
+                    width = 227,
+                    height = 171,
+                    frame_count = 1,
+                    draw_as_shadow = true,
+                    shift = util.by_pixel(39.25, 11.25),
+                    scale = 0.5
+                }
             },
-          },
+        },
         }):
     extend()

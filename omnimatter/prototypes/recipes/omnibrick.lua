@@ -14,9 +14,10 @@ RecGen:create("omnimatter","early-omnite-brick"):
 	setEnabled():extend()
 
 local omnitile = table.deepcopy(data.raw.tile["stone-path"])
-omnitile.name="omnite-brick"
+omnitile.name = "omnite-brick"
 omnitile.walking_speed_modifier = 1.5
-omnitile.minable.result="omnite-brick"
+omnitile.minable.result = "omnite-brick"
+omnitile.map_color = {r = 0.29, g = 0.03, b = 0.43}
 
 --Point (all) graphics to our folder
 for _,tab in pairs({omnitile.transitions, omnitile.transitions_between_transitions,omnitile.variants}) do

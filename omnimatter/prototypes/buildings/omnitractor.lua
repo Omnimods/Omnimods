@@ -11,19 +11,20 @@ else
 	{name="iron-plate", amount=3}}
 end
 
-BuildGen:create("omnimatter","omnitractor"):
+BuildGen:create("omnimatter","burner-omnitractor"):
 	noTech():
+	setIcons("omniphlog"):
+	setBurner(1,1):
 	setSubgroup("omnitractor"):
 	setOrder("a[omnitractor-burner]"):
 	setIngredients(burner_ingredients):
-	setEnergy(10):
-	setBurner(1,1):
+	setEnergy(5):
 	setEmissions(4.5):
 	setUsage(100):
 	setEnabled():
 	setReplace("omnitractor"):
 	setNextUpgrade("omnitractor-1"):
-	setStacksize(10):
+	setStacksize(50):
 	setSize(3):
 	setCrafting({"omnite-extraction-both","omnite-extraction-burner"}):
 	setSpeed(1):
@@ -47,7 +48,7 @@ BuildGen:create("omnimatter","omnitractor"):
 	setFluidBox("WXW.XXX.KXK",true):
 	extend()
 
-function timestier(row,col)
+local function timestier(row,col)
 	local first_row = {1,0.5,0.2}
 	if row == 1 then
 		return first_row[col]
@@ -61,22 +62,6 @@ end
 local get_tech_times = function(levels,tier)
 	local t = 50*timestier(tier,1)
 	return t
-end
-
-local techcost = function(lvl,tier)
-	local c = {}
-	local size = tier+((lvl-1)-(lvl-1)%omni.pure_levels_per_tier)/omni.pure_levels_per_tier
-	local length = math.min(size,#omni.sciencepacks)
-	for l=1,length do
-		local q = 0
-		if omni.linear_science then
-			q = 1+omni.science_constant*(size-l)
-		else
-			q=round(math.pow(omni.science_constant,size-l))
-		end
-		c[#c+1] = {omni.sciencepacks[l],q}
-	end
-	return c
 end
 
 local cost = OmniGen:create():
@@ -99,7 +84,7 @@ end
 
 BuildChain:create("omnimatter","omnitractor"):
 	setSubgroup("omnitractor"):
-	setIcons("omnitractor","omnimatter"):
+	addElectricIcon():
 	setLocName("omnitractor"):
 	setIngredients(cost:ingredients()):
 	setEnergy(5):
@@ -122,7 +107,7 @@ BuildChain:create("omnimatter","omnitractor"):
 				return nil 
 			end
 		end):
-	setStacksize(10):
+	setStacksize(50):
 	allowProductivity():
 	setLevel(settings.startup["omnimatter-max-tier"].value):
 	setSoundWorking("ore-crusher"):

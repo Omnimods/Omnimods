@@ -13,9 +13,9 @@ if mods["omnimatter_crystal"] then
 else
     panel:setIngredients({"iron-plate",2},{"copper-plate",3},{"electronic-circuit",2},{"pulverized-stone",4})
 end
-  panel:extend()
+    panel:extend()
 
-
+local dirt_vehicle_speed_modifier = 1.4
 data:extend({
     --- Solar Mat
     {
@@ -124,7 +124,7 @@ data:extend({
         },
         map_color={r=93, g=138, b=168},
         ageing=0,
-        vehicle_friction_modifier = dirt_vehicle_speed_modifer
+        vehicle_friction_modifier = dirt_vehicle_speed_modifier
     },
     {
         type = "item",
