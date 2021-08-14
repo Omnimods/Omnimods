@@ -13,7 +13,7 @@ end
 
 BuildGen:create("omnimatter","burner-omnitractor"):
 	noTech():
-	setIcons("omniphlog"):
+	setIcons("omnitractor"):
 	setBurner(1,1):
 	setSubgroup("omnitractor"):
 	setOrder("a[omnitractor-burner]"):
