@@ -1,4 +1,5 @@
 .idea/
 *.ps1
+*.zip
 .vscode/launch.json
 steam_appid.txt
