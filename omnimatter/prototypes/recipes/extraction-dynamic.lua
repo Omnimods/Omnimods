@@ -62,60 +62,49 @@ end
 
 --Creates a table containing splits of the given tier with their corresponding ore names
 local function split_omnisource_tier(tier)
-    local splitted_ores = {}
     local source = omni.matter.omnisource[tostring(tier)]
     local source_count = table_size(source)
 
     --special case: Only 1 ore in the current tier --> Reuse max. 2 ores of the previous tier
     if source_count == 1 and omni.matter.omnisource[tostring(tier-1)] then
-        --Store the main ore
-        splitted_ores[1] = {}
-        splitted_ores[1]["main"] = {}
-        for _,v in pairs(source)do
-            splitted_ores[1]["main"][1] = v.name
-        end
-
-        --Add two side ores from the prev tier
         local prev_source = omni.matter.omnisource[tostring(tier-1)]
-        splitted_ores[1].side = {}
         local toadd = 0
         for k, v in pairs(prev_source) do
             toadd = toadd + 1
-            splitted_ores[1].side[#splitted_ores[1].side+1] = v.name
+            source[k] = v
             if toadd == 2 then break end
         end
+        source_count = table_size(source)
+    end
 
-    --Normal case, more than 1 ore in the current tier
-    else
-        -- Put all ore names of source in a table
-        local ore_names = {}
-        for name, content in pairs(source) do
-            ore_names[#ore_names+1] = content.name
+    -- Put all ore names of source in a table
+    local ore_names = {}
+    for name, content in pairs(source) do
+        ore_names[#ore_names+1] = content.name
+    end
+    
+    -- "splits" is a table of integers that shows how ores are divided between recipes, e.g. {5,5} or {3,3,2,2}
+    local splits = {}
+    local split_size = math.min(math.ceil(source_count / 3), 5)
+    local total_splits = source_count / split_size
+    local remainder = source_count % split_size
+
+    for index = 1, split_size do
+        if index <= remainder then
+            splits[#splits + 1] = math.ceil(total_splits)
+        else
+            splits[#splits + 1] = math.floor(total_splits)
         end
+    end
 
-        -- "splits" is a table of integers that shows how ores are divided between recipes, e.g. {5,5} or {3,3,2,2}
-        local splits = {}
-        local split_size = math.min(math.ceil(source_count / 3), 5)
-        local total_splits = source_count / split_size
-        local remainder = source_count % split_size
-
-        for index = 1, split_size do
-            if index <= remainder then
-                splits[#splits + 1] = math.ceil(total_splits)
-            else
-                splits[#splits + 1] = math.floor(total_splits)
-            end
-        end
-
-        --Sort the ores of the current tier into a table according to the defined split size
-        local num_ore = 1
-        for splitnum = 1, #splits do
+    --Sort the ores of the current tier into a table according to the defined split size
+    local splitted_ores = {}
+    local num_ore = 1
+    for splitnum = 1, #splits do
+        for splitamount = 1, splits[splitnum] do
             if not splitted_ores[splitnum] then splitted_ores[splitnum] = {} end
-            if not splitted_ores[splitnum]["main"] then splitted_ores[splitnum]["main"] = {} end
-            for splitamount = 1, splits[splitnum] do
-                splitted_ores[splitnum]["main"][#splitted_ores[splitnum]["main"]+1] = ore_names[num_ore]
-                num_ore = num_ore + 1
-            end
+            splitted_ores[splitnum][#splitted_ores[splitnum]+1] = ore_names[num_ore]
+            num_ore = num_ore + 1
         end
     end
     return splitted_ores
@@ -263,7 +252,6 @@ local function create_impure_extraction(tier, split, ore_name)
     for l=1,omni.impure_levels do
         level_split_results[l] = build_result_table(tier, split, ore_name, l)
     end
-
     for i, res in pairs(level_split_results) do
         local num = 1 --legacy reasons, its in all names, removing it will result in bad migration dreams
         local desc = ""
@@ -313,7 +301,7 @@ local function create_impure_extraction(tier, split, ore_name)
         end
         focused_ore:setResults(res)
         focused_ore:extend()
-    end
+    end      
 end
 
 local function create_pure_extraction(tier, ore_name)
@@ -360,7 +348,7 @@ local function create_pure_extraction(tier, ore_name)
         setTechIcons(generate_pure_icon(ore_name)):
         setTechCost(
             function(levels, grade)
-                return tech_cost(levels, grade, tier)
+               return tech_cost(levels, grade, tier)
             end):
         setTechPrereq(
             function(levels, grade)
@@ -405,14 +393,15 @@ for tier = 1, max_omnisource_tier do
         local splits = split_omnisource_tier(tier)
         --Go throug each split
         for i, split in pairs(splits) do
-            --Create Basic extractions from main + side ores
-            create_base_extraction(tier, omni.lib.union(split.main, split.side), i)
-            --Go through each mainore
-            for j, ore in pairs(split.main) do
+            --Create Basic extractions
+            create_base_extraction(tier, split, i)
+
+            --Go through each ore
+            for j, ore in pairs(split) do
                 --Create pure extraction recipes
                 create_pure_extraction(tier, ore)
-                --Create impure extraction recipes, account for side ores from previous tiers if tiersize = 1
-                create_impure_extraction(tier, omni.lib.union(split.main, split.side), ore)
+                --Create impure extraction recipes
+                create_impure_extraction(tier, split, ore)
             end
         end
     end

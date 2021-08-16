@@ -1,9 +1,7 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.19
-Date: 2021.08.16
+Date: ????
   Bugfixes:
-    - Fixed that extraction tiers with a single ore messed up ratios and crafting categories of
-      the extractions of the previous tier
     - Fixed that the burner omnitractor had a omniphlog icon
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.18
