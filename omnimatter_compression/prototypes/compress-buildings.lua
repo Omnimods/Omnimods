@@ -120,7 +120,7 @@ for _, recipe in pairs(data.raw.recipe) do
         )) 
         then
             local top_result =  find_top_tier(place_result, place_result.type)
-            if top_result and building_list[top_result.type] and top_result.name == place_result.name then
+            if top_result and building_list[top_result.type] then
                 recipe_results[top_result.name] = recipe_results[top_result.name] or {}
                 local res = recipe_results[top_result.name]
                 res[#res+1] = {
