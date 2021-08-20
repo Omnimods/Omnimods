@@ -61,6 +61,9 @@ local compressed_buildings = {}
 -------------------------------------------------------------------------------
 --[[Compression Specific Support Functions]]--
 -------------------------------------------------------------------------------
+local function zero_pad(num, places)
+    return string.format("%0" .. places .. "d", num)
+end
 --set naming convention
 local find_top_tier = function(build, kind)
     local name = build.name
@@ -73,6 +76,26 @@ local find_top_tier = function(build, kind)
     elseif omni.lib.is_number(omni.lib.get_end(name,1)) then
         name = string.sub(name,1,string.len(name)-1)
     elseif not data.raw[kind][name.."-2"] and not data.raw[kind][name.."2"] then
+    end
+    -- Take any digits off the end
+    local digits = name:match("%d+$") or ""
+    -- Remove trailing -1 etc
+    name = name:gsub("[%-%d]+$","")
+    -- Start at 1 since padding only starts at %02d
+    local padded_zeroes = 1
+    for I=1, #digits do
+        local digit = digits:sub(I,I)
+        if digit ~= "0" then
+            break
+        else
+            padded_zeroes = padded_zeroes + 1
+        end
+    end
+    -- If we don't have a tier 2 why bother
+    local zero_two = zero_pad(2, padded_zeroes) 
+    local rawkind = data.raw[kind]
+    local namedash = name .. "-"
+    if not rawkind[namedash..zero_two] and not rawkind[name..zero_two] then
         return build
     end
     local nr = 1
@@ -85,8 +108,18 @@ local find_top_tier = function(build, kind)
         elseif not data.raw[kind][name..nr] and data.raw[kind][name..nr-1] then
             found = false
             return data.raw[kind][name..nr-1]
+    local last_padded_nr = zero_pad(0, padded_zeroes)
+    for nr=1, 99 do
+        local padded_nr = zero_pad(nr, padded_zeroes)
+        local namedash = name .. "-"
+        if not rawkind[namedash..padded_nr] and rawkind[namedash..last_padded_nr] then
+            return rawkind[namedash..last_padded_nr]
+        elseif not rawkind[name..padded_nr] and rawkind[name..last_padded_nr] then
+            return rawkind[name..last_padded_nr]
         end
+        last_padded_nr = padded_nr
     end
+    return build
 end
 --set category if it does not exist
 local category_exists = function(build)
