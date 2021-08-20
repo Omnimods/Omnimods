@@ -1,128 +1,4 @@
 require("control-functions")
---
-    --
-        --
-            -- 
-                --
-                    --
-                        --
-                            --
-                                --
-                                    -- RIP MT. OMNISSIAH
-                                --
-                            --
-                        --
-                    --
-                --
-            --
-        --
-    --
---
-
-local function get_recipe_family(recipe)
-	local metadata = global.omni.recipes[recipe.name]
-	if not metadata then
-		return
-	end
-	local recipe_tree = global.omni.force_recipes[recipe.force.name][metadata.base]
-	if not recipe_tree then
-		return
-	end
-	return recipe_tree, metadata
-end
-
-local function update_last_tier(recipe, full_refresh)
-	if not recipe.valid or not recipe.enabled then
-		return
-	end
-	full_refresh = full_refresh or global.omni.need_update
-	local recipe_tree, metadata = get_recipe_family(recipe)
-	if not recipe_tree then
-		return
-	end
-	-- We're the top of the tree!
-	if recipe_tree and recipe_tree.active_tier < metadata.tier then
-		local I = full_refresh and 97 or recipe_tree.active_tier
-		local research_status = not not (recipe.force.technologies["compression-recipes"] or {}).researched
-		repeat
-			for variant, recipe_name in pairs(recipe_tree[I] or {}) do
-				local force_recipe = recipe.force.recipes[recipe_name]
-				local desired_status = (I == metadata.tier) -- True if we're on the final tier, false otherwise
-				local is_compressed = global.omni.recipes[recipe_name].compressed
-				if is_compressed then
-					desired_status = research_status
-				end
-				if force_recipe.enabled ~= desired_status then
-					force_recipe.enabled = desired_status
-				end
-			end
-			I = I + 1
-		until I > metadata.tier
-		-- Update our current tier
-		recipe_tree.active_tier = metadata.tier
-	end
-end
-
-local function get_last_tier(recipe)
-	local recipe_tree, metadata = get_recipe_family(recipe)
-	if not recipe_tree then
-		return
-	end
-	local active_recipe = recipe_tree[recipe_tree.active_tier][metadata.variant]
-	if not active_recipe then
-		return
-	end
-	return recipe.force.recipes[active_recipe]
-end
-
-local function update_recipe(recipe, enabled_override)
-	if not recipe or not recipe.valid then
-		return
-	end
-
-	local name = recipe.name
-	local force_techs = recipe.force.technologies
-	local recipe_tree, metadata = get_recipe_family(recipe)
-
-	if recipe_tree and metadata.tier < recipe_tree.active_tier then-- Irrelevant recipe!
-		enabled_override = false
-	end
-	
-	if enabled_override ~= nil and enabled_override == false then
-		recipe.enabled = false
-		return
-	else
-		recipe.enabled = true
-	end
-	-- Update according to compression research status
-	if 	force_techs["compression-recipes"] and
-		force_techs["compression-recipes"].researched and 
-		not recipe.category:find("-compressed", nil, true) and 
-		not name:find("concentrated", nil, true) then
-		local recipes = recipe.force.recipes
-		-- Handle both compressed and permuted recipes.
-		local compressed = recipes[string.format("%s-compression",name)]
-		local permuted_compressed = name:find("omniperm") and recipes[name:gsub("omniperm","compression-omniperm")]
-		if compressed then
-			compressed.enabled = true
-		end
-		if permuted_compressed then
-			permuted_compressed.enabled = true
-		end
-		-- Deal with generator variants
-		for tier=1, math.huge do
-			local compressed_recipe = recipes[string.format("%s-concentrated-grade-%i", name, tier)]
-			if compressed_recipe then
-				compressed_recipe.enabled = true
-			else
-				break
-			end
-		end
-	end
-	if recipe.enabled then
-		update_last_tier(recipe)
-	end
-end
 
 local building_tiers = {
 	compact = "compression-compact-buildings",
@@ -131,339 +7,353 @@ local building_tiers = {
 	singularity = "compression-singularity-buildings"
 }
 
-local function update_tech(tech)
-	local force_recs, tiered_buildings
-	local force_techs = tech.force.technologies
-	local variant = (
-		force_techs[string.format("omnipressed-%s", tech.name)] or 
-		force_techs[tech.name:gsub("^omnipressed%-", "")] or 
-		{}
-	)
-	-- Infinites/tiered
-	if tech.level then
-		variant.level = tech.level
-	end
-	-- Handle compressed techs
-	if tech.researched or variant.researched then
-		if tech.prototype.max_level or tech.level then
-			tech.researched, variant.researched = true, true
+script.on_load(function()
+	log("on_load")
+end)
+
+local function memoize(source)
+	local t = {}
+	setmetatable(t, {
+		__index = function(self, index)
+			rawset(self, index, source[index])
+			return rawget(self, index)
 		end
-		force_recs = tech.force.recipes
-		tiered_buildings = global.omni.tiered_buildings
-		for _, effect in pairs(tech.effects) do
-			if effect.type == "unlock-recipe" then
-				if tiered_buildings[effect.recipe] then					
-					for tier, tech_name in pairs(building_tiers) do
-						if force_techs[tech_name] and force_techs[tech_name].researched then
-							local recipe_name = string.format("%s-compressed-%s", effect.recipe, tier)
-							update_recipe(force_recs[recipe_name], true)
-						else
-							break -- Tiers in order, don't continue once we hit one that's locked
-						end
-					end
-				end
-				update_recipe(force_recs[effect.recipe], true)
-			end
-		end
-		if tech.name == "compression-recipes" then -- Generator fluids
-			for name in pairs(global.omni.stock_fluids) do
-				if force_recs[name] and not force_recs[name].enabled then
-					force_recs[name].enabled = true
-				end
-			end
-		end
+	})
+	return t
+end
+
+local function get_relative_tier(recipe_name, offset)
+	offset = offset or 1
+	local is_omniperm = recipe_name:find("%-omniperm")
+	local pattern = "%-(%a)" .. (is_omniperm and "(%-omniperm%-%d%-%d)" or "(.?)") .. "$"
+	local tier = recipe_name:match(pattern)
+	if tier then
+		tier = string.char(string.byte(tier) + offset)
+		return recipe_name:gsub(pattern, "-" .. tier .. "%2")
 	end
 end
 
-local function update_force(force, silent)
-	if not force.valid then return end
-	if #force.players == 0 then return end
-	if not global.omni.force_recipes[force.name] then
-		global.omni.force_recipes[force.name] = util.copy(global.omni.recipe_map)
-	end
-	local profiler = not silent and game.create_profiler()
-	--log("Updating force: " .. force.name)
-	--log("\tSyncing compressed and standard tech research states")
-	local force_techs = force.technologies
-	for _, tech in pairs(force_techs) do
-		update_tech(tech)
-	end
-	if profiler then
-		game.print({
-			"",
-			string.format(
-				"%s for force \"%s\" updated. ",	
-				"Technologies", 
-				force.name
-			),
-			profiler
-		})
-		profiler:reset()
-	end
-	--log("Updating any default recipes")
-	for recipe_name in pairs(global.omni.stock_recipes) do
-		if force.recipes[recipe_name] then
-			update_recipe(force.recipes[recipe_name], true)
-			for tier, tech_name in pairs(building_tiers) do
-				if force_techs[tech_name] and force_techs[tech_name].researched then
-					local recipe_name = string.format("%s-compressed-%s", recipe_name, tier)
-					update_recipe(force.recipes[recipe_name], true)
-				else
-					break -- Tiers in order, don't continue once we hit one that's locked
-				end
-			end
-		end
-	end
-	if profiler then
-		game.print({
-			"",
-			string.format(
-				"%s for force \"%s\" updated. ",	
-				"Recipes", 
-				force.name
-			),
-			profiler
-		})
-	end
-end
-
-local function update_building_recipes(silent)
-	--log("Updating buildings that use tiered recipes")
-	-- Make sure every entity using a tiered recipe (i.e. omnitraction) is up to the current tier
-	local profiler = not silent and game.create_profiler()
-	for _, surface in pairs(game.surfaces) do
-		for _, entity in pairs(surface.find_entities_filtered({type="assembling-machine"})) do
-			local recipe = entity.get_recipe()
-			if recipe then
-				local new_recipe = get_last_tier(recipe)
-				if new_recipe and
-					(new_recipe.name ~= recipe.name) and
-					settings.global["omnilib-autoupdate"].value -- Let's follow the user's preference :^)
-				then
-					local ingredients = {}
-					if entity.is_crafting() then
-						ingredients = recipe.ingredients or {}
-					end
-					entity.set_recipe(new_recipe.name)
-					local updated_ingredients = 0
-					for _, ingredient in pairs(ingredients) do
-						if ingredient.type == "item" then
-							updated_ingredients = updated_ingredients + entity.insert({
-								name = ingredient.name,
-								count = ingredient.amount
-							})
-						elseif ingredient.type == "fluid" then
-							updated_ingredients = updated_ingredients + entity.insert_fluid({
-								name = ingredient.name,
-								amount = ingredient.amount
-							})
-						end
-					end
-					log("\tSet " .. entity.name .. " from recipe \"" .. recipe.name .. "\" to \"" .. new_recipe.name .. "\"")
-					if updated_ingredients ~= 0 then
-						log("\t\tMigrated " .. updated_ingredients .. " ingredients")
-					end
-				end
-			end
-		end
-		if profiler then
-			logstr = 
-			game.print({
-				"",
-				string.format(
-					"%s for surface \"%s\" updated. ",
-					"Building recipes",
-					surface.name
-				),
-				profiler
-			})
-			profiler:reset()
-		end
-	end
-	--log("Building update complete")
-end
-
-local initializing = false
-function omni_update(game, silent)
-	initializing = true
-	--log("Beginning omnidate")
+function omnidate(clear_caches, technology, full_iter)
+	log("Beginning omnidate")
+	local game = game
+	-- Record time spent
 	local profiler = game.create_profiler()
-	for _, force in pairs(game.forces) do
-		update_force(force, silent)
-	end	
-	update_building_recipes(silent)
-	local printer = silent and log or game.print
-	printer({
+	-- Globals
+	if clear_caches then
+		global.omni = {}
+		global.omni.correlated_recipes = {}
+		global.omni.recipe_techs = {}
+		global.omni.stock_recs = {}
+	end
+	-- Proxies
+	local correlated_recipes = global.omni.correlated_recipes	
+	local recipe_techs = global.omni.recipe_techs	
+	local stock_recs = global.omni.stock_recs
+	-- Game items
+	local forces = game.forces
+	local cached_protos = memoize(game.recipe_prototypes)
+	local cached_techs = memoize(game.technology_prototypes)
+	-- Conditional (if we're just doing one tech)
+	local tech_force = technology and technology.force or nil
+	--
+	-- Here we go!
+	--
+
+	-- Skip the stuff we don't need to re-do if we aren't clearing caches
+	if clear_caches then
+		-- First, build a list of categories
+		local cat_filters = {}
+		for category in pairs(game.recipe_category_prototypes) do
+			if category:find("%-compressed$") then
+				cat_filters[#cat_filters+1] = {filter = "category", category = category}
+			end
+		end
+
+		--[[
+			base_or_compressed_or_building={
+				base = recipe_name,
+				compressed = compressed_name,
+				upgrade = next_tier_name,
+				downgrade = previous_tier_name,
+				compact = compact_recipe_name
+			}
+		]]
+		-- Second, build a table of recipes, correlating compressed and uncompressed variants
+		for recipe_name in pairs(game.get_filtered_recipe_prototypes(cat_filters)) do
+			local rmeta = correlated_recipes[recipe_name] or {}
+			-- A, check tiered buildings
+			if recipe_name:find("%-compressed-") then
+				-- Base recipe i.e. assembling-machine-1
+				local original_recipe = recipe_name:gsub("%-compressed%-[^%-]+$", "")
+				-- Compressed building i.e. assembling-machine-1-compact
+				local variant = recipe_name:match("[^%-]+$")
+				local cached_rec = cached_protos[original_recipe]
+				if cached_rec and building_tiers[variant] then
+					-- Store base name and compressed name in meta
+					if correlated_recipes[original_recipe] then
+						rmeta = correlated_recipes[original_recipe]
+					else-- Link (pointer) for other possible lookup names
+						correlated_recipes[original_recipe] = rmeta
+					end
+					rmeta.base = original_recipe
+					rmeta[variant] = recipe_name
+					if cached_rec.enabled then
+						stock_recs[#stock_recs+1] = rmeta
+					end
+				end
+			else -- B, check compressed recipes
+				-- Base recipe i.e. iron-plate
+				local uncompressed_recipe = recipe_name:gsub("%-compression", "")
+				local cached_rec = cached_protos[uncompressed_recipe]
+				if cached_rec then
+					if correlated_recipes[uncompressed_recipe] then
+						rmeta = correlated_recipes[uncompressed_recipe]
+					else-- Link (pointer) for other possible lookup names
+						correlated_recipes[uncompressed_recipe] = rmeta
+					end
+					-- Store base name and compressed name in meta
+					rmeta.base = uncompressed_recipe
+					rmeta.compressed = recipe_name
+					-- If it's unlocked by default, make sure we know that
+					if cached_rec.enabled then
+						stock_recs[#stock_recs+1] = rmeta
+					end
+				end
+			end
+			if rmeta.base then -- If we've found recipes, see if they have relative tiers
+				local upgrade = get_relative_tier(rmeta.base) or ""
+				upgrade = cached_protos[upgrade] and upgrade or nil
+				rmeta.upgrade = upgrade
+				local downgrade = get_relative_tier(rmeta.base, -1) or ""
+				downgrade = cached_protos[downgrade] and downgrade or nil
+				rmeta.downgrade = downgrade
+				correlated_recipes[recipe_name] = rmeta
+			end
+		end
+
+		-- Third, list techs and their base variants
+		for tech_name, tech in pairs(game.technology_prototypes) do
+			local techrec = recipe_techs[tech_name] or {}
+			local has_added = false
+			for _, effect in pairs(tech.effects) do
+				if effect.type == "unlock-recipe" then
+					local effect_recipe = effect.recipe
+					has_added = true			
+					techrec[effect_recipe] = correlated_recipes[effect_recipe]
+				end
+			end
+			if has_added then
+				recipe_techs[tech_name] = techrec
+			end
+			-- nothing
+		end
+	end
+
+	-- Act as if cache has been cleared from here if specified
+	clear_caches = full_iter
+
+	-- Now we see which forces we actually need to check
+	local force_queue = {}
+	if tech_force then
+		force_queue[tech_force.name] = tech_force
+	else -- Add any forces with players otherwise
+		for force_name, force in pairs(forces) do
+			if #force.players > 0 or force_name == "player" then
+				force_queue[force_name] = force
+			end
+		end
+	end
+	
+	-- Iterate each (valid) force
+	for force_name, force in pairs(force_queue) do
+		-- Localise where applicable
+		local cached_recs = memoize(force.recipes)
+		local force_techs = memoize(force.technologies)
+		local has_compression = force_techs["compression-recipes"].researched
+		local technology_name = technology and technology.name or ""
+		-- If we're just a single tech, we can end here if we don't meet the criteria
+		if technology then
+			local tech_level = technology.level
+			local tech_researched = technology.researched
+			-- Sync status between compressed and non-compressed techs
+			local variant = (
+				force_techs[string.format("omnipressed-%s", technology_name)] or 
+				force_techs[technology_name:gsub("^omnipressed%-", "")] or 
+				{}
+			)
+			if technology.level then
+				variant.level = technology.level
+			end
+			variant.researched = tech_researched
+			-- We can stop here if we're on a compressed variant, the rest will happen since we triggered the unlock
+			if technology_name:match("^omnipressed%-") then
+				break
+			end
+		end
+
+		-- Don't bother with any building tiers that aren't unlocked, better than checking within the loop
+		local tiers_unlocked = {}
+		local is_tier_unlock = false
+		local tier_num = 0
+		for tier_name, tier_tech in pairs(building_tiers) do
+			if technology and tier_tech == technology_name then
+				is_tier_unlock = true
+			end
+			local tech = force_techs[tier_tech]
+			tiers_unlocked[tier_name] = tech.researched
+			-- Hide or show techs based on setting
+			tier_num = tier_num + 1
+			tech.enabled = tier_num <= settings.startup["omnicompression_building_levels"].value
+		end
+		-- It's defined here since scope --_(v-v)_--
+		local function process_rec(rec_name, rec_meta, toggle)
+			toggle = not not toggle
+			for key_name, key_value in pairs(rec_meta) do
+				local is_tier = tiers_unlocked[key_name]
+				if is_tier ~= nil then
+					cached_recs[key_value].enabled = toggle and is_tier
+				elseif key_name == "compressed" then
+					cached_recs[key_value].enabled = toggle and has_compression
+				elseif key_name == "downgrade" then -- If we're enabled, disable downgrade
+					local downgrade_rec = cached_recs[key_value]
+					downgrade_rec.enabled = not toggle
+					-- Compressed version as well
+					local compressed_downgrade = cached_recs[correlated_recipes[downgrade_rec.name].compressed]
+					compressed_downgrade.enabled = has_compression and not toggle
+				end
+			end
+		end
+		-- If we just unlocked compression-recipes, or we're doing a full update
+		if technology or clear_caches then			
+			local tech_status = technology and technology.researched
+			local is_compression_unlock = (technology_name == "compression-recipes")
+			if clear_caches or is_compression_unlock or is_tier_unlock then
+				-- Deal with stock recs if necessary
+				if not is_tier_unlock then
+					for rec_name, rec_meta in pairs(stock_recs) do
+						process_rec(rec_name, rec_meta, has_compression)
+					end
+				end
+				-- Iterate techs, set their given recipe state
+				for tech_name, tech_recipes in pairs(recipe_techs) do
+					if force_techs[tech_name].researched then
+						for recipe_name, recipe_meta in pairs(tech_recipes) do
+							process_rec(recipe_name, recipe_meta, force_techs[tech_name].researched)
+						end
+					end
+				end
+			else
+				for recipe_name, recipe_meta in pairs(recipe_techs[technology_name] or {}) do
+					process_rec(recipe_name, recipe_meta, tech_status)
+				end
+			end
+		end
+	end
+	log({
 		"",
 		"Omnidate completed. ",
 		profiler
 	})
-initializing = false
+	global.omni.needs_update = false
 end
 
 script.on_event(defines.events.on_console_chat, function(event)
+	log("on_console_chat\n\t"..serpent.block(event))
 	if event.player_index and game.players[event.player_index] then
 		if event.message=="omnidate" then
-			omni_update(game)
+			global.omni.needs_update = true
 		elseif event.message=="omnilog" then
 			log(
 				"Memory usage: " .. math.ceil(collectgarbage("count")) .. "K"
 			)
-			log(
-				"Recipe map: \n" .. serpent.block(global.omni.recipe_map)
-			)
-			log(
-				"Recipes: \n" .. serpent.block(global.omni.recipes)
-			)
-			log(
-				"Stock Recipes: \n" .. serpent.block(global.omni.stock_recipes)
-			)
-			log(
-				"Stock Fluids: \n" .. serpent.block(global.omni.stock_fluids)
-			)
-			log(
-				"Tiered Buildings: \n" .. serpent.block(global.omni.tiered_buildings)
-			)
 		end
 	end
 end)
 
-local patterns = {
-    "%-()%a$",
-    "%-()%a%-omniperm",
-    "%-()%a%-compression"
+script.on_configuration_changed(function(event)
+	log("on_configuration_changed\n\t"..serpent.block(event))
+	omnidate(true)
+end)
+script.on_init(function(event)
+	omnidate(true)
+end)
+local update_queue = {
+	finished = {},
+	reversed = {}
 }
-function acquire_data(game)
-	-- Recipe tier map
-	local recipes = {}
-	local recipe_map = {}
-	local stock_recipes = {}
-	local stock_fluids = {}
-	local tiered_buildings = {}
-	for name, recipe in pairs(game.recipe_prototypes) do
-		for index, pattern in pairs(patterns) do
-			local match = select(3,name:find(pattern))-- We only care about match position, denoted by ()
-			if
-				match and
-				(
-					index < 3 and
-					(
-						(
-							recipe.category and
-							recipe.category:find("omni")
-		 				) or 
-						name:find("omni")
-					) or
-					(
-						(
-							recipe.category and 
-							recipe.category:find("compress")
-				 		) or
-						name:find("compress")
-					)
-				)
-			then-- KR2 recipe names will screw us otherwise
-				local base = name:sub(1, match-1)
-				local tier = name:sub(match, match):byte()
-				local variant = name:sub(match+1)
-				recipes[name] = {
-					base = base, -- The entry name in the common table
-					tier = tier,
-					variant = variant,
-					compressed = (index == 3)
-				}
-				recipe_map[base] = recipe_map[base] or {}
-				recipe_map[base].active_tier = math.min(97, recipe_map[base].active_tier or tier)
-				recipe_map[base][tier] = recipe_map[base][tier] or {}				
-				recipe_map[base][tier][variant] = name
-				break
-			end
+script.on_event(defines.events.on_tick, function(event)
+	if global.omni.needs_update then
+		omnidate(false, nil, true)
+	elseif update_queue then
+		for _, technology in pairs(update_queue.finished) do
+			omnidate(false, technology)
 		end
-		-- Comes unlocked
-		if recipe.enabled and not (recipes[name] or {}).compressed then
-			stock_recipes[name] = true
+		update_queue.finished = {}
+		for _, technology in pairs(update_queue.reversed) do
+			omnidate(false, technology)
 		end
-		-- Generator variant
-		if recipe.category == "fluid-condensation" then
-			stock_fluids[name] = true
-		end
-		-- Compact, nanite, etc buildings. Doing this work now makes it much faster when onidate is triggered.
-		if name:find("-compressed%-") then		
-			local base_building = name:gsub("-compressed%-%a+", "")
-			tiered_buildings[base_building] = tiered_buildings[base_building] or {}
-			tiered_buildings[base_building][name:gsub(".+compressed%-", "")] = name
-		end
+		update_queue.reversed = {}
 	end
-	global.omni.force_recipes = {}
-	for name in pairs(game.forces) do
-		global.omni.force_recipes[name] = util.copy(recipe_map)
-	end
-	global.omni.recipe_map = recipe_map
-	global.omni.recipes = recipes
-	global.omni.stock_recipes = stock_recipes
-	global.omni.stock_fluids = stock_fluids
-	global.omni.tiered_buildings = tiered_buildings
+end)
+
+local function process_research(event, direction)
+		-- Localise localise localise
+		local tech = event.research
+		local tech_name = tech.name
+		local force = event.force
+		local force_techs = force.technologies
+		local has_compression = force_techs["compression-recipes"].researched
+		-- If we hit a milestone just omnidate
+		if tech_name == "compression-recipes" or tech_name:find("^compression%-%a+%-buildings") then
+			omni_init(event)
+			return
+		end
+		local tech_meta = global.omni.recipe_techs[tech_name]
+		-- Tech has no recipes, or none we care about
+		if not tech_meta then
+			return
+		end
+		-- 
+
+		
+
+
 end
 
-script.on_configuration_changed( function(conf)
-	global.omni = {}
-	acquire_data(game)
-	global.omni.need_update=true
-end)
-
-script.on_init( function(conf)
-	global.omni = {}
-	acquire_data(game)
-	global.omni.need_update=false
-end)
-
-script.on_event(defines.events.on_tick, function(event)
-	if global.omni.need_update then
-		omni_update(game, true)
-		global.omni.need_update = false
-		global.omni.update_buildings = false
-	elseif global.omni.update_buildings then
-		update_building_recipes(true)
-		global.omni.update_buildings = false
-	end
-end)
-
 script.on_event(defines.events.on_research_finished, function(event)
-	if not initializing then
-		local tech = event.research
-		if tech.name == "compression-recipes" or tech.name:find("compression%-%a+%-buildings") then
-			global.omni.need_update = true
-		elseif not global.omni.need_update then -- If we need_update we'll be iterating everything anyway.
-			update_tech(tech)
-			if tech.name:find("^omnitech") and not tech.name:find("^omnipressed") then
-				global.omni.update_buildings = true
-			end
-		end
+	if global.omni and global.omni.needs_update then
+		return
 	end
+	log("on_research_finished\n\t"..serpent.block(event))
+	local finished = update_queue.finished
+	finished[#finished+1] = event.research
+	if #finished >= 3 then -- If our queue is getting too big just do a full omnidate
+		finished = {}
+		global.omni.needs_update = true
+	end
+	--omnidate(false, event.research)
 end)
 
-script.on_event(defines.events.on_technology_effects_reset, function(event)
-	global.omni.need_update = true
+script.on_event(defines.events.on_research_reversed, function(event)
+	--log("on_research_reversed\n\t"..serpent.block(event))
+	if global.omni and global.omni.needs_update then
+		return
+	end
+	local reversed = update_queue.reversed
+	reversed[#reversed+1] = event.research
+	if #reversed >= 3 then -- If our queue is getting too big just do a full omnidate
+		reversed = {}
+		global.omni.needs_update = true
+	end
+	--omnidate(false, event.research)
 end)
 
 script.on_event(defines.events.on_force_created, function(event)
-	global.omni.force_recipes[event.force.name] = util.copy(global.omni.recipe_map)
-	global.omni.need_update = true
-end)
-
-script.on_event(defines.events.on_forces_merged, function(event)
-	global.omni.force_recipes[event.source_name] = nil
-	global.omni.force_recipes[event.destination.name] = util.copy(global.omni.recipe_map)
-	global.omni.need_update = true
+	omnidate(true)
 end)
 
 script.on_event(defines.events.on_force_reset, function(event)
-	global.omni.force_recipes[event.force.name] = util.copy(global.omni.recipe_map)
-	global.omni.need_update = true
-end)
-
-script.on_event(defines.events.on_player_changed_force, function(event)
-	global.omni.need_update = true
+	omnidate(true)
 end)
 
 script.on_event(defines.events.on_player_created, function(event)
