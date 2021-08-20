@@ -69,13 +69,6 @@ local find_top_tier = function(build, kind)
     local name = build.name
     if not settings.startup["omnicompression_final_building"].value then
         return build
-    elseif omni.compression.tierless_buildings[name] then
-        return build
-    elseif omni.lib.is_number(omni.lib.get_end(name,2)) then
-        name = string.sub(name,1,string.len(name)-2)
-    elseif omni.lib.is_number(omni.lib.get_end(name,1)) then
-        name = string.sub(name,1,string.len(name)-1)
-    elseif not data.raw[kind][name.."-2"] and not data.raw[kind][name.."2"] then
     end
     -- Take any digits off the end
     local digits = name:match("%d+$") or ""
@@ -98,16 +91,6 @@ local find_top_tier = function(build, kind)
     if not rawkind[namedash..zero_two] and not rawkind[name..zero_two] then
         return build
     end
-    local nr = 1
-    local found = true
-    while found do
-        nr = nr+1
-        if not data.raw[kind][name.."-"..nr] and data.raw[kind][name.."-"..nr-1] then
-            found = false
-            return data.raw[kind][name.."-"..nr-1]
-        elseif not data.raw[kind][name..nr] and data.raw[kind][name..nr-1] then
-            found = false
-            return data.raw[kind][name..nr-1]
     local last_padded_nr = zero_pad(0, padded_zeroes)
     for nr=1, 99 do
         local padded_nr = zero_pad(nr, padded_zeroes)
