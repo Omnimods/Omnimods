@@ -117,39 +117,6 @@ local category_exists = function(build)
     end
 end
 
-local recipe_results = {}
-
-for _, recipe in pairs(data.raw.recipe) do
-    local product = omni.lib.locale.get_main_product(recipe)
-    product = product and data.raw[product.type][product.name]
-    if product then
-        local place_result = (data.raw[product.type][product.name] or {}).place_result
-        place_result = place_result and omni.lib.locale.find(place_result, 'entity', true)
-        if place_result and -- Valid
-        building_list[place_result.type] and
-        not omni.lib.string_contained_list(place_result.name, black_list) and --not on exclusion list
-        not omni.compression.is_hidden(place_result) and (--Not hidden
-        not compress_entity[place_result] or (
-            compress_entity[place_result] and (
-            not compress_entity[place_result].exclude or compress_entity[place_result].include
-            ) -- Not excluded or included
-        )) 
-        then
-            local top_result =  find_top_tier(place_result, place_result.type)
-            if top_result and building_list[top_result.type] and top_result.name == place_result.name then
-                recipe_results[top_result.name] = recipe_results[top_result.name] or {}
-                local res = recipe_results[top_result.name]
-                res[#res+1] = {
-                recipe = recipe,
-                item = product,
-                building = top_result,
-                base = place_result
-                }
-            end
-        end
-    end
-end
-
 --find placing item
 local find_placing_item = function(build)
     for _, item in pairs(data.raw.item) do
@@ -177,7 +144,7 @@ local new_effect = function(effect, level, linear, constant)
 end
 
 --new fluids for boilers and generators
-local create_concentrated_fluid = function(fluid,tier)
+local create_concentrated_fluid = function(fluid, tier)
     local new_fluid = table.deepcopy(data.raw.fluid[fluid])
 
     new_fluid.localised_name = omni.lib.locale.custom_name(new_fluid, "compressed-fluid", tier)
@@ -192,71 +159,132 @@ local create_concentrated_fluid = function(fluid,tier)
     new_fluid.icons = omni.lib.add_overlay(new_fluid, "compress-fluid", tier)
     new_fluid.icon = nil
     data:extend{new_fluid}
-
-    local base_fluid = fluid
-    -- if tier > 1 then baseFluid = baseFluid.."-concentrated-grade-"..(tier-1) end
-    local base_fluid_data = {{name = base_fluid, type = "fluid", amount = sluid_contain_fluid*multiplier^(tier+1)}}
-    local compress_fluid_data = {{name = "concentrated-"..base_fluid, type = "fluid", amount = multiplier^(tier+1)}}
-    local grade_fluid_data = {{name = fluid.."-concentrated-grade-"..tier, type = "fluid", amount = sluid_contain_fluid*multiplier}}
-    local grade_recipe_data = {
-        energy_required = multiplier^(tier+1)/60,
-        enabled = false,
-        hide_from_player_crafting = true
-    }
-    local ungrade_recipe_data = table.deepcopy(grade_recipe_data) --deepcopy to safeguard against pointer nonsense
-    
-    local grade_compressed_recipe_data = table.deepcopy(grade_recipe_data)
-    local ungrade_compressed_recipe_data = table.deepcopy(grade_compressed_recipe_data)
-
-    grade_recipe_data.ingredients = base_fluid_data
-    grade_recipe_data.results = grade_fluid_data
-    grade_compressed_recipe_data.ingredients = compress_fluid_data
-    grade_compressed_recipe_data.results = table.deepcopy(grade_fluid_data)
-
-    ungrade_recipe_data.ingredients = table.deepcopy(grade_fluid_data)
-    ungrade_recipe_data.results = table.deepcopy(base_fluid_data)
-    ungrade_compressed_recipe_data.ingredients = table.deepcopy(grade_fluid_data)
-    ungrade_compressed_recipe_data.results = table.deepcopy(compress_fluid_data)
-
-    local grade = {
-        type = "recipe",
-        name = fluid.."-concentrated-grade-"..tier,
-        --localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
-        category = "fluid-condensation",
-        enabled = false,
-        icons = new_fluid.icons,
-        order = new_fluid.order or ("z".."[condensed-"..fluid .."]")
-    }
-    local ungrade = {
-        type = "recipe",
-        name = "uncompress-"..fluid.."-concentrated-grade-"..tier,
-        --localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
-        icons = omni.lib.add_overlay(fluid,"uncompress"),
-        category = "fluid-condensation",
-        subgroup = "concentrator-fluids",
-        enabled = false,
-        order = new_fluid.order or ("z".."[condensed-"..fluid .."]")
-    }
-    local grade_compressed = table.deepcopy(grade)
-    grade_compressed.name = "concentrated-"..grade.name
-    local ungrade_compressed = table.deepcopy(ungrade)
-    ungrade_compressed.name = "uncompress-concentrated-"..fluid.."-concentrated-grade-"..tier
-
-    grade.normal = grade_recipe_data
-    grade.expensive = table.deepcopy(grade_recipe_data)
-    ungrade.normal = ungrade_recipe_data
-    ungrade.expensive = table.deepcopy(ungrade_recipe_data)
-
-    grade_compressed.normal = grade_compressed_recipe_data
-    grade_compressed.expensive = table.deepcopy(grade_compressed_recipe_data)
-    ungrade_compressed.normal = ungrade_compressed_recipe_data
-    ungrade_compressed.expensive = table.deepcopy(ungrade_compressed_recipe_data)
-
-    data:extend{grade,ungrade,grade_compressed,ungrade_compressed}
 end
 
+local create_concentrated_recipe = function(fluid, tier, temp)
+    if temp then
+        temp = math.min(temp, 1000)
+    end
+    -- Zero pad to keep sorting proper
+    local temp_str = temp and "-" .. string.format("%04d", temp) .. "c" or ""
+    if not data.raw.fluid[fluid .. "-concentrated-grade-" .. tier] then
+        create_concentrated_fluid(fluid, tier)
+    end
 
-local process_fluid_box = function(fluid_box, i, is_graded)
+    local new_fluid = table.deepcopy(data.raw.fluid[fluid])
+    
+    local base_fluid = fluid
+    if not data.raw.recipe[fluid .. "-concentrated-grade-" .. tier  .. temp_str] then
+        -- if tier > 1 then baseFluid = baseFluid.."-concentrated-grade-"..(tier-1) end
+        local base_fluid_data = {{name = base_fluid, type = "fluid", amount = sluid_contain_fluid*multiplier^(tier+1), temperature=temp}}
+        local compress_fluid_data = {{name = "concentrated-"..base_fluid, type = "fluid", amount = multiplier^(tier+1), temperature=temp}}
+        local grade_fluid_data = {{name = fluid.."-concentrated-grade-"..tier, type = "fluid", amount = sluid_contain_fluid*multiplier, temperature=temp}}
+        local grade_recipe_data = {
+            energy_required = multiplier^(tier+1)/60,
+            enabled = true,
+            hide_from_player_crafting = true
+        }
+        local ungrade_recipe_data = table.deepcopy(grade_recipe_data) --deepcopy to safeguard against pointer nonsense
+        
+        local grade_compressed_recipe_data = table.deepcopy(grade_recipe_data)
+        local ungrade_compressed_recipe_data = table.deepcopy(grade_compressed_recipe_data)
+
+        grade_recipe_data.ingredients = base_fluid_data
+        grade_recipe_data.results = grade_fluid_data
+        grade_compressed_recipe_data.ingredients = compress_fluid_data
+        grade_compressed_recipe_data.results = table.deepcopy(grade_fluid_data)
+
+        ungrade_recipe_data.ingredients = table.deepcopy(grade_fluid_data)
+        ungrade_recipe_data.results = table.deepcopy(base_fluid_data)
+        ungrade_compressed_recipe_data.ingredients = table.deepcopy(grade_fluid_data)
+        ungrade_compressed_recipe_data.results = table.deepcopy(compress_fluid_data)
+
+        local grade = {
+            type = "recipe",
+            name = fluid.."-concentrated-grade-"..tier..temp_str,
+            --localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
+            category = "fluid-condensation",
+            enabled = true,
+            icons = new_fluid.icons,
+            order = new_fluid.order or ("z".."[condensed-"..fluid .."]")
+        }
+        local ungrade = {
+            type = "recipe",
+            name = "uncompress-"..fluid.."-concentrated-grade-"..tier..temp_str,
+            --localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
+            icons = omni.lib.add_overlay(fluid,"uncompress"),
+            category = "fluid-condensation",
+            subgroup = "concentrator-fluids",
+            enabled = true,
+            order = new_fluid.order or ("z".."[condensed-"..fluid .."]")
+        }
+        local grade_compressed = table.deepcopy(grade)
+        grade_compressed.name = "concentrated-"..grade.name
+        local ungrade_compressed = table.deepcopy(ungrade)
+        ungrade_compressed.name = "uncompress-concentrated-"..fluid.."-concentrated-grade-"..tier..temp_str
+
+        grade.normal = grade_recipe_data
+        grade.expensive = table.deepcopy(grade_recipe_data)
+        ungrade.normal = ungrade_recipe_data
+        ungrade.expensive = table.deepcopy(ungrade_recipe_data)
+
+        grade_compressed.normal = grade_compressed_recipe_data
+        grade_compressed.expensive = table.deepcopy(grade_compressed_recipe_data)
+        ungrade_compressed.normal = ungrade_compressed_recipe_data
+        ungrade_compressed.expensive = table.deepcopy(ungrade_compressed_recipe_data)
+
+        data:extend{grade,ungrade,grade_compressed,ungrade_compressed}
+    end
+end
+
+local recipe_results = {}
+log("calculating building tiers")
+for recipe_name, recipe in pairs(data.raw.recipe) do
+    --log(recipe.name)
+    local product = omni.lib.locale.get_main_product(recipe)
+    product = product and data.raw[product.type][product.name]
+    if product then
+        local place_result = (data.raw[product.type][product.name] or {}).place_result
+        place_result = place_result and omni.lib.locale.find(place_result, 'entity', true)
+        if place_result and -- Valid
+        building_list[place_result.type] and
+        not omni.lib.string_contained_list(place_result.name, black_list) and --not on exclusion list
+        not omni.compression.is_hidden(place_result) and (--Not hidden
+        not compress_entity[place_result] or (
+            compress_entity[place_result] and (
+            not compress_entity[place_result].exclude or compress_entity[place_result].include
+            ) -- Not excluded or included
+        )) 
+        then
+            local top_result =  find_top_tier(place_result, place_result.type)
+            if top_result and top_result.name == place_result.name and building_list[top_result.type] then
+                --log("Highest tier of " .. place_result.name .. " is " .. top_result.name)
+                recipe_results[top_result.name] = recipe_results[top_result.name] or {}
+                local res = recipe_results[top_result.name]
+                    res[#res+1] = {
+                    recipe = recipe,
+                    item = product,
+                    building = top_result,
+                    base = place_result
+                }
+            end
+        end
+    end
+    -- Check for fluid temps here too, generate a recipe for each temp and tier
+    if recipe.normal and recipe.normal.results and recipe.category ~= "fluid-condensation" then
+        local parsed_results = omni.lib.locale.parse_product(recipe.normal.results)
+        for _, result in pairs(parsed_results) do
+            if result.type == "fluid" and result.temperature then
+                --log("Fluid: " .. result.name .. " (" .. result.temperature .. "C)")
+                for i = 1, omni.compression.bld_lvls do                    
+                    create_concentrated_recipe(result.name, i, result.temperature)
+                end
+            end
+        end
+    end
+end
+
+local process_fluid_box = function(fluid_box, i, is_graded, proto)
     if not fluid_box then return end
     local fl_name
     if fluid_box.filter then
@@ -265,8 +293,10 @@ local process_fluid_box = function(fluid_box, i, is_graded)
         else
             fl_name = "concentrated-" .. fluid_box.filter
         end
-        if not data.raw.fluid[fl_name] then 
-            create_concentrated_fluid(fluid_box.filter,i)
+        create_concentrated_recipe(fluid_box.filter, i, fluid_box.minimum_temperature)
+        create_concentrated_recipe(fluid_box.filter, i, fluid_box.maximum_temperature)
+        if proto and (proto.target_temperature or proto.maximum_temperature) then
+            create_concentrated_recipe(fluid_box.filter, i, proto.target_temperature or proto.maximum_temperature)
         end
         fluid_box.filter = fl_name
     end
@@ -282,8 +312,10 @@ local process_fluid_box = function(fluid_box, i, is_graded)
                 else
                     fl_name = "concentrated-" .. fluid_box.filter
                 end
-                if not data.raw.fluid[fl_name] then 
-                    create_concentrated_fluid(fluid_box[I].filter,i)
+                create_concentrated_recipe(fluid_box[I].filter, i, fluid_box[I].minimum_temperature)
+                create_concentrated_recipe(fluid_box[I].filter, i, fluid_box[I].maximum_temperature)
+                if proto and (proto.target_temperature or proto.maximum_temperature) then
+                    create_concentrated_recipe(fluid_box[I].filter, i, proto.target_temperature or proto.maximum_temperature)
                 end
                 fluid_box[I].filter = fl_name
             end
@@ -476,13 +508,13 @@ local run_entity_updates = function(new, kind, i)
         if new.energy_source.effectivity then new.energy_source.effectivity = math.pow(new.energy_source.effectivity,1/(i+1)) end
         if new.energy_source.specific_heat then new.energy_source.specific_heat = new_effect(new.energy_source.specific_heat, i, nil, multiplier^i) end
         if new.energy_source.max_transfer then new.energy_source.max_transfer = new_effect(new.energy_source.max_transfer, i, nil, multiplier^i) end
-        process_fluid_box(new.output_fluid_box, i, true)
-        process_fluid_box(new.fluid_box, i, true)
+        process_fluid_box(new.output_fluid_box, i, true, new) -- Make sure output temp gets a recipe
+        process_fluid_box(new.fluid_box, i, true)      
     end
     --Generator
     if kind == "generator" and new.fluid_box then
-        process_fluid_box(new.output_fluid_box, i)
-        process_fluid_box(new.fluid_box, i, true)
+        process_fluid_box(new.output_fluid_box, i, nil)
+        process_fluid_box(new.fluid_box, i, true, new) -- Make sure input temp gets a recipe
         new.scale_fluid_usage = true
         if new.max_power_output then
             new.max_power_output = new_effect(new.max_power_output, i)
