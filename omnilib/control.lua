@@ -33,6 +33,68 @@ local function get_relative_tier(recipe_name, offset)
 	end
 end
 
+local function update_building_recipes()
+	--log("Updating buildings that use tiered recipes")
+	-- User preference
+	if not settings.global["omnilib-autoupdate"].value then
+		return
+	end
+	-- Make sure every entity using a tiered recipe (i.e. omnitraction) is up to the current tier
+	local correlated_recipes = global.omni.correlated_recipes
+	for _, surface in pairs(game.surfaces) do
+		for _, entity in pairs(surface.find_entities_filtered({type="assembling-machine"})) do
+			for _, force in pairs(game.forces) do
+				local force_recs = memoize(force.recipes)
+				if entity.force == force then
+					local current_recipe = entity.get_recipe()					
+					if current_recipe then
+						local current_recipe_name = current_recipe.name
+						-- Iterate until we hit a locked recipe
+						local function find_top(candidate, best)
+							local recipe_meta = correlated_recipes[candidate] or {}
+							local upgrade = recipe_meta.upgrade and force_recs[recipe_meta.upgrade]
+							if upgrade then
+								local upgrade_name = upgrade.name
+								return find_top(upgrade_name, upgrade.enabled and upgrade_name or best) -- tail call
+							else -- We may have cases where the we unlock several techs and the enabled recipes aren't contiguous
+								return best
+							end
+						end
+						local new_recipe = find_top(current_recipe_name, current_recipe_name)
+						-- Work to do?
+						if new_recipe and new_recipe ~= current_recipe_name then
+							local ingredients = {}
+							if entity.is_crafting() then
+								ingredients = current_recipe.ingredients or {}
+							end
+							entity.set_recipe(new_recipe)
+							local updated_ingredients = 0
+							for _, ingredient in pairs(ingredients) do
+								if ingredient.type == "item" then
+									updated_ingredients = updated_ingredients + entity.insert({
+										name = ingredient.name,
+										count = ingredient.amount
+									})
+								elseif ingredient.type == "fluid" then
+									updated_ingredients = updated_ingredients + entity.insert_fluid({
+										name = ingredient.name,
+										amount = ingredient.amount
+									})
+								end
+							end
+							log("\tSet " .. entity.name .. " from recipe \"" .. current_recipe_name .. "\" to \"" .. new_recipe .. "\"")
+							if updated_ingredients ~= 0 then
+								log("\t\tMigrated " .. updated_ingredients .. " ingredients")
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	--log("Building update complete")
+end
+
 function omnidate(clear_caches, technology, full_iter)
 	log("Beginning omnidate")
 	local game = game
@@ -249,6 +311,7 @@ function omnidate(clear_caches, technology, full_iter)
 			end
 		end
 	end
+	update_building_recipes()
 	log({
 		"",
 		"Omnidate completed. ",
