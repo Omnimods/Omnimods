@@ -162,16 +162,19 @@ local create_concentrated_fluid = function(fluid, tier)
 end
 
 local create_concentrated_recipe = function(fluid, tier, temp)
+    local new_fluid = table.deepcopy(data.raw.fluid[fluid])
     if temp then
+        -- Clamp to valid recipe values
         temp = math.min(temp, 1000)
+        -- Clamp to fluid min/max
+        temp = math.min(temp, new_fluid.max_temperature)
+        temp = math.max(temp, new_fluid.default_temperature)
     end
     -- Zero pad to keep sorting proper
     local temp_str = temp and "-" .. string.format("%04d", temp) .. "c" or ""
     if not data.raw.fluid[fluid .. "-concentrated-grade-" .. tier] then
         create_concentrated_fluid(fluid, tier)
-    end
-
-    local new_fluid = table.deepcopy(data.raw.fluid[fluid])
+    end 
     
     local base_fluid = fluid
     if not data.raw.recipe[fluid .. "-concentrated-grade-" .. tier  .. temp_str] then
