@@ -107,7 +107,7 @@ function omnidate(clear_caches, technology, full_iter)
 		global.omni.stock_recs = {}
 	end
 	-- No omnicompression, no omnimatter
-	if not settings.startup["omnicompression_one_list"] or not settings.startup["omnimatter-infinite"] then
+	if not settings.startup["omnicompression_one_list"] and not settings.startup["omnimatter-infinite"] then
 		profiler.stop()
 		global.omni.needs_update = false
 		return
