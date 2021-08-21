@@ -218,7 +218,7 @@ function omnidate(clear_caches, technology, full_iter)
 	end
 
 	-- Act as if cache has been cleared from here if specified
-	clear_caches = full_iter
+	clear_caches = clear_caches or full_iter or false
 
 	-- Now we see which forces we actually need to check
 	local force_queue = {}
@@ -333,10 +333,13 @@ script.on_event(defines.events.on_console_chat, function(event)
 	if event.player_index and game.players[event.player_index] then
 		if event.message=="omnidate" then
 			global.omni.needs_update = true
+		elseif event.message=="omnidatefull" then
+			omnidate(true)
 		elseif event.message=="omnilog" then
 			log(
 				"Memory usage: " .. math.ceil(collectgarbage("count")) .. "K"
 			)
+			log(serpent.block(global.omni.recipe_techs))
 		end
 	end
 end)
@@ -420,11 +423,11 @@ script.on_event(defines.events.on_research_reversed, function(event)
 end)
 
 script.on_event(defines.events.on_force_created, function(event)
-	omnidate(true)
+	omnidate()
 end)
 
 script.on_event(defines.events.on_force_reset, function(event)
-	omnidate(true)
+	omnidate()
 end)
 
 script.on_event(defines.events.on_player_created, function(event)
