@@ -96,7 +96,6 @@ local function update_building_recipes()
 end
 
 function omnidate(clear_caches, technology, full_iter)
-	log("Beginning omnidate")
 	local game = game
 	-- Record time spent
 	local profiler = game.create_profiler()
@@ -107,6 +106,13 @@ function omnidate(clear_caches, technology, full_iter)
 		global.omni.recipe_techs = {}
 		global.omni.stock_recs = {}
 	end
+	-- No omnicompression, no omnimatter
+	if not settings.startup["omnicompression_one_list"] or not settings.startup["omnimatter-infinite"] then
+		profiler.stop()
+		global.omni.needs_update = false
+		return
+	end
+	log("Beginning omnidate")
 	-- Proxies
 	local correlated_recipes = global.omni.correlated_recipes	
 	local recipe_techs = global.omni.recipe_techs	
@@ -231,7 +237,7 @@ function omnidate(clear_caches, technology, full_iter)
 		-- Localise where applicable
 		local cached_recs = memoize(force.recipes)
 		local force_techs = memoize(force.technologies)
-		local has_compression = force_techs["compression-recipes"].researched
+		local has_compression = force_techs["compression-recipes"] and force_techs["compression-recipes"].researched
 		local technology_name = technology and technology.name or ""
 		-- If we're just a single tech, we can end here if we don't meet the criteria
 		if technology then
@@ -262,10 +268,12 @@ function omnidate(clear_caches, technology, full_iter)
 				is_tier_unlock = true
 			end
 			local tech = force_techs[tier_tech]
-			tiers_unlocked[tier_name] = tech.researched
-			-- Hide or show techs based on setting
-			tier_num = tier_num + 1
-			tech.enabled = tier_num <= settings.startup["omnicompression_building_levels"].value
+			if tech then
+				tiers_unlocked[tier_name] = tech.researched
+				-- Hide or show techs based on setting
+				tier_num = tier_num + 1
+				tech.enabled = tier_num <= settings.startup["omnicompression_building_levels"].value
+			end
 		end
 		-- It's defined here since scope --_(v-v)_--
 		local function process_rec(rec_name, rec_meta, toggle)
