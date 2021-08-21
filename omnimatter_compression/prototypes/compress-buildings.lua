@@ -664,6 +664,7 @@ for build_name, values in pairs(recipe_results) do
                 )
                 if new.max_health then
                     new.max_health = new.max_health * math.pow(multiplier, i)
+                    new.max_health = math.min(new.max_health, 2^32-1)
                 end
                 new.minable.result = new.name
                 new.minable.mining_time = (new.minable.mining_time or 10) * i
