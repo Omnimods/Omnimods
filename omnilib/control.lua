@@ -370,30 +370,6 @@ script.on_event(defines.events.on_tick, function(event)
 	end
 end)
 
-local function process_research(event, direction)
-		-- Localise localise localise
-		local tech = event.research
-		local tech_name = tech.name
-		local force = event.force
-		local force_techs = force.technologies
-		local has_compression = force_techs["compression-recipes"].researched
-		-- If we hit a milestone just omnidate
-		if tech_name == "compression-recipes" or tech_name:find("^compression%-%a+%-buildings") then
-			omni_init(event)
-			return
-		end
-		local tech_meta = global.omni.recipe_techs[tech_name]
-		-- Tech has no recipes, or none we care about
-		if not tech_meta then
-			return
-		end
-		-- 
-
-		
-
-
-end
-
 script.on_event(defines.events.on_research_finished, function(event)
 	if global.omni and global.omni.needs_update then
 		return
