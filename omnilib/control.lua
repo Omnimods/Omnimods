@@ -95,10 +95,14 @@ local function update_building_recipes()
 	--log("Building update complete")
 end
 
-function omnidate(clear_caches, technology, full_iter)
+function omnidate(technology)
 	local game = game
 	-- Record time spent
 	local profiler = game.create_profiler()
+	-- Clear cached lists
+	local clear_caches = global.omni and global.omni.clear_caches
+	-- Check every recipe/tech
+	local full_iter = global.omni and global.omni.full_iter
 	-- Globals
 	if clear_caches then
 		global.omni = {}
@@ -106,13 +110,15 @@ function omnidate(clear_caches, technology, full_iter)
 		global.omni.recipe_techs = {}
 		global.omni.stock_recs = {}
 	end
+	-- Make sure we don't trigger ourselves
+	global.omni.needs_update = true
 	-- No omnicompression, no omnimatter
 	if not settings.startup["omnicompression_one_list"] and not settings.startup["omnimatter-infinite"] then
 		profiler.stop()
 		global.omni.needs_update = false
 		return
 	end
-	log("Beginning omnidate")
+	log("Beginning omnidate (" .. (clear_caches and "1" or "0") .. "," .. (full_iter and "1" or "0") .. ")")
 	-- Proxies
 	local correlated_recipes = global.omni.correlated_recipes	
 	local recipe_techs = global.omni.recipe_techs	
@@ -326,16 +332,22 @@ function omnidate(clear_caches, technology, full_iter)
 		profiler
 	})
 	global.omni.needs_update = false
+	global.omni.clear_caches = false
+	global.omni.full_iter = false
 end
 
 script.on_event(defines.events.on_console_chat, function(event)
 	log("on_console_chat\n\t"..serpent.block(event))
 	if event.player_index and game.players[event.player_index] then
 		if event.message=="omnidate" then
+			global.omni = global.omni or {}
 			global.omni.needs_update = true
 		elseif event.message=="omnidatefull" then
-			omnidate(true)
+			global.omni = global.omni or {}
+			global.omni.needs_update = true
+			global.omni.clear_caches = true
 		elseif event.message=="omnilog" then
+			global.omni = global.omni or {}
 			log(
 				"Memory usage: " .. math.ceil(collectgarbage("count")) .. "K"
 			)
@@ -346,25 +358,29 @@ end)
 
 script.on_configuration_changed(function(event)
 	log("on_configuration_changed\n\t"..serpent.block(event))
-	omnidate(true)
+	global.omni = global.omni or {}
+	global.omni.needs_update = true
+	global.omni.clear_caches = true
 end)
 script.on_init(function(event)
-	omnidate(true)
+	global.omni = global.omni or {}
+	global.omni.needs_update = true
+	global.omni.clear_caches = true
 end)
 local update_queue = {
 	finished = {},
 	reversed = {}
 }
 script.on_event(defines.events.on_tick, function(event)
-	if global.omni.needs_update then
-		omnidate(false, nil, true)
+	if global.omni and global.omni.needs_update then
+		omnidate()
 	elseif update_queue then
 		for _, technology in pairs(update_queue.finished) do
-			omnidate(false, technology)
+			omnidate(technology)
 		end
 		update_queue.finished = {}
 		for _, technology in pairs(update_queue.reversed) do
-			omnidate(false, technology)
+			omnidate(technology)
 		end
 		update_queue.reversed = {}
 	end
@@ -380,6 +396,7 @@ script.on_event(defines.events.on_research_finished, function(event)
 	if #finished >= 3 then -- If our queue is getting too big just do a full omnidate
 		finished = {}
 		global.omni.needs_update = true
+		global.omni.full_iter = true
 	end
 	--omnidate(false, event.research)
 end)
@@ -399,11 +416,11 @@ script.on_event(defines.events.on_research_reversed, function(event)
 end)
 
 script.on_event(defines.events.on_force_created, function(event)
-	omnidate()
+	global.omni.needs_update = true
 end)
 
 script.on_event(defines.events.on_force_reset, function(event)
-	omnidate()
+	global.omni.needs_update = true
 end)
 
 script.on_event(defines.events.on_player_created, function(event)
