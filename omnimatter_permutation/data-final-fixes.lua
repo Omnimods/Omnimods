@@ -106,6 +106,8 @@ end
 local rawsize = table_size(data.raw.recipe) + #recipesExpanded
 if rawsize > 65535 then
 	error("data.raw.recipe exceeds the limit of 65535 (" .. rawsize .. "). Please disable either your largest mod or omnipermute.")
+else
+	log("Omnipermute complete, total recipes in data.raw: " .. rawsize)
 end
 
 if #recipesExpanded > 0 then
