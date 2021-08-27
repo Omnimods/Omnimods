@@ -99,6 +99,7 @@ function omnidate(technology)
 	local game = game
 	-- Record time spent
 	local profiler = game.create_profiler()
+	local logger = global.omni and global.omni.log_to_chat and game.print or log
 	-- Clear cached lists
 	local clear_caches = global.omni and global.omni.clear_caches
 	-- Check every recipe/tech
@@ -118,7 +119,7 @@ function omnidate(technology)
 		global.omni.needs_update = false
 		return
 	end
-	log("Beginning omnidate (" .. (clear_caches and "1" or "0") .. "," .. (full_iter and "1" or "0") .. ")")
+	logger("Beginning omnidate" .. (clear_caches and " (full)" or "") .. (full_iter and " (partial)" or ""))
 	-- Proxies
 	local correlated_recipes = global.omni.correlated_recipes	
 	local recipe_techs = global.omni.recipe_techs	
@@ -326,7 +327,7 @@ function omnidate(technology)
 		end
 	end
 	update_building_recipes()
-	log({
+	logger({
 		"",
 		"Omnidate completed. ",
 		profiler
@@ -341,9 +342,11 @@ script.on_event(defines.events.on_console_chat, function(event)
 	if event.player_index and game.players[event.player_index] then
 		if event.message=="omnidate" then
 			global.omni = global.omni or {}
+			global.omni.log_to_chat = true
 			global.omni.needs_update = true
 		elseif event.message=="omnidatefull" then
 			global.omni = global.omni or {}
+			global.omni.log_to_chat = true
 			global.omni.needs_update = true
 			global.omni.clear_caches = true
 		elseif event.message=="omnilog" then
