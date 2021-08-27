@@ -3,6 +3,7 @@ Version: 4.1.20
 Date: ????
   Bugfixes:
     - Force bob´s infinite ore setting to false when hiding it
+    - Fixed that all omnicium alloy recipes were enabled by default without angels refining
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.19
 Date: 2021.08.16

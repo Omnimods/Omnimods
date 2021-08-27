@@ -351,7 +351,7 @@ script.on_event(defines.events.on_console_chat, function(event)
 			log(
 				"Memory usage: " .. math.ceil(collectgarbage("count")) .. "K"
 			)
-			log(serpent.block(global.omni.recipe_techs))
+			--log(serpent.block(global.omni.recipe_techs))
 		end
 	end
 end)

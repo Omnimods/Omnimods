@@ -138,6 +138,7 @@ function omni.matter.add_omnicium_alloy(name,plate,ingot)
                 for _, eff in pairs(tech.effects) do
                     if eff.type == "unlock-recipe" and eff.recipe == plate then
                         table.insert(tech.effects,{type="unlock-recipe",recipe="omnicium-"..name.."-alloy-furnace"})
+                        reg[#reg].enabled = false
                         break
                     end
                 end

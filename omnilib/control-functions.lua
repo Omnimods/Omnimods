@@ -16,12 +16,15 @@ end
 function start_with(a,b)
 	return string.sub(a,1,string.len(b)) == b
 end
+
 function end_with(a,b)
 	return string.sub(a,string.len(a)-string.len(b)+1,string.len(a)) == b
 end
+
 function start_within_table(a,b)
 	return string.sub(a,1,string.len(b)) == b
 end
+
 function equal(tab1,tab2)
 	local v = true
 	local c = 0
@@ -44,6 +47,7 @@ function equal(tab1,tab2)
 	end
 	return v
 end
+
 function inTable(element, tab)
 	for _, t in pairs(tab) do
 		if equal(t,element) then return true end
