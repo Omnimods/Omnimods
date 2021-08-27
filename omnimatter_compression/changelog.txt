@@ -8,6 +8,7 @@ Date: 2021.08.XX
     - Fluid compression/decompression recipes are unlocked by default
   Bugfixes:
     - Fix crash with massive entity HP
+    - Fix crash with unspecified subgroups
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.9
 Date: 2021.08.14
