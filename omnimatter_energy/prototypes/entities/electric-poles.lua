@@ -6,6 +6,8 @@ RecGen:import("small-electric-pole"):
 BuildGen:import("small-electric-pole"):
     setName("small-iron-electric-pole"):
     setIngredients({"iron-plate", 1},{"copper-cable", 2}):
+    setArea(3):
+    setWireDistance(8):
     setEnabled(false):
     setTechName("omnitech-anbaricity"):
     setOrder("a[energy]-a[small-electric-pole]-iron"):
@@ -68,6 +70,7 @@ BuildGen:import("small-electric-pole"):
     setName("small-omnicium-electric-pole"):
     setIngredients({"omnicium-plate", 1},{"copper-cable", 2}):
     setArea(3.5):
+    setWireDistance(8.5):
     setEnabled(false):
     setTechName("omnitech-anbaricity"):
     setOrder("a[energy]-a[small-electric-pole]-omnicium"):

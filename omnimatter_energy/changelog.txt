@@ -3,6 +3,10 @@ Version: 3.1.6
 Date: 2021.08.xx
   Features:
     - New small iron / omnicium electric pole graphics (This also fixes the weird hitbox)
+  Changes:
+    - Reduced the small omnicium electric pole wire distance to 8.5
+    - Increased the small iron electric pole wire distance to 8.0
+    - Increased the small iron electric pole supply area radius to 3
   Bugfixes:
     - Fixed that coal in rock loot was not replaced with purified omnite anymore
 ---------------------------------------------------------------------------------------------------
