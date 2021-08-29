@@ -9,6 +9,7 @@ Date: 2021.08.xx
     - Increased the small iron electric pole supply area radius to 3
   Bugfixes:
     - Fixed that coal in rock loot was not replaced with purified omnite anymore
+    - Fixed that the Omnifurnace Mk 3 did not allow recipes with multiple ingredients
 ---------------------------------------------------------------------------------------------------
 Version: 3.1.5
 Date: 2021.08.14
