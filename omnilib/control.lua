@@ -188,7 +188,9 @@ function omnidate(technology)
 					end
 					-- Store base name and compressed name in meta
 					rmeta.base = uncompressed_recipe
-					rmeta.compressed = recipe_name
+					if recipe_name ~= uncompressed_recipe then
+						rmeta.compressed = recipe_name
+					end
 					-- If it's unlocked by default, make sure we know that
 					if cached_rec.enabled then
 						stock_recs[#stock_recs+1] = rmeta
@@ -295,8 +297,11 @@ function omnidate(technology)
 					local downgrade_rec = cached_recs[key_value]
 					downgrade_rec.enabled = not toggle
 					-- Compressed version as well
-					local compressed_downgrade = cached_recs[correlated_recipes[downgrade_rec.name].compressed]
-					compressed_downgrade.enabled = has_compression and not toggle
+					local compressed_downgrade = correlated_recipes[downgrade_rec.name].compressed
+					if compressed_downgrade then
+						compressed_downgrade = cached_recs[compressed_downgrade]
+						compressed_downgrade.enabled = has_compression and not toggle
+					end
 				end
 			end
 		end
