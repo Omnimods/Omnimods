@@ -83,15 +83,26 @@ for _,rec in pairs(data.raw.recipe) do
 					end
 					if not new.localised_name and new.main_product==nil then new.localised_name = omni.lib.locale.of(rec).name end
 					new.name=new.name.."-omniperm-"..i.."-"..j
+					
+					--Hide all recipes except the original one
+					if settings.startup["hide_permutations"].value and not (i == 1 and  j == 1) then
+						new.normal.hidden = true
+						new.expensive.hidden = true
+						new.normal.hide_from_player_crafting = true
+						new.expensive.hide_from_player_crafting = true
+					--Requires to unlock them via control
+					--else
+					--	  techRec[rec.name][#techRec[rec.name]+1]=new.name
+					end
 					techRec[rec.name][#techRec[rec.name]+1]=new.name
-					new.hidden = true
+
 					if not data.raw["item-subgroup"][new.subgroup] then error("the subgroup "..new.subgroup.." does not exist, make sure you have defined it properly and extended it.") end
 					recipesExpanded[#recipesExpanded+1]={
 						type = "item-subgroup",
 						name = new.subgroup.."-perm",
 						group = "omnipermutation",
 						order = data.raw["item-subgroup"][new.subgroup].order,
-					  }
+					}
 					if not (i==1 and j==1) then new.subgroup=new.subgroup.."-perm" end
 					recipesExpanded[#recipesExpanded+1]=table.deepcopy(new)
 					j=j+1
