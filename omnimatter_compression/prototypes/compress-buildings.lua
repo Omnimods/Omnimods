@@ -577,7 +577,12 @@ local run_entity_updates = function(new, kind, i)
     --power poles
     if kind == "electric-pole" then
         new.maximum_wire_distance = math.min(new.maximum_wire_distance*multiplier*i,64)
-        new.supply_area_distance = math.min(new.supply_area_distance*(i+1),64)
+        -- "Old" formula
+        local new_supply_area = new.supply_area_distance * (i+1)
+        -- Add a little bit based on our multiplier
+        new_supply_area = math.ceil(new_supply_area ^ (1 + (multiplier / 50)))
+        -- Cap per engine limit
+        new.supply_area_distance = math.min(new_supply_area, 64)
     end
     --offshore pumps
     if kind == "offshore-pump" then
@@ -590,8 +595,11 @@ local run_entity_updates = function(new, kind, i)
     end
     --Inserters!
     if kind == "inserter" then
-        new.extension_speed = new.extension_speed *(i + 2)
-        new.rotation_speed = new.rotation_speed * (i + 2)
+        new.extension_speed = new.extension_speed * (i + 1)
+        new.rotation_speed = new.rotation_speed * (i + 1)
+        -- Add a little bit based on our multiplier
+        new.extension_speed = new.extension_speed * (1 + (multiplier / 15))
+        new.rotation_speed = new.rotation_speed * (1 + (multiplier / 15))
     end
     --Generators!
     if kind == "burner-generator" then
