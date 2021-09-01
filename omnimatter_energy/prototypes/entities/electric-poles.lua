@@ -158,7 +158,7 @@ for i,tab in pairs({rem1.animation, rem1.animation_overlay, rem2.animation, rem2
                 local pole = "small-omnicium-electric-pole"
                 if i > 2 then pole = "small-iron-electric-pole" end
                 layer.filename  = string.gsub(layer.filename ,"__base__","__omnimatter_energy__")
-                layer.filename  = string.gsub(layer.filename ,"small%-electric-%pole", pole)
+                layer.filename  = string.gsub(layer.filename ,"small%-electric%-pole", pole)
                 if layer.hr_version and layer.hr_version.filename then
                     layer.hr_version.filename  = string.gsub(layer.hr_version.filename ,"__base__","__omnimatter_energy__")
                     layer.hr_version.filename  = string.gsub(layer.hr_version.filename ,"small%-electric%-pole", pole)
