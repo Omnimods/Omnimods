@@ -756,7 +756,7 @@ end
 for fluidname, fluid in pairs(data.raw.fluid) do
     if fluid.fuel_value and not fluidname:find("concentrated%-") then
         for i = 1, omni.compression.bld_lvls do
-            create_concentrated_fluid(fluidname,i)
+            create_concentrated_recipe(fluidname, i)
         end
     end
 end
