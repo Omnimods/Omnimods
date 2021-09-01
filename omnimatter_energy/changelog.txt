@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.1.6
-Date: 2021.08.xx
+Date: 2021.09.01
   Features:
     - New small iron / omnicium electric pole graphics (Also fixes hitbox issues)
   Changes:
