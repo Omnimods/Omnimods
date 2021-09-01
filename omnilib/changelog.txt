@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.15
+Date: 2021.08.XX
+  Changes:
+    - Speed improvements for control-time logic
+  Bugfixes:
+    - Fixed a crash caused by random numbers in prototype tables (Why???)
+---------------------------------------------------------------------------------------------------
 Version: 4.1.14
 Date: 2021.08.14
   Features:

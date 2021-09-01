@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.4
+Date: 2021.08.XX
+  Features:
+    - Added a setting that hides all permutation recipes from player crafting (defaults to true)
+  Changes:
+    - Log total recipe counts even when we don't crash
+---------------------------------------------------------------------------------------------------
 Version: 2.1.3
 Date: 2021.01.21
   Changes:

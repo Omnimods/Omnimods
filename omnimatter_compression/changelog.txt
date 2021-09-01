@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.10
+Date: 2021.08.XX
+  Features:
+    - Compressed fluids with temperatures
+  Changes:
+    - Better visibly for decompression icons
+    - Fluid compression/decompression recipes are unlocked by default
+    - Small buff to make compressed power poles & inserters scale slightly based on compression multiplier
+  Bugfixes:
+    - Fix crash with massive entity HP
+    - Fix crash with unspecified subgroups
+---------------------------------------------------------------------------------------------------
 Version: 4.1.9
 Date: 2021.08.14
   Features:

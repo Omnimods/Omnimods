@@ -97,6 +97,7 @@ if mods["angelssmelting"] then
         addSmallIcon("iron-ore",3):
         addSmallIcon("copper-ore",1):
         setTechName("omnitech-angels-omnicium-smelting-1"):
+        setTechLocName("technology-name.omnitech-angels-omnicium-smelting-casting"):
         setTechIcons("smelting-omnicium"):
         extend()
 
@@ -108,7 +109,8 @@ if mods["angelssmelting"] then
         setSubgroup("omnicium-casting"):
         setIcons("molten-omnicium","omnimatter"):
         setBothColour({r = 125/255, g = 0/255, b = 161/255}):
-        setTechName("omnitech-angels-omnicium-smelting-1"):extend()
+        setTechName("omnitech-angels-omnicium-smelting-1"):
+        extend()
 
     RecGen:import("angels-plate-iron"):
         setName("angels-plate-omnicium","omnimatter"):
@@ -119,7 +121,8 @@ if mods["angelssmelting"] then
         setIcons("omnicium-plate","omnimatter"):
         addSmallIcon("molten-omnicium",3):
         addProductivity():
-        setTechName("omnitech-angels-omnicium-smelting-1"):extend()
+        setTechName("omnitech-angels-omnicium-smelting-1"):
+        extend()
 
     RecGen:import("iron-ore-processing"):
         setName("omnicium-processing","omnimatter"):
@@ -132,7 +135,8 @@ if mods["angelssmelting"] then
         addSmallIcon("molten-omnicium",3):
         setTechName("omnitech-angels-omnicium-smelting-2"):
         setTechPrereq("omnitech-angels-omnicium-smelting-1"):
-        setTechIcons("smelting-omnicium"):extend()
+        setTechIcons("smelting-omnicium"):
+        extend()
 
     RecGen:import("processed-iron-smelting"):
         setName("processed-omnicium-smelting","omnimatter"):
@@ -144,7 +148,8 @@ if mods["angelssmelting"] then
         setOrder("rd"):
         setIcons("ingot-omnicium","omnimatter"):
         addSmallIcon("processed-omnicium",3):
-        setTechName("omnitech-angels-omnicium-smelting-2"):extend()
+        setTechName("omnitech-angels-omnicium-smelting-2"):
+        extend()
 
     RecGen:import("iron-processed-processing"):
         setName("omnicium-processed-processing","omnimatter"):
@@ -156,7 +161,8 @@ if mods["angelssmelting"] then
         setIcons("pellet-omnicium","omnimatter"):
         setTechName("omnitech-angels-omnicium-smelting-3"):
         setTechPrereq("omnitech-angels-omnicium-smelting-2"):
-        setTechIcons("smelting-omnicium"):extend()
+        setTechIcons("smelting-omnicium"):
+        extend()
 
     RecGen:import("pellet-iron-smelting"):
         setName("pellet-omnicium-smelting","omnimatter"):
@@ -169,7 +175,8 @@ if mods["angelssmelting"] then
         setIcons("ingot-omnicium","omnimatter"):
         addSmallIcon("pellet-omnicium",3):
         setTechName("omnitech-angels-omnicium-smelting-3"):
-        setTechIcons("smelting-omnicium"):extend()
+        setTechIcons("smelting-omnicium"):
+        extend()
 
     RecGen:import("roll-iron-casting"):
         setName("roll-omnicium-casting","omnimatter"):
@@ -178,7 +185,8 @@ if mods["angelssmelting"] then
         replaceIngredients("liquid-molten-iron","liquid-molten-omnicium"):
         replaceResults("angels-roll-iron","angels-roll-omnicium"):
         setSubgroup("omnicium-casting"):
-        setTechName("omnitech-angels-omnicium-smelting-2"):extend()
+        setTechName("omnitech-angels-omnicium-smelting-2"):
+        extend()
 
     RecGen:import("roll-iron-casting-fast"):
         setName("roll-omnicium-casting-fast","omnimatter"):
@@ -186,7 +194,8 @@ if mods["angelssmelting"] then
         replaceIngredients("liquid-molten-iron","liquid-molten-omnicium"):
         replaceResults("angels-roll-iron","angels-roll-omnicium"):
         setSubgroup("omnicium-casting"):
-        setTechName("omnitech-angels-omnicium-smelting-3"):extend()
+        setTechName("omnitech-angels-omnicium-smelting-3"):
+        extend()
 
     RecGen:import("angels-roll-iron-converting"):
         setName("angels-roll-omnicium-converting","omnimatter"):
@@ -195,7 +204,8 @@ if mods["angelssmelting"] then
         replaceIngredients("angels-roll-iron","angels-roll-omnicium"):
         replaceResults("angels-plate-iron","omnicium-plate"):
         setSubgroup("omnicium-casting"):
-        setTechName("omnitech-angels-omnicium-smelting-2"):extend()
+        setTechName("omnitech-angels-omnicium-smelting-2"):
+        extend()
 
 
     RecGen:create("omnimatter","omnicium-gear-wheel-casting"):
@@ -207,7 +217,8 @@ if mods["angelssmelting"] then
         setResults({normal = {{"omnicium-gear-wheel", 6}},expensive={{"omnicium-gear-wheel",6}}}):
         addProductivity():
         setEnergy(2):
-        setTechName("omnitech-angels-omnicium-smelting-1"):extend()
+        setTechName("omnitech-angels-omnicium-smelting-1"):
+        extend()
 
     data:extend({
     {

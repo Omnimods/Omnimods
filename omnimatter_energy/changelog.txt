@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.1.6
+Date: 2021.08.xx
+  Features:
+    - New small iron / omnicium electric pole graphics (Also fixes hitbox issues)
+  Changes:
+    - Reduced the small omnicium electric pole wire distance to 8.5
+    - Increased the small iron electric pole supply area radius to 3.5
+    - Iron / omnicium small electric poles now require the previous one to craft
+  Bugfixes:
+    - Fixed that coal in rock loot was not replaced with purified omnite anymore
+    - Fixed that the Omnifurnace Mk 3 did not allow recipes with multiple ingredients
+---------------------------------------------------------------------------------------------------
 Version: 3.1.5
 Date: 2021.08.14
   Changes:

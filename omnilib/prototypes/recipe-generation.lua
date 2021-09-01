@@ -2500,7 +2500,7 @@ function TechGen:import(name)
     if tech then
         local t = TechGen:create():
         setName(name):
-        setIcons(omni.lib.icon.of(tech)):
+        setIcons(omni.lib.icon.of(tech,true)):
         setPacks(tech.unit.ingredients):
         setCost(tech.unit.count):
         setTime(tech.unit.time):

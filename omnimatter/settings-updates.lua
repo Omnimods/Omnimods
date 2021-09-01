@@ -15,5 +15,5 @@ if mods["angelsrefining"] then
 end
 
 if mods["bobores"] then
-    omni.lib.hide_setting("bool-setting", "bobmods-ores-infiniteore")  
+    omni.lib.hide_setting("bool-setting", "bobmods-ores-infiniteore", false)
 end

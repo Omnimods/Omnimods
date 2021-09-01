@@ -237,7 +237,7 @@ function get_recipe_values(ingredients, results)
         type = "fluid",
         name = "concentrated-" .. f.name,
         amount = f.amount * total_mult / concentrationRatio,
-        --temperature = f.temperature
+        temperature = f.temperature
         }
         end
         return {
@@ -418,7 +418,7 @@ function create_compression_recipe(recipe)
                     local new_cat = set_category(recipe) or "crafting-compressed" --fallback should not be needed
                     local icons = omni.lib.add_overlay(recipe,"compress")         
                     --subgroup check--already standardised, there should be no subgroup in its own
-                    local subgr = {regular = {}}
+                    local subgr = {}
                     if recipe.subgroup or recipe.normal.subgroup then --already standardised, there should be no subgroup in its own
                         if recipe.subgroup then
                             subgr.regular = recipe.subgroup

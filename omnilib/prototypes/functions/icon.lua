@@ -73,7 +73,7 @@ function icon.of(prototype, ptype, silent)
         silent = ptype 
     end
     -- We got handed a .icons
-    if type(prototype) == "table" and prototype[1] and prototype[1].icon then
+    if type(prototype) == "table" and prototype[1] and type(prototype[1]) == "table" and prototype[1].icon then
         return prototype
     end
     if omni.lib.locale.inherits(prototype.type, 'recipe') then
