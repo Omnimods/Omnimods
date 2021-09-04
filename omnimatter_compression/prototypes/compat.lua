@@ -22,9 +22,15 @@ for _,kind in pairs({"assembling-machine","furnace"}) do
                 end
             end
         end
-        if kind == "assembling-machine" and string.find(build.name,"assembling") then
-            if not omni.lib.is_in_table("general-compressed",build.crafting_categories) then
-                table.insert(build.crafting_categories,"general-compressed")
+        if kind == "assembling-machine" then
+            if string.find(build.name,"assembling") then
+                if not omni.lib.is_in_table("general-compressed",build.crafting_categories) then
+                    table.insert(build.crafting_categories,"general-compressed")
+                end
+            end
+            -- Allow selection between compressed and non-compressed
+            if build.fixed_recipe then
+                build.fixed_recipe = nil
             end
         end
     end
