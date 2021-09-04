@@ -480,7 +480,9 @@ local run_entity_updates = function(new, kind, i)
                 new.inputs[i] = "compressed-"..input
             end
         end
-        if new.researching_speed then new.researching_speed = new.researching_speed * (i+1) end
+        if new.researching_speed then 
+            new.researching_speed = new.researching_speed * math.pow(multiplier, i)
+        end
     end
     --[[Power type updates]]--
     --energy source
