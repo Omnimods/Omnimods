@@ -111,6 +111,7 @@ omni.crystal.add_crystal=function(metal,name,recipe)
 			addProductivity():
 			setIngredients({type = "item", name = metal.."-crystal", amount=3}):
 			setResults({type = "item", name = metal, amount=4}):
+			setMain(metal):
 			setEnergy(1.5):extend()
 	end
 end

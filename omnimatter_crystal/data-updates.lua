@@ -105,11 +105,15 @@ if not mods["angelsrefining"] then
 			end
 
 			--Replace the ore with crystal powder
-			rec.normal.results[1].name = "crystal-powder-"..metal
+			local result_name = "crystal-powder-"..metal
+			rec.normal.results[1].name = result_name
+			rec.expensive.results[1].name = result_name
 			rec.icon=nil
 			rec.icon_size=nil
-			rec.icons = omni.lib.icon.of(data.raw.item["crystal-powder-"..metal])
+			rec.icons = omni.lib.icon.of(data.raw.item[result_name])
 			rec.localised_name = {"recipe-name.crystal-powder", {metal}}
+			rec.normal.main_product = result_name
+			rec.expensive.main_product = result_name
 		end
 	end
 
