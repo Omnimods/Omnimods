@@ -8,7 +8,7 @@ for recipe_name, prototype in pairs(data.raw.recipe) do
 end
 
 --Extend compression items/recipes into the regular machines, revert machines with empty compressed categories back to their base categories
-for _,kind in pairs({"assembling-machine","furnace"}) do
+for _,kind in pairs({"assembling-machine","furnace","rocket-silo"}) do
     for _,build in pairs(data.raw[kind]) do
         for i,cat in pairs(build.crafting_categories) do
             local new_cat = cat.."-compressed"
@@ -22,7 +22,7 @@ for _,kind in pairs({"assembling-machine","furnace"}) do
                 end
             end
         end
-        if kind == "assembling-machine" then
+        if kind ~= "furnace" then
             if string.find(build.name,"assembling") then
                 if not omni.lib.is_in_table("general-compressed",build.crafting_categories) then
                     table.insert(build.crafting_categories,"general-compressed")
@@ -30,7 +30,17 @@ for _,kind in pairs({"assembling-machine","furnace"}) do
             end
             -- Allow selection between compressed and non-compressed
             if build.fixed_recipe then
-                build.fixed_recipe = nil
+                local rec = data.raw.recipe[build.fixed_recipe] or {}
+                local compressed_rec = data.raw.recipe[build.fixed_recipe .. "-compression"] or {}
+                if rec and compressed_rec then
+                    build.fixed_recipe = nil
+                    rec.hidden = false
+                    (rec.normal or {}).hidden = false
+                    (rec.expensive or {}).hidden = false
+                    compressed_rec.hidden = false
+                    (compressed_rec.normal or {}).hidden = false
+                    (compressed_rec.expensive or {}).hidden = false
+                end
             end
         end
     end
