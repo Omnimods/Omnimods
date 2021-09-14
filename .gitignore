@@ -1,4 +1,4 @@
 .idea/
 *.ps1
-.vscode/launch.json
+.vscode/
 steam_appid.txt
