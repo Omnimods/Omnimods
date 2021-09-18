@@ -52,7 +52,10 @@ local function update_building_recipes()
                         -- Iterate until we hit a locked recipe
                         local function find_top(candidate, best)
                             local recipe_meta = correlated_recipes[candidate] or {}
-                            local upgrade = recipe_meta.upgrade and force_recs[recipe_meta.upgrade]
+                            local is_compressed = recipe_meta.compressed == candidate
+                            local upgrade = recipe_meta.upgrade -- If we're using compressed make sure we get the right upgrade
+                            upgrade = upgrade and (is_compressed and correlated_recipes[upgrade].compressed or upgrade)
+                            upgrade = upgrade and force_recs[upgrade]
                             if upgrade then
                                 local upgrade_name = upgrade.name
                                 return find_top(upgrade_name, upgrade.enabled and upgrade_name or best) -- tail call
