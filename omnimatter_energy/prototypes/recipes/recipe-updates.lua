@@ -1,6 +1,6 @@
 --Disable all Solar Panels
 for _, sol in pairs(data.raw["solar-panel"]) do
-    if sol.minable then
+    if sol.minable and not string.find(sol.name, "crystal%-solar%-") then
         local recipe = omni.lib.find_recipe(sol.minable.result)
         if recipe then omni.lib.remove_recipe_all_techs(recipe.name) end
     end

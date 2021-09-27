@@ -226,20 +226,20 @@ for j=1,nr_tiers do
         
         if i == 1 and j > 1 then
             RecGen:create("omnimatter_energy", "crystal-solar-panel-tier-"..j.."-size-"..i.."-upgrade"):
-            noItem():
-            setLocName({"recipe-name.crystal-solar-panel", j, i}):
-            setIcons(omni.lib.icon.of("crystal-solar-panel-tier-"..j.."-size-"..i, "item")):
-            setIngredients(get_cost(j,i)):
-            removeIngredients("crystal-solar-panel-tier-"..(j-1).."-size-"..i):
-            multiplyIngredients(max_size*max_size):
-            addIngredients({name = "crystal-solar-panel-tier-"..(j-1).."-size-"..max_size, amount = 1}):
-            setResults({name="crystal-solar-panel-tier-"..j.."-size-"..i, amount=max_size*max_size}):
-            setSubgroup("omnienergy-solar-tier-"..j):
-            setOrder("a[crystal-solar-panel-tier-"..j.."-size-"..i.."]z"):
-            setCategory("crafting"):
-            setEnergy(5):
-            setEnabled(false):
-            setTechName("omnitech-crystal-solar-panel-tier-"..j.."-size-"..i):extend()
+                noItem():
+                setLocName({"recipe-name.crystal-solar-panel", j, i}):
+                setIcons(omni.lib.icon.of("crystal-solar-panel-tier-"..j.."-size-"..i, "item")):
+                setIngredients(get_cost(j,i)):
+                removeIngredients("crystal-solar-panel-tier-"..(j-1).."-size-"..i):
+                multiplyIngredients(max_size*max_size):
+                addIngredients({name = "crystal-solar-panel-tier-"..(j-1).."-size-"..max_size, amount = 1}):
+                setResults({name="crystal-solar-panel-tier-"..j.."-size-"..i, amount=max_size*max_size}):
+                setSubgroup("omnienergy-solar-tier-"..j):
+                setOrder("a[crystal-solar-panel-tier-"..j.."-size-"..i.."]z"):
+                setCategory("crafting"):
+                setEnergy(5):
+                setEnabled(false):
+                setTechName("omnitech-crystal-solar-panel-tier-"..j.."-size-"..i):extend()
         end
     end
 end
