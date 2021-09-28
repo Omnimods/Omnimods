@@ -44,8 +44,8 @@ for _,kind in pairs({"assembling-machine","furnace","rocket-silo"}) do
             end
             -- Allow selection between compressed and non-compressed
             if build.fixed_recipe then
-                local rec = recipes[build.fixed_recipe] or next()
-                local compressed_rec = recipes[build.fixed_recipe .. "-compression"] or next()
+                local rec = recipes[build.fixed_recipe]
+                local compressed_rec = recipes[build.fixed_recipe .. "-compression"]
                 if rec and compressed_rec then
                     build.fixed_recipe = nil
                     rec.hidden = false
