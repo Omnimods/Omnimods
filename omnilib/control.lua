@@ -27,7 +27,7 @@ local function get_relative_tier(recipe_name, offset)
     local is_omniperm = recipe_name:find("%-omniperm")
     local pattern = "%-(%a)" .. (is_omniperm and "(%-omniperm%-%d%-%d)" or "(.?)") .. "$"
     local tier = recipe_name:match(pattern)
-    if tier then
+    if tier and recipe_name:match("omni") then -- Let's not break other mods upgrades
         tier = string.char(string.byte(tier) + offset)
         return recipe_name:gsub(pattern, "-" .. tier .. "%2")
     end
