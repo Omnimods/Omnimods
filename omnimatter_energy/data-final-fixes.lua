@@ -24,3 +24,9 @@ for _,rock in pairs(data.raw["simple-entity"]) do
         end
     end
 end
+
+if mods["5dim_transport"] then
+    -- Fixing the icon sizes back
+    data.raw["splitter"]["basic-splitter"]["structure_patch"]["west"]["hr_version"]["width"] = 90
+    data.raw["splitter"]["basic-splitter"]["structure"]["west"]["hr_version"]["width"] = 90
+end
