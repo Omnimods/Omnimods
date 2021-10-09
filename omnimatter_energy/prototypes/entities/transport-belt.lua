@@ -40,7 +40,10 @@ if not data.raw["transport-belt"]["basic-transport-belt"] then
     ebelt.belt_animation_set.animation_set.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-transport-belt/hr-basic-transport-belt.png"
     ebelt.corpse = "basic-transport-belt-remnants"
 
+    ebelt.icons = nil
     ebelt.icon = "__omnimatter_energy__/graphics/icons/basic-transport-belt.png"
+    ebelt.icon_size = 64
+    ebelt.icon_mipmaps = 4
     ebelt.minable.result = "basic-transport-belt"
     ebelt.next_upgrade = "transport-belt"
     ebelt.related_underground_belt = "basic-underground-belt"
@@ -62,7 +65,10 @@ if not data.raw["transport-belt"]["basic-transport-belt"] then
     eunder.structure.direction_out_side_loading.sheet.filename = "__omnimatter_energy__/graphics/entity/basic-underground-belt/basic-underground-belt-structure.png"
     eunder.structure.direction_out_side_loading.sheet.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-underground-belt/hr-basic-underground-belt-structure.png"
 
+    eunder.icons = nil
     eunder.icon = "__omnimatter_energy__/graphics/icons/basic-underground-belt.png"
+    eunder.icon_size = 64
+    eunder.icon_mipmaps = 4
     eunder.minable.result = "basic-underground-belt"
     eunder.next_upgrade = "underground-belt"
     eunder.speed = 0.015625
@@ -76,19 +82,34 @@ if not data.raw["transport-belt"]["basic-transport-belt"] then
     esplitter.corpse = "basic-splitter-remnants"
 
     esplitter.structure.east.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/basic-splitter-east.png"
+    esplitter.structure.east.width = 46
     esplitter.structure.east.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/hr-basic-splitter-east.png"
+    esplitter.structure.east.hr_version.width = 90
     esplitter.structure.north.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/basic-splitter-north.png"
+    esplitter.structure.north.width = 82
     esplitter.structure.north.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/hr-basic-splitter-north.png"
+    esplitter.structure.north.hr_version.width = 160
     esplitter.structure.south.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/basic-splitter-south.png"
+    esplitter.structure.south.width = 82
     esplitter.structure.south.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/hr-basic-splitter-south.png"
+    esplitter.structure.south.hr_version.width = 160
     esplitter.structure.west.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/basic-splitter-west.png"
+    esplitter.structure.west.width = 46
     esplitter.structure.west.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/hr-basic-splitter-west.png"
+    esplitter.structure.west.hr_version.width = 90
     esplitter.structure_patch.east.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/basic-splitter-east-top_patch.png"
+    esplitter.structure_patch.east.width = 46
     esplitter.structure_patch.east.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/hr-basic-splitter-east-top_patch.png"
+    esplitter.structure_patch.east.hr_version.width = 90
     esplitter.structure_patch.west.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/basic-splitter-west-top_patch.png"
+    esplitter.structure_patch.west.width = 46
     esplitter.structure_patch.west.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/hr-basic-splitter-west-top_patch.png"
+    esplitter.structure_patch.west.hr_version.width = 90
 
+    esplitter.icons = nil
     esplitter.icon = "__omnimatter_energy__/graphics/icons/basic-splitter.png"
+    esplitter.icon_size = 64
+    esplitter.icon_mipmaps = 4
     esplitter.minable.result = "basic-splitter"
     esplitter.next_upgrade = "splitter"
     esplitter.speed = 0.015625
@@ -233,3 +254,5 @@ if not omni.lib.recipe_ingredient_contains("transport-belt", "basic-transport-be
     omni.lib.add_recipe_ingredient("underground-belt", {"basic-underground-belt", 2})
     omni.lib.add_recipe_ingredient("splitter", {"basic-splitter", 1})
 end
+
+log(serpent.block(data.raw["splitter"]["basic-splitter"]))
