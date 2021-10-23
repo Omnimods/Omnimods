@@ -261,10 +261,12 @@ function omnidate(technology)
                 force_techs[technology_name:gsub("^omnipressed%-", "")] or 
                 {}
             )
-            if technology.level then
+            if technology.level and variant.level ~= technology.level then
                 variant.level = technology.level
             end
-            variant.researched = tech_researched
+            if not not tech_researched and variant.researched ~= tech_researched then
+                variant.researched = tech_researched
+            end
             -- We can stop here if we're on a compressed variant, the rest will happen since we triggered the unlock
             if technology_name:match("^omnipressed%-") then
                 break
@@ -280,7 +282,7 @@ function omnidate(technology)
                 is_tier_unlock = true
             end
             local tech = force_techs[tier_tech]
-            if tech then
+            if tech and is_tier_unlock then
                 tiers_unlocked[tier_name] = tech.researched
                 -- Hide or show techs based on setting
                 tier_num = tier_num + 1

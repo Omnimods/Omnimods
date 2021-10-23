@@ -5,6 +5,7 @@ Date: 2021.10.xx
     - Added omni.lib.find_recipes(itemname)
   Bugfixes:
     - Fixed accidentally locking some angels recipes
+    - Fix resetting some infinite techs when completing them
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.15
 Date: 2021.09.01
