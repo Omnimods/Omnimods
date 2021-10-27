@@ -687,6 +687,7 @@ function omni.lib.find_entity_prototype(itemname)
     return nil
 end
 
+--returns the first recipe it finds
 function omni.lib.find_recipe(itemname)
     if type(itemname)=="table" then return itemname elseif type(itemname)~="string" then return nil end
     for _, rec in pairs(data.raw.recipe) do
@@ -696,6 +697,19 @@ function omni.lib.find_recipe(itemname)
     end
     --log("Could not find "..itemname.."'s recipe prototype, check it's type.")
     return nil
+end
+
+--returns a table of all recipes that have the given result
+function omni.lib.find_recipes(itemname)
+    if type(itemname)=="table" then return itemname elseif type(itemname)~="string" then return nil end
+    local recipes = {}
+    for _, rec in pairs(data.raw.recipe) do
+        if omni.lib.recipe_result_contains(rec.name,itemname) then
+            recipes[#recipes+1] = rec
+        end
+    end
+    --log("Could not find "..itemname.."'s recipe prototype, check it's type.")
+    return recipes
 end
 
 -----------------------------------------------------------------------------

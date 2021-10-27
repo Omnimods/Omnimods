@@ -32,7 +32,8 @@ local building_list = {--Types
     ["inserter"] = true,
     ["loader-1x1"] = true,
     ["burner-generator"] = true,
-    ["rocket-silo"] = true
+    ["rocket-silo"] = true,
+    ["roboport"] = true
 }
 local not_energy_use = {--Types
     "solar-panel",
@@ -480,7 +481,9 @@ local run_entity_updates = function(new, kind, i)
                 new.inputs[i] = "compressed-"..input
             end
         end
-        if new.researching_speed then new.researching_speed = new.researching_speed * (i+1) end
+        if new.researching_speed then 
+            new.researching_speed = new.researching_speed * math.pow(multiplier, i)
+        end
     end
     --[[Power type updates]]--
     --energy source
@@ -606,7 +609,7 @@ local run_entity_updates = function(new, kind, i)
         new.max_power_output = new_effect(new.max_power_output, i)
         new.burner.emissions_per_minute = (new.burner.emissions_per_minute or 0) * math.pow(multiplier,i+1)
     end
-    -- Rockets!
+    --Rockets!
     if kind == "rocket-silo" and new.fixed_recipe then
         new.door_opening_speed = new.door_opening_speed * math.pow(multiplier, i)
         new.rocket_result_inventory_size = 8
@@ -621,6 +624,37 @@ local run_entity_updates = function(new, kind, i)
         rocket.flying_speed = rocket.flying_speed * math.pow(multiplier, i)
         rocket.flying_acceleration = rocket.flying_acceleration * math.pow(multiplier, i)
         data:extend({rocket})
+    end
+    --Roboports
+    if kind == "roboport" then
+        -- Otherwise we get a backup of bots waiting
+        if not new.charging_distance then
+            new.charging_distance = 1
+        end
+        new.robot_slots_count = new.robot_slots_count * (i + 1)
+        new.material_slots_count = new.material_slots_count * (i + 1)
+        new.logistics_radius = new.logistics_radius * (i + 1)
+        new.construction_radius = new.construction_radius * (i + 1)
+        new.charging_distance = new.charging_distance * (i + 1)
+        -- Must be >= logistics_radius
+        new.logistics_connection_distance = new.logistics_radius * (i + 1)
+        -- Add some based on compression ratio
+        new.logistics_radius = math.ceil(new.logistics_radius ^ (1 + (multiplier / 50)))
+        new.construction_radius = math.ceil(new.construction_radius ^ (1 + (multiplier / 50)))
+        new.charging_distance = math.ceil(new.charging_distance ^ (1 + (multiplier / 50)))
+        new.logistics_connection_distance = math.ceil(new.logistics_connection_distance ^ (1 + (multiplier / 50)))
+        -- Energy output    
+        new.charging_energy = new_effect(new.charging_energy, i)      
+        -- If we don't change this we get a queue of robots waiting to exit/enter
+        if not new.robot_vertical_acceleration then
+            new.robot_vertical_acceleration = 0.01
+        end
+        new.robot_vertical_acceleration = new.robot_vertical_acceleration * math.pow(multiplier, i)
+        -- Wiki says 0 default but it appears to actually be 4
+        if not new.charging_station_count then
+            new.charging_station_count = 4
+        end
+        new.charging_station_count = new.charging_station_count * math.pow(multiplier, i)
     end
     return new
 end

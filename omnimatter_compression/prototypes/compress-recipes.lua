@@ -850,29 +850,6 @@ for name,fluid in pairs(generatorFluidRecipes) do
 end
 
 -------------------------------------------------------------------------------
---[[Module limitation transfers]]--
--------------------------------------------------------------------------------
---Module Limitations
-local module_limits = function()
-    -- invert compress_recipes to make a lookup
-    local recipes = {}
-    for _, v in pairs(compress_based_recipe) do
-        recipes[v.name] = true
-    end
-    local n = 0
-    for module_name, module in pairs(data.raw.module) do
-        for _, rec_name in pairs(module.limitation or {}) do
-            local compressed = rec_name .. "-compression"
-            if recipes[compressed] then
-                module.limitation[#module.limitation + 1] = compressed
-                n = n + 1
-            end
-        end
-    end
-    log("Added module limitations for " .. n .. " recipes.")
-end
-
--------------------------------------------------------------------------------
 --[[Extend tables]]--
 -------------------------------------------------------------------------------
 -- Final check
@@ -891,7 +868,6 @@ end
 if #compress_based_recipe ~= 0 then
     data:extend(compress_based_recipe)
 end
-module_limits()
 
 -------------------------------------------------------------------------------
 --[[Fix fixed_recipes]]--

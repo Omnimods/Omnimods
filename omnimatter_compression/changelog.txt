@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.11
+Date: 2021.10.27
+  Features:
+    - Compressed roboports (robots soon™)
+  Changes:
+    - Allow switching fixed recipes to compressed variants in some cases
+    - Improve lab scaling
+  Bugfixes:
+    - Move module checks later to fix some missing/incorrect limits
+---------------------------------------------------------------------------------------------------
 Version: 4.1.10
 Date: 2021.09.01
   Features:
