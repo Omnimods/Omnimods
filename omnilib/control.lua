@@ -282,7 +282,7 @@ function omnidate(technology)
                 is_tier_unlock = true
             end
             local tech = force_techs[tier_tech]
-            if tech and is_tier_unlock then
+            if tech then
                 tiers_unlocked[tier_name] = tech.researched
                 -- Hide or show techs based on setting
                 tier_num = tier_num + 1
