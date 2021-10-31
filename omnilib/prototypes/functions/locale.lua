@@ -110,6 +110,8 @@ end
 function lib.parse_product(product)
 -- Get the given product in the `{name = ..., type = ..., ...}` format.
 -- Works for most product specifications
+    if not product then return end -- You get nothing! Good day sir
+
     if type(product) == 'string' then -- Single product
         return {
             name = product,
