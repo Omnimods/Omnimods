@@ -7,10 +7,6 @@ local building_tiers = {
     singularity = "compression-singularity-buildings"
 }
 
-script.on_load(function()
-    log("on_load")
-end)
-
 local function memoize(source)
     local t = {}
     setmetatable(t, {
@@ -403,7 +399,7 @@ script.on_event(defines.events.on_research_finished, function(event)
     if global.omni and global.omni.needs_update then
         return
     end
-    log("on_research_finished\n\t"..serpent.block(event))
+    --log("on_research_finished\n\t"..serpent.block(event))
     local finished = update_queue.finished
     finished[#finished+1] = event.research
     if #finished >= 3 then -- If our queue is getting too big just do a full omnidate
