@@ -780,7 +780,7 @@ end
 log("start recipe compression")
 for _,recipe in pairs(data.raw.recipe) do
     --if not already compressed
-    if string.find(recipe.name,"-compression") == nil and string.find(recipe.name,"compressed%-") == nil and string.find(recipe.name,"compress%-") == nil and string.find(recipe.name,"concent") == nil then
+    if not recipe.category or not (recipe.category == "compression" or string.find(recipe.category,"%-concentration$") or string.find(recipe.category,"%-condensation$") or string.find(recipe.category,"%-compressed$")) then
         if not mods["omnimatter_marathon"] then omni.lib.standardise(recipe) end --ensure standardised
         if recipe.subgroup ~= "y_personal_equip" then --exclude yuoki's personal equipment subgroup
             --check for void and swap it to the void system in place of compression_recipe
