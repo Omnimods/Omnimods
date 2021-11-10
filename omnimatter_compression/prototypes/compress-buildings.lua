@@ -59,6 +59,10 @@ local recipe_category = {} --category additions
 local compress_level = {"Compact","Nanite","Quantum","Singularity"}
 local already_compressed = {}
 local compressed_buildings = {}
+-- LightedPolesPlus support
+local hasLEP = mods["LightedPolesPlus"] ~= nil
+local LEP_scale = hasLEP and settings.startup["lepp_light_size_factor"].value
+local LEP_max_size = hasLEP and settings.startup["lepp_light_max_size"].value
 -------------------------------------------------------------------------------
 --[[Compression Specific Support Functions]]--
 -------------------------------------------------------------------------------
@@ -586,6 +590,29 @@ local run_entity_updates = function(new, kind, i)
         new_supply_area = math.ceil(new_supply_area ^ (1 + (multiplier / 50)))
         -- Cap per engine limit
         new.supply_area_distance = math.min(new_supply_area, 64)
+        -- LightedPoles+ support
+        if hasLEP then
+            -- Do we have a lamp for our base pole?
+            local orig_name = new.name:gsub("%-compressed%-%a+$", "-lamp")
+            if data.raw.lamp[orig_name] then
+                local new_lamp = table.deepcopy(data.raw.lamp[orig_name])
+                -- Scale light by wire distance
+                if LEP_scale > 0 then
+                    -- Math from LightedPolesPlus data_updates
+                    local light_size = math.min(math.floor(math.sqrt(new.maximum_wire_distance)*(40/math.sqrt(7.5))*LEP_scale+0.5))
+                    new_lamp.light.size = light_size
+                    new_lamp.light_when_colored.size = light_size
+                    new_lamp.energy_usage_per_tick = light_size * 0.125 .."kW"
+                end
+                -- Name and icons, just copy from the pole. Again, same as LEP data_updates
+                new_lamp.name = new.name .. "-lamp"
+                for _, v in pairs{"localised_name", "icon", "icons", "icon_size", "icon_mipmaps"} do
+                    new_lamp[v] = new[v]
+                end
+                -- Aaand done
+                data:extend({new_lamp})           
+            end
+        end
     end
     --offshore pumps
     if kind == "offshore-pump" then
