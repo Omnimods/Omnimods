@@ -599,7 +599,7 @@ local run_entity_updates = function(new, kind, i)
                 -- Scale light by wire distance
                 if LEP_scale > 0 then
                     -- Math from LightedPolesPlus data_updates
-                    local light_size = math.min(math.floor(math.sqrt(new.maximum_wire_distance)*(40/math.sqrt(7.5))*LEP_scale+0.5))
+                    local light_size = math.min(math.floor(math.sqrt(new.maximum_wire_distance)*(40/math.sqrt(7.5))*LEP_scale+0.5), LEP_max_size)
                     new_lamp.light.size = light_size
                     new_lamp.light_when_colored.size = light_size
                     new_lamp.energy_usage_per_tick = light_size * 0.125 .."kW"
