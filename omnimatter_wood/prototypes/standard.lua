@@ -51,6 +51,57 @@ local b = BuildGen:create("omnimatter_wood","omnimutator"):
         }
       }
     }):extend()
+		
+local fboxes = data.raw["assembling-machine"]["omnimutator"]["fluid_boxes"]
+fboxes[1].pipe_connections[1].positions = {
+	{
+		0,
+		-1.85
+	},
+	{
+		2,
+		0
+	},
+	{
+		0,
+		2.05
+	},
+	{
+		-2.05,
+		0
+	}
+}
+fboxes[2].pipe_connections[1].positions = {
+	{
+		0,
+		2.05
+	},
+	{
+		-2.05,
+		0
+	},
+	{
+		0,
+		-1.85
+	},
+	{
+		2,
+		0
+	}
+}
+-- I/O
+for I=1, 2 do
+	-- Add covers
+	fboxes[I]["pipe_covers"] = pipecoverspictures()
+	fboxes[I]["pipe_picture"] = assembler3pipepictures()
+	-- Kill the "one size fits all" override
+	fboxes[I].pipe_connections[1].position = nil
+	-- Remove the "assembler 3" tint
+	for _, dir in pairs({"north","east","south","west"}) do
+		fboxes[I]["pipe_picture"][dir].tint = {1,0.9,1,1}
+		fboxes[I]["pipe_picture"][dir]["hr_version"].tint = {1,0.9,1,1}
+	end
+end
 
 RecGen:create("omnimatter_wood","wasteMutation"):
 	setFuelValue(2):
