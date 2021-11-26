@@ -2,7 +2,7 @@
 --------------------------------------------------------------------------------------------------
 --PROCESSING GENERATORS (fluids with temperature specifications)
 --local generator_fluid = {}
---[[for _, gen in pairs(data.raw.generator) do
+for _, gen in pairs(data.raw.generator) do
     if not string.find(gen.name,"creative") then
         if not gen.burns_fluid and gen.fluid_box and gen.fluid_box.filter then
             if not generator_fluid[gen.fluid_box.filter] then
@@ -248,8 +248,8 @@ for _,rec in pairs(data.raw.recipe) do
         end
     end
 end
---log("absolute garbage")]]
---[[for _,build in pairs(data.raw["furnace"]) do
+--log("absolute garbage")
+for _,build in pairs(data.raw["furnace"]) do
     if not string.find(build.name,"creative") and not omni.fluid.forbidden_assembler[build.name] then
         build.fluid_boxes=nil
         if not build.source_inventory_size then build.source_inventory_size = 0 end
@@ -273,9 +273,9 @@ end
             data.raw.furnace[build.name]=nil
         end
     end
-end]]
+end
 
---[[local dont_remove = {}
+local dont_remove = {}
 
 
 for _,pump in pairs(data.raw["offshore-pump"]) do
@@ -461,7 +461,7 @@ end
 --name,ore in pairs(data.raw.resource)
 
 
---[[for _,build in pairs(data.raw["assembling-machine"]) do
+for _,build in pairs(data.raw["assembling-machine"]) do
     if not string.find(build.name,"creative") and not omni.fluid.forbidden_assembler[build.name] then
         local found_generator = false
         if not build.ingredient_count then build.ingredient_count = 0 end
@@ -484,9 +484,9 @@ end
             build.fluid_boxes=nil
         end
     end
-end]]
+end
 
---[[local excluded_subgroups = {"empty-barrel","fill-barrel","barreling-pump"}
+local excluded_subgroups = {"empty-barrel","fill-barrel","barreling-pump"}
 local excluded_names = {"creative",{"boiling","steam"},{"solid","fluid","conversion"},{"fluid","production"}}
 local temperature_fluids = {}
 
@@ -986,4 +986,3 @@ end
 for _,fluid in pairs(data.raw.fluid) do
     if dont_remove[fluid.name]==nil then fluid=nil end
 end
-]]
