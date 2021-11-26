@@ -1,4 +1,4 @@
--- As of 0.18.0
+-- As of 1.1.0
 -- Many thanks to TheRustyKnife for working out the inheritance tree
 -- Top down: Start with our type and find the parent
 -- Bottom up: Start with a parent and find it's children

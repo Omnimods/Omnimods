@@ -1,4 +1,47 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.11
+Date: 2021.10.27
+  Features:
+    - Compressed roboports (robots soon™)
+  Changes:
+    - Allow switching fixed recipes to compressed variants in some cases
+    - Improve lab scaling
+  Bugfixes:
+    - Move module checks later to fix some missing/incorrect limits
+---------------------------------------------------------------------------------------------------
+Version: 4.1.10
+Date: 2021.09.01
+  Features:
+    - Compressed fluids with temperatures
+  Changes:
+    - Better visibly for decompression icons
+    - Fluid compression/decompression recipes are unlocked by default
+    - Small buff to make compressed power poles & inserters scale based on compression multiplier
+  Bugfixes:
+    - Fix crash with massive entity HP
+    - Fix crash with unspecified subgroups
+---------------------------------------------------------------------------------------------------
+Version: 4.1.9
+Date: 2021.08.14
+  Features:
+    - Compatibility for bob's nuclear power when using "compress only highest tier"
+  Changes:
+    - Increase stack sizes for compressed belts and variants of
+  Bugfixes:
+    - Fix failure to load on latest experimental caused by massive tech costs
+    - Fix crash when compressing entities that don't specify max_health
+    - Fix compressed recipes with random results sometimes having the incorrect result amount
+---------------------------------------------------------------------------------------------------
+Version: 4.1.8
+Date: 2021.07.26
+  Changes:
+    - Burner assemblers have less of a speed penalty compared to their electric brethren
+      (they are still less efficient in ore/watt, and cannot take modules)
+    - Add an entry to game log when not compressing items due to massive stack sizes
+  Bugfixes:
+    - Fix some buildings losing their crafting categories when compressed
+    - Fix handling outputs > 65535
+---------------------------------------------------------------------------------------------------
 Version: 4.1.7
 Date: 2021.06.02
   Bugfixes:

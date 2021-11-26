@@ -1,4 +1,47 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.20
+Date: 2021.09.01
+  Bugfixes:
+    - Force bob´s infinite ore setting to false when hiding it
+    - Fixed that all omnicium alloy recipes were enabled by default without angels refining
+    - Fixed that advanced omnicium smelting 1 had a wrong localised name set
+---------------------------------------------------------------------------------------------------
+Version: 4.1.19
+Date: 2021.08.16
+  Bugfixes:
+    - Fixed that extraction tiers with a single ore messed up ratios and crafting categories of
+      the extractions of the previous tier
+    - Fixed that the burner omnitractor had a omniphlog icon
+---------------------------------------------------------------------------------------------------
+Version: 4.1.18
+Date: 2021.08.14
+  Features:
+    - Added new omnite item icons & variants
+    - Added new omnite resource graphics
+  Changes:
+    - Changed burner omnitractor and burner omniphlog crafting time to 5 s (10s / 1s before)
+    - Doubled crushed omnite, pulverized omnite and pulverized stone crafting times
+    - Increases Stacksize of all entities to 50
+  Bugfixes:
+    - Fixed that the omnifurnace had a wrong working sound set
+    - Fixed omnite bricks having the wrong map color
+    - Exclude non-resources from autoplace removal
+---------------------------------------------------------------------------------------------------
+Version: 4.1.17
+Date: 2021.07.22
+  Bugfixes:
+    - Fixed a typo in recipe generation that messed up impure extraction results
+---------------------------------------------------------------------------------------------------
+Version: 4.1.16
+Date: 2021.07.21
+  Changes:
+    - If a tier only contains a single ore, base and focused extractions of that ore include up to
+      2 ores of the previous tier
+  Bugfixes:
+    - Complete rewrite of the extraction recipe generation logic to fix an issue where ore groups
+      of base - and impure extractions were different if there were too many ores in one tier
+    - Added a missing check for angels smelting in add_omnicium_alloy()
+---------------------------------------------------------------------------------------------------
 Version: 4.1.15
 Date: 2021.06.20
   Features:

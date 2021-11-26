@@ -101,11 +101,11 @@ if not mods["angelsrefining"] then
 						icon_size = 32,
 						tint = omni.lib.ore_tints[metal] or {r = 1, g = 1, b = 1, a = 1}
 						}}):
-					extend()	
+					extend()
 			end
 
 			--Replace the ore with crystal powder
-			rec.normal.results[1].name = "crystal-powder-"..metal
+			omni.lib.replace_recipe_result(rec.name, ore, "crystal-powder-"..metal)
 			rec.icon=nil
 			rec.icon_size=nil
 			rec.icons = omni.lib.icon.of(data.raw.item["crystal-powder-"..metal])
@@ -127,7 +127,7 @@ if not mods["angelsrefining"] then
 
 			--If yes, copy the recipe
 			if found == true then
-				local r = RecGen:import(rec)
+				local r = RecGen:import(rec.name)
 				local iproto = omni.lib.find_prototype(rec.name)
 				r:setName("crystal-powder-"..rec.name):
 				setLocName({"recipe-name.crystalline", omni.lib.locale.of(rec).name}):

@@ -93,7 +93,7 @@ function omni.lib.remove_science_pack(techname,pack)
 			end
 		end
 	else
-		log("Can not find tech "..tech.." to replace science pack "..pack)
+		log("Can not find tech "..techname.." to replace science pack "..pack)
 	end
 end
 
@@ -139,14 +139,15 @@ function omni.lib.add_prerequisite(techname, req, force)
 end
 
 function omni.lib.remove_prerequisite(techname,prereq)
-	if data.raw.technology[techname] and data.raw.technology[techname].prerequisites then
+	local tech = data.raw.technology[techname]
+	if tech and tech.prerequisites then
 		local pr={}
-		for i,req in pairs(data.raw.technology[techname].prerequisites) do
-			if req~=prereq then
+		for _,req in pairs(tech.prerequisites) do
+			if req ~= prereq then
 				pr[#pr+1]=req
 			end
 		end
-		data.raw.technology[techname].prerequisites=pr
+		tech.prerequisites = pr
 	else
 		log("Can not find tech "..techname.." to remove prerequisite "..prereq)
 	end
@@ -177,6 +178,6 @@ function omni.lib.set_prerequisite(techname, req)
 			data.raw.technology[techname].prerequisites = {req}
 		end
 	else
-		log("Can not find tech "..techname.." to set prerequisite "..prereq)
+		log("Can not find tech "..techname.." to set prerequisite "..req)
 	end
 end

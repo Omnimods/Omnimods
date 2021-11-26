@@ -14,6 +14,7 @@ circuitry[2] = {circuit = 2, node = 2}
 
 function omni.crystal.oscillocrystal(material)
 	if not data.raw.item[material.."-oscillocrystal"] then
+		local items = {}
 		local board = "__omnimatter_crystal__/graphics/icons/shards/"..material.."-alpha.png"
 		items[#items+1]=  {
 			type = "item",
@@ -48,6 +49,7 @@ end
 
 function omni.crystal.electrocrystal(material)
 	if not data.raw.item[material.."-electrocrystal"] then
+		local items = {}
 		local board = "__omnimatter_crystal__/graphics/icons/shards/"..material.."-beta.png"
 		items[#items+1]=  {
 			type = "item",
@@ -60,7 +62,7 @@ function omni.crystal.electrocrystal(material)
 			stack_size = 200
 		}
 		local crystal = ""
-		if name_beta == "omnine" then crystal = name_beta else crystal = name_beta.."-crystal" end
+		--if name_beta == "omnine" then crystal = name_beta else crystal = name_beta.."-crystal" end
 		items[#items+1]= {
 			type = "recipe",
 			name = material.."-electrocrystal",
@@ -79,6 +81,7 @@ function omni.crystal.electrocrystal(material)
 end
 function omni.crystal.electrocrystal(material)
 	if not data.raw.item[material.."-thermocrystal"] then
+		local items = {}
 		local board = "__omnimatter_crystal__/graphics/icons/shards/"..material.."-gamma.png"
 		items[#items+1]=  {
 			type = "item",
@@ -91,7 +94,7 @@ function omni.crystal.electrocrystal(material)
 			stack_size = 200
 		}
 		local crystal = ""
-		if name_gamma == "omnine" then crystal = name_gamma else crystal = name_gamma.."-crystal" end
+		--if name_gamma == "omnine" then crystal = name_gamma else crystal = name_gamma.."-crystal" end
 		items[#items+1]= {
 			type = "recipe",
 			name = material.."-thermocrystal",

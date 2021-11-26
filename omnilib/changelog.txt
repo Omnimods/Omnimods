@@ -1,4 +1,47 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.17
+Date: 2021.10.28
+  Bugfixes:
+    - Hotfix for missing compressed building recipes
+---------------------------------------------------------------------------------------------------
+Version: 4.1.16
+Date: 2021.10.27
+  Features:
+    - Added omni.lib.find_recipes(itemname)
+  Bugfixes:
+    - Fixed accidentally locking some angels recipes
+    - Fix resetting some infinite techs when completing them
+---------------------------------------------------------------------------------------------------
+Version: 4.1.15
+Date: 2021.09.01
+  Changes:
+    - Speed improvements for control-time logic
+  Bugfixes:
+    - Fixed a crash caused by random numbers in prototype tables (Why???)
+---------------------------------------------------------------------------------------------------
+Version: 4.1.14
+Date: 2021.08.14
+  Features:
+    - Added ItemGen:setItemPictures()
+  Changes:
+    - setBurner() does not automatically add "burner-" infront of the proto name
+    - setSteam() does not automatically add "steam-" infront of the proto name
+  Bugfixes:
+    - Fixed that setBurner() did not remove Module Slots
+    - Fixed that BuildGen:import() set a default working_sound when the imported entity had none
+    - Fixed that setStacksize() was ignored when used on BuildGen
+    - Fixed that BuildChain not passing down setStacksize()
+---------------------------------------------------------------------------------------------------
+Version: 4.1.13
+Date: 2021.07.21
+  Features:
+    - Added omni.lib.alpha(alphabet_position) which returns the corresponding lettter as string
+    - Added omni.lib.recipe_is_enabled(recipename)
+  Bugfixes:
+    - Multiple fixes, typos and fallbacks in recipe generation
+    - Fixed that certain settings were not forced properly
+    - Fixed omni.lib.hide_setting() not properly forcing bool settings to false
+---------------------------------------------------------------------------------------------------
 Version: 4.1.12
 Date: 2021.06.20
   Features:

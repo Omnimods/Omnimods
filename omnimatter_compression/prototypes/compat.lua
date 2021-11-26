@@ -1,32 +1,62 @@
+-- Run module limit updates/transfers once we're for sure done screwing with recipes
+local recipes = data.raw.recipe
+local n = 0
+for module_name, module in pairs(data.raw.module) do
+    for _, rec_name in pairs(module.limitation or {}) do
+        local compressed = rec_name .. "-compression"      
+        if recipes[compressed] then
+            module.limitation[#module.limitation + 1] = compressed
+            n = n + 1
+        end
+    end
+end
+log("Added module limitations for " .. n .. " recipes.")
+
 --[[ Mod compatibility fixes ]]--
 
-rec_count = 0
+local rec_count = 0
 local categories = {}
-for recipe_name, prototype in pairs(data.raw.recipe) do
-	categories[prototype.category or "crafting"] = (categories[prototype.category or "crafting"] or 0) + 1
-	rec_count = rec_count + 1
+for recipe_name, prototype in pairs(recipes) do
+    categories[prototype.category or "crafting"] = (categories[prototype.category or "crafting"] or 0) + 1
+    rec_count = rec_count + 1
 end
 
 --Extend compression items/recipes into the regular machines, revert machines with empty compressed categories back to their base categories
-for _,kind in pairs({"assembling-machine","furnace"}) do
-	for _,build in pairs(data.raw[kind]) do
-		for i,cat in pairs(build.crafting_categories) do
-			local new_cat = cat.."-compressed"
-			if not cat:find("compressed$") and data.raw["recipe-category"][new_cat] and categories[new_cat] ~= 0 then
-				table.insert(build.crafting_categories,cat.."-compressed")
-			elseif cat:find("compressed$") and not categories[cat] then
-				local old_cat = cat:gsub("-compressed$", "")
-				if data.raw["recipe-category"][old_cat] then
-					--log({"","Reverting category ", cat, " to ", old_cat, " on the building ", build.name})
-					build.crafting_categories[i] = old_cat
-				end
-			end
-		  end
-		  if kind == "assembling-machine" and string.find(build.name,"assembling") then
-			if not omni.lib.is_in_table("general-compressed",build.crafting_categories) then
-			  table.insert(build.crafting_categories,"general-compressed")
-			end
-		  end
+for _,kind in pairs({"assembling-machine","furnace","rocket-silo"}) do
+    for _,build in pairs(data.raw[kind]) do
+        for i,cat in pairs(build.crafting_categories) do
+            local new_cat = cat.."-compressed"
+            if not cat:find("compressed$") and data.raw["recipe-category"][new_cat] and categories[new_cat] ~= 0 then
+                table.insert(build.crafting_categories,cat.."-compressed")
+            elseif cat:find("compressed$") and not categories[cat] then
+                local old_cat = cat:gsub("-compressed$", "")
+                if data.raw["recipe-category"][old_cat] then
+                    --log({"","Reverting category ", cat, " to ", old_cat, " on the building ", build.name})
+                    build.crafting_categories[i] = old_cat
+                end
+            end
+        end
+        if kind ~= "furnace" then
+            if string.find(build.name,"assembling") then
+                if not omni.lib.is_in_table("general-compressed",build.crafting_categories) then
+                    table.insert(build.crafting_categories,"general-compressed")
+                end
+            end
+            -- Allow selection between compressed and non-compressed
+            if build.fixed_recipe then
+                local rec = recipes[build.fixed_recipe]
+                local compressed_rec = recipes[build.fixed_recipe .. "-compression"]
+                if rec and compressed_rec then
+                    build.fixed_recipe = nil
+                    rec.hidden = false
+                    (rec.normal or {}).hidden = false
+                    (rec.expensive or {}).hidden = false
+                    compressed_rec.hidden = false
+                    (compressed_rec.normal or {}).hidden = false
+                    (compressed_rec.expensive or {}).hidden = false
+                end
+            end
+        end
     end
 end
 log("Compression finished, data.raw has " .. rec_count .. " recipes.")

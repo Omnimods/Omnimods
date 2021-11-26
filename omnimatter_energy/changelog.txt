@@ -1,4 +1,81 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.1.9
+Date: 2021.10.27
+  Bugfixes:
+    - Fixed a crash with 5dims transport
+---------------------------------------------------------------------------------------------------
+Version: 3.1.8
+Date: 2021.09.26
+  Bugfixes:
+    - Fixed that crystal solar recipes were accidently removed
+---------------------------------------------------------------------------------------------------
+Version: 3.1.7
+Date: 2021.09.01
+  Bugfixes:
+    - Fixed a typo that caused a crash with HR graphics turned off
+---------------------------------------------------------------------------------------------------
+Version: 3.1.6
+Date: 2021.09.01
+  Features:
+    - New small iron / omnicium electric pole graphics (Also fixes hitbox issues)
+  Changes:
+    - Reduced the small omnicium electric pole wire distance to 8.5
+    - Increased the small iron electric pole supply area radius to 3.5
+    - Iron / omnicium small electric poles now require the previous one to craft
+  Bugfixes:
+    - Fixed that coal in rock loot was not replaced with purified omnite anymore
+    - Fixed that the Omnifurnace Mk 3 did not allow recipes with multiple ingredients
+---------------------------------------------------------------------------------------------------
+Version: 3.1.5
+Date: 2021.08.14
+  Changes:
+    - Reduced the required omnite bricks for the burner mining drill from 4 to 1
+    - Turned the omnium turbine into a burner generator
+    - Boilers now require an omnium turbine instead of a burner omnitractor
+    - Filter inserters now require a burner filter inserter instead of a fast inserter
+  Bugfixes:
+    - Fixed that the belt required for a lab was not replaced with a basic belt
+---------------------------------------------------------------------------------------------------
+Version: 3.1.4
+Date: 2021.07.26
+  Changes:
+    - Removed the automation sp requirement from gun turret and stone wall techs
+    - Omnitor AB compat: added omnitors to Angels/Bobs buildings that have "moving parts"
+    - New icon + animation for the omnium heat turbine
+  Bugfixes:
+    - Fixed a crash with certain combinations of bobsmods
+    - Fixed that the basic belt item had a normal belt icon with bob reskins
+    - Fixed that bobs logistics belt speed settings didnt affect basic belts
+---------------------------------------------------------------------------------------------------
+Version: 3.1.3
+Date: 2021.07.23
+  Changes:
+    - Made energy and red science pack recipes slightly cheaper
+  Bugfixes:
+    - Fixed that bobs recipe changes on basic belts were overwritten
+    - Fixed a crash when bobs burner electric generator setting was disabled
+---------------------------------------------------------------------------------------------------
+Version: 3.1.2
+Date: 2021.07.22
+  Features:
+    - Readded Krastorio2 compatibility
+  Changes:
+    - The energy science pack is now added to all technologies
+    - Adjusted the energy and automation science pack recipes
+  Bugfixes:
+    - Fixed that basic underground belts had the wrong length set
+---------------------------------------------------------------------------------------------------
+Version: 3.1.0
+Date: 2021.07.21
+  Features:
+    - Complete rewrite
+    - Added a new science pack that is gated before automation science and leads you to electricity
+    - Added basic belt / underground belt / splitter (7.5 speed)
+  Changes:
+    - Complete tech tree overhaul
+    - Crystal Solar panel recipe overhaul
+    - Omnimatter crystal is an optional dependency now
+---------------------------------------------------------------------------------------------------
 Version: 2.1.10
 Date: 2021.06.20
   Features:

@@ -57,5 +57,7 @@ if mods["pycoalprocessing"] then
         end
       end
     end
+  else
+    omni.lib.replace_recipe_ingredient("inserter", component["circuit"][1], "pcb1")
   end
 end
