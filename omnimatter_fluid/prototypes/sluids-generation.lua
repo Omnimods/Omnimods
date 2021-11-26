@@ -20,9 +20,12 @@ local function sort_fluid(fluidname, category, temperature)
         --Check for a combination of fluid / sluid. If both is required, add it as mush and remove it from sluids/fluids
         if category == "fluid" and fluid_cats["sluid"][fluid.name] then
             category = "mush"
+            --Pick up the already known temperature table
+            temperature = omni.lib.union(fluid_cats["sluid"][fluid.name].temperatures, temperature or {temp = "none"})
             fluid_cats["sluid"][fluid.name] = nil
         elseif category == "sluid" and fluid_cats["fluid"][fluid.name] then
             category = "mush"
+            temperature = omni.lib.union(fluid_cats["fluid"][fluid.name].temperatures, temperature or {temp = "none"})
             fluid_cats["fluid"][fluid.name] = nil
         end
 
