@@ -185,7 +185,7 @@ for catname, cat in pairs(fluid_cats) do
                         icons = omni.lib.icon.of_generic(fluid),
                         subgroup = "omni-solid-fluids",
                         order = fluid.order or "a",
-                        stack_size = sluid_stack_size,
+                        stack_size = omni.fluid.sluid_stack_size,
                     }
                     --log("Created solid-"..fluid.name)
                 else
@@ -197,7 +197,7 @@ for catname, cat in pairs(fluid_cats) do
                         icons = omni.lib.icon.of_generic(fluid),
                         subgroup = "omni-solid-fluids",
                         order = fluid.order or "a",
-                        stack_size = sluid_stack_size,
+                        stack_size = omni.fluid.sluid_stack_size,
                     }
                     --log("Created solid-"..fluid.name.."-T-"..temp)
                 end
@@ -233,8 +233,8 @@ for _, boiler in pairs(data.raw.boiler) do
     local steam_cap = omni.lib.get_fuel_number(data.raw.fluid[steam].heat_capacity)/1000000  --omni.fluid.convert_mj(data.raw.fluid[steam].heat_capacity)
     local steam_delta_tmp = boiler.target_temperature - data.raw.fluid[water].max_temperature
     local prod_steam = omni.fluid.round_fluid(omni.lib.round(omni.lib.get_fuel_number(boiler.energy_consumption)/1000000 / (water_delta_tmp * water_cap + steam_delta_tmp * steam_cap)),1)
-    local lcm = omni.lib.lcm(prod_steam, sluid_contain_fluid)
-    local prod = lcm / sluid_contain_fluid
+    local lcm = omni.lib.lcm(prod_steam, omni.fluid.sluid_contain_fluid)
+    local prod = lcm / omni.fluid.sluid_contain_fluid
     local tid = lcm / prod_steam
 
     --clobber fluid_box_filter if it exists
@@ -271,7 +271,7 @@ for _, boiler in pairs(data.raw.boiler) do
             hide_from_player_crafting = true,
             main_product = steam,
             ingredients = {{type = "item", name = "solid-"..water, amount = prod},},
-            results = {{type = "fluid", name = steam, amount = sluid_contain_fluid*prod, temperature = math.min(boiler.target_temperature, data.raw.fluid[steam].max_temperature)},},
+            results = {{type = "fluid", name = steam, amount = omni.fluid.sluid_contain_fluid*prod, temperature = math.min(boiler.target_temperature, data.raw.fluid[steam].max_temperature)},},
         }
         --log(serpent.block(fluid_cats.mush))
         for _, fugacity in pairs(fluid_cats.mush) do
@@ -293,7 +293,7 @@ for _, boiler in pairs(data.raw.boiler) do
                             hide_from_player_crafting = true,
                             main_product = fugacity.name,
                             ingredients = {{type = "item", name = "solid-"..fugacity.name.."-T-"..temp, amount = prod}},
-                            results = {{type = "fluid", name = fugacity.name, amount = sluid_contain_fluid*prod, temperature = temp}},
+                            results = {{type = "fluid", name = fugacity.name, amount = omni.fluid.sluid_contain_fluid*prod, temperature = temp}},
                         }
                     else
                         log("item does not exist:".. fugacity.name.."-fluidisation-"..temp)
@@ -311,7 +311,7 @@ for _, boiler in pairs(data.raw.boiler) do
                         hide_from_player_crafting = true,
                         main_product = fugacity.name,
                         ingredients = {{type = "item", name = "solid-"..fugacity.name, amount = prod}},
-                        results = {{type = "fluid", name = fugacity.name, amount = sluid_contain_fluid*prod, temperature = data.raw.fluid[fugacity.name].default_temperature}},
+                        results = {{type = "fluid", name = fugacity.name, amount = omni.fluid.sluid_contain_fluid*prod, temperature = data.raw.fluid[fugacity.name].default_temperature}},
                     }
                 end
             end
@@ -450,7 +450,7 @@ for name, changes in pairs(recipe_mods) do
                     if ing.type == "fluid" then
                         --if ing.amount then
                             fluids[dif][ingres][j] = {name= ing.name, amount = omni.fluid.get_fluid_amount(ing)}
-                            mult[dif] = omni.lib.lcm(omni.lib.lcm(sluid_contain_fluid, fluids[dif][ingres][j].amount)/fluids[dif][ingres][j].amount, mult[dif])
+                            mult[dif] = omni.lib.lcm(omni.lib.lcm(omni.fluid.sluid_contain_fluid, fluids[dif][ingres][j].amount)/fluids[dif][ingres][j].amount, mult[dif])
                             primes[dif][ingres][j] = omni.lib.factorize(fluids[dif][ingres][j].amount)
                         -- else --throw error
                         --     log("invalid fluid amount found in: "..rec.name.. " part: ".. dif.."."..ingres)
@@ -593,7 +593,7 @@ for _,resource in pairs(data.raw.resource) do
     if resource.minable and resource.minable.results and resource.minable.results[1] and resource.minable.results[1].type == "fluid" then
         resource.minable.results[1].type = "item"
         resource.minable.results[1].name = "solid-"..resource.minable.results[1].name
-        resource.minable.mining_time = resource.minable.mining_time * sluid_contain_fluid
+        resource.minable.mining_time = resource.minable.mining_time * omni.fluid.sluid_contain_fluid
     end
 end
 

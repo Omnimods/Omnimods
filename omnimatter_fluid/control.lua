@@ -37,7 +37,7 @@ end
 ----------------------
 ---Event functions---
 ----------------------
-local function on_init(event)
+local function on_init()
     local pumps = game.get_filtered_entity_prototypes({{filter = "type", type = "offshore-pump"}})
     for name, pump in pairs(pumps) do
         table.insert(global.offshore_pumps, name)

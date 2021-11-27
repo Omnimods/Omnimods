@@ -11,7 +11,7 @@ for _, pump in pairs(data.raw["offshore-pump"]) do
         type = "recipe",
         name = "solshore-"..pump.name,
         ingredients = {},
-        results = {{name = "solid-"..pump.fluid, amount = math.floor(pump.pumping_speed*60/sluid_contain_fluid)}},
+        results = {{name = "solid-"..pump.fluid, amount = math.floor(pump.pumping_speed*60/omni.fluid.sluid_contain_fluid)}},
         enabled = true,
         category = "solshore-"..pump.name,
         energy_required = 1,

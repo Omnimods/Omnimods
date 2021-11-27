@@ -105,19 +105,19 @@ function omni.fluid.get_fluid_amount(subtable) --individual ingredient/result ta
     -- does this interferre with the GCD functionallity?
     if subtable.amount then
         if subtable.probability then --normal style, priority over previous step
-            return omni.fluid.round_fluid((subtable.amount * subtable.probability) / sluid_contain_fluid)
+            return omni.fluid.round_fluid((subtable.amount * subtable.probability) / omni.fluid.sluid_contain_fluid)
         else
-            return omni.fluid.round_fluid(subtable.amount / sluid_contain_fluid) --standard
+            return omni.fluid.round_fluid(subtable.amount / omni.fluid.sluid_contain_fluid) --standard
         end
     elseif subtable.amount_min and subtable.amount_min > 0 then
         if subtable.amount_max then
-            return omni.fluid.round_fluid((subtable.amount_max + subtable.amount_min) / (2 * sluid_contain_fluid))
+            return omni.fluid.round_fluid((subtable.amount_max + subtable.amount_min) / (2 * omni.fluid.sluid_contain_fluid))
         elseif subtable.probability then
             return omni.fluid.round_fluid(subtable.amount_min * subtable.probability)
         end
     elseif subtable.amount_min and subtable.amount_min == 0 then
         if subtable.amount_max then
-            return omni.fluid.round_fluid(subtable.amount_max / sluid_contain_fluid)
+            return omni.fluid.round_fluid(subtable.amount_max / omni.fluid.sluid_contain_fluid)
         end
     elseif subtable.amount_max and subtable.amount_max > 0 then
         if subtable.probability then

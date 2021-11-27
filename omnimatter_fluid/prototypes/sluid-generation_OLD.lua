@@ -50,8 +50,8 @@ for _, boiler in pairs(data.raw.boiler) do
         local steam_cap = omni.fluid.convert_mj(data.raw.fluid[steam].heat_capacity)
         local steam_delta_tmp = boiler.target_temperature-data.raw.fluid[water].max_temperature
         local prod_steam = omni.fluid.round_fluid(omni.lib.round(omni.fluid.convert_mj(boiler.energy_consumption)/(water_delta_tmp*water_cap+steam_delta_tmp*steam_cap)),1)
-        local lcm = omni.lib.lcm(prod_steam,sluid_contain_fluid)
-        local prod = lcm/sluid_contain_fluid
+        local lcm = omni.lib.lcm(prod_steam,omni.fluid.sluid_contain_fluid)
+        local prod = lcm/omni.fluid.sluid_contain_fluid
         local tid=lcm/prod_steam
 
         --omni.lib.replace_all_ingredient(boiler.name,boiler.name.."-converter")
@@ -68,7 +68,7 @@ for _, boiler in pairs(data.raw.boiler) do
         --icon_size = 32,
         main_product = steam,
         ingredients = {{type = "item", name = "solid-"..water, amount = prod},},
-        results = {{type = "fluid", name = steam, amount = sluid_contain_fluid*prod, temperature = math.min(boiler.target_temperature, data.raw.fluid[steam].max_temperature)},},}
+        results = {{type = "fluid", name = steam, amount = omni.fluid.sluid_contain_fluid*prod, temperature = math.min(boiler.target_temperature, data.raw.fluid[steam].max_temperature)},},}
         new_boiler[#new_boiler+1] = {
             type = "recipe",
             name = boiler.name.."-boiling-solid-steam-"..boiler.target_temperature,
@@ -213,7 +213,7 @@ for _,fluid in pairs(data.raw.fluid) do
         icon_size = 32,
         subgroup = "omni-solid-fluids",
         order = "a",
-        stack_size = sluid_stack_size,
+        stack_size = omni.fluid.sluid_stack_size,
         flags = {}
         --inter_item_count = item_count,
     }
@@ -400,7 +400,7 @@ local make_tmp_sluid = function(name,tmp)
         icon_size = 32,
         subgroup = "omni-solid-fluids",
         order = "a",
-        stack_size = sluid_stack_size,
+        stack_size = omni.fluid.sluid_stack_size,
         flags = {}
         --inter_item_count = item_count,
     }})
@@ -430,7 +430,7 @@ for _,resource in pairs(data.raw.resource) do
         },
         results =
         {
-          {type = "fluid", name = resource.minable.required_fluid, amount = sluid_contain_fluid*12},
+          {type = "fluid", name = resource.minable.required_fluid, amount = omni.fluid.sluid_contain_fluid*12},
         },
       }
       dont_remove[resource.minable.required_fluid] = {true}
@@ -510,13 +510,13 @@ for _,recipe in pairs(data.raw.recipe) do
                         if fuel_fluid[component.name] then energy_fluid[#energy_fluid+1] = table.deepcopy(recipe) end
                         if component.amount then
                             fluids[dif][ingres][j] = {name = component.name, amount = omni.fluid.round_fluid(component.amount)}
-                            mult[dif] = omni.lib.lcm(omni.lib.lcm(sluid_contain_fluid, fluids[dif][ingres][j].amount)/fluids[dif][ingres][j].amount, mult[dif])
+                            mult[dif] = omni.lib.lcm(omni.lib.lcm(omni.fluid.sluid_contain_fluid, fluids[dif][ingres][j].amount)/fluids[dif][ingres][j].amount, mult[dif])
                             primes[dif][ingres][j] = omni.lib.factorize(fluids[dif][ingres][j].amount)
                         else
                             --Temporary, need improvement
                             local avg = (component.amount_max+component.amount_min)/2
                             fluids[dif][ingres][j] = {name = component.name, amount = omni.fluid.round_fluid(avg)}
-                            mult[dif] = omni.lib.lcm(omni.lib.lcm(sluid_contain_fluid, fluids[dif][ingres][j].amount)/fluids[dif][ingres][j].amount, mult[dif])
+                            mult[dif] = omni.lib.lcm(omni.lib.lcm(omni.fluid.sluid_contain_fluid, fluids[dif][ingres][j].amount)/fluids[dif][ingres][j].amount, mult[dif])
                             primes[dif][ingres][j] = omni.lib.factorize(fluids[dif][ingres][j].amount)
                         end
                     end
@@ -530,7 +530,7 @@ for _,recipe in pairs(data.raw.recipe) do
             for _,ingres in pairs({"results"}) do
                 for j,component in pairs(recipe[dif][ingres]) do
                     if component.type == "fluid" then
-                        local c = fluids[dif][ingres][j].amount*mult[dif]/sluid_contain_fluid
+                        local c = fluids[dif][ingres][j].amount*mult[dif]/omni.fluid.sluid_contain_fluid
                         if c > 500 and (not need_adjustment or c > need_adjustment) then
                             need_adjustment = c
                         end
@@ -593,7 +593,7 @@ for _,recipe in pairs(data.raw.recipe) do
             for _,ingres in pairs({"ingredients","results"}) do
                 for j,component in pairs(recipe[dif][ingres]) do
                     if component.type == "fluid" then
-                        component.amount = omni.lib.round(fluids[dif][ingres][j].amount*mult[dif]/sluid_contain_fluid)
+                        component.amount = omni.lib.round(fluids[dif][ingres][j].amount*mult[dif]/omni.fluid.sluid_contain_fluid)
                         component.type = "item"
                         local new_name = "solid-"..component.name
                         if component.temperature or component.maximum_temperature or component.minimum_temperature then
@@ -747,7 +747,7 @@ for _, recipe in pairs(extra_fluid_rec) do
                         end
                     end
                     fluids[dif][ingres][j] = {name=component.name,amount=omni.fluid.round_fluid(amnt)}
-                    mult[dif]=omni.lib.lcm(omni.lib.lcm(sluid_contain_fluid,fluids[dif][ingres][j].amount)/fluids[dif][ingres][j].amount,mult[dif])
+                    mult[dif]=omni.lib.lcm(omni.lib.lcm(omni.fluid.sluid_contain_fluid,fluids[dif][ingres][j].amount)/fluids[dif][ingres][j].amount,mult[dif])
                     primes[dif][ingres][j]=omni.lib.factorize(fluids[dif][ingres][j].amount)
                 end
             end
@@ -760,7 +760,7 @@ for _, recipe in pairs(extra_fluid_rec) do
         for _,ingres in pairs({"results"}) do
             for j,component in pairs(recipe[dif][ingres]) do
                 if component.type == "fluid" and not generator_fluid[component.name] then
-                    local c = fluids[dif][ingres][j].amount*mult[dif]/sluid_contain_fluid
+                    local c = fluids[dif][ingres][j].amount*mult[dif]/omni.fluid.sluid_contain_fluid
                     if c > 500 and (not need_adjustment or c > need_adjustment) then
                         need_adjustment = c
                     end
@@ -823,7 +823,7 @@ for _, recipe in pairs(extra_fluid_rec) do
         for _,ingres in pairs({"ingredients","results"}) do
             for j,component in pairs(recipe[dif][ingres]) do
                 if component.type == "fluid" and not generator_fluid[component.name] then
-                    component.amount = fluids[dif][ingres][j].amount*mult[dif]/sluid_contain_fluid
+                    component.amount = fluids[dif][ingres][j].amount*mult[dif]/omni.fluid.sluid_contain_fluid
                     component.type="item"
                     local new_name = "solid-"..component.name
                     if temperature_fluids[component.name] and table_size(temperature_fluids[component.name].used) > 1 and (component.temperature or component.maximum_temperature or component.minimum_temperature) then
@@ -901,7 +901,7 @@ for _, recipe in pairs(energy_fluid) do
                         end
                     end
                     fluids[dif][ingres][j] = {name=component.name,amount=omni.fluid.round_fluid(amnt)}
-                    mult=omni.lib.lcm(omni.lib.lcm(sluid_contain_fluid,fluids[dif][ingres][j].amount)/fluids[dif][ingres][j].amount,mult)
+                    mult=omni.lib.lcm(omni.lib.lcm(omni.fluid.sluid_contain_fluid,fluids[dif][ingres][j].amount)/fluids[dif][ingres][j].amount,mult)
                 end
             end
         end
@@ -911,7 +911,7 @@ for _, recipe in pairs(energy_fluid) do
         for _,ingres in pairs({"ingredients","results"}) do
             for j,component in pairs(recipe[dif][ingres]) do
                 if component.type == "fluid" and not fuel_fluid[component.name] then
-                    component.amount = fluids[dif][ingres][j].amount*mult/sluid_contain_fluid
+                    component.amount = fluids[dif][ingres][j].amount*mult/omni.fluid.sluid_contain_fluid
                     component.type="item"
                     local new_name = "solid-"..component.name
                     if temperature_fluids[component.name] and temperature_fluids[component.name].used ~= nil and (component.temperature or component.maximum_temperature or component.minimum_temperature) then
