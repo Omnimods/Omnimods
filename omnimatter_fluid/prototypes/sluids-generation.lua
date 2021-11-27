@@ -13,6 +13,14 @@ local recipe_mods = {}
 
 
 local function sort_fluid(fluidname, category, temperature)
+    --possibly look at dealing with the min/max cat first... then any single that falls in that range gets the same value...
+    --the main things to thing about are if it is likely to see variable ranges (the examples I know of are angels coolant and Yuoki's power fluids)
+    --possibly create a table of limits (min's and max's) and sort the singles into each grouping, kind of like what I was attempting with the "average"? it may require an extra sorting stage though
+    --== example: used_coolant = {range_1 = {15,100}, --add all single temps between to that range, 15 is from default temperature or specified minimum below that, max is next lowest min or max temperature. 
+                             --   range_2 = {100,200},
+                             --   range_3 = {200,300},
+                             --   range_4 = {300,1000}}--as a fallback incase something goes above the highest "maximum" from the found table
+    --== have the range count be dependant on the different min/max counts, i guess with this you may not actually need the specific temperature, i was mainly keeping them for localisations
     local fluid = data.raw.fluid[fluidname]
     if temperature and not next(temperature) then temperature = nil end
     --Fluid doesnt exist in this category or as mush yet
@@ -123,7 +131,7 @@ for _,cat in pairs(fluid_cats) do
             fluid.temperatures[i] = nil
         end
 
-        --Second Loop: Go through the leftovers which have min/max set and check if theres an entrie already in its range
+        --Second Loop: Go through the leftovers which have min/max set and check if theres an entry already in its range
         for _,temps in pairs(fluid.temperatures) do
             local found = false
             for new in pairs(new_temps)do
@@ -148,7 +156,7 @@ for _,cat in pairs(fluid_cats) do
                 fluid.temperatures[i] = nil
             end
         end
-        --Check if the table is empty --> Everything could be sorted out properly
+        --Check if the table is empty --> Everything should be sorted out properly
         if next(fluid.temperatures) then
             log("This should be empty")
             log(serpent.block(fluid.temperatures))
@@ -171,10 +179,10 @@ ent[#ent+1] = {
 }
 
 --log(serpent.block(fluid_cats))
-for catname,cat in pairs(fluid_cats) do
-    for _,fluid in pairs(cat) do
+for catname, cat in pairs(fluid_cats) do
+    for _, fluid in pairs(cat) do
         --sluid or mush: create items and replace recipe ings/res
-        if catname == "sluid" or catname == "mush" then
+        if catname ~= "fluid" --[[or catname == "mush"]] then
             for _,temp in pairs(fluid.temperatures) do
                 if temp == "none" then
                     ent[#ent+1] = {
@@ -317,7 +325,8 @@ for _, boiler in pairs(data.raw.boiler) do
             end
         end
 
-        --duplicate boiler for each corresponding one?
+        --duplicate boiler for each corresponding one? 
+        --The sluids boiler is an assembly type so we cannot just override the old ones..., so we make the assemly type replacement and hide the original, Be careful with things like angels electric boilers as they are assembly type too.
         local new_item = table.deepcopy(data.raw.item[boiler.name])
         new_item.name = boiler.name.."-converter"
         new_item.place_result = boiler.name.."-converter"
@@ -475,6 +484,7 @@ for name, changes in pairs(recipe_mods) do
                     end
                 end
             end
+            --I thought most of these subs were already part of the library?
             if need_adjustment then
                 --log("need adj")
                 local modMult = mult[dif]*500/need_adjustment
