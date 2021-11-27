@@ -3,7 +3,7 @@
 -------------------------------------------------------------------------------
 local compress_recipes, uncompress_recipes, compress_items = {}, {}, {}
 local item_count = 0
-local concentrationRatio = sluid_contain_fluid
+local concentrationRatio = omni.compression.sluid_contain_fluid
 --compressed_item_names = {}  --global?
 random_recipes = {} --global?
 local compressed_item_stack_size = 120 -- stack size for compressed items (not the items returned that is dynamic)

@@ -184,9 +184,9 @@ local create_concentrated_recipe = function(fluid, tier, temp)
     local base_fluid = fluid
     if not data.raw.recipe[fluid .. "-concentrated-grade-" .. tier  .. temp_str] then
         -- if tier > 1 then baseFluid = baseFluid.."-concentrated-grade-"..(tier-1) end
-        local base_fluid_data = {{name = base_fluid, type = "fluid", amount = sluid_contain_fluid*multiplier^(tier+1), temperature=temp}}
+        local base_fluid_data = {{name = base_fluid, type = "fluid", amount = omni.compression.sluid_contain_fluid*multiplier^(tier+1), temperature=temp}}
         local compress_fluid_data = {{name = "concentrated-"..base_fluid, type = "fluid", amount = multiplier^(tier+1), temperature=temp}}
-        local grade_fluid_data = {{name = fluid.."-concentrated-grade-"..tier, type = "fluid", amount = sluid_contain_fluid*multiplier, temperature=temp}}
+        local grade_fluid_data = {{name = fluid.."-concentrated-grade-"..tier, type = "fluid", amount = omni.compression.sluid_contain_fluid*multiplier, temperature=temp}}
         local grade_recipe_data = {
             energy_required = multiplier^(tier+1)/60,
             enabled = true,
