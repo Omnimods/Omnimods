@@ -61,7 +61,7 @@ local recipe_mods = {}
 --------------------------------------------------------------------------------------------------
 --Functions for migration to the functions file
 --------------------------------------------------------------------------------------------------
-function omni.fluid.get_fluid_amount(subtable) --individual ingredient/result table
+function omni.fluid.get_true_amount(subtable) --individual ingredient/result table
     -- amount min system
     -- "min-max" parses mininum, sets mm_prob as max/min
     -- "min-chance" parses minimum, sets mp_prob as min*prob
@@ -401,7 +401,7 @@ function sluid_recipe_updates() --currently works with non-standardised recipes
                 for j,ing in pairs(rec[dif][ingres]) do
                     if ing.type == "fluid" then
                         if ing.amount then
-                            fluids[dif][ingres][j] = {name= ing.name, amount = omni.fluid.get_fluid_amount(ing)}
+                            fluids[dif][ingres][j] = {name= ing.name, amount = omni.fluid.get_true_amount(ing)}
                             mult[dif] = omni.lib.lcm(omni.lib.lcm(omni.fluid.sluid_contain_fluid, fluids[dif][ingres][j].amount)/fluids[dif][ingres][j].amount, mult[dif])
                             primes[dif][ingres][j] = omni.lib.factorize(fluids[dif][ingres][j].amount)
                         else --throw error
@@ -454,7 +454,7 @@ function sluid_recipe_updates() --currently works with non-standardised recipes
                             else --default
                                 new_ing.name = "solid-"..changes[ingres][i].name
                             end
-                            new_ing.amount = omni.fluid.get_fluid_amount(ing)
+                            new_ing.amount = omni.fluid.get_true_amount(ing)
                             --ing = new_ing
                             rec[dif][ingres][n]=new_ing
                         end

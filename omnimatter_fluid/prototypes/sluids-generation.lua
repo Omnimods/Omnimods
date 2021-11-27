@@ -243,8 +243,8 @@ for _, boiler in pairs(data.raw.boiler) do
     end
 
     --if exists, find recipe, item and entity
-    if not omni.fluid.forbidden_boilers[boiler.name] and boiler.minable then
-        local rec = omni.lib.find_recipe(boiler.minable.result)
+    if not omni.fluid.forbidden_boilers[boiler.name] then --and boiler.minable then
+        local rec = omni.lib.find_recipe(boiler.minable.result) or omni.lib.find_recipe(boiler.name)
 
         new_boiler[#new_boiler+1] = {
             type = "recipe-category",
@@ -252,8 +252,10 @@ for _, boiler in pairs(data.raw.boiler) do
         }
 
         --add boiler to recipe list and fix minable-result list
-        fix_boilers_recipe[#fix_boilers_recipe+1] = rec.name
-        fix_boilers_item[boiler.minable.result] = true
+        if boiler.minable.result and not boiler.minable.results then
+            fix_boilers_recipe[#fix_boilers_recipe+1] = rec.name
+            fix_boilers_item[boiler.minable.result] = true
+        end
 
         --set-up result and main product values to be the new converter
         omni.lib.replace_recipe_result(rec.name, boiler.name, boiler.name.."-converter")
@@ -424,109 +426,86 @@ end
 -------------------------------------------
 -----Replace recipe ingres with sluids-----
 -------------------------------------------
---log(serpent.block(recipe_mods))
 for name, changes in pairs(recipe_mods) do
     local rec = data.raw.recipe[name]
     if rec then
         --check if needs standardisation
         local std = false
-        for i,dif in pairs({"normal","expensive"}) do
+        for _,dif in pairs({"normal","expensive"}) do
             if not (rec[dif] and rec[dif].ingredients and rec[dif].expensive) then
                 std = true
+                break
             end
         end
-        if std == true then
-            --standardise
-            omni.lib.standardise(rec)
-        end
-        --declare sub-tabs
-        local fluids = {normal = {ingredients = {}, results = {}}, expensive = {ingredients = {}, results = {}}}
-        local primes = {normal = {ingredients = {}, results = {}}, expensive = {ingredients = {}, results = {}}}
+        if std == true then omni.lib.standardise(rec) end
+
         local mult = {normal = 1,expensive = 1}
-        --start first layer of analysis
-        for _,dif in pairs({"normal","expensive"}) do
-            for _,ingres in pairs({"ingredients","results"}) do
-                for j,ing in pairs(rec[dif][ingres]) do
+        local lcm = {normal = 1,expensive = 1}
+        local gcd = {}
+
+        for _, dif in pairs({"normal","expensive"}) do
+            local min_amount = math.huge
+            local lcm_mult = 1
+            for _, ingres in pairs({"ingredients","results"}) do
+                --First loop: Calculate the lcm respecting omni.fluid.sluid_contain_fluid
+                for	_, ing in pairs(rec[dif][ingres]) do
+                    local amount = 0
                     if ing.type == "fluid" then
-                        --if ing.amount then
-                            fluids[dif][ingres][j] = {name= ing.name, amount = omni.fluid.get_fluid_amount(ing)}
-                            mult[dif] = omni.lib.lcm(omni.lib.lcm(omni.fluid.sluid_contain_fluid, fluids[dif][ingres][j].amount)/fluids[dif][ingres][j].amount, mult[dif])
-                            primes[dif][ingres][j] = omni.lib.factorize(fluids[dif][ingres][j].amount)
-                        -- else --throw error
-                        --     log("invalid fluid amount found in: "..rec.name.. " part: ".. dif.."."..ingres)
-                        --     log(serpent.block(rec[dif][ingres]))
-                        -- end
-                    end
-                end
-            end
-            --result value adjustments checker
-            local div = 1
-            local need_adjustment = nil
-            local gcd_primes = {}
-            for j,ing in pairs(rec[dif]["results"]) do
-                if ing.type == "fluid" then
-                    local c = fluids[dif]["results"][j].amount * mult[dif]
-                    if c > 500 and (not need_adjustment or c > need_adjustment) then
-                        need_adjustment = c
-                    end
-                    if gcd_primes == {} then
-                        gcd_primes = primes[dif]["results"][j]
+                        --Round the fluid amount to get rid of weird base numbers, divide afterwards to not lose precision
+                        amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing))/omni.fluid.sluid_contain_fluid
                     else
-                        gcd_primes = omni.lib.prime.gcd(primes[dif]["results"][j],gcd_primes)
+                        --Ignore probability on items, we dont want to mess with/change that. Very low probabilities would make it hard to find a decent gcd
+                        amount = (ing.amount or (ing.amount_min+ing.amount_max)/2)
+                    end
+                    if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
+
+                    --Calculate lcm
+                    --Since our lcm function is not working with floats, multiply by 1000 if we find floats to keep precision for low fluid amounts (we just divided by sluid fluid ratio)
+                    min_amount = math.min(min_amount, amount)
+                    if (amount*lcm_mult) % 1 > 0 and lcm_mult < 1000 then
+                        if lcm_mult < 1000 then
+                            lcm_mult = 1000
+                            lcm[dif] = lcm[dif] * lcm_mult
+                            amount = amount * lcm_mult
+                            amount = omni.lib.round(amount)
+                        else
+                            amount = omni.lib.round(amount * lcm_mult)
+                        end
+                    else
+                        amount = amount * lcm_mult
+                    end
+                    lcm[dif] = omni.lib.lcm(lcm[dif], amount or 1)
+                end
+            end
+            --divide by the lcm mult again to get the "true" lcm
+            lcm[dif] = lcm[dif] / lcm_mult
+            --Get the recipe multiplier which is lcm/lowest amount found in this recipe to not lose precision
+            mult[dif] = lcm[dif]/min_amount
+
+            --Second loop: Find GCD of all ingres multiplie with the LCM multiplier we just calculated (with sluid_contain_fluid applied for fluids)
+            for _, ingres in pairs({"ingredients","results"}) do
+                for	_, ing in pairs(rec[dif][ingres]) do
+                    local amount = 0
+                    if ing.type == "fluid" then
+                        amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing)*mult[dif]/omni.fluid.sluid_contain_fluid)
+                    else
+                        --Ignore probability on items, we dont want to mess with/change that. Very low probabilities would make it hard to find a decent gcd
+                        amount = omni.lib.round((ing.amount or (ing.amount_min+ing.amount_max)/2)*mult[dif])
+                    end
+                    if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
+
+                    if not gcd[dif] then
+                        gcd[dif] = amount
+                    else
+                        gcd[dif] = omni.lib.gcd(gcd[dif], amount)
                     end
                 end
             end
-            --I thought most of these subs were already part of the library?
-            if need_adjustment then
-                --log("need adj")
-                local modMult = mult[dif]*500/need_adjustment
-                local multPrimes = omni.lib.factorize(mult[dif])
-                local addPrimes = {}
-                local checkPrimes = mult[dif]
-                for i = 0, (multPrimes["2"] or 0) do
-                    for j = 0, (multPrimes["3"] or 0) do
-                        for k = 0, (multPrimes["5"] or 0) do
-                            local c = math.pow(2,i)*math.pow(3,j)*math.pow(5,k)
-                            if c > modMult and c < checkPrimes then
-                                checkPrimes = c
-                            end
-                        end
-                    end
-                end
-                addPrimes = omni.lib.factorize(checkPrimes)
-                local totalPrimeVal = omni.lib.prime.value(omni.lib.prime.mult(addPrimes,gcd_primes))
-                for _,ingres in pairs({"ingredients","results"}) do
-                    for j,component in pairs(data.raw.recipe[rec.name][dif][ingres]) do
-                        if component.type == "fluid" then
-                            local fluid_amount = 0
-                            local roundFluidValues = omni.fluid.SetRoundFluidValues()
-                            for i=1,#roundFluidValues do
-                                if roundFluidValues[i]%totalPrimeVal == 0 then
-                                    if ingres == "ingredients" then
-                                        if roundFluidValues[i] > fluids[dif][ingres][j].amount then
-                                            fluid_amount = roundFluidValues[i]
-                                            break
-                                        end
-                                    else
-                                        if roundFluidValues[i] < fluids[dif][ingres][j].amount then
-                                            fluid_amount = roundFluidValues[i]
-                                        else
-                                            break
-                                        end
-                                    end
-                                elseif ingres == "results" and roundFluidValues[i] > fluids[dif][ingres][j].amount then
-                                    break
-                                end
-                            end
-                            --log(fluid_amount)
-                            fluids[dif][ingres][j].amount = fluid_amount
-                        end
-                    end
-                end
-                mult[dif] = mult[dif]/checkPrimes
-            end
+            --The final recipe multiplier is our old mult/the calculated gcd
+            mult[dif] = mult[dif] / gcd[dif]
         end
-        --fix to pick up temperatures etc
+
+        --Now Replace fluids with sluids and apply the mult too all ingres and crafting time
         for _, dif in pairs({"normal","expensive"}) do
             for _, ingres in pairs({"ingredients","results"}) do
                 for	n, ing in pairs(rec[dif][ingres]) do
@@ -570,12 +549,18 @@ for name, changes in pairs(recipe_mods) do
                         else
                             log("Sluid Replacement error for "..ing.name)
                         end
-                        new_ing.amount = omni.fluid.get_fluid_amount(ing)
+                        --Finally round again for the case of a precision error like .999
+                        new_ing.amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing)*mult[dif]/omni.fluid.sluid_contain_fluid)
+
                         --Main product checks
                         if ingres == "results" and rec[dif].main_product and rec[dif].main_product == ing.name then
                             rec[dif].main_product = new_ing.name
                         end
                         rec[dif][ingres][n] = new_ing
+                    --ingres is an item, apply mult
+                    else
+                        --Multiply amount with mult, keep probability in mind
+                        ing.amount = (ing.amount or (ing.amount_min+ing.amount_max)/2) * mult[dif]
                     end
                 end
             end
@@ -611,6 +596,7 @@ for _, fu in pairs(data.raw["furnace"]) do
     end
 end
 
+
 ---------------------------
 -----Fluid box removal-----
 ---------------------------
@@ -623,3 +609,5 @@ for _, jack in pairs(data.raw["mining-drill"]) do
         jack.vector_to_place_result = {-3, 5}
     end
 end
+
+--TODO: Energy value corrections
