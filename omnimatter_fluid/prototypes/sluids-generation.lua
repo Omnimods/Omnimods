@@ -3,9 +3,7 @@
         steam and other fluidbox filtered generator fluids
         heat(omnienergy)]]
 --[[examples of mush:
-        mining fluids (sulfuric acid etc...)
-        fluids with fuel value
-        fluids with temperature requirements]]
+        mining fluids (sulfuric acid etc...)]]
 local fluid_cats = {fluid = {}, sluid = {}, mush = {}}
 local generator_fluid = {} --is used in a generator
 --build a list of recipes to modify after the sluids list is generated
@@ -103,6 +101,13 @@ for _, rec in pairs(data.raw.recipe) do
         for _, fluid in pairs(fluids) do
             sort_fluid(fluid.name, "sluid", {temp = fluid.temperature, temp_min = fluid.default_temperature, temp_max = fluid.max_temperature})
         end
+    end
+end
+
+--Check all fluids for a fuel value
+for _,fluid in pairs(data.raw.fluid) do
+    if fluid.fuel_value then
+        sort_fluid(fluid.name, "fluid")
     end
 end
 
@@ -227,10 +232,10 @@ local boiler_tech = {}
 for _, boiler in pairs(data.raw.boiler) do
     --PREPARE DATA FOR MANIPULATION
     local water = boiler.fluid_box.filter or "water"
-    local water_cap = omni.lib.get_fuel_number(data.raw.fluid[water].heat_capacity)/1000000     --omni.fluid.convert_mj(data.raw.fluid[water].heat_capacity)
+    local water_cap = omni.lib.get_fuel_number(data.raw.fluid[water].heat_capacity)/1000000
     local water_delta_tmp = data.raw.fluid[water].max_temperature - data.raw.fluid[water].default_temperature
     local steam = boiler.output_fluid_box.filter or "steam"
-    local steam_cap = omni.lib.get_fuel_number(data.raw.fluid[steam].heat_capacity)/1000000  --omni.fluid.convert_mj(data.raw.fluid[steam].heat_capacity)
+    local steam_cap = omni.lib.get_fuel_number(data.raw.fluid[steam].heat_capacity)/1000000
     local steam_delta_tmp = boiler.target_temperature - data.raw.fluid[water].max_temperature
     local prod_steam = omni.fluid.round_fluid(omni.lib.round(omni.lib.get_fuel_number(boiler.energy_consumption)/1000000 / (water_delta_tmp * water_cap + steam_delta_tmp * steam_cap)),1)
     local lcm = omni.lib.lcm(prod_steam, omni.fluid.sluid_contain_fluid)
@@ -609,5 +614,3 @@ for _, jack in pairs(data.raw["mining-drill"]) do
         jack.vector_to_place_result = {-3, 5}
     end
 end
-
---TODO: Energy value corrections

@@ -14,21 +14,6 @@ end
 function omni.fluid.excempt_recipe(boiler)
     omni.fluid.forbidden_recipe[boiler]=true
 end
-local fluid_solid = {}
-
-function omni.fluid.convert_mj(value)
-    local unit = string.sub(value,string.len(value)-1,string.len(value)-1)
-    local val = tonumber(string.sub(value,1,string.len(value)-2))
-    if unit == "K" or unit == "k" then
-        return val/1000
-    elseif unit == "M" then
-        return val
-    elseif unit=="G" then
-        return val*1000
-    elseif tonumber(unit) ~= nil then
-        return tonumber(string.sub(value,1,string.len(value)-1))
-    end
-end
 
 function omni.fluid.check_string_excluded(comparison) --checks fluid/recipe name against exclusion list
     for _, str in pairs(omni.fluid.excluded_strings) do
@@ -77,8 +62,6 @@ function omni.fluid.SetRoundFluidValues()
 end
 
 local roundFluidValues = omni.fluid.SetRoundFluidValues()
-log(serpent.block(roundFluidValues))
-
 function omni.fluid.round_fluid(nr,round)
     local t = omni.lib.round(nr)
     local newval = t
