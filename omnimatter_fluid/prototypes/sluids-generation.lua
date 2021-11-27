@@ -13,14 +13,6 @@ local recipe_mods = {}
 
 
 local function sort_fluid(fluidname, category, temperature)
-    --possibly look at dealing with the min/max cat first... then any single that falls in that range gets the same value...
-    --the main things to thing about are if it is likely to see variable ranges (the examples I know of are angels coolant and Yuoki's power fluids)
-    --possibly create a table of limits (min's and max's) and sort the singles into each grouping, kind of like what I was attempting with the "average"? it may require an extra sorting stage though
-    --== example: used_coolant = {range_1 = {15,100}, --add all single temps between to that range, 15 is from default temperature or specified minimum below that, max is next lowest min or max temperature. 
-                             --   range_2 = {100,200},
-                             --   range_3 = {200,300},
-                             --   range_4 = {300,1000}}--as a fallback incase something goes above the highest "maximum" from the found table
-    --== have the range count be dependant on the different min/max counts, i guess with this you may not actually need the specific temperature, i was mainly keeping them for localisations
     local fluid = data.raw.fluid[fluidname]
     if temperature and not next(temperature) then temperature = nil end
     --Fluid doesnt exist in this category or as mush yet
@@ -592,5 +584,28 @@ for name, changes in pairs(recipe_mods) do
         end
     else
         log("recipe not found:".. name)
+    end
+end
+
+--Replace minable fluids result with a sluid
+for _,resource in pairs(data.raw.resource) do
+    local auto = resource.minable.result
+    if resource.minable and resource.minable.results and resource.minable.results[1] and resource.minable.results[1].type == "fluid" then
+        resource.minable.results[1].type = "item"
+        resource.minable.results[1].name = "solid-"..resource.minable.results[1].name
+        resource.minable.mining_time = resource.minable.mining_time * sluid_contain_fluid
+    end
+end
+
+---------------------------
+-----Fluid box removal-----
+---------------------------
+for _, jack in pairs(data.raw["mining-drill"]) do
+    if string.find(jack.name, "jack") then
+        if jack.output_fluid_box then jack.output_fluid_box = nil end
+        jack.vector_to_place_result = {0, -1.85}
+    elseif string.find(jack.name, "thermal") then
+        if jack.output_fluid_box then jack.output_fluid_box = nil end
+        jack.vector_to_place_result = {-3, 5}
     end
 end
