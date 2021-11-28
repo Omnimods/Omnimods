@@ -163,9 +163,9 @@ for _,cat in pairs(fluid_cats) do
 end
 
 
-------------------------
------Process fluids-----
-------------------------
+----------------------------
+-----Create solid items-----
+----------------------------
 local ent = {}
 --create subgroup
 ent[#ent+1] = {
@@ -175,11 +175,10 @@ ent[#ent+1] = {
     order = "aa",
 }
 
---log(serpent.block(fluid_cats))
 for catname, cat in pairs(fluid_cats) do
     for _, fluid in pairs(cat) do
         --sluid or mush: create items and replace recipe ings/res
-        if catname ~= "fluid" --[[or catname == "mush"]] then
+        if catname ~= "fluid" then
             for _,temp in pairs(fluid.temperatures) do
                 if temp == "none" then
                     ent[#ent+1] = {
@@ -192,7 +191,6 @@ for catname, cat in pairs(fluid_cats) do
                         order = fluid.order or "a",
                         stack_size = omni.fluid.sluid_stack_size,
                     }
-                    --log("Created solid-"..fluid.name)
                 else
                     ent[#ent+1] = {
                         type = "item",
@@ -204,7 +202,6 @@ for catname, cat in pairs(fluid_cats) do
                         order = fluid.order or "a",
                         stack_size = omni.fluid.sluid_stack_size,
                     }
-                    --log("Created solid-"..fluid.name.."-T-"..temp)
                 end
             end
         end
@@ -213,8 +210,6 @@ for catname, cat in pairs(fluid_cats) do
             fluid.hidden = true
             fluid.auto_barrel = false
         end
-        --Mush only: create conversion recipe
-
     end
 end
 data:extend(ent)
@@ -230,16 +225,9 @@ local boiler_tech = {}
 
 for _, boiler in pairs(data.raw.boiler) do
     --PREPARE DATA FOR MANIPULATION
+    local boiler_consumption = 60
     local water = boiler.fluid_box.filter or "water"
-    local water_cap = omni.lib.get_fuel_number(data.raw.fluid[water].heat_capacity)/1000000
-    local water_delta_tmp = data.raw.fluid[water].max_temperature - data.raw.fluid[water].default_temperature
     local steam = boiler.output_fluid_box.filter or "steam"
-    local steam_cap = omni.lib.get_fuel_number(data.raw.fluid[steam].heat_capacity)/1000000
-    local steam_delta_tmp = boiler.target_temperature - data.raw.fluid[water].max_temperature
-    local prod_steam = omni.fluid.round_fluid(omni.lib.round(omni.lib.get_fuel_number(boiler.energy_consumption)/1000000 / (water_delta_tmp * water_cap + steam_delta_tmp * steam_cap)),1)
-    local lcm = omni.lib.lcm(prod_steam, omni.fluid.sluid_contain_fluid)
-    local prod = lcm / omni.fluid.sluid_contain_fluid
-    local tid = lcm / prod_steam
 
     --clobber fluid_box_filter if it exists
     if generator_fluid[boiler.output_fluid_box.filter] then
@@ -263,7 +251,7 @@ for _, boiler in pairs(data.raw.boiler) do
         --set-up result and main product values to be the new converter
         omni.lib.replace_recipe_result(rec.name, boiler.name, boiler.name.."-converter")
 
-        --add boiling recipe to new listing
+        --Create water boiling recipe with the boilers target temp
         new_boiler[#new_boiler+1] = {
             type = "recipe",
             name = boiler.name.."-boiling-steam-"..boiler.target_temperature,
@@ -271,14 +259,15 @@ for _, boiler in pairs(data.raw.boiler) do
             subgroup = "fluid-recipes",
             category = "boiler-omnifluid-"..boiler.name,
             order = "g[hydromnic-acid]",
-            energy_required = tid,
+            energy_required = omni.fluid.sluid_contain_fluid/boiler_consumption,
             enabled = true,
             hide_from_player_crafting = true,
             main_product = steam,
-            ingredients = {{type = "item", name = "solid-"..water, amount = prod},},
-            results = {{type = "fluid", name = steam, amount = omni.fluid.sluid_contain_fluid*prod, temperature = math.min(boiler.target_temperature, data.raw.fluid[steam].max_temperature)},},
+            ingredients = {{type = "item", name = "solid-"..water, amount = 1},},
+            results = {{type = "fluid", name = steam, amount = omni.fluid.sluid_contain_fluid, temperature = math.min(boiler.target_temperature, data.raw.fluid[steam].max_temperature)},},
         }
-        --log(serpent.block(fluid_cats.mush))
+
+        --Create mush converter recipes
         for _, fugacity in pairs(fluid_cats.mush) do
             --deal with non-water mush fluids, allow temperature and specific boiler systems
             --if #fugacity.temperature >= 1 then --not sure if i want to add another level of analysis to split them into temperature specific ranges which may make modded hard, or leave it as is.
@@ -293,12 +282,12 @@ for _, boiler in pairs(data.raw.boiler) do
                             subgroup = "fluid-recipes",
                             category = "boiler-omnifluid-"..boiler.name,
                             order = "g[hydromnic-acid]",
-                            energy_required = tid,
-                            enabled = true,--may change this to be linked to the boiler unlock if applicable
+                            energy_required = omni.fluid.sluid_contain_fluid/boiler_consumption,
+                            enabled = true,
                             hide_from_player_crafting = true,
                             main_product = fugacity.name,
-                            ingredients = {{type = "item", name = "solid-"..fugacity.name.."-T-"..temp, amount = prod}},
-                            results = {{type = "fluid", name = fugacity.name, amount = omni.fluid.sluid_contain_fluid*prod, temperature = temp}},
+                            ingredients = {{type = "item", name = "solid-"..fugacity.name.."-T-"..temp, amount = 1}},
+                            results = {{type = "fluid", name = fugacity.name, amount = omni.fluid.sluid_contain_fluid, temperature = temp}},
                         }
                     else
                         log("item does not exist:".. fugacity.name.."-fluidisation-"..temp)
@@ -311,18 +300,17 @@ for _, boiler in pairs(data.raw.boiler) do
                         subgroup = "fluid-recipes",
                         category = "general-omni-boiler",
                         order = "g[hydromnic-acid]",
-                        energy_required = tid,
+                        energy_required = omni.fluid.sluid_contain_fluid/boiler_consumption,
                         enabled = true,--may change this to be linked to the boiler unlock if applicable
                         hide_from_player_crafting = true,
                         main_product = fugacity.name,
-                        ingredients = {{type = "item", name = "solid-"..fugacity.name, amount = prod}},
-                        results = {{type = "fluid", name = fugacity.name, amount = omni.fluid.sluid_contain_fluid*prod, temperature = data.raw.fluid[fugacity.name].default_temperature}},
+                        ingredients = {{type = "item", name = "solid-"..fugacity.name, amount = 1}},
+                        results = {{type = "fluid", name = fugacity.name, amount = omni.fluid.sluid_contain_fluid, temperature = data.raw.fluid[fugacity.name].default_temperature}},
                     }
                 end
             end
         end
 
-        --duplicate boiler for each corresponding one? 
         --The sluids boiler is an assembly type so we cannot just override the old ones..., so we make the assemly type replacement and hide the original, Be careful with things like angels electric boilers as they are assembly type too.
         local new_item = table.deepcopy(data.raw.item[boiler.name])
         new_item.name = boiler.name.."-converter"
@@ -333,8 +321,8 @@ for _, boiler in pairs(data.raw.boiler) do
         boiler.minable.result = boiler.name.."-converter"
         --stop it from being analysed further (stop recursive updates)
         omni.fluid.forbidden_assembler[boiler.name.."-converter"] = true
+        
         --create entity
-
         local new_ent = table.deepcopy(data.raw.boiler[boiler.name])
         new_ent.type = "assembling-machine"
         new_ent.name = boiler.name.."-converter"
@@ -390,9 +378,9 @@ for _, boiler in pairs(data.raw.boiler) do
 
         --find tech unlock
         local found = false --if not found, force off (means enabled at start)
-        for i,tech in pairs(data.raw.technology) do
+        for _, tech in pairs(data.raw.technology) do
             if tech.effects then
-                for j,k in pairs(tech.effects) do
+                for j, k in pairs(tech.effects) do
                     if k.recipe_name and k.recipe_name == boiler.name then
                         boiler_tech[#boiler_tech+1] = {tech_name = tech.name, old_name = boiler.name}
                     end

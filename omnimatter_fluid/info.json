@@ -9,15 +9,16 @@
 "dependencies":[
 	"base",
 	"omnilib >= 4.1.0",
-	"?omnimatter",
-	"?omnimatter_water",
-	"?omnimatter_crystal",
-	"?omnimatter_science",
-	"?omnimatter_research",
-	"?aai-industry",
-	"?angelssmelting",
-	"?Thaumaturgic-Machinations",
-	"?ScienceCostTweakerM",
-	"?angelsindustries"
+	"(?)omnimatter",
+	"(?)omnimatter_water",
+	"(?)omnimatter_crystal",
+	"(?)omnimatter_compression",
+	"(?)omnimatter_science",
+	"(?)omnimatter_research",
+	"(?)aai-industry",
+	"(?)angelssmelting",
+	"(?)Thaumaturgic-Machinations",
+	"(?)ScienceCostTweakerM",
+	"(?)angelsindustries"
 ]
 }
