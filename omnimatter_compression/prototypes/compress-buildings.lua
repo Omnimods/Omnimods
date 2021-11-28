@@ -172,8 +172,8 @@ local create_concentrated_recipe = function(fluid, tier, temp)
         -- Clamp to valid recipe values
         temp = math.min(temp, 1000)
         -- Clamp to fluid min/max
-        temp = math.min(temp, new_fluid.max_temperature)
-        temp = math.max(temp, new_fluid.default_temperature)
+        temp = new_fluid.max_temperature and math.min(temp, new_fluid.max_temperature) or temp
+        temp = new_fluid.default_temperature and math.max(temp, new_fluid.default_temperature) or temp
     end
     -- Zero pad to keep sorting proper
     local temp_str = temp and "-" .. string.format("%04d", temp) .. "c" or ""
