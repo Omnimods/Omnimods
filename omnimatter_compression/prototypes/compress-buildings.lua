@@ -619,7 +619,7 @@ local run_entity_updates = function(new, kind, i)
         -- new.fluid = "concentrated-"..new.fluid
         local fl_name = new.fluid.."-concentrated-grade-"..i
         if not data.raw.fluid[fl_name] then 
-            create_concentrated_fluid(new.fluid,i)
+            create_concentrated_recipe(new.fluid,i)
         end
         new.fluid = fl_name
     end

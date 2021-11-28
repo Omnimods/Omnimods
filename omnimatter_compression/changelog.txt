@@ -5,6 +5,8 @@ Date: 2021.XX.XX
     - LightedPolesPlus (LEP+) support for compressed poles
   Bugfixes:
     - Fix improperly excluding some recipes with the keywords "concentrate" or "compression"
+    - Fix error when handling fluids without explicit temperatures
+    - Fix missing fluid recipes if offshore pump produces something other than water
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.11
 Date: 2021.10.27
