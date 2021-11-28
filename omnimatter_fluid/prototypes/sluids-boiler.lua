@@ -1,61 +1,67 @@
-omni.fluid.boiler_images =	{
-    animation = make_4way_animation_from_spritesheet({
-    layers = {
+function omni.fluid.boiler_images(tier)
+    local boilername = "boiler"
+    if tier and type(tier) == "number" and tier > 1 and tier < 6 then
+        boilername = "boiler_"..tier
+    end
+    return {
+        animation = make_4way_animation_from_spritesheet({
+        layers = {
+            {
+                filename = "__omnimatter_fluid__/graphics/"..boilername.."/boiler-off.png",
+                width = 160,
+                height = 160,
+                frame_count = 1,
+                shift = util.by_pixel(-5, -4.5),
+                },
+            }
+        }),
+        working_visualisations =
         {
-            filename = "__omnimatter_fluid__/graphics/boiler/boiler-off.png",
-            width = 160,
-            height = 160,
-            frame_count = 1,
-            shift = util.by_pixel(-5, -4.5),
-            },
-        }
-    }),
-    working_visualisations =
-    {
-        {
-        north_position = util.by_pixel(35, -23),-- 30,-24
-        west_position = util.by_pixel(1, -49.5), -- 1, -49.5
-        south_position = util.by_pixel(-35, -48), -- -30, -48
-        east_position = util.by_pixel(-11, -1),-- -11, -1
-        apply_recipe_tint = "primary",
-        {
-            apply_recipe_tint = "tertiary",
-            north_position = {0, 0},
-            west_position = {0, 0},
-            south_position = {0, 0},
-            east_position = {0, 0},
-            north_animation =
             {
-                filename = "__omnimatter_fluid__/graphics/boiler/boiler-north-off.png",
-                frame_count = 1,
-                width = 160,
-                height = 160,
-            },
-            east_animation =
+            north_position = util.by_pixel(35, -23),-- 30,-24
+            west_position = util.by_pixel(1, -49.5), -- 1, -49.5
+            south_position = util.by_pixel(-35, -48), -- -30, -48
+            east_position = util.by_pixel(-11, -1),-- -11, -1
+            apply_recipe_tint = "primary",
             {
-                filename = "__omnimatter_fluid__/graphics/boiler/boiler-east-off.png",
-                frame_count = 1,
-                width = 160,
-                height = 160,
-            },
-            west_animation =
-            {
-                filename = "__omnimatter_fluid__/graphics/boiler/boiler-west-off.png",
-                frame_count = 1,
-                width = 160,
-                height = 160,
-            },
-            south_animation =
-            {
-                filename = "__omnimatter_fluid__/graphics/boiler/boiler-south-off.png",
-                frame_count = 1,
-                width = 160,
-                height = 160,
+                apply_recipe_tint = "tertiary",
+                north_position = {0, 0},
+                west_position = {0, 0},
+                south_position = {0, 0},
+                east_position = {0, 0},
+                north_animation =
+                {
+                    filename = "__omnimatter_fluid__/graphics/"..boilername.."/boiler-north-off.png",
+                    frame_count = 1,
+                    width = 160,
+                    height = 160,
+                },
+                east_animation =
+                {
+                    filename = "__omnimatter_fluid__/graphics/"..boilername.."/boiler-east-off.png",
+                    frame_count = 1,
+                    width = 160,
+                    height = 160,
+                },
+                west_animation =
+                {
+                    filename = "__omnimatter_fluid__/graphics/"..boilername.."/boiler-west-off.png",
+                    frame_count = 1,
+                    width = 160,
+                    height = 160,
+                },
+                south_animation =
+                {
+                    filename = "__omnimatter_fluid__/graphics/"..boilername.."/boiler-south-off.png",
+                    frame_count = 1,
+                    width = 160,
+                    height = 160,
+                }
             }
         }
+    },
     }
-},
-}
+end
 omni.fluid.exchanger_images =	{
     animation = make_4way_animation_from_spritesheet({
     layers = {

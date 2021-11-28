@@ -12,7 +12,3 @@
 
 require("prototypes.sluids-generation")
 require("prototypes.offshore-pump")
-
---require("prototypes.sluids-from-fluids")
---require("prototypes.sluids-building-changes")
---require("prototypes.sluids-generation")

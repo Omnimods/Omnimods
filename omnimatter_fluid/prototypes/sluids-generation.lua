@@ -225,7 +225,6 @@ data:extend(ent)
 ----------------------------------------
 local new_boiler = {}
 local fix_boilers_recipe = {}
-local fix_boilers_item = {}
 local ing_replace={}
 local boiler_tech = {}
 
@@ -259,7 +258,6 @@ for _, boiler in pairs(data.raw.boiler) do
         --add boiler to recipe list and fix minable-result list
         if boiler.minable.result and not boiler.minable.results then
             fix_boilers_recipe[#fix_boilers_recipe+1] = rec.name
-            fix_boilers_item[boiler.minable.result] = true
         end
 
         --set-up result and main product values to be the new converter
@@ -347,7 +345,7 @@ for _, boiler in pairs(data.raw.boiler) do
         --change source location to deal with the new size
         new_ent.energy_source = boiler.energy_source
         if new_ent.energy_source and new_ent.energy_source.connections then
-            local HS=boiler.energy_source
+            local HS = boiler.energy_source
             HS.connections = omni.fluid.heat_pipe_images.connections
             HS.pipe_covers = omni.fluid.heat_pipe_images.pipe_covers
             HS.heat_pipe_covers = omni.fluid.heat_pipe_images.heat_pipe_covers
@@ -375,8 +373,15 @@ for _, boiler in pairs(data.raw.boiler) do
             new_ent.animation = omni.fluid.exchanger_images.animation
             new_ent.working_visualisations = omni.fluid.exchanger_images.working_visualisations
         else
-            new_ent.animation = omni.fluid.boiler_images.animation
-            new_ent.working_visualisations = omni.fluid.boiler_images.working_visualisations
+            local tier = string.gsub(boiler.name, "boiler%-", "")
+            if tier and omni.lib.is_number(tier) then
+                new_ent.animation = omni.fluid.boiler_images(tonumber(tier)).animation
+                new_ent.working_visualisations = omni.fluid.boiler_images(tonumber(tier)).working_visualisations
+            else
+                new_ent.animation = omni.fluid.boiler_images().animation
+                new_ent.working_visualisations = omni.fluid.boiler_images().working_visualisations
+            end
+            
         end
         new_ent.collision_box = {{-1.29, -1.29}, {1.29, 1.29}}
         new_ent.selection_box = {{-1.5, -1.5}, {1.5, 1.5}}
