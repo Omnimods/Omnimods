@@ -3,6 +3,8 @@ Version: 4.1.18
 Date: ????
   Features:
     - Added omni.lib.recipe_is_hidden(recipename)
+  Bugfixes:
+    - Fixed that recipe standardisation was not accounting for ingredient.temperature
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.17
 Date: 2021.10.28
