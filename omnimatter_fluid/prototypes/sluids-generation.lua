@@ -16,19 +16,21 @@ local function sort_fluid(fluidname, category, temperature)
     --Fluid doesnt exist in this category or as mush yet
     if fluid and not fluid_cats[category][fluid.name] and not fluid_cats["mush"][fluid.name] then
         --Check for a combination of fluid / sluid. If both is required, add it as mush and remove it from sluids/fluids
+        local temperatures = {}
+        --Pick up the already known temperature table
         if category == "fluid" and fluid_cats["sluid"][fluid.name] then
             category = "mush"
-            --Pick up the already known temperature table
-            temperature = omni.lib.union(fluid_cats["sluid"][fluid.name].temperatures, temperature or {temp = "none"})
+            temperatures = omni.lib.union(fluid_cats["sluid"][fluid.name].temperatures, {temperature or {temp = "none"}})
             fluid_cats["sluid"][fluid.name] = nil
         elseif category == "sluid" and fluid_cats["fluid"][fluid.name] then
             category = "mush"
-            temperature = omni.lib.union(fluid_cats["fluid"][fluid.name].temperatures, temperature or {temp = "none"})
+            temperatures = omni.lib.union(fluid_cats["fluid"][fluid.name].temperatures, {temperature or {temp = "none"}})
             fluid_cats["fluid"][fluid.name] = nil
+        else
+            temperatures = {temperature or {temp = "none"}}
         end
-
         fluid_cats[category][fluid.name] = table.deepcopy(fluid)
-        fluid_cats[category][fluid.name].temperatures = {temperature or {temp = "none"}}
+        fluid_cats[category][fluid.name].temperatures = temperatures
     --Fluid already exists: Update temperatures table if a temperature is specified. Check if "none" is already in the table if no temp is specified
     elseif fluid then
         --Check if it already exists as mush and repoint category to that
@@ -50,7 +52,11 @@ for _, gen in pairs(data.raw.generator) do
     if not omni.fluid.check_string_excluded(gen.name) then
         --Ignore fluid burning gens, looking for things that must stay fluid like steam and save their required temperature in case of getting mush
         if not gen.burns_fluid and gen.fluid_box and gen.fluid_box.filter then
-            sort_fluid(gen.fluid_box.filter, "fluid")
+            --Ignore steam since we create a seperate boiling recipe for that
+            --Not sure if we need to check generators at all
+            if gen.fluid_box.filter ~= "steam" then
+                sort_fluid(gen.fluid_box.filter, "fluid", {temp = gen.maximum_temperature, conversion = true})
+            end
             generator_fluid[gen.fluid_box.filter] = true --set the fluid up as a known filter
             --log("Added "..gen.fluid_box.filter.." as fluid. Generator: "..gen.name)
         end
@@ -61,7 +67,7 @@ end
 for _, turr in pairs(data.raw["fluid-turret"]) do
     if turr.attack_parameters.fluids then
         for _, flu in pairs(turr.attack_parameters.fluids) do
-            sort_fluid(flu.type, "fluid")
+            sort_fluid(flu.type, "fluid", {temp = "none", conversion = true})
             --log("Added "..flu.type.." as fluid. Generator: "..turr.name)
         end
     end
@@ -70,7 +76,7 @@ end
 --mining fluid detection
 for _,res in pairs(data.raw.resource) do
     if res.minable and res.minable.required_fluid then
-        sort_fluid(res.minable.required_fluid, "fluid")
+        sort_fluid(res.minable.required_fluid, "fluid", {temp = "none", conversion = true})
         --log("Added "..res.minable.required_fluid.." as fluid. Generator: "..res.name)
     end
 end
@@ -107,7 +113,7 @@ end
 --Check all fluids for a fuel value
 for _,fluid in pairs(data.raw.fluid) do
     if fluid.fuel_value then
-        sort_fluid(fluid.name, "fluid")
+        sort_fluid(fluid.name, "fluid", {temp = "none", conversion = true})
     end
 end
 
@@ -118,6 +124,7 @@ end
 for _,cat in pairs(fluid_cats) do
     for _,fluid in pairs(cat) do
         local new_temps = {}
+        local conversions = {}
     
         --First loop: Get all entries that have .temperature or nothing (just one) set
         for i=#(fluid.temperatures),1,-1 do
@@ -125,31 +132,40 @@ for _,cat in pairs(fluid_cats) do
             if fluid.temperatures[i].temp and not omni.lib.is_in_table(fluid.temperatures[i].temp, new_temps) then
                 new_temps[#new_temps+1] = fluid.temperatures[i].temp
             end
+            if fluid.temperatures[i].temp and fluid.temperatures[i].conversion then
+                conversions[fluid.temperatures[i].temp] = true
+            end
             fluid.temperatures[i] = nil
         end
 
         --Second Loop: Go through the leftovers which have min/max set and check if theres an entry already in its range
-        for _,temps in pairs(fluid.temperatures) do
-            local found = false
-            for new in pairs(new_temps)do
-                if temps.temp_min and new >= temps.temp_min and temps.temp_max and new <= temps.temp_max then
-                    found = true
-                    break
-                end
-            end
-            if found == true then
-                temps = nil
-            end
-        end
+
+        -- for _, temps in pairs(fluid.temperatures) do
+        --     local found = false
+        --     for new in pairs(new_temps)do
+        --         if temps.temp_min and new >= temps.temp_min and temps.temp_max and new <= temps.temp_max then
+        --             found = true
+        --             break
+        --         end
+        --     end
+        --     if found == true then
+        --         temps = nil
+        --     end
+        -- end
         for i=#(fluid.temperatures),1,-1 do
             local found = false
+            local temp = 0
             for new in pairs(new_temps)do
                 if fluid.temperatures[i].temp_min and new >= fluid.temperatures[i].temp_min and fluid.temperatures[i].temp_max and new <= fluid.temperatures[i].temp_max then
                     found = true
+                    temp = new
                     break
                 end
             end
             if found == true then
+                if fluid.temperatures[i].conversion then
+                    conversions[temp] = true
+                end
                 fluid.temperatures[i] = nil
             end
         end
@@ -159,6 +175,7 @@ for _,cat in pairs(fluid_cats) do
             log(serpent.block(fluid.temperatures))
         end
         fluid.temperatures = new_temps
+        fluid.conversions = conversions
     end
 end
 
@@ -179,7 +196,7 @@ for catname, cat in pairs(fluid_cats) do
     for _, fluid in pairs(cat) do
         --sluid or mush: create items and replace recipe ings/res
         if catname ~= "fluid" then
-            for _,temp in pairs(fluid.temperatures) do
+            for _,temp in pairs(fluid.temperatures ) do
                 if temp == "none" then
                     ent[#ent+1] = {
                         type = "item",
@@ -270,8 +287,8 @@ for _, boiler in pairs(data.raw.boiler) do
         --Create mush converter recipes
         for _, fugacity in pairs(fluid_cats.mush) do
             --deal with non-water mush fluids, allow temperature and specific boiler systems
-            --if #fugacity.temperature >= 1 then --not sure if i want to add another level of analysis to split them into temperature specific ranges which may make modded hard, or leave it as is.
-            for _, temp in pairs(fugacity.temperatures) do
+            for temp,_ in pairs(fugacity.conversions) do
+                --Check the old temperatures table if the required temperature requires a conversion recipe
                 --deal with each instance
                 if temp ~= "none"  and boiler.target_temperature >= temp then
                     if data.raw.item["solid-"..fugacity.name.."-T-"..temp] then
