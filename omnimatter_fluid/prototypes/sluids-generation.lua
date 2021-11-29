@@ -75,9 +75,21 @@ end
 
 --mining fluid detection
 for _,res in pairs(data.raw.resource) do
-    if res.minable and res.minable.required_fluid then
-        sort_fluid(res.minable.required_fluid, "fluid", {temp = "none", conversion = true})
-        --log("Added "..res.minable.required_fluid.." as fluid. Generator: "..res.name)
+    --Required fluids for resources
+    if res.minable then
+        if res.minable.required_fluid then
+            sort_fluid(res.minable.required_fluid, "fluid", {temp = "none", conversion = true})
+            --log("Added "..res.minable.required_fluid.." as mining fluid. Resource: "..res.name)
+        end
+        --Fluid resources just incase they are not added from other analysis (fluids cant be in minable.result)
+        if res.minable.results then
+            for _,flu in pairs(res.minable.results) do
+                if flu.type and flu.type =="fluid" then
+                    sort_fluid(flu.name, "sluid")
+                    --log("Added "..res.minable.required_fluid.." as sluid mining product. Resource: "..res.name)
+                end
+            end
+        end
     end
 end
 
@@ -107,6 +119,8 @@ for _, rec in pairs(data.raw.recipe) do
         for _, fluid in pairs(fluids) do
             sort_fluid(fluid.name, "sluid", {temp = fluid.temperature, temp_min = fluid.default_temperature, temp_max = fluid.max_temperature})
         end
+    else
+        --log("Ignoring blacklisted recipe "..rec.name)
     end
 end
 
@@ -116,6 +130,7 @@ for _,fluid in pairs(data.raw.fluid) do
         sort_fluid(fluid.name, "fluid", {temp = "none", conversion = true})
     end
 end
+
 
 ---------------------------------
 -----Sort temperatures-----
@@ -139,19 +154,6 @@ for _,cat in pairs(fluid_cats) do
         end
 
         --Second Loop: Go through the leftovers which have min/max set and check if theres an entry already in its range
-
-        -- for _, temps in pairs(fluid.temperatures) do
-        --     local found = false
-        --     for new in pairs(new_temps)do
-        --         if temps.temp_min and new >= temps.temp_min and temps.temp_max and new <= temps.temp_max then
-        --             found = true
-        --             break
-        --         end
-        --     end
-        --     if found == true then
-        --         temps = nil
-        --     end
-        -- end
         for i=#(fluid.temperatures),1,-1 do
             local found = false
             local temp = 0
@@ -309,7 +311,8 @@ for _, boiler in pairs(data.raw.boiler) do
                     else
                         log("item does not exist:".. fugacity.name.."-fluidisation-"..temp)
                     end
-                else --no temperature specific fluid
+                --no temperature specific fluid. Make sure to check for "none" since fluids outside of this boiler tier can go past the first if
+                elseif temp == "none" then
                     new_boiler[#new_boiler+1] = {
                         type = "recipe",
                         name = fugacity.name.."-fluidisation",
@@ -563,6 +566,7 @@ for name, changes in pairs(recipe_mods) do
                         --Something is wrong...
                         else
                             log("Sluid Replacement error for "..ing.name)
+                            log(serpent.block(rec))
                         end
                         --Finally round again for the case of a precision error like .999
                         new_ing.amount = math.min(omni.fluid.round_fluid(omni.fluid.get_true_amount(ing)*mult[dif]/omni.fluid.sluid_contain_fluid), 65535)
