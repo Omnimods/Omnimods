@@ -565,8 +565,10 @@ for name, changes in pairs(recipe_mods) do
                             log("Sluid Replacement error for "..ing.name)
                         end
                         --Finally round again for the case of a precision error like .999
-                        new_ing.amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing)*mult[dif]/omni.fluid.sluid_contain_fluid)
-
+                        new_ing.amount = math.min(omni.fluid.round_fluid(omni.fluid.get_true_amount(ing)*mult[dif]/omni.fluid.sluid_contain_fluid), 65535)
+                        if omni.fluid.round_fluid(omni.fluid.get_true_amount(ing)*mult[dif]/omni.fluid.sluid_contain_fluid) > 65535 then
+                            log("WARNING: Ingredient "..new_ing.name.." from the recipe "..rec.name.." ran into the upper limit.")
+                        end
                         --Main product checks
                         if ingres == "results" and rec[dif].main_product and rec[dif].main_product == ing.name then
                             rec[dif].main_product = new_ing.name
@@ -575,7 +577,10 @@ for name, changes in pairs(recipe_mods) do
                     --ingres is an item, apply mult
                     else
                         --Multiply amount with mult, keep probability in mind
-                        ing.amount = (ing.amount or (ing.amount_min+ing.amount_max)/2) * mult[dif]
+                        ing.amount = math.min((ing.amount or (ing.amount_min+ing.amount_max)/2) * mult[dif], 65535)
+                        if (ing.amount or (ing.amount_min+ing.amount_max)/2) * mult[dif] > 65535 then
+                            log("WARNING: Ingredient "..ing.name.." from the recipe "..rec.name.." ran into the upper limit.")
+                        end
                     end
                 end
             end
