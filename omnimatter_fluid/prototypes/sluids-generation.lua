@@ -457,12 +457,14 @@ for name, changes in pairs(recipe_mods) do
         end
         if std == true then omni.lib.standardise(rec) end
 
-        local mult = {normal = 1,expensive = 1}
-        local lcm = {normal = 1,expensive = 1}
+        -----Multiplier calculation with LCM AND GCD-----
+        -------------------------------------------------
+        local mult = {normal = 1, expensive = 1}
+        local lcm = {normal = 1, expensive = 1}
         local gcd = {}
-
         for _, dif in pairs({"normal","expensive"}) do
             local min_amount = math.huge
+            local max_amount = 0
             local lcm_mult = 1
             for _, ingres in pairs({"ingredients","results"}) do
                 --First loop: Calculate the lcm respecting omni.fluid.sluid_contain_fluid
@@ -476,10 +478,10 @@ for name, changes in pairs(recipe_mods) do
                         amount = (ing.amount or (ing.amount_min+ing.amount_max)/2)
                     end
                     if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
-
                     --Calculate lcm
                     --Since our lcm function is not working with floats, multiply by 1000 if we find floats to keep precision for low fluid amounts (we just divided by sluid fluid ratio)
                     min_amount = math.min(min_amount, amount)
+                    max_amount = math.max(max_amount, amount)
                     if (amount*lcm_mult) % 1 > 0 and lcm_mult < 1000 then
                         if lcm_mult < 1000 then
                             lcm_mult = 1000
@@ -521,6 +523,73 @@ for name, changes in pairs(recipe_mods) do
             end
             --The final recipe multiplier is our old mult/the calculated gcd
             mult[dif] = mult[dif] / gcd[dif]
+
+            --Multiplier for this recipe is too huge. Lets do the math lcm/gcd math again with slightly less precision (use rounding)
+            if mult[dif]*max_amount > 20000  or (mult[dif] > 100 and mult[dif]*max_amount > 10000) then
+                --reset all values
+                mult[dif] = 1
+                lcm[dif] = 1
+                gcd[dif] = nil
+                min_amount = math.huge
+                max_amount = 0
+                lcm_mult = 1
+                for _, ingres in pairs({"ingredients","results"}) do
+                    for	_, ing in pairs(rec[dif][ingres]) do
+                        local amount = 0
+                        if ing.type == "fluid" then
+                            --Round the fluid amount to get rid of weird base numbers, divide afterwards to not lose precision
+                            amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing)/omni.fluid.sluid_contain_fluid)
+                        else
+                            --Ignore probability on items, we dont want to mess with/change that. Very low probabilities would make it hard to find a decent gcd
+                            amount = omni.fluid.round_fluid(ing.amount or (ing.amount_min+ing.amount_max)/2)
+                        end
+                        if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
+                        --Calculate lcm
+                        --Since our lcm function is not working with floats, multiply by 1000 if we find floats to keep precision for low fluid amounts (we just divided by sluid fluid ratio)
+                        min_amount = math.min(min_amount, amount)
+                        max_amount = math.max(max_amount, amount)
+                        if (amount*lcm_mult) % 1 > 0 and lcm_mult < 1000 then
+                            if lcm_mult < 1000 then
+                                lcm_mult = 1000
+                                lcm[dif] = lcm[dif] * lcm_mult
+                                amount = amount * lcm_mult
+                                amount = omni.lib.round(amount)
+                            else
+                                amount = omni.lib.round(amount * lcm_mult)
+                            end
+                        else
+                            amount = amount * lcm_mult
+                        end
+                        lcm[dif] = omni.lib.lcm(lcm[dif], amount or 1)
+                    end
+                end
+                --divide by the lcm mult again to get the "true" lcm
+                lcm[dif] = lcm[dif] / lcm_mult
+                --Get the recipe multiplier which is lcm/lowest amount found in this recipe to not lose precision
+                mult[dif] = lcm[dif]/min_amount
+
+                --Recalculate GCD
+                for _, ingres in pairs({"ingredients","results"}) do
+                    for	_, ing in pairs(rec[dif][ingres]) do
+                        local amount = 0
+                        if ing.type == "fluid" then
+                            --Use fluids round function after the ratio division to avoid decimals
+                            amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing)*mult[dif]/omni.fluid.sluid_contain_fluid)
+                        else
+                            amount = omni.lib.round((ing.amount or (ing.amount_min+ing.amount_max)/2)*mult[dif])
+                        end
+                        if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
+
+                        if not gcd[dif] then
+                            gcd[dif] = amount
+                        else
+                            gcd[dif] = omni.lib.gcd(gcd[dif], amount)
+                        end
+                    end
+                end
+                --The final recipe multiplier is our old mult/the calculated gcd
+                mult[dif] = mult[dif] / gcd[dif]
+            end
         end
 
         --Now Replace fluids with sluids and apply the mult too all ingres and crafting time
@@ -582,7 +651,7 @@ for name, changes in pairs(recipe_mods) do
                     else
                         --Multiply amount with mult, keep probability in mind
                         ing.amount = math.min((ing.amount or (ing.amount_min+ing.amount_max)/2) * mult[dif], 65535)
-                        if (ing.amount or (ing.amount_min+ing.amount_max)/2) * mult[dif] > 65535 then
+                        if ((ing.amount or (ing.amount_min+ing.amount_max)/2) * mult[dif]) > 65535 then
                             log("WARNING: Ingredient "..ing.name.." from the recipe "..rec.name.." ran into the upper limit.")
                         end
                     end
