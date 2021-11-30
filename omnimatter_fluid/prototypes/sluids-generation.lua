@@ -440,6 +440,53 @@ for _,boil in pairs(boiler_tech) do
     omni.lib.replace_unlock_recipe(boil.tech_name, boil.old_name, boil.old_name.."-converter")
 end
 
+local function replace_barrels(recipe)
+    for _, dif in pairs({"normal","expensive"}) do
+        for _, ingres in pairs({"ingredients","results"}) do
+            for	j, ing in pairs(recipe[dif][ingres]) do
+                --Remove empty barrels
+                if ing.name and ing.name == "empty-barrel" then
+                    recipe[dif][ingres][j] = nil
+                --Replace filled barrels with sluids
+                elseif ing.name and string.find(ing.name, "%-barrel") then
+                    local flu = string.gsub(ing.name, "%-barrel", "")
+                    if fluid_cats["sluid"][flu] or fluid_cats["mush"][flu] then
+                        ing.name = "solid-"..flu
+                        ing.amount = omni.fluid.round_fluid(ing.amount*50/omni.fluid.sluid_contain_fluid)
+                    end
+                end
+            end
+        end
+    end
+end
+
+--Special Py case 2146321487: replace filled barrel ingredients with solids
+for _, rec in pairs(data.raw.recipe) do
+    if not omni.fluid.check_string_excluded(rec.name) and not omni.lib.recipe_is_hidden(rec.name)  then
+        local std = false
+        local done = false
+        for _,dif in pairs({"normal","expensive"}) do
+            if not (rec[dif] and rec[dif].ingredients and rec[dif].expensive) then
+                std = true
+                break
+            end
+        end
+        if std == true then omni.lib.standardise(rec) end
+        for _, dif in pairs({"normal","expensive"}) do
+            for _, ingres in pairs({"ingredients","results"}) do
+                for	_, ing in pairs(rec[dif][ingres]) do
+                    if string.find(ing.name, "%-barrel") then
+                        replace_barrels(rec)
+                        --Need to lower sluid amount
+                        recipe_mods[rec.name] = recipe_mods[rec.name] or {ingredients = {}, results = {}}
+                        goto continue
+                    end
+                end
+            end
+        end
+        ::continue::
+    end
+end
 
 -------------------------------------------
 -----Replace recipe ingres with sluids-----
