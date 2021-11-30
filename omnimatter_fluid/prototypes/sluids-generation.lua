@@ -9,7 +9,6 @@ local generator_fluid = {} --is used in a generator
 --build a list of recipes to modify after the sluids list is generated
 local recipe_mods = {}
 
-
 local function sort_fluid(fluidname, category, temperature)
     local fluid = data.raw.fluid[fluidname]
     if temperature and not next(temperature) then temperature = nil end
@@ -451,8 +450,11 @@ local function replace_barrels(recipe)
                 elseif ing.name and string.find(ing.name, "%-barrel") then
                     local flu = string.gsub(ing.name, "%-barrel", "")
                     if fluid_cats["sluid"][flu] or fluid_cats["mush"][flu] then
+                        if recipe[dif].main_product and recipe[dif].main_product == ing.name then
+                            recipe[dif].main_product = "solid-"..flu
+                        end
                         ing.name = "solid-"..flu
-                        ing.amount = omni.fluid.round_fluid(ing.amount*50/omni.fluid.sluid_contain_fluid)
+                        ing.amount = omni.lib.round(ing.amount*50/omni.fluid.sluid_contain_fluid)
                     end
                 end
             end
@@ -464,7 +466,6 @@ end
 for _, rec in pairs(data.raw.recipe) do
     if not omni.fluid.check_string_excluded(rec.name) and not omni.lib.recipe_is_hidden(rec.name)  then
         local std = false
-        local done = false
         for _,dif in pairs({"normal","expensive"}) do
             if not (rec[dif] and rec[dif].ingredients and rec[dif].expensive) then
                 std = true
@@ -477,8 +478,6 @@ for _, rec in pairs(data.raw.recipe) do
                 for	_, ing in pairs(rec[dif][ingres]) do
                     if string.find(ing.name, "%-barrel") then
                         replace_barrels(rec)
-                        --Need to lower sluid amount
-                        recipe_mods[rec.name] = recipe_mods[rec.name] or {ingredients = {}, results = {}}
                         goto continue
                     end
                 end
@@ -487,6 +486,7 @@ for _, rec in pairs(data.raw.recipe) do
         ::continue::
     end
 end
+
 
 -------------------------------------------
 -----Replace recipe ingres with sluids-----
@@ -570,7 +570,7 @@ for name, changes in pairs(recipe_mods) do
             end
             --The final recipe multiplier is our old mult/the calculated gcd
             mult[dif] = mult[dif] / gcd[dif]
-
+            
             --Multiplier for this recipe is too huge. Lets do the math lcm/gcd math again with slightly less precision (use rounding)
             if mult[dif]*max_amount > 20000  or (mult[dif] > 100 and mult[dif]*max_amount > 10000) then
                 --reset all values
@@ -685,9 +685,10 @@ for name, changes in pairs(recipe_mods) do
                             log(serpent.block(rec))
                         end
                         --Finally round again for the case of a precision error like .999
-                        new_ing.amount = math.min(omni.fluid.round_fluid(omni.fluid.get_true_amount(ing)*mult[dif]/omni.fluid.sluid_contain_fluid), 65535)
-                        if omni.fluid.round_fluid(omni.fluid.get_true_amount(ing)*mult[dif]/omni.fluid.sluid_contain_fluid) > 65535 then
-                            log("WARNING: Ingredient "..new_ing.name.." from the recipe "..rec.name.." ran into the upper limit.")
+                        local new_amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing)*mult[dif]/omni.fluid.sluid_contain_fluid)
+                        new_ing.amount = math.min(new_amount, 65535)
+                        if new_amount > 65535 then
+                            log("WARNING: Ingredient "..new_ing.name.." from the recipe "..rec.name.." ran into the upper limit. Amount = "..new_amount.." Mult = "..mult[dif])
                         end
                         --Main product checks
                         if ingres == "results" and rec[dif].main_product and rec[dif].main_product == ing.name then
@@ -697,9 +698,10 @@ for name, changes in pairs(recipe_mods) do
                     --ingres is an item, apply mult
                     else
                         --Multiply amount with mult, keep probability in mind
-                        ing.amount = math.min((ing.amount or (ing.amount_min+ing.amount_max)/2) * mult[dif], 65535)
-                        if ((ing.amount or (ing.amount_min+ing.amount_max)/2) * mult[dif]) > 65535 then
-                            log("WARNING: Ingredient "..ing.name.." from the recipe "..rec.name.." ran into the upper limit.")
+                        local new_amount = (ing.amount or (ing.amount_min+ing.amount_max)/2) * mult[dif]
+                        ing.amount = math.min(new_amount, 65535)
+                        if new_amount > 65535 then
+                            log("WARNING: Ingredient "..ing.name.." from the recipe "..rec.name.." ran into the upper limit. Amount = "..new_amount.." Mult = "..mult[dif])
                         end
                     end
                 end
