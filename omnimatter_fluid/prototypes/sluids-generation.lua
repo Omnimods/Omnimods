@@ -152,22 +152,33 @@ for _,cat in pairs(fluid_cats) do
             fluid.temperatures[i] = nil
         end
 
-        --Second Loop: Go through the leftovers which have min/max set and check if theres an entry already in its range
+        --Second Loop: Go through the leftovers which have min/max set
         for i=#(fluid.temperatures),1,-1 do
             local found = false
             local temp = 0
-            for new in pairs(new_temps)do
-                if fluid.temperatures[i].temp_min and new >= fluid.temperatures[i].temp_min and fluid.temperatures[i].temp_max and new <= fluid.temperatures[i].temp_max then
+            local flu = fluid.temperatures[i]
+            if flu.temp_min or flu.temp_max then
+                --Best case: min/max (for the required recipe) equal fluid min/max -->we can use a temperature-less solid (min/max dont have to both exist!!! if only one exists and matches its fine)
+                if (flu.temp_min or data.raw.fluid[flu.name].default_temperature) == data.raw.fluid[flu.name].default_temperature and (flu.temp_max or data.raw.fluid[flu.name].max_temperature) == data.raw.fluid[flu.name].max_temperature then
                     found = true
-                    temp = new
-                    break
+                    temp = "none"
+                    
+                else
+                    --check if theres an entry already in its range
+                    for new in pairs(new_temps)do
+                        if flu.temp_min and new >= flu.temp_min and flu.temp_max and new <= flu.temp_max then
+                            found = true
+                            temp = new
+                            break
+                        end
+                    end
                 end
-            end
-            if found == true then
-                if fluid.temperatures[i].conversion then
-                    conversions[temp] = true
+                if found == true then
+                    if flu.conversion then
+                        conversions[temp] = true
+                    end
+                    fluid.temperatures[i] = nil
                 end
-                fluid.temperatures[i] = nil
             end
         end
         --Check if the table is empty --> Everything should be sorted out properly
@@ -660,21 +671,26 @@ for name, changes in pairs(recipe_mods) do
                         --Ingredient has to be in a specific temperature range, check if a solid between min and max exists
                         --May need to add a recipe for ALL temperatures that are in this range
                         elseif ing.minimum_temperature or ing.maximum_temperature then
-                            local found_temp = nil
-                            for _,temp in pairs(fluid_cats[cat][ing.name].temperatures) do
-                                if type(temp) == "number" and temp >= (ing.minimum_temperature or 0) and temp <= (ing.maximum_temperature or math.huge) then
-                                    found_temp = temp
-                                    break
-                                end
-                            end
-                            if found_temp then
-                                new_ing.name = "solid-"..ing.name.."-T-"..found_temp
-                            --No temperature matches, use the no temperature sluid as fallback
-                            elseif  omni.lib.is_in_table("none", fluid_cats[cat][ing.name].temperatures) then
+                            --Temp min/max == fluid temp min/max -->use a non temp solid (min/max can exist solo)
+                            if (ing.minimum_temperature or data.raw.fluid[ing.name].default_temperature) == data.raw.fluid[ing.name].default_temperature and (ing.maximum_temperatur or data.raw.fluid[ing.name].max_temperature) == data.raw.fluid[ing.name].max_temperature then
                                 new_ing.name = "solid-"..ing.name
-                                log("No sluid found that matches the correct temperature for "..ing.name)
                             else
-                                log("Sluid Replacement error for "..ing.name)
+                                    local found_temp = nil
+                                for _,temp in pairs(fluid_cats[cat][ing.name].temperatures) do
+                                    if type(temp) == "number" and temp >= (ing.minimum_temperature or 0) and temp <= (ing.maximum_temperature or math.huge) then
+                                        found_temp = temp
+                                        break
+                                    end
+                                end
+                                if found_temp then
+                                    new_ing.name = "solid-"..ing.name.."-T-"..found_temp
+                                --No temperature matches, use the no temperature sluid as fallback
+                                elseif  omni.lib.is_in_table("none", fluid_cats[cat][ing.name].temperatures) then
+                                    new_ing.name = "solid-"..ing.name
+                                    log("No sluid found that matches the correct temperature for "..ing.name)
+                                else
+                                    log("Sluid Replacement error for "..ing.name)
+                                end
                             end
                         -- No temperature set and "none" is in our list --> no temp sluid exists
                         elseif omni.lib.is_in_table("none", fluid_cats[cat][ing.name].temperatures) then
