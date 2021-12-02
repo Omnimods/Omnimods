@@ -104,8 +104,85 @@ BuildChain:create("omnimatter","omniphlog"):
     }):setOverlay("tractor-over"):
     extend()
 
-if mods["angelsindustries"] and angelsmods.industries.components then
-    for i=1,settings.startup["omnimatter-max-tier"].value do
+local fbox_positions = {
+    {
+        {
+            0,
+            -1.95---1.95
+        },
+        {
+            1.9,
+            0
+        },
+        {
+            0,
+            1.85
+        },
+        {
+            -1.9,
+            0
+        }
+    },
+    {
+        {
+            0,
+            1.85
+        },
+        {
+            -1.9,
+            0
+        },
+        {
+            0,
+            -1.95---1.95
+        },
+        {
+            1.9,
+            0
+        }
+    }
+}
+local shift = {
+    north = {0, 0.25},
+    east = {-0.1, 0},
+    south = {0, 0.19},
+    west = {-0.1, 0}
+}
+local function modify_fluidboxes(proto)
+    local fboxes = proto.fluid_boxes
+    for I=1, #fboxes do
+		-- Covers = no active connection
+		fboxes[I].pipe_covers = pipecoverspictures()
+		-- Move the north cover up a little
+        fboxes[I].pipe_covers.north.layers[1].shift = {0, -0.05}
+		fboxes[I].pipe_covers.north.layers[1].hr_version.shift = {0, -0.05}
+		-- Only south should draw "on top"
+		fboxes[I].secondary_draw_orders = {
+			north = -1,
+			east = -1,
+			south = 2,
+			west = -1
+		}
+        -- Offset fluidbox
+		fboxes[I].pipe_connections[1].positions = fbox_positions[I]
+		-- Remove the "one size fits all" position table
+		fboxes[I].pipe_connections[1].position = nil
+        fboxes[I].pipe_picture = assembler3pipepictures()
+		for dir, picture in pairs(fboxes[I].pipe_picture) do
+            -- X, Y
+            for II=1, 2 do
+                picture.shift[II] = picture.shift[II] + shift[dir][II]
+                picture.hr_version.shift[II] = picture.hr_version.shift[II] + shift[dir][II]
+            end
+            -- Override the "assembler 3" tint
+			picture.tint = {1,0.9,1,1}
+			picture.hr_version.tint = {1,0.9,1,1}
+		end
+	end
+end
+local is_comp_mode = mods["angelsindustries"] and angelsmods.industries.components
+for i=1,settings.startup["omnimatter-max-tier"].value do
+    if is_comp_mode then
         -- Remove previous tier buildings from the recipes
         if i == 1 then
             omni.lib.remove_recipe_ingredient("omniphlog-1", "burner-omniphlog")
@@ -113,4 +190,8 @@ if mods["angelsindustries"] and angelsmods.industries.components then
             omni.lib.remove_recipe_ingredient("omniphlog-"..i, "omniphlog-"..i-1)
         end
     end
+    -- Modify our fluid boxes
+	modify_fluidboxes(data.raw["assembling-machine"]["omniphlog-"..i])
 end
+-- Burner as well
+modify_fluidboxes(data.raw["assembling-machine"]["burner-omniphlog"])

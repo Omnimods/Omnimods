@@ -107,7 +107,11 @@ if mods["pypetroleumhandling"] then
 end
 if mods["pyalienlife"] then
 	-- Green
-	omni.matter.add_resource("bio-sample", 2)
+	if data.raw.item["native-flora"] then -- indev version
+		omni.matter.add_resource("native-flora", 2)
+	else
+		omni.matter.add_resource("bio-sample", 2)
+	end
 end
 if mods["pyrawores"] then
 	--Initial omnitractions

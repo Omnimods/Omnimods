@@ -24,10 +24,17 @@ end
 --Extend compression items/recipes into the regular machines, revert machines with empty compressed categories back to their base categories
 for _,kind in pairs({"assembling-machine","furnace","rocket-silo"}) do
     for _,build in pairs(data.raw[kind]) do
+        local has_advanced = false -- Add our "general" category if the machine is capable of advanced crafting
+        local has_general_compressed = false -- but only if it isn't there already
         for i,cat in pairs(build.crafting_categories) do
             local new_cat = cat.."-compressed"
+            if cat == "advanced-crafting" then
+                has_advanced = true
+            elseif cat == "general-compressed" then
+                has_general_compressed = true
+            end
             if not cat:find("compressed$") and data.raw["recipe-category"][new_cat] and categories[new_cat] ~= 0 then
-                table.insert(build.crafting_categories,cat.."-compressed")
+                table.insert(build.crafting_categories,new_cat)
             elseif cat:find("compressed$") and not categories[cat] then
                 local old_cat = cat:gsub("-compressed$", "")
                 if data.raw["recipe-category"][old_cat] then
@@ -36,12 +43,10 @@ for _,kind in pairs({"assembling-machine","furnace","rocket-silo"}) do
                 end
             end
         end
+        if has_advanced and not has_general_compressed then
+            build.crafting_categories[#build.crafting_categories+1] = "general-compressed"
+        end
         if kind ~= "furnace" then
-            if string.find(build.name,"assembling") then
-                if not omni.lib.is_in_table("general-compressed",build.crafting_categories) then
-                    table.insert(build.crafting_categories,"general-compressed")
-                end
-            end
             -- Allow selection between compressed and non-compressed
             if build.fixed_recipe then
                 local rec = recipes[build.fixed_recipe]

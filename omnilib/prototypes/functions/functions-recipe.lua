@@ -2,21 +2,20 @@ function omni.lib.set_recipe_ingredients(recipename,...)
     local rec = data.raw.recipe[recipename]
     if rec then
         local arg = {...}
-	    local ing = {}
-	    for i,v in pairs(arg) do
-	    	local tmp = {}
-	    	if type(v)=="string" then
-	    		tmp = {{name=v,type="item", amount=1}}
-	    	elseif type(v)=="table" then
-	    		if type(v[1]) == "string" then
-	    			tmp = {{name=v[1],type="item", amount=v[2]}}
-	    		elseif v.name then
-	    			tmp = {{name=v.name,type=v.type or "item", amount=v.amount,probability = v.probability, amount_min = v.amount_min, amount_max=v.amount_max}}
-	    		end
-	    	end
-	    	ing = omni.lib.union(ing,tmp)
-	    end
-
+        local ing = {}
+        for i,v in pairs(arg) do
+            local tmp = {}
+            if type(v)=="string" then
+                tmp = {{name=v,type="item", amount=1}}
+            elseif type(v)=="table" then
+                if type(v[1]) == "string" then
+                    tmp = {{name=v[1],type="item", amount=v[2]}}
+                elseif v.name then
+                    tmp = {{name=v.name,type=v.type or "item", amount=v.amount,probability = v.probability, amount_min = v.amount_min, amount_max=v.amount_max}}
+                end
+            end
+            ing = omni.lib.union(ing,tmp)
+        end
         if rec.ingredients then
             rec.ingredients = ing
         end
@@ -26,27 +25,27 @@ function omni.lib.set_recipe_ingredients(recipename,...)
         if rec.expensive and rec.expensive.ingredients then
             rec.expensive.ingredients = ing
         end
-	end
+    end
 end
 
 function omni.lib.set_recipe_results(recipename,...)
     local rec = data.raw.recipe[recipename]
     if rec then
         local arg = {...}
-	    local res = {}
-	    for i,v in pairs(arg) do
-	    	local tmp = {}
-	    	if type(v)=="string" then
-		    	tmp = {{name=v,type="item", amount=1}}
-		    elseif type(v)=="table" then
-		    	if type(v[1]) == "string" then
-		    		tmp = {{name=v[1],type="item", amount=v[2]}}
-		    	elseif v.name then
-		    		tmp = {{name=v.name,type=v.type or "item", amount=v.amount,probability = v.probability, amount_min = v.amount_min, amount_max=v.amount_max}}
-		    	end
-		    end
-		    res = omni.lib.union(res,tmp)
-	    end
+        local res = {}
+        for i,v in pairs(arg) do
+            local tmp = {}
+            if type(v)=="string" then
+                tmp = {{name=v,type="item", amount=1}}
+            elseif type(v)=="table" then
+                if type(v[1]) == "string" then
+                    tmp = {{name=v[1],type="item", amount=v[2]}}
+                elseif v.name then
+                    tmp = {{name=v.name,type=v.type or "item", amount=v.amount,probability = v.probability, amount_min = v.amount_min, amount_max=v.amount_max}}
+                end
+            end
+            res = omni.lib.union(res,tmp)
+        end
         if rec.result then
             rec.result = nil
             rec.result_count = nil
@@ -71,18 +70,18 @@ function omni.lib.set_recipe_results(recipename,...)
             end
             rec.expensive.results = res
         end
-	end
+    end
 end
 
 function omni.lib.add_recipe_ingredient(recipename, ingredient)
     local rec = data.raw.recipe[recipename]
     if rec then
-		local norm = {}
+        local norm = {}
         local expens = {}
-		if not ingredient.name then
-			if type(ingredient)=="string" then
-				norm = {type="item",name=ingredient,amount=1}
-				expens = {type="item",name=ingredient,amount=1}
+        if not ingredient.name then
+            if type(ingredient)=="string" then
+                norm = {type="item",name=ingredient,amount=1}
+                expens = {type="item",name=ingredient,amount=1}
             elseif ingredient.normal or ingredient.expensive then
                 if ingredient.normal then
                     norm = {type=ingredient.normal.type or "item",name=ingredient.normal.name or ingredient.normal[1], amount=ingredient.normal.amount or ingredient.normal[2] or 1}
@@ -94,15 +93,15 @@ function omni.lib.add_recipe_ingredient(recipename, ingredient)
                 else
                     expens = nil
                 end
-			elseif ingredient[1].name then
-				norm = ingredient[1]
-				expens = ingredient[2]
-			elseif type(ingredient[1])=="string" then
-				norm = {type="item",name=ingredient[1],amount=ingredient[2]}
-				expens = {type="item",name=ingredient[1],amount=ingredient[2]}
-			end
-		else
-			norm = ingredient
+            elseif ingredient[1].name then
+                norm = ingredient[1]
+                expens = ingredient[2]
+            elseif type(ingredient[1])=="string" then
+                norm = {type="item",name=ingredient[1],amount=ingredient[2]}
+                expens = {type="item",name=ingredient[1],amount=ingredient[2]}
+            end
+        else
+            norm = ingredient
             expens = ingredient
         end
         local found = false
@@ -129,7 +128,7 @@ function omni.lib.add_recipe_ingredient(recipename, ingredient)
             found = false
             --check if ingredient the ingredient is already used
             for i,ing in pairs(rec.ingredients) do
-                 --check if nametags exist (only check ing[i] when no name tags exist)
+                --check if nametags exist (only check ing[i] when no name tags exist)
                 if ing.name then
                     if ing.name == norm.name then
                         found = true
@@ -151,46 +150,46 @@ function omni.lib.add_recipe_ingredient(recipename, ingredient)
             found = false
             for i,ing in pairs(rec.normal.ingredients) do
                 --check if nametags exist (only check ing[i] when no name tags exist)
-               if ing.name then
-                   if ing.name == norm.name then
-                       found= true
-                       ing.amount = ing.amount + norm.amount
-                       break
-                   end
-               elseif ing[1] and ing[1] == norm.name then
-                   found= true
-                   ing[2] = ing[2] + norm.amount
-                   break
-               end
-           end
-           if  not found then
-               table.insert(rec.normal.ingredients, norm)
-           end
+                if ing.name then
+                    if ing.name == norm.name then
+                        found= true
+                        ing.amount = ing.amount + norm.amount
+                        break
+                    end
+                elseif ing[1] and ing[1] == norm.name then
+                    found= true
+                    ing[2] = ing[2] + norm.amount
+                    break
+                end
+            end
+            if  not found then
+                table.insert(rec.normal.ingredients, norm)
+            end
         end
         --rec.expensive.ingredients
         if expens and rec.expensive and rec.expensive.ingredients then
             found = false
             for i,ing in pairs(rec.expensive.ingredients) do
                 --check if nametags exist (only check ing[i] when no name tags exist)
-               if ing.name then
-                   if ing.name == expens.name then
-                       found= true
-                       ing.amount = ing.amount + expens.amount
-                       break
-                   end
-               elseif ing[1] and ing[1] == expens.name then
-                   found= true
-                   ing[2] = ing[2] + expens.amount
-                   break
-               end
-           end
-           if  not found then
-               table.insert(rec.expensive.ingredients, expens)
-           end
+                if ing.name then
+                    if ing.name == expens.name then
+                        found= true
+                        ing.amount = ing.amount + expens.amount
+                        break
+                    end
+                elseif ing[1] and ing[1] == expens.name then
+                    found= true
+                    ing[2] = ing[2] + expens.amount
+                    break
+                end
+            end
+            if  not found then
+                table.insert(rec.expensive.ingredients, expens)
+            end
         end
-	else
-		--log(recipe.." does not exist.")
-	end
+    else
+        --log(recipe.." does not exist.")
+    end
 end
 
 function omni.lib.add_recipe_result(recipename, result)
@@ -198,11 +197,11 @@ function omni.lib.add_recipe_result(recipename, result)
     if rec then
         local norm = {}
         local expens = {}
-	    if not result.name then
-	    	if type(result)=="string" then
-	    		norm = {type="item",name=result,amount=1}
-	    		expens = {type="item",name=result,amount=1}
-	    	elseif result.normal or result.expensive then
+        if not result.name then
+            if type(result)=="string" then
+                norm = {type="item",name=result,amount=1}
+                expens = {type="item",name=result,amount=1}
+            elseif result.normal or result.expensive then
                 if result.normal then
                     norm = {type=result.normal.type or "item",name=result.normal.name or result.normal[1], amount=result.normal.amount or result.normal[2] or 1}
                 else
@@ -213,16 +212,16 @@ function omni.lib.add_recipe_result(recipename, result)
                 else
                     expens = nil
                 end
-	    	elseif result[1].name then
-	    		norm = result[1]
-	    		expens = result[2]
-	    	elseif type(result[1])=="string" then
-	    		norm = {type="item",name=result[1],amount=result[2]}
-	    		expens = {type="item",name=result[1],amount=result[2]}
-    		end
-	    else
-	    	norm = result
-	    	expens = result
+            elseif result[1].name then
+                norm = result[1]
+                expens = result[2]
+            elseif type(result[1])=="string" then
+                norm = {type="item",name=result[1],amount=result[2]}
+                expens = {type="item",name=result[1],amount=result[2]}
+            end
+        else
+            norm = result
+            expens = result
         end
         local found = false
         -- Single result checks
@@ -315,34 +314,34 @@ function omni.lib.add_recipe_result(recipename, result)
                 table.insert(rec.expensive.results, expens)
             end
         end
-	else
-		--log(recipe.." does not exist.")
-	end
+    else
+        --log(recipe.." does not exist.")
+    end
 end
 
 function omni.lib.remove_recipe_ingredient(recipename, ingredient)
     local rec = data.raw.recipe[recipename]
     if rec then
-	    if rec.ingredients then
-	    	for i,ing in pairs(rec.ingredients) do
-		    	if ing.name == ingredient or ing[1] == ingredient then
-		    		table.remove(rec.ingredients,i)
-		    	end
-         end
+        if rec.ingredients then
+            for i,ing in pairs(rec.ingredients) do
+                if ing.name == ingredient or ing[1] == ingredient then
+                    table.remove(rec.ingredients,i)
+                end
+            end
         end
-	    if rec.normal and rec.normal.ingredients then
-		    for i,ing in pairs(rec.normal.ingredients) do
-		    	if ing.name == ingredient or ing[1] == ingredient then
-		    		table.remove(rec.normal.ingredients,i)
-		    	end
+        if rec.normal and rec.normal.ingredients then
+            for i,ing in pairs(rec.normal.ingredients) do
+                if ing.name == ingredient or ing[1] == ingredient then
+                    table.remove(rec.normal.ingredients,i)
+                end
             end
         end
         if rec.expensive and rec.expensive.ingredients then
-		    for i,ing in pairs(rec.expensive.ingredients) do
-			    if ing.name == ingredient or ing[1] == ingredient then
-			    	table.remove(rec.expensive.ingredients,i)
-			    end
-		    end
+            for i,ing in pairs(rec.expensive.ingredients) do
+                if ing.name == ingredient or ing[1] == ingredient then
+                    table.remove(rec.expensive.ingredients,i)
+                end
+            end
         end
     else
         log("Can not remove ingredient "..ingredient..". Recipe "..recipename.." not found.")
@@ -351,10 +350,10 @@ end
 
 function omni.lib.remove_recipe_result(recipename, result)
     local rec = data.raw.recipe[recipename]
-	if not rec.result and not rec.normal.result then
-		if rec.results then
-			for i,res in pairs(rec.results) do
-				if res.name == result then
+    if not rec.result and not rec.normal.result then
+        if rec.results then
+            for i,res in pairs(rec.results) do
+                if res.name == result then
                     table.remove(rec.results,i)
                     if rec.normal.main_product and rec.normal.main_product == result then
                         rec.normal.main_product = nil
@@ -363,20 +362,20 @@ function omni.lib.remove_recipe_result(recipename, result)
                 end   
             end
         end
-		if rec.normal and rec.normal.results then
-			for i,res in pairs(rec.normal.results) do
-				if res.name == result then
+        if rec.normal and rec.normal.results then
+            for i,res in pairs(rec.normal.results) do
+                if res.name == result then
                     table.remove(rec.normal.results,i)
                     if rec.normal.main_product and rec.normal.main_product == result then
                         rec.normal.main_product = nil
                     end
                     break
-				end
+                end
             end
         end
         if rec.expensive and rec.expensive.results then
-			for i,res in pairs(rec.expensive.results) do
-				if res.name == result then
+            for i,res in pairs(rec.expensive.results) do
+                if res.name == result then
                     table.remove(rec.expensive.results,i)
                     if rec.expensive.main_product and rec.expensive.main_product == result then
                         rec.expensive.main_product = nil
@@ -384,10 +383,10 @@ function omni.lib.remove_recipe_result(recipename, result)
                     break
                 end
             end
-		end
-	else
-		log("Attempted to remove the only result that recipe "..recipename.." has. Cannot be done")
-	end
+        end
+    else
+        log("Attempted to remove the only result that recipe "..recipename.." has. Cannot be done")
+    end
 end
 
 function omni.lib.replace_recipe_result(recipename, result, replacement)
@@ -505,7 +504,7 @@ function omni.lib.replace_recipe_result(recipename, result, replacement)
 end
 
 function omni.lib.replace_recipe_ingredient(recipename, ingredient, replacement)
-	local rec = data.raw.recipe[recipename]
+    local rec = data.raw.recipe[recipename]
     if rec then
         local repname = nil
         local repamount = nil
@@ -554,11 +553,11 @@ function omni.lib.replace_recipe_ingredient(recipename, ingredient, replacement)
                         ing.amount = repamount or ing.amount
                         ing.type = reptype or ing.type
                         if reptemp == "blank" then
-                          ing.temperature = nil
-                          ing.maximum_temperature = nil
-                          ing.minimum_temperature = nil
+                            ing.temperature = nil
+                            ing.maximum_temperature = nil
+                            ing.minimum_temperature = nil
                         else
-                          ing.temperature = reptemp or ing.temp
+                            ing.temperature = reptemp or ing.temp
                         end
                     end
                     break
@@ -578,11 +577,11 @@ function omni.lib.replace_recipe_ingredient(recipename, ingredient, replacement)
                 end
             end
         end
-	end
+    end
 end
 
 function omni.lib.multiply_recipe_ingredient(recipename, ingredient, mult)
-	local rec = data.raw.recipe[recipename]
+    local rec = data.raw.recipe[recipename]
     if rec then
         --rec.ingredients
         if rec.ingredients then
@@ -629,11 +628,11 @@ function omni.lib.multiply_recipe_ingredient(recipename, ingredient, mult)
                 end
             end
         end
-	end
+    end
 end
 
 function omni.lib.multiply_recipe_result(recipename, result, mult)
-	local rec = data.raw.recipe[recipename]
+    local rec = data.raw.recipe[recipename]
     if rec then
         -- Single result
         if rec.result and rec.result == result then
@@ -705,23 +704,23 @@ function omni.lib.multiply_recipe_result(recipename, result, mult)
                 end
             end
         end
-	end
+    end
 end
 
 function omni.lib.replace_all_ingredient(ingredient, replacement)
-	for _,recipe in pairs(data.raw.recipe) do
-		omni.lib.replace_recipe_ingredient(recipe.name, ingredient, replacement)
-	end
+    for _,recipe in pairs(data.raw.recipe) do
+        omni.lib.replace_recipe_ingredient(recipe.name, ingredient, replacement)
+    end
 end
 
 function omni.lib.replace_all_result(result, replacement)
-	for _,recipe in pairs(data.raw.recipe) do
-		omni.lib.replace_recipe_result(recipe.name, result, replacement)
-	end
+    for _,recipe in pairs(data.raw.recipe) do
+        omni.lib.replace_recipe_result(recipe.name, result, replacement)
+    end
 end
 
 function omni.lib.change_recipe_category(recipe, category)
-	data.raw.recipe[recipe].category=category
+    data.raw.recipe[recipe].category=category
 end
 
 --Checks if a recipe contains a specific material as ingredient
@@ -738,13 +737,13 @@ function omni.lib.recipe_ingredient_contains(recipename, itemname)
         if rec.normal and rec.normal.ingredients then
             for i,ing in pairs(rec.normal.ingredients) do
                 if omni.lib.is_in_table(itemname, ing) then return true end
-           end
+            end
         end
         --rec.expensive.ingredients
         if rec.expensive and rec.expensive.ingredients then
             for i,ing in pairs(rec.expensive.ingredients) do
                 if omni.lib.is_in_table(itemname, ing) then return true end
-           end
+            end
         end 
         return nil
     end
@@ -774,13 +773,13 @@ function omni.lib.recipe_result_contains(recipename, itemname)
         if rec.normal and rec.normal.results then
             for i,res in pairs(rec.normal.results) do
                 if omni.lib.is_in_table(itemname, res) then return true end
-           end
+            end
         end
         --rec.expensive.results
         if rec.expensive and rec.expensive.results then
             for i,res in pairs(rec.expensive.results) do
                 if omni.lib.is_in_table(itemname, res) then return true end
-           end
+            end
         end 
         return nil
     end
@@ -805,40 +804,40 @@ function omni.lib.recipe_result_contains_string(recipename, string)
 end
 
 function omni.lib.get_tech_name(recipename)
-	for _,tech in pairs(data.raw.technology) do
-		if tech.effects then
-			for _,eff in pairs(tech.effects) do
-				if eff.type == "unlock-recipe" and eff.recipe ==recipename then
-					return tech.name
-				end
-			end
-		end
+    for _,tech in pairs(data.raw.technology) do
+        if tech.effects then
+            for _,eff in pairs(tech.effects) do
+                if eff.type == "unlock-recipe" and eff.recipe ==recipename then
+                    return tech.name
+                end
+            end
+        end
     end
     return nil
 end
 
 function omni.lib.remove_recipe_all_techs(recipename)
-	for _,tech in pairs(data.raw.technology) do
-		if tech.effects then
-			for i,eff in pairs(tech.effects) do
-				if eff.type == "unlock-recipe" and eff.recipe == recipename then
-					table.remove(data.raw.technology[tech.name].effects,i)
-				end
-			end
-		end
-	end
+    for _,tech in pairs(data.raw.technology) do
+        if tech.effects then
+            for i,eff in pairs(tech.effects) do
+                if eff.type == "unlock-recipe" and eff.recipe == recipename then
+                    table.remove(data.raw.technology[tech.name].effects,i)
+                end
+            end
+        end
+    end
 end
 
 function omni.lib.replace_recipe_all_techs(recipename,replacement)
-	for _,tech in pairs(data.raw.technology) do
-		if tech.effects then
-			for i,eff in pairs(tech.effects) do
-				if eff.type == "unlock-recipe" and eff.recipe == recipename then
-					eff.recipe=replacement
-				end
-			end
-		end
-	end
+    for _,tech in pairs(data.raw.technology) do
+        if tech.effects then
+            for i,eff in pairs(tech.effects) do
+                if eff.type == "unlock-recipe" and eff.recipe == recipename then
+                    eff.recipe=replacement
+                end
+            end
+        end
+    end
 end
 
 --Checks if the recipe is enabled
@@ -859,7 +858,7 @@ function omni.lib.recipe_is_enabled(recipename)
                 return false
             end
         --nothing is set --> recipe is enabled by default
-        else 
+        else
             return true
         end
     end
@@ -896,4 +895,29 @@ function omni.lib.disable_recipe(recipename)
             rec.expensive.enabled = false
         end
     end
+end
+
+--Checks if the recipe is hidden
+function omni.lib.recipe_is_hidden(recipename)
+    local rec = data.raw.recipe[recipename]
+    if rec then
+        --Check rec.hidden which has prio
+        if rec.hidden ~= nil then
+            if rec.hidden == true then
+                return true
+            else
+                return false
+            end
+        elseif (rec.normal and rec.normal.hidden ~= nil) or (rec.expensive and rec.expensive.hidden~= nil) then
+            if (rec.normal and rec.normal.hidden == true) or (rec.expensive and rec.expensive.hidden == true) then
+                return true
+            else
+                return false
+            end
+        --nothing is set --> recipe is not hidden
+        else
+            return false
+        end
+    end
+    return nil
 end

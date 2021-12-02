@@ -133,8 +133,182 @@ BuildChain:create("omnimatter","omnitractor"):
 	}):setOverlay("tractor-over"):
 	extend()
 
-if mods["angelsindustries"] and angelsmods.industries.components then
-	for i=1,math.min(settings.startup["omnimatter-max-tier"].value,5) do
+local fbox_positions = {
+	{
+		{
+			-1,
+			-1.95
+		},
+		{
+			1.9,
+			-1
+		},
+		{
+			1,
+			1.85
+		},
+		{
+			-1.9,
+			1
+		}
+	},
+	{
+		{
+			1,
+			-1.95
+		},
+		{
+			1.9,
+			1
+		},
+		{
+			-1,
+			1.85
+		},
+		{
+			-1.9,
+			-1
+		}
+	},
+	{
+		{
+			-1,
+			1.85
+		},
+		{
+			-1.9,
+			-1
+		},
+		{
+			1,
+			-1.95
+		},
+		{
+			1.9,
+			1
+		}
+	},
+	{
+		{
+			1,
+			1.85
+		},
+		{
+			-1.9,
+			1
+		},
+		{
+			-1,
+			-1.95
+		},
+		{
+			1.9,
+			-1
+		}
+	}
+}
+local function modify_fluidboxes(proto)
+	local fboxes = proto.fluid_boxes
+	for I=1, #fboxes do
+		-- Covers = no active connection
+		fboxes[I].pipe_covers = pipecoverspictures()
+		-- Move the north cover up a little
+		fboxes[I].pipe_covers.north.layers[1].shift = {0, -0.05}
+		fboxes[I].pipe_covers.north.layers[1].hr_version.shift = {0, -0.05}
+		-- Only south should draw "on top"
+		fboxes[I].secondary_draw_orders = {
+			north = -1,
+			east = -1,
+			south = 0,
+			west = -1
+		}
+		-- Picture always shown, covers draws on top
+		fboxes[I].pipe_picture = {
+			north = {
+				filename = "__base__/graphics/entity/pipe/pipe-straight-vertical.png",
+				height = 64,
+				width = 64,
+				shift = {
+					0,
+					0.95
+				},
+				hr_version = {
+					filename = "__base__/graphics/entity/pipe/hr-pipe-straight-vertical.png",
+					scale = 0.5,
+					height = 128,
+					width = 128,
+					shift = {
+						0,
+						0.95
+					}
+				}
+			},
+			east = {
+				filename = "__base__/graphics/entity/pipe/pipe-straight-horizontal.png",
+				height = 64,
+				width = 64,
+				shift = {
+					-0.85,
+					0
+				},
+				hr_version = {
+					filename = "__base__/graphics/entity/pipe/hr-pipe-straight-horizontal.png",
+					scale = 0.5,
+					height = 128,
+					width = 128,
+					shift = {
+						-0.85,
+						0
+					}
+				}
+			},
+			south = {
+				filename = "__omnimatter__/graphics/pipe-patch-south.png",
+				height = 64,
+				width = 64,
+				shift = {
+					0,
+					-0.299
+				},
+				hr_version = {
+					filename = "__omnimatter__/graphics/hr-pipe-patch-south.png",
+					scale = 0.5,
+					height = 128,
+					width = 128,
+					shift = {
+						0,
+						-0.299
+					}
+				}
+			},
+			west = {
+				filename = "__base__/graphics/entity/pipe/pipe-straight-horizontal.png",
+				height = 64,
+				width = 64,
+				shift = {
+					0.9,
+					0
+				},
+				hr_version = {
+					filename = "__base__/graphics/entity/pipe/hr-pipe-straight-horizontal.png",
+					scale = 0.5,
+					height = 128,
+					width = 128,
+					shift = {
+						0.9,
+						0
+					}
+				}
+			}
+		}
+		fboxes[I].pipe_connections[1].positions = fbox_positions[I]
+		-- Remove the "one size fits all" position table
+		fboxes[I].pipe_connections[1].position = nil
+	end
+end
+local comp_mode_active = mods["angelsindustries"] and angelsmods.industries.components
+for i=1,math.min(settings.startup["omnimatter-max-tier"].value,5) do
+	if comp_mode_active then
 		-- Add omniblock unlocks
 		omni.lib.add_unlock_recipe("omnitech-omnitractor-electric-"..i, "block-omni-"..i)
 		-- Remove previous tier buildings from the recipes
@@ -144,4 +318,8 @@ if mods["angelsindustries"] and angelsmods.industries.components then
 			omni.lib.remove_recipe_ingredient("omnitractor-"..i, "omnitractor-"..i-1)
 		end
 	end
+	-- Modify our fluid boxes
+	modify_fluidboxes(data.raw["assembling-machine"]["omnitractor-"..i])
 end
+-- Burner as well
+modify_fluidboxes(data.raw["assembling-machine"]["burner-omnitractor"])

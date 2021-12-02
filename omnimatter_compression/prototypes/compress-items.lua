@@ -1,7 +1,7 @@
 local compress_recipes, uncompress_recipes, compress_items = {}, {}, {}
 compressed_item_names = {}  --global?
 local item_count = 0
-local concentrationRatio = sluid_contain_fluid --set in omnilib
+local concentrationRatio = omni.compression.sluid_contain_fluid --set in omnilib
 local excluded_items = {}
 --Config variables
 local compressed_item_stack_size = 120 -- stack size for compressed items (not the items returned that is dynamic)
@@ -63,26 +63,26 @@ for _, group in pairs({"fluid"}) do
                 subgroup = "concentrator-fluids",
                 normal = {
                 ingredients = {
-                    {name = fluid.name, type = "fluid", amount = sluid_contain_fluid*concentrationRatio}
+                    {name = fluid.name, type = "fluid", amount = omni.compression.sluid_contain_fluid*concentrationRatio}
                 },
                 subgroup = "concentrator-fluids",
                 results = {
-                    {name = "concentrated-"..fluid.name, type = "fluid", amount = sluid_contain_fluid}
+                    {name = "concentrated-"..fluid.name, type = "fluid", amount = omni.compression.sluid_contain_fluid}
                 },
-                energy_required = sluid_contain_fluid / speed_div,
+                energy_required = omni.compression.sluid_contain_fluid / speed_div,
                 enabled = true,
                 hidden = true,
                 hide_from_player_crafting = omni.compression.hide_handcraft
                 },
                 expensive={
                 ingredients = {
-                    {name = fluid.name, type = "fluid", amount = sluid_contain_fluid*concentrationRatio}
+                    {name = fluid.name, type = "fluid", amount = omni.compression.sluid_contain_fluid*concentrationRatio}
                 },
                 subgroup = "concentrator-fluids",
                 results = {
-                    {name = "concentrated-"..fluid.name, type = "fluid", amount = sluid_contain_fluid}
+                    {name = "concentrated-"..fluid.name, type = "fluid", amount = omni.compression.sluid_contain_fluid}
                 },
-                energy_required = sluid_contain_fluid / speed_div,
+                energy_required = omni.compression.sluid_contain_fluid / speed_div,
                 enabled = true,
                 hidden = true,
                 hide_from_player_crafting = omni.compression.hide_handcraft
@@ -104,11 +104,11 @@ for _, group in pairs({"fluid"}) do
                 order = fluid.order or ("z".."[concentrated-"..fluid.name .."]"),
                 normal = {
                 ingredients = {
-                    {name = "concentrated-"..fluid.name,type = "fluid", amount = sluid_contain_fluid}
+                    {name = "concentrated-"..fluid.name,type = "fluid", amount = omni.compression.sluid_contain_fluid}
                 },
                 subgroup = "compressor-out-fluids",
                 results = {
-                    {name = fluid.name, type = "fluid", amount = sluid_contain_fluid*concentrationRatio}
+                    {name = fluid.name, type = "fluid", amount = omni.compression.sluid_contain_fluid*concentrationRatio}
                 },
                 enabled = true,
                 hidden = true,
@@ -117,11 +117,11 @@ for _, group in pairs({"fluid"}) do
                 },
                 expensive = {
                 ingredients = {
-                    {name = "concentrated-"..fluid.name, type = "fluid", amount = sluid_contain_fluid}
+                    {name = "concentrated-"..fluid.name, type = "fluid", amount = omni.compression.sluid_contain_fluid}
                 },
                 subgroup = "compressor-out-fluids",
                 results = {
-                    {name = fluid.name,type="fluid", amount=sluid_contain_fluid*concentrationRatio}
+                    {name = fluid.name,type="fluid", amount=omni.compression.sluid_contain_fluid*concentrationRatio}
                 },
                 enabled = true,
                 hidden = true,

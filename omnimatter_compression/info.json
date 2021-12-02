@@ -1,6 +1,6 @@
 {
 "name":"omnimatter_compression",
-"version": "4.1.11",
+"version": "4.1.12",
 "title":"Omnicompression",
 "author":"EmperorZelos",
 "contact": "https://discord.gg/WQYks7W",
@@ -17,7 +17,6 @@
     "(?)omnimatter_crystal",
     "(?)marathomaton",
     "(?)Thaumaturgic-Machinations",
-    "(?)omnimatter_fluid",
     "(?)bobelectronics",
     "(?)bobplates",
     "(?)angelspetrochem",

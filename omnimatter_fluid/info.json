@@ -1,6 +1,6 @@
 {
 "name":"omnimatter_fluid",
-"version": "4.1.4",
+"version": "4.1.5",
 "title":"Omnifluid",
 "author":"EmperorZelos",
 "contact": "https://discord.gg/WQYks7W",
@@ -9,15 +9,20 @@
 "dependencies":[
 	"base",
 	"omnilib >= 4.1.0",
-	"?omnimatter",
-	"?omnimatter_water",
-	"?omnimatter_crystal",
-	"?omnimatter_science",
-	"?omnimatter_research",
-	"?aai-industry",
-	"?angelssmelting",
-	"?Thaumaturgic-Machinations",
-	"?ScienceCostTweakerM",
-	"?angelsindustries"
+	"(?)omnimatter",
+	"(?)omnimatter_water",
+	"(?)omnimatter_crystal",
+	"(?)omnimatter_compression",
+	"(?)omnimatter_science",
+	"(?)omnimatter_research",
+	"(?)aai-industry",
+	"(?)angelssmelting",
+	"(?)angelsindustries",
+	"(?)Thaumaturgic-Machinations",
+	"(?)ScienceCostTweakerM",
+	"(?)pycoalprocessing",
+	"(?)pyindustry",
+	"(?)pyhightech",
+	"(?)pyfusionenergy"
 ]
 }

@@ -66,7 +66,7 @@ function omni.lib.standardise(recipe)
                 for i,ing in pairs(ingredients[diff]) do
                     local temp = {}
                     if ing.name then
-                        temp = {type = ing.type, name=ing.name, amount=ing.amount, maximum_temperature=ing.maximum_temperature, minimum_temperature=ing.minimum_temperature, fluidbox_index=ing.fluidbox_index}
+                        temp = {type = ing.type, name=ing.name, amount=ing.amount, temperature = ing.temperature, maximum_temperature=ing.maximum_temperature, minimum_temperature=ing.minimum_temperature, fluidbox_index=ing.fluidbox_index}
                         if not temp.type then temp.type ="item" end
                     else
                         temp = {type = "item", name=ing[1],amount=ing[2]}
