@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.6
+Date: ????
+  Changes:
+    - Prevent PickerDollies from moving sluid offshore pumps
+  Bugfixes:
+    - Fixed that the sluid offshore pump localisation was missing
+---------------------------------------------------------------------------------------------------
 Version: 4.1.5
 Date: 2021.12.02
   Changes:
