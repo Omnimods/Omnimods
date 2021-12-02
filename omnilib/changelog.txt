@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.18
-Date: ????
+Date: 2021.12.02
   Features:
     - Added omni.lib.recipe_is_hidden(recipename)
   Bugfixes:
