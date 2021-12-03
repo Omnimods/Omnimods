@@ -23,6 +23,8 @@ for _, pump in pairs(data.raw["offshore-pump"]) do
         local solid_ent = {
             type = "assembling-machine",
             name = "solshore-"..pump.name,
+            localised_name = omni.lib.locale.of(pump).name,
+            localised_description = pump.localised_description,
             selection_box = pump.collision_box,
             collision_box = pump.selection_box,
             collision_mask = {"not-colliding-with-itself"},
