@@ -23,11 +23,9 @@ end
 
 local function offshore_pump_placed(entity)
     if game.entity_prototypes["solshore-"..entity.name] then
-        local pos = entity.position
-        pos.y = pos.y + 1/32
         entity.surface.create_entity{
             name = "solshore-"..entity.name,
-            position = pos,
+            position = entity.position,
             direction = entity.direction,
             force = entity.force
         }
