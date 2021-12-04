@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.7
+Date: 2021.12.04
+  Features:
+    - Splitted boiler recipes into categories for better overview of boiling and converter recipes
+  Bugfixes:
+    - Fixed that solid steam boiler recipes where missing for some temperatures
+    - Fixed various issues with boiler temperatures and boiling water to steam recipes
+---------------------------------------------------------------------------------------------------
 Version: 4.1.6
 Date: 2021.12.03
   Changes:
@@ -8,7 +16,7 @@ Date: 2021.12.03
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.5
 Date: 2021.12.02
-  Changes:
+  Info:
     - Complete rewrite, fixed various bugs and issues.
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.4
@@ -23,7 +31,7 @@ Date: 2021.01.21
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.2
 Date: 2021.01.21
-  Changes:
+  Info:
     - Updated for omnilib 4.1.6
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.1

@@ -132,6 +132,14 @@ for _,fluid in pairs(data.raw.fluid) do
     end
 end
 
+--Always create sluid steam for the lowest boiler temp
+local min_boiler_temp = math.huge
+for _, boiler in pairs(data.raw.boiler) do
+    min_boiler_temp = math.min(min_boiler_temp, boiler.target_temperature)
+end
+if min_boiler_temp < math.huge then
+    sort_fluid("steam", "sluid", {temp = min_boiler_temp})
+end
 
 ---------------------------------
 -----Sort temperatures-----
@@ -248,14 +256,13 @@ for catname, cat in pairs(fluid_cats) do
 end
 data:extend(ent)
 
-
 ----------------------------------------
------Sluid Boiler recioe generation-----
+-----Sluid Boiler recipe generation-----
 ----------------------------------------
 local new_boiler = {}
 local ing_replace={}
 local boiler_tech = {}
-local boiling_steam= {}
+local boiling_steam = {}
 
 for _, boiler in pairs(data.raw.boiler) do
     --PREPARE DATA FOR MANIPULATION
@@ -285,7 +292,7 @@ for _, boiler in pairs(data.raw.boiler) do
             type = "recipe",
             name = boiler.name.."-boiling-steam-"..boiler.target_temperature,
             icons = {{icon = "__base__/graphics/icons/fluid/steam.png", icon_size = 64, icon_mipmaps = 4}},
-            subgroup = "fluid-recipes",
+            subgroup = "boiler-sluid-steam",
             category = "boiler-omnifluid-"..boiler.name,
             order = "g[hydromnic-acid]",
             energy_required = omni.fluid.sluid_contain_fluid/boiler_consumption,
@@ -296,14 +303,23 @@ for _, boiler in pairs(data.raw.boiler) do
             results = {{type = "fluid", name = steam, amount = omni.fluid.sluid_contain_fluid, temperature = math.min(boiler.target_temperature, data.raw.fluid[steam].max_temperature)},},
         }
 
-        --Create a solid water boiling recipe version if steam with the boiler target temp is required.
-        if fluid_cats["mush"]["steam"] and omni.lib.is_in_table(boiler.target_temperature, fluid_cats["mush"]["steam"].temperatures) then
+        --Create a solid water boiling recipe version if steam with the boiler target temp is required. A recipe with the lowest boilers targed temp needs to be created aswell when "none" temp steam is required
+        local category = "mush"
+        if fluid_cats["sluid"]["steam"] then category = "sluid" end
+        local found = false
+        for _, temp in pairs(fluid_cats[category]["steam"].temperatures) do
+            if (type(temp) == "string" and temp == "none" and boiler.target_temperature == min_boiler_temp) or (type(temp) == "number" and boiler.target_temperature == temp) then
+                found = true
+                break
+            end
+        end
+        if found == true then
             boiling_steam[boiler.target_temperature] = true
             new_boiler[#new_boiler+1] = {
                 type = "recipe",
                 name = boiler.name.."-boiling-solid-steam-"..boiler.target_temperature,
                 icons = {{icon = "__base__/graphics/icons/fluid/steam.png", icon_size = 64, icon_mipmaps = 4}},
-                subgroup = "fluid-recipes",
+                subgroup = "boiler-sluid-steam",
                 category = "boiler-omnifluid-"..boiler.name,
                 order = "g[hydromnic-acid]",
                 energy_required = omni.fluid.sluid_contain_fluid/boiler_consumption,
@@ -327,7 +343,7 @@ for _, boiler in pairs(data.raw.boiler) do
                             type = "recipe",
                             name = boiler.name.."-"..fugacity.name.."-fluidisation-"..temp,
                             icons = omni.lib.icon.of(fugacity.name,"fluid"),
-                            subgroup = "fluid-recipes",
+                            subgroup = "boiler-sluid-converter",
                             category = "boiler-omnifluid-"..boiler.name,
                             order = "g[hydromnic-acid]",
                             energy_required = omni.fluid.sluid_contain_fluid/boiler_consumption,
@@ -346,7 +362,7 @@ for _, boiler in pairs(data.raw.boiler) do
                         type = "recipe",
                         name = fugacity.name.."-fluidisation",
                         icons = omni.lib.icon.of(fugacity.name,"fluid"),
-                        subgroup = "fluid-recipes",
+                        subgroup = "boiler-sluid-converter",
                         category = "general-omni-boiler",
                         order = "g[hydromnic-acid]",
                         energy_required = omni.fluid.sluid_contain_fluid/boiler_consumption,
