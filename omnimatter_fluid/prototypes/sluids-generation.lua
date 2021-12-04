@@ -106,10 +106,12 @@ for _, rec in pairs(data.raw.recipe) do
                 end
             elseif (rec.normal and rec.normal[ingres]) or (rec.expensive and rec.expensive[ingres]) then
                 for _, diff in pairs({"normal","expensive"}) do
-                    for _, it in pairs(rec[diff][ingres]) do
-                        if it and it.type and it.type == "fluid" then
-                            fluids[#fluids+1] = it
-                            recipe_mods[rec.name] = recipe_mods[rec.name] or {ingredients = {}, results = {}}
+                    if rec[diff] and rec[diff][ingres] then
+                        for _, it in pairs(rec[diff][ingres]) do
+                            if it and it.type and it.type == "fluid" then
+                                fluids[#fluids+1] = it
+                                recipe_mods[rec.name] = recipe_mods[rec.name] or {ingredients = {}, results = {}}
+                            end
                         end
                     end
                 end
