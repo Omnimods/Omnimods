@@ -106,17 +106,19 @@ for _, rec in pairs(data.raw.recipe) do
                 end
             elseif (rec.normal and rec.normal[ingres]) or (rec.expensive and rec.expensive[ingres]) then
                 for _, diff in pairs({"normal","expensive"}) do
-                    for _, it in pairs(rec[diff][ingres]) do
-                        if it and it.type and it.type == "fluid" then
-                            fluids[#fluids+1] = it
-                            recipe_mods[rec.name] = recipe_mods[rec.name] or {ingredients = {}, results = {}}
+                    if rec[diff] and rec[diff][ingres] then
+                        for _, it in pairs(rec[diff][ingres]) do
+                            if it and it.type and it.type == "fluid" then
+                                fluids[#fluids+1] = it
+                                recipe_mods[rec.name] = recipe_mods[rec.name] or {ingredients = {}, results = {}}
+                            end
                         end
                     end
                 end
             end
         end
         for _, fluid in pairs(fluids) do
-            sort_fluid(fluid.name, "sluid", {temp = fluid.temperature, temp_min = fluid.default_temperature, temp_max = fluid.max_temperature})
+            sort_fluid(fluid.name, "sluid", {temp = fluid.temperature, temp_min = fluid.minimum_temperature, temp_max = fluid.maximum_temperature})
         end
     else
         --log("Ignoring blacklisted recipe "..rec.name)
@@ -130,6 +132,14 @@ for _,fluid in pairs(data.raw.fluid) do
     end
 end
 
+--Always create sluid steam for the lowest boiler temp
+local min_boiler_temp = math.huge
+for _, boiler in pairs(data.raw.boiler) do
+    min_boiler_temp = math.min(min_boiler_temp, boiler.target_temperature)
+end
+if min_boiler_temp < math.huge then
+    sort_fluid("steam", "sluid", {temp = min_boiler_temp})
+end
 
 ---------------------------------
 -----Sort temperatures-----
@@ -139,34 +149,36 @@ for _,cat in pairs(fluid_cats) do
     for _,fluid in pairs(cat) do
         local new_temps = {}
         local conversions = {}
-    
         --First loop: Get all entries that have .temperature or nothing (just one) set
         for i=#(fluid.temperatures),1,-1 do
-            --log(serpent.block(fluid.temperatures[i]))
-            if fluid.temperatures[i].temp and not omni.lib.is_in_table(fluid.temperatures[i].temp, new_temps) then
-                new_temps[#new_temps+1] = fluid.temperatures[i].temp
+            --Steam sucks
+            if fluid.temperatures[i].temp then
+                if fluid.temperatures[i].conversion then
+                    conversions[fluid.temperatures[i].temp] = true
+                end
+                if not omni.lib.is_in_table(fluid.temperatures[i].temp, new_temps) then
+                    new_temps[#new_temps+1] = fluid.temperatures[i].temp
+                end
+                fluid.temperatures[i] = nil
             end
-            if fluid.temperatures[i].temp and fluid.temperatures[i].conversion then
-                conversions[fluid.temperatures[i].temp] = true
-            end
-            fluid.temperatures[i] = nil
         end
 
+        if next(fluid.temperatures) then fluid.temperatures = omni.fluid.compact_array(fluid.temperatures) end
         --Second Loop: Go through the leftovers which have min/max set
-        for i=#(fluid.temperatures),1,-1 do
+        for i = #(fluid.temperatures),1,-1 do
             local found = false
             local temp = 0
             local flu = fluid.temperatures[i]
             if flu.temp_min or flu.temp_max then
                 --Best case: min/max (for the required recipe) equal fluid min/max -->we can use a temperature-less solid (min/max dont have to both exist!!! if only one exists and matches its fine)
-                if (flu.temp_min or data.raw.fluid[flu.name].default_temperature) == data.raw.fluid[flu.name].default_temperature and (flu.temp_max or data.raw.fluid[flu.name].max_temperature) == data.raw.fluid[flu.name].max_temperature then
+                if ((flu.temp_min or data.raw.fluid[fluid.name].default_temperature) == data.raw.fluid[fluid.name].default_temperature) and ((flu.temp_max or data.raw.fluid[fluid.name].max_temperature) == data.raw.fluid[fluid.name].max_temperature) then
                     found = true
                     temp = "none"
                     
                 else
                     --check if theres an entry already in its range
-                    for new in pairs(new_temps)do
-                        if flu.temp_min and new >= flu.temp_min and flu.temp_max and new <= flu.temp_max then
+                    for _, new in pairs(new_temps)do
+                        if type(new) == "number" and new >= (flu.temp_min or 0) and new <= (flu.temp_max or math.huge) then
                             found = true
                             temp = new
                             break
@@ -181,6 +193,7 @@ for _,cat in pairs(fluid_cats) do
                 end
             end
         end
+
         --Check if the table is empty --> Everything should be sorted out properly
         if next(fluid.temperatures) then
             log("This should be empty")
@@ -243,14 +256,13 @@ for catname, cat in pairs(fluid_cats) do
 end
 data:extend(ent)
 
-
 ----------------------------------------
------Sluid Boiler recioe generation-----
+-----Sluid Boiler recipe generation-----
 ----------------------------------------
 local new_boiler = {}
-local fix_boilers_recipe = {}
 local ing_replace={}
 local boiler_tech = {}
+local boiling_steam = {}
 
 for _, boiler in pairs(data.raw.boiler) do
     --PREPARE DATA FOR MANIPULATION
@@ -272,11 +284,6 @@ for _, boiler in pairs(data.raw.boiler) do
             name = "boiler-omnifluid-"..boiler.name,
         }
 
-        --add boiler to recipe list and fix minable-result list
-        if boiler.minable.result and not boiler.minable.results then
-            fix_boilers_recipe[#fix_boilers_recipe+1] = rec.name
-        end
-
         --set-up result and main product values to be the new converter
         omni.lib.replace_recipe_result(rec.name, boiler.name, boiler.name.."-converter")
 
@@ -285,7 +292,7 @@ for _, boiler in pairs(data.raw.boiler) do
             type = "recipe",
             name = boiler.name.."-boiling-steam-"..boiler.target_temperature,
             icons = {{icon = "__base__/graphics/icons/fluid/steam.png", icon_size = 64, icon_mipmaps = 4}},
-            subgroup = "fluid-recipes",
+            subgroup = "boiler-sluid-steam",
             category = "boiler-omnifluid-"..boiler.name,
             order = "g[hydromnic-acid]",
             energy_required = omni.fluid.sluid_contain_fluid/boiler_consumption,
@@ -295,6 +302,34 @@ for _, boiler in pairs(data.raw.boiler) do
             ingredients = {{type = "item", name = "solid-"..water, amount = 1},},
             results = {{type = "fluid", name = steam, amount = omni.fluid.sluid_contain_fluid, temperature = math.min(boiler.target_temperature, data.raw.fluid[steam].max_temperature)},},
         }
+
+        --Create a solid water boiling recipe version if steam with the boiler target temp is required. A recipe with the lowest boilers targed temp needs to be created aswell when "none" temp steam is required
+        local category = "mush"
+        if fluid_cats["sluid"]["steam"] then category = "sluid" end
+        local found = false
+        for _, temp in pairs(fluid_cats[category]["steam"].temperatures) do
+            if (type(temp) == "string" and temp == "none" and boiler.target_temperature == min_boiler_temp) or (type(temp) == "number" and boiler.target_temperature == temp) then
+                found = true
+                break
+            end
+        end
+        if found == true then
+            boiling_steam[boiler.target_temperature] = true
+            new_boiler[#new_boiler+1] = {
+                type = "recipe",
+                name = boiler.name.."-boiling-solid-steam-"..boiler.target_temperature,
+                icons = {{icon = "__base__/graphics/icons/fluid/steam.png", icon_size = 64, icon_mipmaps = 4}},
+                subgroup = "boiler-sluid-steam",
+                category = "boiler-omnifluid-"..boiler.name,
+                order = "g[hydromnic-acid]",
+                energy_required = omni.fluid.sluid_contain_fluid/boiler_consumption,
+                enabled = true,
+                hide_from_player_crafting = true,
+                main_product = "solid-"..steam.."-T-"..boiler.target_temperature,
+                ingredients = {{type = "item", name = "solid-"..water, amount = 1},},
+                results = {{type = "item", name = "solid-"..steam.."-T-"..boiler.target_temperature, amount = omni.fluid.sluid_contain_fluid}},
+            }
+        end
 
         --Create mush converter recipes
         for _, fugacity in pairs(fluid_cats.mush) do
@@ -308,7 +343,7 @@ for _, boiler in pairs(data.raw.boiler) do
                             type = "recipe",
                             name = boiler.name.."-"..fugacity.name.."-fluidisation-"..temp,
                             icons = omni.lib.icon.of(fugacity.name,"fluid"),
-                            subgroup = "fluid-recipes",
+                            subgroup = "boiler-sluid-converter",
                             category = "boiler-omnifluid-"..boiler.name,
                             order = "g[hydromnic-acid]",
                             energy_required = omni.fluid.sluid_contain_fluid/boiler_consumption,
@@ -327,7 +362,7 @@ for _, boiler in pairs(data.raw.boiler) do
                         type = "recipe",
                         name = fugacity.name.."-fluidisation",
                         icons = omni.lib.icon.of(fugacity.name,"fluid"),
-                        subgroup = "fluid-recipes",
+                        subgroup = "boiler-sluid-converter",
                         category = "general-omni-boiler",
                         order = "g[hydromnic-acid]",
                         energy_required = omni.fluid.sluid_contain_fluid/boiler_consumption,
@@ -670,22 +705,30 @@ for name, changes in pairs(recipe_mods) do
                             new_ing.name = "solid-"..ing.name.."-T-"..ing.temperature
                         --Ingredient has to be in a specific temperature range, check if a solid between min and max exists
                         --May need to add a recipe for ALL temperatures that are in this range
-                        elseif ing.minimum_temperature or ing.maximum_temperature then
+                        elseif ing.minimum_temperature or ing.maximum_temperature or ing.name == "steam" then
                             --Temp min/max == fluid temp min/max -->use a non temp solid (min/max can exist solo)
-                            if (ing.minimum_temperature or data.raw.fluid[ing.name].default_temperature) == data.raw.fluid[ing.name].default_temperature and (ing.maximum_temperatur or data.raw.fluid[ing.name].max_temperature) == data.raw.fluid[ing.name].max_temperature then
+                            --Steam sucks, dont replace fluid steam with a temperature less solid
+                            if ing.name ~= "steam" and (ing.minimum_temperature or data.raw.fluid[ing.name].default_temperature) == data.raw.fluid[ing.name].default_temperature and (ing.maximum_temperatur or data.raw.fluid[ing.name].max_temperature) == data.raw.fluid[ing.name].max_temperature then
                                 new_ing.name = "solid-"..ing.name
                             else
-                                    local found_temp = nil
+                                local found_temp = nil
                                 for _,temp in pairs(fluid_cats[cat][ing.name].temperatures) do
                                     if type(temp) == "number" and temp >= (ing.minimum_temperature or 0) and temp <= (ing.maximum_temperature or math.huge) then
-                                        found_temp = temp
-                                        break
+                                        --If multiple temps are found, use the lowest. (As said, might have to create recipe copies for all found temps here if this doesnt work)
+                                        found_temp = math.min(found_temp or math.huge, temp)
                                     end
                                 end
                                 if found_temp then
                                     new_ing.name = "solid-"..ing.name.."-T-"..found_temp
+                                --Steam sucks, if nothing has been found yet, we need to replace it with the lowest boiler temp
+                                elseif ing.name == "steam" then
+                                    local temp = math.huge
+                                    for t,_ in pairs (boiling_steam) do
+                                        temp = math.min(temp, t)
+                                    end
+                                    new_ing.name = "solid-"..ing.name.."-T-"..temp
                                 --No temperature matches, use the no temperature sluid as fallback
-                                elseif  omni.lib.is_in_table("none", fluid_cats[cat][ing.name].temperatures) then
+                                elseif omni.lib.is_in_table("none", fluid_cats[cat][ing.name].temperatures) then
                                     new_ing.name = "solid-"..ing.name
                                     log("No sluid found that matches the correct temperature for "..ing.name)
                                 else

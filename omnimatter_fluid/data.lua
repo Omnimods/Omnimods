@@ -5,4 +5,5 @@ omni.fluid.sluid_contain_fluid = 40
 omni.fluid.sluid_stack_size = 360
 
 require("prototypes.functions")
+require("prototypes.categories")
 require("prototypes.sluids-boiler")

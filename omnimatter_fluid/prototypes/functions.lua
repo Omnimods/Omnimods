@@ -86,3 +86,13 @@ function omni.fluid.get_true_amount(subtable) --individual ingredient/result tab
     local amount = subtable.amount or (subtable.amount_min + subtable.amount_max)/2 or 0
     return amount * probability
 end
+
+function omni.fluid.compact_array(array) --individual ingredient/result table
+    local new = {}
+    for i=1,#array do
+        if array[i]~=nil then
+            new[#new+1] = array[i]
+        end
+    end
+    return new
+end
