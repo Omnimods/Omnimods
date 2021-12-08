@@ -10,5 +10,9 @@
 --     end
 -- end
 
+--Add pys combustion mixture as special fluid, need conversion recipes for all added temperatures since its created in assemblers
+omni.fluid.add_assembler_generator_fluid("combustion-mixture1")
+
+
 require("prototypes.sluids-generation")
 require("prototypes.offshore-pump")
