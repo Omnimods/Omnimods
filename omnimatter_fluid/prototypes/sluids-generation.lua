@@ -52,7 +52,6 @@ for _, gen in pairs(data.raw.generator) do
         --Ignore fluid burning gens, looking for things that must stay fluid like steam and save their required temperature in case of getting mush
         if not gen.burns_fluid and gen.fluid_box and gen.fluid_box.filter then
             --Ignore steam since we create a seperate boiling recipe for that
-            --Not sure if we need to check generators at all
             if gen.fluid_box.filter ~= "steam" then
                 sort_fluid(gen.fluid_box.filter, "fluid", {temp = gen.maximum_temperature, conversion = true})
             end
@@ -94,7 +93,7 @@ end
 
 --recipes
 for _, rec in pairs(data.raw.recipe) do
-    if not omni.fluid.check_string_excluded(rec.name) and not omni.lib.recipe_is_hidden(rec.name) then
+    if not omni.fluid.check_string_excluded(rec.name) and not omni.lib.recipe_is_hidden(rec.name) and not omni.fluid.forbidden_recipe[rec.name] then
         local fluids = {}
         for _, ingres in pairs({"ingredients","results"}) do --ignore result/ingredient as they don't handle fluids
             if rec[ingres] then
@@ -118,7 +117,9 @@ for _, rec in pairs(data.raw.recipe) do
             end
         end
         for _, fluid in pairs(fluids) do
-            sort_fluid(fluid.name, "sluid", {temp = fluid.temperature, temp_min = fluid.minimum_temperature, temp_max = fluid.maximum_temperature})
+            local conv = nil
+            if (fluid.temperature or 0) > (data.raw.fluid[fluid.name].default_temperature or math.huge) then conv = true end
+            sort_fluid(fluid.name, "sluid", {temp = fluid.temperature, temp_min = fluid.minimum_temperature, temp_max = fluid.maximum_temperature, conversion = conv})
         end
     else
         --log("Ignoring blacklisted recipe "..rec.name)
@@ -256,6 +257,7 @@ for catname, cat in pairs(fluid_cats) do
 end
 data:extend(ent)
 
+
 ----------------------------------------
 -----Sluid Boiler recipe generation-----
 ----------------------------------------
@@ -337,7 +339,7 @@ for _, boiler in pairs(data.raw.boiler) do
             for temp,_ in pairs(fugacity.conversions) do
                 --Check the old temperatures table if the required temperature requires a conversion recipe
                 --deal with each instance
-                if temp ~= "none"  and boiler.target_temperature >= temp then
+                if temp ~= "none"  and (boiler.target_temperature >= temp or omni.fluid.assembler_generator_fluids[fugacity.name]) then
                     if data.raw.item["solid-"..fugacity.name.."-T-"..temp] then
                         new_boiler[#new_boiler+1] = {
                             type = "recipe",

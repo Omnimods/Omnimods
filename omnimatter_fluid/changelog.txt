@@ -1,10 +1,21 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.8
+Date: 2021.12.08
+  Features:
+    - Added Mining drones compatibility
+  Changes:
+    - Added omni.fluid.add_assembler_generator_fluid(fluidname) to specify generator fluids that
+      are crafted in assemblers (and have no boiler recipe). Boilers target temperature will be
+      ignored for these fluids when creating conversion recipes
+  Bugfixes:
+    - Fixed that PY´s combustion mixture had no conversion recipes
+---------------------------------------------------------------------------------------------------
 Version: 4.1.7
 Date: 2021.12.04
   Features:
     - Splitted boiler recipes into categories for better overview of boiling and converter recipes
   Bugfixes:
-    - Fixed that solid steam boiler recipes where missing for some temperatures
+    - Fixed that solid steam boiler recipes were missing for some temperatures
     - Fixed various issues with boiler temperatures and boiling water to steam recipes
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.6

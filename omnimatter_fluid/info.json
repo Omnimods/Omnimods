@@ -1,6 +1,6 @@
 {
 "name":"omnimatter_fluid",
-"version": "4.1.7",
+"version": "4.1.8",
 "title":"Omnifluid",
 "author":"EmperorZelos",
 "contact": "https://discord.gg/WQYks7W",
@@ -18,12 +18,13 @@
 	"(?)aai-industry",
 	"(?)angelssmelting",
 	"(?)angelsindustries",
-	"(?)Thaumaturgic-Machinations",
-	"(?)ScienceCostTweakerM",
+	"(?)Mining_Drones",
 	"(?)pycoalprocessing",
 	"(?)pyindustry",
 	"(?)pyhightech",
 	"(?)pyfusionenergy",
-	"(?)PickerDollies"
+	"(?)PickerDollies",
+	"(?)ScienceCostTweakerM",
+	"(?)Thaumaturgic-Machinations"
 ]
 }

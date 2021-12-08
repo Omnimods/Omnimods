@@ -1,18 +1,24 @@
 omni.fluid.forbidden_boilers = {}
-omni.fluid.forbidden_assembler = {}
+omni.fluid.forbidden_assembler = {} --This one is not used for anything yet. If its not required for further fluid box things we can rip it out.
 omni.fluid.forbidden_recipe = {}
+--Generator fluids that are normally created in an assembling machine. If the results temp is higher than any boiler, we need to ignore the boiler temperature(s) to create conversion recipes
+omni.fluid.assembler_generator_fluids = {}
 omni.fluid.excluded_strings = {{"empty","barrel"},{"fill","barrel"},{"fluid","unknown"},"barreling-pump","creative"}
 
 function omni.fluid.excempt_boiler(boiler)
-    omni.fluid.forbidden_boilers[boiler]=true
+    omni.fluid.forbidden_boilers[boiler] = true
 end
 
 function omni.fluid.excempt_assembler(boiler)
-    omni.fluid.forbidden_assembler[boiler]=true
+    omni.fluid.forbidden_assembler[boiler] = true
 end
 
 function omni.fluid.excempt_recipe(boiler)
-    omni.fluid.forbidden_recipe[boiler]=true
+    omni.fluid.forbidden_recipe[boiler] = true
+end
+
+function omni.fluid.add_assembler_generator_fluid(fluidname)
+    omni.fluid.assembler_generator_fluids[fluidname] = true
 end
 
 function omni.fluid.check_string_excluded(comparison) --checks fluid/recipe name against exclusion list
