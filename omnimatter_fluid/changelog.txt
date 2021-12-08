@@ -15,7 +15,7 @@ Date: 2021.12.04
   Features:
     - Splitted boiler recipes into categories for better overview of boiling and converter recipes
   Bugfixes:
-    - Fixed that solid steam boiler recipes where missing for some temperatures
+    - Fixed that solid steam boiler recipes were missing for some temperatures
     - Fixed various issues with boiler temperatures and boiling water to steam recipes
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.6
