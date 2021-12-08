@@ -93,7 +93,7 @@ end
 
 --recipes
 for _, rec in pairs(data.raw.recipe) do
-    if not omni.fluid.check_string_excluded(rec.name) and not omni.lib.recipe_is_hidden(rec.name) then
+    if not omni.fluid.check_string_excluded(rec.name) and not omni.lib.recipe_is_hidden(rec.name) and not omni.fluid.forbidden_recipe[rec.name] then
         local fluids = {}
         for _, ingres in pairs({"ingredients","results"}) do --ignore result/ingredient as they don't handle fluids
             if rec[ingres] then
