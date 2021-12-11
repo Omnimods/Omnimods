@@ -213,7 +213,7 @@ local create_concentrated_recipe = function(fluid, tier, temp)
             --localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
             category = "fluid-condensation",
             enabled = true,
-            icons = new_fluid.icons,
+            icons = omni.lib.icon.of(new_fluid),
             order = new_fluid.order or ("z".."[condensed-"..fluid .."]")
         }
         local ungrade = {
