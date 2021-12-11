@@ -61,6 +61,17 @@ for _, gen in pairs(data.raw.generator) do
     end
 end
 
+for _, boiler in pairs(data.raw.boiler) do
+    --Check exclusion table
+    if not omni.fluid.check_string_excluded(boiler.name) and not omni.fluid.forbidden_boilers[boiler.name]then
+        --Input fluid == output fluid - Boiler is only used for heating up the fluid
+        if boiler.fluid_box.filter == boiler.output_fluid_box.filter then
+            sort_fluid(boiler.fluid_box.filter, "fluid", {temp = boiler.target_temperature, conversion = true})
+        end
+        --log("Added "..gen.fluid_box.filter.." as fluid. Boiler: "..boiler.name)
+    end
+end
+
 --fluid throwing type turrets
 for _, turr in pairs(data.raw["fluid-turret"]) do
     if turr.attack_parameters.fluids then
@@ -201,6 +212,7 @@ for _,cat in pairs(fluid_cats) do
         if next(fluid.temperatures) then
             log("This should be empty")
             log(serpent.block(fluid.temperatures))
+            log(serpent.block(new_temps))
         end
         fluid.temperatures = new_temps
         fluid.conversions = conversions
@@ -291,38 +303,42 @@ for _, boiler in pairs(data.raw.boiler) do
         --set-up result and main product values to be the new converter
         omni.lib.replace_recipe_result(rec.name, boiler.name, boiler.name.."-converter")
 
-        --Create water boiling recipe with the boilers target temp
-        new_boiler[#new_boiler+1] = {
-            type = "recipe",
-            name = boiler.name.."-boiling-steam-"..boiler.target_temperature,
-            icons = {{icon = "__base__/graphics/icons/fluid/steam.png", icon_size = 64, icon_mipmaps = 4}},
-            subgroup = "boiler-sluid-steam",
-            category = "boiler-omnifluid-"..boiler.name,
-            order = "g[hydromnic-acid]",
-            energy_required = omni.fluid.sluid_contain_fluid/boiler_consumption,
-            enabled = true,
-            hide_from_player_crafting = true,
-            main_product = steam,
-            ingredients = {{type = "item", name = "solid-"..water, amount = 1},},
-            results = {{type = "fluid", name = steam, amount = omni.fluid.sluid_contain_fluid, temperature = math.min(boiler.target_temperature, data.raw.fluid[steam].max_temperature)},},
-        }
+        --Create  boiling recipe with the boilers target temp (only when input~= output. Some boilers are used to heat up fluids)
+        if water ~= steam then
+            new_boiler[#new_boiler+1] = {
+                type = "recipe",
+                name = boiler.name.."-boiling-steam-"..boiler.target_temperature,
+                icons = omni.lib.icon.of(data.raw.fluid[steam]),
+                subgroup = "boiler-sluid-steam",
+                category = "boiler-omnifluid-"..boiler.name,
+                order = "g[hydromnic-acid]",
+                energy_required = omni.fluid.sluid_contain_fluid/boiler_consumption,
+                enabled = true,
+                hide_from_player_crafting = true,
+                main_product = steam,
+                ingredients = {{type = "item", name = "solid-"..water, amount = 1},},
+                results = {{type = "fluid", name = steam, amount = omni.fluid.sluid_contain_fluid, temperature = math.min(boiler.target_temperature, data.raw.fluid[steam].max_temperature)},},
+            }
+        end
 
         --Create a solid water boiling recipe version if steam with the boiler target temp is required. A recipe with the lowest boilers targed temp needs to be created aswell when "none" temp steam is required
         local category = "mush"
-        if fluid_cats["sluid"]["steam"] then category = "sluid" end
+        if fluid_cats["sluid"][steam] then category = "sluid" end
         local found = false
-        for _, temp in pairs(fluid_cats[category]["steam"].temperatures) do
+        for _, temp in pairs(fluid_cats[category][steam].temperatures) do
             if (type(temp) == "string" and temp == "none" and boiler.target_temperature == min_boiler_temp) or (type(temp) == "number" and boiler.target_temperature == temp) then
                 found = true
                 break
             end
         end
         if found == true then
+            local boiled_amount = omni.fluid.sluid_contain_fluid
+            if water == steam then boiled_amount = 1 end
             boiling_steam[boiler.target_temperature] = true
             new_boiler[#new_boiler+1] = {
                 type = "recipe",
                 name = boiler.name.."-boiling-solid-steam-"..boiler.target_temperature,
-                icons = {{icon = "__base__/graphics/icons/fluid/steam.png", icon_size = 64, icon_mipmaps = 4}},
+                icons = omni.lib.icon.of(data.raw.fluid[steam]),
                 subgroup = "boiler-sluid-steam",
                 category = "boiler-omnifluid-"..boiler.name,
                 order = "g[hydromnic-acid]",
@@ -331,7 +347,7 @@ for _, boiler in pairs(data.raw.boiler) do
                 hide_from_player_crafting = true,
                 main_product = "solid-"..steam.."-T-"..boiler.target_temperature,
                 ingredients = {{type = "item", name = "solid-"..water, amount = 1},},
-                results = {{type = "item", name = "solid-"..steam.."-T-"..boiler.target_temperature, amount = omni.fluid.sluid_contain_fluid}},
+                results = {{type = "item", name = "solid-"..steam.."-T-"..boiler.target_temperature, amount = boiled_amount}},
             }
         end
 
