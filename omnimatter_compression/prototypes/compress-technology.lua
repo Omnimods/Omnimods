@@ -172,7 +172,7 @@ for _,tech in pairs(data.raw.technology) do
         end
 
         -- Stage 3: Do the final adjustment of our amount requirements, dividing amount by unit count
-        for num, ings in pairs(t.unit.ingredients) do
+        for _, ings in pairs(t.unit.ingredients) do
             ings.amount = ings.amount / stacks_needed
             ings.amount = math.max(1, omni.lib.round(ings.amount))
         end
