@@ -7,6 +7,7 @@ Date: ????
     - Be more robust if something in fluid replacement goes wrong.
     - Fixed an issue where solid-fluid items and recipes were missing for fluids that could be
       heated up with boilers
+    - Fixed a typo that caused certain solid fluid items to have no localised name
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.8
 Date: 2021.12.08

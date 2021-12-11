@@ -241,7 +241,7 @@ for catname, cat in pairs(fluid_cats) do
                     ent[#ent+1] = {
                         type = "item",
                         name = "solid-"..fluid.name,
-                        localised_name = {"item-name.solid-fluid", fluid.name.localised_name or {"fluid-name."..fluid.name}},
+                        localised_name = {"item-name.solid-fluid", fluid.localised_name or {"fluid-name."..fluid.name}},
                         localised_description = {"item-description.solid-fluid", fluid.localised_description or {"fluid-description."..fluid.name}},
                         icons = omni.lib.icon.of_generic(fluid),
                         subgroup = "omni-solid-fluids",
@@ -252,7 +252,7 @@ for catname, cat in pairs(fluid_cats) do
                     ent[#ent+1] = {
                         type = "item",
                         name = "solid-"..fluid.name.."-T-"..temp,
-                        localised_name = {"item-name.solid-fluid-tmp", fluid.name.localised_name or {"fluid-name."..fluid.name},"T="..temp},
+                        localised_name = {"item-name.solid-fluid-tmp", fluid.localised_name or {"fluid-name."..fluid.name},"T="..temp},
                         localised_description = {"item-description.solid-fluid", fluid.localised_description or {"fluid-description."..fluid.name}},
                         icons = omni.lib.icon.of_generic(fluid),
                         subgroup = "omni-solid-fluids",
