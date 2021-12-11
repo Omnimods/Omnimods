@@ -3,7 +3,6 @@
 -------------------------------------------------------------------------------
 local lab_inputs = {}
 local compressed_techs={}
-local pack_sizes={}
 local tiered_tech = {}
 local alwaysSP = omni.lib.split(settings.startup["omnicompression_always_compress_sp"].value,",")
 local min_compress = settings.startup["omnicompression_compressed_tech_min"].value
@@ -52,6 +51,21 @@ local splitTech = function(tech)
         return tech
     end
 end
+local pack_sizes = {}
+local stack_size = function(name)
+
+end
+setmetatable(pack_sizes, {
+    __index = function(self, key, value)
+        local proto = data.raw.tool[key]
+        if not proto or not proto.stack_size then
+            log("We expect " .. key .. " to be a tool, but it isn't")
+            proto = data.raw.item[key]
+        end
+        self[key] = proto.stack_size
+        return rawget(self, key)
+    end
+})
 -------------------------------------------------------------------------------
 --[[Set-up loops]]--
 -------------------------------------------------------------------------------
@@ -72,13 +86,6 @@ for _, lab in pairs(data.raw.lab) do
         end
         if proto and data.raw.tool["compressed-"..ing] and not omni.lib.start_with(ing,"compressed") and not omni.lib.is_in_table("compressed-"..ing,lab.inputs) and not hidden then
             table.insert(lab.inputs,"compressed-"..ing)
-        end
-        if proto and not pack_sizes[ing] then --only add it if it does not already exist (should save a few microns)
-            if data.raw.tool[ing].stack_size then
-                pack_sizes[ing]=data.raw.tool[ing].stack_size
-            elseif data.raw.item[ing].stack_size then
-                pack_sizes[ing]=data.raw.item[ing].stack_size
-            end
         end
     end
 end
@@ -156,18 +163,18 @@ for _,tech in pairs(data.raw.technology) do
                 ings[1] = nil
                 ings[2] = nil
             end
-            lcm[#lcm+1] = data.raw.tool[ings.name].stack_size
+            lcm[#lcm+1] = pack_sizes[ings.name]
         end
         lcm = omni.lib.lcm(unpack(lcm))
 
         -- Stage 2: Determine our amounts and unit.count (stacks_needed)
         for _, ings in pairs(t.unit.ingredients) do
-            divisor = math.max(divisor, data.raw.tool[ings.name].stack_size)
+            divisor = math.max(divisor, pack_sizes[ings.name])
             ings.amount = (ings.amount * (t.unit.count or lcm)) / pack_sizes[ings.name]
             ings.amount = math.max(1, omni.lib.round(ings.amount))
             ings.name = "compressed-"..ings.name
-            if ings.amount > data.raw.tool[ings.name].stack_size then
-                stacks_needed = omni.lib.lcm(stacks_needed, math.ceil(ings.amount / data.raw.tool[ings.name].stack_size))
+            if ings.amount > pack_sizes[ings.name] then
+                stacks_needed = omni.lib.lcm(stacks_needed, math.ceil(ings.amount / pack_sizes[ings.name]))
             end
         end
 
