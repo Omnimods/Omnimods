@@ -118,7 +118,7 @@ for _, rec in pairs(data.raw.recipe) do
         end
         for _, fluid in pairs(fluids) do
             local conv = nil
-            if (fluid.temperature or 0) > (data.raw.fluid[fluid.name].default_temperature or math.huge) then conv = true end
+            if (fluid.temperature or -65535) > (data.raw.fluid[fluid.name].default_temperature or math.huge) then conv = true end
             sort_fluid(fluid.name, "sluid", {temp = fluid.temperature, temp_min = fluid.minimum_temperature, temp_max = fluid.maximum_temperature, conversion = conv})
         end
     else
@@ -141,6 +141,7 @@ end
 if min_boiler_temp < math.huge then
     sort_fluid("steam", "sluid", {temp = min_boiler_temp})
 end
+
 
 ---------------------------------
 -----Sort temperatures-----
@@ -165,6 +166,7 @@ for _,cat in pairs(fluid_cats) do
         end
 
         if next(fluid.temperatures) then fluid.temperatures = omni.fluid.compact_array(fluid.temperatures) end
+
         --Second Loop: Go through the leftovers which have min/max set
         for i = #(fluid.temperatures),1,-1 do
             local found = false
