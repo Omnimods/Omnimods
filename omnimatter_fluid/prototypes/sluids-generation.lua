@@ -572,6 +572,7 @@ for name, changes in pairs(recipe_mods) do
                         --Ignore probability on items, we dont want to mess with/change that. Very low probabilities would make it hard to find a decent gcd
                         amount = (ing.amount or (ing.amount_min+ing.amount_max)/2)
                     end
+                    if amount == 0 then break end
                     if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
                     --Calculate lcm
                     --Since our lcm function is not working with floats, multiply by 1000 if we find floats to keep precision for low fluid amounts (we just divided by sluid fluid ratio)
@@ -607,6 +608,7 @@ for name, changes in pairs(recipe_mods) do
                         --Ignore probability on items, we dont want to mess with/change that. Very low probabilities would make it hard to find a decent gcd
                         amount = omni.lib.round((ing.amount or (ing.amount_min+ing.amount_max)/2)*mult[dif])
                     end
+                    if amount == 0 then break end
                     if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
 
                     if not gcd[dif] then
@@ -638,6 +640,7 @@ for name, changes in pairs(recipe_mods) do
                             --Ignore probability on items, we dont want to mess with/change that. Very low probabilities would make it hard to find a decent gcd
                             amount = omni.fluid.round_fluid(ing.amount or (ing.amount_min+ing.amount_max)/2)
                         end
+                        if amount == 0 then break end
                         if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
                         --Calculate lcm
                         --Since our lcm function is not working with floats, multiply by 1000 if we find floats to keep precision for low fluid amounts (we just divided by sluid fluid ratio)
@@ -673,6 +676,7 @@ for name, changes in pairs(recipe_mods) do
                         else
                             amount = omni.lib.round((ing.amount or (ing.amount_min+ing.amount_max)/2)*mult[dif])
                         end
+                        if amount == 0 then break end
                         if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
 
                         if not gcd[dif] then
@@ -735,6 +739,7 @@ for name, changes in pairs(recipe_mods) do
                                     log("No sluid found that matches the correct temperature for "..ing.name)
                                 else
                                     log("Sluid Replacement error for "..ing.name)
+                                    break
                                 end
                             end
                         -- No temperature set and "none" is in our list --> no temp sluid exists
@@ -744,6 +749,7 @@ for name, changes in pairs(recipe_mods) do
                         else
                             log("Sluid Replacement error for "..ing.name)
                             log(serpent.block(rec))
+                            break
                         end
                         --Finally round again for the case of a precision error like .999
                         local new_amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing)*mult[dif]/omni.fluid.sluid_contain_fluid)
