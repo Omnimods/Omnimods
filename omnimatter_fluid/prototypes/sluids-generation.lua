@@ -293,7 +293,7 @@ for _, boiler in pairs(data.raw.boiler) do
 
     --if exists, find recipe, item and entity
     if not omni.fluid.forbidden_boilers[boiler.name] then --and boiler.minable then
-        local rec = omni.lib.find_recipe(boiler.minable.result) or omni.lib.find_recipe(boiler.name)
+        local rec = omni.lib.find_recipe(boiler.minable and boiler.minable.result) or omni.lib.find_recipe(boiler.name)
 
         new_boiler[#new_boiler+1] = {
             type = "recipe-category",
@@ -801,7 +801,6 @@ end
 
 --Replace minable fluids result with a sluid
 for _,resource in pairs(data.raw.resource) do
-    local auto = resource.minable.result
     if resource.minable and resource.minable.results and resource.minable.results[1] and resource.minable.results[1].type == "fluid" then
         resource.minable.results[1].type = "item"
         resource.minable.results[1].name = "solid-"..resource.minable.results[1].name
