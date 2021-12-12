@@ -375,7 +375,7 @@ function OmniGen:chainIngredients()
     local f = function(levels,grade,dif)
 
         local usable = self.input.items
-        local sum = clone_function(self.input.sum)(levels,grade)
+        local sum = omni.lib.clone_function(self.input.sum)(levels,grade)
         local total = 0
 
         local ingredients = {}
@@ -400,12 +400,12 @@ function OmniGen:chainIngredients()
         end
         return ingredients
     end
-    return clone_function(f)
+    return omni.lib.clone_function(f)
 end
 
 function OmniGen:wasteYieldResults()
     local f = function(levels,grade,dif)
-        local max_yield = clone_function(self.output.yield.quant)(levels,grade)
+        local max_yield = omni.lib.clone_function(self.output.yield.quant)(levels,grade)
         local yieldItems = table.deepcopy(self.output.yield.items)
         local wasteItems = table.deepcopy(self.output.waste.items)
         local yield_count = 0
@@ -438,7 +438,7 @@ function OmniGen:wasteYieldResults()
         end
         total = 0
         if wasteItems then
-            local max_waste = clone_function(self.output.waste.quant)(levels,grade)
+            local max_waste = omni.lib.clone_function(self.output.waste.quant)(levels,grade)
             for j,waste in pairs(wasteItems) do
                 local amount = 0
                 local t = "item"
@@ -462,7 +462,7 @@ function OmniGen:wasteYieldResults()
         end
         return table.deepcopy(results)
     end
-    return clone_function(f)
+    return omni.lib.clone_function(f)
 end
 
 function linear_gen(start, final, levels, grade)
@@ -701,7 +701,7 @@ function ItemGen:addIcon(icon)
     else
         a = function(levels,grade)	return {{icon=icon}} end
     end
-    local f = clone_function(self.icons)
+    local f = omni.lib.clone_function(self.icons)
     self.icons = function(levels,grade) return omni.lib.union(f(levels,grade),a(levels,grade)) end
     self.set_icon = true
     return self
@@ -984,7 +984,7 @@ function ItemGen:setLocName(inname,...)
     return self
 end
 function ItemGen:addLocName(key)
-    local a = clone_function(self.loc_name)
+    local a = omni.lib.clone_function(self.loc_name)
     local b = function(levels,grade) return {key} end
     if type(key) == "function" then
         b = key
@@ -995,7 +995,7 @@ function ItemGen:addLocName(key)
     else
         b=function(levels,grade) return key end
     end
-    self.loc_name = clone_function(function(levels,grade) return omni.lib.union(a(levels,grade),{b(levels,grade)}) end)
+    self.loc_name = omni.lib.clone_function(function(levels,grade) return omni.lib.union(a(levels,grade),{b(levels,grade)}) end)
     return self
 end
 function ItemGen:setLocDesc(inname,keys)
@@ -1016,7 +1016,7 @@ function ItemGen:setLocDesc(inname,keys)
     return self
 end
 function ItemGen:addLocDescKey(key)
-    local a = clone_function(self.loc_desc_keys)
+    local a = omni.lib.clone_function(self.loc_desc_keys)
     local k = key
     if type(key)=="table" then
         k=function(levels,grade) return key end
@@ -1055,7 +1055,7 @@ function ItemGen:setGenerationCondition(...)
     return self
 end
 function ItemGen:notCondition()
-    local a=clone_function(self.requiredMods)
+    local a=omni.lib.clone_function(self.requiredMods)
     self.requiredMods=function(levels,grade) return not a(levels,grade) end
     return self
 end
@@ -1381,32 +1381,32 @@ function RecGen:resetItemName()
     return self
 end
 function RecGen:multiplyItem(item,c)
-    local a = clone_function(self.ingredients)
-    local b = clone_function(self.results)
+    local a = omni.lib.clone_function(self.ingredients)
+    local b = omni.lib.clone_function(self.results)
     self.ingredients=function(levels,grade,dif) return multiplyIngres(a(levels,grade,dif),item,c) end
     self.results=function(levels,grade,dif) return multiplyIngres(b(levels,grade,dif),item,c) end
     return self
 end
 function RecGen:multiplyIngredients(c)
-    local a = clone_function(self.ingredients)
+    local a = omni.lib.clone_function(self.ingredients)
     self.ingredients=function(levels,grade,dif) return multiplyIngres(a(levels,grade,dif),c) end
     return self
 end
 function RecGen:multiplyResults(c)
-    local a = clone_function(self.results)
+    local a = omni.lib.clone_function(self.results)
     self.results=function(levels,grade,dif) return multiplyIngres(a(levels,grade,dif),c) end
     return self
 end
 function RecGen:multiplyIfIngredients(bool,c)
     if bool then
-        local a = clone_function(self.ingredients)
+        local a = omni.lib.clone_function(self.ingredients)
         self.ingredients=function(levels,grade,dif) return multiplyIngres(a(levels,grade,dif),c) end
     end
     return self
 end
 function RecGen:multiplyIfResults(bool,c)
     if bool then
-        local a = clone_function(self.results)
+        local a = omni.lib.clone_function(self.results)
         self.results=function(levels,grade,dif) return multiplyIngres(a(levels,grade,dif),c) end
     end
     return self
@@ -1499,8 +1499,8 @@ function RecGen:setNormalIngredients(...)
     local arg = argTable({...},"string","name")
     local tmp = RecGen:create("mah","blah"):
         setIngredients(arg)
-    local a = clone_function(self.ingredients)
-    local b = clone_function(tmp.ingredients)
+    local a = omni.lib.clone_function(self.ingredients)
+    local b = omni.lib.clone_function(tmp.ingredients)
     self.ingredients = function(levels,grade,dif) if dif == 0 then return b(levels,grade,dif) else return a(levels,grade,dif) end end
     return self
 end
@@ -1508,16 +1508,16 @@ function RecGen:setExpensiveIngredients(...)
     local arg = argTable({...},"string","name")
     local tmp = RecGen:create("mah","blah"):
         setIngredients(arg)
-    local a = clone_function(self.ingredients)
-    local b = clone_function(tmp.ingredients)
+    local a = omni.lib.clone_function(self.ingredients)
+    local b = omni.lib.clone_function(tmp.ingredients)
     self.ingredients = function(levels,grade,dif) if dif == 1 then return b(levels,grade,dif) else return a(levels,grade,dif) end end
     return self
 end
 function RecGen:addIngredients(...)
     local tmp = RecGen:create("mah","blah"):
         setIngredients(argTable({...},"string","name"))
-    local a = clone_function(self.ingredients)
-    local b = clone_function(tmp.ingredients)
+    local a = omni.lib.clone_function(self.ingredients)
+    local b = omni.lib.clone_function(tmp.ingredients)
     self.ingredients = function(levels,grade,dif) return omni.lib.union(a(levels,grade,dif),b(levels,grade,dif)) end
     return self
 end
@@ -1525,7 +1525,7 @@ function RecGen:addNormalIngredients(...)
     local arg = argTable({...},"string","name")
     local tmp = RecGen:create("mah","blah"):
         setIngredients(arg)
-    local a = clone_function(self.ingredients)
+    local a = omni.lib.clone_function(self.ingredients)
     local b = function(levels,grade,dif) if dif == 0 then return tmp.ingredients(levels,grade,dif) else return {} end end
     self.ingredients = function(levels,grade,dif) return omni.lib.union(a(levels,grade,dif),b(levels,grade,dif)) end
     return self
@@ -1534,7 +1534,7 @@ function RecGen:addExpensiveIngredients(...)
     local arg = argTable({...},"string","name")
     local tmp = RecGen:create("mah","blah"):
         setIngredients(arg)
-    local a = clone_function(self.ingredients)
+    local a = omni.lib.clone_function(self.ingredients)
     local b = function(levels,grade,dif) if dif == 1 then return tmp.ingredients(levels,grade,dif) else return {} end end
     self.ingredients = function(levels,grade,dif) return omni.lib.union(a(levels,grade,dif),b(levels,grade,dif)) end
     return self
@@ -1549,7 +1549,7 @@ function RecGen:replaceIngredients(...)
             a[2]={type="item",name=a[2][1],amount=a[2][2] or 1}
         end
     end
-    local ingredients = clone_function(self.ingredients)
+    local ingredients = omni.lib.clone_function(self.ingredients)
     self.ingredients=function(levels,grade,dif) return replaceIngres(ingredients(levels,grade,dif),arg) end
     return self
 end
@@ -1592,7 +1592,7 @@ function RecGen:ifSetIngredients(bool,...)
 end
 function RecGen:removeIngredients(...)
     local args = {...}
-    local ingredients = clone_function(self.ingredients)
+    local ingredients = omni.lib.clone_function(self.ingredients)
     self.ingredients=function(levels,grade,dif)
         local ings = ingredients(levels,grade,dif)
         local finalIngs = {}
@@ -1623,7 +1623,7 @@ function RecGen:ifModsRemoveIngredients(mods,...)
 end
 function RecGen:removeResults(...)
     local args = {...}
-    local results = clone_function(self.results)
+    local results = omni.lib.clone_function(self.results)
     self.results=function(levels,grade,dif)
         local ings = results(levels,grade,dif)
         local finalIngs = {}
@@ -1704,8 +1704,8 @@ function RecGen:setNormalResults(...)
     local arg = argTable({...},"string","name")
     local tmp = RecGen:create("mah","blah"):
         setResults(arg)
-    local a = clone_function(self.results)
-    local b = clone_function(tmp.results)
+    local a = omni.lib.clone_function(self.results)
+    local b = omni.lib.clone_function(tmp.results)
     self.results = function(levels,grade,dif) if dif == 0 then return b(levels,grade,dif) else return a(levels,grade,dif) end end
     return self
 end
@@ -1713,8 +1713,8 @@ function RecGen:setExpensiveResults(...)
     local arg = argTable({...},"string","name")
     local tmp = RecGen:create("mah","blah"):
         setResults(arg)
-    local a = clone_function(self.results)
-    local b = clone_function(tmp.results)
+    local a = omni.lib.clone_function(self.results)
+    local b = omni.lib.clone_function(tmp.results)
     self.results = function(levels,grade,dif) if dif == 1 then return b(levels,grade,dif) else return a(levels,grade,dif) end end
     return self
 end
@@ -1722,8 +1722,8 @@ function RecGen:addResults(...)
     local arg = argTable({...})
     local tmp = RecGen:create("mah","blah"):
         setResults(arg)
-    local a = clone_function(tmp.results)
-    local b = clone_function(self.results)
+    local a = omni.lib.clone_function(tmp.results)
+    local b = omni.lib.clone_function(self.results)
     self.results = function(levels,grade,dif) return omni.lib.union(a(levels,grade,dif),b(levels,grade,dif)) end
     return self
 end
@@ -1731,7 +1731,7 @@ function RecGen:addNormalResults(...)
     local arg = argTable({...},"string","name")
     local tmp = RecGen:create("mah","blah"):
         setIngredients(arg)
-    local a = clone_function(self.results)
+    local a = omni.lib.clone_function(self.results)
     local b = function(levels,grade,dif) if dif == 0 then return arg else return nil end end
     self.results = function(levels,grade,dif) return omni.table.union(a(levels,grade,dif),b(levels,grade,dif)) end
     return self
@@ -1740,7 +1740,7 @@ function RecGen:addExpensiveResults(...)
     local arg = argTable({...},"string","name")
     local tmp = RecGen:create("mah","blah"):
         setIngredients(arg)
-    local a = clone_function(self.results)
+    local a = omni.lib.clone_function(self.results)
     local b = function(levels,grade,dif) if dif == 1 then return arg else return nil end end
     self.results = function(levels,grade,dif) return omni.table.union(a(levels,grade,dif),b(levels,grade,dif)) end
     return self
@@ -1755,7 +1755,7 @@ function RecGen:replaceResults(...)
             a[2]={type="item",name=a[1],amount=a[2] or 1}
         end
     end
-    local results = clone_function(self.results)
+    local results = omni.lib.clone_function(self.results)
     self.results=function(levels,grade,dif) return replaceIngres(results(levels,grade,dif),arg) end
     return self
 end
@@ -2009,8 +2009,8 @@ function RecGen:exemptMarathon()
     return self
 end
 function RecGen:equalize(item,res)
-    local results = self:results(0,0,0)
-    local ingredients = self:ingredients(0,0,0)
+    local results = self:results(0,0)
+    local ingredients = self:ingredients(0,0)
     if #results == 1 then
         omni.marathon.equalize(item,results[1].name)
     elseif #results > 1 and #ingredients == 1 then
@@ -2113,7 +2113,7 @@ function RecGen:setTechLocName(inname,...)
 end
 
 function RecGen:addTechLocName(key)
-    local a = clone_function(self.tech.loc_name)
+    local a = omni.lib.clone_function(self.tech.loc_name)
     local b = function(levels,grade) return {key} end
     if type(key) == "function" then
         b = key
@@ -2124,7 +2124,7 @@ function RecGen:addTechLocName(key)
     else
         b=function(levels,grade) return key end
     end
-    self.tech.loc_name = clone_function(function(levels,grade) return omni.lib.union(a(levels,grade),{b(levels,grade)}) end)
+    self.tech.loc_name = omni.lib.clone_function(function(levels,grade) return omni.lib.union(a(levels,grade),{b(levels,grade)}) end)
     return self
 end
 function RecGen:setTechLocDesc(inname,keys)
@@ -2236,9 +2236,9 @@ function RecGen:setTechPrereq(...)
             self.tech.prerequisites = prereq
         end
     elseif #arg == 1 and type(arg[1])~="table" then
-        self.tech.prerequisites= clone_function(function(levels,grade) return arg end)
+        self.tech.prerequisites= omni.lib.clone_function(function(levels,grade) return arg end)
     else
-        self.tech.prerequisites= clone_function(function(levels,grade) return arg end)
+        self.tech.prerequisites= omni.lib.clone_function(function(levels,grade) return arg end)
     end
     return self
 end
@@ -2263,8 +2263,8 @@ function RecGen:addTechPrereq(...)
     if type(arg[1])=="table" or type(arg[1])=="function" then arg=arg[1] end
     local tmp = RecGen:create("mah","blah"):
         setTechPrereq(arg)
-    local a = clone_function(tmp.tech.prerequisites)
-    local b = clone_function(self.tech.prerequisites)
+    local a = omni.lib.clone_function(tmp.tech.prerequisites)
+    local b = omni.lib.clone_function(self.tech.prerequisites)
     self.tech.prerequisites = function(levels,grade) return omni.lib.union(a(levels,grade),b(levels,grade)) end
     return self
 end
@@ -2290,21 +2290,21 @@ function RecGen:addCondPrereq(cond,...)
         setTechPrereq(argif)
     local tmpelse = RecGen:create("mah","blah"):
         setTechPrereq(argelse)
-    local b = clone_function(self.tech.prerequisites)
+    local b = omni.lib.clone_function(self.tech.prerequisites)
     if type(cond)=="string" then
         if mods[cond] then
-            local a = clone_function(tmpif.tech.prerequisites)
+            local a = omni.lib.clone_function(tmpif.tech.prerequisites)
             self.tech.prerequisites = function(levels,grade) return omni.lib.union(a(levels,grade),b(levels,grade)) end
         else
-            local a = clone_function(tmpelse.tech.prerequisites)
+            local a = omni.lib.clone_function(tmpelse.tech.prerequisites)
             self.tech.prerequisites = function(levels,grade) return omni.lib.union(a(levels,grade),b(levels,grade)) end
         end
     elseif type(cond)=="boolean" then
         if cond then
-            local a = clone_function(tmpif.tech.prerequisites)
+            local a = omni.lib.clone_function(tmpif.tech.prerequisites)
             self.tech.prerequisites = function(levels,grade) return omni.lib.union(a(levels,grade),b(levels,grade)) end
         else
-            local a = clone_function(tmpelse.tech.prerequisites)
+            local a = omni.lib.clone_function(tmpelse.tech.prerequisites)
             self.tech.prerequisites = function(levels,grade) return omni.lib.union(a(levels,grade),b(levels,grade)) end
         end
     end
@@ -2898,7 +2898,7 @@ function BuildGen:find(name)
     end
 end
 function BuildGen:allowProductivity(func)
-    local tmp = clone_function(self.module.effects)
+    local tmp = omni.lib.clone_function(self.module.effects)
     self.module.effects = function(levels,grade) return omni.lib.union(tmp(levels,grade),{"productivity"}) end
     return self
 end
@@ -3383,7 +3383,7 @@ function BuildGen:setFluidBox(s,hide,tmp)
     return self
 end
 function BuildGen:setFilter(filter,nr)
-    local a = clone_function(self.fluid_boxes)
+    local a = omni.lib.clone_function(self.fluid_boxes)
     local sb = "(1)."
     if nr then sb=nr.."." end
     self.fluid_boxes = function(levels,grade) return omni.lib.replaceValue(a(levels,grade),sb.."filter",filter) end

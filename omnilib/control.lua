@@ -1,5 +1,3 @@
-require("control-functions")
-
 local building_tiers = {
     compact = "compression-compact-buildings",
     nanite = "compression-nanite-buildings",
@@ -94,7 +92,7 @@ local function update_building_recipes()
     --log("Building update complete")
 end
 
-function omnidate(technology)
+local function omnidate(technology)
     local game = game
     -- Record time spent
     local profiler = game.create_profiler()
@@ -343,7 +341,7 @@ function omnidate(technology)
     global.omni.full_iter = false
 end
 
-script.on_event(defines.events.on_console_chat, function(event)
+script.on_event(function(event)
     log("on_console_chat\n\t"..serpent.block(event))
     if event.player_index and game.players[event.player_index] then
         if event.message=="omnidate" then
@@ -363,7 +361,7 @@ script.on_event(defines.events.on_console_chat, function(event)
             --log(serpent.block(global.omni.recipe_techs))
         end
     end
-end)
+end, defines.events.on_console_chat)
 
 script.on_configuration_changed(function(event)
     log("on_configuration_changed\n\t"..serpent.block(event))

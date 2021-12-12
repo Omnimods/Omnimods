@@ -303,19 +303,19 @@ function omni.lib.tint(proto, tint)
     proto.icon = nil
 end
 
-function clone_function(fn)
-  local dumped = string.dump(fn)
-  local cloned = load(dumped)
-  local i = 1
-  while true do
-    local name = debug.getupvalue(fn, i)
-    if not name then
-      break
+function omni.lib.clone_function(fn)
+    local dumped = string.dump(fn)
+    local cloned = load(dumped)
+    local i = 1
+    while true do
+        local name = debug.getupvalue(fn, i)
+        if not name then
+        break
+        end
+        debug.upvaluejoin(cloned, i, fn, i)
+        i = i + 1
     end
-    debug.upvaluejoin(cloned, i, fn, i)
-    i = i + 1
-  end
-  return cloned
+    return cloned
 end
 
 function omni.lib.capitalize(str)
