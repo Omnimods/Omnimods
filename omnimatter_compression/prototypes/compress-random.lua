@@ -1,14 +1,10 @@
-----log(serpent.block(random_recipes))
-
 local exclusion_list = {"void","flaring","incineration"}
-
 local check_recipes = random_recipes
 
 log("start probability style compression")
 
 for _, recipe in pairs(check_recipes) do
     if not omni.lib.is_in_table(recipe,exclusion_list) and not string.find(recipe,"creative") then
-        local double = false
         --local store = data.raw.recipe[recipe]
         local new_recipe = table.deepcopy(data.raw.recipe[recipe])
         --grab localisation before standardisation
@@ -23,7 +19,7 @@ for _, recipe in pairs(check_recipes) do
         local stored_probabilities = {normal={},expensive={}}
         --prob table should include more details than just the number, the order of items seems to get changed in create_compression_recipes
         for _, difficulty in pairs({"normal","expensive"}) do
-            for i, result in pairs(new_recipe[difficulty].results) do
+            for _, result in pairs(new_recipe[difficulty].results) do
                 --check item not already in table
                 local result_name = result.name
                 if stored_probabilities[difficulty][result_name] then
@@ -67,18 +63,18 @@ for _, recipe in pairs(check_recipes) do
                 --set rec
                 result.amount = result_amount
                 --prevent shenanigans
-                result.amount_min=nil
-                result.amount_max=nil
-                result.probability=nil
+                result.amount_min = nil
+                result.amount_max = nil
+                result.probability = nil
             end
         end
         --parse to compression
-        local new_rec = create_compression_recipe(new_recipe)
+        local new_rec = omni.compression.create_compression_recipe(new_recipe)
         --add in manipulation to return the form
         if new_rec then
             local secondary = {}
             for _, difficulty in pairs({"normal","expensive"}) do
-                for i, result in pairs(new_rec[difficulty].results) do
+                for _, result in pairs(new_rec[difficulty].results) do
                     local result_name = string.sub(result.name,12)
                     if result.type == "fluid" then
                         result_name = string.sub(result.name,14)
@@ -88,7 +84,7 @@ for _, recipe in pairs(check_recipes) do
                         result_name=result_name .."-p"
                     end
                     local probability = stored_probabilities[difficulty][result_name]
-                    if probability then                        
+                    if probability then                  
                         --get style
                         if probability.style == "min-max" then
                             if result.amount and math.floor(result.amount*probability.mm_prob) > result.amount then --check it actually gets a range
@@ -116,10 +112,9 @@ for _, recipe in pairs(check_recipes) do
             end
             new_rec.localised_name = new_rec.localised_name or loc
             data:extend({new_rec})
-        else
-            if not string.find(recipe,"void") then --ignore void recipes
-                --log("you fucked up big time with this recipe: "..rec.name)
-            end
+        -- elseif not string.find(recipe,"void") then --ignore void recipes
+        --         log("you fucked up big time with this recipe: "..rec.name)
+        --     end
         end
     end
 end

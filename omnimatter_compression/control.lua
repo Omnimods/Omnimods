@@ -1,31 +1,5 @@
---require("gui")
-
-function start_with(a,b)
-    return string.sub(a,1,string.len(b)) == b
-end
-function end_with(a,b)
-    return string.sub(a,string.len(a)-string.len(b)+1) == b
-end
-
-local get_stacksize = function(game,item)
-    for _, p in pairs({"item","mining-tool","gun","ammo","armor","repair-tool","capsule","module","tool","rail-planner","selection-tool","item-with-entity-data"}) do
-        if game[p][item] and game[p][item].stack_size then return game[p][item].stack_size end
-    end
-end
-
-local get_ore_stack = function(game, item)
-    return
-end
 local tiers = {"compact","nanite","quantum","singularity"}
 local items_per_tier = settings.startup["omnicompression_multiplier"].value
-local not_already_compressed=function(recipe)
-    for _, tier in pairs(tiers) do
-        if string.find(recipe, tier) then
-            return false
-        end
-    end
-    return true
-end
 
 local function find_tier(class_name)
     for index, tier in pairs(tiers) do
@@ -189,7 +163,9 @@ local function compression_planner(event, log_only)
 end
 
 script.on_event(defines.events.on_rocket_launched, function(event)
-    rocket, silo, player = event.rocket, event.rocket_silo, event.player_index
+    local rocket = event.rocket
+    local silo = event.rocket_silo
+    local player = event.player_index
     if not rocket or not silo then
         return
     end
@@ -296,7 +272,7 @@ end)
 --Refresh planner activation when omnidate is activated
 script.on_event(defines.events.on_console_chat, function(event)
     if event.player_index and game.players[event.player_index] then
-        if event.message=="omnidate" then
+        if event.message == "omnidate" then
             refresh_planner_status()
         end
     end
