@@ -10,7 +10,7 @@ local min_compress = settings.startup["omnicompression_compressed_tech_min"].val
 --[[Locally defined functions]]--
 -------------------------------------------------------------------------------
 -- lab input checks
-local has_input  = function(tab)
+local function has_input(tab)
     local  found = false
     for _, li in pairs(lab_inputs) do
         local has_all = true
@@ -28,7 +28,7 @@ local has_input  = function(tab)
     return found
 end
 --contains at least one of the packs
-local containsOne = function(t,d)
+local function containsOne(t,d)
     for _,p in pairs(t) do
         for _,q in pairs(d) do
             if p[1]==q then
@@ -41,7 +41,7 @@ local containsOne = function(t,d)
     return false
 end
 
-local splitTech = function(tech)
+local function splitTech(tech)
     local match = select(3, tech:find("()%-%d+$"))
     if match then
         local level = tech:sub(match+1)
@@ -71,7 +71,6 @@ log("start tech compression checks")
 
 --add compressed packs to labs
 for _, lab in pairs(data.raw.lab) do
-    local l = table.deepcopy(lab)
     if not has_input(lab.inputs) then
         lab_inputs[#lab_inputs+1]=lab.inputs
     end
@@ -109,13 +108,13 @@ for _,tech in pairs(data.raw.technology) do --run always
             tiered_tech[name] = tonumber(lvl)
         elseif tiered_tech[name] > tonumber(lvl) then --in case techs are added out of order, always add the lowest
             tiered_tech[name] = tonumber(lvl)
-        end    
+        end
     end
 end
 --log(serpent.block(tiered_tech))
 --compare tech to the list created (tiered_tech) to include techs missing packs previously in the chain
-local include_techs = function(t)
-  --extract name and level
+local function include_techs(t)
+    --extract name and level
     local name, lvl = splitTech(t.name)
     if lvl == "" or lvl == nil then --tweak to allow techs that start with no number
         lvl = 1

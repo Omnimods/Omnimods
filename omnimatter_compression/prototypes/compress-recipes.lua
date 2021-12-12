@@ -1,21 +1,17 @@
 -------------------------------------------------------------------------------
 --[[Initialisation and Config Variables]]--
 -------------------------------------------------------------------------------
-local compress_recipes, uncompress_recipes, compress_items = {}, {}, {}
-local item_count = 0
+local compress_recipes = {}
 local concentrationRatio = omni.compression.sluid_contain_fluid
 --compressed_item_names = {}  --global?
 random_recipes = {} --global?
-local compressed_item_stack_size = 120 -- stack size for compressed items (not the items returned that is dynamic)
-local hcn = {1, 2, 4, 6, 12, 24, 36, 48, 60, 120, 180, 240, 360, 720, 840, 1260, 1680, 2520}
 local compress_based_recipe = {}
-local compressed_recipes = {}
 local new_cat={}
 -------------------------------------------------------------------------------
 --[[Set-up the functions for compressed recipes]]--
 -------------------------------------------------------------------------------
 --stack size of more than 1 function
-local more_than_one = function(recipe)
+local function more_than_one(recipe)
     -- Multi-result
     local results = recipe.results or recipe.normal and recipe.normal.results
     -- Sanity checks, huzzah
@@ -43,7 +39,7 @@ local more_than_one = function(recipe)
     return false
 end
 --category set
-local set_category = function(recipe)
+local function set_category(recipe)
     if recipe.normal.category then
         if not data.raw["recipe-category"][recipe.normal.category.."-compressed"] then
             if not omni.lib.is_in_table(recipe.normal.category.."-compressed",new_cat) then
@@ -60,7 +56,7 @@ local set_category = function(recipe)
 end
 
 --fluids check, returns true if anything except fluids is present
-local not_only_fluids = function(recipe)
+local function not_only_fluids(recipe)
     local all_ing = {}
     local all_res = {}
     if recipe.normal and recipe.normal.ingredients then
@@ -97,7 +93,7 @@ local not_only_fluids = function(recipe)
 end
 
 --checks results for probabilistic returns (probability, amount min, amount max etc)
-local not_random = function(recipe)
+local function not_random(recipe)
     local results = {}
     if recipe.normal and recipe.normal.results then
         results = omni.lib.union(recipe.normal.results,recipe.expensive.results or {})
@@ -115,7 +111,7 @@ local not_random = function(recipe)
 end
 
 --splits fluids and solids per "table"
-local seperate_fluid_solid = function(collection)
+local function seperate_fluid_solid(collection)
     local fluid = {}
     local solid = {}
     if type(collection) == "table" then
@@ -148,10 +144,8 @@ local seperate_fluid_solid = function(collection)
 end
 
 --sort and clean up groups of ingredients and results for type processing
-function get_recipe_values(ingredients, results)
+local function get_recipe_values(ingredients, results)
     local parts={}
-    local lng = {0,0}
-
     local all_ing = seperate_fluid_solid(ingredients)
     local all_res = seperate_fluid_solid(results)
 
@@ -168,15 +162,19 @@ function get_recipe_values(ingredients, results)
     local mult_stack = 1
     --calculate lcm of the parts and stacks
     for _, p in pairs(parts) do
-        if gcd_rec == 0 then gcd_rec = p.amount
-        else gcd_rec = omni.lib.gcd(gcd_rec, p.amount)
+        if gcd_rec == 0 then
+            gcd_rec = p.amount
+        else
+            gcd_rec = omni.lib.gcd(gcd_rec, p.amount)
         end
         lcm_rec = omni.lib.lcm(lcm_rec,p.amount)
         mult_rec = mult_rec*p.amount
-        
+
         local stacksize = omni.lib.find_stacksize(p.name)
-        if gcd_stack == 0 then gcd_stack=stacksize
-        else gcd_stack = omni.lib.gcd(gcd_stack,stacksize)
+        if gcd_stack == 0 then
+            gcd_stack=stacksize
+        else
+            gcd_stack = omni.lib.gcd(gcd_stack,stacksize)
         end
         lcm_stack = omni.lib.lcm(lcm_stack,stacksize)
         mult_stack = mult_stack*stacksize
@@ -193,13 +191,13 @@ function get_recipe_values(ingredients, results)
     local new_gcd = 0
     local new_lcm = lcm_rec*lcm_stack--rec_max*stack_max/omni.lib.gcd(rec_max,stack_max)
     local new = {}
-    for i,p in pairs(new_parts) do
+    for i, _ in pairs(new_parts) do
         new[i]=new_lcm*new_stacks[i].amount/new_parts[i].amount
         new[i]=math.max(math.floor(new[i]+0.5),1) --round and assume at least 1
         if new_gcd == 0 then
-        new_gcd = new[i]
+            new_gcd = new[i]
         else
-        new_gcd=omni.lib.gcd(new_gcd,new[i])
+            new_gcd=omni.lib.gcd(new_gcd,new[i])
         end
     end
     for i,p in pairs(new_parts) do
@@ -207,48 +205,45 @@ function get_recipe_values(ingredients, results)
     end
     local total_mult = new[1]*omni.lib.find_stacksize(parts[1].name)/parts[1].amount
 
-        local newing = {}
-        for i, s in pairs(all_ing.solid) do
-            newing[#newing + 1] = {
-        type = "item",
-        name = "compressed-" .. parts[i].name,
-        amount = new[i]
-        }
-        end
-        for _,f in pairs(all_ing.fluid) do
-            newing[#newing + 1] = {
-        type = "fluid",
-        name = "concentrated-" .. f.name,
-        amount = f.amount * total_mult / concentrationRatio,
-        minimum_temperature = f.minimum_temperature,
-        maximum_temperature = f.maximum_temperature
-        }
-        end
-        local newres = {}
-        for i, s in pairs(all_res.solid) do
-            newres[#newres + 1] = {
-        type = "item",
-        name = "compressed-" .. parts[#all_ing.solid + i].name,
-        amount = new[#all_ing.solid + i]
-        }
-        end
-        for _,f in pairs(all_res.fluid) do
-            newres[#newres + 1] = {
-        type = "fluid",
-        name = "concentrated-" .. f.name,
-        amount = f.amount * total_mult / concentrationRatio,
-        temperature = f.temperature
-        }
-        end
-        return {
-        ingredients = newing,
-        results = newres
+    local newing = {}
+    for i, s in pairs(all_ing.solid) do
+        newing[#newing + 1] = {
+    type = "item",
+    name = "compressed-" .. parts[i].name,
+    amount = new[i]
     }
+    end
+    for _,f in pairs(all_ing.fluid) do
+        newing[#newing + 1] = {
+            type = "fluid",
+            name = "concentrated-" .. f.name,
+            amount = f.amount * total_mult / concentrationRatio,
+            minimum_temperature = f.minimum_temperature,
+            maximum_temperature = f.maximum_temperature
+        }
+    end
+    local newres = {}
+    for i, s in pairs(all_res.solid) do
+        newres[#newres + 1] = {
+            type = "item",
+            name = "compressed-" .. parts[#all_ing.solid + i].name,
+            amount = new[#all_ing.solid + i]
+        }
+    end
+    for _,f in pairs(all_res.fluid) do
+        newres[#newres + 1] = {
+            type = "fluid",
+            name = "concentrated-" .. f.name,
+            amount = f.amount * total_mult / concentrationRatio,
+            temperature = f.temperature
+        }
+    end
+    return {ingredients = newing, results = newres}
 end
 
 
 --output(results) adjustments
-function adjustOutput(recipe)
+local function adjustOutput(recipe)
     local silos = {} -- For later reference
     local supremumTime = settings.startup["omnicompression_too_long_time"].value
     -- Rocket case
@@ -409,11 +404,11 @@ end
 -------------------------------------------------------------------------------
 --[[Create Compressed Versions of Each Recipe]]--
 -------------------------------------------------------------------------------
-function create_compression_recipe(recipe)
-    if not omni.lib.is_in_table(recipe.name, excluded_recipes) then --not excluded
+function omni.compression.create_compression_recipe(recipe)
+    if not omni.lib.is_in_table(recipe.name, omni.compression.excluded_recipes) then --not excluded
         if not string.find(recipe.name,"creative") and not is_void(recipe) then --not creative mod or void
             if (recipe.normal.results and #recipe.normal.results > 0) then --ingredients.normal.results and 1+
-                if (more_than_one(recipe) or omni.lib.is_in_table(recipe.name, include_recipes)) then
+                if (more_than_one(recipe) or omni.lib.is_in_table(recipe.name, omni.compression.include_recipes)) then
                     local comrec={} --set basis to zero
                     local new_cat = set_category(recipe) or "crafting-compressed" --fallback should not be needed
                     local icons = omni.lib.add_overlay(recipe,"compress")         
@@ -469,7 +464,7 @@ function create_compression_recipe(recipe)
                                 for b, io_type in pairs({"ingredients","results"}) do
                                     parts.solid[a][b] = parts.solid[a][b] or {}
                                     parts.fluid[a][b] = parts.fluid[a][b] or {}
-                                    for c, component in pairs(recipe[recipe_difficulty][io_type]) do
+                                    for _, component in pairs(recipe[recipe_difficulty][io_type]) do
                                         --temp fix for non-standard stuff sneaking through
                                         component = (io_type == "results" and omni.lib.locale.parse_product(component) or omni.lib.locale.parse_ingredient(component))
                                         if component.type ~= "fluid" then
@@ -657,7 +652,7 @@ function create_compression_recipe(recipe)
                                     end
                                 end
                             end
-                            comrec=r
+                            comrec = r
                         end
                         -------------------------------------------------------------------------------
                         --final adjustments--
@@ -718,13 +713,13 @@ end
 -------------------------------------------------------------------------------
 --[[VOID CREATION RECIPE]]--
 -------------------------------------------------------------------------------
-local create_void = function(recipe)
+local function create_void(recipe)
     local continue = false
     local prefix = "compressed-"
     local product = omni.lib.locale.get_main_product(recipe)
     local ingredient = omni.lib.locale.get_main_ingredient(recipe)
     --local prob = 1
-    if not omni.lib.is_in_table(recipe.name, excluded_recipes) then --not excluded
+    if not omni.lib.is_in_table(recipe.name, omni.compression.excluded_recipes) then --not excluded
         if not more_than_one(recipe) then -- Verify products
             if ingredient then
                 if not product or (product.count == 0) or (product.probability == 0) or product.name:find("void") then
@@ -769,7 +764,7 @@ local create_void = function(recipe)
             end
             return table.deepcopy(new_rc)
         end
-        return nil    
+        return nil
     end
 end
 
@@ -785,7 +780,7 @@ for _,recipe in pairs(data.raw.recipe) do
         if not mods["omnimatter_marathon"] then omni.lib.standardise(recipe) end --ensure standardised
         if recipe.subgroup ~= "y_personal_equip" then --exclude yuoki's personal equipment subgroup
             --check for void and swap it to the void system in place of compression_recipe
-            local rc = create_compression_recipe(recipe) --call create recipe
+            local rc = omni.compression.create_compression_recipe(recipe) --call create recipe
             -- the main exclusions are added in that function since it is also called with the random recipes
             if not rc and is_void(recipe) then
                 --should create void recipes in place of non-void
@@ -826,7 +821,7 @@ for name,fluid in pairs(generatorFluidRecipes) do
                         end
                     end
                 end
-                
+
                 newFluid.name = newFluid.name.."-concentrated-grade-"..i
                 newFluid.localised_name = omni.lib.locale.custom_name(data.raw.fluid[name], 'compressed-fluid', i)
                 if not newFluid.heat_capacity then

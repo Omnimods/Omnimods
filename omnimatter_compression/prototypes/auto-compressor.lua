@@ -34,7 +34,7 @@ local fluidbox = minify({
     }
 }, "XWX.XXX.XKX")
 
-local b = BuildGen:create("omnimatter_compression","auto-compressor"):
+BuildGen:create("omnimatter_compression","auto-compressor"):
     setStacksize(50):
     setFlags({"placeable-neutral", "placeable-player", "player-creation"}):
     setSubgroup("production-machine"):
@@ -92,8 +92,8 @@ local b = BuildGen:create("omnimatter_compression","auto-compressor"):
         }}
     }):
     extend()
-    
-local b = BuildGen:create("omnimatter_compression","auto-concentrator"):
+
+BuildGen:create("omnimatter_compression","auto-concentrator"):
     setStacksize(50):
     setFlags({"placeable-neutral", "placeable-player", "player-creation"}):
     setSubgroup("production-machine"):
@@ -120,8 +120,8 @@ local b = BuildGen:create("omnimatter_compression","auto-concentrator"):
         animation_speed = 0.25
     }):
     extend()
-    
-local b = BuildGen:create("omnimatter_compression","auto-condensator"):
+
+BuildGen:create("omnimatter_compression","auto-condensator"):
     setStacksize(50):
     setFlags({"placeable-neutral", "placeable-player", "player-creation"}):
     setSubgroup("production-machine"):
@@ -148,6 +148,6 @@ local b = BuildGen:create("omnimatter_compression","auto-condensator"):
         animation_speed = 0.25
     }):
     extend()
-    
+
 data.raw["furnace"]["auto-concentrator"].scale_entity_info_icon = true
 data.raw["assembling-machine"]["auto-condensator"].scale_entity_info_icon = true

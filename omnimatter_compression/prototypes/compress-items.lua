@@ -1,6 +1,5 @@
 local compress_recipes, uncompress_recipes, compress_items = {}, {}, {}
 compressed_item_names = {}  --global?
-local item_count = 0
 local concentrationRatio = omni.compression.sluid_contain_fluid --set in omnilib
 local excluded_items = {}
 --Config variables
@@ -31,7 +30,7 @@ for _, group in pairs({"fluid"}) do
     --Loop through all of the items in the category
     for _, fluid in pairs(data.raw[group]) do
         --Check for hidden flag to skip later
-        local hidden = omni.compression.is_hidden(fluid) --check hidden
+        --local hidden = omni.compression.is_hidden(fluid) --check hidden
         if not (--[[hidden or ]]fluid.name:find("creative-mode")) then--and
             --string.find(fluid.name,"^compress") ==nil and string.find(fluid.name,"^concentrat") ==nil then --not already compressed
             --copy original
@@ -131,7 +130,7 @@ for _, group in pairs({"fluid"}) do
             }
             --omni.lib.standardise(uncompress)
             standardized_recipes["uncompress-"..fluid.name] = true
-                    uncompress_recipes[#uncompress_recipes+1] = uncompress
+            uncompress_recipes[#uncompress_recipes+1] = uncompress
         end
     end
 end
@@ -215,7 +214,7 @@ local function generate_compressed_item(item, norecipe)
             generate_compressed_item(data.raw.item[item.burnt_result], true)
         end
     end
-    
+
     for _, product in pairs(product_table) do
         -- Standardise
         product.name = product.name or product[1]
@@ -347,7 +346,6 @@ for group in pairs(data.raw) do
         end
     end
 end
---log(serpent.block(excluded_items))
 
 for _, rec in pairs(data.raw.recipe) do
     for _, dif in pairs({"normal", "expensive"}) do

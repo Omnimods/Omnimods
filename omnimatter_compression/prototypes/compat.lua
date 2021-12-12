@@ -1,7 +1,7 @@
 -- Run module limit updates/transfers once we're for sure done screwing with recipes
 local recipes = data.raw.recipe
 local n = 0
-for module_name, module in pairs(data.raw.module) do
+for _, module in pairs(data.raw.module) do
     for _, rec_name in pairs(module.limitation or {}) do
         local compressed = rec_name .. "-compression"      
         if recipes[compressed] then
@@ -16,7 +16,7 @@ log("Added module limitations for " .. n .. " recipes.")
 
 local rec_count = 0
 local categories = {}
-for recipe_name, prototype in pairs(recipes) do
+for _, prototype in pairs(recipes) do
     categories[prototype.category or "crafting"] = (categories[prototype.category or "crafting"] or 0) + 1
     rec_count = rec_count + 1
 end
@@ -64,4 +64,5 @@ for _,kind in pairs({"assembling-machine","furnace","rocket-silo"}) do
         end
     end
 end
+
 log("Compression finished, data.raw has " .. rec_count .. " recipes.")
