@@ -685,7 +685,7 @@ local run_entity_updates = function(new, kind, i)
     end
     return new
 end
-log("start building compression")
+log("Start building compression")
 
 -------------------------------------------------------------------------------
 --[[Build Compression Tier Recipes]]--
@@ -830,4 +830,5 @@ end
 if #compressed_buildings > 0 then
     data:extend(compressed_buildings)
 end
-log("end building compression")
+
+log("Building compression finished: "..(#compressed_buildings or 0).. " buildings")

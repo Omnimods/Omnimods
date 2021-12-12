@@ -1,4 +1,4 @@
-log("start ore compression")
+log("Start ore compression")
 
 local compressed_ores = {}
 local blacklist = {{"creative","mode"}}--{"stone",{"creative","mode"}}
@@ -252,9 +252,9 @@ for name,ore in pairs(data.raw.resource) do
     end
 end
 
-if compressed_ores and #compressed_ores > 0 then
+if #compressed_ores > 0 then
     data:extend(compressed_ores)
 else
     --log("omnicompression didn't find any ores to extend, something is wrong.")
 end
-log("end ore compression")
+log("Ore compression finished: "..(#compressed_ores or 0).. " ores")

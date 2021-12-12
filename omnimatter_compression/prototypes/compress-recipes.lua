@@ -776,8 +776,9 @@ end
 -------------------------------------------------------------------------------
 --[[CALL FUNCTION FOR GENERAL RECIPES]]--
 -------------------------------------------------------------------------------
+log("Start recipe compression")
+
 --call the recipe creation script, splitting off the randomised recipes and void recipes for further processing
-log("start recipe compression")
 for _,recipe in pairs(data.raw.recipe) do
     --if not already compressed
     if not recipe.category or not (recipe.category == "compression" or string.find(recipe.category,"%-concentration$") or string.find(recipe.category,"%-condensation$") or string.find(recipe.category,"%-compressed$")) then
@@ -862,10 +863,10 @@ end
 -- Extend
 data:extend(new_cat)
 
-if #compress_recipes ~= 0 then
+if #compress_recipes > 0 then
     data:extend(compress_recipes) --for generator fluid recipes
 end
-if #compress_based_recipe ~= 0 then
+if #compress_based_recipe > 0 then
     data:extend(compress_based_recipe)
 end
 
@@ -885,5 +886,4 @@ for _, type in pairs(assemblers) do
     end
 end
 
---log("Finished compressing recipes")
-log("end recipe compression")
+log("Recipe compression finished: "..(#compress_recipes or 0).. " recipes")

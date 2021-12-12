@@ -51,10 +51,8 @@ local splitTech = function(tech)
         return tech
     end
 end
-local pack_sizes = {}
-local stack_size = function(name)
 
-end
+local pack_sizes = {}
 setmetatable(pack_sizes, {
     __index = function(self, key, value)
         local proto = data.raw.tool[key]
@@ -70,6 +68,7 @@ setmetatable(pack_sizes, {
 --[[Set-up loops]]--
 -------------------------------------------------------------------------------
 log("start tech compression checks")
+
 --add compressed packs to labs
 for _, lab in pairs(data.raw.lab) do
     local l = table.deepcopy(lab)
@@ -132,7 +131,7 @@ end
 -------------------------------------------------------------------------------
 --[[Compressed Tech creation]]--
 -------------------------------------------------------------------------------
-log("start tech compression")
+log("Start technology compression")
 for _,tech in pairs(data.raw.technology) do
     if (tech.unit and (tech.unit.count and type(tech.unit.count)=="number" and tech.unit.count > min_compress)) or
     include_techs(tech) or containsOne(tech.unit.ingredients,alwaysSP) or not tech.unit.count then
@@ -165,7 +164,7 @@ for _,tech in pairs(data.raw.technology) do
             end
             lcm[#lcm+1] = pack_sizes[ings.name]
         end
-        lcm = omni.lib.lcm(unpack(lcm))
+        lcm = omni.lib.lcm(table.unpack(lcm))
 
         -- Stage 2: Determine our amounts and unit.count (stacks_needed)
         for _, ings in pairs(t.unit.ingredients) do
@@ -201,7 +200,8 @@ for _,tech in pairs(data.raw.technology) do
     end
 end
 
-if #compressed_techs >= 1 then --in case no tech is compressed
+if #compressed_techs > 0 then --in case no tech is compressed
     data:extend(compressed_techs)
 end
-log("end tech compression")
+
+log("Technology compression finished: "..(#compressed_techs or 0).. " techs")

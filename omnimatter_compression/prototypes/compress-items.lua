@@ -26,7 +26,7 @@ end
 --[[Create Dynamic Recipes from fluids]]--
 -------------------------------------------------------------------------------
 --set-up basic parameters (temperature, energy_value etc)
-log("start item compressing")
+log("Start item compression")
 for _, group in pairs({"fluid"}) do
     --Loop through all of the items in the category
     for _, fluid in pairs(data.raw[group]) do
@@ -362,4 +362,4 @@ end
 data:extend(compress_items)
 data:extend(compress_recipes)
 data:extend(uncompress_recipes)
-log("end item compression")
+log("Item compression finished: "..(#compress_items or 0).. " items")
