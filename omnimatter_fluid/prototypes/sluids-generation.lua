@@ -61,6 +61,17 @@ for _, gen in pairs(data.raw.generator) do
     end
 end
 
+for _, boiler in pairs(data.raw.boiler) do
+    --Check exclusion table
+    if not omni.fluid.check_string_excluded(boiler.name) and not omni.fluid.forbidden_boilers[boiler.name]then
+        --Input fluid == output fluid - Boiler is only used for heating up the fluid
+        if boiler.fluid_box.filter == boiler.output_fluid_box.filter then
+            sort_fluid(boiler.fluid_box.filter, "fluid", {temp = boiler.target_temperature, conversion = true})
+        end
+        --log("Added "..gen.fluid_box.filter.." as fluid. Boiler: "..boiler.name)
+    end
+end
+
 --fluid throwing type turrets
 for _, turr in pairs(data.raw["fluid-turret"]) do
     if turr.attack_parameters.fluids then
@@ -118,7 +129,7 @@ for _, rec in pairs(data.raw.recipe) do
         end
         for _, fluid in pairs(fluids) do
             local conv = nil
-            if (fluid.temperature or 0) > (data.raw.fluid[fluid.name].default_temperature or math.huge) then conv = true end
+            if (fluid.temperature or -65535) > (data.raw.fluid[fluid.name].default_temperature or math.huge) then conv = true end
             sort_fluid(fluid.name, "sluid", {temp = fluid.temperature, temp_min = fluid.minimum_temperature, temp_max = fluid.maximum_temperature, conversion = conv})
         end
     else
@@ -141,6 +152,7 @@ end
 if min_boiler_temp < math.huge then
     sort_fluid("steam", "sluid", {temp = min_boiler_temp})
 end
+
 
 ---------------------------------
 -----Sort temperatures-----
@@ -165,6 +177,7 @@ for _,cat in pairs(fluid_cats) do
         end
 
         if next(fluid.temperatures) then fluid.temperatures = omni.fluid.compact_array(fluid.temperatures) end
+
         --Second Loop: Go through the leftovers which have min/max set
         for i = #(fluid.temperatures),1,-1 do
             local found = false
@@ -199,6 +212,7 @@ for _,cat in pairs(fluid_cats) do
         if next(fluid.temperatures) then
             log("This should be empty")
             log(serpent.block(fluid.temperatures))
+            log(serpent.block(new_temps))
         end
         fluid.temperatures = new_temps
         fluid.conversions = conversions
@@ -227,7 +241,7 @@ for catname, cat in pairs(fluid_cats) do
                     ent[#ent+1] = {
                         type = "item",
                         name = "solid-"..fluid.name,
-                        localised_name = {"item-name.solid-fluid", fluid.name.localised_name or {"fluid-name."..fluid.name}},
+                        localised_name = {"item-name.solid-fluid", fluid.localised_name or {"fluid-name."..fluid.name}},
                         localised_description = {"item-description.solid-fluid", fluid.localised_description or {"fluid-description."..fluid.name}},
                         icons = omni.lib.icon.of_generic(fluid),
                         subgroup = "omni-solid-fluids",
@@ -238,7 +252,7 @@ for catname, cat in pairs(fluid_cats) do
                     ent[#ent+1] = {
                         type = "item",
                         name = "solid-"..fluid.name.."-T-"..temp,
-                        localised_name = {"item-name.solid-fluid-tmp", fluid.name.localised_name or {"fluid-name."..fluid.name},"T="..temp},
+                        localised_name = {"item-name.solid-fluid-tmp", fluid.localised_name or {"fluid-name."..fluid.name},"T="..temp},
                         localised_description = {"item-description.solid-fluid", fluid.localised_description or {"fluid-description."..fluid.name}},
                         icons = omni.lib.icon.of_generic(fluid),
                         subgroup = "omni-solid-fluids",
@@ -279,7 +293,7 @@ for _, boiler in pairs(data.raw.boiler) do
 
     --if exists, find recipe, item and entity
     if not omni.fluid.forbidden_boilers[boiler.name] then --and boiler.minable then
-        local rec = omni.lib.find_recipe(boiler.minable.result) or omni.lib.find_recipe(boiler.name)
+        local rec = omni.lib.find_recipe(boiler.minable and boiler.minable.result) or omni.lib.find_recipe(boiler.name)
 
         new_boiler[#new_boiler+1] = {
             type = "recipe-category",
@@ -289,38 +303,42 @@ for _, boiler in pairs(data.raw.boiler) do
         --set-up result and main product values to be the new converter
         omni.lib.replace_recipe_result(rec.name, boiler.name, boiler.name.."-converter")
 
-        --Create water boiling recipe with the boilers target temp
-        new_boiler[#new_boiler+1] = {
-            type = "recipe",
-            name = boiler.name.."-boiling-steam-"..boiler.target_temperature,
-            icons = {{icon = "__base__/graphics/icons/fluid/steam.png", icon_size = 64, icon_mipmaps = 4}},
-            subgroup = "boiler-sluid-steam",
-            category = "boiler-omnifluid-"..boiler.name,
-            order = "g[hydromnic-acid]",
-            energy_required = omni.fluid.sluid_contain_fluid/boiler_consumption,
-            enabled = true,
-            hide_from_player_crafting = true,
-            main_product = steam,
-            ingredients = {{type = "item", name = "solid-"..water, amount = 1},},
-            results = {{type = "fluid", name = steam, amount = omni.fluid.sluid_contain_fluid, temperature = math.min(boiler.target_temperature, data.raw.fluid[steam].max_temperature)},},
-        }
+        --Create  boiling recipe with the boilers target temp (only when input~= output. Some boilers are used to heat up fluids)
+        if water ~= steam then
+            new_boiler[#new_boiler+1] = {
+                type = "recipe",
+                name = boiler.name.."-boiling-steam-"..boiler.target_temperature,
+                icons = omni.lib.icon.of(data.raw.fluid[steam]),
+                subgroup = "boiler-sluid-steam",
+                category = "boiler-omnifluid-"..boiler.name,
+                order = "g[hydromnic-acid]",
+                energy_required = omni.fluid.sluid_contain_fluid/boiler_consumption,
+                enabled = true,
+                hide_from_player_crafting = true,
+                main_product = steam,
+                ingredients = {{type = "item", name = "solid-"..water, amount = 1},},
+                results = {{type = "fluid", name = steam, amount = omni.fluid.sluid_contain_fluid, temperature = math.min(boiler.target_temperature, data.raw.fluid[steam].max_temperature)},},
+            }
+        end
 
         --Create a solid water boiling recipe version if steam with the boiler target temp is required. A recipe with the lowest boilers targed temp needs to be created aswell when "none" temp steam is required
         local category = "mush"
-        if fluid_cats["sluid"]["steam"] then category = "sluid" end
+        if fluid_cats["sluid"][steam] then category = "sluid" end
         local found = false
-        for _, temp in pairs(fluid_cats[category]["steam"].temperatures) do
+        for _, temp in pairs(fluid_cats[category][steam].temperatures) do
             if (type(temp) == "string" and temp == "none" and boiler.target_temperature == min_boiler_temp) or (type(temp) == "number" and boiler.target_temperature == temp) then
                 found = true
                 break
             end
         end
         if found == true then
+            local boiled_amount = omni.fluid.sluid_contain_fluid
+            if water == steam then boiled_amount = 1 end
             boiling_steam[boiler.target_temperature] = true
             new_boiler[#new_boiler+1] = {
                 type = "recipe",
                 name = boiler.name.."-boiling-solid-steam-"..boiler.target_temperature,
-                icons = {{icon = "__base__/graphics/icons/fluid/steam.png", icon_size = 64, icon_mipmaps = 4}},
+                icons = omni.lib.icon.of(data.raw.fluid[steam]),
                 subgroup = "boiler-sluid-steam",
                 category = "boiler-omnifluid-"..boiler.name,
                 order = "g[hydromnic-acid]",
@@ -329,7 +347,7 @@ for _, boiler in pairs(data.raw.boiler) do
                 hide_from_player_crafting = true,
                 main_product = "solid-"..steam.."-T-"..boiler.target_temperature,
                 ingredients = {{type = "item", name = "solid-"..water, amount = 1},},
-                results = {{type = "item", name = "solid-"..steam.."-T-"..boiler.target_temperature, amount = omni.fluid.sluid_contain_fluid}},
+                results = {{type = "item", name = "solid-"..steam.."-T-"..boiler.target_temperature, amount = boiled_amount}},
             }
         end
 
@@ -572,6 +590,7 @@ for name, changes in pairs(recipe_mods) do
                         --Ignore probability on items, we dont want to mess with/change that. Very low probabilities would make it hard to find a decent gcd
                         amount = (ing.amount or (ing.amount_min+ing.amount_max)/2)
                     end
+                    if amount == 0 then break end
                     if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
                     --Calculate lcm
                     --Since our lcm function is not working with floats, multiply by 1000 if we find floats to keep precision for low fluid amounts (we just divided by sluid fluid ratio)
@@ -607,6 +626,7 @@ for name, changes in pairs(recipe_mods) do
                         --Ignore probability on items, we dont want to mess with/change that. Very low probabilities would make it hard to find a decent gcd
                         amount = omni.lib.round((ing.amount or (ing.amount_min+ing.amount_max)/2)*mult[dif])
                     end
+                    if amount == 0 then break end
                     if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
 
                     if not gcd[dif] then
@@ -638,6 +658,7 @@ for name, changes in pairs(recipe_mods) do
                             --Ignore probability on items, we dont want to mess with/change that. Very low probabilities would make it hard to find a decent gcd
                             amount = omni.fluid.round_fluid(ing.amount or (ing.amount_min+ing.amount_max)/2)
                         end
+                        if amount == 0 then break end
                         if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
                         --Calculate lcm
                         --Since our lcm function is not working with floats, multiply by 1000 if we find floats to keep precision for low fluid amounts (we just divided by sluid fluid ratio)
@@ -673,6 +694,7 @@ for name, changes in pairs(recipe_mods) do
                         else
                             amount = omni.lib.round((ing.amount or (ing.amount_min+ing.amount_max)/2)*mult[dif])
                         end
+                        if amount == 0 then break end
                         if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
 
                         if not gcd[dif] then
@@ -735,6 +757,7 @@ for name, changes in pairs(recipe_mods) do
                                     log("No sluid found that matches the correct temperature for "..ing.name)
                                 else
                                     log("Sluid Replacement error for "..ing.name)
+                                    break
                                 end
                             end
                         -- No temperature set and "none" is in our list --> no temp sluid exists
@@ -744,6 +767,7 @@ for name, changes in pairs(recipe_mods) do
                         else
                             log("Sluid Replacement error for "..ing.name)
                             log(serpent.block(rec))
+                            break
                         end
                         --Finally round again for the case of a precision error like .999
                         local new_amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing)*mult[dif]/omni.fluid.sluid_contain_fluid)
@@ -777,7 +801,6 @@ end
 
 --Replace minable fluids result with a sluid
 for _,resource in pairs(data.raw.resource) do
-    local auto = resource.minable.result
     if resource.minable and resource.minable.results and resource.minable.results[1] and resource.minable.results[1].type == "fluid" then
         resource.minable.results[1].type = "item"
         resource.minable.results[1].name = "solid-"..resource.minable.results[1].name

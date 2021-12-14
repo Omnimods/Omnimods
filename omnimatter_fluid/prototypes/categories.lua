@@ -4,7 +4,7 @@ data:extend(
     type = "item-group",
     name = "boiling-steam",
     order = "z",
-    icons = omni.lib.icon.of(data.raw.fluid["steam"]),
+    icons = {{icon = "__omnilib__/graphics/icons/burner.png", icon_size = 32}},
   },
   {
     type = "item-group",

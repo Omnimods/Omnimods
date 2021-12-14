@@ -1,6 +1,6 @@
 {
 "name":"omnimatter_fluid",
-"version": "4.1.8",
+"version": "4.1.9",
 "title":"Omnifluid",
 "author":"EmperorZelos",
 "contact": "https://discord.gg/WQYks7W",
@@ -25,6 +25,8 @@
 	"(?)pyfusionenergy",
 	"(?)PickerDollies",
 	"(?)ScienceCostTweakerM",
+	"(?)space-exploration",
+	"(?)space-exploration-postprocess",
 	"(?)Thaumaturgic-Machinations"
 ]
 }

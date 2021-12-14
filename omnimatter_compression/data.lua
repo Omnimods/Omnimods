@@ -12,7 +12,7 @@ if settings.startup["omnicompression_hide_handcraft"].value == false then
     omni.compression.hide_handcraft = nil--Don't override to false
 end
 
-omni.compression.sluid_contain_fluid= 60
+omni.compression.sluid_contain_fluid = 60
 
 
 require("prototypes/item-groups")

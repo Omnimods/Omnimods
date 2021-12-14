@@ -57,7 +57,6 @@ building_list["generator"] = true
 
 local recipe_category = {} --category additions
 local compress_level = {"Compact","Nanite","Quantum","Singularity"}
-local already_compressed = {}
 local compressed_buildings = {}
 -- LightedPolesPlus support
 local hasLEP = mods["LightedPolesPlus"] ~= nil
@@ -99,7 +98,7 @@ local find_top_tier = function(build, kind)
     local last_padded_nr = zero_pad(0, padded_zeroes)
     for nr=1, 99 do
         local padded_nr = zero_pad(nr, padded_zeroes)
-        local namedash = name .. "-"
+        namedash = name .. "-"
         if not rawkind[namedash..padded_nr] and rawkind[namedash..last_padded_nr] then
             return rawkind[namedash..last_padded_nr]
         elseif not rawkind[name..padded_nr] and rawkind[name..last_padded_nr] then
@@ -122,23 +121,6 @@ local category_exists = function(build)
     end
 end
 
---find placing item
-local find_placing_item = function(build)
-    for _, item in pairs(data.raw.item) do
-        if item.place_result and item.place_result == build.name then return item end
-    end
-end
---find recipe
-local find_recipe = function(product)
-    for _,recipe in pairs(data.raw.recipe) do
-        omni.lib.standardise(recipe)
-        if #recipe.normal.results == 1 and recipe.normal.results[1].name == product then
-            return recipe
-        end
-    end
-    return nil
-end
-
 local new_effect = function(effect, level, linear, constant)
     local mult = (
         (linear and level + 1)
@@ -157,7 +139,7 @@ local create_concentrated_fluid = function(fluid, tier)
     if new_fluid.heat_capacity then
         new_fluid.heat_capacity = new_effect(new_fluid.heat_capacity, tier, nil, multiplier^tier)
     end
-    
+
     if new_fluid.fuel_value then
         new_fluid.fuel_value = new_effect(new_fluid.fuel_value, tier)
     end
@@ -179,8 +161,8 @@ local create_concentrated_recipe = function(fluid, tier, temp)
     local temp_str = temp and "-" .. string.format("%04d", temp) .. "c" or ""
     if not data.raw.fluid[fluid .. "-concentrated-grade-" .. tier] then
         create_concentrated_fluid(fluid, tier)
-    end 
-    
+    end
+
     local base_fluid = fluid
     if not data.raw.recipe[fluid .. "-concentrated-grade-" .. tier  .. temp_str] then
         -- if tier > 1 then baseFluid = baseFluid.."-concentrated-grade-"..(tier-1) end
@@ -193,7 +175,6 @@ local create_concentrated_recipe = function(fluid, tier, temp)
             hide_from_player_crafting = true
         }
         local ungrade_recipe_data = table.deepcopy(grade_recipe_data) --deepcopy to safeguard against pointer nonsense
-        
         local grade_compressed_recipe_data = table.deepcopy(grade_recipe_data)
         local ungrade_compressed_recipe_data = table.deepcopy(grade_compressed_recipe_data)
 
@@ -213,7 +194,7 @@ local create_concentrated_recipe = function(fluid, tier, temp)
             --localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
             category = "fluid-condensation",
             enabled = true,
-            icons = new_fluid.icons,
+            icons = omni.lib.icon.of(new_fluid),
             order = new_fluid.order or ("z".."[condensed-"..fluid .."]")
         }
         local ungrade = {
@@ -247,7 +228,7 @@ end
 
 local recipe_results = {}
 log("calculating building tiers")
-for recipe_name, recipe in pairs(data.raw.recipe) do
+for _, recipe in pairs(data.raw.recipe) do
     --log(recipe.name)
     local product = omni.lib.locale.get_main_product(recipe)
     product = product and data.raw[product.type][product.name]
@@ -258,9 +239,9 @@ for recipe_name, recipe in pairs(data.raw.recipe) do
         building_list[place_result.type] and
         not omni.lib.string_contained_list(place_result.name, black_list) and --not on exclusion list
         not omni.compression.is_hidden(place_result) and (--Not hidden
-        not compress_entity[place_result] or (
-            compress_entity[place_result] and (
-            not compress_entity[place_result].exclude or compress_entity[place_result].include
+        not omni.compression.compress_entity[place_result] or (
+            omni.compression.compress_entity[place_result] and (
+            not omni.compression.compress_entity[place_result].exclude or omni.compression.compress_entity[place_result].include
             ) -- Not excluded or included
         )) 
         then
@@ -314,7 +295,6 @@ local process_fluid_box = function(fluid_box, i, is_graded, proto)
     for I=1, #fluid_box do
         if fluid_box[I] then
             if fluid_box.filter then
-                local fl_name
                 if is_graded then
                     fl_name = fluid_box.filter.."-concentrated-grade-"..i
                 else
@@ -345,12 +325,12 @@ local modspec = {
 }
 -- Help us keep the code clean
 setmetatable(modspec, {
-  __call = function(self, proto, key, expression)
-        if expression then
-            proto.module_specification[self[key]] = expression(proto.module_specification[self[key]])
-        end
-        return proto.module_specification[self[key]]
-  end
+    __call = function(self, proto, key, expression)
+            if expression then
+                proto.module_specification[self[key]] = expression(proto.module_specification[self[key]])
+            end
+            return proto.module_specification[self[key]]
+    end
 })
 -------------------------------------------------------------------------------
 --[[Entity Type Specific Properties]]--
@@ -378,7 +358,7 @@ local run_entity_updates = function(new, kind, i)
             y = 0
         }
         }
-        for entry=1, #bounding_box do -- Remove numbered and convert to explicit 
+        for entry=1, #bounding_box do -- Remove numbered and convert to explicit
             for index=1, #bounding_box[entry] do
                 bounding_box[entry][string.char(119+index)] = bounding_box[entry][index]
                 bounding_box[entry][index] = nil
@@ -474,9 +454,9 @@ local run_entity_updates = function(new, kind, i)
         end
         new.crafting_categories = new_cat
         new.crafting_speed = new.crafting_speed * math.pow(multiplier,i)
-        if new.fluid_boxes then
-            --process_fluid_box(new.fluid_boxes, i, false)
-        end
+        -- if new.fluid_boxes then
+        --     process_fluid_box(new.fluid_boxes, i, false)
+        -- end
     end
     --lab vial slot update (may want to move this to recipe update since tools/items are done later...)
     if kind == "lab" then
@@ -685,19 +665,18 @@ local run_entity_updates = function(new, kind, i)
     end
     return new
 end
-log("start building compression")
+log("Start building compression")
 
 -------------------------------------------------------------------------------
 --[[Build Compression Tier Recipes]]--
 -------------------------------------------------------------------------------
-for build_name, values in pairs(recipe_results) do
+for _, values in pairs(recipe_results) do
     for _, details in pairs(values) do --only building types
         --category check and create if not
         local build = details.building
         if build and details.item and details.recipe and not details.recipe.name:find("^uncompress%-") and details.base and build.minable then -- and build.minable.result and data.raw.item[build.minable.result]
             --check that it is a minable entity
             category_exists(build)
-            already_compressed[build_name] = true
             for i = 1, omni.compression.bld_lvls do
                 local new = table.deepcopy(build)
                 local item = table.deepcopy(details.item)
@@ -759,7 +738,8 @@ for build_name, values in pairs(recipe_results) do
 
                 compressed_buildings[#compressed_buildings+1] = item
                 --[[COMPRESSION/DE-COMPRESSION RECIPE CREATION]]--
-                if i == 1 then 
+                local ing = {}
+                if i == 1 then
                     ing  = {{
                         details.item.name,
                         multiplier * cost_multiplier
@@ -830,4 +810,5 @@ end
 if #compressed_buildings > 0 then
     data:extend(compressed_buildings)
 end
-log("end building compression")
+
+log("Building compression finished: "..(#compressed_buildings or 0).. " buildings")

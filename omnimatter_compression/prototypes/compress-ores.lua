@@ -1,10 +1,7 @@
-log("start ore compression")
+log("Start ore compression")
 
 local compressed_ores = {}
 local blacklist = {{"creative","mode"}}--{"stone",{"creative","mode"}}
-local add_fluid_boxes = false
-local get_icons = omni.lib.icon.of
-local compensation_c = 500/120
 
 for name,ore in pairs(data.raw.resource) do
     if not omni.lib.string_contained_list(name,blacklist) then
@@ -50,7 +47,7 @@ for name,ore in pairs(data.raw.resource) do
             end
 
             local max_stacksize = 0
-            for i,drop in ipairs(new.minable.results) do        
+            for _,drop in ipairs(new.minable.results) do        
                 for _,comp in pairs({"compressed-", "concentrated-"}) do
                     if compressed_item_names[comp .. drop.name] then
                         max_stacksize = math.max(omni.lib.find_stacksize(drop.name),max_stacksize) --returns 50 for fluids
@@ -87,158 +84,145 @@ for name,ore in pairs(data.raw.resource) do
                         a = a/10
                         n = "solid-"..n
                         r = "solid-"..r
-                        local loc_key={"fluid-name.concentrated"}
                         compressed_ores[#compressed_ores+1] = {
-                        type = "item",
-                        name = r,
-                        localised_name = {"item-name.solid-fluid", {"fluid-name."..new.minable.required_fluid}},
-                        icons = omni.lib.add_overlay(cf, "compress"),
-                        subgroup = "omni-solid-fluids",
-                        order = "a",
-                        stack_size = 200,
-                        flags={}
+                            type = "item",
+                            name = r,
+                            localised_name = {"item-name.solid-fluid", {"fluid-name."..new.minable.required_fluid}},
+                            icons = omni.lib.add_overlay(cf, "compress"),
+                            subgroup = "omni-solid-fluids",
+                            order = "a",
+                            stack_size = 200,
+                            flags={}
                         }
                         compressed_ores[#compressed_ores+1] = {
-                        type = "item",
-                        name = "compressed-"..r,
-                        localised_name = {"item-name.compressed-sluid", {"fluid-name."..new.minable.required_fluid}},
-                        icons = omni.lib.add_overlay(cf, "compress"),
-                        subgroup = "omni-solid-fluids",
-                        order = "a",
-                        stack_size = 50,
-                        flags={}
+                            type = "item",
+                            name = "compressed-"..r,
+                            localised_name = {"item-name.compressed-sluid", {"fluid-name."..new.minable.required_fluid}},
+                            icons = omni.lib.add_overlay(cf, "compress"),
+                            subgroup = "omni-solid-fluids",
+                            order = "a",
+                            stack_size = 50,
+                            flags={}
                         }
                         compressed_ores[#compressed_ores+1] = {
-                        type = "recipe",
-                        name = "liquify-"..r,
-                        icons = omni.lib.add_overlay(cf, "compress"),
-                        subgroup = "fluid-recipes",
-                        category = "general-omni-boiler",
-                        order = "g[hydromnic-acid]",
-                        normal = {
-                            energy_required = 3,
-                            enabled = true,
-                            ingredients =
-                            {
-                            {type = "item", name = r, amount = 10},
+                            type = "recipe",
+                            name = "liquify-"..r,
+                            icons = omni.lib.add_overlay(cf, "compress"),
+                            subgroup = "fluid-recipes",
+                            category = "general-omni-boiler",
+                            order = "g[hydromnic-acid]",
+                            normal = {
+                                energy_required = 3,
+                                enabled = true,
+                                ingredients = {
+                                    {type = "item", name = r, amount = 10},
+                                },
+                                results = {
+                                    {type = "fluid", name = "concentrated-"..new.minable.required_fluid, amount = 60*2.4},
+                                }
                             },
-                            results =
-                            {
-                            {type = "fluid", name = "concentrated-"..new.minable.required_fluid, amount = 60*2.4},
+                            expensive = {
+                                energy_required = 3,
+                                enabled = true,
+                                ingredients = {
+                                    {type = "item", name = r, amount = 10},
+                                },
+                                results = {
+                                    {type = "fluid", name = "concentrated-"..new.minable.required_fluid, amount = 60*2.4},
+                                }
                             }
-                        },
-                        expensive = {
-                            energy_required = 3,
-                            enabled = true,
-                            ingredients =
-                            {
-                            {type = "item", name = r, amount = 10},
-                            },
-                            results =
-                            {
-                            {type = "fluid", name = "concentrated-"..new.minable.required_fluid, amount = 60*2.4},
-                            }
-                        }
                         }
                         compressed_ores[#compressed_ores+1]={
-                        type = "recipe",
-                        name = "liquify-"..r.."-compression",
-                        icons = omni.lib.add_overlay(cf, "compress"),
-                        subgroup = "fluid-recipes",
-                        category = "general-omni-boiler",
-                        order = "g[hydromnic-acid]",
-                        normal = {
-                            energy_required = 3,
-                            enabled = true,
-                            ingredients =
-                            {
-                            {type = "item", name = "compressed-"..r, amount = 10},
+                            type = "recipe",
+                            name = "liquify-"..r.."-compression",
+                            icons = omni.lib.add_overlay(cf, "compress"),
+                            subgroup = "fluid-recipes",
+                            category = "general-omni-boiler",
+                            order = "g[hydromnic-acid]",
+                            normal = {
+                                energy_required = 3,
+                                enabled = true,
+                                ingredients = {
+                                    {type = "item", name = "compressed-"..r, amount = 10},
+                                },
+                                results = {
+                                    {type = "fluid", name = "concentrated-"..new.minable.required_fluid, amount = 3000*25/17.36*2.4},
+                                }
                             },
-                            results =
-                            {
-                            {type = "fluid", name = "concentrated-"..new.minable.required_fluid, amount = 3000*25/17.36*2.4},
+                            expensive = {
+                                energy_required = 3,
+                                enabled = true,
+                                ingredients = {
+                                    {type = "item", name = "compressed-"..r, amount = 10},
+                                },
+                                results = {
+                                    {type = "fluid", name = "concentrated-"..new.minable.required_fluid, amount = 3000*25/17.36*2.4},
+                                }
                             }
-                        },
-                        expensive = {
-                            energy_required = 3,
-                            enabled = true,
-                            ingredients =
-                            {
-                            {type = "item", name = "compressed-"..r, amount = 10},
-                            },
-                            results =
-                            {
-                            {type = "fluid", name = "concentrated-"..new.minable.required_fluid, amount = 3000*25/17.36*2.4},
-                            }
-                        }
                         }
                         --data.raw.recipe["uncompress-solid-"..new.minable.required_fluid] = nil
-                        concentrate = {
-                        type = "recipe",
-                        name = "concentrated-"..new.minable.required_fluid.."-compression",
-                        icons = omni.lib.add_overlay(cf, "compress"),
-                        category = "fluid-concentration",
-                        normal = {
-                            enabled = true,
-                            hidden = true,
-                            ingredients = {
-                            {type = t,amount=a,name="compressed-"..n}
+                        compressed_ores[#compressed_ores+1] = {
+                            type = "recipe",
+                            name = "concentrated-"..new.minable.required_fluid.."-compression",
+                            icons = omni.lib.add_overlay(cf, "compress"),
+                            category = "fluid-concentration",
+                            normal = {
+                                enabled = true,
+                                hidden = true,
+                                ingredients = {
+                                    {type = t, amount = a, name = "compressed-"..n}
+                                },
+                                results = {
+                                    {type = t, amount = 5*a/ss, name = "compressed-"..r}
+                                },
+                                energy_required = 0.01
                             },
-                            results = {
-                            {type=t,amount=5*a/ss,name = "compressed-"..r}
-                            },
-                            energy_required = 0.01
-                        },
-                        expensive = {
-                            enabled = true,
-                            hidden = true,
-                            ingredients = {
-                            {type = t,amount=a,name="compressed-"..n}
-                            },
-                            results = {
-                            {type=t,amount=5*a/ss,name = "compressed-"..r}
-                            },
-                            energy_required = 0.01
+                            expensive = {
+                                enabled = true,
+                                hidden = true,
+                                ingredients = {
+                                    {type = t, amount = a, name = "compressed-"..n}
+                                },
+                                results = {
+                                    {type = t, amount = 5*a/ss, name = "compressed-"..r}
+                                },
+                                energy_required = 0.01
+                            }
                         }
-                        }
-                        compressed_ores[#compressed_ores+1]=concentrate
-                    else
-                        add_fluid_boxes=true
                     end
-                    local concentrate = {
+                    compressed_ores[#compressed_ores+1] = {
                         type = "recipe",
                         name = "concentrated-"..new.minable.required_fluid,
                         icons = omni.lib.add_overlay(cf, "compress"),
                         category = "fluid-concentration",
                         normal = {
-                        enabled = true,
-                        hidden = true,
-                        ingredients = {
-                            {type = t,amount=a,name=n}
-                        },
-                        results ={
-                            {type=t,amount=a/ss,name = r}
-                        },
-                        energy_required = 0.01
+                            enabled = true,
+                            hidden = true,
+                            ingredients = {
+                                {type = t, amount = a, name = n}
+                            },
+                            results = {
+                                {type = t, amount = a/ss, name = r}
+                            },
+                            energy_required = 0.01
                         },
                         expensive = {
-                        enabled = true,
-                        hidden = true,
-                        ingredients = {
-                            {type = t,amount=a,name=n}
-                        },
-                        results ={
-                            {type=t,amount=a/ss,name = r}
-                        },
-                        energy_required = 0.01
+                            enabled = true,
+                            hidden = true,
+                            ingredients = {
+                                {type = t,amount=a,name=n}
+                            },
+                            results = {
+                                {type = t, amount = a/ss, name = r}
+                            },
+                            energy_required = 0.01
                         }
                     }
-                    compressed_ores[#compressed_ores+1]=concentrate
                 end
                 new.minable.required_fluid="concentrated-"..new.minable.required_fluid
             end
             if compressed and max_stacksize > 0 then
-                compressed_ores[#compressed_ores+1]=new
+                compressed_ores[#compressed_ores+1] = new
                 --[[ Migrating to future properly named ores! hurray technical debt ]]--
                 local new_copy = table.deepcopy(new)
                 new_copy.name = ore.name
@@ -252,9 +236,9 @@ for name,ore in pairs(data.raw.resource) do
     end
 end
 
-if compressed_ores and #compressed_ores > 0 then
+if #compressed_ores > 0 then
     data:extend(compressed_ores)
 else
     --log("omnicompression didn't find any ores to extend, something is wrong.")
 end
-log("end ore compression")
+log("Ore compression finished: "..(#compressed_ores or 0).. " ores")
