@@ -341,6 +341,26 @@ local function omnidate(technology)
     global.omni.full_iter = false
 end
 
+
+-------------
+---Events---
+------------
+--Disable warnings for the event part, the lua lang server seems wonky here
+---@diagnostic disable
+
+script.on_init(function(event)
+    global.omni = global.omni or {}
+    global.omni.needs_update = true
+    global.omni.clear_caches = true
+end)
+
+script.on_configuration_changed(function(event)
+    log("on_configuration_changed\n\t"..serpent.block(event))
+    global.omni = global.omni or {}
+    global.omni.needs_update = true
+    global.omni.clear_caches = true
+end)
+
 script.on_event(function(event)
     log("on_console_chat\n\t"..serpent.block(event))
     if event.player_index and game.players[event.player_index] then
@@ -363,21 +383,11 @@ script.on_event(function(event)
     end
 end, defines.events.on_console_chat)
 
-script.on_configuration_changed(function(event)
-    log("on_configuration_changed\n\t"..serpent.block(event))
-    global.omni = global.omni or {}
-    global.omni.needs_update = true
-    global.omni.clear_caches = true
-end)
-script.on_init(function(event)
-    global.omni = global.omni or {}
-    global.omni.needs_update = true
-    global.omni.clear_caches = true
-end)
 local update_queue = {
     finished = {},
     reversed = {}
 }
+
 script.on_event(defines.events.on_tick, function(event)
     if global.omni and global.omni.needs_update then
         omnidate()
@@ -438,3 +448,5 @@ script.on_event(defines.events.on_player_created, function(event)
         ply.print{"message.omni-difficulty"}
     end
 end)
+
+---@diagnostic enable
