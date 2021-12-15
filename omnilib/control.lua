@@ -361,7 +361,7 @@ script.on_configuration_changed(function(event)
     global.omni.clear_caches = true
 end)
 
-script.on_event(function(event)
+script.on_event(defines.events.on_console_chat, function(event)
     log("on_console_chat\n\t"..serpent.block(event))
     if event.player_index and game.players[event.player_index] then
         if event.message=="omnidate" then
@@ -381,7 +381,7 @@ script.on_event(function(event)
             --log(serpent.block(global.omni.recipe_techs))
         end
     end
-end, defines.events.on_console_chat)
+end)
 
 local update_queue = {
     finished = {},
