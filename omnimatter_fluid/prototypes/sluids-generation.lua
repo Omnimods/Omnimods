@@ -742,15 +742,17 @@ for name, changes in pairs(recipe_mods) do
                                         found_temp = math.min(found_temp or math.huge, temp)
                                     end
                                 end
-                                if found_temp then
-                                    new_ing.name = "solid-"..ing.name.."-T-"..found_temp
-                                --Steam sucks, if nothing has been found yet, we need to replace it with the lowest boiler temp
-                                elseif ing.name == "steam" then
-                                    local temp = math.huge
-                                    for t,_ in pairs (boiling_steam) do
-                                        temp = math.min(temp, t)
+                                --Steam sucks, if nothing has been found, we need to replace it with the lowest boiler temp
+                                if ing.name == "steam" then
+                                    if not found_temp or (found_temp and found_temp < min_boiler_temp) then
+                                        found_temp = math.huge
+                                        for t,_ in pairs (boiling_steam) do
+                                            found_temp = math.min(found_temp, t)
+                                        end
                                     end
-                                    new_ing.name = "solid-"..ing.name.."-T-"..temp
+                                    new_ing.name = "solid-"..ing.name.."-T-"..found_temp
+                                elseif found_temp then
+                                    new_ing.name = "solid-"..ing.name.."-T-"..found_temp
                                 --No temperature matches, use the no temperature sluid as fallback
                                 elseif omni.lib.is_in_table("none", fluid_cats[cat][ing.name].temperatures) then
                                     new_ing.name = "solid-"..ing.name
