@@ -13,6 +13,7 @@ if mods["pycoalprocessing"] and data.raw.fluid["combustion-mixture1"] then
     omni.fluid.add_assembler_generator_fluid("combustion-mixture1")
 end
 
+
 --Late requires
 require("prototypes.sluids-generation")
 require("prototypes.offshore-pump")
