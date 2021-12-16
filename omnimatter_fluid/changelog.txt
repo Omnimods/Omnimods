@@ -5,8 +5,8 @@ Date: 2021.12.16
     - Fixed a special case where fluid steam in recipes without any specified temperatures was
       replaced with the minimal registered steam temperature instead of with the minimal registered
       boiler target temperature
-    - Fixed that steam outputted by recipes that had a lower temperature than the lowest boiler`s
-      target temperature had no conversion recipe
+    - Fixed that steam outputted by recipes that had a temperature that was not matching any
+      boiler`s target temperature had no conversion recipe
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.9
 Date: 2021.12.14

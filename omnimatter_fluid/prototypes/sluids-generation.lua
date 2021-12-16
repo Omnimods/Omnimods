@@ -146,8 +146,16 @@ end
 
 --Always create sluid steam for the lowest boiler temp
 local min_boiler_temp = math.huge
+--Save all boiler temps with the according fluid output
+local boiler_temps = {}
 for _, boiler in pairs(data.raw.boiler) do
     min_boiler_temp = math.min(min_boiler_temp, boiler.target_temperature)
+    local fluid = boiler.output_fluid_box.filter or "steam"
+    if not boiler_temps[fluid] then
+        boiler_temps[fluid]  = {boiler.target_temperature}
+    else
+        table.insert(boiler_temps[fluid], boiler.target_temperature)
+    end
 end
 if min_boiler_temp < math.huge then
     sort_fluid("steam", "sluid", {temp = min_boiler_temp})
@@ -351,24 +359,32 @@ for _, boiler in pairs(data.raw.boiler) do
             }
         end
 
-        --Check if steam/boiler output filter fluid is registered as sluid with a temp < min boiler temp. This mean some recipes output this sluid and we need to add a conversion recipe so it can be burned in engines
+
+        --If the boiler output fluid requires a conversion with a temp < this boilers target temperature but higher than the next lower boiler, then we need to add a conversion recipe
         if fluid_cats["sluid"][steam] then
+            --find next lower boiler for the same fluid
+            local lower_tier = 0
+            for _, t in pairs(boiler_temps[steam]) do
+                if t > lower_tier and t < boiler.target_temperature then lower_tier = t end
+            end
             for temp, _ in pairs(fluid_cats["sluid"][steam].conversions) do
-                if boiler.target_temperature == min_boiler_temp and temp < min_boiler_temp and data.raw.item["solid-"..steam.."-T-"..temp] then
-                    new_boiler[#new_boiler+1] = {
-                        type = "recipe",
-                        name = boiler.name.."-"..steam.."-fluidisation-"..temp,
-                        icons = omni.lib.icon.of(steam,"fluid"),
-                        subgroup = "boiler-sluid-converter",
-                        category = "boiler-omnifluid-"..boiler.name,
-                        order = "g[hydromnic-acid]",
-                        energy_required = omni.fluid.sluid_contain_fluid/boiler_consumption,
-                        enabled = true,
-                        hide_from_player_crafting = true,
-                        main_product = steam,
-                        ingredients = {{type = "item", name = "solid-"..steam.."-T-"..temp, amount = 1}},
-                        results = {{type = "fluid", name = steam, amount = omni.fluid.sluid_contain_fluid, temperature = temp}},
-                    }
+                if temp < boiler.target_temperature and temp > lower_tier then
+                    if data.raw.item["solid-"..steam.."-T-"..temp] then
+                        new_boiler[#new_boiler+1] = {
+                            type = "recipe",
+                            name = boiler.name.."-"..steam.."-fluidisation-"..temp,
+                            icons = omni.lib.icon.of(steam,"fluid"),
+                            subgroup = "boiler-sluid-converter",
+                            category = "boiler-omnifluid-"..boiler.name,
+                            order = "g[hydromnic-acid]",
+                            energy_required = omni.fluid.sluid_contain_fluid/boiler_consumption,
+                            enabled = true,
+                            hide_from_player_crafting = true,
+                            main_product = steam,
+                            ingredients = {{type = "item", name = "solid-"..steam.."-T-"..temp, amount = 1}},
+                            results = {{type = "fluid", name = steam, amount = omni.fluid.sluid_contain_fluid, temperature = temp}},
+                        }
+                    end
                 end
             end
         end
