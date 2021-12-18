@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.14
+Date: 2021.12.18
+  Changes:
+    - Integer settings now use dropdowns to clearly display constrained values
+  Bugfixes:
+    - Fix error when certain settings were changed to invalid-but-technically-allowed values
+---------------------------------------------------------------------------------------------------
 Version: 4.1.13
 Date: 2021.12.14
   Bugfixes:

@@ -12,8 +12,9 @@ data:extend(
         name = "omnicompression_building_levels",
         setting_type = "startup",
         default_value = 2,
-        min_value = 1,
-        max_value = 4,
+        minimum_value = 1,
+        maximum_value = 4,
+        allowed_values = {1,2,3,4},
         order = "b"
     },
     {
@@ -21,8 +22,9 @@ data:extend(
         name = "omnicompression_multiplier",
         setting_type = "startup",
         default_value = 4,
-        min_value = 2,
-        max_value = 10,
+        minimum_value = 2,
+        maximum_value = 10,
+        allowed_values = {2,3,4,5,6,7,8,9,10},
         order = "c"
     },
     {
@@ -37,8 +39,8 @@ data:extend(
         name = "omnicompression_too_long_time",
         setting_type = "startup",
         default_value = 11000,
-        min_value = 1200,
-        max_value = 72000,
+        minimum_value = 1200,
+        maximum_value = 72000,
         order = "e"
     },
     {
@@ -60,8 +62,8 @@ data:extend(
         name = "omnicompression_compressed_tech_min",
         setting_type = "startup",
         default_value = 2000, --space science pack size
-        min_value = 0,
-        max_value = 250000000,
+        minimum_value = 0,
+        maximum_value = 250000000,
         order = "h"
     },
     {
@@ -83,8 +85,9 @@ data:extend(
         name = "omnicompression_energy_mult",
         setting_type = "startup",
         default_value = 1,
-        min_value = 1,
-        max_value = 5,
+        minimum_value = 1,
+        maximum_value = 5,
+        allowed_values = {1,2,3,4,5},
         order = "k"
     },
     {
@@ -92,8 +95,9 @@ data:extend(
         name = "omnicompression_cost_mult",
         setting_type = "startup",
         default_value = 1,
-        min_value = 1,
-        max_value = 5,
+        minimum_value = 1,
+        maximum_value = 5,
+        allowed_values = {1,2,3,4,5},
         order = "l"
     },
     {
