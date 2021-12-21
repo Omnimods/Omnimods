@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.11
+Date: 2021.12.XX
+  Bugfixes:
+    - Fixed that hidden void recipes were not converted into a sluid version
+    - If a void recipe for a sluid with multiple temperatures exists, create a void recipe for
+      each temperature
+---------------------------------------------------------------------------------------------------
 Version: 4.1.10
 Date: 2021.12.16
   Bugfixes:

@@ -102,3 +102,20 @@ function omni.fluid.compact_array(array) --individual ingredient/result table
     end
     return new
 end
+
+function omni.fluid.is_fluid_void(recipe)
+    local results = {}
+    local ingredients = {}
+    if recipe.normal then
+        results = recipe.normal.results
+        ingredients = recipe.normal.ingredients
+    elseif recipe.results then
+        results = recipe.results
+        ingredients = recipe.ingredients
+    end
+    --need to check results since it can be nil when .result exists
+    if results and next(results) and #results == 1 and results[1].amount and results[1].amount == 0  and next(ingredients) and ingredients[1].type and ingredients[1].type == "fluid" then
+        return true
+    end
+    return false
+end

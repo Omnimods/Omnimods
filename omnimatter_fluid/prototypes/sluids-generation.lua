@@ -8,6 +8,7 @@ local fluid_cats = {fluid = {}, sluid = {}, mush = {}}
 local generator_fluid = {} --is used in a generator
 --build a list of recipes to modify after the sluids list is generated
 local recipe_mods = {}
+local void_recipes = {}
 
 local function sort_fluid(fluidname, category, temperature)
     local fluid = data.raw.fluid[fluidname]
@@ -104,8 +105,10 @@ end
 
 --recipes
 for _, rec in pairs(data.raw.recipe) do
-    if not omni.fluid.check_string_excluded(rec.name) and not omni.lib.recipe_is_hidden(rec.name) and not omni.fluid.forbidden_recipe[rec.name] then
+    --need to check hidden recipes aswell (voiding stuff for example), maybe exclude hidden AND NOT enabled in the future?
+    if not omni.fluid.check_string_excluded(rec.name) --[[and not omni.lib.recipe_is_hidden(rec.name)]] and not omni.fluid.forbidden_recipe[rec.name] then
         local fluids = {}
+        local is_void = omni.fluid.is_fluid_void(rec)
         for _, ingres in pairs({"ingredients","results"}) do --ignore result/ingredient as they don't handle fluids
             if rec[ingres] then
                 for _, it in pairs(rec[ingres]) do
@@ -128,9 +131,14 @@ for _, rec in pairs(data.raw.recipe) do
             end
         end
         for _, fluid in pairs(fluids) do
-            local conv = nil
-            if (fluid.temperature or -65535) > (data.raw.fluid[fluid.name].default_temperature or math.huge) then conv = true end
-            sort_fluid(fluid.name, "sluid", {temp = fluid.temperature, temp_min = fluid.minimum_temperature, temp_max = fluid.maximum_temperature, conversion = conv})
+            if is_void then
+                sort_fluid(fluid.name, "sluid")
+                void_recipes[rec.name] = true
+            else
+                local conv = nil
+                if (fluid.temperature or -65535) > (data.raw.fluid[fluid.name].default_temperature or math.huge) then conv = true end
+                sort_fluid(fluid.name, "sluid", {temp = fluid.temperature, temp_min = fluid.minimum_temperature, temp_max = fluid.maximum_temperature, conversion = conv})
+            end
         end
     else
         --log("Ignoring blacklisted recipe "..rec.name)
@@ -192,11 +200,10 @@ for _,cat in pairs(fluid_cats) do
             local temp = 0
             local flu = fluid.temperatures[i]
             if flu.temp_min or flu.temp_max then
-                --Best case: min/max (for the required recipe) equal fluid min/max -->we can use a temperature-less solid (min/max dont have to both exist!!! if only one exists and matches its fine)
+                --Best case: min/max (for the required recipe) equals fluid min/max -->we can use a temperature-less solid (min/max dont have to both exist!!! if only one exists and matches its fine)
                 if ((flu.temp_min or data.raw.fluid[fluid.name].default_temperature) == data.raw.fluid[fluid.name].default_temperature) and ((flu.temp_max or data.raw.fluid[fluid.name].max_temperature) == data.raw.fluid[fluid.name].max_temperature) then
                     found = true
                     temp = "none"
-                    
                 else
                     --check if theres an entry already in its range
                     for _, new in pairs(new_temps)do
@@ -219,6 +226,7 @@ for _,cat in pairs(fluid_cats) do
         --Check if the table is empty --> Everything should be sorted out properly
         if next(fluid.temperatures) then
             log("This should be empty")
+            log(fluid.name)
             log(serpent.block(fluid.temperatures))
             log(serpent.block(new_temps))
         end
@@ -620,7 +628,7 @@ for name, changes in pairs(recipe_mods) do
                 --First loop: Calculate the lcm respecting omni.fluid.sluid_contain_fluid
                 for	_, ing in pairs(rec[dif][ingres]) do
                     local amount = 0
-                    if ing.type == "fluid" then
+                    if ing.type == "fluid" and ing.amount and ing.amount ~= 0 then
                         --Round the fluid amount to get rid of weird base numbers, divide afterwards to not lose precision
                         amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing))/omni.fluid.sluid_contain_fluid
                     else
@@ -657,7 +665,7 @@ for name, changes in pairs(recipe_mods) do
             for _, ingres in pairs({"ingredients","results"}) do
                 for	_, ing in pairs(rec[dif][ingres]) do
                     local amount = 0
-                    if ing.type == "fluid" then
+                    if ing.type == "fluid" and ing.amount and ing.amount ~= 0 then
                         amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing)*mult[dif]/omni.fluid.sluid_contain_fluid)
                     else
                         --Ignore probability on items, we dont want to mess with/change that. Very low probabilities would make it hard to find a decent gcd
@@ -794,10 +802,10 @@ for name, changes in pairs(recipe_mods) do
                                     new_ing.name = "solid-"..ing.name.."-T-"..found_temp
                                 elseif found_temp then
                                     new_ing.name = "solid-"..ing.name.."-T-"..found_temp
-                                --No temperature matches, use the no temperature sluid as fallback
+                                --No temperature matches, use the no temperature sluid as fallback (or if the recipe is a void recipe. Surpress the warning for this case)
                                 elseif omni.lib.is_in_table("none", fluid_cats[cat][ing.name].temperatures) then
                                     new_ing.name = "solid-"..ing.name
-                                    log("No sluid found that matches the correct temperature for "..ing.name)
+                                    if not void_recipes[rec.name] then log("No sluid found that matches the correct temperature for "..ing.name.." in the recipe "..rec.name) end
                                 else
                                     log("Sluid Replacement error for "..ing.name)
                                     break
@@ -813,7 +821,11 @@ for name, changes in pairs(recipe_mods) do
                             break
                         end
                         --Finally round again for the case of a precision error like .999
-                        local new_amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing)*mult[dif]/omni.fluid.sluid_contain_fluid)
+                        local new_amount = 0
+                        -- If amount is 0 (void recipes), dont use fluids round function since its min. value is 1
+                        if ing.amount and not (ing.amount_min or ing.amount_max) and ing.amount > 0 then
+                            new_amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing)*mult[dif]/omni.fluid.sluid_contain_fluid)
+                        end
                         new_ing.amount = math.min(new_amount, 65535)
                         if new_amount > 65535 then
                             log("WARNING: Ingredient "..new_ing.name.." from the recipe "..rec.name.." ran into the upper limit. Amount = "..new_amount.." Mult = "..mult[dif])
@@ -841,6 +853,29 @@ for name, changes in pairs(recipe_mods) do
         log("recipe not found:".. name)
     end
 end
+
+--Copy the sluid void recipe for all temperature sluids that have been generated
+local voids = {}
+for name, _ in pairs(void_recipes) do
+    local rec = data.raw.recipe[name]
+    local ing = rec.normal.ingredients[1].name
+    local cat = "sluid"
+    if fluid_cats["mush"][ing] then cat = "mush" end
+    local flu = fluid_cats[cat][ing]
+    if flu then
+        for _,temp in pairs(fluid_cats[cat][ing].temperatures) do
+            if type(temp) == "number" and data.raw.item["solid-"..flu.name.."-T-"..temp] then
+                local new_rec = table.deepcopy(rec)
+                new_rec.name = rec.name.."-T-"..temp
+                new_rec.localised_name = omni.lib.locale.of(rec).name
+                new_rec.normal.ingredients[1] = "solid-"..flu.name.."-T-"..temp
+                new_rec.expensive.ingredients[1] = "solid-"..flu.name.."-T-"..temp
+                voids[#voids+1] = new_rec
+            end
+        end
+    end
+end
+if next(voids) then data:extend(voids) end
 
 --Replace minable fluids result with a sluid
 for _,resource in pairs(data.raw.resource) do
