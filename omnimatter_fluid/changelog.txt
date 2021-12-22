@@ -1,6 +1,9 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.11
 Date: 2021.12.XX
+  Changes:
+    - Added omni.fluid.add_multi_temp_recipe(recipename) to mark recipes which require a copy with
+      sluids for each available temperature in the orginal min/max range of the fluid
   Bugfixes:
     - Fixed that hidden void recipes were not converted into a sluid version
     - If a void recipe for a sluid with multiple temperatures exists, create a void recipe for
