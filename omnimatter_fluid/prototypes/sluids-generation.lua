@@ -134,6 +134,7 @@ for _, rec in pairs(data.raw.recipe) do
             if is_void then
                 sort_fluid(fluid.name, "sluid")
                 void_recipes[rec.name] = true
+                --log("Added recipe "..rec.name.." as voiding recipe.")
             else
                 local conv = nil
                 if (fluid.temperature or -65535) > (data.raw.fluid[fluid.name].default_temperature or math.huge) then conv = true end
@@ -785,20 +786,24 @@ for name, changes in pairs(recipe_mods) do
                                     if type(temp) == "number" and temp >= (ing.minimum_temperature or 0) and temp <= (ing.maximum_temperature or math.huge) then
                                         --If multiple temps are found, use the lowest.
                                         found_temp = math.min(found_temp or math.huge, temp)
-                                        if ing.name == "steam" and temp == min_boiler_temp then
-                                            found_temp = temp
-                                            break
-                                        end
                                     end
                                 end
-                                --Steam sucks, if nothing has been found, we need to replace it with the lowest boiler temp
+                                --Steam sucks
                                 if ing.name == "steam" then
-                                    if not found_temp or (found_temp and found_temp < min_boiler_temp) then
-                                        found_temp = math.huge
-                                        for t,_ in pairs (boiling_steam) do
-                                            found_temp = math.min(found_temp, t)
-                                        end
+                                    --Get the lowest boiler temp producing steam
+                                    local min_temp = math.huge
+                                    for t, _ in pairs (boiling_steam) do
+                                        min_temp = math.min(min_temp, t)
                                     end
+                                    --If the min boiler temp is in the temperature range and the found temp is lower than that, use that
+                                    if found_temp and found_temp < min_temp and min_temp >= (ing.minimum_temperature or 0) and min_temp <= (ing.maximum_temperature or math.huge) then
+                                        found_temp = min_temp
+                                    end
+                                    --If nothing has been found yet, we need to replace it with the lowest boiler temp
+                                    if not found_temp then--or (found_temp and found_temp < min_boiler_temp) then
+                                        found_temp = min_temp
+                                    end
+
                                     new_ing.name = "solid-"..ing.name.."-T-"..found_temp
                                 elseif found_temp then
                                     new_ing.name = "solid-"..ing.name.."-T-"..found_temp
