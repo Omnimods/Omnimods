@@ -14,6 +14,14 @@ if mods["pycoalprocessing"] and data.raw.fluid["combustion-mixture1"] then
     omni.fluid.add_multi_temp_recipe("cooling-water")
 end
 
+if mods["pypetroleumhandling"] and data.raw.fluid["combustion-mixture1"] then
+    omni.fluid.excempt_recipe("drilling-fluids")
+    omni.fluid.add_mining_fluid("drilling-fluid-0")
+    omni.fluid.add_mining_fluid("drilling-fluid-1")
+    omni.fluid.add_mining_fluid("drilling-fluid-2")
+    omni.fluid.add_mining_fluid("drilling-fluid-3")
+end
+
 
 --Late requires
 require("prototypes.sluids-generation")

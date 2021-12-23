@@ -85,7 +85,7 @@ for _, turr in pairs(data.raw["fluid-turret"]) do
 end
 
 --mining fluid detection
-for _,res in pairs(data.raw.resource) do
+for _, res in pairs(data.raw.resource) do
     --Required fluids for resources
     if res.minable then
         if res.minable.required_fluid then
@@ -102,6 +102,11 @@ for _,res in pairs(data.raw.resource) do
             end
         end
     end
+end
+
+--Mining fluids registered by compat
+for flu, _ in pairs(omni.fluid.mining_fluids) do
+    sort_fluid(flu, "fluid", {temp = "none", conversion = true})
 end
 
 --recipes

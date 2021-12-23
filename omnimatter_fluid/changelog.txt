@@ -4,10 +4,14 @@ Date: 2021.12.XX
   Changes:
     - Added omni.fluid.add_multi_temp_recipe(recipename) to mark recipes which require a copy with
       sluids for each available temperature in the orginal min/max range of the fluid
+    - Added omni.fluid.add_mining_fluid(fluidname) to register mining fluid manually that
+      require a solid -> fluid conversion recipe
   Bugfixes:
     - Fixed that hidden void recipes were not converted into a sluid version
     - If a void recipe for a sluid with multiple temperatures exists, create a void recipe for
       each temperature
+    - Fixed that the mining fluid required for PY`s multi fluid input drills / pumpjacks were not
+      excluded from conversion
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.10
 Date: 2021.12.16

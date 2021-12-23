@@ -4,6 +4,7 @@ omni.fluid.forbidden_recipe = {}
 --Generator fluids that are normally created in an assembling machine. If the results temp is higher than any boiler, we need to ignore the boiler temperature(s) to create conversion recipes
 omni.fluid.assembler_generator_fluids = {}
 omni.fluid.multi_temp_recipes = {}
+omni.fluid.mining_fluids = {}
 omni.fluid.excluded_strings = {{"empty","barrel"},{"fill","barrel"},{"fluid","unknown"},"barreling-pump","creative"}
 
 function omni.fluid.excempt_boiler(boiler)
@@ -24,6 +25,11 @@ end
 
 function omni.fluid.add_multi_temp_recipe(recipename)
     omni.fluid.multi_temp_recipes[recipename] = true
+end
+
+--Adds that fluid as mining fluid, converter recipes will be generated
+function omni.fluid.add_mining_fluid(fluidname)
+    omni.fluid.mining_fluids[fluidname] = true
 end
 
 function omni.fluid.check_string_excluded(comparison) --checks fluid/recipe name against exclusion list
