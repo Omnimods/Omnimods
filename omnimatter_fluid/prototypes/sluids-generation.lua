@@ -159,12 +159,16 @@ for _,fluid in pairs(data.raw.fluid) do
     end
 end
 
---Always create sluid steam for the lowest boiler temp
+--Find the lowest and highest boilers target temperature
 local min_boiler_temp = math.huge
+local max_boiler_temp = 0
 --Save all boiler temps with the according fluid output
 local boiler_temps = {}
+
 for _, boiler in pairs(data.raw.boiler) do
     min_boiler_temp = math.min(min_boiler_temp, boiler.target_temperature)
+    max_boiler_temp = math.max(max_boiler_temp, boiler.target_temperature)
+    
     local fluid = boiler.output_fluid_box.filter or "steam"
     if not boiler_temps[fluid] then
         boiler_temps[fluid]  = {boiler.target_temperature}
@@ -172,6 +176,8 @@ for _, boiler in pairs(data.raw.boiler) do
         table.insert(boiler_temps[fluid], boiler.target_temperature)
     end
 end
+
+--Always create sluid steam for the lowest boiler temp
 if min_boiler_temp < math.huge then
     sort_fluid("steam", "sluid", {temp = min_boiler_temp})
 end
@@ -374,7 +380,6 @@ for _, boiler in pairs(data.raw.boiler) do
             }
         end
 
-
         --If the boiler output fluid requires a conversion with a temp < this boilers target temperature but higher than the next lower boiler, then we need to add a conversion recipe
         if fluid_cats["sluid"][steam] then
             --find next lower boiler for the same fluid
@@ -409,7 +414,8 @@ for _, boiler in pairs(data.raw.boiler) do
             --deal with non-water mush fluids, allow temperature and specific boiler systems
             for temp,_ in pairs(fugacity.conversions) do
                 --Check the old temperatures table if the required temperature requires a conversion recipe
-                if temp ~= "none"  and (boiler.target_temperature >= temp or omni.fluid.assembler_generator_fluids[fugacity.name]) then
+                --Create conversion recipes for all mushes up to the boilers target temperature. Generator assembler fluids higher than any boiler temp are added to the highest tier boiler
+                if temp ~= "none"  and (boiler.target_temperature >= temp or (omni.fluid.assembler_generator_fluids[fugacity.name] and boiler.target_temperature == max_boiler_temp)) then
                     if data.raw.item["solid-"..fugacity.name.."-T-"..temp] then
                         new_boiler[#new_boiler+1] = {
                             type = "recipe",
