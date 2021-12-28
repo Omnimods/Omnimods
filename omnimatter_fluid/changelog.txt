@@ -14,6 +14,8 @@ Date: 2021.12.XX
       each temperature
     - Fixed that the mining fluid required for PY`s multi fluid input drills / pumpjacks were not
       excluded from conversion
+    - Fixed that the function parsing fluid amounts for the GCD calculation used the wrong rounding
+      function which caused the multiplier of certain recipes not being as low as possible
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.10
 Date: 2021.12.16
@@ -43,7 +45,7 @@ Date: 2021.12.08
       are crafted in assemblers (and have no boiler recipe). Boilers target temperature will be
       ignored for these fluids when creating conversion recipes
   Bugfixes:
-    - Fixed that PY´s combustion mixture had no conversion recipes
+    - Fixed that PY`s combustion mixture had no conversion recipes
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.7
 Date: 2021.12.04

@@ -679,7 +679,7 @@ for name, changes in pairs(recipe_mods) do
                 for	_, ing in pairs(rec[dif][ingres]) do
                     local amount = 0
                     if ing.type == "fluid" and ing.amount and ing.amount ~= 0 then
-                        amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing)*mult[dif]/omni.fluid.sluid_contain_fluid)
+                        amount = omni.lib.round(omni.fluid.get_true_amount(ing)*mult[dif]/omni.fluid.sluid_contain_fluid)
                     else
                         --Ignore probability on items, we dont want to mess with/change that. Very low probabilities would make it hard to find a decent gcd
                         amount = omni.lib.round((ing.amount or (ing.amount_min+ing.amount_max)/2)*mult[dif])
@@ -696,7 +696,7 @@ for name, changes in pairs(recipe_mods) do
             end
             --The final recipe multiplier is our old mult/the calculated gcd
             mult[dif] = mult[dif] / gcd[dif]
-            
+
             --Multiplier for this recipe is too huge. Lets do the math lcm/gcd math again with slightly less precision (use rounding)
             if mult[dif]*max_amount > 20000  or (mult[dif] > 100 and mult[dif]*max_amount > 10000) then
                 --reset all values
