@@ -267,12 +267,13 @@ local function create_impure_extraction(tier, split, ore_name)
     for i, res in pairs(level_split_results) do
         local num = 1 --legacy reasons, its in all names, removing it will result in bad migration dreams
         local desc = ""
+        local main_amount
         for j, part in pairs(res) do
             desc = desc.."[img=item."..part.name.."] x "..string.format("%.2f",part.amount * (part.probability or 1))
             if j<#res then desc = desc.."\n" end
+            if part.name == ore_name then main_amount = part.amount * (part.probability or 1) end
         end
-        local focused_ore =
-        (
+        local focused_ore = (
             RecGen:create("omnimatter", "omnirec-focus-" .. num .. "-" .. ore_name .. "-" .. omni.lib.alpha(i)):
                 setLocName("recipe-name.impure-omnitraction", {"item-name." .. ore_name}):
                 setLocDesc(desc):
@@ -310,6 +311,11 @@ local function create_impure_extraction(tier, split, ore_name)
             focused_ore:setTechPrereq("omnitech-omnitractor-electric-"..tier-1)
         else
             focused_ore:setTechPrereq("omnitech-focused-extraction-"..ore_name.."-"..(i-1))
+        end
+        if settings.startup["omnimatter-mining-fluids"].value and omni.matter.omnisource[tostring(tier)][ore_name]["fluid"] then
+            local flu = omni.matter.omnisource[tostring(tier)][ore_name]["fluid"].name
+            local mult = omni.matter.omnisource[tostring(tier)][ore_name]["fluid"].amount
+            focused_ore:addIngredients({{type = "fluid", name = flu, amount = main_amount * mult}})
         end
         focused_ore:setResults(res)
         focused_ore:extend()
@@ -352,7 +358,7 @@ local function create_pure_extraction(tier, ore_name)
             setIcons(ore_name)
             --setIngredients("omnite")
     )
-    if omni.matter.omnisource[tostring(tier)][ore_name]["fluid"] then
+    if settings.startup["omnimatter-mining-fluids"].value and omni.matter.omnisource[tostring(tier)][ore_name]["fluid"] then
         local flu = omni.matter.omnisource[tostring(tier)][ore_name]["fluid"].name
         local mult = omni.matter.omnisource[tostring(tier)][ore_name]["fluid"].amount
         pure_ore:setIngredients(function(levels,grade) return omni.lib.union(cost:ingredients()(levels,grade), {{type = "fluid", name = flu, amount = mult * cost.output.yield.quant(levels,grade)}}) end)

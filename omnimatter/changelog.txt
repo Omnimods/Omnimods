@@ -3,6 +3,8 @@ Version: 4.1.22
 Date: ????
   Changes:
     - Removed the setting to enable/disable infinite omnite. This can be done in the map generator
+    - Extraction recipes of ores that normally require a fluid to mine now require that fluid
+      aswell by default. A setting to disable this has been added.
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.21
 Date: 2021.12.02

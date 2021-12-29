@@ -142,7 +142,7 @@ if mods["Krastorio2"] then
 	--disable vanilla coal & stone, need a lower tier
 	all_time_ores = false
 	-- T1
-	omni.matter.add_resource("coal",1)
+	omni.matter.add_resource("coal", 1)
 	-- T2
 	omni.matter.add_resource("raw-rare-metals", 2)
 	omni.matter.add_fluid("mineral-water", 2, 1)
