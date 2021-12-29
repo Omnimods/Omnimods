@@ -321,15 +321,19 @@ local function create_pure_extraction(tier, ore_name)
         OmniGen:create():
             setInputAmount(12):
             setYield(ore_name):
+            --setIngredients({{type = "item", name = "omnite", amount = 12}, {type= "fluid", name = "sulfuric-acid", amount = 100}}):
             setIngredients("omnite"):
             setWaste("stone-crushed"):
-            yieldQuant(extraction_value):
+            yieldQuant(
+                function(levels, grade)
+                    return extraction_value(levels, grade)
+                end):
             wasteQuant(
                 function(levels, grade)
                     return math.max(12 - extraction_value(levels, grade), 0)
-                end
-            )
+                end)
     )
+
     local function get_desc(levels,grade)
         local desc = ""
         local costres =cost:results()
@@ -340,14 +344,22 @@ local function create_pure_extraction(tier, ore_name)
         end
         return desc
     end
+
     local pure_ore = (
         RecChain:create("omnimatter", "extraction-" .. ore_name):
-        setLocName("recipe-name.pure-omnitraction", {"item-name." .. ore_name}):
-        setLocDesc(function(levels, grade) return get_desc(levels,grade) end):
-        setIngredients("omnite"):
-        setIcons(ore_name):
-        setIngredients(cost:ingredients()):
-        setResults(cost:results()):
+            setLocName("recipe-name.pure-omnitraction", {"item-name." .. ore_name}):
+            setLocDesc(function(levels, grade) return get_desc(levels,grade) end):
+            setIcons(ore_name)
+            --setIngredients("omnite")
+    )
+    if omni.matter.omnisource[tostring(tier)][ore_name]["fluid"] then
+        local flu = omni.matter.omnisource[tostring(tier)][ore_name]["fluid"].name
+        local mult = omni.matter.omnisource[tostring(tier)][ore_name]["fluid"].amount
+        pure_ore:setIngredients(function(levels,grade) return omni.lib.union(cost:ingredients()(levels,grade), {{type = "fluid", name = flu, amount = mult * cost.output.yield.quant(levels,grade)}}) end)
+    else
+        pure_ore:setIngredients(cost:ingredients())
+    end
+    pure_ore:setResults(cost:results()):
         setEnabled(false):
         setCategory("omnite-extraction"):
         setSubgroup("omni-pure"):
@@ -370,8 +382,8 @@ local function create_pure_extraction(tier, ore_name)
             function(levels, grade)
                 return math.floor((grade - 1) * 3 / levels) + tier
             end):
-        setTechLocName("omnitech-pure-omnitraction", {"item-name." .. ore_name}):extend()
-    )
+        setTechLocName("omnitech-pure-omnitraction", {"item-name." .. ore_name}):
+        extend()
 end
 
 --Initial omnitraction recipe creation

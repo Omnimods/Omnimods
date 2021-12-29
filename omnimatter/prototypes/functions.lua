@@ -12,40 +12,43 @@ omni.matter.res_to_keep = {
 --Manipulation of the extraction tables
 --Open for modders to use to add compatibility
 
-function omni.matter.add_resource(n, t, s, m)
-    if not omni.matter.omnisource[tostring(t)] then omni.matter.omnisource[tostring(t)] = {} end
-    omni.matter.omnisource[tostring(t)][n]={mod=m, tier = t, name = n, techicon = s}
+function omni.matter.add_resource(r_name, tier, fluid_to_mine)
+    if not omni.matter.omnisource[tostring(tier)] then omni.matter.omnisource[tostring(tier)] = {} end
+    omni.matter.omnisource[tostring(tier)][r_name] = {tier = tier, name = r_name}
+    if fluid_to_mine and fluid_to_mine.name then
+        omni.matter.omnisource[tostring(tier)][r_name]["fluid"] = {name = fluid_to_mine.name, amount = fluid_to_mine.amount or 1}
+    end
 end
 
-function omni.matter.add_fluid(n ,t, r, s, m)
-    if not omni.matter.omnifluid[tostring(t)] then omni.matter.omnifluid[tostring(t)] = {} end
-    omni.matter.omnifluid[tostring(t)][n]={mod=m, tier = t, ratio=r, name = n,techicon = s}
+function omni.matter.add_fluid(f_name , tier, ratio)
+    if not omni.matter.omnifluid[tostring(tier)] then omni.matter.omnifluid[tostring(tier)] = {} end
+    omni.matter.omnifluid[tostring(tier)][f_name] = {tier = tier, ratio=ratio, name = f_name}
 end
 
-function omni.matter.remove_resource(n)
+function omni.matter.remove_resource(r_name)
     for t, tiers in pairs(omni.matter.omnisource) do
-        if omni.matter.omnisource[t][n] then
-            omni.matter.omnisource[t][n] = nil
+        if omni.matter.omnisource[t][r_name] then
+            omni.matter.omnisource[t][r_name] = nil
             return true
         end
     end
     return nil
 end
 
-function omni.matter.remove_fluid(n)
+function omni.matter.remove_fluid(f_name)
     for t, tiers in pairs(omni.matter.omnifluid) do
-        if omni.matter.omnifluid[t][n] then
-            omni.matter.omnifluid[t][n] = nil
+        if omni.matter.omnifluid[t][f_name] then
+            omni.matter.omnifluid[t][f_name] = nil
             return true
         end
     end
     return nil
 end
 
-function omni.matter.get_ore_tier(n)
+function omni.matter.get_ore_tier(r_name)
     for _, tiers in pairs(omni.matter.omnisource) do
         for _,ores in pairs(tiers) do
-            if ores.name == n then
+            if ores.name == r_name then
                 return ores.tier
             end
         end
@@ -53,13 +56,13 @@ function omni.matter.get_ore_tier(n)
     return nil
 end
 
-function omni.matter.set_ore_tier(n,t)
-    local tier = omni.matter.get_ore_tier(n)
-    if tier then
-        local res = table.deepcopy(omni.matter.omnisource[tostring(tier)][n])
-        omni.matter.omnisource[tostring(tier)][n] = nil
-        if not omni.matter.omnisource[tostring(t)] then omni.matter.omnisource[tostring(t)] = {} end
-        omni.matter.omnisource[tostring(t)][n] = res
+function omni.matter.set_ore_tier(r_name, tier)
+    local t = omni.matter.get_ore_tier(r_name)
+    if t then
+        local res = table.deepcopy(omni.matter.omnisource[tostring(t)][r_name])
+        omni.matter.omnisource[tostring(t)][r_name] = nil
+        if not omni.matter.omnisource[tostring(tier)] then omni.matter.omnisource[tostring(tier)] = {} end
+        omni.matter.omnisource[tostring(tier)][r_name] = res
         return true
     else
         return nil
