@@ -615,7 +615,7 @@ end
 -------------------------------------------
 -----Replace recipe ingres with sluids-----
 -------------------------------------------
-for name, changes in pairs(recipe_mods) do
+for name, _ in pairs(recipe_mods) do
     local rec = data.raw.recipe[name]
     if rec then
         --check if needs standardisation
@@ -643,10 +643,10 @@ for name, changes in pairs(recipe_mods) do
                     local amount = 0
                     if ing.type == "fluid" and ing.amount and ing.amount ~= 0 then
                         --Round the fluid amount to get rid of weird base numbers, divide afterwards to not lose precision
-                        amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing))/omni.fluid.sluid_contain_fluid
+                        amount = omni.lib.round(omni.fluid.get_true_amount(ing)) / omni.fluid.sluid_contain_fluid
                     else
                         --Ignore probability on items, we dont want to mess with/change that. Very low probabilities would make it hard to find a decent gcd
-                        amount = (ing.amount or (ing.amount_min+ing.amount_max)/2)
+                        amount = (ing.amount or (ing.amount_min+ing.amount_max) / 2)
                     end
                     if amount == 0 then break end
                     if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
@@ -679,7 +679,7 @@ for name, changes in pairs(recipe_mods) do
                 for	_, ing in pairs(rec[dif][ingres]) do
                     local amount = 0
                     if ing.type == "fluid" and ing.amount and ing.amount ~= 0 then
-                        amount = omni.lib.round(omni.fluid.get_true_amount(ing)*mult[dif]/omni.fluid.sluid_contain_fluid)
+                        amount = omni.lib.round(omni.fluid.get_true_amount(ing) * mult[dif]) / omni.fluid.sluid_contain_fluid
                     else
                         --Ignore probability on items, we dont want to mess with/change that. Very low probabilities would make it hard to find a decent gcd
                         amount = omni.lib.round((ing.amount or (ing.amount_min+ing.amount_max)/2)*mult[dif])
@@ -711,7 +711,7 @@ for name, changes in pairs(recipe_mods) do
                         local amount = 0
                         if ing.type == "fluid" then
                             --Round the fluid amount to get rid of weird base numbers, divide afterwards to not lose precision
-                            amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing)/omni.fluid.sluid_contain_fluid)
+                            amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing) / omni.fluid.sluid_contain_fluid)
                         else
                             --Ignore probability on items, we dont want to mess with/change that. Very low probabilities would make it hard to find a decent gcd
                             amount = omni.fluid.round_fluid(ing.amount or (ing.amount_min+ing.amount_max)/2)
@@ -748,9 +748,9 @@ for name, changes in pairs(recipe_mods) do
                         local amount = 0
                         if ing.type == "fluid" then
                             --Use fluids round function after the ratio division to avoid decimals
-                            amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing)*mult[dif]/omni.fluid.sluid_contain_fluid)
+                            amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing) * mult[dif] / omni.fluid.sluid_contain_fluid)
                         else
-                            amount = omni.lib.round((ing.amount or (ing.amount_min+ing.amount_max)/2)*mult[dif])
+                            amount = omni.fluid.round_fluid(ing.amount or ((ing.amount_min+ing.amount_max)/2) * mult[dif])
                         end
                         if amount == 0 then break end
                         if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
