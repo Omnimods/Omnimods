@@ -1,13 +1,6 @@
 data:extend({
   {
     type = "bool-setting",
-    name = "omnimatter-infinite",
-    setting_type = "startup",
-    default_value = false,
-    order = "aa"
-  },
-  {
-    type = "bool-setting",
     name = "omnimatter-infinite-omnic-acid",
     setting_type = "startup",
     default_value = true,
