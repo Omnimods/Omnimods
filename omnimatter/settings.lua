@@ -13,7 +13,6 @@ data:extend({
     default_value = 1,
     maximum_value = 5,
     minimum_value = 0.20,
-    per_user = false,
     order = "ac"
   },
   {
@@ -23,7 +22,7 @@ data:extend({
     default_value = 5,
     maximum_value = 8,
     minimum_value = 3,
-    per_user = false,
+    allowed_values = {3,4,5,6,7,8},
     order = "ad"
   },
   {
@@ -33,7 +32,7 @@ data:extend({
     default_value = 2,
     maximum_value = 6,
     minimum_value = 1,
-    per_user = false,
+    allowed_values = {1,2,3,4,5,6},
     order = "ae"
   },
   {
@@ -43,7 +42,7 @@ data:extend({
     default_value = 3,
     maximum_value = 6,
     minimum_value = 2,
-    per_user = false,
+    allowed_values = {2,3,4,5,6},
     order = "af"
   },
   {
@@ -53,7 +52,7 @@ data:extend({
     default_value = 6,
     maximum_value = 10,
     minimum_value = 2,
-    per_user = false,
+    allowed_values = {2,3,4,5,6,7,8,9,10},
     order = "ag"
   },
   {
@@ -63,7 +62,7 @@ data:extend({
     default_value = 2,
     maximum_value = 3,
     minimum_value = 1,
-    per_user = false,
+    allowed_values = {1,2,3},
     order = "ah"
   },
   {
@@ -73,7 +72,6 @@ data:extend({
     default_value = 2,
     maximum_value = 5,
     minimum_value = 1.0,
-    per_user = false,
     order = "ai"
   },
   {
@@ -83,7 +81,6 @@ data:extend({
     default_value = 0.3,
     maximum_value = 20,
     minimum_value = 0.0001,
-    per_user = false,
     order = "aj"
   },
   {
@@ -91,7 +88,6 @@ data:extend({
     name = "omnimatter-linear-science-packs",
     setting_type = "startup",
     default_value = false,
-    per_user = false,
     order = "ak"
   },
   {
@@ -101,7 +97,6 @@ data:extend({
     default_value = 2,
     maximum_value = 10,
     minimum_value = 0.00,
-    per_user = false,
     order = "al"
   },
   {
@@ -109,7 +104,6 @@ data:extend({
     name = "omnimatter-rocket-locked",
     setting_type = "startup",
     default_value = true,
-    per_user = false,
     order = "am"
   },
   {
