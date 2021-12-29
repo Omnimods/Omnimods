@@ -254,5 +254,3 @@ if not omni.lib.recipe_ingredient_contains("transport-belt", "basic-transport-be
     omni.lib.add_recipe_ingredient("underground-belt", {"basic-underground-belt", 2})
     omni.lib.add_recipe_ingredient("splitter", {"basic-splitter", 1})
 end
-
-log(serpent.block(data.raw["splitter"]["basic-splitter"]))
