@@ -101,8 +101,8 @@ function omni.lib.add_recipe_ingredient(recipename, ingredient)
                 expens = {type="item",name=ingredient[1],amount=ingredient[2]}
             end
         else
-            norm = ingredient
-            expens = ingredient
+            norm = table.deepcopy(ingredient)
+            expens = table.deepcopy(ingredient)
         end
         local found = false
         --rec.ingredients --If only .normal needs to be modified, keep ingredients, else copy into .normal/.expensive
@@ -220,8 +220,8 @@ function omni.lib.add_recipe_result(recipename, result)
                 expens = {type="item",name=result[1],amount=result[2]}
             end
         else
-            norm = result
-            expens = result
+            norm = table.deepcopy(result)
+            expens = table.deepcopy(result)
         end
         local found = false
         -- Single result checks
