@@ -277,6 +277,7 @@ local function create_impure_extraction(tier, split, ore_name)
             RecGen:create("omnimatter", "omnirec-focus-" .. num .. "-" .. ore_name .. "-" .. omni.lib.alpha(i)):
                 setLocName("recipe-name.impure-omnitraction", {"item-name." .. ore_name}):
                 setLocDesc(desc):
+                setOrder("a[omnirec-focus-"..tier.."-"..ore_name.."]"):
                 setIngredients({name = "omnite", type = "item", amount = 10}):
                 setSubgroup("omni-impure"):
                 setEnergy(5 * (math.floor(tier / 2 + 0.5))):
@@ -355,6 +356,7 @@ local function create_pure_extraction(tier, ore_name)
         RecChain:create("omnimatter", "extraction-" .. ore_name):
             setLocName("recipe-name.pure-omnitraction", {"item-name." .. ore_name}):
             setLocDesc(function(levels, grade) return get_desc(levels,grade) end):
+            setOrder("a[extraction-"..tier.."-"..ore_name.."]"):
             setIcons(ore_name)
             --setIngredients("omnite")
     )
