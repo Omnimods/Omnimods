@@ -97,15 +97,21 @@ data:extend(
   },
   {
     type = "item-subgroup",
-    name = "omni-fluid-basic",
+    name = "omni-refine",
     group = "omnimatter",
     order = "am",
   },
   {
     type = "item-subgroup",
-    name = "omni-fluid-extraction",
+    name = "omni-fluid-basic",
     group = "omnimatter",
     order = "an",
+  },
+  {
+    type = "item-subgroup",
+    name = "omni-fluid-extraction",
+    group = "omnimatter",
+    order = "ao",
   },
 }
 )

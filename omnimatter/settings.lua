@@ -106,11 +106,4 @@ data:extend({
     default_value = true,
     order = "am"
   },
-  {
-    type = "bool-setting",
-    name = "omnimatter-mining-fluids",
-    setting_type = "startup",
-    default_value = true,
-    order = "an"
-  },
 })
