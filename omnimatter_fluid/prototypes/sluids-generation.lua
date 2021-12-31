@@ -749,9 +749,9 @@ for name, _ in pairs(recipe_mods) do
                         local amount = 0
                         if ing.type == "fluid" then
                             --Use fluids round function after the ratio division to avoid decimals
-                            amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing) * mult[dif] / omni.fluid.sluid_contain_fluid)
+                            amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing) / omni.fluid.sluid_contain_fluid) * mult[dif]
                         else
-                            amount = omni.fluid.round_fluid(ing.amount or ((ing.amount_min+ing.amount_max)/2) * mult[dif])
+                            amount = omni.fluid.round_fluid(ing.amount or ((ing.amount_min+ing.amount_max)/2)) * mult[dif]
                         end
                         if amount == 0 then break end
                         if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
