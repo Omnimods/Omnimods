@@ -321,7 +321,7 @@ local function create_impure_extraction(tier, split, ore_name)
                 setOrder("a[omnirec-focus-"..tier.."-"..ore_name.."]"):
                 setIngredients({name = "omnite", type = "item", amount = 10}):
                 setSubgroup("omni-impure"):
-                setEnergy(5 * (math.floor(tier / 2 + 0.5))):
+                setEnergy(5.0 * (math.floor(tier / 2 + 0.5))):
                 setIcons("omnite"):
                 setEnabled(false):
                 addIcon(
@@ -398,11 +398,10 @@ local function create_pure_extraction(tier, ore_name)
             setEnabled(false):
             setCategory("omnite-extraction"):
             setSubgroup("omni-pure"):
-            setMain(ore_name):
             setLevel(3 * omni.pure_levels_per_tier):
             setEnergy(
                 function(levels, grade)
-                    return 5 * (math.floor((grade - 1 + (tier - 1) / 2) / levels) + 1)
+                    return 6.5 * (math.floor((grade - 1 + (tier - 1) / 2) / levels) + 1)
                 end):
             setTechIcons(generate_pure_icon(ore_name)):
             setTechCost(
