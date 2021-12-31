@@ -60,7 +60,6 @@ local function generate_pure_icon(ore_name)
     )
 end
 
-log(serpent.block(omni.matter.omnisource))
 --Creates a table containing splits of the given tier with their corresponding ore names
 local function check_mining_fluids(tier)
     local source = omni.matter.omnisource[tostring(tier)]
@@ -365,7 +364,6 @@ local function create_pure_extraction(tier, ore_name)
         OmniGen:create():
             setInputAmount(12):
             setYield(ore_name):
-            --setIngredients({{type = "item", name = "omnite", amount = 12}, {type= "fluid", name = "sulfuric-acid", amount = 100}}):
             setIngredients("omnite"):
             setWaste("stone-crushed"):
             yieldQuant(
@@ -395,7 +393,6 @@ local function create_pure_extraction(tier, ore_name)
             setLocDesc(function(levels, grade) return get_desc(levels,grade) end):
             setOrder("a[extraction-"..tier.."-"..ore_name.."]"):
             setIcons(ore_name):
-            --setIngredients("omnite"):
             setIngredients(cost:ingredients()):
             setResults(cost:results()):
             setEnabled(false):
