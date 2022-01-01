@@ -13,24 +13,24 @@ if angelsmods and angelsmods.refining then
 	metal_ores = false
 
 	--Initial omnitractions for saph/ stir
-	omni.matter.add_initial("angels-ore1",1,6)
-    omni.matter.add_initial("angels-ore3",1,6)
+	omni.matter.add_initial("angels-ore1", 1, 6)
+    omni.matter.add_initial("angels-ore3", 1, 6)
 
-	omni.matter.add_resource("angels-ore1",1)
-	omni.matter.add_resource("angels-ore3",1) 
-	omni.matter.add_resource("angels-ore4",3)
-	omni.matter.add_fluid("thermal-water",3,3)
+	omni.matter.add_resource("angels-ore1", 1)
+	omni.matter.add_resource("angels-ore3", 1) 
+	omni.matter.add_resource("angels-ore4", 3)
+	omni.matter.add_fluid("thermal-water", 3, 3)
 	if bobmods and bobmods.ores or (angelsmods.industries and angelsmods.industries.overhaul) then
-		omni.matter.add_resource("angels-ore2",3)
-		omni.matter.add_resource("angels-ore5",2)
-		omni.matter.add_resource("angels-ore6",2)
+		omni.matter.add_resource("angels-ore2", 3)
+		omni.matter.add_resource("angels-ore5", 2)
+		omni.matter.add_resource("angels-ore6", 2)
 	else
-		omni.matter.add_resource("angels-ore2",2)
+		omni.matter.add_resource("angels-ore2", 2)
 	end
 else
 	--Non-Angel initial omnitractions
-	omni.matter.add_initial("iron-ore",1,7)
-	omni.matter.add_initial("copper-ore",1,7)
+	omni.matter.add_initial("iron-ore", 1, 7)
+	omni.matter.add_initial("copper-ore", 1, 7)
 	if bobmods and bobmods.ores then
 		local levels={		
 			--["iron-ore"]=1,
@@ -56,31 +56,31 @@ else
 				if levels[ore.name] then
 					omni.matter.add_resource(ore.name,levels[ore.name])
 				else
-					log("WARNING: Omni Tier not set for bob´s ore: "..ore.name)
+					log("WARNING: Omni Tier not set for bob`s ore: "..ore.name)
 				end
 			end
 		end
 		--Force Gem ore, certain bob settings disable it in the table checked above
-		omni.matter.add_resource("gem-ore",3)
-		omni.matter.add_fluid("lithia-water",2,1)
+		omni.matter.add_resource("gem-ore", 3)
+		omni.matter.add_fluid("lithia-water", 2, 1)
 	end
 end
 
 if mods["SigmaOne_Nuclear"] then
-	omni.matter.add_resource("fluorine-ore",3)
+	omni.matter.add_resource("fluorine-ore", 3)
 end
 if mods["dark-matter-replicators"] then
-	omni.matter.add_resource("tenemut",3)
+	omni.matter.add_resource("tenemut", 3)
 end
 if mods["Yuoki"] then
-	omni.matter.add_resource("y-res1",2)
-	omni.matter.add_resource("y-res2",3)
+	omni.matter.add_resource("y-res1", 2)
+	omni.matter.add_resource("y-res2", 3)
 end
 if mods["pycoalprocessing"] then
 	-- Red
 	omni.matter.add_resource("raw-borax", 1)
 	-- Green
-	omni.matter.add_resource("niobium-ore", 2)	
+	omni.matter.add_resource("niobium-ore", 2)
 end
 if mods["pyfusionenergy"] then
 	-- Blue
@@ -115,11 +115,11 @@ if mods["pyalienlife"] then
 end
 if mods["pyrawores"] then
 	--Initial omnitractions
-	omni.matter.add_initial("ore-aluminium",1,14)
-    omni.matter.add_initial("ore-tin",1,12)
-    omni.matter.add_initial("ore-quartz",1,12)
-    omni.matter.add_initial("raw-coal",1,10)
-	omni.matter.add_initial("nexelit-ore",1,7)
+	omni.matter.add_initial("ore-aluminium", 1, 14)
+    omni.matter.add_initial("ore-tin", 1, 12)
+    omni.matter.add_initial("ore-quartz", 1, 12)
+    omni.matter.add_initial("raw-coal", 1, 10)
+	omni.matter.add_initial("nexelit-ore", 1, 7)
 	
 	-- Pre-sci/red
 	omni.matter.add_resource("ore-aluminium", 1)
@@ -142,7 +142,7 @@ if mods["Krastorio2"] then
 	--disable vanilla coal & stone, need a lower tier
 	all_time_ores = false
 	-- T1
-	omni.matter.add_resource("coal",1)
+	omni.matter.add_resource("coal", 1)
 	-- T2
 	omni.matter.add_resource("raw-rare-metals", 2)
 	omni.matter.add_fluid("mineral-water", 2, 1)
@@ -151,9 +151,9 @@ if mods["Krastorio2"] then
 	-- Only add stone and uranium when angels is not present
 	if not (angelsmods and angelsmods.refining) then
 		-- T1
-		omni.matter.add_resource("stone",1)
+		omni.matter.add_resource("stone", 1)
 		-- T3
-		omni.matter.add_resource("uranium-ore", 3)
+		omni.matter.add_resource("uranium-ore", 3, {name = data.raw.resource["uranium-ore"].minable.required_fluid, amount = data.raw.resource["uranium-ore"].minable.fluid_amount})
 	end
 end
 
@@ -162,23 +162,23 @@ end
 ----------------------------------------------------------------------------
 if angelsmods and angelsmods.petrochem then
 	vanilla_fluids = false
-	omni.matter.add_fluid("gas-natural-1",1,3+4/7)
-	omni.matter.add_fluid("liquid-multi-phase-oil",2,1+3/8)
-	if not mods["omnimatter_water"] and not mods["pypetroleumhandling"] then omni.matter.add_resource("sulfur",2) end
+	omni.matter.add_fluid("gas-natural-1", 1, 3+4/7)
+	omni.matter.add_fluid("liquid-multi-phase-oil", 2, 1+3/8)
+	if not mods["omnimatter_water"] and not mods["pypetroleumhandling"] then omni.matter.add_resource("sulfur", 2) end
 end
 
 ----------------------------------------------------------------------------
 -- Add vanilla resources --
 ----------------------------------------------------------------------------
 if all_time_ores then
-	omni.matter.add_resource("coal",2)
-	omni.matter.add_resource("stone",3)
+	omni.matter.add_resource("coal", 2)
+	omni.matter.add_resource("stone", 3)
 end
 if metal_ores then
-	omni.matter.add_resource("iron-ore",1)
-	omni.matter.add_resource("copper-ore",1)
-	omni.matter.add_resource("uranium-ore",3)
+	omni.matter.add_resource("iron-ore", 1)
+	omni.matter.add_resource("copper-ore", 1)
+	omni.matter.add_resource("uranium-ore", 3, {name = data.raw.resource["uranium-ore"].minable.required_fluid, amount = data.raw.resource["uranium-ore"].minable.fluid_amount})
 end
 if vanilla_fluids then
-	omni.matter.add_fluid("crude-oil",1,1)
+	omni.matter.add_fluid("crude-oil", 1, 1)
 end

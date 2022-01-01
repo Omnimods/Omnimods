@@ -1,8 +1,15 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.22
 Date: ????
+  Features:
+    - Ores that normally require a fluid to mine cant be extracted from omnite directly anymore
+      The recipe now outputs a crude version of the ore which needs to be refined with the mining
+      fluid to get the proper ore
   Changes:
     - Removed the setting to enable/disable infinite omnite. This can be done in the map generator
+    - Properly order all extraction recipes by tier
+    - Increased the crafting time of pure extractions from 5s/tier to 6.5s/tier to end up with even
+      numbers when filling belts
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.21
 Date: 2021.12.02

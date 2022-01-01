@@ -1238,7 +1238,9 @@ function RecGen:import(rec)
         setSubgroup(recipe.subgroup or r.subgroup(0,0)):
         setOrder(recipe.order or r.order(0,0)):
         setIcons(recipe.icons or recipe.icon or r.icons(0,0) or omni.lib.icon.of(recipe, true)):
-        setHidden(recipe.hidden or false)
+        setHidden(recipe.hidden or false):
+        showAmount(recipe.normal.show_amount_in_title):
+        showProduct(recipe.normal.always_show_products)
 
         for _, module in pairs(data.raw.module) do
             if module.effect.productivity and module.limitation then
@@ -1987,6 +1989,8 @@ function RecGen:generate_recipe()
             enabled = self.enabled(0,0),
             main_product = self.main_product(0,0),
             energy_required = self.energy_required(0,0) or 0.5,
+            show_amount_in_title = self.show_amount,
+            always_show_products = self.show_product,
         },
         expensive = {
             ingredients=table.deepcopy(self.ingredients(0,0,1)) or {},
@@ -1994,6 +1998,8 @@ function RecGen:generate_recipe()
             enabled = self.enabled(0,0),
             main_product = self.main_product(0,0),
             energy_required = self.energy_required(0,0) or 0.5,
+            show_amount_in_title = self.show_amount,
+            always_show_products = self.show_product,
         },
         icons = self.icons(0,0),
         icon_size = 32,
@@ -2311,6 +2317,16 @@ function RecGen:addCondPrereq(cond,...)
     return self
 end
 
+function RecGen:showAmount(b)
+    self.show_amount = b
+    return self
+end
+
+function RecGen:showProduct(b)
+    self.show_product = b
+    return self
+end
+
 function RecChain:setTechSuffix(suffix)
     self.tech.suffix = suffix
     return self
@@ -2401,7 +2417,9 @@ function RecChain:generate_chain()
         setTechLocName(self.tech.loc_name(self.levels,i)):
         setTechLocDesc(self.tech.loc_desc,self.tech.loc_desc_keys):
         --setTechName("omnitech-"..techname.."-"..i-techDifEnabled):
-        setGenerationCondition(self.requiredMods(self.levels,i))
+        setGenerationCondition(self.requiredMods(self.levels,i)):
+        showAmount(self.show_amount):
+        showProduct(self.show_product)
 
         if string.find(techname, "omnitech-") then
             r:setTechName(techname.."-"..i-techDifEnabled)

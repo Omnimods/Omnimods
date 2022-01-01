@@ -61,6 +61,51 @@ local function generate_pure_icon(ore_name)
 end
 
 --Creates a table containing splits of the given tier with their corresponding ore names
+local function check_mining_fluids(tier)
+    local source = omni.matter.omnisource[tostring(tier)]
+
+    for _, v in pairs(source)do
+        if v.fluid and v.fluid.name then
+            --Create replacement item
+            --Build item icon. Make the tinted one a bit transparent and put the grey base behind it
+            local ore = string.gsub(v.name, "%-ore", "")
+            local icons = {{icon = "__omnimatter__/graphics/icons/ore_base_b.png", icon_size = 64}, omni.lib.add_ore_tint({icon = "__omnimatter__/graphics/icons/ore_base.png", icon_size = 64}, ore, 0.8)}
+
+            ItemGen:create("omnimatter", "crude-"..v.name):
+                setLocName({"item-name.crude", omni.lib.locale.of(data.raw.item[v.name]).name}):
+                --setSubgroup("angels-omnicium"):
+                setIcons(icons):
+                extend()
+
+            local techname = "omnitech-omnitractor-electric-"..(tier-1)
+            if tier <= 1 then techname = "omnitech-base-impure-extraction" end
+
+            RecGen:create("omnimatter", "crude-"..v.name):
+                setIngredients({"crude-"..v.name, 13}):
+                addIngredients({type = "fluid", name = v.fluid.name, amount = (v.fluid.amount or 1)*13}):
+                setResults({v.name, 13}):
+                setOrder("z[refinement-"..tier.."-"..v.name.."]"):
+                setCategory("omnite-extraction"):
+                setSubgroup("omni-pure"):
+                setIcons(v.name):
+                addSmallIcon(v.fluid.name, 3):
+                setLocName({"recipe-name.crude-refinement", omni.lib.locale.of(data.raw.item[v.name]).name}):
+                setEnergy(6.5):
+                setEnabled(false):
+                setTechName(techname):
+                setCategory("omnite-extraction"):
+                setSubgroup("omni-refine"):
+                showAmount(false):
+                showProduct(true):
+                extend()
+
+            --Alter the name in the omnisource table to point extraction recipes to the new item
+            v.name = "crude-"..v.name
+        end
+    end
+end
+
+--Creates a table containing splits of the given tier with their corresponding ore names
 local function split_omnisource_tier(tier)
     local splitted_ores = {}
     local source = omni.matter.omnisource[tostring(tier)]
@@ -71,17 +116,17 @@ local function split_omnisource_tier(tier)
         --Store the main ore
         splitted_ores[1] = {}
         splitted_ores[1]["main"] = {}
-        for _,v in pairs(source)do
+        for _, v in pairs(source)do
             splitted_ores[1]["main"][1] = v.name
         end
 
         --Add two side ores from the prev tier
         local prev_source = omni.matter.omnisource[tostring(tier-1)]
-        splitted_ores[1].side = {}
+        splitted_ores[1]["side"] = {}
         local toadd = 0
         for k, v in pairs(prev_source) do
             toadd = toadd + 1
-            splitted_ores[1].side[#splitted_ores[1].side+1] = v.name
+            splitted_ores[1]["side"][#splitted_ores[1]["side"]+1] = v.name
             if toadd == 2 then break end
         end
 
@@ -271,14 +316,14 @@ local function create_impure_extraction(tier, split, ore_name)
             desc = desc.."[img=item."..part.name.."] x "..string.format("%.2f",part.amount * (part.probability or 1))
             if j<#res then desc = desc.."\n" end
         end
-        local focused_ore =
-        (
+        local focused_ore = (
             RecGen:create("omnimatter", "omnirec-focus-" .. num .. "-" .. ore_name .. "-" .. omni.lib.alpha(i)):
-                setLocName("recipe-name.impure-omnitraction", {"item-name." .. ore_name}):
+                setLocName({"recipe-name.impure-omnitraction", omni.lib.locale.of(data.raw.item[ore_name]).name}):
                 setLocDesc(desc):
+                setOrder("a[omnirec-focus-"..tier.."-"..ore_name.."]"):
                 setIngredients({name = "omnite", type = "item", amount = 10}):
                 setSubgroup("omni-impure"):
-                setEnergy(5 * (math.floor(tier / 2 + 0.5))):
+                setEnergy(5.0 * (math.floor(tier / 2 + 0.5))):
                 setIcons("omnite"):
                 setEnabled(false):
                 addIcon(
@@ -323,13 +368,16 @@ local function create_pure_extraction(tier, ore_name)
             setYield(ore_name):
             setIngredients("omnite"):
             setWaste("stone-crushed"):
-            yieldQuant(extraction_value):
+            yieldQuant(
+                function(levels, grade)
+                    return extraction_value(levels, grade)
+                end):
             wasteQuant(
                 function(levels, grade)
                     return math.max(12 - extraction_value(levels, grade), 0)
-                end
-            )
+                end)
     )
+
     local function get_desc(levels,grade)
         local desc = ""
         local costres =cost:results()
@@ -340,37 +388,40 @@ local function create_pure_extraction(tier, ore_name)
         end
         return desc
     end
+
     local pure_ore = (
         RecChain:create("omnimatter", "extraction-" .. ore_name):
-        setLocName("recipe-name.pure-omnitraction", {"item-name." .. ore_name}):
-        setLocDesc(function(levels, grade) return get_desc(levels,grade) end):
-        setIngredients("omnite"):
-        setIcons(ore_name):
-        setIngredients(cost:ingredients()):
-        setResults(cost:results()):
-        setEnabled(false):
-        setCategory("omnite-extraction"):
-        setSubgroup("omni-pure"):
-        setMain(ore_name):
-        setLevel(3 * omni.pure_levels_per_tier):
-        setEnergy(
-            function(levels, grade)
-                return 5 * (math.floor((grade - 1 + (tier - 1) / 2) / levels) + 1)
-            end):
-        setTechIcons(generate_pure_icon(ore_name)):
-        setTechCost(
-            function(levels, grade)
-                return tech_cost(levels, grade, tier)
-            end):
-        setTechPrereq(
-            function(levels, grade)
-                return reqpure(tier, grade, ore_name)
-            end):
-        setTechPacks(
-            function(levels, grade)
-                return math.floor((grade - 1) * 3 / levels) + tier
-            end):
-        setTechLocName("omnitech-pure-omnitraction", {"item-name." .. ore_name}):extend()
+            setLocName({"recipe-name.pure-omnitraction", omni.lib.locale.of(data.raw.item[ore_name]).name}):
+            setLocDesc(function(levels, grade) return get_desc(levels,grade) end):
+            setOrder("a[extraction-"..tier.."-"..ore_name.."]"):
+            setIcons(ore_name):
+            setIngredients(cost:ingredients()):
+            setResults(cost:results()):
+            setEnabled(false):
+            setCategory("omnite-extraction"):
+            setSubgroup("omni-pure"):
+            setLevel(3 * omni.pure_levels_per_tier):
+            setEnergy(
+                function(levels, grade)
+                    return 6.5 * (math.floor((grade - 1 + (tier - 1) / 2) / levels) + 1)
+                end):
+            setTechIcons(generate_pure_icon(ore_name)):
+            setTechCost(
+                function(levels, grade)
+                    return tech_cost(levels, grade, tier)
+                end):
+            setTechPrereq(
+                function(levels, grade)
+                    return reqpure(tier, grade, ore_name)
+                end):
+            setTechPacks(
+                function(levels, grade)
+                    return math.floor((grade - 1) * 3 / levels) + tier
+                end):
+            setTechLocName("omnitech-pure-omnitraction", {"item-name." .. ore_name}):
+            showAmount(false):
+            showProduct(true):
+            extend()
     )
 end
 
@@ -402,6 +453,7 @@ end
 for tier = 1, max_omnisource_tier do
     --Split the current tier if it exists
     if omni.matter.omnisource[tostring(tier)] then
+        check_mining_fluids(tier)
         local splits = split_omnisource_tier(tier)
         --Go throug each split
         for i, split in pairs(splits) do
