@@ -111,7 +111,7 @@ local function omnidate(technology)
     -- Make sure we don't trigger ourselves
     global.omni.needs_update = true
     -- No omnicompression, no omnimatter
-    if not settings.startup["omnicompression_one_list"] and not settings.startup["omnimatter-infinite"] then
+    if not settings.startup["omnicompression_one_list"] and not settings.startup["omnimatter-beginner-multiplier"] then
         profiler.stop()
         global.omni.needs_update = false
         return

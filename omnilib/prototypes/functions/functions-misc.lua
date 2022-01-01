@@ -30,33 +30,32 @@ omni.lib.ore_tints = {--can add to the tint table with table.insert(omni.lib.ore
     ["lead"]      = {r = 0.5  , g = 0.5  , b = 0.5  }, --map_color = {r=0.0, g=0.0, b=0.50}
     ["titanium"]  = {r = 0.8  , g = 0.55 , b = 0.7  }, --map_color = {r=0.610, g=0.325, b=0.500}
     ["silicon"]   = {r = 1    , g = 1    , b = 1    }, --map_color = {r = 1, g = 1, b = 1}
-    ["quartz"]   	= {r = 1    , g = 1    , b = 1    }, --map_color = {r = 1, g = 1, b = 1}
+    ["quartz"]    = {r = 1    , g = 1    , b = 1    }, --map_color = {r = 1, g = 1, b = 1}
     ["nickel"]    = {r = 0.54 , g = 0.8  , b = 0.75 }, --map_color = {r=0.4, g=0.8, b=0.6}
     ["zinc"]      = {r = 0.34 , g = 0.9  , b = 0.81 }, --map_color = {r=0.5, g=1, b=1}
     ["silver"]    = {r = 0.875, g = 0.975, b = 1    }, --map_color = {r=0.7, g=0.9, b=0.9}
     ["gold"]      = {r = 1    , g = 0.75 , b = 0    }, --map_color = {r=1, g=0.7, b=0}
     ["tungsten"]  = {r = 0.75 , g = 0.5  , b = 0.25 }, --map_color = {r = 0.5, g = 0.0, b = 0.0}
-    ["manganese"] = {r = 1    , g = 1    , b = 1    , a = 1},
-    ["chrome"]    = {r = 1    , g = 1    , b = 1    , a = 1},
-    ["platinum"]  = {r = 1    , g = 1    , b = 1    , a = 1},
+    ["manganese"] = {r = 1    , g = 1    , b = 1    },
+    ["chrome"]    = {r = 1    , g = 1    , b = 1    },
+    ["platinum"]  = {r = 1    , g = 1    , b = 1    },
     ["thorium"]   = {r = 1    , g = 1    , b = 0.25 }, --map_color = {r = 0.75, g = 1, b = 0.25}
     ["cobalt"]    = {r = 0.3  , g = 0.53 , b = 0.77 }, --map_color = {r=0.18, g=0.35, b=0.53}
     ["aluminium"] = {r = 0.777, g = 0.7  , b = 0.333}, --map_color = {r=0.777, g=0.7, b=0.333}
     ["sulfur"]    = {r = 0.8  , g = 0.75 , b = 0.1  }, --map_color = {r=1, g=1, b=0}
-    ["bauxite"] 	= {r=0.777	, g=0.7	   , b=0.333  }, --<-- map_color only
+    ["bauxite"]   = {r = 0.777, g = 0.7  , b = 0.333}, --<-- map_color only
     ["rutile"]    = {r = 0.8  , g = 0.55 , b = 0.7  }, --map_color = {r=0.610, g=0.325, b=0.500}
     ["gems"]      = {r = 0.25 , g = 1    , b = 0.25 }, --<-- map_color only
-    ["raw-imersite"] = {r=1	, g=0.5	   , b=1	  }, --<-- map_color only
+    ["raw-imersite"] = {r = 1 , g = 0.5	 , b = 1    }, --<-- map_color only
     ["raw-rare-metals"] = {r = 0.6, g = 0.3, b = 1  }, --<-- map_color only
     }
 
-    function omni.lib.add_ore_tint(icon,ore_name) --should work for a specific icon or icons table
-    if type(icon) == "table" then --should be a row regardless
-        --get tint
-        local tint = omni.lib.ore_tints.ore_name or {r = 1, g = 1, b = 1, a = 1} --add default of white if not in table
-        change_icons_tint(icon,tint) --icons tint, not icon tint...
+function omni.lib.add_ore_tint(icons, ore_name, alpha)
+    if type(icons) == "table" and icons.icon then
+        icons["tint"] = omni.lib.ore_tints[ore_name] or {r = 1, g = 1, b = 1, a = 1}
+        if alpha then icons["tint"]["a"] = alpha end
     end
-    return icon
+    return icons
 end
 
 function omni.lib.factorize(nr)

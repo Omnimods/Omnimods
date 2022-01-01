@@ -90,11 +90,13 @@ local function check_mining_fluids(tier)
                 setIcons(v.name):
                 addSmallIcon(v.fluid.name, 3):
                 setLocName({"recipe-name.crude-refinement", omni.lib.locale.of(data.raw.item[v.name]).name}):
-                setEnergy(10):
+                setEnergy(6.5):
                 setEnabled(false):
                 setTechName(techname):
                 setCategory("omnite-extraction"):
                 setSubgroup("omni-refine"):
+                showAmount(false):
+                showProduct(true):
                 extend()
 
             --Alter the name in the omnisource table to point extraction recipes to the new item
@@ -417,6 +419,8 @@ local function create_pure_extraction(tier, ore_name)
                     return math.floor((grade - 1) * 3 / levels) + tier
                 end):
             setTechLocName("omnitech-pure-omnitraction", {"item-name." .. ore_name}):
+            showAmount(false):
+            showProduct(true):
             extend()
     )
 end
