@@ -783,16 +783,21 @@ for name, _ in pairs(recipe_mods) do
                         else
                             break
                         end
+                        --Has temperature set in recipe and that temperature is the default temp of the liquid --> use non temperatur solid
+                        if ing.temperature and ing.temperature == data.raw.fluid[ing.name].default_temperature then
+                            new_ing.name = "solid-"..ing.name
                         --Has temperature set in recipe and that temperature is in our list
-                        if ing.temperature and omni.lib.is_in_table(ing.temperature, fluid_cats[cat][ing.name].temperatures) then
+                        elseif ing.temperature and omni.lib.is_in_table(ing.temperature, fluid_cats[cat][ing.name].temperatures) then
                             new_ing.name = "solid-"..ing.name.."-T-"..ing.temperature
                         --Ingredient has to be in a specific temperature range, check if a solid between min and max exists
                         --May need to add a recipe for ALL temperatures that are in this range
                         elseif ing.minimum_temperature or ing.maximum_temperature or ing.name == "steam" then
                             local found_temp = nil
+                            local min_temp = ing.minimum_temperature or data.raw.fluid[ing.name].default_temperature
+                            local max_temp = ing.maximum_temperature or data.raw.fluid[ing.name].max_temperature
                             --Temp min/max == fluid temp min/max -->use a non temp solid (min/max can exist solo)
                             --Steam sucks, dont replace fluid steam with a temperature less solid
-                            if ing.name ~= "steam" and (ing.minimum_temperature or data.raw.fluid[ing.name].default_temperature) == data.raw.fluid[ing.name].default_temperature and (ing.maximum_temperatur or data.raw.fluid[ing.name].max_temperature) == data.raw.fluid[ing.name].max_temperature then
+                            if ing.name ~= "steam" and (min_temp == data.raw.fluid[ing.name].default_temperature) then-- and max_temp == data.raw.fluid[ing.name].max_temperature) then
                                 new_ing.name = "solid-"..ing.name
                             else
                                 for _,temp in pairs(fluid_cats[cat][ing.name].temperatures) do
