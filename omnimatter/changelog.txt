@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.22
-Date: ????
+Date: 2022.01.03
   Features:
     - Ores that normally require a fluid to mine cant be extracted from omnite directly anymore
       The recipe now outputs a crude version of the ore which needs to be refined with the mining
