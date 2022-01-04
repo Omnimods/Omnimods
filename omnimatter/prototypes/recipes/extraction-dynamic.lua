@@ -335,11 +335,7 @@ local function create_impure_extraction(tier, split, ore_name)
                 addBlankIcon():
                 setTechName("omnitech-focused-extraction-" .. ore_name .. "-" .. i):
                 setTechCost(25 * i * tier):
-                setTechLocName(
-                    "omnitech-impure-omnitraction",
-                    "item-name." .. ore_name,
-                    i
-                ):
+                setTechLocName({"omnitech-impure-omnitraction", omni.lib.locale.of(data.raw.item[ore_name]).name, i}):
                 setTechPacks(math.max(1, tier)):
                 setTechIcons(generate_impure_icon(ore_name)):
                 marathon()
