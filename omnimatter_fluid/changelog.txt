@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.11
-Date: 2022.01.03
+Date: 2022.01.04
   Changes:
     - Added omni.fluid.add_multi_temp_recipe(recipename) to mark recipes which require a copy with
       sluids for each available temperature in the orginal min/max range of the fluid
@@ -16,6 +16,8 @@ Date: 2022.01.03
       excluded from conversion
     - Fixed that the function parsing fluid amounts for the GCD calculation used the wrong rounding
       function which caused the multiplier of certain recipes not being as low as possible
+    - Fixed that the recipe crafting times inside boilers that have a consumption rate of != 60°
+      without omnifluid were wrong
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.10
 Date: 2021.12.16
