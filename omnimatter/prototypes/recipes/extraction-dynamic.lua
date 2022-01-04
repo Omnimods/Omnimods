@@ -418,7 +418,7 @@ local function create_pure_extraction(tier, ore_name)
                 function(levels, grade)
                     return math.floor((grade - 1) * 3 / levels) + tier
                 end):
-            setTechLocName("omnitech-pure-omnitraction", {"item-name." .. ore_name}):
+            setTechLocName({"omnitech-pure-omnitraction", omni.lib.locale.of(data.raw.item[ore_name]).name}):
             showAmount(false):
             showProduct(true):
             extend()
