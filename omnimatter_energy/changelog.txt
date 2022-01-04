@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.1.10
-Date: 2022.01.03
+Date: 2022.01.04
   Features:
     - Added support for DiscoScience
     - Added recipes for upgrading crystal solar panels from size 1 to max size

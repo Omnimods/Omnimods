@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.21
-Date: 2022.01.03
+Date: 2022.01.04
   Features:
     - Added showAmount(bool) and showProduct(bool) to RecGen to set recipe.show_amount_in_title
         and recipe.always_show_products
