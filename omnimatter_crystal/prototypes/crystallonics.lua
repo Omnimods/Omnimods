@@ -26,8 +26,8 @@ RecGen:create("omnimatter_crystal","omnine"):
     setCategory("omniplant"):
     setEnergy(10):
     setStacksize(200):
-    setFuelValue(18):
-    setFuelCategory("crystal"):
+    --setFuelValue(18):
+    --setFuelCategory("crystal"):
     marathon():
     setTechName("omnitech-crystallology-1"):
     setIngredients({
@@ -63,8 +63,8 @@ RecGen:create("omnimatter_crystal","omnine-shards"):
     setSubgroup("omnine"):
     setCategory(cat):
     setStacksize(200):
-    setFuelValue(3.5):
-    setFuelCategory("crystal"):
+    --setFuelValue(3.5):
+    --setFuelCategory("crystal"):
     setEnergy(1):
     marathon():
     setTechName("omnitech-crystallology-1"):

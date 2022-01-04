@@ -1,13 +1,6 @@
 data:extend({
   {
     type = "bool-setting",
-    name = "omnimatter-infinite",
-    setting_type = "startup",
-    default_value = false,
-    order = "aa"
-  },
-  {
-    type = "bool-setting",
     name = "omnimatter-infinite-omnic-acid",
     setting_type = "startup",
     default_value = true,
@@ -18,9 +11,8 @@ data:extend({
     name = "omnimatter-beginner-multiplier",
     setting_type = "startup",
     default_value = 1,
-    maximum_value = 5,
     minimum_value = 0.20,
-    per_user = false,
+    maximum_value = 5,
     order = "ac"
   },
   {
@@ -28,9 +20,9 @@ data:extend({
     name = "omnimatter-max-tier",
     setting_type = "startup",
     default_value = 5,
-    maximum_value = 8,
     minimum_value = 3,
-    per_user = false,
+    maximum_value = 8,
+    allowed_values = {3,4,5,6,7,8},
     order = "ad"
   },
   {
@@ -38,9 +30,9 @@ data:extend({
     name = "omnimatter-pure-lvl-per-tier",
     setting_type = "startup",
     default_value = 2,
-    maximum_value = 6,
     minimum_value = 1,
-    per_user = false,
+    maximum_value = 6,
+    allowed_values = {1,2,3,4,5,6},
     order = "ae"
   },
   {
@@ -48,9 +40,9 @@ data:extend({
     name = "omnimatter-impure-lvls",
     setting_type = "startup",
     default_value = 3,
-    maximum_value = 6,
     minimum_value = 2,
-    per_user = false,
+    maximum_value = 6,
+    allowed_values = {2,3,4,5,6},
     order = "af"
   },
   {
@@ -58,9 +50,9 @@ data:extend({
     name = "omnimatter-fluid-lvl",
     setting_type = "startup",
     default_value = 6,
-    maximum_value = 10,
     minimum_value = 2,
-    per_user = false,
+    maximum_value = 10,
+    allowed_values = {2,3,4,5,6,7,8,9,10},
     order = "ag"
   },
   {
@@ -68,9 +60,9 @@ data:extend({
     name = "omnimatter-fluid-lvl-per-tier",
     setting_type = "startup",
     default_value = 2,
-    maximum_value = 3,
     minimum_value = 1,
-    per_user = false,
+    maximum_value = 3,
+    allowed_values = {1,2,3},
     order = "ah"
   },
   {
@@ -78,9 +70,8 @@ data:extend({
     name = "omnimatter-pure-tech-tier-cost-increase",
     setting_type = "startup",
     default_value = 2,
-    maximum_value = 5,
     minimum_value = 1.0,
-    per_user = false,
+    maximum_value = 5,
     order = "ai"
   },
   {
@@ -88,9 +79,8 @@ data:extend({
     name = "omnimatter-pure-tech-level-cost-increase",
     setting_type = "startup",
     default_value = 0.3,
-    maximum_value = 20,
     minimum_value = 0.0001,
-    per_user = false,
+    maximum_value = 20,
     order = "aj"
   },
   {
@@ -98,7 +88,6 @@ data:extend({
     name = "omnimatter-linear-science-packs",
     setting_type = "startup",
     default_value = false,
-    per_user = false,
     order = "ak"
   },
   {
@@ -106,9 +95,8 @@ data:extend({
     name = "omnimatter-science-pack-constant",
     setting_type = "startup",
     default_value = 2,
-    maximum_value = 10,
     minimum_value = 0.00,
-    per_user = false,
+    maximum_value = 10,
     order = "al"
   },
   {
@@ -116,7 +104,6 @@ data:extend({
     name = "omnimatter-rocket-locked",
     setting_type = "startup",
     default_value = true,
-    per_user = false,
     order = "am"
   },
 })

@@ -204,7 +204,7 @@ for j=1,nr_tiers do
             setSubgroup("omnienergy-solar-tier-"..j):
             setOrder("a[crystal-solar-panel-tier-"..j.."-size-"..i.."]"):
             setCategory("crafting"):
-            setEnergy(5):
+            setEnergy(10):
             setEnabled(false):
             setStacksize(50):
             setTechName("omnitech-crystal-solar-panel-tier-"..j.."-size-"..i):
@@ -212,7 +212,7 @@ for j=1,nr_tiers do
             setTechIcons(ticons):		
             setTechCost(150+((j-1)*max_size+i)*75+j*100):	--base_cost+...*cost_between_techs+...*addidional_cost_between_tiers
             setTechPacks(get_scienceing(j)):
-            setTechPrereq(get_req(j,i,max_size)):
+            setTechPrereq(get_req(j,i)):
             setForce():
             extend()
     end
@@ -220,15 +220,16 @@ end
 
 data:extend(sol)
 
---Add an upgrade recipe from previous tier max size to this tier size 1
+
 for j=1,nr_tiers do
     for i=1,max_size do
-        
+        --Add an upgrade recipe from previous tier max size to this tier size 1
         if i == 1 and j > 1 then
             RecGen:create("omnimatter_energy", "crystal-solar-panel-tier-"..j.."-size-"..i.."-upgrade"):
                 noItem():
                 setLocName({"recipe-name.crystal-solar-panel", j, i}):
                 setIcons(omni.lib.icon.of("crystal-solar-panel-tier-"..j.."-size-"..i, "item")):
+                addSmallIcon({{icon = "__core__/graphics/icons/technology/effect-constant/effect-constant-capacity.png", icon_size = 64, scale = 0.6, icon_mipmaps = 2}}, 4):
                 setIngredients(get_cost(j,i)):
                 removeIngredients("crystal-solar-panel-tier-"..(j-1).."-size-"..i):
                 multiplyIngredients(max_size*max_size):
@@ -237,9 +238,31 @@ for j=1,nr_tiers do
                 setSubgroup("omnienergy-solar-tier-"..j):
                 setOrder("a[crystal-solar-panel-tier-"..j.."-size-"..i.."]z"):
                 setCategory("crafting"):
-                setEnergy(5):
+                setEnergy(40):
                 setEnabled(false):
-                setTechName("omnitech-crystal-solar-panel-tier-"..j.."-size-"..i):extend()
+                setTechName("omnitech-crystal-solar-panel-tier-"..j.."-size-"..i):
+                extend()
+        end
+
+        --Add an upgrade recipe from size 1 to max size that unlocks with the final tier research
+        if i == max_size then
+            RecGen:create("omnimatter_energy", "crystal-solar-panel-tier-"..j.."-size-"..i.."-upgrade"):
+                noItem():
+                setLocName({"recipe-name.crystal-solar-panel", j, i}):
+                setIcons(omni.lib.icon.of("crystal-solar-panel-tier-"..j.."-size-"..i, "item")):
+                addSmallIcon({{icon = "__core__/graphics/icons/technology/effect-constant/effect-constant-movement-speed.png", icon_size = 64, scale = 0.6, icon_mipmaps = 2}}, 4):
+                setIngredients(get_cost(j,i)):
+                removeIngredients("crystal-solar-panel-tier-"..j.."-size-"..(i-1),"crystal-solar-panel-tier-"..j.."-size-"..1):
+                multiplyIngredients(max_size-1):
+                addIngredients({name = "crystal-solar-panel-tier-"..j.."-size-"..1, amount = max_size*max_size}):
+                setResults({name="crystal-solar-panel-tier-"..j.."-size-"..i, amount=1}):
+                setSubgroup("omnienergy-solar-tier-"..j):
+                setOrder("a[crystal-solar-panel-tier-"..j.."-size-"..i.."]z"):
+                setCategory("crafting"):
+                setEnergy(40):
+                setEnabled(false):
+                setTechName("omnitech-crystal-solar-panel-tier-"..j.."-size-"..i):
+                extend()
         end
     end
 end

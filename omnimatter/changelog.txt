@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.22
+Date: 2022.01.04
+  Features:
+    - Ores that normally require a fluid to mine cant be extracted from omnite directly anymore
+      The recipe now outputs a crude version of the ore which needs to be refined with the mining
+      fluid to get the proper ore
+  Changes:
+    - Removed the setting to enable/disable infinite omnite. This can be done in the map generator
+    - Properly order all extraction recipes by tier
+    - Increased the crafting time of pure extractions from 5s/tier to 6.5s/tier to end up with even
+      numbers when filling belts
+---------------------------------------------------------------------------------------------------
 Version: 4.1.21
 Date: 2021.12.02
   Changes:
@@ -9,7 +21,7 @@ Date: 2021.12.02
 Version: 4.1.20
 Date: 2021.09.01
   Bugfixes:
-    - Force bob´s infinite ore setting to false when hiding it
+    - Force bob`s infinite ore setting to false when hiding it
     - Fixed that all omnicium alloy recipes were enabled by default without angels refining
     - Fixed that advanced omnicium smelting 1 had a wrong localised name set
 ---------------------------------------------------------------------------------------------------

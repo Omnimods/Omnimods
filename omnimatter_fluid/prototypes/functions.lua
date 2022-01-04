@@ -3,6 +3,8 @@ omni.fluid.forbidden_assembler = {} --This one is not used for anything yet. If 
 omni.fluid.forbidden_recipe = {}
 --Generator fluids that are normally created in an assembling machine. If the results temp is higher than any boiler, we need to ignore the boiler temperature(s) to create conversion recipes
 omni.fluid.assembler_generator_fluids = {}
+omni.fluid.multi_temp_recipes = {}
+omni.fluid.mining_fluids = {}
 omni.fluid.excluded_strings = {{"empty","barrel"},{"fill","barrel"},{"fluid","unknown"},"barreling-pump","creative"}
 
 function omni.fluid.excempt_boiler(boiler)
@@ -19,6 +21,15 @@ end
 
 function omni.fluid.add_assembler_generator_fluid(fluidname)
     omni.fluid.assembler_generator_fluids[fluidname] = true
+end
+
+function omni.fluid.add_multi_temp_recipe(recipename)
+    omni.fluid.multi_temp_recipes[recipename] = true
+end
+
+--Adds that fluid as mining fluid, converter recipes will be generated
+function omni.fluid.add_mining_fluid(fluidname)
+    omni.fluid.mining_fluids[fluidname] = true
 end
 
 function omni.fluid.check_string_excluded(comparison) --checks fluid/recipe name against exclusion list
@@ -101,4 +112,59 @@ function omni.fluid.compact_array(array) --individual ingredient/result table
         end
     end
     return new
+end
+
+function omni.fluid.is_fluid_void(recipe)
+    local results = {}
+    local ingredients = {}
+    if recipe.normal then
+        results = recipe.normal.results
+        ingredients = recipe.normal.ingredients
+    elseif recipe.results then
+        results = recipe.results
+        ingredients = recipe.ingredients
+    end
+    --need to check results since it can be nil when .result exists
+    if results and next(results) and #results == 1 and results[1].amount and results[1].amount == 0  and next(ingredients) and ingredients[1].type and ingredients[1].type == "fluid" then
+        return true
+    end
+    return false
+end
+
+function omni.fluid.create_temperature_copies(recipe, fluidname, replacement, temperatures)
+    --Additional recipe checks: If this is a fixed recipe somewhere, we need to remove that, enable the recipe and unhide if required
+    for _, ent in pairs(data.raw["assembling-machine"]) do
+        if ent.fixed_recipe and ent.fixed_recipe == recipe.name then
+            ent.fixed_recipe = nil
+            omni.lib.enable_recipe(recipe.name)
+            if recipe.normal then
+                recipe.normal.hidden = false
+                recipe.expensive.hidden = false
+            end
+            if recipe.hidden then recipe.hidden = false end
+        end
+    end
+    --Create copies for each temp in temperatures and replace the sluid with the required temp sluid
+    local copies = {}
+    for _, temp in pairs(temperatures) do
+        local sluid = "solid-"..fluidname.."-T-"..temp
+        if type(temp) ~= "number" then sluid = "solid-"..fluidname end
+        if data.raw.item[sluid] and sluid ~= replacement then
+            local newrec = table.deepcopy(recipe)
+            newrec.name = newrec.name .."-T-"..temp
+            newrec.localised_name = omni.lib.locale.of(recipe).name
+            for _, dif in pairs({"normal","expensive"}) do
+                for _, ingres in pairs({"ingredients","results"}) do
+                    for _, flu in pairs(newrec[dif][ingres]) do
+                        if flu.name and flu.name == replacement then
+                            flu.name = sluid
+                            break
+                        end
+                    end
+                end
+            end
+            copies[#copies+1] = newrec
+        end
+    end
+    if next(copies) then data:extend(copies) end
 end

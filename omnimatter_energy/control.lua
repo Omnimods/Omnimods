@@ -1,3 +1,11 @@
+local function writeDebug(message)
+    if false then
+        for _, player in pairs(game.players) do
+            player.print(tostring(message))
+        end
+    end
+end
+
 local function gather(pos,entity)
     return surface.find_entities_filtered{
         area= {{pos.x -0.5, pos.y -0.5},{pos.x +0.5, pos.y +0.5}},
@@ -152,13 +160,21 @@ local function Robot_Tile_Remove(event)
 end
 
 local function call_remote_functions()
+    --K2 crash site
     if game.active_mods["Krastorio2"] and remote.interfaces["kr-crash-site"] then
         remote.call("kr-crash-site","remove_crash_site_entity","kr-crash-site-generator")
     end
+    --DiscoScience
+    if remote.interfaces["DiscoScience"] and remote.interfaces["DiscoScience"]["setIngredientColor"] then
+        remote.call("DiscoScience", "setIngredientColor", "energy-science-pack", {r = 0, g = 0, b = 0.6})
+        remote.call("DiscoScience", "setLabScale", "omnitor-lab", 1)
+    end
 end
+
 --------------------------------------------------------------------
 
 script.on_init(call_remote_functions)
+script.on_configuration_changed(call_remote_functions)
 
 local pre_remove_events = {defines.events.on_pre_player_mined_item, defines.events.on_robot_pre_mined}
 script.on_event(pre_remove_events, On_Remove)
@@ -169,21 +185,8 @@ script.on_event(player_build_event, Player_Tile_Built)
 local robot_build_event = {defines.events.on_robot_built_tile}
 script.on_event(robot_build_event, Robot_Tile_Built)
 
-local remove_events = {defines.events.on_player_mined_item}
-script.on_event(remove_events, Player_Tile_Remove)
+local player_remove_events = {defines.events.on_player_mined_item}
+script.on_event(player_remove_events, Player_Tile_Remove)
 
-local remove_events = {defines.events.on_robot_mined}
-script.on_event(remove_events, Robot_Tile_Remove)
-
-
---------------------------------------------------------------------
---- DeBug Messages
---------------------------------------------------------------------
-function writeDebug(message)
-    if false then
-        for i, player in pairs(game.players) do
-            player.print(tostring(message))
-        end
-    end
-end
-
+local robot_remove_events = {defines.events.on_robot_mined}
+script.on_event(robot_remove_events, Robot_Tile_Remove)

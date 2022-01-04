@@ -60,8 +60,8 @@ omni.crystal.add_crystal=function(metal,name,recipe)
 
 		RecGen:create("omnimatter_crystal",metal.."-crystal"):
 			setLocName("recipe-name.crystal",name):
-			setFuelValue(35):
-			setFuelCategory("crystal"):
+			--setFuelValue(35):
+			--setFuelCategory("crystal"):
 			setSubgroup("crystallization"):
 			setOrder("a["..metal.."-crystal]"):
 			setStacksize(500):

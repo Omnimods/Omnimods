@@ -7,6 +7,7 @@ data:extend(
     default_value = 3,
     minimum_value = 1,
     maximum_value = 8,
+    allowed_values = {1,2,3,4,5,6,7,8},
     order = "a"
   },
   {
@@ -16,6 +17,7 @@ data:extend(
     default_value = 5,
     minimum_value = 1,
     maximum_value = 10,
+    allowed_values = {1,2,3,4,5,6,7,8,9,10},
     order = "b"
   },
 }
