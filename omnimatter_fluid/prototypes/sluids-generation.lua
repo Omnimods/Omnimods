@@ -143,8 +143,11 @@ for _, rec in pairs(data.raw.recipe) do
                 --log("Added recipe "..rec.name.." as voiding recipe.")
             else
                 local conv = nil
+                local flu_temp = fluid.temperature
                 if (fluid.temperature or -65535) > (data.raw.fluid[fluid.name].default_temperature or math.huge) then conv = true end
-                sort_fluid(fluid.name, "sluid", {temp = fluid.temperature, temp_min = fluid.minimum_temperature, temp_max = fluid.maximum_temperature, conversion = conv})
+                --if only fluid.temperature is specified and if that matches the fluid´s default temperature, we dont need to register that to get a temperature less replacement
+                if fluid.temperature and fluid.temperature == data.raw.fluid[fluid.name].default_temperature  and not fluid.maximum_temperature then flu_temp = nil end
+                sort_fluid(fluid.name, "sluid", {temp = flu_temp, temp_min = fluid.minimum_temperature, temp_max = fluid.maximum_temperature, conversion = conv})
             end
         end
     else
@@ -168,7 +171,7 @@ local boiler_temps = {}
 for _, boiler in pairs(data.raw.boiler) do
     min_boiler_temp = math.min(min_boiler_temp, boiler.target_temperature)
     max_boiler_temp = math.max(max_boiler_temp, boiler.target_temperature)
-    
+
     local fluid = boiler.output_fluid_box.filter or "steam"
     if not boiler_temps[fluid] then
         boiler_temps[fluid]  = {boiler.target_temperature}
@@ -226,6 +229,12 @@ for _,cat in pairs(fluid_cats) do
                             break
                         end
                     end
+                    --Max is > than fluid.default_temperature.
+                    --Fluid might only have default temp. versions in recipes. If this is the case, nothing had been found here yet and we need to point to "none"
+                    if flu.temp_max and flu.temp_max >= fluid.default_temperature and omni.lib.is_in_table("none", new_temps) then
+                        found = true
+                        temp = "none"
+                    end
                 end
                 if found == true then
                     if flu.conversion then
@@ -242,6 +251,7 @@ for _,cat in pairs(fluid_cats) do
             log(fluid.name)
             log(serpent.block(fluid.temperatures))
             log(serpent.block(new_temps))
+            log(serpent.block("Min: "..fluid.default_temperature.." Max: "..fluid.max_temperature))
         end
         fluid.temperatures = new_temps
         fluid.conversions = conversions
@@ -521,7 +531,7 @@ for _, boiler in pairs(data.raw.boiler) do
         ing_replace[#ing_replace+1] = boiler.name
 
         --find tech unlock
-        local found = false --if not found, force off (means enabled at start)
+        found = false --if not found, force off (means enabled at start)
         for _, tech in pairs(data.raw.technology) do
             if tech.effects then
                 for j, k in pairs(tech.effects) do

@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.12
+Date: 2022.01.07
+  Bugfixes:
+    - Fixed a crash with angels petrochem and omnimatter compression caused by temperature-less
+      sluid versions of items not being registered in rare cases
+---------------------------------------------------------------------------------------------------
 Version: 4.1.11
 Date: 2022.01.04
   Changes:
