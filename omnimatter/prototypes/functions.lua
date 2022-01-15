@@ -70,11 +70,15 @@ function omni.matter.set_ore_tier(r_name, tier)
 end
 
 --Add initial extraction ores
-function omni.matter.add_initial(ore_name,ore_amount,omnite_amount)
+function omni.matter.add_initial(ore_name, ore_amount,omnite_amount, fluid_to_mine)
     omni.matter.omnitial[ore_name] = {
         ingredients ={{name = "omnite", amount = omnite_amount}},
         results = {{name = ore_name, amount = ore_amount}, {name = "stone-crushed", amount = (omnite_amount-ore_amount) or 6}}
     }
+    if fluid_to_mine and fluid_to_mine.name then
+        omni.matter.omnitial[ore_name].fluid = {name = fluid_to_mine.name, amount = fluid_to_mine.amount or 1}
+        omni.matter.omnitial[ore_name].results[1].name = "crude-"..omni.matter.omnitial[ore_name].results[1].name
+    end
 end
 
 function omni.matter.add_omnicium_alloy(name,plate,ingot)
