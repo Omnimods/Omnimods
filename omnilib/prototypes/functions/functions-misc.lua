@@ -54,6 +54,7 @@ function omni.lib.add_ore_tint(icons, ore_name, alpha)
     if type(icons) == "table" and icons.icon then
         icons["tint"] = omni.lib.ore_tints[ore_name] or {r = 1, g = 1, b = 1, a = 1}
         if alpha then icons["tint"]["a"] = alpha end
+        if not omni.lib.ore_tints[ore_name] then log("Could not find a saved tint for "..ore_name) end
     end
     return icons
 end
