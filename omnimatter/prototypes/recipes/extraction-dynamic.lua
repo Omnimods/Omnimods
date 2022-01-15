@@ -102,10 +102,13 @@ local function check_mining_fluids(tier)
                     setEnabled(false)
             )
             if tier > 1 then
-                tech:setTechName("omnitech-omnitractor-electric-"..(tier-1)):extend()
+                tech:setTechName("omnitech-omnitractor-electric-"..(tier-1)):
+                extend()
             else
                 tech:setTechName("omnitech-base-impure-extraction"):
-                setTechCost(1):
+                setTechLocName("omnitech-base-omnitraction"):
+                setTechPrereq(nil):
+                setTechCost(25*omni.beginning_tech_help):
                 setTechPacks(1):
                 setTechIcons({
                     {
@@ -290,29 +293,28 @@ local function create_base_extraction(tier, split, split_num)
             setLocName("recipe-name.base-impure", {"", result_names}):
             setLocDesc(desc):
             setIcons(icons):
-            setIngredients(
-                {name = "omnite", type = "item", amount = 10}
-            ):
+            setIngredients({name = "omnite", type = "item", amount = 10}):
             setSubgroup("omni-impure-basic"):
             setEnergy(5 * (math.floor(tier / 2 + 0.5))):
             setEnabled(false)
     )
+
     --Set the techname before setting other tech attributes
     if tier == 1 then
         base_impure_ore:
-        setCategory("omnite-extraction-both"):
-        setTechPrereq(nil):
-        setTechName("omnitech-base-impure-extraction"):
-        setTechLocName("omnitech-base-omnitraction")
+            setCategory("omnite-extraction-both"):
+            setTechName("omnitech-base-impure-extraction"):
+            setTechLocName("omnitech-base-omnitraction"):
+            setTechPrereq(nil)
     else
         base_impure_ore:
-        setCategory("omnite-extraction"):
-        setTechName("omnitech-omnitractor-electric-" .. (tier - 1))
+            setCategory("omnite-extraction"):
+            setTechName("omnitech-omnitractor-electric-" .. (tier - 1)):
+            setTechUpgrade(true)
     end
     base_impure_ore:
-        setTechUpgrade(tier > 1):
-        setTechCost(tc):
         setTechPacks(math.max(1, tier - 1)):
+        setTechCost(tc):
         setTechIcons({
             {
                 icon = "__omnimatter__/graphics/technology/extraction-generic.png",
