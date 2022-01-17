@@ -10,7 +10,7 @@ BuildGen:import("small-electric-pole"):
     setWireDistance(7.5):
     setOrder("a[energy]-a[small-electric-pole]-iron"):
     setIcons({{icon = "__omnimatter_energy__/graphics/icons/small-iron-electric-pole.png", icon_mipmaps = 4, icon_size = 64,}}):
-    setEnabled(false):   
+    setEnabled(false):
     setTechName("omnitech-small-iron-electric-pole"):
     setTechLocName("entity-name.small-iron-electric-pole"):
     setTechPacks({{"energy-science-pack", 1}}):
@@ -138,6 +138,12 @@ BuildGen:import("small-electric-pole"):
         }
     }):
     extend()
+
+--Fix hitboxes, lib changes them for some reason. Remove with new lib
+data.raw["electric-pole"]["small-omnicium-electric-pole"].collision_box = {{-0.15, -0.15}, {0.15, 0.15}}
+data.raw["electric-pole"]["small-iron-electric-pole"].collision_box = {{-0.15, -0.15}, {0.15, 0.15}}
+data.raw["electric-pole"]["small-omnicium-electric-pole"].selection_box = {{-0.4, -0.4}, {0.4, 0.4}}
+data.raw["electric-pole"]["small-iron-electric-pole"].selection_box = {{-0.4, -0.4}, {0.4, 0.4}}
 
 --Set new remnants
 local rem1 = table.deepcopy(data.raw.corpse["small-electric-pole-remnants"])
