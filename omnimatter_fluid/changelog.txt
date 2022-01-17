@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.13
-Date: 2022.01.xx
+Date: 2022.01.17
   Bugfixes:
     - Fixed that recipes which had both fluid and non-stackable items as ingredients/results could
       cause a crash
