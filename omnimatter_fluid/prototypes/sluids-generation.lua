@@ -781,6 +781,7 @@ for name, _ in pairs(recipe_mods) do
 
         --Now Replace fluids with sluids and apply the mult too all ingres and crafting time
         for _, dif in pairs({"normal","expensive"}) do
+            local fix_stacksize = false
             for _, ingres in pairs({"ingredients","results"}) do
                 for	n, ing in pairs(rec[dif][ingres]) do
                     if ing.type == "fluid" then
@@ -881,11 +882,31 @@ for name, _ in pairs(recipe_mods) do
                         if new_amount > 65535 then
                             log("WARNING: Ingredient "..ing.name.." from the recipe "..rec.name.." ran into the upper limit. Amount = "..new_amount.." Mult = "..mult[dif])
                         end
+                        --Check stacksize. If the stacksize is smaller than the amount, we need to split up the result/ingredien
+                        local item_proto = omni.lib.find_prototype(ing.name)
+                        if item_proto and ing.amount > 1 and (omni.lib.is_in_table("not-stackable", item_proto.flags or {}) or item_proto.stack_size == 1) then
+                            fix_stacksize = true
+                        end
                     end
                 end
             end
             --crafting time adjustment
             rec[dif].energy_required = rec[dif].energy_required*mult[dif]
+            --Apply stack size fixes
+            if fix_stacksize then
+                local add = {}
+                for	_, ing in pairs(rec[dif]["results"]) do
+                    local proto = omni.lib.find_prototype(ing.name)
+                    if proto and (omni.lib.is_in_table("not-stackable", proto.flags or {}) or proto.stack_size == 1) then
+                        local to_add = ing.amount - 1
+                        ing.amount = 1
+                        for _ = 1, to_add do
+                            add[#add+1] = table.deepcopy(ing)
+                        end
+                    end
+                end
+                rec[dif]["results"]= omni.lib.union(rec[dif]["results"], add)
+            end
         end
     else
         log("recipe not found:".. name)
