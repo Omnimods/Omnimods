@@ -8,7 +8,7 @@ if mods["Krastorio2"] then
         setEnabled(false):
         setTechName("basic-tech-card"):
         setTechCost(45):
-        setTechIcons({{icon = "__Krastorio2__/graphics/icons/cards/basic-tech-card.png",icon_size = 64}}):
+        setTechIcons({{icon = "__Krastorio2Assets__/icons/cards/basic-tech-card.png",icon_size = 64}}):
         setTechPacks({{"energy-science-pack", 1}}):
         setTechPrereq("omnitech-anbaric-lab"):
         extend()
