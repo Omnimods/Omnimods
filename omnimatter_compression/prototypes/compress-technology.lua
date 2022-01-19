@@ -95,7 +95,7 @@ for _,tech in pairs(data.raw.technology) do --run always
         name = tech.name
     end
     --protect against pack removal
-    if containsOne(tech.unit.ingredients,alwaysSP) then
+    if containsOne(tech.unit and tech.unit.ingredients, alwaysSP) then
         if not tiered_tech[name] then
             tiered_tech[name] = tonumber(lvl)
         elseif tiered_tech[name] > tonumber(lvl) then --in case techs are added out of order, always add the lowest

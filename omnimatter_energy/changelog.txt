@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.1.11
+Date: 2022.01.17
+  Bugfixes:
+    - Fixed a crash with Krastorio2 caused by accessing an icon-path that has been moved
+    - Fixed that the small iron and omnicium poles hit- and collision box were too big
+---------------------------------------------------------------------------------------------------
 Version: 3.1.10
 Date: 2022.01.04
   Features:

@@ -1,4 +1,4 @@
-function omni.lib.add_unlock_recipe(techname, recipe,force)
+function omni.lib.add_unlock_recipe(techname, recipe, force)
 	local found = false
 	if data.raw.technology[techname] and (data.raw.recipe[recipe] or force) then
 		if data.raw.technology[techname].effects then

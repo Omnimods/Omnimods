@@ -78,9 +78,9 @@ if mods["Yuoki"] then
 end
 if mods["pycoalprocessing"] then
 	-- Red
-	omni.matter.add_resource("raw-borax", 1)
+	omni.matter.add_resource("raw-borax", 1, {name = data.raw.resource["borax"].minable.required_fluid, amount = data.raw.resource["borax"].minable.fluid_amount})
 	-- Green
-	omni.matter.add_resource("niobium-ore", 2)
+	omni.matter.add_resource("niobium-ore", 2, {name = data.raw.resource["niobium"].minable.required_fluid, amount = data.raw.resource["niobium"].minable.fluid_amount})
 end
 if mods["pyfusionenergy"] then
 	-- Blue
@@ -93,7 +93,7 @@ if mods["pyhightech"] then
 	-- Blue
 	omni.matter.add_resource("rare-earth-ore", 3)
 	-- Beyond
-	omni.matter.add_resource("phosphate-rock", 3)
+	omni.matter.add_resource("phosphate-rock", 3, {name = data.raw.resource["phosphate-rock"].minable.required_fluid, amount = data.raw.resource["phosphate-rock"].minable.fluid_amount})
 end
 if mods["pypetroleumhandling"] then
 	-- Green
@@ -115,27 +115,27 @@ if mods["pyalienlife"] then
 end
 if mods["pyrawores"] then
 	--Initial omnitractions
-	omni.matter.add_initial("ore-aluminium", 1, 14)
-    omni.matter.add_initial("ore-tin", 1, 12)
+	omni.matter.add_initial("ore-aluminium", 1, 14, {name = data.raw.resource["ore-aluminium"].minable.required_fluid, amount = data.raw.resource["ore-aluminium"].minable.fluid_amount})
+    omni.matter.add_initial("ore-tin", 1, 12, {name = data.raw.resource["ore-tin"].minable.required_fluid, amount = data.raw.resource["ore-tin"].minable.fluid_amount})
     omni.matter.add_initial("ore-quartz", 1, 12)
     omni.matter.add_initial("raw-coal", 1, 10)
 	omni.matter.add_initial("nexelit-ore", 1, 7)
 	
 	-- Pre-sci/red
-	omni.matter.add_resource("ore-aluminium", 1)
-	omni.matter.add_resource("ore-tin", 1)
+	omni.matter.add_resource("ore-aluminium", 1, {name = data.raw.resource["ore-aluminium"].minable.required_fluid, amount = data.raw.resource["ore-aluminium"].minable.fluid_amount})
+	omni.matter.add_resource("ore-tin", 1, {name = data.raw.resource["ore-tin"].minable.required_fluid, amount = data.raw.resource["ore-tin"].minable.fluid_amount})
 	omni.matter.add_resource("ore-quartz", 1)
 	omni.matter.add_resource("raw-coal", 1)
 	omni.matter.add_resource("nexelit-ore", 1)
 	-- Green
-	omni.matter.add_resource("ore-lead", 2)
-	omni.matter.add_resource("ore-titanium", 2)
-	omni.matter.add_resource("ore-chromium", 2)
+	omni.matter.add_resource("ore-lead", 2, {name = data.raw.resource["ore-lead"].minable.required_fluid, amount = data.raw.resource["ore-lead"].minable.fluid_amount})
+	omni.matter.add_resource("ore-titanium", 2, {name = data.raw.resource["ore-titanium"].minable.required_fluid, amount = data.raw.resource["ore-titanium"].minable.fluid_amount})
+	omni.matter.add_resource("ore-chromium", 2, {name = data.raw.resource["ore-chromium"].minable.required_fluid, amount = data.raw.resource["ore-chromium"].minable.fluid_amount})
 	omni.matter.add_resource("salt", 2)
 	-- Blue
-	omni.matter.add_resource("ore-nickel", 3)
+	omni.matter.add_resource("ore-nickel", 3, {name = data.raw.resource["ore-nickel"].minable.required_fluid, amount = data.raw.resource["ore-nickel"].minable.fluid_amount})
 	-- Beyond
-	omni.matter.add_resource("ore-zinc", 3)
+	omni.matter.add_resource("ore-zinc", 3, {name = data.raw.resource["ore-zinc"].minable.required_fluid, amount = data.raw.resource["ore-zinc"].minable.fluid_amount})
 end
 
 if mods["Krastorio2"] then

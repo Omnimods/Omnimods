@@ -48,12 +48,17 @@ omni.lib.ore_tints = {--can add to the tint table with table.insert(omni.lib.ore
     ["gems"]      = {r = 0.25 , g = 1    , b = 0.25 }, --<-- map_color only
     ["raw-imersite"] = {r = 1 , g = 0.5	 , b = 1    }, --<-- map_color only
     ["raw-rare-metals"] = {r = 0.6, g = 0.3, b = 1  }, --<-- map_color only
-    }
+    ["raw-borax"] = {r = 0.917, g = 0.917, b = 0.917}, --<-- map_color only
+    ["niobium"]   = {r = 0.403, g = 0.6,   b = 0.701}, --<-- map_color only
+    ["chromium"]  = {r = 0.784, g = 0.231, b = 0.  }, --<-- map_color only
+    ["phosphate-rock"] = {r = 0.998, g = 0.998, b = 0.998}, --<-- map_color only
+}
 
 function omni.lib.add_ore_tint(icons, ore_name, alpha)
     if type(icons) == "table" and icons.icon then
         icons["tint"] = omni.lib.ore_tints[ore_name] or {r = 1, g = 1, b = 1, a = 1}
         if alpha then icons["tint"]["a"] = alpha end
+        if not omni.lib.ore_tints[ore_name] then log("Could not find a saved tint for "..ore_name) end
     end
     return icons
 end
