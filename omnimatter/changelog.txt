@@ -2,7 +2,9 @@
 Version: 4.1.24
 Date: 2022.01.XX
   Changes:
-    - Added setting to opt-out of mining fluid requirement (for cowards, or situations where it causes deadlocks)
+    - Added setting to opt-out of mining fluid requirement (for cowards)
+  Bugfixes:
+    - Fixed that the burner omnitractor could not refine tier 1 crude ores
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.23
 Date: 2022.01.17

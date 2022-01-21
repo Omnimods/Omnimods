@@ -76,6 +76,8 @@ local function check_mining_fluids(tier)
             end
 
             local icons = {{icon = "__omnimatter__/graphics/icons/ore_base_b.png", icon_size = 64}, omni.lib.add_ore_tint({icon = "__omnimatter__/graphics/icons/ore_base.png", icon_size = 64}, ore, 0.8)}
+            local cat = "omnite-extraction"
+            if tier <= 1 then cat = "omnite-extraction-both" end
 
             ItemGen:create("omnimatter", "crude-"..v.name):
                 setLocName({"item-name.crude", omni.lib.locale.of(data.raw.item[v.name]).name}):
@@ -89,13 +91,12 @@ local function check_mining_fluids(tier)
                     addIngredients({type = "fluid", name = v.fluid.name, amount = (v.fluid.amount or 1)*13}):
                     setResults({v.name, 13}):
                     setOrder("z[refinement-"..tier.."-"..v.name.."]"):
-                    setCategory("omnite-extraction"):
                     setSubgroup("omni-pure"):
                     setIcons(v.name):
                     addSmallIcon(v.fluid.name, 3):
                     setLocName({"recipe-name.crude-refinement", omni.lib.locale.of(data.raw.item[v.name]).name}):
                     setEnergy(6.5):
-                    setCategory("omnite-extraction"):
+                    setCategory(cat):
                     setSubgroup("omni-refine"):
                     showAmount(false):
                     showProduct(true):
