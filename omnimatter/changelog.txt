@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.24
+Date: 2022.01.XX
+  Changes:
+    - Added setting to opt-out of mining fluid requirement (for cowards, or situations where it causes deadlocks)
+---------------------------------------------------------------------------------------------------
 Version: 4.1.23
 Date: 2022.01.17
   Features:

@@ -106,4 +106,11 @@ data:extend({
     default_value = true,
     order = "am"
   },
+  {
+    type = "bool-setting",
+    name = "omnimatter-fluid-processing",
+    setting_type = "startup",
+    default_value = true,
+    order = "an"
+  },
 })
