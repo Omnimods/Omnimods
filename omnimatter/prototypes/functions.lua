@@ -13,20 +13,14 @@ omni.matter.res_to_keep = {
 --Open for modders to use to add compatibility
 
 function omni.matter.add_resource(r_name, tier, fluid_to_mine)
-    if not settings.startup["omnimatter-fluid-processing"].value then
-        fluid_to_mine = nil
-    end
     if not omni.matter.omnisource[tostring(tier)] then omni.matter.omnisource[tostring(tier)] = {} end
     omni.matter.omnisource[tostring(tier)][r_name] = {tier = tier, name = r_name}
-    if fluid_to_mine and fluid_to_mine.name then
+    if fluid_to_mine and fluid_to_mine.name and settings.startup["omnimatter-fluid-processing"].value then
         omni.matter.omnisource[tostring(tier)][r_name]["fluid"] = {name = fluid_to_mine.name, amount = fluid_to_mine.amount or 1}
     end
 end
 
 function omni.matter.add_fluid(f_name , tier, ratio)
-    if not settings.startup["omnimatter-fluid-processing"].value then
-        return
-    end
     if not omni.matter.omnifluid[tostring(tier)] then omni.matter.omnifluid[tostring(tier)] = {} end
     omni.matter.omnifluid[tostring(tier)][f_name] = {tier = tier, ratio=ratio, name = f_name}
 end
@@ -77,14 +71,11 @@ end
 
 --Add initial extraction ores
 function omni.matter.add_initial(ore_name, ore_amount,omnite_amount, fluid_to_mine)
-    if not settings.startup["omnimatter-fluid-processing"].value then
-        fluid_to_mine = nil
-    end
     omni.matter.omnitial[ore_name] = {
         ingredients ={{name = "omnite", amount = omnite_amount}},
         results = {{name = ore_name, amount = ore_amount}, {name = "stone-crushed", amount = (omnite_amount-ore_amount) or 6}}
     }
-    if fluid_to_mine and fluid_to_mine.name then
+    if fluid_to_mine and fluid_to_mine.name and settings.startup["omnimatter-fluid-processing"].value then
         omni.matter.omnitial[ore_name].fluid = {name = fluid_to_mine.name, amount = fluid_to_mine.amount or 1}
         omni.matter.omnitial[ore_name].results[1].name = "crude-"..omni.matter.omnitial[ore_name].results[1].name
     end
