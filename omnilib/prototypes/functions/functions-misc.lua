@@ -790,12 +790,12 @@ function omni.lib.add_overlay(it, overlay_type, level)
         technology = { -- compressed techs
             icon = "__omnimatter_compression__/graphics/compress-tech-128.png",
             icon_size = 128,
-            scale= 1.5 * (base_size / 128),
-            shift={
+            scale = 1.5 * (base_size / 128),
+            shift = {
                 -32 * (base_size / 128),
                 32 * (base_size / 128),
             },
-            tint={
+            tint = {
                 r = 1,
                 g = 1,
                 b = 1,
@@ -809,7 +809,9 @@ function omni.lib.add_overlay(it, overlay_type, level)
         overlay = overlays[overlay_type]
     elseif type(overlay_type) == "table" then
         overlay = overlay_type
-        overlay.scale = overlay.scale * base_scale
+        if overlay.scale then
+            overlay.scale = overlay.scale * base_scale
+        end
     else
         error("add_overlay: invalid overlay_type specified")
     end
