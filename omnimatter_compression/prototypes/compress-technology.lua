@@ -157,11 +157,12 @@ for _,tech in pairs(data.raw.technology) do
         for _, ings in pairs(t.unit.ingredients) do
             if ings[1] then
                 ings.name = ings[1]
-                -- Remove unit_count from our equation for now
-                ings.amount = ings[2] * (t.unit.count or 1)
+                ings.amount = ings[2]
                 ings[1] = nil
                 ings[2] = nil
             end
+            -- Remove unit_count from our equation for now
+            ings.amount = ings.amount * (t.unit.count or 1)
             lcm[#lcm+1] = pack_sizes[ings.name]
             -- Amount of packs needed (in stacks)
             gcd[#gcd+1] = ings.amount / pack_sizes[ings.name]
