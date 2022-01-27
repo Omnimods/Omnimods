@@ -175,10 +175,10 @@ for _,tech in pairs(data.raw.technology) do
         for _, ings in pairs(t.unit.ingredients) do
             -- Divisor will always be the largest stack size of the packs used in this tech
             divisor = math.max(divisor, pack_sizes[ings.name])
-            -- Take divide our our pack size and GCD, the latter will become our unit count
+            -- Divide out our pack size and GCD, the latter will become our unit count
             ings.amount = (ings.amount / pack_sizes[ings.name]) / gcd
-            -- Minimum 1, round otherwise
-            ings.amount = math.max(omni.lib.round(ings.amount), 1)
+            -- Minimum 1, Maximum 65535, round otherwise
+            ings.amount = math.min(math.max(omni.lib.round(ings.amount), 1), 65535)
             ings.name = "compressed-"..ings.name
         end
 
