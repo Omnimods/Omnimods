@@ -150,51 +150,61 @@ for _,tech in pairs(data.raw.technology) do
         t.icons = omni.lib.add_overlay(t, "technology")
         t.icon = nil
         --if we req more than a (compressed) stack, we increment this counter
-        local stacks_needed = 1
         local divisor = 1
         local lcm = {1}
+        local gcd = {}
         -- Stage 1: Standardize and find our LCM of the various stack sizes
         for _, ings in pairs(t.unit.ingredients) do
             if ings[1] then
                 ings.name = ings[1]
-                ings.amount = ings[2]
+                -- Remove unit_count from our equation for now
+                ings.amount = ings[2] * (t.unit.count or 1)
                 ings[1] = nil
                 ings[2] = nil
             end
             lcm[#lcm+1] = pack_sizes[ings.name]
+            -- Amount of packs needed (in stacks)
+            gcd[#gcd+1] = ings.amount / pack_sizes[ings.name]
         end
         lcm = omni.lib.lcm(table.unpack(lcm))
+        gcd = omni.lib.pgcd(table.unpack(gcd))
+        log(t.name .. " GCD: " .. gcd)
 
-        -- Stage 2: Determine our amounts and unit.count (stacks_needed)
+        -- Stage 2: Determine our amounts and divisor (if we use count_formula)
+        log(serpent.block(t.unit))
         for _, ings in pairs(t.unit.ingredients) do
+            -- Divisor will always be the largest stack size of the packs used in this tech
             divisor = math.max(divisor, pack_sizes[ings.name])
-            ings.amount = (ings.amount * (t.unit.count or lcm)) / pack_sizes[ings.name]
-            ings.amount = math.max(1, omni.lib.round(ings.amount))
+            -- Take divide our our pack size and GCD, the latter will become our unit count
+            ings.amount = (ings.amount / pack_sizes[ings.name]) / gcd
+            -- Minimum 1, round otherwise
+            ings.amount = math.max(omni.lib.round(ings.amount), 1)
             ings.name = "compressed-"..ings.name
-            if ings.amount > pack_sizes[ings.name] then
-                stacks_needed = omni.lib.lcm(stacks_needed, math.ceil(ings.amount / pack_sizes[ings.name]))
-            end
         end
 
-        -- Stage 3: Do the final adjustment of our amount requirements, dividing amount by unit count
-        for _, ings in pairs(t.unit.ingredients) do
-            ings.amount = ings.amount / stacks_needed
-            ings.amount = math.max(1, omni.lib.round(ings.amount))
-        end
-        --if valid remove effects from compressed and update cost curve
+        --if valid remove effects from compressed version
         if t.effects then
             for i, eff in pairs(t.effects) do
                 if eff.type ~= "unlock-recipe" then t.effects[i] = nil end
             end
         end
+        
+        -- Divide our time and unit count to account for our changes
         if t.unit.count then
-            t.unit.time = omni.lib.round((t.unit.time * t.unit.count) / stacks_needed)
-            t.unit.time = math.max(1, t.unit.time)
-            t.unit.count = math.min(stacks_needed, 2^64-1)
+            -- new time is total time divided by our new unit count
+            t.unit.time = omni.lib.round((t.unit.time * t.unit.count) / math.max(gcd, 1))
+            -- and clamped
+            t.unit.time = math.min(math.max(t.unit.time, 1), 2^64-1)
+            -- new unit count is our gcd, rounded
+            t.unit.count = omni.lib.round(gcd)
+            -- and clamped
+            t.unit.count = math.min(math.max(t.unit.count, 1), 2^64-1)
+
         else
-            t.unit.time = t.unit.time * divisor
+            t.unit.time = math.max(1, t.unit.time / gcd)
             t.unit.count_formula = "(" .. t.unit.count_formula..")*".. string.format("%f", 1 / divisor)
         end
+
         compressed_techs[#compressed_techs+1]=table.deepcopy(t)
     end
 end

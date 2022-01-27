@@ -336,6 +336,23 @@ function omni.lib.gcd(m,n)
 
     return n;
 end
+-- Recursive GCD for.. reasons
+function omni.lib.pgcd(...)
+    local arg = table.pack(...)
+    if #arg > 2
+    then
+        local tmp = table.remove(arg, 1)
+        return omni.lib.pgcd(tmp, omni.lib.pgcd(unpack(arg)))
+    elseif #arg == 2 then
+        a, b = unpack(arg)
+        repeat
+        a, b = b, math.fmod(a, b)
+        until b == 0
+        return a
+    else
+        return arg[#arg]
+    end
+end
 
 function omni.lib.lcm(...)
     local arg = {...}
