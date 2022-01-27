@@ -168,10 +168,8 @@ for _,tech in pairs(data.raw.technology) do
         end
         lcm = omni.lib.lcm(table.unpack(lcm))
         gcd = omni.lib.pgcd(table.unpack(gcd))
-        log(t.name .. " GCD: " .. gcd)
 
         -- Stage 2: Determine our amounts and divisor (if we use count_formula)
-        log(serpent.block(t.unit))
         for _, ings in pairs(t.unit.ingredients) do
             -- Divisor will always be the largest stack size of the packs used in this tech
             divisor = math.max(divisor, pack_sizes[ings.name])
