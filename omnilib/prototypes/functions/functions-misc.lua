@@ -735,9 +735,12 @@ function omni.lib.add_overlay(it, overlay_type, level)
         return
     end
     local base_size = icons[1] and icons[1].icon_size
+    local base_scale = icons[1] and icons[1].scale or 1
     if not base_size then
         base_size = 32
         log("No icon size found for " .. it.name)
+    else
+        base_size = base_size * base_scale
     end
     level = level or "" -- So we can build our table
     local overlays = { -- Since we normalize for 32px/no mipmap icons below, we only need to set those properties for exceptions
@@ -789,6 +792,7 @@ function omni.lib.add_overlay(it, overlay_type, level)
         overlay = overlays[overlay_type]
     elseif type(overlay_type) == "table" then
         overlay = overlay_type
+        overlay.scale = overlay.scale * base_scale
     else
         error("add_overlay: invalid overlay_type specified")
     end

@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.23
+Date: 2022.##.##
+  Bugfixes:
+    - Fixed an icon scaling issue with technology icons with a scale factor on the first layer
+---------------------------------------------------------------------------------------------------
 Version: 4.1.22
 Date: 2022.01.17
   Changes:
