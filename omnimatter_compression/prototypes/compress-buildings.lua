@@ -143,6 +143,7 @@ local create_concentrated_fluid = function(fluid, tier)
     if new_fluid.fuel_value then
         new_fluid.fuel_value = new_effect(new_fluid.fuel_value, tier)
     end
+    -- Tier + compression icon
     new_fluid.icons = omni.lib.add_overlay(new_fluid, "compress-fluid", tier)
     new_fluid.icon = nil
     data:extend{new_fluid}
@@ -194,14 +195,14 @@ local create_concentrated_recipe = function(fluid, tier, temp)
             --localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
             category = "fluid-condensation",
             enabled = true,
-            icons = omni.lib.icon.of(new_fluid),
+            icons = omni.lib.add_overlay(new_fluid, "compress-fluid", tier),
             order = new_fluid.order or ("z".."[condensed-"..fluid .."]")
         }
         local ungrade = {
             type = "recipe",
             name = "uncompress-"..fluid.."-concentrated-grade-"..tier..temp_str,
             --localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
-            icons = omni.lib.add_overlay(fluid,"uncompress"),
+            icons = omni.lib.add_overlay(omni.lib.add_overlay(new_fluid, "compress-fluid", tier),"uncompress"),
             category = "fluid-condensation",
             subgroup = "concentrator-fluids",
             enabled = true,
