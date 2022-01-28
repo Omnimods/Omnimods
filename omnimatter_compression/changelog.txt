@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.15
+Date: 2022.01.XX
+  Bugfixes:
+    - Fix compressed buildings using +1 tier more power than they should
+    - Fix missing overlay on condensator fluids
+    - Fix lack of compressed boilers with omnifluid
+  Changes:
+    - Added descriptions to condensator/concentrator
+    - Changed compressed tech formulae not to overload labs with massive stack sizes
+---------------------------------------------------------------------------------------------------
 Version: 4.1.14
 Date: 2022.01.04
   Changes:
