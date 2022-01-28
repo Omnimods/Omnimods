@@ -469,7 +469,7 @@ for _, boiler in pairs(data.raw.boiler) do
         local new_item = table.deepcopy(data.raw.item[boiler.name])
         new_item.name = boiler.name.."-converter"
         new_item.place_result = boiler.name.."-converter"
-        new_item.localised_name = {"item-name.boiler-converter", {"entity-name."..boiler.name}}
+        new_item.localised_name = {"item-name.boiler-converter", omni.lib.locale.of(boiler).name}
         new_boiler[#new_boiler+1] = new_item
 
         boiler.minable.result = boiler.name.."-converter"
@@ -480,7 +480,7 @@ for _, boiler in pairs(data.raw.boiler) do
         local new_ent = table.deepcopy(data.raw.boiler[boiler.name])
         new_ent.type = "assembling-machine"
         new_ent.name = boiler.name.."-converter"
-        new_ent.localised_name = {"item-name.boiler-converter", {"entity-name."..boiler.name}}
+        new_ent.localised_name = {"item-name.boiler-converter", omni.lib.locale.of(boiler).name}
         new_ent.icon = boiler.icon
         new_ent.icons = boiler.icons
         new_ent.crafting_speed = 1
