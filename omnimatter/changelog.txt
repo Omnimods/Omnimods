@@ -1,10 +1,13 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.24
-Date: 2022.01.XX
+Date: 2022.01.29
   Changes:
     - Added setting to opt-out of mining fluid requirement (for cowards)
+    - Updated angels omnicium smelting tech and recipe updates
   Bugfixes:
     - Fixed that the burner omnitractor could not refine tier 1 crude ores
+    - Fixed that processed omnicium could not be crafted in the ore processor 1
+    - Fixed advanced omnicium casting 2 & 3 not having certain prerequisites
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.23
 Date: 2022.01.17
