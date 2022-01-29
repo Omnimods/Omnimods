@@ -58,6 +58,7 @@ local not_energy_use = {--Types
 local recipe_category = {} --category additions
 local compress_level = {"Compact","Nanite","Quantum","Singularity"}
 local compressed_buildings = {}
+local concentrationRatio = omni.fluid.sluid_contain_fluid --set in omnilib
 -- LightedPolesPlus support
 local hasLEP = mods["LightedPolesPlus"] ~= nil
 local LEP_scale = hasLEP and settings.startup["lepp_light_size_factor"].value
@@ -167,9 +168,9 @@ local create_concentrated_recipe = function(fluid, tier, temp)
     local base_fluid = fluid
     if not data.raw.recipe[fluid .. "-concentrated-grade-" .. tier  .. temp_str] then
         -- if tier > 1 then baseFluid = baseFluid.."-concentrated-grade-"..(tier-1) end
-        local base_fluid_data = {{name = base_fluid, type = "fluid", amount = omni.compression.sluid_contain_fluid*multiplier^(tier+1), temperature=temp}}
+        local base_fluid_data = {{name = base_fluid, type = "fluid", amount = concentrationRatio*multiplier^(tier+1), temperature=temp}}
         local compress_fluid_data = {{name = "concentrated-"..base_fluid, type = "fluid", amount = multiplier^(tier+1), temperature=temp}}
-        local grade_fluid_data = {{name = fluid.."-concentrated-grade-"..tier, type = "fluid", amount = omni.compression.sluid_contain_fluid*multiplier, temperature=temp}}
+        local grade_fluid_data = {{name = fluid.."-concentrated-grade-"..tier, type = "fluid", amount = concentrationRatio*multiplier, temperature=temp}}
         local grade_recipe_data = {
             energy_required = multiplier^(tier+1)/60,
             enabled = true,

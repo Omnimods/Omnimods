@@ -11,9 +11,10 @@ omni.compression.one_list = settings.startup["omnicompression_one_list"].value
 if settings.startup["omnicompression_hide_handcraft"].value == false then
     omni.compression.hide_handcraft = nil--Don't override to false
 end
-
-omni.compression.sluid_contain_fluid = 60
-
+-- Fluid may override this
+omni.fluid = omni.fluid or {
+    sluid_contain_fluid = 60
+}
 
 require("prototypes/item-groups")
 require("prototypes/recipe-categories")
