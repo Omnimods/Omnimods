@@ -95,10 +95,16 @@ function omni.matter.add_omnicium_alloy(name,plate,ingot)
             r:fluid():
             setBothColour({r = 1, g = 0, b = 1}):
             setMaxTemp(900):
+            setIngredients(
+                {type="item", name="ingot-omnicium", amount=18},
+                {type="item", name=ingot, amount=12}
+            ):
+            setResults({type="fluid", name="molten-omnicium-"..name.."-alloy", amount=300}):
             setIcons("liquid-molten-omnicium"):
             addSmallIcon(ingot,3):
             setCategory("induction-smelting"):
-            setSubgroup("omnicium-casting"):
+            setSubgroup("omnicium-alloy-casting"):
+            setOrder("a[molten-omnicium-"..name.."-alloy]"):
             setEnergy(4):
             setTechName("omnitech-angels-omnicium-"..name.."-alloy-smelting"):
             setTechIcons("smelting-omnicium-"..name):
@@ -108,21 +114,18 @@ function omni.matter.add_omnicium_alloy(name,plate,ingot)
             setTechPrereq(
                 "omnitech-angels-omnicium-smelting-1",
                 "angels-"..name.."-smelting-1"):
-            setIngredients(
-                {type="item", name="ingot-omnicium", amount=18},
-                {type="item", name=ingot, amount=12}
-            ):
-            setResults({type="fluid", name="molten-omnicium-"..name.."-alloy", amount=300}):extend()
+            extend()
 
         RecGen:create("omnimatter","angels-plate-omnicium-"..name.."-alloy"):
-            setCategory("casting"):
-            setSubgroup("omnicium-casting"):
-            setEnergy(4):
-            addProductivity():
-            setTechName("omnitech-angels-omnicium-"..name.."-alloy-smelting"):
             setIngredients({type="fluid", name="molten-omnicium-"..name.."-alloy", amount=40}):
+            setResults({type="item", name="omnicium-"..name.."-alloy", amount=4}):
             addProductivity():
-            setResults({type="item", name="omnicium-"..name.."-alloy", amount=4}):extend()
+            setCategory("casting"):
+            setEnergy(4):
+            setSubgroup("omnicium-alloy-casting"):
+            setOrder("b[molten-omnicium-"..name.."-alloy]"):
+            setTechName("omnitech-angels-omnicium-"..name.."-alloy-smelting"):
+            extend()
     else
         math.randomseed(string.len(plate..name))
         local metal_q = math.random(2,6)
