@@ -688,9 +688,6 @@ function omni.compression.create_compression_recipe(recipe)
                             comrec.category = new_cat
                             comrec.main_product = nil
                             comrec.hide_from_player_crafting = comrec.hide_from_player_crafting or omni.compression.hide_handcraft
-                            if (recipe.enabled or recipe.normal.enabled or recipe.expensive.enabled) then
-                                log(comrec.name)
-                            end
                             return comrec
                         else
                             return nil --should not
