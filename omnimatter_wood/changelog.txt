@@ -1,15 +1,9 @@
 ---------------------------------------------------------------------------------------------------
-Version: 4.1.8
+Version: 4.1.7
 Date: 2022.01.30
   Bugfixes:
-    - Fixed that wood in angels bioprocessing recipes was not properly replaced with omniwood
----------------------------------------------------------------------------------------------------
-Version: 4.1.7
-Date: 2021.11.XX
-  Bugfixes:
     - Fixed "floating" pipe connections on omnimutator
-  Info:
-    - Where did 4.1.5 go?
+    - Fixed that wood in angels bioprocessing recipes was not properly replaced with omniwood
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.6
 Date: 2021.08.14
