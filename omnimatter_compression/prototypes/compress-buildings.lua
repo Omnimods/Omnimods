@@ -458,6 +458,11 @@ local run_entity_updates = function(new, kind, i)
         -- if new.fluid_boxes then
         --     process_fluid_box(new.fluid_boxes, i, false)
         -- end
+        -- Hide "made in"
+        new.flags = new.flags or {}
+        if not omni.lib.is_in_table("hidden", new.flags) then
+            new.flags[#new.flags+1] = "hidden"
+        end
     end
     --lab vial slot update (may want to move this to recipe update since tools/items are done later...)
     if kind == "lab" then
