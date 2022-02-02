@@ -725,6 +725,14 @@ for _, values in pairs(recipe_results) do
                 end
                 new.minable.result = new.name
                 new.minable.mining_time = (new.minable.mining_time or 10) * i
+                -- Fast replace in kind
+                if not build.fast_replaceable_group then
+                    build.fast_replaceable_group = build.name
+                end
+                if not new.next_upgrade and i < omni.compression.bld_lvls then
+                    new.next_upgrade = build.name.."-compressed-"..string.lower(compress_level[i+1])                  
+                end
+                new.fast_replaceable_group = build.fast_replaceable_group
                 new.icons = omni.lib.add_overlay(build,"building",i)
                 new.icon = nil
                 run_entity_updates(new, new.type, i)
