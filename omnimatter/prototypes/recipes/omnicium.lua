@@ -175,20 +175,20 @@ if mods["angelssmelting"] then
     RecGen:import("roll-iron-casting"):
         setName("roll-omnicium-casting","omnimatter"):
         setItemName("angels-roll-omnicium"):
-        setIcons("roll-omnicium","omnimatter"):
         replaceIngredients("liquid-molten-iron","liquid-molten-omnicium"):
         replaceResults("angels-roll-iron","angels-roll-omnicium"):
         setSubgroup("omnicium-casting"):
+        setIcons("roll-omnicium","omnimatter"):
         addSmallIcon({{icon = "__omnilib__/graphics/icons/small/num_1.png", icon_size = 32, tint = {a=1,b=0,g=0.8,r=1}}}, 2):
         setTechName("omnitech-angels-omnicium-smelting-2"):
         extend()
 
     RecGen:import("roll-iron-casting-fast"):
         setName("roll-omnicium-casting-fast","omnimatter"):
-        setIcons("roll-omnicium","omnimatter"):
         replaceIngredients("liquid-molten-iron","liquid-molten-omnicium"):
         replaceResults("angels-roll-iron","angels-roll-omnicium"):
         setSubgroup("omnicium-casting"):
+        setIcons("roll-omnicium","omnimatter"):
         addSmallIcon({{icon = "__omnilib__/graphics/icons/small/num_2.png", icon_size = 32, tint = {a=1,b=0,g=0.8,r=1}}}, 2):
         setTechName("omnitech-angels-omnicium-smelting-3"):
         extend()
@@ -202,6 +202,9 @@ if mods["angelssmelting"] then
         addSmallIcon("angels-roll-omnicium", 2):
         setTechName("omnitech-angels-omnicium-smelting-2"):
         extend()
+
+    --Fix item icons
+    ItemGen:import("angels-roll-omnicium"):setIcons("roll-omnicium","omnimatter"):extend()
 
     RecGen:create("omnimatter","omnicium-gear-wheel-casting"):
         setStacksize(100):
