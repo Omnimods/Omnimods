@@ -372,8 +372,6 @@ for _, boiler in pairs(data.raw.boiler) do
             end
         end
         if found == true then
-            local boiled_amount = omni.fluid.sluid_contain_fluid
-            if water == steam then boiled_amount = 1 end
             boiling_steam[boiler.target_temperature] = true
             new_boiler[#new_boiler+1] = {
                 type = "recipe",
@@ -387,7 +385,7 @@ for _, boiler in pairs(data.raw.boiler) do
                 hide_from_player_crafting = true,
                 main_product = "solid-"..steam.."-T-"..boiler.target_temperature,
                 ingredients = {{type = "item", name = "solid-"..water, amount = 1},},
-                results = {{type = "item", name = "solid-"..steam.."-T-"..boiler.target_temperature, amount = boiled_amount}},
+                results = {{type = "item", name = "solid-"..steam.."-T-"..boiler.target_temperature, amount = 1}},
             }
         end
 
