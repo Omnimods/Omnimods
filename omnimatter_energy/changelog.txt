@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.1.12
 Date: ????
+  Changes:
+    - Moved Military research from red science to energy science only
   Bugfixes:
     - Fixed automation having no prerequisites with Bobs steam assembler being disabled
 ---------------------------------------------------------------------------------------------------
