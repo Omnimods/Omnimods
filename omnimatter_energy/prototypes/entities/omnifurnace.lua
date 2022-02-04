@@ -59,15 +59,14 @@ BuildGen:import("electric-furnace"):
                 width = 129,
                 height = 100,
                 frame_count = 1,
-                shift = util.by_pixel(1.5, 4.0),
-                --shift = {0.46875, 0},
+                shift = util.by_pixel(15.0, 0.0),
                 hr_version = {
                     filename = "__omnimatter_energy__/graphics/entity/buildings/hr-electric-omni-furnace.png",
                     priority = "high",
                     width = 239,
                     height = 219,
                     frame_count = 1,
-                    shift = util.by_pixel(1.25, 6.5),
+                    shift = util.by_pixel(0.75, 5.75),
                     scale = 0.5
                 }
             },
@@ -78,9 +77,7 @@ BuildGen:import("electric-furnace"):
                 height = 100,
                 frame_count = 1,
                 draw_as_shadow = true,
-                shift = util.by_pixel(39.5, 11.5),
-                --shift = {0.46875, 0},
-
+                shift = util.by_pixel(13.5, 0),
                 hr_version = {
                     filename = "__base__/graphics/entity/electric-furnace/hr-electric-furnace-shadow.png",
                     priority = "high",
@@ -88,7 +85,7 @@ BuildGen:import("electric-furnace"):
                     height = 171,
                     frame_count = 1,
                     draw_as_shadow = true,
-                    shift = util.by_pixel(39.25, 11.25),
+                    shift = util.by_pixel(11.25, 7.75),
                     scale = 0.5
                 }
             },
