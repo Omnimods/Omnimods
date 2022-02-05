@@ -16,6 +16,11 @@ local function memoize(source)
     return t
 end
 
+local update_queue = {
+    finished = {},
+    reversed = {}
+}
+
 local function get_relative_tier(recipe_name, offset)
     offset = offset or 1
     local is_omniperm = recipe_name:find("%-omniperm")
@@ -263,6 +268,8 @@ local function omnidate(technology)
             end
             -- We can stop here if we're on a compressed variant, the rest will happen since we triggered the unlock
             if technology_name:match("^omnipressed%-") then
+                local queue = update_queue[tech_researched and 'finished' or 'reversed']
+                queue[#queue+1] = variant
                 break
             end
         end
@@ -310,10 +317,8 @@ local function omnidate(technology)
             local is_compression_unlock = (technology_name == "compression-recipes")
             if clear_caches or is_compression_unlock or is_tier_unlock then
                 -- Deal with stock recs if necessary
-                if not is_tier_unlock then
-                    for rec_name, rec_meta in pairs(stock_recs) do
-                        process_rec(rec_name, rec_meta, has_compression)
-                    end
+                for rec_name, rec_meta in pairs(stock_recs) do
+                    process_rec(rec_name, rec_meta, has_compression)
                 end
                 -- Iterate techs, set their given recipe state
                 for tech_name, tech_recipes in pairs(recipe_techs) do
@@ -382,11 +387,6 @@ script.on_event(defines.events.on_console_chat, function(event)
         end
     end
 end)
-
-local update_queue = {
-    finished = {},
-    reversed = {}
-}
 
 script.on_event(defines.events.on_tick, function(event)
     if global.omni and global.omni.needs_update then

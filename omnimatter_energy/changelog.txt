@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.1.12
+Date: 2022.02.05
+  Changes:
+    - Moved Military research from red science to energy science only
+  Bugfixes:
+    - Fixed automation having no prerequisites with Bobs steam assembler being disabled
+    - Fixed omnifurnace mk3 shifts being off especially for the non hr resolution
+    - Fixed that the item order of the burner omni furnace was not set properly
+---------------------------------------------------------------------------------------------------
 Version: 3.1.11
 Date: 2022.01.17
   Bugfixes:

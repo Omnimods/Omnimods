@@ -372,8 +372,6 @@ for _, boiler in pairs(data.raw.boiler) do
             end
         end
         if found == true then
-            local boiled_amount = omni.fluid.sluid_contain_fluid
-            if water == steam then boiled_amount = 1 end
             boiling_steam[boiler.target_temperature] = true
             new_boiler[#new_boiler+1] = {
                 type = "recipe",
@@ -387,7 +385,7 @@ for _, boiler in pairs(data.raw.boiler) do
                 hide_from_player_crafting = true,
                 main_product = "solid-"..steam.."-T-"..boiler.target_temperature,
                 ingredients = {{type = "item", name = "solid-"..water, amount = 1},},
-                results = {{type = "item", name = "solid-"..steam.."-T-"..boiler.target_temperature, amount = boiled_amount}},
+                results = {{type = "item", name = "solid-"..steam.."-T-"..boiler.target_temperature, amount = 1}},
             }
         end
 
@@ -469,21 +467,22 @@ for _, boiler in pairs(data.raw.boiler) do
         local new_item = table.deepcopy(data.raw.item[boiler.name])
         new_item.name = boiler.name.."-converter"
         new_item.place_result = boiler.name.."-converter"
-        new_item.localised_name = {"item-name.boiler-converter", {"entity-name."..boiler.name}}
+        new_item.localised_name = {"item-name.boiler-converter", omni.lib.locale.of(boiler).name}
         new_boiler[#new_boiler+1] = new_item
 
         boiler.minable.result = boiler.name.."-converter"
         --stop it from being analysed further (stop recursive updates)
         omni.fluid.forbidden_assembler[boiler.name.."-converter"] = true
-        
+
         --create entity
         local new_ent = table.deepcopy(data.raw.boiler[boiler.name])
         new_ent.type = "assembling-machine"
         new_ent.name = boiler.name.."-converter"
-        new_ent.localised_name = {"item-name.boiler-converter", {"entity-name."..boiler.name}}
+        new_ent.localised_name = {"item-name.boiler-converter", omni.lib.locale.of(boiler).name}
         new_ent.icon = boiler.icon
         new_ent.icons = boiler.icons
         new_ent.crafting_speed = 1
+
         --change source location to deal with the new size
         new_ent.energy_source = boiler.energy_source
         if new_ent.energy_source and new_ent.energy_source.connections then
@@ -531,19 +530,20 @@ for _, boiler in pairs(data.raw.boiler) do
         ing_replace[#ing_replace+1] = boiler.name
 
         --find tech unlock
-        found = false --if not found, force off (means enabled at start)
         for _, tech in pairs(data.raw.technology) do
             if tech.effects then
-                for j, k in pairs(tech.effects) do
+                for _, k in pairs(tech.effects) do
                     if k.recipe_name and k.recipe_name == boiler.name then
                         boiler_tech[#boiler_tech+1] = {tech_name = tech.name, old_name = boiler.name}
                     end
                 end
             end
         end
-        if found == false then
-            --hide and disable starting items
-            local old = data.raw.boiler[boiler.name]
+
+        --hide and disable old boiler entity and item
+        local old_ent = data.raw.boiler[boiler.name]
+        local old_item = data.raw.item[boiler.name]
+        for _, old in pairs({old_ent, old_item}) do
             old.enabled = false
             if old.flags then
                 if not old.flags["hidden"] then
@@ -552,8 +552,7 @@ for _, boiler in pairs(data.raw.boiler) do
             else
                 old.flags = {"hidden"}
             end
-            data.raw.item[boiler.name].hidden = true
-            data.raw.item[boiler.name].enabled = false
+            if old.next_upgrade then old.next_upgrade = nil end
         end
     end
 end

@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.23
+Date: 2022.02.05
+  Bugfixes:
+    - Fixed an icon scaling issue with technology icons with a scale factor on the first layer
+    - Fixed an issue where some recipes or tech effects wouldn't unlock (matter, compression)
+    - Fixed that the default fuel category was set on items after importing their recipe
+---------------------------------------------------------------------------------------------------
 Version: 4.1.22
 Date: 2022.01.17
   Changes:

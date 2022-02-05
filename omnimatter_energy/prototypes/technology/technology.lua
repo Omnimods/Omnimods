@@ -101,6 +101,10 @@ omni.lib.add_prerequisite("logistic-science-pack", "electronics")
 --Some vanilla techs to move from red to energy SP that are required early(turrets,walls,...)
 omni.lib.replace_science_pack("gun-turret", "automation-science-pack", "energy-science-pack")
 omni.lib.replace_science_pack("stone-wall", "automation-science-pack", "energy-science-pack")
+omni.lib.replace_science_pack("military", "automation-science-pack", "energy-science-pack")
+
+--Move gun turret tech behind military
+omni.lib.add_prerequisite("gun-turret", "military")
 
 local function get_packs(tier)
     local c = {}
@@ -129,9 +133,9 @@ data:extend({
         },
         unit =
         {
-          count = 80,
-          ingredients = get_packs(1),
-          time = 30
+            count = 80,
+            ingredients = get_packs(1),
+            time = 30
         },
         order = "c-a"
     },
@@ -151,9 +155,9 @@ data:extend({
         },
         unit =
         {
-          count = 160,
-          ingredients = get_packs(2),
-          time = 30
+            count = 160,
+            ingredients = get_packs(2),
+            time = 30
         },
         order = "c-a"
     },
@@ -173,9 +177,9 @@ data:extend({
         },
         unit =
         {
-          count = 175,
-          ingredients = get_packs(3),
-          time = 30
+            count = 175,
+            ingredients = get_packs(3),
+            time = 30
         },
         order = "c-a"
     },
@@ -195,9 +199,9 @@ data:extend({
         },
         unit =
         {
-          count = 250,
-          ingredients = get_packs(4),
-          time = 30
+            count = 250,
+            ingredients = get_packs(4),
+            time = 30
         },
         order = "c-a"
     },
@@ -217,34 +221,34 @@ data:extend({
         },
         unit =
         {
-          count = 400,
-          ingredients = get_packs(5),
-          time = 30
+            count = 400,
+            ingredients = get_packs(5),
+            time = 30
         },
         order = "c-a"
     },
     {
-      type = "technology",
-      name = "omnitech-omni-solar-road",
-      localised_name = {"technology-name.omnitech-omni-solar-road"},
-      icon = "__omnimatter_energy__/graphics/technology/omni-solar-road.png",
-      icon_size = 128,
-      prerequisites =
-      {
-        "concrete",
-        "omnitech-crystal-solar-panel-tier-"..settings.startup["omnielectricity-solar-tiers"].value.."-size-"..settings.startup["omnielectricity-solar-size"].value,
-        "space-science-pack",
-      },
-      effects =
-      {
-        {type = "unlock-recipe",recipe = "omni-solar-road"}
-      },
-      unit =
-      {
-        count = 2000,
-        ingredients = get_packs(6),
-        time = 30
-      },
-      order = "c-a"
-  },
+        type = "technology",
+        name = "omnitech-omni-solar-road",
+        localised_name = {"technology-name.omnitech-omni-solar-road"},
+        icon = "__omnimatter_energy__/graphics/technology/omni-solar-road.png",
+        icon_size = 128,
+        prerequisites =
+        {
+            "concrete",
+            "omnitech-crystal-solar-panel-tier-"..settings.startup["omnielectricity-solar-tiers"].value.."-size-"..settings.startup["omnielectricity-solar-size"].value,
+            "space-science-pack",
+        },
+        effects =
+        {
+            {type = "unlock-recipe",recipe = "omni-solar-road"}
+        },
+        unit =
+        {
+            count = 2000,
+            ingredients = get_packs(6),
+            time = 30
+        },
+        order = "c-a"
+    },
 })

@@ -58,9 +58,11 @@ end
 if mods["bobassembly"] then
     --Simple automation is between red SP and automation, move its steam assembler behind omnis basic automation, remove bobs burner assembler
     omni.lib.replace_prerequisite("basic-automation", "automation-science-pack", "omnitech-simple-automation")
-    omni.lib.replace_prerequisite("automation", "basic-automation", "automation-science-pack")
     omni.lib.remove_science_pack("basic-automation", "automation-science-pack")
     omni.lib.remove_unlock_recipe("basic-automation", "burner-assembling-machine")
+    if settings.startup["bobmods-assembly-burner"].value then
+        omni.lib.replace_prerequisite("automation", "basic-automation", "automation-science-pack")
+    end
 
     --Update subgroup
     data.raw.recipe["omnitor-assembling-machine"].subgroup = "bob-assembly-machine"

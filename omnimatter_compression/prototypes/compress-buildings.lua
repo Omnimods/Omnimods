@@ -16,6 +16,7 @@ local building_list = {--Types
     ["boiler"] = true,
     ["lab"] = true,
     ["assembling-machine"] = true,
+    ["generator"] = true,
     ["furnace"] = true,
     ["mining-drill"] = true,
     ["solar-panel"] = true,
@@ -51,9 +52,8 @@ local not_energy_use = {--Types
     "inserter",
     "burner-generator"
 }
-
-if mods["omnimatter_fluid"] then building_list["boiler"] = nil end
-building_list["generator"] = true
+-- no longer needed?
+--if mods["omnimatter_fluid"] then building_list["boiler"] = nil end
 
 local recipe_category = {} --category additions
 local compress_level = {"Compact","Nanite","Quantum","Singularity"}
@@ -125,7 +125,7 @@ local new_effect = function(effect, level, linear, constant)
     local mult = (
         (linear and level + 1)
         or constant or
-        math.pow(multiplier + 1, level)
+        math.pow(multiplier, level)
     )
     return omni.lib.mult_fuel_value(effect, mult)
 end
@@ -143,6 +143,7 @@ local create_concentrated_fluid = function(fluid, tier)
     if new_fluid.fuel_value then
         new_fluid.fuel_value = new_effect(new_fluid.fuel_value, tier)
     end
+    -- Tier + compression icon
     new_fluid.icons = omni.lib.add_overlay(new_fluid, "compress-fluid", tier)
     new_fluid.icon = nil
     data:extend{new_fluid}
@@ -194,14 +195,14 @@ local create_concentrated_recipe = function(fluid, tier, temp)
             --localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
             category = "fluid-condensation",
             enabled = true,
-            icons = omni.lib.icon.of(new_fluid),
+            icons = omni.lib.add_overlay(new_fluid, "compress-fluid", tier),
             order = new_fluid.order or ("z".."[condensed-"..fluid .."]")
         }
         local ungrade = {
             type = "recipe",
             name = "uncompress-"..fluid.."-concentrated-grade-"..tier..temp_str,
             --localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
-            icons = omni.lib.add_overlay(fluid,"uncompress"),
+            icons = omni.lib.add_overlay(omni.lib.add_overlay(new_fluid, "compress-fluid", tier),"uncompress"),
             category = "fluid-condensation",
             subgroup = "concentrator-fluids",
             enabled = true,
@@ -457,6 +458,11 @@ local run_entity_updates = function(new, kind, i)
         -- if new.fluid_boxes then
         --     process_fluid_box(new.fluid_boxes, i, false)
         -- end
+        -- Hide "made in"
+        new.flags = new.flags or {}
+        if not omni.lib.is_in_table("hidden", new.flags) then
+            new.flags[#new.flags+1] = "hidden"
+        end
     end
     --lab vial slot update (may want to move this to recipe update since tools/items are done later...)
     if kind == "lab" then
@@ -499,7 +505,7 @@ local run_entity_updates = function(new, kind, i)
         if new.energy_source.specific_heat then new.energy_source.specific_heat = new_effect(new.energy_source.specific_heat, i, nil, multiplier^i) end
         if new.energy_source.max_transfer then new.energy_source.max_transfer = new_effect(new.energy_source.max_transfer, i, nil, multiplier^i) end
         process_fluid_box(new.output_fluid_box, i, true, new) -- Make sure output temp gets a recipe
-        process_fluid_box(new.fluid_box, i, true)      
+        process_fluid_box(new.fluid_box, i, true)
     end
     --Generator
     if kind == "generator" and new.fluid_box then
@@ -719,6 +725,14 @@ for _, values in pairs(recipe_results) do
                 end
                 new.minable.result = new.name
                 new.minable.mining_time = (new.minable.mining_time or 10) * i
+                -- Fast replace in kind
+                if not build.fast_replaceable_group then
+                    build.fast_replaceable_group = build.name
+                end
+                if not new.next_upgrade and i < omni.compression.bld_lvls then
+                    new.next_upgrade = build.name.."-compressed-"..string.lower(compress_level[i+1])                  
+                end
+                new.fast_replaceable_group = build.fast_replaceable_group
                 new.icons = omni.lib.add_overlay(build,"building",i)
                 new.icon = nil
                 run_entity_updates(new, new.type, i)

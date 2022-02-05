@@ -521,11 +521,11 @@ function ItemGen:import(item)
         setFlags(proto.flags):
         setPlace(proto.place_result):
         setSubgroup(proto.subgroup):
-        setFuelCategory(proto.fuel_category):
         setIcons(proto.icons or proto.icon or omni.lib.icon.of(proto, true)):
         setItemPictures(proto.pictures):
         setFuelValue(proto.fuel_value):
         setOrder(proto.order)
+        if proto.fuel_category then it:setFuelCategory(proto.fuel_category) end
         if proto.type == "fluid" then
             it:fluid():
             setFlowColour(proto.flow_color):
@@ -1213,9 +1213,9 @@ function RecGen:import(rec)
                 setPlace(proto.place_result):
                 setSubgroup(proto.subgroup):
                 setOrder(proto.order):
-                setFuelCategory(proto.fuel_category):
                 setIcons(proto.icons or proto.icon or omni.lib.icon.of(proto, true)):
                 setFuelValue(proto.fuel_value)
+                if proto.fuel_category then r:setFuelCategory(proto.fuel_category) end
                 if proto.place_as_tile then r:tile():setPlace(proto.place_as_tile.result) end
                 if proto.type == "fluid" then
                     r:fluid():
