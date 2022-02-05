@@ -292,3 +292,35 @@ script.on_event("give-compression-planner", function(event)
         spawn_planner(event.player_index)
     end
 end)
+-- Resync compressed and uncompressed techs
+commands.add_command(
+    "omnidatetechs",
+    "Peforms a full resync of the tech tree. Will freeze the game for up to a few seconds.",
+    function(command)
+        for force_name, force in pairs(game.forces) do
+            local force_techs = force.technologies
+            for technology_name, tech in pairs(force_techs) do
+                local variant = (
+                    force_techs[string.format("omnipressed-%s", technology_name)] or 
+                    force_techs[technology_name:gsub("^omnipressed%-", "")] or 
+                    {}
+                )
+                if variant.researched ~= tech.researched then
+                    if variant.researched then
+                        tech.researched = true
+                    else
+                        variant.researched = true
+                    end
+                end
+                if tech.level and tech.level ~= variant.level then
+                    if tech.level > variant.level then
+                        variant.level = tech.level
+                    else
+                        tech.level = variant.level
+                    end
+                end
+            end
+        end
+        game.print("Technology resync complete.")
+    end
+)

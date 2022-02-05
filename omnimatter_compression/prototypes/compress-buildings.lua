@@ -729,8 +729,10 @@ for _, values in pairs(recipe_results) do
                 if not build.fast_replaceable_group then
                     build.fast_replaceable_group = build.name
                 end
-                if not new.next_upgrade and i < omni.compression.bld_lvls then
-                    new.next_upgrade = build.name.."-compressed-"..string.lower(compress_level[i+1])                  
+                if not omni.lib.is_in_table("not-upgradable", build.flags) then
+                    if not new.next_upgrade and i < omni.compression.bld_lvls then
+                        new.next_upgrade = build.name.."-compressed-"..string.lower(compress_level[i+1])                  
+                    end
                 end
                 new.fast_replaceable_group = build.fast_replaceable_group
                 new.icons = omni.lib.add_overlay(build,"building",i)

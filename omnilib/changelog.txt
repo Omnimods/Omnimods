@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.24
+Date: 2022.02.05
+  Bugfixes:
+    - Fixed some more tech unlock shenanigans
+  Changes:
+    - Moved omnidate and omnidatefull to proper chat commands that you can tab complete
+---------------------------------------------------------------------------------------------------
 Version: 4.1.23
 Date: 2022.02.05
   Bugfixes:
