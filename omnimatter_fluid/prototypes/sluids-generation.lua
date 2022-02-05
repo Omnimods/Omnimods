@@ -473,7 +473,7 @@ for _, boiler in pairs(data.raw.boiler) do
         boiler.minable.result = boiler.name.."-converter"
         --stop it from being analysed further (stop recursive updates)
         omni.fluid.forbidden_assembler[boiler.name.."-converter"] = true
-        
+
         --create entity
         local new_ent = table.deepcopy(data.raw.boiler[boiler.name])
         new_ent.type = "assembling-machine"
@@ -482,6 +482,7 @@ for _, boiler in pairs(data.raw.boiler) do
         new_ent.icon = boiler.icon
         new_ent.icons = boiler.icons
         new_ent.crafting_speed = 1
+
         --change source location to deal with the new size
         new_ent.energy_source = boiler.energy_source
         if new_ent.energy_source and new_ent.energy_source.connections then
@@ -529,19 +530,20 @@ for _, boiler in pairs(data.raw.boiler) do
         ing_replace[#ing_replace+1] = boiler.name
 
         --find tech unlock
-        found = false --if not found, force off (means enabled at start)
         for _, tech in pairs(data.raw.technology) do
             if tech.effects then
-                for j, k in pairs(tech.effects) do
+                for _, k in pairs(tech.effects) do
                     if k.recipe_name and k.recipe_name == boiler.name then
                         boiler_tech[#boiler_tech+1] = {tech_name = tech.name, old_name = boiler.name}
                     end
                 end
             end
         end
-        if found == false then
-            --hide and disable starting items
-            local old = data.raw.boiler[boiler.name]
+
+        --hide and disable old boiler entity and item
+        local old_ent = data.raw.boiler[boiler.name]
+        local old_item = data.raw.item[boiler.name]
+        for _, old in pairs({old_ent, old_item}) do
             old.enabled = false
             if old.flags then
                 if not old.flags["hidden"] then
@@ -550,8 +552,7 @@ for _, boiler in pairs(data.raw.boiler) do
             else
                 old.flags = {"hidden"}
             end
-            data.raw.item[boiler.name].hidden = true
-            data.raw.item[boiler.name].enabled = false
+            if old.next_upgrade then old.next_upgrade = nil end
         end
     end
 end
