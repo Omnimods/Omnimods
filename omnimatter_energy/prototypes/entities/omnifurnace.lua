@@ -16,6 +16,7 @@ RecGen:import("burner-omni-furnace"):
 ItemGen:import("burner-omni-furnace"):
     setLocName("entity-name.omni-furnace-1"):
     addIcon("__omnilib__/graphics/icons/small/lvl1.png"):
+    setOrder("a[omni-furnace-1]"):
     extend()
 
 BuildGen:import("burner-omni-furnace"):
