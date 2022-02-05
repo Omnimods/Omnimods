@@ -8,6 +8,8 @@ Date: 2022.01.XX
   Changes:
     - Added descriptions to condensator/concentrator
     - Changed compressed tech formulae not to overload labs with massive stack sizes
+  Features:
+    - Compressed buildings can now be fast-replaced and upgrade-planner'd
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.14
 Date: 2022.01.04
