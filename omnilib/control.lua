@@ -264,6 +264,7 @@ local function omnidate(technology)
                 variant.level = technology.level
             end
             if not not tech_researched and variant.researched ~= tech_researched then
+                log("cocks")
                 variant.researched = tech_researched
             end
             -- We can stop here if we're on a compressed variant, the rest will happen since we triggered the unlock
@@ -366,26 +367,22 @@ script.on_configuration_changed(function(event)
     global.omni.clear_caches = true
 end)
 
-script.on_event(defines.events.on_console_chat, function(event)
-    log("on_console_chat\n\t"..serpent.block(event))
-    if event.player_index and game.players[event.player_index] then
-        if event.message=="omnidate" then
-            global.omni = global.omni or {}
-            global.omni.log_to_chat = true
-            global.omni.needs_update = true
-        elseif event.message=="omnidatefull" then
-            global.omni = global.omni or {}
-            global.omni.log_to_chat = true
-            global.omni.needs_update = true
-            global.omni.clear_caches = true
-        elseif event.message=="omnilog" then
-            global.omni = global.omni or {}
-            log(
-                "Memory usage: " .. math.ceil(collectgarbage("count")) .. "K"
-            )
-            --log(serpent.block(global.omni.recipe_techs))
-        end
-    end
+commands.add_command("omnidate", "Refreshes control-time data as if you had just researched a new tech", function(command)
+    global.omni = global.omni or {}
+    global.omni.log_to_chat = true
+    global.omni.needs_update = true
+end)
+commands.add_command("omnidatefull", "Refreshes control-time data as if you had just started a new game", function(command)
+    global.omni = global.omni or {}
+    global.omni.log_to_chat = true
+    global.omni.needs_update = true
+    global.omni.clear_caches = true
+end)
+commands.add_command("omnilog", "Tells you how much memory omnilib is using", function(command)
+    global.omni = global.omni or {}
+    game.print(
+        "Memory usage: " .. math.ceil(collectgarbage("count")) .. "K"
+    )
 end)
 
 script.on_event(defines.events.on_tick, function(event)
