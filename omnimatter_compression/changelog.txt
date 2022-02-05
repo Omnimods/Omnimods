@@ -3,6 +3,8 @@ Version: 4.1.16
 Date: 2022.02.XX
   Changes:
     - Added omnidatetechs chat command
+  Bugfixes:
+    - No longer tries to add next_upgrade to entitites marked as not upgradable
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.15
 Date: 2022.02.05
