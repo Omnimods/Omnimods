@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.15
+Date: ????
+  Bugfixes:
+    - Special steam cases: check all boiler fluids instead of just steam to avoid issues with
+      mods adding different kind of boiler output fluids
+---------------------------------------------------------------------------------------------------
 Version: 4.1.14
 Date: 2022.02.05
   Bugfixes:
