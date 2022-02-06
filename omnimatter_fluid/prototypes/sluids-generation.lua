@@ -318,7 +318,6 @@ local new_boiler = {}
 local ing_replace={}
 local boiler_tech = {}
 local boiling_steam = {}
-local boiler_fluids = {}
 
 for _, boiler in pairs(data.raw.boiler) do
     --PREPARE DATA FOR MANIPULATION
@@ -346,7 +345,7 @@ for _, boiler in pairs(data.raw.boiler) do
 
         --Create  boiling recipe with the boilers target temp (only when input~= output. Some boilers are used to heat up fluids)
         if water ~= steam then
-            boiler_fluids[steam] = true
+            omni.fluid.add_boiler_fluid(steam)
 
             new_boiler[#new_boiler+1] = {
                 type = "recipe",
@@ -624,7 +623,6 @@ for _, rec in pairs(data.raw.recipe) do
     end
 end
 
-
 -------------------------------------------
 -----Replace recipe ingres with sluids-----
 -------------------------------------------
@@ -805,13 +803,13 @@ for name, _ in pairs(recipe_mods) do
                             new_ing.name = "solid-"..ing.name.."-T-"..ing.temperature
                         --Ingredient has to be in a specific temperature range, check if a solid between min and max exists
                         --May need to add a recipe for ALL temperatures that are in this range
-                        elseif ing.minimum_temperature or ing.maximum_temperature or boiler_fluids[ing.name] then
+                        elseif ing.minimum_temperature or ing.maximum_temperature or omni.fluid.boiler_fluids[ing.name] then
                             local found_temp = nil
                             local min_temp = ing.minimum_temperature or data.raw.fluid[ing.name].default_temperature
                             local max_temp = ing.maximum_temperature or data.raw.fluid[ing.name].max_temperature
                             --Temp min/max == fluid temp min/max -->use a non temp solid (min/max can exist solo)
                             --Steam sucks, dont replace fluid steam with a temperature less solid
-                            if not boiler_fluids[ing.name] and (min_temp == data.raw.fluid[ing.name].default_temperature) then-- and max_temp == data.raw.fluid[ing.name].max_temperature) then
+                            if not omni.fluid.boiler_fluids[ing.name] and (min_temp == data.raw.fluid[ing.name].default_temperature) then-- and max_temp == data.raw.fluid[ing.name].max_temperature) then
                                 new_ing.name = "solid-"..ing.name
                             else
                                 for _,temp in pairs(fluid_cats[cat][ing.name].temperatures) do
@@ -821,7 +819,7 @@ for name, _ in pairs(recipe_mods) do
                                     end
                                 end
                                 --Steam sucks
-                                if boiler_fluids[ing.name] then
+                                if omni.fluid.boiler_fluids[ing.name] then
                                     --Get the lowest boiler temp producing steam
                                     local min_temp = math.huge
                                     for t, _ in pairs (boiling_steam) do

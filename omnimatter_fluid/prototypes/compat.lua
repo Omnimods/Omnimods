@@ -24,3 +24,7 @@ if mods["pypetroleumhandling"] then
     omni.fluid.add_mining_fluid("drilling-fluid-2")
     omni.fluid.add_mining_fluid("drilling-fluid-3")
 end
+
+if mods["omnimatter_compression"] then
+    omni.fluid.add_boiler_fluid("concentrated-steam")
+end

@@ -5,6 +5,7 @@ omni.fluid.forbidden_recipe = {}
 omni.fluid.assembler_generator_fluids = {}
 omni.fluid.multi_temp_recipes = {}
 omni.fluid.mining_fluids = {}
+omni.fluid.boiler_fluids = {}
 omni.fluid.excluded_strings = {{"empty","barrel"},{"fill","barrel"},{"fluid","unknown"},"barreling-pump","creative"}
 
 function omni.fluid.excempt_boiler(boiler)
@@ -30,6 +31,11 @@ end
 --Adds that fluid as mining fluid, converter recipes will be generated
 function omni.fluid.add_mining_fluid(fluidname)
     omni.fluid.mining_fluids[fluidname] = true
+end
+
+--Adds that fluid as boiler fluid. Required if fluids that are not a boiler output should still be handled like boiler output fluids
+function omni.fluid.add_boiler_fluid(fluidname)
+    omni.fluid.boiler_fluids[fluidname] = true
 end
 
 function omni.fluid.check_string_excluded(comparison) --checks fluid/recipe name against exclusion list
