@@ -1,8 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.17
-Date: ????
+Date: 2022.02.06
   Bugfixes:
-    - Fixed a crash that happened in rare cases when trying to compress ore patches
+    - Fixed a crash when trying to compress infinite ores with low yield
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.16
 Date: 2022.02.05
