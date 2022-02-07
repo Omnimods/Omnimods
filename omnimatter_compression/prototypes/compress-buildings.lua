@@ -52,12 +52,13 @@ local not_energy_use = {--Types
     "inserter",
     "burner-generator"
 }
--- no longer needed?
---if mods["omnimatter_fluid"] then building_list["boiler"] = nil end
 
 local recipe_category = {} --category additions
 local compress_level = {"Compact","Nanite","Quantum","Singularity"}
 local compressed_buildings = {}
+local concentrationRatio = omni.fluid.sluid_contain_fluid --set in omnilib
+-- Omnifluid support
+local hasSluids = mods["omnimatter_fluid"] ~= nil
 -- LightedPolesPlus support
 local hasLEP = mods["LightedPolesPlus"] ~= nil
 local LEP_scale = hasLEP and settings.startup["lepp_light_size_factor"].value
@@ -167,9 +168,9 @@ local create_concentrated_recipe = function(fluid, tier, temp)
     local base_fluid = fluid
     if not data.raw.recipe[fluid .. "-concentrated-grade-" .. tier  .. temp_str] then
         -- if tier > 1 then baseFluid = baseFluid.."-concentrated-grade-"..(tier-1) end
-        local base_fluid_data = {{name = base_fluid, type = "fluid", amount = omni.compression.sluid_contain_fluid*multiplier^(tier+1), temperature=temp}}
+        local base_fluid_data = {{name = base_fluid, type = "fluid", amount = concentrationRatio*multiplier^(tier+1), temperature=temp}}
         local compress_fluid_data = {{name = "concentrated-"..base_fluid, type = "fluid", amount = multiplier^(tier+1), temperature=temp}}
-        local grade_fluid_data = {{name = fluid.."-concentrated-grade-"..tier, type = "fluid", amount = omni.compression.sluid_contain_fluid*multiplier, temperature=temp}}
+        local grade_fluid_data = {{name = fluid.."-concentrated-grade-"..tier, type = "fluid", amount = concentrationRatio*multiplier, temperature=temp}}
         local grade_recipe_data = {
             energy_required = multiplier^(tier+1)/60,
             enabled = true,
@@ -208,11 +209,12 @@ local create_concentrated_recipe = function(fluid, tier, temp)
             enabled = true,
             order = new_fluid.order or ("z".."[condensed-"..fluid .."]")
         }
+
         local grade_compressed = table.deepcopy(grade)
         grade_compressed.name = "concentrated-"..grade.name
         local ungrade_compressed = table.deepcopy(ungrade)
         ungrade_compressed.name = "uncompress-concentrated-"..fluid.."-concentrated-grade-"..tier..temp_str
-
+        
         grade.normal = grade_recipe_data
         grade.expensive = table.deepcopy(grade_recipe_data)
         ungrade.normal = ungrade_recipe_data
@@ -243,7 +245,7 @@ for _, recipe in pairs(data.raw.recipe) do
         not omni.compression.compress_entity[place_result] or (
             omni.compression.compress_entity[place_result] and (
             not omni.compression.compress_entity[place_result].exclude or omni.compression.compress_entity[place_result].include
-            ) -- Not excluded or included
+            ) -- Not excluded, or is explicitly included
         )) 
         then
             local top_result =  find_top_tier(place_result, place_result.type)
@@ -251,12 +253,27 @@ for _, recipe in pairs(data.raw.recipe) do
                 --log("Highest tier of " .. place_result.name .. " is " .. top_result.name)
                 recipe_results[top_result.name] = recipe_results[top_result.name] or {}
                 local res = recipe_results[top_result.name]
-                    res[#res+1] = {
+                res[#res+1] = {
                     recipe = recipe,
                     item = product,
                     building = top_result,
                     base = place_result
                 }
+                -- Add fluidpump assembler if necessary
+                if hasSluids and top_result.type == "offshore-pump" then
+                    local compound_top = data.raw["assembling-machine"]["solshore-"..top_result.name]
+                    local compound_place = data.raw["assembling-machine"]["solshore-"..place_result.name]
+                    if compound_top and compound_place then
+                        recipe_results[compound_top.name] = recipe_results[compound_top.name] or {}
+                        local compound_res = recipe_results[compound_top.name]
+                        compound_res[#compound_res+1] = {
+                            recipe = recipe,
+                            item = product,
+                            building = compound_top,
+                            base = compound_place
+                        }
+                    end                    
+                end
             end
         end
     end

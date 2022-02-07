@@ -2,7 +2,7 @@
 --[[Initialisation and Config Variables]]--
 -------------------------------------------------------------------------------
 local compress_recipes = {}
-local concentrationRatio = omni.compression.sluid_contain_fluid
+local concentrationRatio = omni.fluid.sluid_contain_fluid
 --compressed_item_names = {}  --global?
 random_recipes = {} --global?
 local compress_based_recipe = {}
@@ -637,18 +637,17 @@ function omni.compression.create_compression_recipe(recipe)
                                 -- no stack size shenanigans required for fluids
                             --------------------------------------------------
                             local r = table.deepcopy(recipe)
-
                             r.name = r.name.."-compression"
                             r.localised_name = omni.lib.locale.custom_name(recipe, 'compressed-recipe')
                             r.icons = icons
                             r.icon = nil
                             for _, dif in pairs({"normal","expensive"}) do
-                                r[dif].category=new_cat
-                                r[dif].energy_required = concentrationRatio*r[dif].energy_required
+                                r[dif].category = new_cat
+                                r[dif].energy_required = concentrationRatio * r[dif].energy_required
                                 r[dif].hide_from_player_crafting = r[dif].hide_from_player_crafting or omni.compression.hide_handcraft
-                                for _,ingres in pairs({"ingredients","results"}) do
-                                    for i,item in pairs(r[dif][ingres]) do
-                                        r[dif][ingres][i].name="concentrated-"..r[dif][ingres][i].name
+                                for _, ingres in pairs({"ingredients", "results"}) do
+                                    for i, item in pairs(r[dif][ingres]) do
+                                        r[dif][ingres][i].name="concentrated-" .. r[dif][ingres][i].name
                                     end
                                 end
                             end
@@ -681,12 +680,12 @@ function omni.compression.create_compression_recipe(recipe)
                                 if comrec.expensive then comrec.expensive.subgroup = subgroup end
                             end
                             comrec.normal.hidden = recipe.normal.hidden
-                            comrec.normal.enabled = false
+                            comrec.normal.enabled = recipe.normal.enabled
                             comrec.normal.main_product = nil
                             comrec.expensive.main_product = nil
-                            comrec.expensive.enabled = false
-                            comrec.enabled=false
-                            comrec.category=new_cat
+                            comrec.expensive.enabled = recipe.expensive.enabled
+                            comrec.enabled = recipe.enabled
+                            comrec.category = new_cat
                             comrec.main_product = nil
                             comrec.hide_from_player_crafting = comrec.hide_from_player_crafting or omni.compression.hide_handcraft
                             return comrec
@@ -811,17 +810,21 @@ for name,fluid in pairs(generatorFluidRecipes) do
                 for _,dif in pairs({"normal","expensive"}) do
                     for j,res in pairs(new[dif].results) do
                         if res.name == name then
-                            new[dif].results[j].amount = new[dif].results[j].amount/ math.pow(multiplier,i)
-                            newFluid=table.deepcopy(data.raw.fluid[res.name])
-                            new[dif].results[j].name = res.name.."-concentrated-grade-"..i
+                            res.amount = res.amount / math.pow(multiplier,i) * i
+                            newFluid = table.deepcopy(data.raw.fluid[res.name])
+                            res.name = res.name.."-concentrated-grade-"..i
                         elseif string.sub(res.name,string.len("concentrated-")+1,-1) == name then
-                            new[dif].results[j].amount = new[dif].results[j].amount/ math.pow(multiplier,i)*60
-                            newFluid=table.deepcopy(data.raw.fluid[string.sub(res.name,string.len("concentrated-")+1,-1)])
-                            new[dif].results[j].name = string.sub(res.name,string.len("concentrated-")+1,-1).."-concentrated-grade-"..i
+                            res.amount = res.amount / math.pow(multiplier,i) * 60 * i
+                            newFluid = table.deepcopy(data.raw.fluid[string.sub(res.name,string.len("concentrated-")+1,-1)])
+                            res.name = string.sub(res.name,string.len("concentrated-")+1,-1).."-concentrated-grade-"..i
                         end
                     end
+                    for j, ing in pairs(new[dif].ingredients) do
+                        ing.amount = ing.amount * i
+                    end
+                    new[dif].energy_required = new[dif].energy_required * i
                 end
-
+                
                 newFluid.name = newFluid.name.."-concentrated-grade-"..i
                 newFluid.localised_name = omni.lib.locale.custom_name(data.raw.fluid[name], 'compressed-fluid', i)
                 if not newFluid.heat_capacity then
@@ -838,6 +841,8 @@ for name,fluid in pairs(generatorFluidRecipes) do
 
                 newFluid.icons = omni.lib.add_overlay(newFluid, "compress-fluid", i)
                 newFluid.icon = nil
+                new.icons = newFluid.icons
+                new.icon = nil
                 compress_recipes[#compress_recipes+1] = new
                 compress_recipes[#compress_recipes+1] = newFluid
             end
