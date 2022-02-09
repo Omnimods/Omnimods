@@ -497,7 +497,7 @@ for _, boiler in pairs(data.raw.boiler) do
         end
         new_ent.energy_usage = boiler.energy_consumption
         new_ent.ingredient_count = 4
-        new_ent.crafting_categories = {"boiler-omnifluid-"..boiler.name,"general-omni-boiler"}
+        new_ent.crafting_categories = {"boiler-omnifluid-"..boiler.name, "general-omni-boiler"}
         new_ent.fluid_boxes = {
             {
                 production_type = "output",

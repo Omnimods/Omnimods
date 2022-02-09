@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.16
+Date: ????
+  Features:
+    - Added compat for angels electric boilers. They now have access to converter recipes without
+      a temperature requirement
+---------------------------------------------------------------------------------------------------
 Version: 4.1.15
 Date: 2022.02.06
   Bugfixes:
