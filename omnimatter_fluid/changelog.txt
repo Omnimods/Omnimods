@@ -4,6 +4,9 @@ Date: ????
   Features:
     - Added compat for angels electric boilers. They now have access to converter recipes without
       a temperature requirement
+  Bugfixes:
+    - Fixed that the amount of some probability based results of recipes dropper below 1 and was
+      therefor rounded down to 0
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.15
 Date: 2022.02.06

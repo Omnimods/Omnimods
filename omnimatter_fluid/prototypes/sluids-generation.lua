@@ -657,7 +657,7 @@ for name, _ in pairs(recipe_mods) do
                         amount = omni.lib.round(omni.fluid.get_true_amount(ing)) / omni.fluid.sluid_contain_fluid
                     else
                         --Ignore probability on items, we dont want to mess with/change that. Very low probabilities would make it hard to find a decent gcd
-                        amount = (ing.amount or (ing.amount_min+ing.amount_max) / 2)
+                        amount = (ing.amount or (ing.amount_min+ing.amount_max) * (ing.probability or 1) / 2)
                     end
                     if amount == 0 then break end
                     if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
@@ -694,7 +694,7 @@ for name, _ in pairs(recipe_mods) do
                     else
                         --Ignore probability on items, we dont want to mess with/change that. Very low probabilities would make it hard to find a decent gcd
                         --amount = omni.lib.round((ing.amount or (ing.amount_min+ing.amount_max)/2)*mult[dif])
-                        amount = (ing.amount or (ing.amount_min+ing.amount_max)/2) * mult[dif]
+                        amount = (ing.amount or (ing.amount_min+ing.amount_max) * (ing.probability or 1) / 2) * mult[dif]
                     end
                     if amount == 0 then break end
                     if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
@@ -877,7 +877,7 @@ for name, _ in pairs(recipe_mods) do
                     --ingres is an item, apply mult
                     else
                         --Multiply amount with mult, keep probability in mind
-                        local new_amount = (ing.amount or (ing.amount_min+ing.amount_max)/2) * mult[dif]
+                        local new_amount = omni.lib.round((ing.amount or ((ing.amount_min+ing.amount_max) / 2)) * (ing.probability or 1)) * mult[dif]
                         ing.amount = math.min(new_amount, 65535)
                         if new_amount > 65535 then
                             log("WARNING: Ingredient "..ing.name.." from the recipe "..rec.name.." ran into the upper limit. Amount = "..new_amount.." Mult = "..mult[dif])
