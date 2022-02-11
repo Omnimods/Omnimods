@@ -1,12 +1,14 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.16
-Date: ????
+Date: 2022.02.11
   Features:
     - Added compat for angels electric boilers. They now have access to converter recipes without
       a temperature requirement
   Bugfixes:
     - Fixed that the amount of some probability based results of recipes dropper below 1 and was
       therefor rounded down to 0
+    - Fixed that modded recipes outputting a boiler (besides the normal crafting recipe of that
+      boiler) outputted the normal fluid type boiler instead of the modified boiler item
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.15
 Date: 2022.02.06
