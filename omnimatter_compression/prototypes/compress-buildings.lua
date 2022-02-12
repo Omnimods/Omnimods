@@ -729,7 +729,7 @@ for _, values in pairs(recipe_results) do
                 if not build.fast_replaceable_group then
                     build.fast_replaceable_group = build.name
                 end
-                if not omni.lib.is_in_table("not-upgradable", build.flags) then
+                if not omni.lib.is_in_table("not-upgradable", build.flags or {}) and not omni.lib.is_in_table("hidden", item.flags or {}) then
                     if not new.next_upgrade and i < omni.compression.bld_lvls then
                         new.next_upgrade = build.name.."-compressed-"..string.lower(compress_level[i+1])                  
                     end
