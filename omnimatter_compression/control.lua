@@ -69,14 +69,8 @@ local function compression_planner(event, log_only)
         local remainder, iremainder = 0, 0
         local result_table = {}
         for key, entity in pairs(event.entities) do
-            if entity.valid and
-            entity.type == "resource" and
-            #entity.prototype.mineable_properties.products > 0 and
-            not (
-                entity.name:find("^compressed")
-                or entity.name:find("^concentrated")
-            )
-            then
+            if entity.valid and entity.type == "resource" and #entity.prototype.mineable_properties.products > 0 and not
+            (entity.name:find("^compressed") or entity.name:find("^concentrated")) then
                 local results = entity.prototype.mineable_properties.products
                 local result = results[1]
                 -- Store the relevant entity properties, we'll add to this table as we calculate
@@ -85,7 +79,8 @@ local function compression_planner(event, log_only)
                     force = entity.force
                 }
                 local size
-                local min, max, amount = entity.initial_amount, results.amount_max or 1, entity.amount
+                local min = entity.initial_amount
+                local amount = entity.amount
                 local output_amount = amount
                 if result.type == "item" and entities["compressed-resource-"..entity.name] then
                     size = items[result.name].stack_size
@@ -125,7 +120,7 @@ local function compression_planner(event, log_only)
                         entity.destroy()
                         if output_amount >= 1 then
                             local res = surface.create_entity(ent)
-                            if ent.initial_amount then
+                            if ent.initial_amount and ent.initial_amount > 0 then
                                 res.initial_amount = ent.initial_amount
                             end
                         end

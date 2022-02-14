@@ -24,3 +24,24 @@ if mods["pypetroleumhandling"] then
     omni.fluid.add_mining_fluid("drilling-fluid-2")
     omni.fluid.add_mining_fluid("drilling-fluid-3")
 end
+
+if mods["omnimatter_compression"] then
+    omni.fluid.add_boiler_fluid("concentrated-steam")
+end
+
+if mods["angelspetrochem"] then
+    -- Add the fluid conversions to angels electric boilers
+    local boilers = {"angels-electric-boiler", "angels-electric-boiler-2", "angels-electric-boiler-3"}
+    for _, b in pairs(boilers) do
+        local boiler = data.raw["assembling-machine"][b]
+        local cats = {}
+        if boiler and boiler.crafting_category then
+            cats = {boiler.crafting_category}
+            boiler.crafting_category = nil
+        elseif boiler and boiler.crafting_categories then
+            cats = boiler.crafting_categories
+        end
+        cats[#cats+1] = "general-omni-boiler"
+        boiler.crafting_categories = cats
+    end
+end

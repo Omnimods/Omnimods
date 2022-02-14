@@ -264,7 +264,6 @@ local function omnidate(technology)
                 variant.level = technology.level
             end
             if not not tech_researched and variant.researched ~= tech_researched then
-                log("cocks")
                 variant.researched = tech_researched
             end
             -- We can stop here if we're on a compressed variant, the rest will happen since we triggered the unlock
@@ -284,11 +283,15 @@ local function omnidate(technology)
                 is_tier_unlock = true
             end
             local tech = force_techs[tier_tech]
+            local compressed_tech = force_techs["omnipressed-" .. tier_tech]
             if tech then
                 tiers_unlocked[tier_name] = tech.researched
                 -- Hide or show techs based on setting
                 tier_num = tier_num + 1
                 tech.enabled = tier_num <= settings.startup["omnicompression_building_levels"].value
+                if compressed_tech then
+                    compressed_tech.enabled = tech.enabled
+                end
             end
         end
         -- It's defined here since scope --_(v-v)_--

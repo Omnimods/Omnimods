@@ -333,18 +333,15 @@ for _, boiler in pairs(data.raw.boiler) do
 
     --if exists, find recipe, item and entity
     if not omni.fluid.forbidden_boilers[boiler.name] then --and boiler.minable then
-        local rec = omni.lib.find_recipe(boiler.minable and boiler.minable.result) or omni.lib.find_recipe(boiler.name)
-
         new_boiler[#new_boiler+1] = {
             type = "recipe-category",
             name = "boiler-omnifluid-"..boiler.name,
         }
 
-        --set-up result and main product values to be the new converter
-        omni.lib.replace_recipe_result(rec.name, boiler.name, boiler.name.."-converter")
-
         --Create  boiling recipe with the boilers target temp (only when input~= output. Some boilers are used to heat up fluids)
         if water ~= steam then
+            omni.fluid.add_boiler_fluid(steam)
+
             new_boiler[#new_boiler+1] = {
                 type = "recipe",
                 name = boiler.name.."-boiling-steam-"..boiler.target_temperature,
@@ -463,14 +460,11 @@ for _, boiler in pairs(data.raw.boiler) do
             end
         end
 
-        --The sluids boiler is an assembly type so we cannot just override the old ones..., so we make the assemly type replacement and hide the original, Be careful with things like angels electric boilers as they are assembly type too.
-        local new_item = table.deepcopy(data.raw.item[boiler.name])
-        new_item.name = boiler.name.."-converter"
+        --Create a new entity to not break stuff (from changing vanillas boiler type). Modify the existing items place result.
+        local new_item = data.raw.item[boiler.name]
         new_item.place_result = boiler.name.."-converter"
         new_item.localised_name = {"item-name.boiler-converter", omni.lib.locale.of(boiler).name}
-        new_boiler[#new_boiler+1] = new_item
 
-        boiler.minable.result = boiler.name.."-converter"
         --stop it from being analysed further (stop recursive updates)
         omni.fluid.forbidden_assembler[boiler.name.."-converter"] = true
 
@@ -495,7 +489,7 @@ for _, boiler in pairs(data.raw.boiler) do
         end
         new_ent.energy_usage = boiler.energy_consumption
         new_ent.ingredient_count = 4
-        new_ent.crafting_categories = {"boiler-omnifluid-"..boiler.name,"general-omni-boiler"}
+        new_ent.crafting_categories = {"boiler-omnifluid-"..boiler.name, "general-omni-boiler"}
         new_ent.fluid_boxes = {
             {
                 production_type = "output",
@@ -503,10 +497,10 @@ for _, boiler in pairs(data.raw.boiler) do
                 base_level = 1,
                 pipe_connections = {{type = "output", position = {0, -2}}}
             }
-        }--get_fluid_boxes(new.fluid_boxes or new.output_fluid_box)
+        }
         new_ent.fluid_box = nil --removes input box
         new_ent.mode = nil --invalid for assemblers
-        new_ent.minable.result = boiler.name.."-converter"
+        --new_ent.minable.result = boiler.name.."-converter"
         if new_ent.next_upgrade then
             new_ent.next_upgrade = new_ent.next_upgrade.."-converter"
         end
@@ -540,20 +534,17 @@ for _, boiler in pairs(data.raw.boiler) do
             end
         end
 
-        --hide and disable old boiler entity and item
-        local old_ent = data.raw.boiler[boiler.name]
-        local old_item = data.raw.item[boiler.name]
-        for _, old in pairs({old_ent, old_item}) do
-            old.enabled = false
-            if old.flags then
-                if not old.flags["hidden"] then
-                    table.insert(old.flags,"hidden")
-                end
-            else
-                old.flags = {"hidden"}
+        --hide and disable old boiler entity
+        local old = data.raw.boiler[boiler.name]
+        old.enabled = false
+        if old.flags then
+            if not old.flags["hidden"] then
+                table.insert(old.flags,"hidden")
             end
-            if old.next_upgrade then old.next_upgrade = nil end
+        else
+            old.flags = {"hidden"}
         end
+        if old.next_upgrade then old.next_upgrade = nil end
     end
 end
 
@@ -563,15 +554,6 @@ new_boiler[#new_boiler+1] = {
 }
 
 data:extend(new_boiler)
-
---replace the item as an ingredient
-for _,boiler in pairs(ing_replace) do
-    omni.lib.replace_all_ingredient(boiler, boiler.."-converter")
-end
---replace in tech unlock
-for _,boil in pairs(boiler_tech) do
-    omni.lib.replace_unlock_recipe(boil.tech_name, boil.old_name, boil.old_name.."-converter")
-end
 
 local function replace_barrels(recipe)
     for _, dif in pairs({"normal","expensive"}) do
@@ -621,7 +603,6 @@ for _, rec in pairs(data.raw.recipe) do
     end
 end
 
-
 -------------------------------------------
 -----Replace recipe ingres with sluids-----
 -------------------------------------------
@@ -656,7 +637,7 @@ for name, _ in pairs(recipe_mods) do
                         amount = omni.lib.round(omni.fluid.get_true_amount(ing)) / omni.fluid.sluid_contain_fluid
                     else
                         --Ignore probability on items, we dont want to mess with/change that. Very low probabilities would make it hard to find a decent gcd
-                        amount = (ing.amount or (ing.amount_min+ing.amount_max) / 2)
+                        amount = (ing.amount or (ing.amount_min+ing.amount_max) * (ing.probability or 1) / 2)
                     end
                     if amount == 0 then break end
                     if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
@@ -693,7 +674,7 @@ for name, _ in pairs(recipe_mods) do
                     else
                         --Ignore probability on items, we dont want to mess with/change that. Very low probabilities would make it hard to find a decent gcd
                         --amount = omni.lib.round((ing.amount or (ing.amount_min+ing.amount_max)/2)*mult[dif])
-                        amount = (ing.amount or (ing.amount_min+ing.amount_max)/2) * mult[dif]
+                        amount = (ing.amount or (ing.amount_min+ing.amount_max) * (ing.probability or 1) / 2) * mult[dif]
                     end
                     if amount == 0 then break end
                     if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
@@ -802,13 +783,13 @@ for name, _ in pairs(recipe_mods) do
                             new_ing.name = "solid-"..ing.name.."-T-"..ing.temperature
                         --Ingredient has to be in a specific temperature range, check if a solid between min and max exists
                         --May need to add a recipe for ALL temperatures that are in this range
-                        elseif ing.minimum_temperature or ing.maximum_temperature or ing.name == "steam" then
+                        elseif ing.minimum_temperature or ing.maximum_temperature or omni.fluid.boiler_fluids[ing.name] then
                             local found_temp = nil
                             local min_temp = ing.minimum_temperature or data.raw.fluid[ing.name].default_temperature
                             local max_temp = ing.maximum_temperature or data.raw.fluid[ing.name].max_temperature
                             --Temp min/max == fluid temp min/max -->use a non temp solid (min/max can exist solo)
                             --Steam sucks, dont replace fluid steam with a temperature less solid
-                            if ing.name ~= "steam" and (min_temp == data.raw.fluid[ing.name].default_temperature) then-- and max_temp == data.raw.fluid[ing.name].max_temperature) then
+                            if not omni.fluid.boiler_fluids[ing.name] and (min_temp == data.raw.fluid[ing.name].default_temperature) then-- and max_temp == data.raw.fluid[ing.name].max_temperature) then
                                 new_ing.name = "solid-"..ing.name
                             else
                                 for _,temp in pairs(fluid_cats[cat][ing.name].temperatures) do
@@ -818,7 +799,7 @@ for name, _ in pairs(recipe_mods) do
                                     end
                                 end
                                 --Steam sucks
-                                if ing.name == "steam" then
+                                if omni.fluid.boiler_fluids[ing.name] then
                                     --Get the lowest boiler temp producing steam
                                     local min_temp = math.huge
                                     for t, _ in pairs (boiling_steam) do
@@ -876,7 +857,7 @@ for name, _ in pairs(recipe_mods) do
                     --ingres is an item, apply mult
                     else
                         --Multiply amount with mult, keep probability in mind
-                        local new_amount = (ing.amount or (ing.amount_min+ing.amount_max)/2) * mult[dif]
+                        local new_amount = omni.lib.round((ing.amount or ((ing.amount_min+ing.amount_max) / 2)) * (ing.probability or 1)) * mult[dif]
                         ing.amount = math.min(new_amount, 65535)
                         if new_amount > 65535 then
                             log("WARNING: Ingredient "..ing.name.." from the recipe "..rec.name.." ran into the upper limit. Amount = "..new_amount.." Mult = "..mult[dif])

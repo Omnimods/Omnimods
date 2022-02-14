@@ -729,7 +729,7 @@ for _, values in pairs(recipe_results) do
                 if not build.fast_replaceable_group then
                     build.fast_replaceable_group = build.name
                 end
-                if not omni.lib.is_in_table("not-upgradable", build.flags) then
+                if not omni.lib.is_in_table("not-upgradable", build.flags or {}) and not omni.lib.is_in_table("hidden", item.flags or {}) then
                     if not new.next_upgrade and i < omni.compression.bld_lvls then
                         new.next_upgrade = build.name.."-compressed-"..string.lower(compress_level[i+1])                  
                     end
@@ -744,11 +744,7 @@ for _, values in pairs(recipe_results) do
                 item.localised_name = new.localised_name
                 item.name = new.name
                 item.place_result = new.name
-                if new.type == "transport-belt" or new.type == "loader" or new.type == "splitter" or new.type == "underground-belt" or new.type == "loader-1x1" then
-                    item.stack_size = 25
-                else
-                    item.stack_size = 5
-                end
+                item.stack_size = math.max(5, math.ceil(item.stack_size / multiplier))
                 item.icons = omni.lib.add_overlay(item,"building",i)
                 item.icon = nil
 

@@ -212,4 +212,19 @@ if #compressed_techs > 0 then --in case no tech is compressed
     data:extend(compressed_techs)
 end
 
+log("Migrating compressed tech prerequisites")
+-- Once we've added them to data, we'll fix the prereqs
+for _, template in pairs(compressed_techs) do
+    local tech = data.raw.technology[template.name]
+    --migrate prereqs to compressed versions
+    if tech.prerequisites then
+        for i, v in pairs(tech.prerequisites) do
+            local variant = "omnipressed-" .. v
+            if data.raw.technology[variant] then
+                tech.prerequisites[i] = variant
+            end
+        end
+    end
+end
+
 log("Technology compression finished: "..(#compressed_techs or 0).. " techs")

@@ -1,4 +1,17 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.18
+Date: 2022.02.14
+  Changes:
+    - Compressed technologies now form a "tree" with proper prerequisites for queueing
+    - Compressed items of buildings (tiered) now stack up to original stacksize / compression mult
+  Bugfixes:
+    - Fix void recipes with quantity > 0 but probability 0 not getting compressed variants
+---------------------------------------------------------------------------------------------------
+Version: 4.1.17
+Date: 2022.02.06
+  Bugfixes:
+    - Fixed a crash when trying to compress infinite ores with low yield
+---------------------------------------------------------------------------------------------------
 Version: 4.1.16
 Date: 2022.02.05
   Changes:
