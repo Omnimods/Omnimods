@@ -744,11 +744,7 @@ for _, values in pairs(recipe_results) do
                 item.localised_name = new.localised_name
                 item.name = new.name
                 item.place_result = new.name
-                if new.type == "transport-belt" or new.type == "loader" or new.type == "splitter" or new.type == "underground-belt" or new.type == "loader-1x1" then
-                    item.stack_size = 25
-                else
-                    item.stack_size = 5
-                end
+                item.stack_size = math.max(5, math.ceil(item.stack_size / multiplier))
                 item.icons = omni.lib.add_overlay(item,"building",i)
                 item.icon = nil
 
