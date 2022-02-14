@@ -3,6 +3,8 @@ Version: 4.1.18
 Date: 2022.02.XX
   Features:
     - Compressed technologies now form a "tree" with proper prerequisites for queueing
+  Bugfixes:
+    - Fix void recipes with quantity > 0 but probability 0 not getting compressed variants
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.17
 Date: 2022.02.06
