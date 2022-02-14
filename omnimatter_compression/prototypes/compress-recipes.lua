@@ -28,7 +28,7 @@ local function more_than_one(recipe)
         return false
     end
     -- Valid but we're returning nothing
-    if product.amount == 0 then
+    if product.amount == 0 or (product.probability or 1) == 0 then
         return false
     end
     product = omni.lib.locale.find(product.name, product.type, true)
