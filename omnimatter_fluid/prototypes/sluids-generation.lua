@@ -538,8 +538,20 @@ for _, boiler in pairs(data.raw.boiler) do
         local old = data.raw.boiler[boiler.name]
         old.enabled = false
         if old.flags then
-            if not old.flags["hidden"] then
-                table.insert(old.flags,"hidden")
+            local I = 1
+            local shouldhide = true
+            -- Iterate and remove "player-creation" from the now-hidden boiler, add "hidden" flag if it doesn't have it already
+            repeat
+                if old.flags[I] == "player-creation" then
+                    table.remove(old.flags, I)
+                    I = I - 1
+                elseif old.flags[I] == "hidden" then
+                    shouldhide = false
+                end
+                I = I + 1
+            until I > #old.flags
+            if shouldhide then
+                old.flags[#old.flags+1] = "hidden"
             end
         else
             old.flags = {"hidden"}
