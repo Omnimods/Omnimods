@@ -72,8 +72,8 @@ for _, recipe in pairs(check_recipes) do
         local new_rec = omni.compression.create_compression_recipe(new_recipe)
         --add in manipulation to return the form
         if new_rec then
-            local secondary = {}
             for _, difficulty in pairs({"normal","expensive"}) do
+                local secondary = {}
                 for _, result in pairs(new_rec[difficulty].results) do
                     local result_name = string.sub(result.name,12)
                     if result.type == "fluid" then
