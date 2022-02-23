@@ -1,4 +1,4 @@
-BuildGen:create("omnimatter","burner-omni-furnace"):
+local omnifurnace = BuildGen:create("omnimatter","burner-omni-furnace"):
     setBurner(1,1):
     noTech():
     setEnergy(5):
@@ -131,5 +131,6 @@ BuildGen:create("omnimatter","burner-omni-furnace"):
             }
         },
     }):
-    setReplace("furnace"):
-    extend()
+    setReplace("furnace")
+omnifurnace.energy_source.burnt_inventory_size = 1
+omnifurnace:extend()
