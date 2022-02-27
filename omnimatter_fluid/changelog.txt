@@ -1,8 +1,10 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.17
-Date: 2022.02.XX
+Date: 2022.02.27
   Changes:
     - Removed "player-creation" flag from hidden boilers so helmod and factory planner may exclude them
+  Bugfixes:
+    - Fixed a crash that could occur while loading saves with a pre-rewrite version of omnifluid
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.16
 Date: 2022.02.11

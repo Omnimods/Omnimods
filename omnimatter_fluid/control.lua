@@ -68,7 +68,7 @@ local function on_entity_removed(event)
     if entity and entity.valid then
         if entity.type == "assembling-machine" or entity.type == "offshore-pump" then
             local ori = entity.name:gsub("solshore%-", "")
-            --Casse offshore pmp destroyed
+            --Case offshore pmp destroyed
             if in_table(entity.name, global.offshore_pumps) then
                 remove_entities(entity.surface, {"solshore-"..entity.name}, entity.position, 0.5)
             --Case assembler destroyed
