@@ -466,9 +466,9 @@ local run_entity_updates = function(new, kind, i)
     end
     --lab vial slot update (may want to move this to recipe update since tools/items are done later...)
     if kind == "lab" then
-        for i,input in pairs(new.inputs) do
+        for i, input in pairs(new.inputs) do
             if data.raw.tool["compressed-"..input] then
-                new.inputs[i] = "compressed-"..input
+                new.inputs[#new.inputs+1] = "compressed-"..input
             end
         end
         if new.researching_speed then 

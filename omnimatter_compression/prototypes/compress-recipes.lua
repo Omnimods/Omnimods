@@ -406,7 +406,7 @@ end
 -------------------------------------------------------------------------------
 function omni.compression.create_compression_recipe(recipe)
     if not omni.lib.is_in_table(recipe.name, omni.compression.excluded_recipes) then --not excluded
-        if not string.find(recipe.name,"creative") and not is_void(recipe) then --not creative mod or void
+        if not string.find(recipe.name,"creative") then --not creative mod or void
             if (recipe.normal.results and #recipe.normal.results > 0) then --ingredients.normal.results and 1+
                 if (more_than_one(recipe) or omni.lib.is_in_table(recipe.name, omni.compression.include_recipes)) then
                     local comrec={} --set basis to zero
@@ -718,7 +718,6 @@ local function create_void(recipe)
     local prefix = "compressed-"
     local product = omni.lib.locale.get_main_product(recipe)
     local ingredient = omni.lib.locale.get_main_ingredient(recipe)
-    --local prob = 1
     if not omni.lib.is_in_table(recipe.name, omni.compression.excluded_recipes) then --not excluded
         if not more_than_one(recipe) then -- Verify products
             if ingredient then
