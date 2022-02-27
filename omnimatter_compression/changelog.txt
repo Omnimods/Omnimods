@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.19
-Date: 2022.02.XX
+Date: 2022.02.27
   Bugfixes:
     - Fix non-void recipes with "void" in the name not getting compressed
     - Fix that the probability of expensive recipes that had the same item more than once in their
