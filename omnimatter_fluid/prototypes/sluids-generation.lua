@@ -648,8 +648,7 @@ for name, _ in pairs(recipe_mods) do
                         --Round the fluid amount to get rid of weird base numbers, divide afterwards to not lose precision
                         amount = omni.lib.round(omni.fluid.get_true_amount(ing)) / omni.fluid.sluid_contain_fluid
                     else
-                        --Ignore probability on items, we dont want to mess with/change that. Very low probabilities would make it hard to find a decent gcd
-                        amount = (ing.amount or (ing.amount_min+ing.amount_max) * (ing.probability or 1) / 2)
+                        amount = omni.fluid.get_true_amount(ing)
                     end
                     if amount == 0 then break end
                     if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
@@ -684,9 +683,8 @@ for name, _ in pairs(recipe_mods) do
                     if ing.type == "fluid" and ing.amount and ing.amount ~= 0 then
                         amount = omni.lib.round(omni.fluid.get_true_amount(ing) * mult[dif]) / omni.fluid.sluid_contain_fluid
                     else
-                        --Ignore probability on items, we dont want to mess with/change that. Very low probabilities would make it hard to find a decent gcd
                         --amount = omni.lib.round((ing.amount or (ing.amount_min+ing.amount_max)/2)*mult[dif])
-                        amount = (ing.amount or (ing.amount_min+ing.amount_max) * (ing.probability or 1) / 2) * mult[dif]
+                        amount = omni.fluid.get_true_amount(ing) * mult[dif]
                     end
                     if amount == 0 then break end
                     if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
@@ -718,7 +716,7 @@ for name, _ in pairs(recipe_mods) do
                             amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing) / omni.fluid.sluid_contain_fluid)
                         else
                             --Ignore probability on items, we dont want to mess with/change that. Very low probabilities would make it hard to find a decent gcd
-                            amount = omni.fluid.round_fluid(ing.amount or (ing.amount_min+ing.amount_max)/2)
+                            amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing))
                         end
                         if amount == 0 then break end
                         if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
@@ -754,7 +752,7 @@ for name, _ in pairs(recipe_mods) do
                             --Use fluids round function after the ratio division to avoid decimals
                             amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing) / omni.fluid.sluid_contain_fluid) * mult[dif]
                         else
-                            amount = omni.fluid.round_fluid(ing.amount or ((ing.amount_min+ing.amount_max)/2)) * mult[dif]
+                            amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing)) * mult[dif]
                         end
                         if amount == 0 then break end
                         if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
@@ -869,8 +867,14 @@ for name, _ in pairs(recipe_mods) do
                     --ingres is an item, apply mult
                     else
                         --Multiply amount with mult, keep probability in mind
-                        local new_amount = omni.lib.round((ing.amount or ((ing.amount_min+ing.amount_max) / 2)) * (ing.probability or 1)) * mult[dif]
+                        local new_amount = omni.lib.round(omni.fluid.get_true_amount(ing) * mult[dif])
                         ing.amount = math.min(new_amount, 65535)
+                        
+                        --Nil probability related values since these are calculated into the amount now
+                        ing.amount_max = nil
+                        ing.amount_min = nil
+                        ing.probability = nil
+
                         if new_amount > 65535 then
                             log("WARNING: Ingredient "..ing.name.." from the recipe "..rec.name.." ran into the upper limit. Amount = "..new_amount.." Mult = "..mult[dif])
                         end
