@@ -713,10 +713,9 @@ for name, _ in pairs(recipe_mods) do
                         local amount = 0
                         if ing.type == "fluid" then
                             --Round the fluid amount to get rid of weird base numbers, divide afterwards to not lose precision
-                            amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing) / omni.fluid.sluid_contain_fluid)
+                            amount = omni.fluid.get_true_amount(ing) / omni.fluid.sluid_contain_fluid
                         else
-                            --Ignore probability on items, we dont want to mess with/change that. Very low probabilities would make it hard to find a decent gcd
-                            amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing))
+                            amount = omni.fluid.get_true_amount(ing)
                         end
                         if amount == 0 then break end
                         if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
@@ -729,12 +728,12 @@ for name, _ in pairs(recipe_mods) do
                                 lcm_mult = 1000
                                 lcm[dif] = lcm[dif] * lcm_mult
                                 amount = amount * lcm_mult
-                                amount = omni.lib.round(amount)
+                                amount = omni.fluid.round_fluid(amount)
                             else
-                                amount = omni.lib.round(amount * lcm_mult)
+                                amount = omni.fluid.round_fluid(amount * lcm_mult)
                             end
                         else
-                            amount = amount * lcm_mult
+                            amount = omni.fluid.round_fluid(amount * lcm_mult)
                         end
                         lcm[dif] = omni.lib.lcm(lcm[dif], amount or 1)
                     end
@@ -750,9 +749,9 @@ for name, _ in pairs(recipe_mods) do
                         local amount = 0
                         if ing.type == "fluid" then
                             --Use fluids round function after the ratio division to avoid decimals
-                            amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing) / omni.fluid.sluid_contain_fluid) * mult[dif]
+                            amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing) / omni.fluid.sluid_contain_fluid * mult[dif])
                         else
-                            amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing)) * mult[dif]
+                            amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing) * mult[dif])
                         end
                         if amount == 0 then break end
                         if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
@@ -868,6 +867,7 @@ for name, _ in pairs(recipe_mods) do
                     else
                         --Multiply amount with mult, keep probability in mind
                         local new_amount = omni.lib.round(omni.fluid.get_true_amount(ing) * mult[dif])
+
                         ing.amount = math.min(new_amount, 65535)
                         
                         --Nil probability related values since these are calculated into the amount now
@@ -966,7 +966,7 @@ for _, fu in pairs(data.raw["furnace"]) do
         for _, box in pairs(fu.fluid_boxes) do
             if type(box) == "table" and box.production_type and box.production_type == "input" and fu.source_inventory_size == 0 then
                 fu.source_inventory_size = 1
-            elseif type(box) == "table" and box.production_type and box.production_type == "ouput" and fu.result_inventory_size == 0 then
+            elseif type(box) == "table" and box.production_type and box.production_type == "output" and fu.result_inventory_size == 0 then
                 fu.result_inventory_size = 1
             end
         end

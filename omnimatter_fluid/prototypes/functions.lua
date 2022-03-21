@@ -106,7 +106,7 @@ end
 
 function omni.fluid.get_true_amount(subtable) --individual ingredient/result table
     local probability = subtable.probability or 1
-    local amount = subtable.amount or (subtable.amount_min + subtable.amount_max)/2 or 0
+    local amount = subtable.amount or (subtable.amount_min + subtable.amount_max)/2 or subtable.catalyst_count or 0
     return amount * probability
 end
 

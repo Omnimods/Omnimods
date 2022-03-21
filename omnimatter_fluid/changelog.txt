@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.19
+Date: 2022.03.21
+  Bugfixes:
+    - Fixed that results with a low and odd probability could end up with an amount of 0
+    - Fixed that the fluid output slot of furnaces was not replaced with a sluid one due to a typo
+---------------------------------------------------------------------------------------------------
 Version: 4.1.18
 Date: 2022.03.01
   Bugfixes:
