@@ -966,7 +966,7 @@ for _, fu in pairs(data.raw["furnace"]) do
         for _, box in pairs(fu.fluid_boxes) do
             if type(box) == "table" and box.production_type and box.production_type == "input" and fu.source_inventory_size == 0 then
                 fu.source_inventory_size = 1
-            elseif type(box) == "table" and box.production_type and box.production_type == "ouput" and fu.result_inventory_size == 0 then
+            elseif type(box) == "table" and box.production_type and box.production_type == "output" and fu.result_inventory_size == 0 then
                 fu.result_inventory_size = 1
             end
         end
