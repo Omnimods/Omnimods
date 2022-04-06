@@ -718,7 +718,7 @@ function ItemGen:addMask(...)
     return self
 end
 function ItemGen:addIconLevel(lvl)
-    self:addIcon({icon = "__omnilib__/graphics/icons/small/lvl"..lvl..".png",icon_size=32})
+    self:addIcon({icon = "__omnilib__/graphics/icons/small/lvl"..lvl..".png",icon_size=64,scale=0.5})
     return self
 end
 function ItemGen:setName(lvl,mod)
