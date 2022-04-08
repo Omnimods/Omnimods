@@ -76,6 +76,10 @@ if mods["Yuoki"] then
 	omni.matter.add_resource("y-res1", 2)
 	omni.matter.add_resource("y-res2", 3)
 end
+if mods["baketorio"] then
+	omni.matter.add_resource("salt", 1)
+	omni.matter.add_resource("trona", 2, {name = data.raw.resource["trona"].minable.required_fluid, amount = data.raw.resource["trona"].minable.fluid_amount})
+end
 if mods["pycoalprocessing"] then
 	-- Red
 	omni.matter.add_resource("raw-borax", 1, {name = data.raw.resource["borax"].minable.required_fluid, amount = data.raw.resource["borax"].minable.fluid_amount})

@@ -14,6 +14,13 @@ if mods["Yuoki"] then
 	omni.crystal.add_crystal("y-res1","Durotal")
 	omni.crystal.add_crystal("y-res2","Nuatreel")
 end
+
+if mods["baketorio"] then
+	omni.lib.ore_tints["trona"] = {r = 0.627, g = 0.455, b = 0.388}
+	omni.crystal.add_crystal("salt","Salt")
+	omni.crystal.add_crystal("trona","Trona")
+end
+
 if mods["Krastorio2"] then
 	omni.crystal.add_crystal("raw-imersite","Imersite")
 	omni.crystal.add_crystal("raw-rare-metals","Rare metals")
@@ -109,7 +116,6 @@ if not mods["angelsrefining"] then
 			rec.icon=nil
 			rec.icon_size=nil
 			rec.icons = omni.lib.icon.of(data.raw.item["crystal-powder-"..metal])
-			rec.localised_name = {"recipe-name.crystal-powder", {metal}}
 			rec.localised_name = {"recipe-name.crystal-powder", {"item-name." .. metal}}
 		end
 	end
