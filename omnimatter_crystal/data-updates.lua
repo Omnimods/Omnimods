@@ -110,6 +110,7 @@ if not mods["angelsrefining"] then
 			rec.icon_size=nil
 			rec.icons = omni.lib.icon.of(data.raw.item["crystal-powder-"..metal])
 			rec.localised_name = {"recipe-name.crystal-powder", {metal}}
+			rec.localised_name = {"recipe-name.crystal-powder", {"item-name." .. metal}}
 		end
 	end
 
