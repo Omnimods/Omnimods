@@ -67,6 +67,7 @@ if not mods["angelsrefining"] then
 			local ore = rec.normal.results[1].name
 			added_ores[#added_ores+1] = ore
 			local metal = string.gsub(ore,"-ore","")
+			local metal_formatted = metal:sub(1,1):upper() .. metal:sub(2)
 
 			local tier = 1
 			for i,t in pairs(omni.matter.omnisource) do
@@ -102,7 +103,7 @@ if not mods["angelsrefining"] then
 			--Create crystal powder item if it doesnt exist yet
 			if not data.raw.item["crystal-powder-"..metal] then
 				ItemGen:create("omnimatter_crystal", "crystal-powder-"..metal):
-					setLocName({"item-name.crystal-powder", {metal}}):
+					setLocName({"item-name.crystal-powder", metal_formatted}):
 					setIcons({{
 						icon = "__omnimatter_crystal__/graphics/icons/crystal-powder.png",
 						icon_size = 32,
@@ -116,7 +117,7 @@ if not mods["angelsrefining"] then
 			rec.icon=nil
 			rec.icon_size=nil
 			rec.icons = omni.lib.icon.of(data.raw.item["crystal-powder-"..metal])
-			rec.localised_name = {"recipe-name.crystal-powder", {"item-name." .. metal}}
+			rec.localised_name = {"recipe-name.crystal-powder", metal_formatted}
 		end
 	end
 
