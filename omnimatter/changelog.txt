@@ -3,6 +3,8 @@ Version: 4.1.27
 Date: 2022.04.XX
   Changes:
     - Baketorio support (Thanks, Jemsterr!)
+    - Added a seperate recipe to recycle omnic watse into omnic water (unlocked by default)
+    - Increased the required waste for recycling omnic water from 360 to 420
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.26
 Date: 2022.02.27
