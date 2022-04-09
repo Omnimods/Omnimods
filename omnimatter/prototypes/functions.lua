@@ -13,8 +13,8 @@ omni.matter.res_to_keep = {
 --Open for modders to use to add compatibility
 
 function omni.matter.add_resource(r_name, tier, fluid_to_mine)
-    if not tier then
-        error("Second argument in omni.matter.add_resource cannot be nil")
+    if not tonumber(tier) then
+        error("omni.matter.add_resource(): Invalid tier specified for "..r_name)
     end
     if not omni.matter.omnisource[tostring(tier)] then omni.matter.omnisource[tostring(tier)] = {} end
     omni.matter.omnisource[tostring(tier)][r_name] = {tier = tier, name = r_name}
@@ -24,6 +24,9 @@ function omni.matter.add_resource(r_name, tier, fluid_to_mine)
 end
 
 function omni.matter.add_fluid(f_name , tier, ratio)
+    if not tonumber(tier) then
+        error("omni.matter.add_fluid(): Invalid tier specified for "..f_name)
+    end
     if not omni.matter.omnifluid[tostring(tier)] then omni.matter.omnifluid[tostring(tier)] = {} end
     omni.matter.omnifluid[tostring(tier)][f_name] = {tier = tier, ratio=ratio, name = f_name}
 end
@@ -60,6 +63,9 @@ function omni.matter.get_ore_tier(r_name)
 end
 
 function omni.matter.set_ore_tier(r_name, tier)
+    if not tonumber(tier) then
+        error("omni.matter.set_ore_tier(): Invalid tier specified for "..r_name)
+    end
     local t = omni.matter.get_ore_tier(r_name)
     if t then
         local res = table.deepcopy(omni.matter.omnisource[tostring(t)][r_name])
@@ -73,7 +79,7 @@ function omni.matter.set_ore_tier(r_name, tier)
 end
 
 --Add initial extraction ores
-function omni.matter.add_initial(ore_name, ore_amount,omnite_amount, fluid_to_mine)
+function omni.matter.add_initial(ore_name, ore_amount, omnite_amount, fluid_to_mine)
     omni.matter.omnitial[ore_name] = {
         ingredients ={{name = "omnite", amount = omnite_amount}},
         results = {{name = ore_name, amount = ore_amount}, {name = "stone-crushed", amount = (omnite_amount-ore_amount) or 6}}
