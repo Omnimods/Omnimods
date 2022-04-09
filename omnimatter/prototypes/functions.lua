@@ -13,6 +13,9 @@ omni.matter.res_to_keep = {
 --Open for modders to use to add compatibility
 
 function omni.matter.add_resource(r_name, tier, fluid_to_mine)
+    if not tier then
+        error("Second argument in omni.matter.add_resource cannot be nil")
+    end
     if not omni.matter.omnisource[tostring(tier)] then omni.matter.omnisource[tostring(tier)] = {} end
     omni.matter.omnisource[tostring(tier)][r_name] = {tier = tier, name = r_name}
     if fluid_to_mine and fluid_to_mine.name and settings.startup["omnimatter-fluid-processing"].value then

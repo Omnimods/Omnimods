@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.27
 Date: 2022.04.XX
+  Bugfixes:
+    - Fixed load-time error with mods that provided an invalid ore tier
   Changes:
     - Baketorio support (Thanks, Jemsterr!)
     - Added a seperate recipe to recycle omnic watse into omnic water (unlocked by default)
