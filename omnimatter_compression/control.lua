@@ -319,3 +319,35 @@ commands.add_command(
         game.print("Technology resync complete.")
     end
 )
+
+-- Disco science ╰(*°▽°*)╯
+local function init_discoscience()
+    if 
+        not remote.interfaces.DiscoScience 
+        or not remote.interfaces.DiscoScience.setIngredientColor 
+        or not remote.interfaces.DiscoScience.getIngredientColor
+    then
+        log("DiscoScience not found, skipping compat")
+        return
+    end
+    local sciencePackPrototypes = game.get_filtered_item_prototypes({{
+        filter = "type",
+        type = "tool"
+    }})
+    for name, proto in pairs(sciencePackPrototypes) do
+        if not name:find("^compressed%-") then goto continue end
+
+        local uncompressed_pack = sciencePackPrototypes[name:gsub("^compressed%-","")]
+        if not uncompressed_pack then goto continue end
+
+        local original_color = remote.call("DiscoScience", "getIngredientColor", uncompressed_pack.name)
+        if not original_color then goto continue end
+
+        log("Registering DiscoScience color for " .. name)
+        remote.call("DiscoScience", "setIngredientColor", name, original_color)
+
+        ::continue::
+    end
+end
+script.on_init(init_discoscience)
+script.on_configuration_changed(init_discoscience)
