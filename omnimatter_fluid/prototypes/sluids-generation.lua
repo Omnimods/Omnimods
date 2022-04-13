@@ -618,6 +618,8 @@ for _, rec in pairs(data.raw.recipe) do
     end
 end
 
+local max_mult = 0
+
 -------------------------------------------
 -----Replace recipe ingres with sluids-----
 -------------------------------------------
@@ -744,7 +746,8 @@ for name, _ in pairs(recipe_mods) do
                 --divide by the lcm mult again to get the "true" lcm
                 lcm[dif] = lcm[dif] / lcm_mult
                 --Get the recipe multiplier which is lcm/lowest amount found in this recipe to not lose precision
-                mult[dif] = lcm[dif]/min_amount
+                mult[dif] = lcm[dif] / min_amount
+
 
                 --Recalculate GCD
                 for _, ingres in pairs({"ingredients","results"}) do
@@ -769,6 +772,7 @@ for name, _ in pairs(recipe_mods) do
                 --The final recipe multiplier is our old mult/the calculated gcd
                 mult[dif] = mult[dif] / gcd[dif]
             end
+            max_mult = math.max(mult[dif], max_mult)
         end
 
         --Now Replace fluids with sluids and apply the mult too all ingres and crafting time
@@ -876,7 +880,7 @@ for name, _ in pairs(recipe_mods) do
                         local new_amount = omni.lib.round(omni.fluid.get_true_amount(ing) * mult[dif])
 
                         ing.amount = math.min(new_amount, 65535)
-                        
+
                         --Nil probability related values since these are calculated into the amount now
                         ing.amount_max = nil
                         ing.amount_min = nil
@@ -915,6 +919,7 @@ for name, _ in pairs(recipe_mods) do
         log("recipe not found:".. name)
     end
 end
+log("Highest sluid recipe multiplier: "..max_mult)
 
 --Copy the sluid void recipe for all temperature sluids that have been generated
 local voids = {}
