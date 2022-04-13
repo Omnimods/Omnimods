@@ -349,7 +349,7 @@ for _, boiler in pairs(data.raw.boiler) do
                 subgroup = "boiler-sluid-steam",
                 category = "boiler-omnifluid-"..boiler.name,
                 order = "g[hydromnic-acid]",
-                energy_required = omni.fluid.sluid_contain_fluid/boiler_consumption,
+                energy_required = math.max(omni.fluid.sluid_contain_fluid/boiler_consumption, 0.0011),
                 enabled = true,
                 hide_from_player_crafting = true,
                 main_product = steam,
@@ -378,7 +378,7 @@ for _, boiler in pairs(data.raw.boiler) do
                 subgroup = "boiler-sluid-steam",
                 category = "boiler-omnifluid-"..boiler.name,
                 order = "g[hydromnic-acid]",
-                energy_required = omni.fluid.sluid_contain_fluid/boiler_consumption,
+                energy_required = math.max(omni.fluid.sluid_contain_fluid/boiler_consumption, 0.0011),
                 enabled = true,
                 hide_from_player_crafting = true,
                 main_product = "solid-"..steam.."-T-"..tempstring,
@@ -405,7 +405,7 @@ for _, boiler in pairs(data.raw.boiler) do
                             subgroup = "boiler-sluid-converter",
                             category = "boiler-omnifluid-"..boiler.name,
                             order = "g[hydromnic-acid]",
-                            energy_required = omni.fluid.sluid_contain_fluid/boiler_consumption,
+                            energy_required = math.max(omni.fluid.sluid_contain_fluid/boiler_consumption, 0.0011),
                             enabled = true,
                             hide_from_player_crafting = true,
                             main_product = steam,
@@ -433,7 +433,7 @@ for _, boiler in pairs(data.raw.boiler) do
                             subgroup = "boiler-sluid-converter",
                             category = "boiler-omnifluid-"..boiler.name,
                             order = "g[hydromnic-acid]",
-                            energy_required = omni.fluid.sluid_contain_fluid / boiler_consumption,
+                            energy_required = math.max(omni.fluid.sluid_contain_fluid / boiler_consumption, 0.0011),
                             enabled = true,
                             hide_from_player_crafting = true,
                             main_product = fugacity.name,
@@ -452,7 +452,7 @@ for _, boiler in pairs(data.raw.boiler) do
                         subgroup = "boiler-sluid-converter",
                         category = "general-omni-boiler",
                         order = "g[hydromnic-acid]",
-                        energy_required = omni.fluid.sluid_contain_fluid/boiler_consumption,
+                        energy_required = math.max(omni.fluid.sluid_contain_fluid/boiler_consumption, 0.0011),
                         enabled = true,--may change this to be linked to the boiler unlock if applicable
                         hide_from_player_crafting = true,
                         main_product = fugacity.name,
@@ -898,7 +898,7 @@ for name, _ in pairs(recipe_mods) do
                 end
             end
             --crafting time adjustment
-            rec[dif].energy_required = math.min(rec[dif].energy_required*mult[dif], 0.001)
+            rec[dif].energy_required = math.max(rec[dif].energy_required*mult[dif], 0.0011)
             --Apply stack size fixes
             if fix_stacksize then
                 local add = {}
