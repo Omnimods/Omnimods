@@ -171,7 +171,7 @@ local create_concentrated_recipe = function(fluid, tier, temp)
         local compress_fluid_data = {{name = "concentrated-"..base_fluid, type = "fluid", amount = multiplier^(tier+1), temperature=temp}}
         local grade_fluid_data = {{name = fluid.."-concentrated-grade-"..tier, type = "fluid", amount = omni.compression.sluid_contain_fluid*multiplier, temperature=temp}}
         local grade_recipe_data = {
-            energy_required = multiplier^(tier+1)/60,
+            energy_required = math.max(0.0011, multiplier^(tier+1)/60),
             enabled = true,
             hide_from_player_crafting = true
         }

@@ -571,14 +571,14 @@ function omni.compression.create_compression_recipe(recipe)
                                 normal = {
                                     ingredients = new_val_norm.ingredients,
                                     results = new_val_norm.results,
-                                    energy_required = tid.normal,
+                                    energy_required = math.max(0.0011, tid.normal),
                                     subgroup = subgr.normal,
                                     hide_from_player_crafting = recipe.normal.hide_from_player_crafting or omni.compression.hide_handcraft
                                 },
                                 expensive = {
                                     ingredients = new_val_exp.ingredients,
                                     results = new_val_exp.results,
-                                    energy_required = tid.expensive,
+                                    energy_required = math.max(0.0011, tid.expensive),
                                     subgroup = subgr.expensive,
                                     hide_from_player_crafting = recipe.expensive.hide_from_player_crafting or omni.compression.hide_handcraft
                                 },
@@ -595,7 +595,7 @@ function omni.compression.create_compression_recipe(recipe)
                                             for _,ing in pairs(r[dif].ingredients) do
                                                 ing.amount = math.ceil(ing.amount/r[dif].results[1].amount)
                                             end
-                                            r[dif].energy_required = r[dif].energy_required/r[dif].results[1].amount
+                                            r[dif].energy_required = math.max(0.0011, r[dif].energy_required/r[dif].results[1].amount)
                                             r[dif].results[1].amount=1
                                         end
                                     end
