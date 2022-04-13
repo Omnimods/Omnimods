@@ -90,12 +90,13 @@ end
 --find lowest level in tiered techs that gets compressed to ensure chains are all compressed passed the first one
 for _,tech in pairs(data.raw.technology) do --run always
     local name, lvl = splitTech(tech.name)
+    local unit = tech.unit or tech.normal.unit
     if lvl == "" or lvl == nil then --tweak to allow techs that start with no number
         lvl = 1
         name = tech.name
     end
     --protect against pack removal
-    if containsOne(tech.unit and tech.unit.ingredients, alwaysSP) then
+    if containsOne(unit and unit.ingredients, alwaysSP) then
         if not tiered_tech[name] then
             tiered_tech[name] = tonumber(lvl)
         elseif tiered_tech[name] > tonumber(lvl) then --in case techs are added out of order, always add the lowest
@@ -103,7 +104,7 @@ for _,tech in pairs(data.raw.technology) do --run always
         end
     end
     --protect against cost drops
-    if tech.unit and ((tech.unit.count and type(tech.unit.count)=="number" and tech.unit.count > min_compress)) then
+    if tech.unit and ((unit.count and type(unit.count)=="number" and unit.count > min_compress)) then
         if not tiered_tech[name] then
             tiered_tech[name] = tonumber(lvl)
         elseif tiered_tech[name] > tonumber(lvl) then --in case techs are added out of order, always add the lowest
