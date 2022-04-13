@@ -705,7 +705,7 @@ for name, _ in pairs(recipe_mods) do
             mult[dif] = mult[dif] / gcd[dif]
 
             --Multiplier for this recipe is too huge. Lets do the math lcm/gcd math again with slightly less precision (use rounding)
-            if mult[dif]*max_amount > 20000  or (mult[dif] > 100 and mult[dif]*max_amount > 10000) then
+            if mult[dif]*max_amount > 10000  or (mult[dif] > 50 and mult[dif]*max_amount > 1000) then
                 --reset all values
                 mult[dif] = 1
                 lcm[dif] = 1
@@ -718,9 +718,9 @@ for name, _ in pairs(recipe_mods) do
                         local amount = 0
                         if ing.type == "fluid" then
                             --Round the fluid amount to get rid of weird base numbers, divide afterwards to not lose precision
-                            amount = omni.fluid.get_true_amount(ing) / omni.fluid.sluid_contain_fluid
+                            amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing) / omni.fluid.sluid_contain_fluid)
                         else
-                            amount = omni.fluid.get_true_amount(ing)
+                            amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing))
                         end
                         if amount == 0 then break end
                         if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
@@ -728,18 +728,7 @@ for name, _ in pairs(recipe_mods) do
                         --Since our lcm function is not working with floats, multiply by 1000 if we find floats to keep precision for low fluid amounts (we just divided by sluid fluid ratio)
                         min_amount = math.min(min_amount, amount)
                         max_amount = math.max(max_amount, amount)
-                        if (amount*lcm_mult) % 1 > 0 and lcm_mult < 1000 then
-                            if lcm_mult < 1000 then
-                                lcm_mult = 1000
-                                lcm[dif] = lcm[dif] * lcm_mult
-                                amount = amount * lcm_mult
-                                amount = omni.fluid.round_fluid(amount)
-                            else
-                                amount = omni.fluid.round_fluid(amount * lcm_mult)
-                            end
-                        else
-                            amount = omni.fluid.round_fluid(amount * lcm_mult)
-                        end
+
                         lcm[dif] = omni.lib.lcm(lcm[dif], amount or 1)
                     end
                 end
@@ -755,9 +744,9 @@ for name, _ in pairs(recipe_mods) do
                         local amount = 0
                         if ing.type == "fluid" then
                             --Use fluids round function after the ratio division to avoid decimals
-                            amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing) / omni.fluid.sluid_contain_fluid * mult[dif])
+                            amount = omni.fluid.round_fluid(omni.fluid.round_fluid(omni.fluid.get_true_amount(ing)) / omni.fluid.sluid_contain_fluid) * mult[dif]
                         else
-                            amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing) * mult[dif])
+                            amount = omni.fluid.round_fluid(omni.fluid.get_true_amount(ing)) * mult[dif]
                         end
                         if amount == 0 then break end
                         if not amount then log("Could not get the amount of the following table:") log(serpent.block(ing)) end
@@ -898,7 +887,7 @@ for name, _ in pairs(recipe_mods) do
                 end
             end
             --crafting time adjustment
-            rec[dif].energy_required = math.max(rec[dif].energy_required*mult[dif], 0.0011)
+            rec[dif].energy_required = math.min(rec[dif].energy_required*mult[dif], 0.001)
             --Apply stack size fixes
             if fix_stacksize then
                 local add = {}

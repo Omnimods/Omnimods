@@ -69,16 +69,18 @@ end
 
 function omni.fluid.SetRoundFluidValues()
     local top_value = 500000
+    local step = omni.fluid.sluid_contain_fluid
     local roundFluidValues = {}
-    local b,c,d = math.log(5),math.log(3),math.log(2)
-    for i=0,math.floor(math.log(top_value)/b) do
-        local pow5 = math.pow(5,i)
-        for j=0,math.floor(math.log(top_value/pow5)/c) do
-            local pow3=math.pow(3,j)
-            for k=0,math.floor(math.log(top_value/pow5/pow3)/d) do
-                roundFluidValues[#roundFluidValues+1] = pow5*pow3*math.pow(2,k)
-            end
+    local current = 0
+    while current < top_value do
+        if current <= 100 then
+            current = current + (step/10)
+        elseif current <= 1000 then
+            current = current + (step/5)
+        else
+            current = current + step
         end
+        roundFluidValues[#roundFluidValues+1] = current
     end
     table.sort(roundFluidValues)
     return(roundFluidValues)
