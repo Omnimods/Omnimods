@@ -20,7 +20,7 @@ local build_tech_list = function()
       goto continue 
     end
     -- if alien science (gold pack)
-    for _,ing in pairs(tech.unit.ingredients) do
+    for _,ing in pairs((tech.unit or tech.normal.unit).ingredients) do
       for _,sub_ing in pairs(ing) do
         if string.find(sub_ing, "science%-pack%-gold") then 
           omni.science.exclude_tech[tech.name]=true
@@ -194,29 +194,30 @@ function omni.science.tech_updates()
   run_lab_comp_check() --ensure this is done at the right time
   -- separate techs for processing and set tech time
   for _,tech in pairs(data.raw.technology) do
+    local unit = tech.unit or tech.normal.unit
     --roll through each tech
     if Set.StdTime and omni.lib.start_with(tech.name,"omnipressed-") then --compression tech time standardise?
       --standardised research time
-			tech.unit.time = Set.StdTimeConst
+		  unit.time = Set.StdTimeConst
     end
     --if contains packs as ingredients
-    if tech.unit.count then
+    if unit.count then
       if not omni.lib.start_with(tech.name,"omnitech") or --non omnitechs
       (Set.ModOmCost and omni.lib.start_with(tech.name,"omnitech")) and
       (#omni.science.exclude_tech_from_maths >=1) and not omni.science.exclude_tech_from_maths(tech.name) then --omnitech with start-up setting
         --check compliance before adding to table
-        if data.raw.technology[tech.name] and data.raw.technology[tech.name].unit.count then
-          if not data.raw.technology[tech.name].prerequisites or #data.raw.technology[tech.name].prerequisites == 0 or not hasLabIngredients(data.raw.technology[tech.name]) then
+        if unit.count then
+          if not tech.prerequisites or #tech.prerequisites == 0 or not hasLabIngredients(tech) then
             --non-compliant, set height to 1
             tech_list.name[#tech_list.name+1] = tech.name
-            tech_list.cost[#tech_list.cost+1] = data.raw.technology[tech.name].unit.count --just incase does not have count
+            tech_list.cost[#tech_list.cost+1] = unit.count --just incase does not have count
             tech_list.height[#tech_list.height+1] = 1
           else
             check_techs[#check_techs+1] = tech.name
           end
         else
           log("all the wrong: " ..tech.name)
-          log(serpent.block(data.raw.technology[tech]))
+          log(serpent.block(tech))
         end
       elseif omni.lib.start_with(tech.name,"omnitech") and not Set.ModOmCost then
         --set height to 0 (so multiplier is 1)
@@ -306,10 +307,11 @@ function omni.science.tech_updates()
 
 	if Set.ModAllCost then
     for i,tech in pairs(tech_list.name) do
+      local raw_tech = data.raw.technology[tech]
       if Set.Cumul then
-				data.raw.technology[tech].unit.count = math.ceil(tech_list.cost[i])
+				(raw_tech.unit or raw_tech.normal.unit).count = math.ceil(tech_list.cost[i])
       elseif Set.Expon then
-        data.raw.technology[tech].unit.count = math.ceil(Set.ExponInit*math.pow(Set.ExponBase,tech_list.height[i]))
+        (raw_tech.unit or raw_tech.normal.unit).count = math.ceil(Set.ExponInit*math.pow(Set.ExponBase,tech_list.height[i]))
       else --no maths changing mode
         log("why bother with this mod if you don't want cumulative or exponential tech costs?")
 			end
