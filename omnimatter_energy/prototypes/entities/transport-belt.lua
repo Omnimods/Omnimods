@@ -92,7 +92,7 @@ if not data.raw["transport-belt"]["basic-transport-belt"] then
     esplitter.structure.south.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/basic-splitter-south.png"
     esplitter.structure.south.width = 82
     esplitter.structure.south.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/hr-basic-splitter-south.png"
-    esplitter.structure.south.hr_version.width = 160
+    esplitter.structure.south.hr_version.width = 164
     esplitter.structure.west.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/basic-splitter-west.png"
     esplitter.structure.west.width = 46
     esplitter.structure.west.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/hr-basic-splitter-west.png"
