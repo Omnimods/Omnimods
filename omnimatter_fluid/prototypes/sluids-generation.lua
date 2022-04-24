@@ -887,7 +887,7 @@ for name, _ in pairs(recipe_mods) do
                 end
             end
             --crafting time adjustment
-            rec[dif].energy_required = math.min(rec[dif].energy_required*mult[dif], 0.001)
+            rec[dif].energy_required = math.max(rec[dif].energy_required*mult[dif], 0.0011)
             --Apply stack size fixes
             if fix_stacksize then
                 local add = {}
