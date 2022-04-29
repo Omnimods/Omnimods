@@ -713,7 +713,7 @@ function ItemGen:addMask(...)
     self:addIcon({
         icon = string.sub(icons[#icons].icon,1,-5).."-mask.png",
         tint=table.deepcopy(arg),
-        icon_size = icons[#icons].icon.icon_size or 32
+        icon_size = icons[#icons].icon_size or 32
     })
     return self
 end
