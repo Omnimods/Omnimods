@@ -232,7 +232,7 @@ function omni.matter.add_omniwater_extraction(mod, element, lvls, tier, gain, st
             setIngredients({type="fluid",name="omnic-water",amount=720}):
             setResults({
                 {type = "fluid", name = element, amount = gain*0.5},
-                {type = "fluid", name = "omnic-waste", amount = gain*1.3}}):
+                {type = "fluid", name = "omnic-waste", amount = gain*1.5}}):
             setSubgroup("omni-fluid-basic"):
             setOrder("b[basic-"..element.."-omnitraction]"):
             setCategory("omnite-extraction-both"):
