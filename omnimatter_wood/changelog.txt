@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.8
-Date: 2022.04.xx
+Date: 2022.05.01
   Bugfixes:
     - Fixed that all minable results from tree type entities were replaced with omniwood instead
       of just wood
