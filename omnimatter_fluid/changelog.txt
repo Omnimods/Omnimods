@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.21
+Date: 2022.05.01
+  Bugfixes:
+    - Fixed recipe amounts for low probabilities once again
+    - Apply the recipe multiplier to catalyst_amount as well
+---------------------------------------------------------------------------------------------------
 Version: 4.1.20
 Date: 2022.05.01
   Bugfixes:

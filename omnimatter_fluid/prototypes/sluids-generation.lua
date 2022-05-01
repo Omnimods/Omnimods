@@ -671,7 +671,7 @@ for name, _ in pairs(recipe_mods) do
                             amount = omni.lib.round(amount * lcm_mult)
                         end
                     else
-                        amount = amount * lcm_mult
+                        amount = omni.lib.round(amount * lcm_mult)
                     end
                     lcm[dif] = omni.lib.lcm(lcm[dif], amount or 1)
                 end
@@ -679,7 +679,7 @@ for name, _ in pairs(recipe_mods) do
             --divide by the lcm mult again to get the "true" lcm
             lcm[dif] = lcm[dif] / lcm_mult
             --Get the recipe multiplier which is lcm/lowest amount found in this recipe to not lose precision
-            mult[dif] = lcm[dif]/min_amount
+            mult[dif] = lcm[dif] / min_amount
 
             --Second loop: Find GCD of all ingres multiplied with the LCM multiplier we just calculated (with sluid_contain_fluid applied for fluids)
             for _, ingres in pairs({"ingredients","results"}) do
@@ -865,10 +865,15 @@ for name, _ in pairs(recipe_mods) do
                         rec[dif][ingres][n] = new_ing
                     --ingres is an item, apply mult
                     else
+
                         --Multiply amount with mult, keep probability in mind
                         local new_amount = omni.lib.round(omni.fluid.get_true_amount(ing) * mult[dif])
-
                         ing.amount = math.min(new_amount, 65535)
+
+                        --Apply the mult on the catalyst amount aswell
+                        if ing.catalyst_amount then
+                            ing.catalyst_amount = omni.lib.round(ing.catalyst_amount * mult[dif])
+                        end
 
                         --Nil probability related values since these are calculated into the amount now
                         ing.amount_max = nil
