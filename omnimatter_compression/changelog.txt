@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.20
+Date: 2022.05.01
+  Features:
+    - DiscoScience support for compressed science packs
+  Bugfixes:
+    - Fix failure to load with techs that use .normal/.expensive
+    - Fix failure to load with some energy_required values being too low
+---------------------------------------------------------------------------------------------------
 Version: 4.1.19
 Date: 2022.02.27
   Bugfixes:

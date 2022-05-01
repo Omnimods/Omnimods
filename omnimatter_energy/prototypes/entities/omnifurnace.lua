@@ -1,6 +1,6 @@
 BuildGen:import("burner-omni-furnace"):
     setLocName("entity-name.omni-furnace-1"):
-    addIcon("__omnilib__/graphics/icons/small/lvl1.png"):
+    addIconLevel(1):
     setOrder("a[omni-furnace-1]"):
     setFuelCategories("omnite"):
     setNextUpgrade("omni-furnace-2"):
@@ -9,19 +9,19 @@ BuildGen:import("burner-omni-furnace"):
 
 RecGen:import("burner-omni-furnace"):
     setLocName("entity-name.omni-furnace-1"):
-    addIcon("__omnilib__/graphics/icons/small/lvl1.png"):
+    addIconLevel(1):
     setOrder("a[omni-furnace-1]"):
     extend()
 
 ItemGen:import("burner-omni-furnace"):
     setLocName("entity-name.omni-furnace-1"):
-    addIcon("__omnilib__/graphics/icons/small/lvl1.png"):
+    addIconLevel(1):
     setOrder("a[omni-furnace-1]"):
     extend()
 
 BuildGen:import("burner-omni-furnace"):
     setName("omni-furnace-2","omnimatter_energy"):
-    addIcon("__omnilib__/graphics/icons/small/lvl2.png"):
+    addIconLevel(2):
     setSpeed(2.0):
     setEmissions(4.0):
     setOrder("a[omni-furnace-2]"):
@@ -35,9 +35,8 @@ BuildGen:import("burner-omni-furnace"):
 BuildGen:import("electric-furnace"):
     setName("omni-furnace-3","omnimatter_energy"):
     setAssembler():
-    setIcons({
-        {icon = "__omnimatter_energy__/graphics/icons/electric-omni-furnace.png", icon_size = 64},
-        {icon = "__omnilib__/graphics/icons/small/lvl3.png", icon_size = 32}}):
+    setIcons({{icon = "__omnimatter_energy__/graphics/icons/electric-omni-furnace.png", icon_size = 64}}):
+    addIconLevel(3):
     setSpeed(3.0):
     setUsage(160):
     setEmissions(1.0):

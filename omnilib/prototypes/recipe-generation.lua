@@ -713,12 +713,12 @@ function ItemGen:addMask(...)
     self:addIcon({
         icon = string.sub(icons[#icons].icon,1,-5).."-mask.png",
         tint=table.deepcopy(arg),
-        icon_size = icons[#icons].icon.icon_size or 32
+        icon_size = icons[#icons].icon_size or 32
     })
     return self
 end
 function ItemGen:addIconLevel(lvl)
-    self:addIcon({icon = "__omnilib__/graphics/icons/small/lvl"..lvl..".png",icon_size=32})
+    self:addIcon({icon = "__omnilib__/graphics/icons/small/lvl"..lvl..".png",icon_size=64,scale=0.5})
     return self
 end
 function ItemGen:setName(lvl,mod)

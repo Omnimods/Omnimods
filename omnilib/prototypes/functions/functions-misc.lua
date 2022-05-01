@@ -785,7 +785,9 @@ function omni.lib.add_overlay(it, overlay_type, level)
             icon = "__omnimatter_compression__/graphics/compress-out-arrow-32.png"
         },
         ["compress-fluid"] = { -- tiered compressed fluids (generator fluids)
-            icon = "__omnilib__/graphics/icons/small/lvl"..level..".png"
+            icon = "__omnilib__/graphics/icons/small/lvl"..level..".png",
+            icon_size = 64,
+            scale = 0.5
         },
         technology = { -- compressed techs
             icon = "__omnimatter_compression__/graphics/compress-tech-128.png",

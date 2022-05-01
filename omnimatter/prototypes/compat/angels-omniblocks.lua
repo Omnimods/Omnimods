@@ -18,7 +18,7 @@ if mods["angelsindustries"] and angelsmods.industries.components then
 		icons = {
 				{icon = "__angelsindustries__/graphics/icons/block-bprocessing-4.png",
 				tint = {255,0,255}},
-				{icon = "__omnilib__/graphics/icons/small/lvl0.png"}
+				{icon = "__omnilib__/graphics/icons/small/lvl0.png",icon_size=64,scale=0.5}
 				},
 		icon_size = 32,
 		subgroup = "omniblocks",
@@ -57,7 +57,7 @@ if mods["angelsindustries"] and angelsmods.industries.components then
 				icons = {
 					{icon = "__angelsindustries__/graphics/icons/block-bprocessing-4.png",
 					tint = {255,0,255}},
-					{icon = "__omnilib__/graphics/icons/small/lvl"..i..".png"}
+					{icon = "__omnilib__/graphics/icons/small/lvl"..i..".png",icon_size=64,scale=0.5}
 					},
 				icon_size = 32,
 				subgroup = "omniblocks",

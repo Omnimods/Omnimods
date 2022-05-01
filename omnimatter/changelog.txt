@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.27
+Date: 2022.05.01
+  Changes:
+    - Baketorio support (Thanks, Jemsterr!)
+    - Added a seperate recipe to recycle omnic watse into omnic water (unlocked by default)
+    - Increased the required waste for recycling omnic water from 360 to 420
+  Bugfixes:
+    - Added proper error messages for compat function calls when an invalid ore tier is specified
+    - Fixed that the basic water omnitraction outputted too less omnic waste
+---------------------------------------------------------------------------------------------------
 Version: 4.1.26
 Date: 2022.02.27
   Bugfixes:

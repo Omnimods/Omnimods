@@ -1,6 +1,6 @@
 {
 "name":"omnimatter",
-"version": "4.1.26",
+"version": "4.1.27",
 "title":"Omnimatter",
 "author":"EmperorZelos",
 "contact": "https://discord.gg/WQYks7W",
@@ -12,6 +12,7 @@
   "?angelsrefining",
   "?angelssmelting",
   "?angelspetrochem",
+  "?baketorio",
   "?bobores",
   "?bobtech",
   "?Krastorio2",
