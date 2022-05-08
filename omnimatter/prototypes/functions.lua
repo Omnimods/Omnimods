@@ -19,8 +19,17 @@ function omni.matter.add_resource(r_name, tier, fluid_to_mine)
     if not omni.matter.omnisource[tostring(tier)] then
         omni.matter.omnisource[tostring(tier)] = {}
     end
+    local resource = data.raw.resource[r_name]
+    -- Add color if we're missing it
+    if resource and resource.map_color and not omni.lib.ore_tints[r_name] then
+        omni.lib.ore_tints[r_name] = {
+            r = resource.map_color[1] or resource.map_color.r,
+            g = resource.map_color[2] or resource.map_color.g,
+            b = resource.map_color[3] or resource.map_color.b
+        }
+    end
     -- Yeah sometimes.. only sometimes do we have a resource but not an item and the names don't match, and we somehow end up here. Welcome to hell :)
-    local minable = data.raw.resource[r_name] and data.raw.resource[r_name].minable
+    local minable = resource and resource.minable
     if minable then
         if fluid_to_mine == nil and minable.required_fluid and minable.fluid_amount then-- Specify false to skip
             fluid_to_mine = {
@@ -33,6 +42,24 @@ function omni.matter.add_resource(r_name, tier, fluid_to_mine)
                 r_name = minable.result 
             elseif minable.results and minable.results[1] then
                 r_name = minable.results[1][1] or minable.results[1].name
+            end
+        end
+    else
+        log("WARNING: Ore \"" .. r_name .. "\" specified but is not a resource")
+        for _, resource in pairs(data.raw.resource) do
+            if resource.minable then
+                if resource.minable.result then
+                    if resource.minable.result == r_name then
+                        log("\tOre \"" .. r_name .. "\" specified but is attached to resource \"" .. resource.name .. "\"")
+                    end
+                elseif resource.minable.results then
+                    for _, result in pairs(resource.minable.results) do
+                        local result_name = result[1] or result.name
+                        if result_name == r_name then
+                            log("\tOre \"" .. r_name .. "\" specified but is attached to resource \"" .. resource.name .. "\"")
+                        end
+                    end
+                end
             end
         end
     end

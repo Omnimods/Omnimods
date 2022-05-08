@@ -84,25 +84,25 @@ if mods["pycoalprocessing"] then
 	-- Red
 	omni.matter.add_resource("raw-borax", 1)
 	-- Green
-	omni.matter.add_resource("niobium-ore", 2)
+	omni.matter.add_resource("niobium", 2)
 end
 if mods["pyfusionenergy"] then
 	-- Blue
 	omni.matter.add_resource("molybdenum-ore", mods["pyrawores"] and 2 or 4)
-	omni.matter.add_resource("kimberlite-rock", 3)
+	omni.matter.add_resource("volcanic-pipe", 3)--kimberlite-rock
 	-- Beyond
-	omni.matter.add_resource("regolite-rock", 4)
+	omni.matter.add_resource("regolites", 4)
 end
 if mods["pyhightech"] then
 	-- Blue
-	omni.matter.add_resource("rare-earth-ore", 2)
+	omni.matter.add_resource("rare-earth-ore", 2)--rare-earth-ore
 	-- Beyond
 	omni.matter.add_resource("phosphate-rock", 2)
 end
 if mods["pypetroleumhandling"] then
 	-- Green
 	omni.matter.add_resource("oil-sand", 2)
-	omni.matter.add_resource("sulfur", 2)
+	omni.matter.add_resource("sulfur-patch", 2)
 	--Red
 	omni.matter.add_fluid("tar", 1, 1)
 	omni.matter.add_fluid("natural-gas", 1, 1)
@@ -112,7 +112,7 @@ end
 if mods["pyalienlife"] then
 	-- Green
 	if data.raw.item["native-flora"] then -- indev version
-		omni.matter.add_resource("native-flora", 1)
+		omni.matter.add_resource("ore-bioreserve", 1)--native-flora
 	else
 		omni.matter.add_resource("bio-sample", 2)
 	end
@@ -147,7 +147,7 @@ if mods["pyrawores"] then
 			amount = data.raw.resource["ore-titanium"].minable.fluid_amount
 		}
 	)
-	omni.matter.add_resource("salt", 1)
+	omni.matter.add_resource("salt-rock", 1)
 	omni.matter.add_resource("ore-chromium", 1)
 	-- Green
 	omni.matter.add_resource("ore-nickel", mods["pyalternativeenergy"] and 1 or 2)
