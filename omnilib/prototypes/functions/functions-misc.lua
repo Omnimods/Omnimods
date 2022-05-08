@@ -58,21 +58,24 @@ function omni.lib.add_ore_tint(icons, ore_name, alpha)
     if type(icons) ~= "table" then
         return icons
     end
-    local tinted = table.deepcopy(icons)
+    local new_icons = table.deepcopy(icons)
+    local resource = data.raw.resource[ore_name]
     if omni.lib.ore_tints[ore_name] then
-        tinted["tint"] = omni.lib.ore_tints[ore_name] or {r = 1, g = 1, b = 1, a = 1}
-    elseif data.raw.resource[ore_name] then
-
-        tinted["tint"] = {
-            r = data.raw.resource[ore_name].map_color[1] or data.raw.resource[ore_name].map_color.r,
-            g = data.raw.resource[ore_name].map_color[2] or data.raw.resource[ore_name].map_color.g,
-            b = data.raw.resource[ore_name].map_color[3] or data.raw.resource[ore_name].map_color.b
+        new_icons.tint = omni.lib.ore_tints[ore_name] or {r = 1, g = 1, b = 1, a = 1}
+    elseif resource and resource.map_color then
+        new_icons.tint = {
+            r = resource.map_color[1] or resource.map_color.r,
+            g = resource.map_color[2] or resource.map_color.g,
+            b = resource.map_color[3] or resource.map_color.b
         }
     else
         log("Could not find a saved tint for "..ore_name) 
     end
-    if alpha then tinted["tint"]["a"] = alpha end
-    return tinted
+    if alpha then 
+        new_icons.tint = new_icons.tint or {}
+        new_icons["tint"]["a"] = alpha
+    end
+    return new_icons
 end
 
 function omni.lib.factorize(nr)
