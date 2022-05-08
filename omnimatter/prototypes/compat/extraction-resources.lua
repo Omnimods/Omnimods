@@ -156,6 +156,7 @@ end
 
 if mods["pyalternativeenergy"] then
 	omni.matter.add_resource("antimonium-ore", 1, {name = data.raw.resource["antimonium-ore"].minable.required_fluid, amount = data.raw.resource["antimonium-ore"].minable.fluid_amount})
+	omni.matter.add_fluid("geothermal-water", 1, 1)
 end
 
 if mods["Krastorio2"] then
