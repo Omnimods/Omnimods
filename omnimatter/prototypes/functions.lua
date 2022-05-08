@@ -16,7 +16,26 @@ function omni.matter.add_resource(r_name, tier, fluid_to_mine)
     if not tonumber(tier) then
         error("omni.matter.add_resource(): Invalid tier specified for "..r_name)
     end
-    if not omni.matter.omnisource[tostring(tier)] then omni.matter.omnisource[tostring(tier)] = {} end
+    if not omni.matter.omnisource[tostring(tier)] then
+        omni.matter.omnisource[tostring(tier)] = {}
+    end
+    -- Yeah sometimes.. only sometimes do we have a resource but not an item and the names don't match, and we somehow end up here. Welcome to hell :)
+    local minable = data.raw.resource[r_name] and data.raw.resource[r_name].minable
+    if minable then
+        if fluid_to_mine == nil and minable.required_fluid and minable.fluid_amount then-- Specify false to skip
+            fluid_to_mine = {
+                name = minable.required_fluid,
+                amount = minable.fluid_amount
+            }
+        end
+        if not data.raw.item[r_name] then
+            if minable.result and minable.result then
+                r_name = minable.result 
+            elseif minable.results and minable.results[1] then
+                r_name = minable.results[1][1] or minable.results[1].name
+            end
+        end
+    end
     omni.matter.omnisource[tostring(tier)][r_name] = {tier = tier, name = r_name}
     if fluid_to_mine and fluid_to_mine.name and settings.startup["omnimatter-fluid-processing"].value then
         omni.matter.omnisource[tostring(tier)][r_name]["fluid"] = {name = fluid_to_mine.name, amount = fluid_to_mine.amount or 1}
