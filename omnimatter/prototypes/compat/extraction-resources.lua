@@ -82,7 +82,7 @@ if mods["baketorio"] then
 end
 if mods["pycoalprocessing"] then
 	-- Red
-	omni.matter.add_resource("raw-borax", 1)
+	omni.matter.add_resource("borax", 1)
 	-- Green
 	omni.matter.add_resource("niobium", 2)
 end
@@ -94,8 +94,12 @@ if mods["pyfusionenergy"] then
 	omni.matter.add_resource("regolites", 4)
 end
 if mods["pyhightech"] then
-	-- Blue
-	omni.matter.add_resource("rare-earth-ore", 2)--rare-earth-ore
+	if 	mods["pyalternativeenergy"] then
+		omni.matter.add_resource("ree", 1)--rare-earth-ore
+	else
+		-- Blue
+		omni.matter.add_resource("rare-earth-bolide", 2)--rare-earth-ore
+	end
 	-- Beyond
 	omni.matter.add_resource("phosphate-rock", 2)
 end
