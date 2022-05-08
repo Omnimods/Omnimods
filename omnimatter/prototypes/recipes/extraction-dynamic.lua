@@ -77,14 +77,14 @@ local function check_mining_fluids(tier)
                 ore = string.gsub(v.name, "%-ore", "")
             end
 
-            local icons = {{icon = "__omnimatter__/graphics/icons/ore_base_b.png", icon_size = 64}, omni.lib.add_ore_tint({icon = "__omnimatter__/graphics/icons/ore_base.png", icon_size = 64}, ore, 0.8)}
+            local ore_icons = {{icon = "__omnimatter__/graphics/icons/ore_base_b.png", icon_size = 64}, omni.lib.add_ore_tint({icon = "__omnimatter__/graphics/icons/ore_base.png", icon_size = 64}, ore, 0.8)}
             local cat = "omnite-extraction"
             if tier <= 1 then cat = "omnite-extraction-both" end
 
             ItemGen:create("omnimatter", "crude-"..v.name):
                 setLocName({"item-name.crude", omni.lib.locale.of(data.raw.item[v.name]).name}):
                 --setSubgroup("angels-omnicium"):
-                setIcons(icons):
+                setIcons(ore_icons):
                 extend()
 
             local crude_rec =
@@ -106,6 +106,7 @@ local function check_mining_fluids(tier)
             if omni.matter.omnitial[v.name] then
                 crude_rec:setEnabled(true)
             else
+                local scaling = omni.lib.icon.of(data.raw.item[v.name])[1].icon_size / omni.lib.icon.of(data.raw.fluid[v.fluid.name])[1].icon_size
                 crude_rec:setEnabled(false):
                     setTechName("omnitech-refinement-crude-"..v.name):
                     setTechLocName({"omnitech-crude-refinement", omni.lib.locale.of(data.raw.item[v.name]).name}):
@@ -114,23 +115,13 @@ local function check_mining_fluids(tier)
                     setTechCost(25 * tier * tier * (tier > 1 and 1 or omni.beginning_tech_help)):
                     setTechIcons(
                         util.combine_icons(
-                            {
-                                {
-                                    icon = "__omnimatter__/graphics/technology/extraction-generic.png",
-                                    icon_size = 128
-                                },
-                                omni.lib.add_ore_tint({
-                                    icon = "__omnimatter__/graphics/icons/ore_base.png",
-                                    icon_size = 64,
-                                    scale = 0.5,
-                                    shift = {-8, 32}
-                                }, ore, 0.8)
-                            },
-                            omni.lib.icon.of(data.raw.fluid[v.fluid.name]),
-                            {
-                                scale = 0.4375,
-                                shift = {-18, 42}
-                            }
+                        omni.lib.icon.of(data.raw.item[v.name]),
+                        omni.lib.icon.of(data.raw.fluid[v.fluid.name]),
+                        {
+                            scale = 0.4375 * scaling,
+                            shift = {-20 * scaling, 20 * scaling}
+                        }
+
                         ))
                 end
                 crude_rec:extend()
