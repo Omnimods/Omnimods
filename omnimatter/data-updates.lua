@@ -31,3 +31,4 @@ end
 
 --SET EXTERNAL PARAMETERS
 require("prototypes.compat.angels-updates")
+require("prototypes.compat.pycp-updates")
