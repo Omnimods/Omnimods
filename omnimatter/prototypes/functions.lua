@@ -46,24 +46,6 @@ function omni.matter.add_resource(r_name, tier, fluid_to_mine)
                 r_name = minable.results[1][1] or minable.results[1].name
             end
         end
-    else -- We have an item but not a resource
-        log("WARNING: Ore \"" .. r_name .. "\" specified but is not a resource")
-        for _, resource in pairs(data.raw.resource) do
-            if resource.minable then
-                if resource.minable.result then
-                    if resource.minable.result == r_name then
-                        log("\tOre \"" .. r_name .. "\" specified but is attached to resource \"" .. resource.name .. "\"")
-                    end
-                elseif resource.minable.results then
-                    for _, result in pairs(resource.minable.results) do
-                        local result_name = result[1] or result.name
-                        if result_name == r_name then
-                            log("\tOre \"" .. r_name .. "\" specified but is attached to resource \"" .. resource.name .. "\"")
-                        end
-                    end
-                end
-            end
-        end
     end
     omni.matter.omnisource[tostring(tier)][r_name] = {tier = tier, name = r_name}
     if fluid_to_mine and fluid_to_mine.name and settings.startup["omnimatter-fluid-processing"].value then
