@@ -354,9 +354,9 @@ function omni.lib.pgcd(...)
     if #arg > 2
     then
         local tmp = table.remove(arg, 1)
-        return omni.lib.pgcd(tmp, omni.lib.pgcd(unpack(arg)))
+        return omni.lib.pgcd(tmp, omni.lib.pgcd(table.unpack(arg)))
     elseif #arg == 2 then
-        a, b = unpack(arg)
+        a, b = table.unpack(arg)
         repeat
         a, b = b, math.fmod(a, b)
         until b == 0
