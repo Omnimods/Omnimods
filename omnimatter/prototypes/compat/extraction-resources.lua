@@ -95,7 +95,7 @@ if mods["pyfusionenergy"] then
 end
 if mods["pyhightech"] then
 	if 	mods["pyalternativeenergy"] then
-		omni.matter.add_resource("ree", 1)--rare-earth-ore
+		omni.matter.add_resource("ree", 2)--rare-earth-ore
 	else
 		-- Blue
 		omni.matter.add_resource("rare-earth-bolide", 2)--rare-earth-ore
