@@ -44,7 +44,7 @@ function omni.matter.add_resource(r_name, tier, fluid_to_mine)
                     break
                 end
             end
-            if not matched_result and not data.raw.item[r_name] then -- This resource has no results matching r_name, and no item just called r_name exists
+            if not matched_result then            
                 r_name = minable.results[1][1] or minable.results[1].name
             end
         end
