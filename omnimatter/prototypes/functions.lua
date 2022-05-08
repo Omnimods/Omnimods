@@ -30,11 +30,21 @@ function omni.matter.add_resource(r_name, tier, fluid_to_mine)
                 amount = minable.fluid_amount
             }
         end
-        -- If the item doesn't exist, then we have to go find the minable result
-        if not data.raw.item[r_name] then
-            if minable.result and minable.result == r_name then
-                r_name = minable.result 
-            elseif minable.results and minable.results[1] then
+        -- Find the minable result if we can.
+        -- Edge case: item and resource with same name. Resource yields different thing than the item with the resource's name
+        -- If we hit this, we'll take the minable result
+        if minable.result then
+            r_name = minable.result 
+        elseif minable.results then -- This is more complex, we'll search the results for something matching r_name
+            local matched_result = false     -- If we don't find a match, we'll defer to the first result
+            for k, result in pairs(minable.results) do
+                local result_name = result[1] or result.name
+                if result_name == r_name then
+                    matched_result = true
+                    break
+                end
+            end
+            if not matched_result then            
                 r_name = minable.results[1][1] or minable.results[1].name
             end
         end
