@@ -103,7 +103,7 @@ local function check_mining_fluids(tier)
                 showProduct(true):
                 setEnabled(false):
                 setTechName("omnitech-refinement-crude-"..v.name):
-                setTechLocName({"omnitech-crude-refinement", omni.lib.locale.of(data.raw.item[v.name]).name, i}):
+                setTechLocName({"omnitech-crude-refinement", omni.lib.locale.of(data.raw.item[v.name]).name}):
                 setTechPrereq(tier > 1 and "omnitech-omnitractor-electric-"..(tier-1) or "omnitech-base-impure-extraction"):
                 setTechPacks(math.max(1, tier - 1)):
                 setTechCost(25 * tier * tier * (tier > 1 and 1 or omni.beginning_tech_help)):
