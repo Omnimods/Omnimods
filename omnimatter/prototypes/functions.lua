@@ -31,20 +31,22 @@ function omni.matter.add_resource(r_name, tier, fluid_to_mine)
     -- Yeah sometimes.. only sometimes do we have a resource but not an item and the names don't match, and we somehow end up here. Welcome to hell :)
     local minable = resource and resource.minable
     if minable then
-        if fluid_to_mine == nil and minable.required_fluid and minable.fluid_amount then-- Specify false to skip
+        -- Check for fluid, fluid_to_mine=false skips, fluid_to_mine=anything overrides
+        if fluid_to_mine == nil and minable.required_fluid and minable.fluid_amount then
             fluid_to_mine = {
                 name = minable.required_fluid,
                 amount = minable.fluid_amount
             }
         end
+        -- If the item doesn't exist, then we have to go find the minable result
         if not data.raw.item[r_name] then
-            if minable.result and minable.result then
+            if minable.result and minable.result == r_name then
                 r_name = minable.result 
             elseif minable.results and minable.results[1] then
                 r_name = minable.results[1][1] or minable.results[1].name
             end
         end
-    else
+    else -- We have an item but not a resource
         log("WARNING: Ore \"" .. r_name .. "\" specified but is not a resource")
         for _, resource in pairs(data.raw.resource) do
             if resource.minable then
