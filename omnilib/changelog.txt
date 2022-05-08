@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.27
+Date: ????
+  Changes:
+    - omni.lib.add_ore_tint() now checks the resource map color when the specified ore is not in
+      our lookup table
+---------------------------------------------------------------------------------------------------
 Version: 4.1.26
 Date: 2022.05.01
   Bugfixes:

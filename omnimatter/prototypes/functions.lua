@@ -19,17 +19,9 @@ function omni.matter.add_resource(r_name, tier, fluid_to_mine)
     if not omni.matter.omnisource[tostring(tier)] then
         omni.matter.omnisource[tostring(tier)] = {}
     end
-    local resource = data.raw.resource[r_name]
-    -- Add color if we're missing it
-    if resource and resource.map_color and not omni.lib.ore_tints[r_name] then
-        omni.lib.ore_tints[r_name] = {
-            r = resource.map_color[1] or resource.map_color.r,
-            g = resource.map_color[2] or resource.map_color.g,
-            b = resource.map_color[3] or resource.map_color.b
-        }
-    end
+
     -- Yeah sometimes.. only sometimes do we have a resource but not an item and the names don't match, and we somehow end up here. Welcome to hell :)
-    local minable = resource and resource.minable
+    local minable = data.raw.resource[r_name] and data.raw.resource[r_name].minable
     if minable then
         -- Check for fluid, fluid_to_mine=false skips, fluid_to_mine=anything overrides
         if fluid_to_mine == nil and minable.required_fluid and minable.fluid_amount then
@@ -47,6 +39,7 @@ function omni.matter.add_resource(r_name, tier, fluid_to_mine)
             end
         end
     end
+    
     omni.matter.omnisource[tostring(tier)][r_name] = {tier = tier, name = r_name}
     if fluid_to_mine and fluid_to_mine.name and settings.startup["omnimatter-fluid-processing"].value then
         omni.matter.omnisource[tostring(tier)][r_name]["fluid"] = {name = fluid_to_mine.name, amount = fluid_to_mine.amount or 1}
