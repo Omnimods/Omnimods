@@ -60,6 +60,8 @@ local function generate_pure_icon(ore_name)
     )
 end
 
+local ores_with_fluid = {}
+
 --Creates a table containing splits of the given tier with their corresponding ore names
 local function check_mining_fluids(tier)
     local source = omni.matter.omnisource[tostring(tier)]
@@ -85,32 +87,25 @@ local function check_mining_fluids(tier)
                 setIcons(icons):
                 extend()
 
-            local tech =(
-                RecGen:create("omnimatter", "crude-"..v.name):
-                    setIngredients({"crude-"..v.name, 13}):
-                    addIngredients({type = "fluid", name = v.fluid.name, amount = (v.fluid.amount or 1)*13}):
-                    setResults({v.name, 13}):
-                    setOrder("z[refinement-"..tier.."-"..v.name.."]"):
-                    setSubgroup("omni-pure"):
-                    setIcons(v.name):
-                    addSmallIcon(v.fluid.name, 3):
-                    setLocName({"recipe-name.crude-refinement", omni.lib.locale.of(data.raw.item[v.name]).name}):
-                    setEnergy(6.5):
-                    setCategory(cat):
-                    setSubgroup("omni-refine"):
-                    showAmount(false):
-                    showProduct(true):
-                    setEnabled(false)
-            )
-            if tier > 1 then
-                tech:setTechName("omnitech-omnitractor-electric-"..(tier-1)):
-                extend()
-            else
-                tech:setTechName("omnitech-base-impure-extraction"):
-                setTechLocName("omnitech-base-omnitraction"):
-                setTechPrereq(nil):
-                setTechCost(25*omni.beginning_tech_help):
-                setTechPacks(1):
+            RecGen:create("omnimatter", "crude-"..v.name):
+                setIngredients({"crude-"..v.name, 13}):
+                addIngredients({type = "fluid", name = v.fluid.name, amount = (v.fluid.amount or 1)*13}):
+                setResults({v.name, 13}):
+                setOrder("z[refinement-"..tier.."-"..v.name.."]"):
+                setSubgroup("omni-pure"):
+                setIcons(v.name):
+                addSmallIcon(v.fluid.name, 3):
+                setLocName({"recipe-name.crude-refinement", omni.lib.locale.of(data.raw.item[v.name]).name}):
+                setEnergy(6.5):
+                setCategory(cat):
+                setSubgroup("omni-refine"):
+                showAmount(false):
+                showProduct(true):
+                setEnabled(false):
+                setTechName("omnitech-impure-refinement-crude-"..v.name):
+                setTechPrereq(tier > 1 and "omnitech-omnitractor-electric-"..(tier-1) or "omnitech-base-impure-extraction"):
+                setTechPacks(math.max(1, tier - 1)):
+                setTechCost(25 * tier * tier * (tier > 1 and 1 or omni.beginning_tech_help)):
                 setTechIcons({
                     {
                         icon = "__omnimatter__/graphics/technology/extraction-generic.png",
@@ -123,11 +118,12 @@ local function check_mining_fluids(tier)
                         shift = {-8, 32}
                     }
                 }):
-                extend()
-            end
+            extend()
 
             --Alter the name in the omnisource table to point extraction recipes to the new item
             v.name = "crude-"..v.name
+            -- Note that it needs fluid for later
+            ores_with_fluid[v.name] = true
         end
     end
 end
@@ -374,10 +370,14 @@ local function create_impure_extraction(tier, split, ore_name)
         else
             focused_ore:setCategory("omnite-extraction")
         end
-        if i == 1 and tier == 1 then
-            focused_ore:setTechPrereq("omnitech-base-impure-extraction")
-        elseif i == 1 then
-            focused_ore:setTechPrereq("omnitech-omnitractor-electric-"..tier-1)
+        if i == 1 then
+            if ores_with_fluid[ore_name] then
+                focused_ore:setTechPrereq("omnitech-impure-refinement-"..ore_name)
+            elseif tier == 1 then
+                focused_ore:setTechPrereq("omnitech-base-impure-extraction")
+            else
+                focused_ore:setTechPrereq("omnitech-omnitractor-electric-"..tier-1)
+            end
         else
             focused_ore:setTechPrereq("omnitech-focused-extraction-"..ore_name.."-"..(i-1))
         end
