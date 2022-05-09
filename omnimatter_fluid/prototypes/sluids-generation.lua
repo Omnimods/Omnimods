@@ -595,8 +595,9 @@ local function replace_barrels(recipe)
                 --Replace filled barrels with sluids
                 elseif ing.name and (string.find(ing.name, "%-barrel") or string.find(ing.name, "%-canister")) then
                     local flu = string.gsub(ing.name, "%-barrel", "")
-                    flu = string.gsub(ing.name, "%-gas%-canister", "")
-                    flu = string.gsub(ing.name, "%-canister", "")
+                    flu = string.gsub(flu, "%-gas%-canister", "")
+                    flu = string.gsub(flu, "%-canister", "")
+
                     if fluid_cats["sluid"][flu] or fluid_cats["mush"][flu] then
                         if recipe[dif].main_product and recipe[dif].main_product == ing.name then
                             recipe[dif].main_product = "solid-"..flu
@@ -1006,8 +1007,6 @@ for _, ass in pairs(data.raw["assembling-machine"]) do
             if crafting_category_fluids[cat] then
                 max_inc = math.max(max_inc, crafting_category_fluids[cat])
             end
-            log(ass.ingredient_count)
-            log(type(ass.ingredient_count))
             ass.ingredient_count = math.min(255, ass.ingredient_count + max_inc)
         end
     end
