@@ -10,6 +10,8 @@ local generator_fluid = {} --is used in a generator
 local recipe_mods = {}
 local void_recipes = {}
 local add_multi_temp_recipes = {}
+--Save the highest amount of unique fluid ingredients per crafting cat
+local crafting_category_fluids = {}
 
 local function sort_fluid(fluidname, category, temperature)
     local fluid = data.raw.fluid[fluidname]
@@ -114,6 +116,7 @@ for _, rec in pairs(data.raw.recipe) do
     --need to check hidden recipes aswell (voiding stuff for example), maybe exclude hidden AND NOT enabled in the future?
     if not omni.fluid.check_string_excluded(rec.name) --[[and not omni.lib.recipe_is_hidden(rec.name)]] and not omni.fluid.forbidden_recipe[rec.name] then
         local fluids = {}
+        local ing_fluids = 0
         local is_void = omni.fluid.is_fluid_void(rec)
         for _, ingres in pairs({"ingredients","results"}) do --ignore result/ingredient as they don't handle fluids
             if rec[ingres] then
@@ -121,6 +124,7 @@ for _, rec in pairs(data.raw.recipe) do
                     if it and it.type and it.type == "fluid" then
                         fluids[#fluids+1] = it
                         recipe_mods[rec.name] = recipe_mods[rec.name] or {ingredients = {}, results = {}}
+                        if ingres == "ingredients" then ing_fluids = ing_fluids + 1 end
                     end
                 end
             elseif (rec.normal and rec.normal[ingres]) or (rec.expensive and rec.expensive[ingres]) then
@@ -130,12 +134,23 @@ for _, rec in pairs(data.raw.recipe) do
                             if it and it.type and it.type == "fluid" then
                                 fluids[#fluids+1] = it
                                 recipe_mods[rec.name] = recipe_mods[rec.name] or {ingredients = {}, results = {}}
+                                if ingres == "ingredients" then ing_fluids = ing_fluids + 1 end
                             end
                         end
                     end
                 end
             end
         end
+
+        --Update the fluid count for the crafting category of this recipe. "crafting" cant hold any fluids so we dont need to worry
+        if rec.category and rec.category ~= "crafting" then
+            if not crafting_category_fluids[rec.category] then
+                crafting_category_fluids[rec.category] = ing_fluids
+            else
+                crafting_category_fluids[rec.category] = math.max(crafting_category_fluids[rec.category], ing_fluids)
+            end
+        end
+
         for _, fluid in pairs(fluids) do
             if is_void then
                 sort_fluid(fluid.name, "sluid")
@@ -980,6 +995,21 @@ for _, fu in pairs(data.raw["furnace"]) do
             end
         end
         fu.fluid_boxes = nil
+    end
+end
+
+--Increase assembling machine ingredient slots if they cant hold the updated sluid recipe anymore
+for _, ass in pairs(data.raw["assembling-machine"]) do
+    if ass.ingredient_count then
+        for _, cat in pairs(ass.crafting_categories) do
+            local max_inc = 0
+            if crafting_category_fluids[cat] then
+                max_inc = math.max(max_inc, crafting_category_fluids[cat])
+            end
+            log(ass.ingredient_count)
+            log(type(ass.ingredient_count))
+            ass.ingredient_count = math.min(255, ass.ingredient_count + max_inc)
+        end
     end
 end
 
