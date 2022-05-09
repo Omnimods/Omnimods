@@ -575,11 +575,13 @@ local function replace_barrels(recipe)
         for _, ingres in pairs({"ingredients","results"}) do
             for	j, ing in pairs(recipe[dif][ingres]) do
                 --Remove empty barrels
-                if ing.name and ing.name == "empty-barrel" then
+                if ing.name and (ing.name == "empty-barrel" or ing.name == "empty-canister"  or ing.name == "empty-gas-canister")then
                     recipe[dif][ingres][j] = nil
                 --Replace filled barrels with sluids
-                elseif ing.name and string.find(ing.name, "%-barrel") then
+                elseif ing.name and (string.find(ing.name, "%-barrel") or string.find(ing.name, "%-canister")) then
                     local flu = string.gsub(ing.name, "%-barrel", "")
+                    flu = string.gsub(ing.name, "%-gas%-canister", "")
+                    flu = string.gsub(ing.name, "%-canister", "")
                     if fluid_cats["sluid"][flu] or fluid_cats["mush"][flu] then
                         if recipe[dif].main_product and recipe[dif].main_product == ing.name then
                             recipe[dif].main_product = "solid-"..flu
@@ -607,7 +609,7 @@ for _, rec in pairs(data.raw.recipe) do
         for _, dif in pairs({"normal","expensive"}) do
             for _, ingres in pairs({"ingredients","results"}) do
                 for	_, ing in pairs(rec[dif][ingres]) do
-                    if string.find(ing.name, "%-barrel") then
+                    if string.find(ing.name, "%-barrel") or string.find(ing.name, "%-canister")  or string.find(ing.name, "%-gas%-canister") then
                         replace_barrels(rec)
                         goto continue
                     end
