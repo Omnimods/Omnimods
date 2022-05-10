@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.22
+Date: ????
+  Bugfixes:
+    - Fixed that filled (gas-) canisters used as recipe ingredients were not replaced with sluids
+    - Fixed that certain recipes were not craftable anymore due to exceeding the ingredient
+      slot limit on some modded assemblers when converting from fluid to item
+---------------------------------------------------------------------------------------------------
 Version: 4.1.21
 Date: 2022.05.01
   Bugfixes:
