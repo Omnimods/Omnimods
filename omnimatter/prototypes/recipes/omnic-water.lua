@@ -48,8 +48,6 @@ for _, fluid in pairs(data.raw.fluid) do
             setOrder("zzz"..(fluid.order or "")):
             setLocName({"recipe-name.omnilation", omni.lib.locale.of(fluid).name }):
             extend()
-        -- Py compat
-        data.raw.recipe["omniflush-"..fluid.name].ignore_for_dependencies = true
         fluids[#fluids+1] = fluid.name
     end
 end
