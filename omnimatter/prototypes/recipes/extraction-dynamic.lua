@@ -81,8 +81,11 @@ local function check_mining_fluids(tier)
             local cat = "omnite-extraction"
             if tier <= 1 then cat = "omnite-extraction-both" end
 
+
+            local proto = data.raw.item[v.name] or data.raw.tool[v.name]
+
             ItemGen:create("omnimatter", "crude-"..v.name):
-                setLocName({"item-name.crude", omni.lib.locale.of(data.raw.item[v.name]).name}):
+                setLocName({"item-name.crude", omni.lib.locale.of(proto).name}):
                 --setSubgroup("angels-omnicium"):
                 setIcons(ore_icons):
                 extend()
@@ -96,7 +99,7 @@ local function check_mining_fluids(tier)
                     setSubgroup("omni-pure"):
                     setIcons(v.name):
                     addSmallIcon(v.fluid.name, 3):
-                    setLocName({"recipe-name.crude-refinement", omni.lib.locale.of(data.raw.item[v.name]).name}):
+                    setLocName({"recipe-name.crude-refinement", omni.lib.locale.of(proto).name}):
                     setEnergy(6.5):
                     setCategory(cat):
                     setSubgroup("omni-refine"):
@@ -106,16 +109,16 @@ local function check_mining_fluids(tier)
             if omni.matter.omnitial[v.name] then
                 crude_rec:setEnabled(true)
             else
-                local scaling = omni.lib.icon.of(data.raw.item[v.name])[1].icon_size / omni.lib.icon.of(data.raw.fluid[v.fluid.name])[1].icon_size
+                local scaling = omni.lib.icon.of(proto)[1].icon_size / omni.lib.icon.of(data.raw.fluid[v.fluid.name])[1].icon_size
                 crude_rec:setEnabled(false):
                     setTechName("omnitech-refinement-crude-"..v.name):
-                    setTechLocName({"omnitech-crude-refinement", omni.lib.locale.of(data.raw.item[v.name]).name}):
+                    setTechLocName({"omnitech-crude-refinement", omni.lib.locale.of(proto).name}):
                     setTechPrereq(tier > 1 and "omnitech-omnitractor-electric-"..(tier-1) or "omnitech-base-impure-extraction"):
                     setTechPacks(math.max(1, tier - 1)):
                     setTechCost(25 * tier * tier * (tier > 1 and 1 or omni.beginning_tech_help)):
                     setTechIcons(
                         util.combine_icons(
-                        omni.lib.icon.of(data.raw.item[v.name]),
+                        omni.lib.icon.of(proto),
                         omni.lib.icon.of(data.raw.fluid[v.fluid.name]),
                         {
                             scale = 0.4375 * scaling,
@@ -347,9 +350,12 @@ local function create_impure_extraction(tier, split, ore_name)
             desc = desc.."[img=item."..part.name.."] x "..string.format("%.2f",part.amount * (part.probability or 1))
             if j<#res then desc = desc.."\n" end
         end
+
+        local proto = data.raw.item[ore_name] or data.raw.tool[ore_name]
+
         local focused_ore = (
             RecGen:create("omnimatter", "omnirec-focus-" .. num .. "-" .. ore_name .. "-" .. omni.lib.alpha(i)):
-                setLocName({"recipe-name.impure-omnitraction", omni.lib.locale.of(data.raw.item[ore_name]).name}):
+                setLocName({"recipe-name.impure-omnitraction", omni.lib.locale.of(proto).name}):
                 setLocDesc(desc):
                 setOrder("a[omnirec-focus-"..tier.."-"..ore_name.."]"):
                 setIngredients({name = "omnite", type = "item", amount = 10}):
@@ -366,7 +372,7 @@ local function create_impure_extraction(tier, split, ore_name)
                 addBlankIcon():
                 setTechName("omnitech-focused-extraction-" .. ore_name .. "-" .. i):
                 setTechCost(25 * i * tier):
-                setTechLocName({"omnitech-impure-omnitraction", omni.lib.locale.of(data.raw.item[ore_name]).name, i}):
+                setTechLocName({"omnitech-impure-omnitraction", omni.lib.locale.of(proto).name, i}):
                 setTechPacks(math.max(1, tier)):
                 setTechIcons(generate_impure_icon(ore_name)):
                 marathon()
@@ -420,9 +426,11 @@ local function create_pure_extraction(tier, ore_name)
         return desc
     end
 
+    --Minable result is not necessarily an item
+    local proto = data.raw.item[ore_name] or data.raw.tool[ore_name]
     local pure_ore = (
         RecChain:create("omnimatter", "extraction-" .. ore_name):
-            setLocName({"recipe-name.pure-omnitraction", omni.lib.locale.of(data.raw.item[ore_name]).name}):
+            setLocName({"recipe-name.pure-omnitraction", omni.lib.locale.of(proto).name}):
             setLocDesc(function(levels, grade) return get_desc(levels,grade) end):
             setOrder("a[extraction-"..tier.."-"..ore_name.."]"):
             setIcons(ore_name):
@@ -449,7 +457,7 @@ local function create_pure_extraction(tier, ore_name)
                 function(levels, grade)
                     return math.floor((grade - 1) * 3 / levels) + tier
                 end):
-            setTechLocName({"omnitech-pure-omnitraction", omni.lib.locale.of(data.raw.item[ore_name]).name}):
+            setTechLocName({"omnitech-pure-omnitraction", omni.lib.locale.of(proto).name}):
             showAmount(false):
             showProduct(true):
             extend()
@@ -486,6 +494,7 @@ end
 
 --Initial omnitraction recipe creation (Needs to be generated last)
 for ore, dt in pairs(omni.matter.omnitial) do
+    local proto = data.raw.item[dt.results[1].name] or data.raw.tool[dt.results[1].name]
     RecGen:create("omnimatter","initial-omnitraction-" .. ore):
         setCategory("omnite-extraction-burner"):
         setEnergy(5):
@@ -496,7 +505,7 @@ for ore, dt in pairs(omni.matter.omnitial) do
         setResults(dt.results):
         setIcons(dt.results[1].name):
         marathon():
-        setLocName({"recipe-name.initial-omni", omni.lib.locale.of(data.raw.item[dt.results[1].name]).name}):
+        setLocName({"recipe-name.initial-omni", omni.lib.locale.of(proto).name}):
         addSmallIcon("stone-crushed", 3):
         extend()
 end
