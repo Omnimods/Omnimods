@@ -53,7 +53,7 @@ for _, fluid in pairs(data.raw.fluid) do
 end
 
 for _, rec in pairs(data.raw.recipe) do
-    if not rec.hidden and not string.find(rec.name, "barrel") then
+    if not rec.hidden and not (string.find(rec.name, "barrel") or string.find(rec.name, "canister") ) then
         for _, flu in pairs(fluids) do
             if  omni.lib.recipe_result_contains(rec.name, flu) then
                 local techname = omni.lib.get_tech_name(rec.name)
