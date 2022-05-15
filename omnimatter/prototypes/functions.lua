@@ -16,7 +16,40 @@ function omni.matter.add_resource(r_name, tier, fluid_to_mine)
     if not tonumber(tier) then
         error("omni.matter.add_resource(): Invalid tier specified for "..r_name)
     end
-    if not omni.matter.omnisource[tostring(tier)] then omni.matter.omnisource[tostring(tier)] = {} end
+    if not omni.matter.omnisource[tostring(tier)] then
+        omni.matter.omnisource[tostring(tier)] = {}
+    end
+
+    -- Yeah sometimes.. only sometimes do we have a resource but not an item and the names don't match, and we somehow end up here. Welcome to hell :)
+    local minable = data.raw.resource[r_name] and data.raw.resource[r_name].minable
+    if minable then
+        -- Check for fluid, fluid_to_mine=false skips, fluid_to_mine=anything overrides
+        if fluid_to_mine == nil and minable.required_fluid and minable.fluid_amount then
+            fluid_to_mine = {
+                name = minable.required_fluid,
+                amount = minable.fluid_amount
+            }
+        end
+        -- Find the minable result if we can.
+        -- Edge case: item and resource with same name. Resource yields different thing than the item with the resource's name
+        -- If we hit this, we'll take the minable result
+        if minable.result then
+            r_name = minable.result 
+        elseif minable.results then -- This is more complex, we'll search the results for something matching r_name
+            local matched_result = false     -- If we don't find a match, we'll defer to the first result
+            for k, result in pairs(minable.results) do
+                local result_name = result[1] or result.name
+                if result_name == r_name then
+                    matched_result = true
+                    break
+                end
+            end
+            if not matched_result then            
+                r_name = minable.results[1][1] or minable.results[1].name
+            end
+        end
+    end
+    
     omni.matter.omnisource[tostring(tier)][r_name] = {tier = tier, name = r_name}
     if fluid_to_mine and fluid_to_mine.name and settings.startup["omnimatter-fluid-processing"].value then
         omni.matter.omnisource[tostring(tier)][r_name]["fluid"] = {name = fluid_to_mine.name, amount = fluid_to_mine.amount or 1}
