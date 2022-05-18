@@ -116,6 +116,7 @@ end
 if mods["pyalienlife"] then
 	-- Green
 	if data.raw.item["native-flora"] then -- indev version
+		omni.matter.add_initial("ore-bioreserve", 1, 12)
 		omni.matter.add_resource("ore-bioreserve", 1)--native-flora
 	else
 		omni.matter.add_resource("bio-sample", 2)
