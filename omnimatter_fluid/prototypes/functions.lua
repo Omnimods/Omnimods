@@ -6,7 +6,7 @@ omni.fluid.assembler_generator_fluids = {}
 omni.fluid.multi_temp_recipes = {}
 omni.fluid.mining_fluids = {}
 omni.fluid.boiler_fluids = {}
-omni.fluid.excluded_strings = {{"empty","barrel"},{"fill","barrel"},{"fluid","unknown"},"barreling-pump","creative"}
+omni.fluid.excluded_strings = {{"empty","barrel"},{"fill","barrel"},{"empty","canister"},{"fill","canister"},{"fluid","unknown"},"barreling-pump","creative"}
 
 function omni.fluid.excempt_boiler(boiler)
     omni.fluid.forbidden_boilers[boiler] = true

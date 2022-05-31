@@ -1,6 +1,6 @@
 {
 "name":"omnimatter_fluid",
-"version": "4.1.21",
+"version": "4.1.22",
 "title":"Omnifluid",
 "author":"EmperorZelos",
 "contact": "https://discord.gg/WQYks7W",
@@ -23,6 +23,7 @@
 	"(?)pyindustry",
 	"(?)pyhightech",
 	"(?)pyfusionenergy",
+	"(?)pypostprocessing",
 	"(?)PickerDollies",
 	"(?)ScienceCostTweakerM",
 	"(?)space-exploration",

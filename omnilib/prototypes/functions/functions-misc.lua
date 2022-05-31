@@ -55,12 +55,27 @@ omni.lib.ore_tints = {--can add to the tint table with table.insert(omni.lib.ore
 }
 
 function omni.lib.add_ore_tint(icons, ore_name, alpha)
-    if type(icons) == "table" and icons.icon then
-        icons["tint"] = omni.lib.ore_tints[ore_name] or {r = 1, g = 1, b = 1, a = 1}
-        if alpha then icons["tint"]["a"] = alpha end
-        if not omni.lib.ore_tints[ore_name] then log("Could not find a saved tint for "..ore_name) end
+    if type(icons) ~= "table" then
+        return icons
     end
-    return icons
+    local new_icons = table.deepcopy(icons)
+    local resource = data.raw.resource[ore_name]
+    if omni.lib.ore_tints[ore_name] then
+        new_icons.tint = omni.lib.ore_tints[ore_name] or {r = 1, g = 1, b = 1, a = 1}
+    elseif resource and resource.map_color then
+        new_icons.tint = {
+            r = resource.map_color[1] or resource.map_color.r,
+            g = resource.map_color[2] or resource.map_color.g,
+            b = resource.map_color[3] or resource.map_color.b
+        }
+    else
+        log("Could not find a saved tint for "..ore_name) 
+    end
+    if alpha then 
+        new_icons.tint = new_icons.tint or {}
+        new_icons["tint"]["a"] = alpha
+    end
+    return new_icons
 end
 
 function omni.lib.factorize(nr)
@@ -342,9 +357,9 @@ function omni.lib.pgcd(...)
     if #arg > 2
     then
         local tmp = table.remove(arg, 1)
-        return omni.lib.pgcd(tmp, omni.lib.pgcd(unpack(arg)))
+        return omni.lib.pgcd(tmp, omni.lib.pgcd(table.unpack(arg)))
     elseif #arg == 2 then
-        a, b = unpack(arg)
+        a, b = table.unpack(arg)
         repeat
         a, b = b, math.fmod(a, b)
         until b == 0

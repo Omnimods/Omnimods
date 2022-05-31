@@ -5,6 +5,39 @@ omni.matter.res_to_keep = {
     "omnite",
     "infinite-omnite"
 }
+-- returns resource_name, fluid_to_mine
+local function get_resource(name, fluid)
+    -- Yeah sometimes.. only sometimes do we have a resource but not an item and the names don't match, and we somehow end up here. Welcome to hell :)
+    local minable = data.raw.resource[name] and data.raw.resource[name].minable
+    if minable then
+        -- Check for fluid, fluid=false skips, fluid=anything overrides
+        if fluid == nil and minable.required_fluid and minable.fluid_amount then
+            fluid = {
+                name = minable.required_fluid,
+                amount = minable.fluid_amount
+            }
+        end
+        -- Find the minable result if we can.
+        -- Edge case: item and resource with same name. Resource yields different thing than the item with the resource's name
+        -- If we hit this, we'll take the minable result
+        if minable.result then
+            name = minable.result 
+        elseif minable.results then -- This is more complex, we'll search the results for something matching r_name
+            local matched_result = false     -- If we don't find a match, we'll defer to the first result
+            for k, result in pairs(minable.results) do
+                local result_name = result[1] or result.name
+                if result_name == name then
+                    matched_result = true
+                    break
+                end
+            end
+            if not matched_result then            
+                name = minable.results[1][1] or minable.results[1].name
+            end
+        end
+    end
+    return name, fluid        
+end
 
 --------------------------
 ---Extraction functions---
@@ -16,7 +49,12 @@ function omni.matter.add_resource(r_name, tier, fluid_to_mine)
     if not tonumber(tier) then
         error("omni.matter.add_resource(): Invalid tier specified for "..r_name)
     end
-    if not omni.matter.omnisource[tostring(tier)] then omni.matter.omnisource[tostring(tier)] = {} end
+    if not omni.matter.omnisource[tostring(tier)] then
+        omni.matter.omnisource[tostring(tier)] = {}
+    end
+
+    r_name, fluid_to_mine = get_resource(r_name, fluid_to_mine)
+
     omni.matter.omnisource[tostring(tier)][r_name] = {tier = tier, name = r_name}
     if fluid_to_mine and fluid_to_mine.name and settings.startup["omnimatter-fluid-processing"].value then
         omni.matter.omnisource[tostring(tier)][r_name]["fluid"] = {name = fluid_to_mine.name, amount = fluid_to_mine.amount or 1}
@@ -80,10 +118,14 @@ end
 
 --Add initial extraction ores
 function omni.matter.add_initial(ore_name, ore_amount, omnite_amount, fluid_to_mine)
+
+    ore_name, fluid_to_mine = get_resource(ore_name, fluid_to_mine)
+
     omni.matter.omnitial[ore_name] = {
         ingredients ={{name = "omnite", amount = omnite_amount}},
         results = {{name = ore_name, amount = ore_amount}, {name = "stone-crushed", amount = (omnite_amount-ore_amount) or 6}}
     }
+
     if fluid_to_mine and fluid_to_mine.name and settings.startup["omnimatter-fluid-processing"].value then
         omni.matter.omnitial[ore_name].fluid = {name = fluid_to_mine.name, amount = fluid_to_mine.amount or 1}
         omni.matter.omnitial[ore_name].results[1].name = "crude-"..omni.matter.omnitial[ore_name].results[1].name
