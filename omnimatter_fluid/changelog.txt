@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.23
+Date: ????
+  Features:
+    - Added angels "coolant-cool-steam" recipe as multi temp recipe
+  Bugfixes:
+    - Fixed that omni.fluid.add_multi_temp_recipe() failed on fluids with both min and max temp
+      not being specified
+---------------------------------------------------------------------------------------------------
 Version: 4.1.22
 Date: 2022.05.31
   Bugfixes:

@@ -45,3 +45,8 @@ if mods["angelspetrochem"] then
         boiler.crafting_categories = cats
     end
 end
+
+if mods["angelssmelting"] then
+    omni.fluid.add_multi_temp_recipe("coolant-cool-steam")
+    omni.fluid.add_multi_temp_recipe("coolant-cool-steam-compression")
+end

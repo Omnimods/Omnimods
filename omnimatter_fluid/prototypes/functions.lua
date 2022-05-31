@@ -140,39 +140,45 @@ function omni.fluid.is_fluid_void(recipe)
 end
 
 function omni.fluid.create_temperature_copies(recipe, fluidname, replacement, temperatures)
-    --Additional recipe checks: If this is a fixed recipe somewhere, we need to remove that, enable the recipe and unhide if required
-    for _, ent in pairs(data.raw["assembling-machine"]) do
-        if ent.fixed_recipe and ent.fixed_recipe == recipe.name then
-            ent.fixed_recipe = nil
-            omni.lib.enable_recipe(recipe.name)
-            if recipe.normal then
-                recipe.normal.hidden = false
-                recipe.expensive.hidden = false
+    if recipe then
+        --Additional recipe checks: If this is a fixed recipe somewhere, we need to remove that, enable the recipe and unhide if required
+        for _, ent in pairs(data.raw["assembling-machine"]) do
+            if ent.fixed_recipe and ent.fixed_recipe == recipe.name then
+                ent.fixed_recipe = nil
+                omni.lib.enable_recipe(recipe.name)
+                if recipe.normal then
+                    recipe.normal.hidden = false
+                    recipe.expensive.hidden = false
+                end
+                if recipe.hidden then recipe.hidden = false end
             end
-            if recipe.hidden then recipe.hidden = false end
         end
-    end
-    --Create copies for each temp in temperatures and replace the sluid with the required temp sluid
-    local copies = {}
-    for _, temp in pairs(temperatures) do
-        local sluid = "solid-"..fluidname.."-T-"..temp
-        if type(temp) ~= "number" then sluid = "solid-"..fluidname end
-        if data.raw.item[sluid] and sluid ~= replacement then
-            local newrec = table.deepcopy(recipe)
-            newrec.name = newrec.name .."-T-"..temp
-            newrec.localised_name = omni.lib.locale.of(recipe).name
-            for _, dif in pairs({"normal","expensive"}) do
-                for _, ingres in pairs({"ingredients","results"}) do
-                    for _, flu in pairs(newrec[dif][ingres]) do
-                        if flu.name and flu.name == replacement then
-                            flu.name = sluid
-                            break
+        --Create copies for each temp in temperatures and replace the sluid with the required temp sluid
+        local copies = {}
+        for _, temp in pairs(temperatures) do
+            local sluid = "solid-"..fluidname.."-T-"..temp
+            local tech = omni.lib.get_tech_name(recipe.name)
+            if type(temp) ~= "number" then sluid = "solid-"..fluidname end
+            if data.raw.item[sluid] and sluid ~= replacement then
+                local newrec = table.deepcopy(recipe)
+                newrec.name = newrec.name .."-T-"..temp
+                newrec.localised_name = omni.lib.locale.of(recipe).name
+                for _, dif in pairs({"normal","expensive"}) do
+                    for _, ingres in pairs({"ingredients","results"}) do
+                        for _, flu in pairs(newrec[dif][ingres]) do
+                            if flu.name and flu.name == replacement then
+                                flu.name = sluid
+                                break
+                            end
                         end
                     end
                 end
+                copies[#copies+1] = newrec
+                if tech and not omni.lib.recipe_is_enabled(recipe.name) then
+                    omni.lib.add_unlock_recipe(tech, newrec.name, true)
+                end
             end
-            copies[#copies+1] = newrec
         end
+        if next(copies) then data:extend(copies) end
     end
-    if next(copies) then data:extend(copies) end
 end

@@ -853,8 +853,8 @@ for name, _ in pairs(recipe_mods) do
                                     break
                                 end
                             end
-                            --Check if we want recipe copies for all temperatures in the min/max range and create them later by copying
-                            if omni.fluid.multi_temp_recipes[rec.name] then
+                            --Check if we want recipe copies for all temperatures in the min/max range and create them later by copying (only add this once!)
+                            if omni.fluid.multi_temp_recipes[rec.name] and not add_multi_temp_recipes[rec.name] then
                                 add_multi_temp_recipes[rec.name] = {fluid_name = ing.name, temperatures = {min = ing.minimum_temperature, max = ing.maximum_temperature, original = found_temp or "none"}}
                             end
                         -- No temperature set and "none" is in our list --> no temp sluid exists
@@ -966,8 +966,10 @@ for rec_name, fluid_data in pairs(add_multi_temp_recipes) do
     local cat = "sluid"
     if fluid_cats["mush"][fluid_data.fluid_name] then cat = "mush" end
     --Get all required temperatures
+    local min_temp = fluid_data.temperatures.min or data.raw.fluid[fluid_data.fluid_name].default_temperature or -65535
+    local max_temp = fluid_data.temperatures.max or data.raw.fluid[fluid_data.fluid_name].max_temperature or math.huge
     for _, temp in pairs(fluid_cats[cat][fluid_data.fluid_name].temperatures) do
-        if (type(temp) == "number" and temp >= (fluid_data.temperatures.min or -65535) and temp <= (fluid_data.temperatures.max or math.huge) and type(fluid_data.temperatures.original) == "number" and temp ~= fluid_data.temperatures.original) or
+        if (type(temp) == "number" and temp >= (min_temp or -65535) and temp <= (max_temp) and type(fluid_data.temperatures.original) == "number" and temp ~= fluid_data.temperatures.original) or
         (type(temp) ~= "number" and type(fluid_data.temperatures.original) ~= "number") then
             temperatures[#temperatures+1] = temp
         end
