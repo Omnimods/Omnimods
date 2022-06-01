@@ -29,6 +29,10 @@ if mods["omnimatter_compression"] then
     omni.fluid.add_boiler_fluid("concentrated-steam")
 end
 
+if mods["pyalternativeenergy"] then
+    omni.fluid.excempt_boiler("solar-tower-building")
+end
+
 if mods["angelspetrochem"] then
     -- Add the fluid conversions to angels electric boilers
     local boilers = {"angels-electric-boiler", "angels-electric-boiler-2", "angels-electric-boiler-3"}
