@@ -6,6 +6,7 @@ Date: ????
   Bugfixes:
     - Fixed that omni.fluid.add_multi_temp_recipe() failed on fluids with both min and max temp
       not being specified
+    - Fixed that very low probability ingredient / result amounts could end up with "0"
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.22
 Date: 2022.05.31

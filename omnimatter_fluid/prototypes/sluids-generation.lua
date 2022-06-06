@@ -885,7 +885,15 @@ for name, _ in pairs(recipe_mods) do
                     else
 
                         --Multiply amount with mult, keep probability in mind
-                        local new_amount = omni.lib.round(omni.fluid.get_true_amount(ing) * mult[dif])
+                        local new_amount = omni.fluid.get_true_amount(ing) * mult[dif]
+                        if new_amount < 1 then
+                            ing.probability = new_amount
+                            new_amount = 1
+                        else
+                            omni.lib.round(new_amount)
+                            ing.probability = nil
+                        end
+
                         ing.amount = math.min(new_amount, 65535)
 
                         --Apply the mult on the catalyst amount aswell
@@ -896,7 +904,6 @@ for name, _ in pairs(recipe_mods) do
                         --Nil probability related values since these are calculated into the amount now
                         ing.amount_max = nil
                         ing.amount_min = nil
-                        ing.probability = nil
 
                         if new_amount > 65535 then
                             log("WARNING: Ingredient "..ing.name.." from the recipe "..rec.name.." ran into the upper limit. Amount = "..new_amount.." Mult = "..mult[dif])
