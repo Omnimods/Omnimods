@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.29
+Date: 2022.06.XX
+  Bugfixes:
+    - Fixed some (recently introduced) incompatibilites with portal versions of pyrawores
+---------------------------------------------------------------------------------------------------
 Version: 4.1.28
 Date: 2022.05.31
   Bugfixes:

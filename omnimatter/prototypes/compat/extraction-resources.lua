@@ -126,7 +126,7 @@ if mods["pyrawores"] then
 	--disable vanilla coal & stone, raw coal will produce our coal.
 	all_time_ores = false
 	--Initial omnitractions
-	if not mods["pyalienlife"] then
+	if not mods["pyalienlife"] and mods["pyrawores"]:find("^2.2.[7,8]$") then
 		omni.matter.add_initial("ore-aluminium", 1, 14)
 		omni.matter.add_initial("ore-tin", 1, 12)
 		omni.matter.add_initial("ore-quartz", 1, 12)
