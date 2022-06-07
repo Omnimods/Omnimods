@@ -90,7 +90,7 @@ function lib.find(input_name, input_type, silent)
     -- Log with our types and input arguments
 	error(
         string.format(
-            "No prototype called `%s` found for type `%s`, these prototypes with the name exist: %s\nPlease report this to https://mods.factorio.com/mod/rusty-locale",
+            "No prototype called `%s` found for type `%s`, these prototypes with the name exist: %s",
             input_name,
             input_type,
             serpent.line(existing_types)
