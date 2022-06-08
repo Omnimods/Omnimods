@@ -644,6 +644,7 @@ local run_entity_updates = function(new, kind, i)
         if not new.charging_distance then
             new.charging_distance = 1
         end
+        new.recharge_minimum = new.energy_usage
         new.robot_slots_count = new.robot_slots_count * (i + 1)
         new.material_slots_count = new.material_slots_count * (i + 1)
         new.logistics_radius = new.logistics_radius * (i + 1)
