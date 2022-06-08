@@ -669,12 +669,8 @@ local run_entity_updates = function(new, kind, i)
         end
         new.charging_station_count = new.charging_station_count * math.pow(multiplier, i)
         --recharge_minimum has to be >= energy_usage --> Make sure to use the same multiplier
-        if omni.lib.string_contained_list(new.name,{"boiler","omnifluid"}) then
-            new.recharge_minimum = new_effect(new.recharge_minimum, i)
-        else
-            new.recharge_minimum = new_effect(new.recharge_minimum, i)
-            new.recharge_minimum = new_effect(new.recharge_minimum, nil, nil, energy_multiplier)
-        end
+        new.recharge_minimum = new_effect(new.recharge_minimum, i)
+        new.recharge_minimum = new_effect(new.recharge_minimum, nil, nil, energy_multiplier)
     end
     return new
 end
