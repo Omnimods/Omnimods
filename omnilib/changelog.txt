@@ -4,7 +4,6 @@ Date: 2022.06.XX
   Bugfixes:
     - Fixed load order issue from some missing dependencies
     - Fixed misleading error message in some cases
-    - Fix load issues with most recent bobores when gem sorting is disabled
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.27
 Date: 2022.05.31
