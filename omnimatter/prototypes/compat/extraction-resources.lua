@@ -32,6 +32,7 @@ else
 	omni.matter.add_initial("iron-ore", 1, 7)
 	omni.matter.add_initial("copper-ore", 1, 7)
 	if bobmods and bobmods.ores then
+		local has_gems = settings.startup["bobmods-ores-unsortedgemore"].value
 		local levels={		
 			--["iron-ore"]=1,
 			--["copper-ore"]=1,
@@ -48,7 +49,7 @@ else
 			["tungsten-ore"]=3,
 			--["uranium-ore"]=3,
 			["thorium-ore"]=3,
-			["gem-ore"]=3,
+			["gem-ore"]=has_gems and 3 or nil,
 			["sulfur"]=2
 		}
 		for i, ore in pairs(bobmods.ores) do --check ore triggers (works with plates)
@@ -61,7 +62,9 @@ else
 			end
 		end
 		--Force Gem ore, certain bob settings disable it in the table checked above
-		omni.matter.add_resource("gem-ore", 3)
+		if has_gems then
+			omni.matter.add_resource("gem-ore", 3)
+		end
 		omni.matter.add_fluid("lithia-water", 2, 1)
 	end
 end
