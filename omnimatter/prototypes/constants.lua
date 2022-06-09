@@ -18,23 +18,23 @@ if omni.linear_science and omni.science_constant < 1 then omni.science_constant 
 
 --constant functions
 function omni.matter.get_constant(kind)
-	if kind == "acid" then
-		return omni.acid_ratio
-	elseif kind == "fluid level" then
-		return omni.fluid_levels 
-	end
+    if kind == "acid" then
+        return omni.acid_ratio
+    elseif kind == "fluid level" then
+        return omni.fluid_levels 
+    end
 end
 
 function omni.matter.get_ore_production(level)
-	return (-13+24*omni.pure_levels_per_tier+5*level)/(-1+3*omni.pure_levels_per_tier)*(-4+9*omni.pure_levels_per_tier+level)/(-4+12*omni.pure_levels_per_tier)
+    return (-13+24*omni.pure_levels_per_tier+5*level)/(-1+3*omni.pure_levels_per_tier)*(-4+9*omni.pure_levels_per_tier+level)/(-4+12*omni.pure_levels_per_tier)
 end
 
 function omni.matter.get_fluid_production(level,fluid)
-	local lvl_amount = (120+(level-1)*120/(omni.fluid_levels-1))
-	if fluid == "omnic acid" then
-		lvl_amount=lvl_amount*omni.acid_ratio
-	elseif fluid == "omni sludge" then
-		lvl_amount=lvl_amount*omni.sludge_ratio
-	end
-	return lvl_amount
+    local lvl_amount = (120+(level-1)*120/(omni.fluid_levels-1))
+    if fluid == "omnic acid" then
+        lvl_amount=lvl_amount*omni.acid_ratio
+    elseif fluid == "omni sludge" then
+        lvl_amount=lvl_amount*omni.sludge_ratio
+    end
+    return lvl_amount
 end

@@ -16,15 +16,15 @@ data:extend({
     inventory_size_bonus = 0
   },
   --[[{
-	type = "item",
-	name = "battery-steam",
-	icon = "__omnimatter_logistics__/graphics/icons/battery-steam.png",
+    type = "item",
+    name = "battery-steam",
+    icon = "__omnimatter_logistics__/graphics/icons/battery-steam.png",
     icon_size = 32,
-	placed_as_equipment_result = "battery-steam",
-	flags = {},
-	order = "a[angels-burner-generator-vequip]",
-	stack_size = 10,
-	default_request_amount = 10
+    placed_as_equipment_result = "battery-steam",
+    flags = {},
+    order = "a[angels-burner-generator-vequip]",
+    stack_size = 10,
+    default_request_amount = 10
   },
   {
     type = "recipe",
@@ -35,7 +35,7 @@ data:extend({
     ingredients ={
       {"boiler", 1},
       {"storage-tank", 2},
-	},
+    },
     results=
     {
       {type="item", name="battery-steam", amount=1},

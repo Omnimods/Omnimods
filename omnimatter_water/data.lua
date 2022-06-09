@@ -19,7 +19,7 @@ local get_omniwater_prereq = function(grade,element,tier)
         req[#req+1]="omnitech-omnitractor-electric-"..tractor_lvl
     --Add the last tech of a tier as prereq for the next omnitractor
     elseif grade > 0 and grade%omni.fluid_levels_per_tier == 0 and (tractor_lvl+1 <=omni.max_tier) then
-        omni.lib.add_prerequisite("omnitech-omnitractor-electric-"..tractor_lvl+1, "omnitech-"..element.."-omnitraction-"..(grade), true)	
+        omni.lib.add_prerequisite("omnitech-omnitractor-electric-"..tractor_lvl+1, "omnitech-"..element.."-omnitraction-"..(grade), true)    
     end
     --Add the last tier as prereq for the rocket silo if its the highest tier
     if omni.rocket_locked and tractor_lvl >= omni.max_tier and grade == water_levels then

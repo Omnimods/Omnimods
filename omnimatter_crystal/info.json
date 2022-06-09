@@ -7,8 +7,8 @@
 "description":"Adds crystalline branches for technology",
 "factorio_version":"1.1",
 "dependencies":[
-	"base",
-	"omnilib >= 4.1.0",
-	"omnimatter"
+    "base",
+    "omnilib >= 4.1.0",
+    "omnimatter"
 ]
 }

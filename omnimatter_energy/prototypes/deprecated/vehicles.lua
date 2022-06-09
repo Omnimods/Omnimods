@@ -45,15 +45,15 @@ data:extend({
         result = locomotive.name,
         enabled = false,
     },
-	{
-	type = "item",
-	name = "omnicium-",
-	icons = {
-		{icon = "__omnimatter_electricity__/graphics/icons/oxyomnide-salt.png"}
-	},
-	icon_size = 32,
-	flags = {"goes-to-main-inventory"},
-	subgroup = "electro-components",
-	order="a",
-	stack_size = 100}
+    {
+    type = "item",
+    name = "omnicium-",
+    icons = {
+        {icon = "__omnimatter_electricity__/graphics/icons/oxyomnide-salt.png"}
+    },
+    icon_size = 32,
+    flags = {"goes-to-main-inventory"},
+    subgroup = "electro-components",
+    order="a",
+    stack_size = 100}
 })

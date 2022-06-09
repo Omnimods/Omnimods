@@ -11,8 +11,8 @@ data:extend(
   {
     type = "item-subgroup",
     name = "omnissence",
-	group = "omnimatter",
-	order = "z",
+    group = "omnimatter",
+    order = "z",
   },
 }
 )

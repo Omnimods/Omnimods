@@ -62,7 +62,7 @@ function omni.fluid.boiler_images(tier)
     },
     }
 end
-omni.fluid.exchanger_images =	{
+omni.fluid.exchanger_images =    {
     animation = make_4way_animation_from_spritesheet({
     layers = {
         {

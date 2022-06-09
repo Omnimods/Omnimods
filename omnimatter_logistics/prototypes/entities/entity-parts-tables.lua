@@ -2,18 +2,18 @@
 if not omni.logistics then omni.logistics={} end
 --flying sounds
 function omni.logistics.flying_robot(volume)
-	return {
-		sound = {
-			{filename = "__base__/sound/flying-robot-1.ogg", volume = volume},
-			{filename = "__base__/sound/flying-robot-2.ogg", volume = volume},
-			{filename = "__base__/sound/flying-robot-3.ogg", volume = volume},
-			{filename = "__base__/sound/flying-robot-4.ogg", volume = volume},
-			{filename = "__base__/sound/flying-robot-5.ogg", volume = volume},
-		},
-		max_sounds_per_type = 5,
-		audible_distance_modifier = 1,
-		probability = 1 / (10 * 60) -- average pause between the sound is 10 seconds
-	}
+    return {
+        sound = {
+            {filename = "__base__/sound/flying-robot-1.ogg", volume = volume},
+            {filename = "__base__/sound/flying-robot-2.ogg", volume = volume},
+            {filename = "__base__/sound/flying-robot-3.ogg", volume = volume},
+            {filename = "__base__/sound/flying-robot-4.ogg", volume = volume},
+            {filename = "__base__/sound/flying-robot-5.ogg", volume = volume},
+        },
+        max_sounds_per_type = 5,
+        audible_distance_modifier = 1,
+        probability = 1 / (10 * 60) -- average pause between the sound is 10 seconds
+    }
 end
 --cargo robot parts
 omni.logistics.cargo_bot_images={
@@ -119,7 +119,7 @@ omni.logistics.construction_bot_parts={
     height = 64,
     frame_count = 1,
     shift = {0, 0},
-	  scale = 0.75,
+      scale = 0.75,
     direction_count = 16
   },
   shadow_in_motion ={
@@ -130,13 +130,13 @@ omni.logistics.construction_bot_parts={
     height = 64,
     frame_count = 1,
     shift = {0, 0},
-	  scale = 0.75,
+      scale = 0.75,
     direction_count = 16
   },
   shadow_working ={
     stripes = util.multiplystripes(2,{
         {
-		      filename = "__omnimatter_logistics__/graphics/entity/construction-robot/construction-robot-shadow.png",
+              filename = "__omnimatter_logistics__/graphics/entity/construction-robot/construction-robot-shadow.png",
           width_in_frames = 16,
           height_in_frames = 1,
         }
@@ -322,13 +322,13 @@ omni.logistics.zone_expander_parts={
     scale = 0.5,
     animation_speed = 0.5
   },
-	base_patch ={
+    base_patch ={
     filename = "__omnilib__/graphics/icons/blank.png",
     width = 1,
     height = 1,
     frame_count = 1,
   },
-	door_animation ={
+    door_animation ={
     filename = "__omnilib__/graphics/icons/blank.png",
     width = 1,
     height = 1,
@@ -360,26 +360,26 @@ omni.logistics.relay_station_parts = {
     width = 128,
     height = 224,
     shift = {0.25, -1},
-	  scale = 0.5,
+      scale = 0.5,
   },
-	base_animation ={
+    base_animation ={
     filename = "__omnimatter_logistics__/graphics/entity/relay-station/relay-station.png",
     priority = "medium",
     width = 128,
     height = 224,
     frame_count = 16,
-	  line_length = 4,
+      line_length = 4,
     shift = {0.25, -1},
-	  scale = 0.5,
-	  animation_speed = 0.5
+      scale = 0.5,
+      animation_speed = 0.5
   },
-	base_patch ={
+    base_patch ={
     filename = "__omnilib__/graphics/icons/blank.png",
     width = 1,
     height = 1,
     frame_count = 1,
   },
-	door_animation ={
+    door_animation ={
     filename = "__omnimatter_logistics__/graphics/entity/empty.png",
     width = 1,
     height = 1,

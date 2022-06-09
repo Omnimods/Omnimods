@@ -1,13 +1,13 @@
 -- Tried to make it work for multi-recipe items like solid fuel
 --Not logging all tech unlocks for some reason, also a HUGE performance hook
--- 	for _,tech in pairs(data.raw.technology) do
--- 		if tech.effects then
--- 			for _,eff in pairs(tech.effects) do
+--     for _,tech in pairs(data.raw.technology) do
+--         if tech.effects then
+--             for _,eff in pairs(tech.effects) do
 --                 if eff.type == "unlock-recipe" then --and eff.recipe.results
 --                     rectech[#rectech+1] = {recname = eff.recipe, techname = tech.name}
 --                 end
--- 			end
--- 		end
+--             end
+--         end
 --     end
 --     log(serpent.block(rectech))
 --     for _,rec in pairs(data.raw.recipe) do

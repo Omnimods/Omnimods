@@ -5,28 +5,28 @@ data:extend(
     name = "omniscience-modify-costs",
     setting_type = "startup",
     default_value = true,
-	order=a
+    order=a
   },
   {
     type = "bool-setting",
     name = "omniscience-modify-omnimatter-costs",
     setting_type = "startup",
     default_value = false,
-	order=b
+    order=b
   },
   {
     type = "bool-setting",
     name = "omniscience-rocket-modified-by-omni",
     setting_type = "startup",
     default_value = true,
-	order=c
+    order=c
   },
   {
     type = "bool-setting",
     name = "omniscience-cumulative-count",
     setting_type = "startup",
     default_value = true,
-	order=d
+    order=d
   },
   {
     type = "double-setting",
@@ -34,7 +34,7 @@ data:extend(
     setting_type = "startup",
     default_value = 1,
     minimum_value = 0.01,
-	order=e
+    order=e
   },
   {
     type = "double-setting",
@@ -42,7 +42,7 @@ data:extend(
     setting_type = "startup",
     default_value = 1,
     minimum_value = 0.01,
-	order=f
+    order=f
   },
   {
     type = "double-setting",
@@ -50,7 +50,7 @@ data:extend(
     setting_type = "startup",
     default_value = 0.75,
     minimum_value = 0.05,
-	order=g
+    order=g
   },
   {
     type = "double-setting",
@@ -58,14 +58,14 @@ data:extend(
     setting_type = "startup",
     default_value = 0.2,
     minimum_value = 0.005,
-	order=h
+    order=h
   },
    {
     type = "bool-setting",
     name = "omniscience-exponential",
     setting_type = "startup",
     default_value = false,
-	order=i
+    order=i
   },
   {
     type = "double-setting",
@@ -74,7 +74,7 @@ data:extend(
     default_value = 20,
     maximum_value = 2000,
     minimum_value = 20,
-	order=j
+    order=j
   },
     {
     type = "double-setting",
@@ -82,8 +82,8 @@ data:extend(
     setting_type = "startup",
     default_value = 1,
     maximum_value = 6,
-    minimum_value = 0.1,	
-	order=k
+    minimum_value = 0.1,    
+    order=k
   },
     {
     type = "double-setting",
@@ -91,15 +91,15 @@ data:extend(
     setting_type = "startup",
     default_value = 1.4,
     maximum_value = 6,
-    minimum_value = 0.1,	
-	order=l
+    minimum_value = 0.1,    
+    order=l
   },
      {
     type = "bool-setting",
     name = "omniscience-standard-time",
     setting_type = "startup",
     default_value = false,
-	order=m
+    order=m
   },
   {
     type = "int-setting",
@@ -108,7 +108,7 @@ data:extend(
     default_value = 15,
     minimum_value = 5,
     maximum_value = 120,
-	order=n
+    order=n
   },
 }
 )

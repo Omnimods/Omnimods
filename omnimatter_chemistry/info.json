@@ -7,12 +7,12 @@
 "description":"Petrochem a la omni",
 "factorio_version":"0.18",
 "dependencies":[
-	"base",
-	"omnimatter >= 3.18.0",
-	"omnilib >= 3.18.0",
-	"angelssmelting",
-	"omnimatter_wood >= 3.18.0",
-	"? omnimatter_water"
+    "base",
+    "omnimatter >= 3.18.0",
+    "omnilib >= 3.18.0",
+    "angelssmelting",
+    "omnimatter_wood >= 3.18.0",
+    "? omnimatter_water"
 ]
 }
-	
+    

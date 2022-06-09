@@ -6,7 +6,7 @@ data:extend({
     subgroup = "omni-mutator-items",
     order = "g[hydromnic-acid]",
     category = "chemistry",
-	energy_required = 1,
+    energy_required = 1,
     enabled = "true",
     ingredients =
     {

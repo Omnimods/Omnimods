@@ -2,8 +2,8 @@ data:extend({
    {
     type = "item-subgroup",
     name = "shoes",
-	group = "omnilogistics",
-	order = "aa",
+    group = "omnilogistics",
+    order = "aa",
   },
 {
     type = "recipe",
@@ -12,7 +12,7 @@ data:extend({
     icon_size = 32,
     subgroup = "shoes",
     order = "g[hydromnic-acid]",
-	energy_required = 2,
+    energy_required = 2,
     enabled = false,
     ingredients =
     {

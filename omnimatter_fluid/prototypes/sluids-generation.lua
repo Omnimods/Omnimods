@@ -588,7 +588,7 @@ data:extend(new_boiler)
 local function replace_barrels(recipe)
     for _, dif in pairs({"normal","expensive"}) do
         for _, ingres in pairs({"ingredients","results"}) do
-            for	j, ing in pairs(recipe[dif][ingres]) do
+            for    j, ing in pairs(recipe[dif][ingres]) do
                 --Remove empty barrels
                 if ing.name and (ing.name == "empty-barrel" or ing.name == "empty-canister"  or ing.name == "empty-gas-canister")then
                     recipe[dif][ingres][j] = nil
@@ -624,7 +624,7 @@ for _, rec in pairs(data.raw.recipe) do
         if std == true then omni.lib.standardise(rec) end
         for _, dif in pairs({"normal","expensive"}) do
             for _, ingres in pairs({"ingredients","results"}) do
-                for	_, ing in pairs(rec[dif][ingres]) do
+                for    _, ing in pairs(rec[dif][ingres]) do
                     if string.find(ing.name, "%-barrel") or string.find(ing.name, "%-canister")  or string.find(ing.name, "%-gas%-canister") then
                         replace_barrels(rec)
                         goto continue
@@ -665,7 +665,7 @@ for name, _ in pairs(recipe_mods) do
             local lcm_mult = 1
             for _, ingres in pairs({"ingredients","results"}) do
                 --First loop: Calculate the lcm respecting omni.fluid.sluid_contain_fluid
-                for	_, ing in pairs(rec[dif][ingres]) do
+                for    _, ing in pairs(rec[dif][ingres]) do
                     local amount = 0
                     if ing.type == "fluid" and ing.amount and ing.amount ~= 0 then
                         --Round the fluid amount to get rid of weird base numbers, divide afterwards to not lose precision
@@ -701,7 +701,7 @@ for name, _ in pairs(recipe_mods) do
 
             --Second loop: Find GCD of all ingres multiplied with the LCM multiplier we just calculated (with sluid_contain_fluid applied for fluids)
             for _, ingres in pairs({"ingredients","results"}) do
-                for	_, ing in pairs(rec[dif][ingres]) do
+                for    _, ing in pairs(rec[dif][ingres]) do
                     local amount = 0
                     if ing.type == "fluid" and ing.amount and ing.amount ~= 0 then
                         amount = omni.lib.round(omni.fluid.get_true_amount(ing) * mult[dif]) / omni.fluid.sluid_contain_fluid
@@ -732,7 +732,7 @@ for name, _ in pairs(recipe_mods) do
                 max_amount = 0
                 lcm_mult = 1
                 for _, ingres in pairs({"ingredients","results"}) do
-                    for	_, ing in pairs(rec[dif][ingres]) do
+                    for    _, ing in pairs(rec[dif][ingres]) do
                         local amount = 0
                         if ing.type == "fluid" then
                             --Round the fluid amount to get rid of weird base numbers, divide afterwards to not lose precision
@@ -758,7 +758,7 @@ for name, _ in pairs(recipe_mods) do
 
                 --Recalculate GCD
                 for _, ingres in pairs({"ingredients","results"}) do
-                    for	_, ing in pairs(rec[dif][ingres]) do
+                    for    _, ing in pairs(rec[dif][ingres]) do
                         local amount = 0
                         if ing.type == "fluid" then
                             --Use fluids round function after the ratio division to avoid decimals
@@ -786,7 +786,7 @@ for name, _ in pairs(recipe_mods) do
         for _, dif in pairs({"normal","expensive"}) do
             local fix_stacksize = false
             for _, ingres in pairs({"ingredients","results"}) do
-                for	n, ing in pairs(rec[dif][ingres]) do
+                for    n, ing in pairs(rec[dif][ingres]) do
                     if ing.type == "fluid" then
                         local new_ing={}--start empty to remove all old props to add only what is needed
                         new_ing.type = "item"
@@ -921,7 +921,7 @@ for name, _ in pairs(recipe_mods) do
             --Apply stack size fixes
             if fix_stacksize then
                 local add = {}
-                for	_, ing in pairs(rec[dif]["results"]) do
+                for    _, ing in pairs(rec[dif]["results"]) do
                     local proto = omni.lib.find_prototype(ing.name)
                     if proto and (omni.lib.is_in_table("not-stackable", proto.flags or {}) or proto.stack_size == 1) then
                         local to_add = ing.amount - 1

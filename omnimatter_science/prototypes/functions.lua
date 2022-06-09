@@ -181,14 +181,14 @@ end
 omni.science.tech_list = { name = {}, cost = {}, height = {}} --list of tech and key properties
 function omni.science.tech_updates()
   log("Updating technology costs.")
-	local tech_list = omni.science.tech_list
-	local check_techs = {} --list of checks
-	--tech_list.name={}
-	--tech_list.cost={}
-	--tech_list.height={}
-	--module
-	--omni-impure
-	local omni_excempt_list = {{"omniston","solvation"},{"omnic","hydrolyzation"},{"stone","omnisolvent"},"distillation",{"omni","sorting"},{"impure","omni"},{"water","omnitraction"},{"mud","omnitraction"}}
+    local tech_list = omni.science.tech_list
+    local check_techs = {} --list of checks
+    --tech_list.name={}
+    --tech_list.cost={}
+    --tech_list.height={}
+    --module
+    --omni-impure
+    local omni_excempt_list = {{"omniston","solvation"},{"omnic","hydrolyzation"},{"stone","omnisolvent"},"distillation",{"omni","sorting"},{"impure","omni"},{"water","omnitraction"},{"mud","omnitraction"}}
   omni_excempt_list[#omni_excempt_list+1]={"pseudoliquid","amorphous","crystal"}
   
   run_lab_comp_check() --ensure this is done at the right time
@@ -198,7 +198,7 @@ function omni.science.tech_updates()
     --roll through each tech
     if Set.StdTime and omni.lib.start_with(tech.name,"omnipressed-") then --compression tech time standardise?
       --standardised research time
-		  unit.time = Set.StdTimeConst
+          unit.time = Set.StdTimeConst
     end
     --if contains packs as ingredients
     if unit.count then
@@ -233,50 +233,50 @@ function omni.science.tech_updates()
   end
 
   -- select and update costings of techs in check_techs
-	local found = true --used to allow multi-pass calculations
+    local found = true --used to allow multi-pass calculations
   while #check_techs > 0 and found do
     found = false
     for i,tech in pairs(check_techs) do
       local techno = data.raw.technology[tech] --set shortening of something used commonly
-			if all_pre_in_table(tech) and (techno.unit.count or techno.unit[2]) then
-				found = true --this re-initiates the loop, this prevents lockups if a loop fails to modify
-				table.insert(tech_list.name,tech)
+            if all_pre_in_table(tech) and (techno.unit.count or techno.unit[2]) then
+                found = true --this re-initiates the loop, this prevents lockups if a loop fails to modify
+                table.insert(tech_list.name,tech)
         local cost = techno.unit.count or techno.unit[2]
 
-				--[[if omni.lib.start_with(tech,"omnitech") and Set.Cumul then --skip if not cumulative mode
-					cost = cost--*Set.CumulOmConst
+                --[[if omni.lib.start_with(tech,"omnitech") and Set.Cumul then --skip if not cumulative mode
+                    cost = cost--*Set.CumulOmConst
         elseif Set.Cumul then --skip if not cumulative mode
-					cost = cost--*Set.CumulConst
+                    cost = cost--*Set.CumulConst
         end]]
         
-				local h = 0
+                local h = 0
         local add = 0
         for _,pre in pairs(techno.prerequisites) do
           h = math.max(h,get_height(pre)) -- set this for all conditions
           if Set.Cumul then
             if tech ~= "rocket-silo" or Set.ModSilo then
-            	if not string.find(pre,"omnitech") then
-							  cost = cost+get_cost(pre)*Set.CumulConst --adds all non-omni techs regardless
-						  else
-							  add = math.max(add,get_cost(pre)*Set.CumulOmConst) --adds only the most expensive omni tech
-						  end
-					  elseif not string.find(pre,"omnitech") then
-						  cost = cost+get_cost(pre)
-				    end
+                if not string.find(pre,"omnitech") then
+                              cost = cost+get_cost(pre)*Set.CumulConst --adds all non-omni techs regardless
+                          else
+                              add = math.max(add,get_cost(pre)*Set.CumulOmConst) --adds only the most expensive omni tech
+                          end
+                      elseif not string.find(pre,"omnitech") then
+                          cost = cost+get_cost(pre)
+                    end
           end
         end
         cost=cost+add--*Set.OmMaxConst --add==0 if not cumulative mode, so this line does nothing in exp mode
 
         if #techno.prerequisites == 1 and Set.Cumul then
-					local c = Set.CumulOmConst
-					local chain = Set.ChainConst
-					if omni.lib.start_with(tech,"omnitech") then
-						cost = cost*(1+Set.ChainOmConst*c/(c+1))
-					else
-						local lv = 1
+                    local c = Set.CumulOmConst
+                    local chain = Set.ChainConst
+                    if omni.lib.start_with(tech,"omnitech") then
+                        cost = cost*(1+Set.ChainOmConst*c/(c+1))
+                    else
+                        local lv = 1
             local t = techno.prerequisites[1]
             local count = 0
-						while data.raw.technology[t].prerequisites and #data.raw.technology[t].prerequisites >= 1 do
+                        while data.raw.technology[t].prerequisites and #data.raw.technology[t].prerequisites >= 1 do
               if count > 100 then error("Technology loop detected with:"..data.raw.technology[t].name) end
               if data.raw.technology[t].prerequisites[1] == nil then --what the heck is going on here
                 log("nil detected in pre-req table of "..t)
@@ -287,34 +287,34 @@ function omni.science.tech_updates()
                 t = data.raw.technology[t].prerequisites[1]
                 count = count + 1
               end
-						end
-						cost = cost*(math.pow(1+chain*c/(c+1),1+lv/(lv+1)))
-					end
-				end
+                        end
+                        cost = cost*(math.pow(1+chain*c/(c+1),1+lv/(lv+1)))
+                    end
+                end
         table.insert(tech_list.cost,cost)
         table.insert(tech_list.height,h+1)
         table.remove(check_techs,i)
-			end
-		end
-	end
+            end
+        end
+    end
 
-	if #check_techs>0 then
-		--log("Something didn't go as I wanted and this many remains: "..#check_techs.." and they are")
+    if #check_techs>0 then
+        --log("Something didn't go as I wanted and this many remains: "..#check_techs.." and they are")
     for _,left in pairs(check_techs) do
       --log(left)
-		end
-	end
+        end
+    end
 
-	if Set.ModAllCost then
+    if Set.ModAllCost then
     for i,tech in pairs(tech_list.name) do
       local raw_tech = data.raw.technology[tech]
       if Set.Cumul then
-				(raw_tech.unit or raw_tech.normal.unit).count = math.ceil(tech_list.cost[i])
+                (raw_tech.unit or raw_tech.normal.unit).count = math.ceil(tech_list.cost[i])
       elseif Set.Expon then
         (raw_tech.unit or raw_tech.normal.unit).count = math.ceil(Set.ExponInit*math.pow(Set.ExponBase,tech_list.height[i]))
       else --no maths changing mode
         log("why bother with this mod if you don't want cumulative or exponential tech costs?")
-			end
-		end
-	end
+            end
+        end
+    end
 end
