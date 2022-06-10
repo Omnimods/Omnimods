@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.29
-Date: 2022.06.XX
+Date: 2022.06.10
   Bugfixes:
     - Fixed some (recently introduced) incompatibilites with portal versions of pyrawores
     - Fix load issues with most recent bobores when gem sorting is disabled
