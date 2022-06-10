@@ -4,7 +4,7 @@ if bobmods and bobmods.ores then
             type = "recipe",
             name = "sort-gem-ore",
             energy_required = 1,
-	        icon_size = 32,
+            icon_size = 32,
             ingredients = {
                 {"gem-ore", 1},
             },
@@ -30,6 +30,6 @@ if bobmods and bobmods.ores then
 end
 
 if mods["bobplates"] then
-	omni.matter.add_omnicium_alloy("aluminium","aluminium-plate","ingot-aluminium")
-	omni.matter.add_omnicium_alloy("tungsten","tungsten-plate","casting-powder-tungsten")
+    omni.matter.add_omnicium_alloy("aluminium","aluminium-plate","ingot-aluminium")
+    omni.matter.add_omnicium_alloy("tungsten","tungsten-plate","casting-powder-tungsten")
 end

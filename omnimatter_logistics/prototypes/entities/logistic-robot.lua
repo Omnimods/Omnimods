@@ -3,78 +3,78 @@ local bot = {}
   bot[#bot+1] = {
     type = "item-subgroup",
     name = "omni-logistic",
-	group = "omnilogistics",
-	order = "aa",
+    group = "omnilogistics",
+    order = "aa",
   }
 
 local costs= {circuit={},mechanical={},plate={}}
 
 costs.circuit[#costs.circuit+1] = {name = "electronic-circuit", quant={10,16}}
 if mods["angelsindustries"] then
-	costs.circuit[#costs.circuit+1] = {name = "circuit-red-loaded", quant={5,7,10}}
+    costs.circuit[#costs.circuit+1] = {name = "circuit-red-loaded", quant={5,7,10}}
 elseif mods["bobelectronics"] then
-	costs.circuit[#costs.circuit+1] = {name = "basic-circuit-board", quant={5,7,10}}
+    costs.circuit[#costs.circuit+1] = {name = "basic-circuit-board", quant={5,7,10}}
 end
 if mods["aai-industry"] then
-	costs.mechanical[#costs.mechanical+1]={name = "motor", quant={5,8,12}}
+    costs.mechanical[#costs.mechanical+1]={name = "motor", quant={5,8,12}}
   costs.mechanical[#costs.mechanical+1]={name = "electric-motor", quant={7,7}}
 else
   costs.mechanical[#costs.mechanical+1]={name = "iron-gear-wheel", quant={5,7,10,15,20}}
 end
 if mods["bobplates"] then
   costs.plate[#costs.plate+1]={name = "steel-plate", quant={8,12}}
-	costs.plate[#costs.plate+1]={name = "bronze-alloy", quant={7,10,15}}
+    costs.plate[#costs.plate+1]={name = "bronze-alloy", quant={7,10,15}}
 else
   costs.plate[#costs.plate+1]={name = "steel-plate", quant={5,8,12,15,20}}
 end
   
 for i=1,nr_bots do
-	bot[#bot+1] = {
+    bot[#bot+1] = {
     type = "item",
     name = "omni-logistic-robot-"..i,
     icon = "__omnimatter_logistics__/graphics/icons/omni-logistic-bot.png",
     icon_size = 32,
-	localised_name = {"item-name.omni-logistic-bot", i},
+    localised_name = {"item-name.omni-logistic-bot", i},
     flags = {},
     order = "c[angels-logistic-robot]",
     subgroup = "omni-logistic",
     place_result = "omni-logistic-robot-"..i,
     stack_size = 20
     }
-	
-	local c = {}
-	for _,kind in pairs(costs) do
-		local left = i
-		local level = 1
-		while kind[level].quant[left] == nil do
-			left=left-#kind[level].quant
-			level=level+1
-		end
-		c[#c+1]={type="item",name=kind[level].name,amount=kind[level].quant[left]}
-	end
-	if i > 1 then c[#c+1]={type="item",name="omni-logistic-robot-"..i-1,amount=1} end
-	bot[#bot+1] = {
+    
+    local c = {}
+    for _,kind in pairs(costs) do
+        local left = i
+        local level = 1
+        while kind[level].quant[left] == nil do
+            left=left-#kind[level].quant
+            level=level+1
+        end
+        c[#c+1]={type="item",name=kind[level].name,amount=kind[level].quant[left]}
+    end
+    if i > 1 then c[#c+1]={type="item",name="omni-logistic-robot-"..i-1,amount=1} end
+    bot[#bot+1] = {
     type = "recipe",
     name = "omni-logistic-robot-"..i,
     icon = "__omnimatter_logistics__/graphics/icons/omni-logistic-bot.png",
     icon_size = 32,
     subgroup = "omni-logistic",
     order = "g[hydromnic-acid]",
-	energy_required = 10,
+    energy_required = 10,
     enabled = false,
     ingredients =c,
     results =
     {
       {type="item", name="omni-logistic-robot-"..i, amount=1},
     },
-	}
-	
-	bot[#bot+1] = {
+    }
+    
+    bot[#bot+1] = {
     type = "logistic-robot",
     name = "omni-logistic-robot-"..i,
     icon = "__omnimatter_logistics__/graphics/icons/omni-logistic-bot.png",
     icon_size = 32,
-	localised_name = {"item-name.omni-logistic-bot", i},
+    localised_name = {"item-name.omni-logistic-bot", i},
     flags = {"placeable-player", "player-creation", "placeable-off-grid", "not-on-map"},
     minable = { mining_time = 0.1, result = "omni-logistic-robot-"..i},
     resistances = { { type = "fire", percent = 85 } },
@@ -97,7 +97,7 @@ for i=1,nr_bots do
       line_length = 16,
       width = 128,
       height = 128,
-	  scale = 0.5,
+      scale = 0.5,
       frame_count = 1,
       shift = {0, 0},
       direction_count = 16,
@@ -110,10 +110,10 @@ for i=1,nr_bots do
       line_length = 16,
       width = 128,
       height = 128,
-	  scale = 0.5,
+      scale = 0.5,
       frame_count = 1,
       shift = {0, 0},
-	  scale = 0.5,
+      scale = 0.5,
       direction_count = 16,
     },
     in_motion =
@@ -123,24 +123,24 @@ for i=1,nr_bots do
       line_length = 16,
       width = 128,
       height = 128,
-	  scale = 0.5,
+      scale = 0.5,
       frame_count = 1,
       shift = {0, 0},
-	  scale = 0.5,
+      scale = 0.5,
       direction_count = 16,
       y = 384
     },
     in_motion_with_cargo =
     {
-	  filename = "__omnimatter_logistics__/graphics/entity/cargo-robot/cargo-robot.png",
-	  priority = "high",
+      filename = "__omnimatter_logistics__/graphics/entity/cargo-robot/cargo-robot.png",
+      priority = "high",
       line_length = 16,
       width = 128,
       height = 128,
-	  scale = 0.5,
+      scale = 0.5,
       frame_count = 1,
       shift = {0, 0},
-	  scale = 0.5,
+      scale = 0.5,
       direction_count = 16,
       y = 256
     },
@@ -197,11 +197,11 @@ for i=1,nr_bots do
     type = "technology",
     name = "omnibots-logistic-"..i,
     icon = "__omnimatter_logistics__/graphics/technology/omni-logistic-bot.png",
-	icon_size = 128,
-	prerequisites = req,
+    icon_size = 128,
+    prerequisites = req,
     effects =
     {
-	  {
+      {
         type = "unlock-recipe",
         recipe = "omni-logistic-robot-"..i
       },
@@ -210,9 +210,9 @@ for i=1,nr_bots do
     {
       count = 350+50*(math.pow(2,i-1)-1),
       ingredients = {
-	  {"automation-science-pack", 1},
-	  {"logistic-science-pack", 1},
-	  },
+      {"automation-science-pack", 1},
+      {"logistic-science-pack", 1},
+      },
       time = 60
     },
     order = "c-a"

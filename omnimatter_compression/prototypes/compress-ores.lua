@@ -5,7 +5,7 @@ local blacklist = {{"creative","mode"}}--{"stone",{"creative","mode"}}
 
 for name,ore in pairs(data.raw.resource) do
     if not omni.lib.string_contained_list(name,blacklist) then
-        if ore.name then
+        if ore.name and ore.minable and (ore.minable.result or ore.minable.results) then
             local compressed = false
             local new = table.deepcopy(ore)
             new.localised_name = omni.lib.locale.custom_name(ore, "compressed-ore")
@@ -47,7 +47,7 @@ for name,ore in pairs(data.raw.resource) do
             end
 
             local max_stacksize = 0
-            for _,drop in ipairs(new.minable.results) do        
+            for _,drop in ipairs(new.minable.results) do
                 for _,comp in pairs({"compressed-", "concentrated-"}) do
                     if compressed_item_names[comp .. drop.name] then
                         max_stacksize = math.max(omni.lib.find_stacksize(drop.name),max_stacksize) --returns 50 for fluids

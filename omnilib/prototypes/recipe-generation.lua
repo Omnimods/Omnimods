@@ -580,7 +580,7 @@ function ItemGen:setIcons(icons,mod)
             local ic_scale
             local ic_sz = 32
             for _, c in pairs(icons) do
-                if c.icon_size then	ic_sz=c.icon_size end
+                if c.icon_size then    ic_sz=c.icon_size end
                 if c.scale then ic_scale = c.scale*32/ic_sz end
                 if type(c)=="table" then
                     ic[#ic+1] = {icon = "__"..mod.."__/graphics/icons/"..(c.name or c.icon)..".png",
@@ -636,7 +636,7 @@ function ItemGen:setIcons(icons,mod)
             else
                 setup={{icon = icons, icon_size=ic_sz}}
             end
-            self.icons = function(levels,grade)	return setup end
+            self.icons = function(levels,grade)    return setup end
         elseif type(icons) == "string" and not proto and (mod or self.mod) then
             self.icons = function(levels,grade) return {{icon = "__"..(mod or self.mod).."__/graphics/icons/"..icons..".png",icon_size=ic_sz}} end
         elseif proto then
@@ -699,7 +699,7 @@ function ItemGen:addIcon(icon)
     elseif type(icon)=="table" then
         a = function(levels,grade) return {{icon=icon[1]}} end
     else
-        a = function(levels,grade)	return {{icon=icon}} end
+        a = function(levels,grade)    return {{icon=icon}} end
     end
     local f = omni.lib.clone_function(self.icons)
     self.icons = function(levels,grade) return omni.lib.union(f(levels,grade),a(levels,grade)) end
@@ -1855,7 +1855,7 @@ function RecGen:generate_recipe()
         setSubgroup(self.subgroup(0,0)):
         setOrder(self.order(0,0)):
         setStacksize(self.stack_size):
-        setFuelValue(self.fuel_value):		
+        setFuelValue(self.fuel_value):        
         setPlace(self.place_result(0,0)):
         setFlags(self.flags):
         setLocName(self.loc_name(0,0)):
@@ -2203,7 +2203,7 @@ function RecGen:setTechIcons(icons,mod)
         self.tech.icons = function(levels,grade) return ic end
     else
         self.tech.icons = icons
-    end	
+    end    
     return self
 end
 function RecGen:setTechPacks(cost)
@@ -2727,9 +2727,9 @@ function TechGen:generate_tech()
     order = "c-a"
     }
     --if type(tech.icon) == "table" and tech.icon[1] then
-    --	tech.icons = self.icon
-    --	tech.icon = nil
-    --	tech.icon_size = nil
+    --    tech.icons = self.icon
+    --    tech.icon = nil
+    --    tech.icon_size = nil
     --end
     if self.loc_name and next(self.loc_name) then
         tech.localised_name = self.loc_name

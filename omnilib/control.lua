@@ -45,7 +45,7 @@ local function update_building_recipes()
             for _, force in pairs(game.forces) do
                 local force_recs = memoize(force.recipes)
                 if entity.force == force then
-                    local current_recipe = entity.get_recipe()					
+                    local current_recipe = entity.get_recipe()
                     if current_recipe then
                         local current_recipe_name = current_recipe.name
                         -- Iterate until we hit a locked recipe
@@ -123,8 +123,8 @@ local function omnidate(technology)
     end
     logger("Beginning omnidate" .. (clear_caches and " (full)" or "") .. (full_iter and " (partial)" or ""))
     -- Proxies
-    local correlated_recipes = global.omni.correlated_recipes	
-    local recipe_techs = global.omni.recipe_techs	
+    local correlated_recipes = global.omni.correlated_recipes
+    local recipe_techs = global.omni.recipe_techs
     local stock_recs = global.omni.stock_recs
     -- Game items
     local forces = game.forces
@@ -217,7 +217,7 @@ local function omnidate(technology)
             for _, effect in pairs(tech.effects) do
                 if effect.type == "unlock-recipe" then
                     local effect_recipe = effect.recipe
-                    has_added = true			
+                    has_added = true
                     techrec[effect_recipe] = correlated_recipes[effect_recipe]
                 end
             end
@@ -316,7 +316,7 @@ local function omnidate(technology)
             end
         end
         -- If we just unlocked compression-recipes, or we're doing a full update
-        if technology or clear_caches then			
+        if technology or clear_caches then
             local tech_status = technology and technology.researched
             local is_compression_unlock = (technology_name == "compression-recipes")
             if clear_caches or is_compression_unlock or is_tier_unlock then

@@ -69,7 +69,7 @@ local function zero_pad(num, places)
     return string.format("%0" .. places .. "d", num)
 end
 --set naming convention
-local find_top_tier = function(build, kind)
+local function find_top_tier(build, kind)
     local name = build.name
     if not settings.startup["omnicompression_final_building"].value then
         return build
@@ -109,7 +109,7 @@ local find_top_tier = function(build, kind)
     return build
 end
 --set category if it does not exist
-local category_exists = function(build)
+local function category_exists(build)
     if build.crafting_categories then --no crafting_categories, don't loop
         for i, cat in pairs(build.crafting_categories) do --check crafting_categories and add compressed version if does not already exist
             if not data.raw["recipe-category"][cat.."-compressed"] then
@@ -121,7 +121,7 @@ local category_exists = function(build)
     end
 end
 
-local new_effect = function(effect, level, linear, constant)
+local function new_effect(effect, level, linear, constant)
     local mult = (
         (linear and level + 1)
         or constant or
@@ -131,7 +131,7 @@ local new_effect = function(effect, level, linear, constant)
 end
 
 --new fluids for boilers and generators
-local create_concentrated_fluid = function(fluid, tier)
+local function create_concentrated_fluid(fluid, tier)
     local new_fluid = table.deepcopy(data.raw.fluid[fluid])
 
     new_fluid.localised_name = omni.lib.locale.custom_name(new_fluid, "compressed-fluid", tier)
@@ -149,7 +149,7 @@ local create_concentrated_fluid = function(fluid, tier)
     data:extend{new_fluid}
 end
 
-local create_concentrated_recipe = function(fluid, tier, temp)
+local function create_concentrated_recipe(fluid, tier, temp)
     local new_fluid = table.deepcopy(data.raw.fluid[fluid])
     if temp then
         -- Clamp to valid recipe values
@@ -333,6 +333,8 @@ setmetatable(modspec, {
             return proto.module_specification[self[key]]
     end
 })
+
+
 -------------------------------------------------------------------------------
 --[[Entity Type Specific Properties]]--
 -------------------------------------------------------------------------------
@@ -439,6 +441,39 @@ local run_entity_updates = function(new, kind, i)
         end
         )
     end
+
+    --------------------------
+    --[[Power type updates]]--
+    --------------------------
+    --energy source
+    if new.energy_source then
+        if new.energy_source.emissions_per_minute then
+            new.energy_source.emissions_per_minute = new.energy_source.emissions_per_minute * math.pow(multiplier,i+1)
+        end
+        if new.energy_source.buffer_capacity then
+            new.energy_source.buffer_capacity = new_effect(new.energy_source.buffer_capacity, i)
+        end
+        if new.energy_source.drain then
+            new.energy_source.drain = new_effect(new.energy_source.drain, i)
+        end
+        if new.energy_source.input_flow_limit then
+            new.energy_source.input_flow_limit = new_effect(new.energy_source.input_flow_limit, i)
+        end
+    end
+
+    --energy usage
+    if not omni.lib.is_in_table(kind,not_energy_use) and new.energy_usage then
+        if omni.lib.string_contained_list(new.name,{"boiler","omnifluid"}) then
+            new.energy_usage = new_effect(new.energy_usage, i)
+        else
+            new.energy_usage = new_effect(new.energy_usage, i)
+            new.energy_usage = new_effect(new.energy_usage, nil, nil, energy_multiplier)
+        end
+    end
+
+    ---------------------------
+    --[[Entity type updates]]--
+    ---------------------------
     --recipe category settings for assembly/furnace types
     if kind == "assembling-machine" or kind == "furnace" or kind == "rocket-silo" then
         local new_cat = table.deepcopy(new.crafting_categories) --revert each time
@@ -475,12 +510,8 @@ local run_entity_updates = function(new, kind, i)
             new.researching_speed = new.researching_speed * math.pow(multiplier, i)
         end
     end
-    --[[Power type updates]]--
-    --energy source
-    if new.energy_source and new.energy_source.emissions_per_minute then
-        new.energy_source.emissions_per_minute = new.energy_source.emissions_per_minute * math.pow(multiplier,i+1)
-    end
-    --power production tweaks
+
+    --Solar Panels / Reactors
     if kind == "solar-panel" then
         new.production = new_effect(new.production,i)
     elseif kind == "reactor" then
@@ -490,6 +521,7 @@ local run_entity_updates = function(new, kind, i)
             new.heat_buffer.max_transfer = new_effect(new.heat_buffer.max_transfer,i)
         end
     end
+    
     --Heat Pipe
     if kind == "heat-pipe" then
         if new.heat_buffer then
@@ -497,6 +529,7 @@ local run_entity_updates = function(new, kind, i)
             new.heat_buffer.max_transfer = new_effect(new.heat_buffer.max_transfer,i)
         end
     end
+
     --Boiler
     if kind == "boiler" then
         if new.energy_consumption then new.energy_consumption = new_effect(new.energy_consumption, i, nil, multiplier^i) end
@@ -507,6 +540,7 @@ local run_entity_updates = function(new, kind, i)
         process_fluid_box(new.output_fluid_box, i, true, new) -- Make sure output temp gets a recipe
         process_fluid_box(new.fluid_box, i, true)
     end
+
     --Generator
     if kind == "generator" and new.fluid_box then
         process_fluid_box(new.output_fluid_box, i, nil)
@@ -519,30 +553,16 @@ local run_entity_updates = function(new, kind, i)
         --new.fluid_usage_per_tick*math.pow((multiplier+1)/multiplier,i)
         --new.effectivity = new.effectivity*math.pow(multiplier,i)
     end
+
     --Accumulator
     if kind == "accumulator" then
-        local eff = new_effect(new.energy_source.buffer_capacity,i)
-        new.energy_source.buffer_capacity = string.sub(eff,1,string.len(eff)-1).."J"
-        new.energy_source.input_flow_limit = new_effect(new.energy_source.input_flow_limit,i)
+        --Make sure Buffer capacity is displayed in Joules again
+        new.energy_source.buffer_capacity = string.sub(new.energy_source.buffer_capacity,1,string.len(new.energy_source.buffer_capacity)-1).."J"
         if new.energy_source.usage_priority == "tertiary" then
-            new.energy_source.output_flow_limit = new_effect(new.energy_source.output_flow_limit,i)
-        end
-    else
-    --double check...input_flow_limit on non acumulators
-        if new.energy_source and new.energy_source.input_flow_limit and type(new.energy_source.input_flow_limit)=="string" then
-            new.energy_source.input_flow_limit = new_effect(new.energy_source.input_flow_limit,i)
+            new.energy_source.output_flow_limit = new_effect(new.energy_source.output_flow_limit, i)
         end
     end
-    --[[Support type updates]]--
-    --energy usage
-    if not omni.lib.is_in_table(kind,not_energy_use) and new.energy_usage then
-        if omni.lib.string_contained_list(new.name,{"boiler","omnifluid"}) then
-            new.energy_usage = new_effect(new.energy_usage, i)
-        else
-            new.energy_usage = new_effect(new.energy_usage, i)
-            new.energy_usage = new_effect(new.energy_usage, nil, nil, energy_multiplier)
-        end
-    end
+
     --mining speed and radius update
     if kind == "mining-drill" then
         local speed_divisor = 2
@@ -553,11 +573,13 @@ local run_entity_updates = function(new, kind, i)
         --new.mining_power = new.mining_power * math.pow(multiplier,i/2)
         new.resource_searching_radius = new.resource_searching_radius *(i+1)
     end
+
     --belts
     if kind == "transport-belt" or kind == "loader" or kind == "splitter" or kind == "underground-belt" or kind == "loader-1x1" then
         if new.animation_speed_coefficient then new.animation_speed_coefficient = new.animation_speed_coefficient*(i+2) end
         new.speed = new.speed*(i+2)
     end
+
     --beacons
     if kind == "beacon" then
         if new.supply_area_distance*(i+1) <= 64 then
@@ -567,6 +589,7 @@ local run_entity_updates = function(new, kind, i)
         end
         new.module_specification.module_slots = new.module_specification.module_slots*(i+1)
     end
+
     --power poles
     if kind == "electric-pole" then
         new.maximum_wire_distance = math.min(new.maximum_wire_distance*multiplier*i,64)
@@ -600,6 +623,7 @@ local run_entity_updates = function(new, kind, i)
             end
         end
     end
+
     --offshore pumps
     if kind == "offshore-pump" then
         -- new.fluid = "concentrated-"..new.fluid
@@ -609,6 +633,7 @@ local run_entity_updates = function(new, kind, i)
         end
         new.fluid = fl_name
     end
+
     --Inserters!
     if kind == "inserter" then
         new.extension_speed = new.extension_speed * (i + 1)
@@ -617,11 +642,13 @@ local run_entity_updates = function(new, kind, i)
         new.extension_speed = new.extension_speed * (1 + (multiplier / 15))
         new.rotation_speed = new.rotation_speed * (1 + (multiplier / 15))
     end
+
     --Generators!
     if kind == "burner-generator" then
         new.max_power_output = new_effect(new.max_power_output, i)
         new.burner.emissions_per_minute = (new.burner.emissions_per_minute or 0) * math.pow(multiplier,i+1)
     end
+
     --Rockets!
     if kind == "rocket-silo" and new.fixed_recipe then
         new.door_opening_speed = new.door_opening_speed * math.pow(multiplier, i)
@@ -638,6 +665,7 @@ local run_entity_updates = function(new, kind, i)
         rocket.flying_acceleration = rocket.flying_acceleration * math.pow(multiplier, i)
         data:extend({rocket})
     end
+
     --Roboports
     if kind == "roboport" then
         -- Otherwise we get a backup of bots waiting
@@ -668,9 +696,13 @@ local run_entity_updates = function(new, kind, i)
             new.charging_station_count = 4
         end
         new.charging_station_count = new.charging_station_count * math.pow(multiplier, i)
+        --recharge_minimum has to be >= energy_usage --> Make sure to use the same multiplier
+        new.recharge_minimum = new_effect(new.recharge_minimum, i)
+        new.recharge_minimum = new_effect(new.recharge_minimum, nil, nil, energy_multiplier)
     end
     return new
 end
+
 log("Start building compression")
 
 -------------------------------------------------------------------------------

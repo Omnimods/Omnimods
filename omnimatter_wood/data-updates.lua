@@ -12,7 +12,7 @@ if mods["angelsbioprocessing"] and mods["bobgreenhouse"] then --checks both bio 
     data.raw.recipe["wood-sawing-manual"].localised_name = {"item-name.omniwood"}
 end
 --update ingredients
-if mods["bobplates"] then	omni.lib.replace_recipe_ingredient("omnimutator","copper-plate","glass") end
+if mods["bobplates"] then    omni.lib.replace_recipe_ingredient("omnimutator","copper-plate","glass") end
 
 if data.raw.recipe["burner-lab"] then
     omni.lib.replace_recipe_ingredient("burner-lab","wood","omniwood")

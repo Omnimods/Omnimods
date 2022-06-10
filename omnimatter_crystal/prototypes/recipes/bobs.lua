@@ -1,5 +1,5 @@
 if bobmods and bobmods.ores then
-    local products={		
+    local products={        
         ["lead-ore"]="Lead",
         ["tin-ore"]="Tin",
         ["quartz"]="Silicon",

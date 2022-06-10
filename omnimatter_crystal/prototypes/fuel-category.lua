@@ -1,11 +1,11 @@
 data:extend({
 {
-	type = "fuel-category",
-	name = "omnial"
+    type = "fuel-category",
+    name = "omnial"
 },
 {
-	type = "fuel-category",
-	name = "crystal"
+    type = "fuel-category",
+    name = "crystal"
 },
 
 })

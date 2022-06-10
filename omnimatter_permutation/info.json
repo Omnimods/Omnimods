@@ -7,17 +7,17 @@
 "description":"Let's you shift the outputs of fluids on recipes and buildings to make better designs. This involves ALL premutations of ANY recipe and output/input.",
 "factorio_version":"1.1",
 "dependencies":[
-	"base",
-	"omnilib >= 4.1.0",
-	"?omnimatter_fluid",
-	"?omnimatter_compression",
-	"?omnimatter_energy",
-	"?omnimatter_wood",
-	"?omnimatter",
-	"?omnimatter_crystal",
-	"?PyCoalTBaA",
-	"?MoreSciencePacks",
-	"?MomoTweak",
-	"(?)pypostprocessing"
+    "base",
+    "omnilib >= 4.1.0",
+    "?omnimatter_fluid",
+    "?omnimatter_compression",
+    "?omnimatter_energy",
+    "?omnimatter_wood",
+    "?omnimatter",
+    "?omnimatter_crystal",
+    "?PyCoalTBaA",
+    "?MoreSciencePacks",
+    "?MomoTweak",
+    "(?)pypostprocessing"
 ]
 }

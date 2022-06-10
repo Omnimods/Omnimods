@@ -1,17 +1,17 @@
 local function timestier(row,col)
-	local first_row = {1,0.5,0.2}
-	if row == 1 then
-		return first_row[col]
-	elseif col == 3 then
-		return 0.2
-	else
-		return timestier(row-1,col)+timestier(row-1,col+1)
-	end
+    local first_row = {1,0.5,0.2}
+    if row == 1 then
+        return first_row[col]
+    elseif col == 3 then
+        return 0.2
+    else
+        return timestier(row-1,col)+timestier(row-1,col+1)
+    end
 end
 
 local get_tech_times = function(levels,tier)
-	local t = 50*timestier(tier,1)
-	return t
+    local t = 50*timestier(tier,1)
+    return t
 end
 
 -- Burner Omniplant

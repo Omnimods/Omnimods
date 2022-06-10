@@ -14,7 +14,7 @@ local function gather(pos,entity)
 end
 
 local function On_Remove(event)
-    local entity = event.entity	
+    local entity = event.entity    
     if entity.valid and entity.name == "omni-solar-road" then
         local entity_group = gather(entity.position,nil)
         if entity_group then
@@ -37,7 +37,7 @@ local function Player_Tile_Built(event)
         local position = vv.position
         local currentTilename = surface.get_tile(position.x,position.y).name
 
-        if currentTilename == "omni-solar-road" then			
+        if currentTilename == "omni-solar-road" then            
             local force = event.force
             local solar_mat = surface.get_tile(position.x,position.y)
             local sm_pole_name = "omni-solar-road-pole"  
@@ -64,13 +64,13 @@ local function Player_Tile_Built(event)
 
             --- Remove the Hidden Solar Panel
             local entity2 = entities[1]
-            entity2 = surface.find_entities_filtered{area=area, name="omni-solar-road-pole"  , limit=1}	
+            entity2 = surface.find_entities_filtered{area=area, name="omni-solar-road-pole"  , limit=1}    
 
             if entity2 then
                 for _, o in pairs(surface.find_entities_filtered({area = area, name = "omni-solar-road-pole"  })) do o.destroy() end
                 writeDebug("bi_solar-panel_for_Solar-Mat Removed")
             else
-                writeDebug("bi_solar-panel_for_Solar-Mat not found")				
+                writeDebug("bi_solar-panel_for_Solar-Mat not found")                
             end
         end
     end
@@ -89,7 +89,7 @@ local function Robot_Tile_Built(event)
         local position = vv.position
         local currentTilename = surface.get_tile(position.x,position.y).name
 
-        if currentTilename == "omni-solar-road" then		
+        if currentTilename == "omni-solar-road" then        
             writeDebug("Solar Mat has been built")
             local force = event.force
             local solar_mat = surface.get_tile(position.x,position.y)
@@ -114,12 +114,12 @@ local function Robot_Tile_Built(event)
                 for _, o in pairs(surface.find_entities_filtered({area = area, name = "omni-solar-road-pole" })) do o.destroy() end
                 writeDebug("bi_solar_pole Removed")
             else
-                writeDebug("bi_solar_pole not found")				
+                writeDebug("bi_solar_pole not found")                
             end
 
-            --- Remove the Hidden Solar Panel		
+            --- Remove the Hidden Solar Panel        
             local entity2 = entities[1]
-            entity2 = surface.find_entities_filtered{area=area, name="omni-solar-road-panel" , limit=1}	
+            entity2 = surface.find_entities_filtered{area=area, name="omni-solar-road-panel" , limit=1}    
             if entity2 then
                 for _, o in pairs(surface.find_entities_filtered({area = area, name = "omni-solar-road-panel" })) do o.destroy() end
                 writeDebug("bi_solar-panel_for_Solar-Mat Removed")

@@ -47,7 +47,7 @@ function omni.lib.standardise(recipe)
                 end
             end
         else
-            error("Error: Corrupted recipe '"..recipe.name.."' has no ingredients set")	
+            error("Error: Corrupted recipe '"..recipe.name.."' has no ingredients set")    
         end
 
         if recipe.expensive.ingredients then

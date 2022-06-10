@@ -6,7 +6,7 @@ data:extend({
     icon_size = 32,
     subgroup = "early-armours",
     order = "g[hydromnic-acid]",
-	  energy_required = 10,
+      energy_required = 10,
     enabled = false,
     ingredients =
     {

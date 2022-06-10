@@ -5,7 +5,7 @@ data:extend(
     name = "omniwood",
     order = "z",
     icon = "__omnimatter_wood__/graphics/technology/omniwood-category.png",
-	  icon_size = 128,
+      icon_size = 128,
   },
   {
     type = "item-subgroup",

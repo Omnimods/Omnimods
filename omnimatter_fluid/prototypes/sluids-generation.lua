@@ -588,7 +588,7 @@ data:extend(new_boiler)
 local function replace_barrels(recipe)
     for _, dif in pairs({"normal","expensive"}) do
         for _, ingres in pairs({"ingredients","results"}) do
-            for	j, ing in pairs(recipe[dif][ingres]) do
+            for    j, ing in pairs(recipe[dif][ingres]) do
                 --Remove empty barrels
                 if ing.name and (ing.name == "empty-barrel" or ing.name == "empty-canister"  or ing.name == "empty-gas-canister")then
                     recipe[dif][ingres][j] = nil
@@ -624,7 +624,7 @@ for _, rec in pairs(data.raw.recipe) do
         if std == true then omni.lib.standardise(rec) end
         for _, dif in pairs({"normal","expensive"}) do
             for _, ingres in pairs({"ingredients","results"}) do
-                for	_, ing in pairs(rec[dif][ingres]) do
+                for    _, ing in pairs(rec[dif][ingres]) do
                     if string.find(ing.name, "%-barrel") or string.find(ing.name, "%-canister")  or string.find(ing.name, "%-gas%-canister") then
                         replace_barrels(rec)
                         goto continue
@@ -665,7 +665,7 @@ for name, _ in pairs(recipe_mods) do
             local lcm_mult = 1
             for _, ingres in pairs({"ingredients","results"}) do
                 --First loop: Calculate the lcm respecting omni.fluid.sluid_contain_fluid
-                for	_, ing in pairs(rec[dif][ingres]) do
+                for    _, ing in pairs(rec[dif][ingres]) do
                     local amount = 0
                     if ing.type == "fluid" and ing.amount and ing.amount ~= 0 then
                         --Round the fluid amount to get rid of weird base numbers, divide afterwards to not lose precision
@@ -701,7 +701,7 @@ for name, _ in pairs(recipe_mods) do
 
             --Second loop: Find GCD of all ingres multiplied with the LCM multiplier we just calculated (with sluid_contain_fluid applied for fluids)
             for _, ingres in pairs({"ingredients","results"}) do
-                for	_, ing in pairs(rec[dif][ingres]) do
+                for    _, ing in pairs(rec[dif][ingres]) do
                     local amount = 0
                     if ing.type == "fluid" and ing.amount and ing.amount ~= 0 then
                         amount = omni.lib.round(omni.fluid.get_true_amount(ing) * mult[dif]) / omni.fluid.sluid_contain_fluid
@@ -732,7 +732,7 @@ for name, _ in pairs(recipe_mods) do
                 max_amount = 0
                 lcm_mult = 1
                 for _, ingres in pairs({"ingredients","results"}) do
-                    for	_, ing in pairs(rec[dif][ingres]) do
+                    for    _, ing in pairs(rec[dif][ingres]) do
                         local amount = 0
                         if ing.type == "fluid" then
                             --Round the fluid amount to get rid of weird base numbers, divide afterwards to not lose precision
@@ -758,7 +758,7 @@ for name, _ in pairs(recipe_mods) do
 
                 --Recalculate GCD
                 for _, ingres in pairs({"ingredients","results"}) do
-                    for	_, ing in pairs(rec[dif][ingres]) do
+                    for    _, ing in pairs(rec[dif][ingres]) do
                         local amount = 0
                         if ing.type == "fluid" then
                             --Use fluids round function after the ratio division to avoid decimals
@@ -786,7 +786,7 @@ for name, _ in pairs(recipe_mods) do
         for _, dif in pairs({"normal","expensive"}) do
             local fix_stacksize = false
             for _, ingres in pairs({"ingredients","results"}) do
-                for	n, ing in pairs(rec[dif][ingres]) do
+                for    n, ing in pairs(rec[dif][ingres]) do
                     if ing.type == "fluid" then
                         local new_ing={}--start empty to remove all old props to add only what is needed
                         new_ing.type = "item"
@@ -853,8 +853,8 @@ for name, _ in pairs(recipe_mods) do
                                     break
                                 end
                             end
-                            --Check if we want recipe copies for all temperatures in the min/max range and create them later by copying
-                            if omni.fluid.multi_temp_recipes[rec.name] then
+                            --Check if we want recipe copies for all temperatures in the min/max range and create them later by copying (only add this once!)
+                            if omni.fluid.multi_temp_recipes[rec.name] and not add_multi_temp_recipes[rec.name] then
                                 add_multi_temp_recipes[rec.name] = {fluid_name = ing.name, temperatures = {min = ing.minimum_temperature, max = ing.maximum_temperature, original = found_temp or "none"}}
                             end
                         -- No temperature set and "none" is in our list --> no temp sluid exists
@@ -885,7 +885,15 @@ for name, _ in pairs(recipe_mods) do
                     else
 
                         --Multiply amount with mult, keep probability in mind
-                        local new_amount = omni.lib.round(omni.fluid.get_true_amount(ing) * mult[dif])
+                        local new_amount = omni.fluid.get_true_amount(ing) * mult[dif]
+                        if new_amount < 1 then
+                            ing.probability = new_amount
+                            new_amount = 1
+                        else
+                            omni.lib.round(new_amount)
+                            ing.probability = nil
+                        end
+
                         ing.amount = math.min(new_amount, 65535)
 
                         --Apply the mult on the catalyst amount aswell
@@ -896,7 +904,6 @@ for name, _ in pairs(recipe_mods) do
                         --Nil probability related values since these are calculated into the amount now
                         ing.amount_max = nil
                         ing.amount_min = nil
-                        ing.probability = nil
 
                         if new_amount > 65535 then
                             log("WARNING: Ingredient "..ing.name.." from the recipe "..rec.name.." ran into the upper limit. Amount = "..new_amount.." Mult = "..mult[dif])
@@ -914,7 +921,7 @@ for name, _ in pairs(recipe_mods) do
             --Apply stack size fixes
             if fix_stacksize then
                 local add = {}
-                for	_, ing in pairs(rec[dif]["results"]) do
+                for    _, ing in pairs(rec[dif]["results"]) do
                     local proto = omni.lib.find_prototype(ing.name)
                     if proto and (omni.lib.is_in_table("not-stackable", proto.flags or {}) or proto.stack_size == 1) then
                         local to_add = ing.amount - 1
@@ -966,8 +973,10 @@ for rec_name, fluid_data in pairs(add_multi_temp_recipes) do
     local cat = "sluid"
     if fluid_cats["mush"][fluid_data.fluid_name] then cat = "mush" end
     --Get all required temperatures
+    local min_temp = fluid_data.temperatures.min or data.raw.fluid[fluid_data.fluid_name].default_temperature or -65535
+    local max_temp = fluid_data.temperatures.max or data.raw.fluid[fluid_data.fluid_name].max_temperature or math.huge
     for _, temp in pairs(fluid_cats[cat][fluid_data.fluid_name].temperatures) do
-        if (type(temp) == "number" and temp >= (fluid_data.temperatures.min or -65535) and temp <= (fluid_data.temperatures.max or math.huge) and type(fluid_data.temperatures.original) == "number" and temp ~= fluid_data.temperatures.original) or
+        if (type(temp) == "number" and temp >= (min_temp or -65535) and temp <= (max_temp) and type(fluid_data.temperatures.original) == "number" and temp ~= fluid_data.temperatures.original) or
         (type(temp) ~= "number" and type(fluid_data.temperatures.original) ~= "number") then
             temperatures[#temperatures+1] = temp
         end

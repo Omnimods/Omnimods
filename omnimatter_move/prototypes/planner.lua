@@ -3,7 +3,7 @@ data:extend({
     type = "selection-tool",
     name = "ore-move-planner",
     icon = "__omnimatter_move__/graphics/planner.png",
-	  icon_size = 32,
+      icon_size = 32,
     stack_size = 1,
     stackable = false,
     subgroup = "tool",
@@ -29,7 +29,7 @@ data:extend({
     localised_name = {"item-name.ore-move-planner"},
     action = "lua",
     associated_control_input = "give-ore-move-planner",
-	  icon = {
+      icon = {
       filename = "__omnimatter_move__/graphics/planner-shortcut.png",
       size = 128,
       scale = 1,
