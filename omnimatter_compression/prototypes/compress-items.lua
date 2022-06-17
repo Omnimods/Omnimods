@@ -2,6 +2,11 @@ local compress_recipes, uncompress_recipes, compress_items = {}, {}, {}
 compressed_item_names = {}  --global?
 local concentrationRatio = omni.compression.sluid_contain_fluid --set in omnilib
 local excluded_items = {}
+local no_compensate = {
+    -- Space Exploration 0.6.39+
+    -- It will ERROR ***in control stage*** if this isn't the absolute maximu
+    ["rocket-fuel"] = mods["space-exploration"] and not mods["space-exploration"]:find("^0%.[0-5]")
+}
 --Config variables
 local compressed_item_stack_size = 120 -- stack size for compressed items (not the items returned that is dynamic)
 local max_stack_size_to_compress = 2000 -- Don't compress items over this stack size
@@ -141,7 +146,7 @@ end
 local function generate_compressed_item(item, norecipe)
     if not item then return end
     local place_result = omni.lib.locale.find(item.place_result, "entity", true)
-    if omni.compression.stack_compensate and item.stack_size > 1 then --setting variable and stack size exclusion
+    if omni.compression.stack_compensate and item.stack_size > 1 and not no_compensate[item.name] then --setting variable and stack size exclusion
         if not item.place_result or place_result == nil then
             item.stack_size = math.ceil(item.stack_size/60)*60
         else
