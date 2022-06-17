@@ -14,6 +14,12 @@ log("Added module limitations for " .. n .. " recipes.")
 
 --[[ Mod compatibility fixes ]]--
 
+-- Space Exploration 0.6.39+
+if mods["space-exploration"] and not mods["space-exploration"]:find("^0%.[0-5]") then
+    -- It will ERROR ***in control stage*** if this isn't the absolute maximum
+    data.raw.item["rocket-fuel"].stack_size = 10
+end
+
 local rec_count = 0
 local categories = {}
 for _, prototype in pairs(recipes) do
