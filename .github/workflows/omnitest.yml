@@ -1,0 +1,21 @@
+name: Test
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  
+permissions:
+  contents: read
+
+jobs:
+  test-pull-request:
+    name: PR
+    uses: Omnimods/omnitests/.github/workflows/omnitest.yml@v1
+    with:
+      repository: ${{ github.repository }}
+      ref: ${{ github.event.pull_request.head.sha }}
+    secrets: inherit
