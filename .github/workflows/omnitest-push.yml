@@ -11,8 +11,8 @@ permissions:
   contents: read
 
 jobs:
-  test-pull-request:
-    name: PR
+  test-push:
+    name: Push
     uses: Omnimods/omnitests/.github/workflows/omnitest.yml@v1
     with:
       repository: ${{ github.repository }}
