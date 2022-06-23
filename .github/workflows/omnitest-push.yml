@@ -15,7 +15,7 @@ permissions:
 jobs:
   test-push:
     name: Push
-    uses: Omnimods/omnitests/.github/workflows/omnitest.yml@v1
+    uses: Omnimods/omnitests/.github/workflows/omnitest.yml@main
     with:
       repository: ${{ github.repository }}
       ref: ${{ github.ref }}
