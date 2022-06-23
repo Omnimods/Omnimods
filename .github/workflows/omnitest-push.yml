@@ -18,5 +18,7 @@ jobs:
     uses: Omnimods/omnitests/.github/workflows/omnitest.yml@main
     with:
       repository: ${{ github.repository }}
-      ref: ${{ github.ref }}
+      ref: ${{ github.sha }}
+      #might use .ref for push and pr
+      #ref: ${{ github.ref }}
     secrets: inherit
