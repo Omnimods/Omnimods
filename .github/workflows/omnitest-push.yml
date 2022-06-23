@@ -21,4 +21,5 @@ jobs:
       ref: ${{ github.sha }}
       #might use .ref for push and pr
       #ref: ${{ github.ref }}
+      test_ref: main
     secrets: inherit
