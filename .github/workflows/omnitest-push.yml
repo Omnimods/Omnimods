@@ -1,10 +1,8 @@
 name: Test
 
 on:
-    # Triggers the workflow on push or pull request events but only for the "master" branch
+    # Triggers the workflow on push events but only for the "master" branch
   push:
-    branches: [ "master" ]
-  pull_request:
     branches: [ "master" ]
 
 permissions:
@@ -16,7 +14,6 @@ jobs:
     uses: Omnimods/omnitests/.github/workflows/omnitest.yml@main
     with:
       repository: ${{ github.repository }}
-      #ref: ${{ github.sha }}
-      ref: ${{ github.ref }}
+      ref: ${{ github.sha }}
       test_ref: main
     secrets: inherit
