@@ -1,5 +1,5 @@
 if mods["angelsrefining"] then
-    for _,f in pairs(data.raw.fluid) do
+    fo _,f in pairs(data.raw.fluid) do
         data.raw.recipe["angels-fluid-splitter-"..f.name]=nil
     end
 
