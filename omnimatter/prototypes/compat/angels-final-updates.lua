@@ -1,6 +1,6 @@
 if mods["angelsrefining"] then
-    fo _,f in pairs(data.raw.fluid) do
-        data.raw.recipe["angels-fluid-splitter-"..f.name]=nil
+    for _,f in pairs(data.raw.fluid) do
+        data.raw.recipe["angelss-fluid-splitter-"..f.name]=nil
     end
 
     RecGen:import("coal-liquefaction"):
