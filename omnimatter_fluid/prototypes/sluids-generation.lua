@@ -788,6 +788,7 @@ for name, _ in pairs(recipe_mods) do
             for _, ingres in pairs({"ingredients","results"}) do
                 for    n, ing in pairs(rec[dif][ingres]) do
                     if ing.type == "fluid" then
+                        local found_temp = nil
                         local new_ing={}--start empty to remove all old props to add only what is needed
                         new_ing.type = "item"
                         local cat = ""
@@ -807,7 +808,6 @@ for name, _ in pairs(recipe_mods) do
                         --Ingredient has to be in a specific temperature range, check if a solid between min and max exists
                         --May need to add a recipe for ALL temperatures that are in this range
                         elseif ing.minimum_temperature or ing.maximum_temperature or omni.fluid.boiler_fluids[ing.name] then
-                            local found_temp = nil
                             local min_temp = ing.minimum_temperature or data.raw.fluid[ing.name].default_temperature
                             --Temp min/max == fluid temp min/max -->use a non temp solid (min/max can exist solo)
                             --Steam sucks, dont replace fluid steam with a temperature less solid
@@ -853,10 +853,6 @@ for name, _ in pairs(recipe_mods) do
                                     break
                                 end
                             end
-                            --Check if we want recipe copies for all temperatures in the min/max range and create them later by copying (only add this once!)
-                            if omni.fluid.multi_temp_recipes[rec.name] and not add_multi_temp_recipes[rec.name] then
-                                add_multi_temp_recipes[rec.name] = {fluid_name = ing.name, temperatures = {min = ing.minimum_temperature, max = ing.maximum_temperature, original = found_temp or "none"}}
-                            end
                         -- No temperature set and "none" is in our list --> no temp sluid exists
                         elseif omni.lib.is_in_table("none", fluid_cats[cat][ing.name].temperatures) then
                             new_ing.name = "solid-"..ing.name
@@ -865,6 +861,10 @@ for name, _ in pairs(recipe_mods) do
                             log("Sluid Replacement error for "..ing.name)
                             log(serpent.block(rec))
                             break
+                        end
+                        --Check if we want recipe copies for all temperatures in the min/max range and create them later by copying (only add this once!)
+                        if omni.fluid.multi_temp_recipes[rec.name] and not add_multi_temp_recipes[rec.name] then
+                            add_multi_temp_recipes[rec.name] = {fluid_name = ing.name, temperatures = {min = ing.minimum_temperature, max = ing.maximum_temperature, original = found_temp or "none"}}
                         end
                         --Finally round again for the case of a precision error like .999
                         local new_amount = 0
@@ -975,12 +975,14 @@ for rec_name, fluid_data in pairs(add_multi_temp_recipes) do
     --Get all required temperatures
     local min_temp = fluid_data.temperatures.min or data.raw.fluid[fluid_data.fluid_name].default_temperature or -65535
     local max_temp = fluid_data.temperatures.max or data.raw.fluid[fluid_data.fluid_name].max_temperature or math.huge
+
     for _, temp in pairs(fluid_cats[cat][fluid_data.fluid_name].temperatures) do
-        if (type(temp) == "number" and temp >= (min_temp or -65535) and temp <= (max_temp) and type(fluid_data.temperatures.original) == "number" and temp ~= fluid_data.temperatures.original) or
+        if (type(temp) == "number" and temp >= min_temp and temp <= max_temp and tostring(temp) ~= tostring(fluid_data.temperatures.original)) or
         (type(temp) ~= "number" and type(fluid_data.temperatures.original) ~= "number") then
             temperatures[#temperatures+1] = temp
         end
     end
+
     --Call create_temperature_copies with the replacement and a table of required temperatures
     omni.fluid.create_temperature_copies(data.raw.recipe[rec_name], fluid_data.fluid_name, replacement, temperatures)
 end

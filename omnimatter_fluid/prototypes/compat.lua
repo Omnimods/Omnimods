@@ -44,6 +44,21 @@ if mods["pypetroleumhandling"] then
     omni.fluid.add_mining_fluid("drilling-fluid-3")
 end
 
+if mods["pyrawores"] then
+    local multitemprecs = {
+        "arqad",
+        "oil-breakdown-2",
+        "tar-breakdown-2",
+        "quensch-ovengas",
+        "reheat-coke-gas",
+        "outlet-gas-01",
+        "coke-oven-gas-pyvoid-gas"
+    }
+    for _, rec in pairs(multitemprecs) do
+        omni.fluid.add_multi_temp_recipe(rec)
+    end
+end
+
 if mods["angelspetrochem"] then
     -- Add the fluid conversions to angels electric boilers
     local boilers = {"angels-electric-boiler", "angels-electric-boiler-2", "angels-electric-boiler-3"}
