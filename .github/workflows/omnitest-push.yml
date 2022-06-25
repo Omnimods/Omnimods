@@ -1,0 +1,19 @@
+name: Test
+
+on:
+  push:
+    branches:
+    - master
+
+permissions:
+  contents: read
+
+jobs:
+  test-push:
+    name: Push
+    uses: Omnimods/omnitests/.github/workflows/omnitest.yml@main
+    with:
+      repository: ${{ github.repository }}
+      ref: ${{ github.sha }}
+      test_ref: main
+    secrets: inherit
