@@ -1,3 +1,7 @@
+if mods["omnimatter_compression"] then
+    omni.fluid.add_boiler_fluid("concentrated-steam")
+end
+
 --Find mining operations if mining-drones is active
 if mods["Mining_Drones"] then
     for _,rec in pairs(data.raw.recipe) do
@@ -6,6 +10,21 @@ if mods["Mining_Drones"] then
             omni.fluid.excempt_recipe(rec.name)
         end
     end
+end
+
+if mods["pyalienlife"] then
+    --Varrel names are messed up in PY 1.3.4. This can be removed once py updates
+    local milk_rec = "korlex-milk-"
+    omni.lib.multiply_recipe_result()
+    for i = 1, 4, 1 do
+        omni.lib.remove_recipe_ingredient(milk_rec..i, "empty-barrel-milk")
+        omni.lib.multiply_recipe_result(milk_rec..i, "barrel-milk", omni.fluid.sluid_contain_fluid)
+        omni.lib.replace_recipe_result(milk_rec..i, "barrel-milk", "solid-milk")
+    end
+end
+
+if mods["pyalternativeenergy"] then
+    omni.fluid.excempt_boiler("solar-tower-building")
 end
 
 if mods["pycoalprocessing"] then
@@ -23,14 +42,6 @@ if mods["pypetroleumhandling"] then
     omni.fluid.add_mining_fluid("drilling-fluid-1")
     omni.fluid.add_mining_fluid("drilling-fluid-2")
     omni.fluid.add_mining_fluid("drilling-fluid-3")
-end
-
-if mods["omnimatter_compression"] then
-    omni.fluid.add_boiler_fluid("concentrated-steam")
-end
-
-if mods["pyalternativeenergy"] then
-    omni.fluid.excempt_boiler("solar-tower-building")
 end
 
 if mods["angelspetrochem"] then

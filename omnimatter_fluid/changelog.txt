@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.24
+Date: 2022.06.XX
+  Bugfixes:
+    - Fixed Pyalienlife korlex milk barrels not being properly replaced due to py using diff. names
+---------------------------------------------------------------------------------------------------
 Version: 4.1.23
 Date: 2022.06.10
   Features:

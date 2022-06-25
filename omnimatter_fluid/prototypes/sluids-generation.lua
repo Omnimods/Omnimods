@@ -624,7 +624,7 @@ for _, rec in pairs(data.raw.recipe) do
         if std == true then omni.lib.standardise(rec) end
         for _, dif in pairs({"normal","expensive"}) do
             for _, ingres in pairs({"ingredients","results"}) do
-                for    _, ing in pairs(rec[dif][ingres]) do
+                for _, ing in pairs(rec[dif][ingres]) do
                     if string.find(ing.name, "%-barrel") or string.find(ing.name, "%-canister")  or string.find(ing.name, "%-gas%-canister") then
                         replace_barrels(rec)
                         goto continue
