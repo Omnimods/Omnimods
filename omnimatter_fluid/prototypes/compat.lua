@@ -67,5 +67,4 @@ end
 
 if mods["angelssmelting"] then
     omni.fluid.add_multi_temp_recipe("coolant-cool-steam")
-    omni.fluid.add_multi_temp_recipe("coolant-cool-steam-compression")
 end

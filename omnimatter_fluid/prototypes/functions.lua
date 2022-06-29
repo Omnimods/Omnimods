@@ -8,34 +8,65 @@ omni.fluid.mining_fluids = {}
 omni.fluid.boiler_fluids = {}
 omni.fluid.excluded_strings = {{"empty","barrel"},{"fill","barrel"},{"empty","canister"},{"fill","canister"},{"fluid","unknown"},"barreling-pump","creative"}
 
-function omni.fluid.excempt_boiler(boiler)
-    omni.fluid.forbidden_boilers[boiler] = true
+local compression_levels = {"compact","nanite","quantum","singularity"}
+if not mods["omnimatter_compression"] then compression_levels = nil end
+
+function omni.fluid.excempt_boiler(boiler_name)
+    omni.fluid.forbidden_boilers[boiler_name] = true
+    if compression_levels then
+        for _, level in pairs(compression_levels) do
+            omni.fluid.forbidden_boilers[boiler_name.."-compressed-"..level] = true
+        end
+    end
 end
 
-function omni.fluid.excempt_assembler(boiler)
-    omni.fluid.forbidden_assembler[boiler] = true
+function omni.fluid.excempt_assembler(assembler_name)
+    omni.fluid.forbidden_assembler[assembler_name] = true
+    if compression_levels then
+        for _, level in pairs(compression_levels) do
+            omni.fluid.forbidden_boilers[assembler_name.."-compressed-"..level] = true
+        end
+    end
 end
 
-function omni.fluid.excempt_recipe(boiler)
-    omni.fluid.forbidden_recipe[boiler] = true
+function omni.fluid.excempt_recipe(recipe_name)
+    omni.fluid.forbidden_recipe[recipe_name] = true
+    if mods["omnimatter_compression"] then
+        omni.fluid.forbidden_recipe[recipe_name.."-compression"] = true
+    end
 end
 
-function omni.fluid.add_assembler_generator_fluid(fluidname)
-    omni.fluid.assembler_generator_fluids[fluidname] = true
+function omni.fluid.add_assembler_generator_fluid(fluid_name)
+    omni.fluid.assembler_generator_fluids[fluid_name] = true
+    local base_name = string.gsub(fluid_name, "solid%-", "")
+    if mods["omnimatter_compression"] then
+        omni.fluid.forbidden_recipe["solid-concentrated-"..base_name] = true
+    end
 end
 
-function omni.fluid.add_multi_temp_recipe(recipename)
-    omni.fluid.multi_temp_recipes[recipename] = true
+function omni.fluid.add_multi_temp_recipe(recipe_name)
+    omni.fluid.multi_temp_recipes[recipe_name] = true
+    if mods["omnimatter_compression"] then
+        omni.fluid.multi_temp_recipes[recipe_name.."-compression"] = true
+    end
 end
 
 --Adds that fluid as mining fluid, converter recipes will be generated
-function omni.fluid.add_mining_fluid(fluidname)
-    omni.fluid.mining_fluids[fluidname] = true
+function omni.fluid.add_mining_fluid(fluid_name)
+    omni.fluid.mining_fluids[fluid_name] = true
+    local base_name = string.gsub(fluid_name, "solid%-", "")
+    if mods["omnimatter_compression"] then
+        omni.fluid.mining_fluids["solid-concentrated-"..base_name] = true
+    end
 end
 
 --Adds that fluid as boiler fluid. Required if fluids that are not a boiler output should still be handled like boiler output fluids
-function omni.fluid.add_boiler_fluid(fluidname)
-    omni.fluid.boiler_fluids[fluidname] = true
+function omni.fluid.add_boiler_fluid(fluid_name)
+    omni.fluid.boiler_fluids[fluid_name] = true
+    local base_name = string.gsub(fluid_name, "solid%-", "")
+    if mods["omnimatter_compression"] then
+        omni.fluid.boiler_fluids["solid-concentrated-"..base_name] = true
+    end
 end
 
 function omni.fluid.check_string_excluded(comparison) --checks fluid/recipe name against exclusion list
