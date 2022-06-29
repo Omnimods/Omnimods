@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.5
+Date: 2022.07.XX
+  Changes:
+    - Added bz-dsr-bridge as hidden dependency
+  Bugfixes:
+    - Fixed breaking the SE condenser turbine due to swapped fluid output slots
+---------------------------------------------------------------------------------------------------
 Version: 2.1.4
 Date: 2021.09.01
   Features:

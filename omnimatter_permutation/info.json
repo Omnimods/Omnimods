@@ -1,6 +1,6 @@
 {
 "name":"omnimatter_permutation",
-"version": "2.1.4",
+"version": "2.1.5",
 "title":"Omnipermute",
 "author":"EmperorZelos",
 "contact": "https://discord.gg/WQYks7W",
@@ -9,16 +9,18 @@
 "dependencies":[
     "base",
     "omnilib >= 4.1.0",
-    "?omnimatter_fluid",
-    "?omnimatter_compression",
-    "?omnimatter_energy",
-    "?omnimatter_wood",
-    "?omnimatter",
-    "?omnimatter_crystal",
-    "?PyCoalTBaA",
-    "?MoreSciencePacks",
-    "?MomoTweak",
-    "?bz-dsr-bridge",
-    "(?)pypostprocessing"
+    "(?)omnimatter_fluid",
+    "(?)omnimatter_compression",
+    "(?)omnimatter_energy",
+    "(?)omnimatter_wood",
+    "(?)omnimatter",
+    "(?)omnimatter_crystal",
+    "(?)PyCoalTBaA",
+    "(?)MoreSciencePacks",
+    "(?)MomoTweak",
+    "(?)bz-dsr-bridge",
+    "(?)pypostprocessing",
+    "(?)space-exploration",
+    "(?)space-exploration-postprocess"
 ]
 }

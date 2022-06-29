@@ -1,11 +1,13 @@
+require("compat")
+
 data:extend({
- {
-    type = "item-group",
-    name = "omnipermutation",
-    order = "z",
-    icon = "__omnimatter_permutation__/graphics/permutation.png",
-    icon_size = 128,
-  }
+    {
+        type = "item-group",
+        name = "omnipermutation",
+        order = "z",
+        icon = "__omnimatter_permutation__/graphics/permutation.png",
+        icon_size = 128,
+    }
 })
 
 local fluidCount = function(ingres)
@@ -22,8 +24,6 @@ local grabFluids = function(ingres)
     end
     return catch
 end
-
-local addTechRec={}
 
 function factorial(n)
     if n == 0 then
@@ -50,7 +50,7 @@ local recipesExpanded = {}
 local techRec = {}
 for _,rec in pairs(data.raw.recipe) do
     omni.lib.standardise(rec)
-    if fluidCount(rec.normal.results) > 1 or fluidCount(rec.normal.ingredients) > 1 then
+    if not omni.permutation.excluded_recipes[rec.name] and (fluidCount(rec.normal.results) > 1 or fluidCount(rec.normal.ingredients) > 1) then
         techRec[rec.name] = {}
         if not omni.lib.equalTableIgnore(rec.normal.ingredients,rec.expensive.ingredients,"amount") or not omni.lib.equalTableIgnore(rec.normal.results,rec.expensive.results,"amount") then
             for _,dif in pairs({"normal","expensive"}) do
@@ -83,7 +83,7 @@ for _,rec in pairs(data.raw.recipe) do
                     end
                     if not new.localised_name and new.main_product==nil then new.localised_name = omni.lib.locale.of(rec).name end
                     new.name=new.name.."-omniperm-"..i.."-"..j
-                    
+
                     --Hide all recipes except the original one
                     if settings.startup["hide_permutations"].value and not (i == 1 and  j == 1) then
                         new.normal.hidden = true

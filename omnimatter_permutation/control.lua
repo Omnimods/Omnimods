@@ -24,15 +24,15 @@ function change_fluid_recipe(event,kind,val)
                 local s,e = string.find(rec.name,"omniperm")
                 local v = split(string.sub(rec.name,e+2,string.len(rec.name)),"-")
                 local name = string.sub(rec.name,1,s-2)
-                
                 local perm = global.omni.perm[name]
+                
                 if perm[kind]>1 then
                     local fluidBoxes = {}
-                    
+
                     for i=1,#building.fluidbox do
                         fluidBoxes[i]=clone(building.fluidbox[i])
                     end
-                    
+
                     local ing = v[1]
                     local res = v[2]
                     if kind=="ingredient" then
@@ -40,12 +40,10 @@ function change_fluid_recipe(event,kind,val)
                     else
                         res=(res+val-1-math.min(0,res+val-1)*perm.result)%perm.result+1        
                     end
-                    
-                    
-                    
+
                     local rec = name.."-omniperm-"..ing.."-"..res
                     local newrec = game.recipe_prototypes[name.."-omniperm-"..ing.."-"..res]
-                    
+
                     local boxCount = 1
                     for _, kind in pairs({"ingredients","products"}) do
                         for _,ingres in pairs(newrec[kind]) do
@@ -60,7 +58,7 @@ function change_fluid_recipe(event,kind,val)
                             end
                         end
                     end
-                    
+
                     building.set_recipe(rec)
                     building.crafting_progress=progress
                     building.bonus_progress=bonus
