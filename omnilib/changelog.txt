@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.30
 Date: 2022.06.XX
+  Changes:
+    - BuildGen:setBurner() adds a burnt_inventory slot by default now
   Bugfixes:
     - Fixed a typo in omni.lib.replace_recipe_result() affecting recipe.expensive
 ---------------------------------------------------------------------------------------------------

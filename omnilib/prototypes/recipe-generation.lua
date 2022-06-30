@@ -3131,6 +3131,7 @@ function BuildGen:setBurner(efficiency,size)
         type = "burner",
         effectivity = efficiency or 0.5,
         fuel_inventory_size = size or 1,
+        burnt_inventory_size = size or 1,
         emissions_per_minute = 1.0,
         smoke =
         {
