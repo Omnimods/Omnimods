@@ -15,10 +15,10 @@ if mods["omnimatter_crystal"] then
             end
         end
         if not lab_ignore_pack[labs.name] and found == false then
-                table.insert(labs.inputs, "omni-pack")
+            table.insert(labs.inputs, "omni-pack")
         end
     end
-    
+
     --SP ingredient manipulation
     omni.lib.add_recipe_ingredient("chemical-science-pack","basic-crystallonic")
     omni.lib.add_recipe_ingredient("production-science-pack","basic-oscillo-crystallonic")
