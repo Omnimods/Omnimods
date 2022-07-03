@@ -93,7 +93,7 @@ local function check_mining_fluids(tier)
             local crude_rec =
                 RecGen:create("omnimatter", "crude-"..v.name):
                     setIngredients({"crude-"..v.name, 13}):
-                    addIngredients({type = "fluid", name = v.fluid.name, amount = (v.fluid.amount or 1)*13}):
+                    addIngredients({type = "fluid", name = v.fluid.name, amount = math.floor(v.fluid.amount or 1)*13/10}):
                     setResults({v.name, 13}):
                     setOrder("z[refinement-"..tier.."-"..v.name.."]"):
                     setSubgroup("omni-pure"):
