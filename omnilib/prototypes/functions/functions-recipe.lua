@@ -488,7 +488,7 @@ function omni.lib.replace_recipe_result(recipename, result, replacement)
                 end
             end
         end
-        
+
         --Check if the main product was replaced
         if rec.main_product and rec.main_product == result then
             rec.main_product = repname
@@ -497,7 +497,7 @@ function omni.lib.replace_recipe_result(recipename, result, replacement)
             rec.normal.main_product = repname
         end
         if rec.expensive and rec.expensive.main_product and rec.expensive.main_product == result then
-            rec.normexpensiveal.main_product = repname
+            rec.expensive.main_product = repname
         end
     end
 end

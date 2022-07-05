@@ -805,6 +805,7 @@ for _, values in pairs(recipe_results) do
                     result = new.name,
                     energy_required = 5*math.floor(math.pow(multiplier,i/2)),
                     enabled = false,
+                    hidden = omni.lib.recipe_is_hidden(rc.name),
                     category = "crafting-compressed",
                     order = (rc.order or details.item.order or "") .. "-compressed",
                     subgroup = rc.subgroup,

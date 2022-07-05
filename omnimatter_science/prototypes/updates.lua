@@ -15,10 +15,10 @@ if mods["omnimatter_crystal"] then
             end
         end
         if not lab_ignore_pack[labs.name] and found == false then
-                table.insert(labs.inputs, "omni-pack")
+            table.insert(labs.inputs, "omni-pack")
         end
     end
-    
+
     --SP ingredient manipulation
     omni.lib.add_recipe_ingredient("chemical-science-pack","basic-crystallonic")
     omni.lib.add_recipe_ingredient("production-science-pack","basic-oscillo-crystallonic")
@@ -27,8 +27,12 @@ if mods["omnimatter_crystal"] then
     --SP tech manipulation
     omni.lib.remove_science_pack("omnitech-crystallonics-4","utility-science-pack")
     omni.lib.add_science_pack("electric-engine")
-    omni.lib.add_science_pack("plastics")
-    omni.lib.add_prerequisite("plastics", "omnipack-technology")
+
+    if not mods["pycoalprocessing"] then
+        omni.lib.add_science_pack("plastics")
+        omni.lib.add_prerequisite("plastics", "omnipack-technology")
+    end
+
     omni.lib.replace_science_pack("omnitech-crystallology-2","chemical-science-pack")
     omni.lib.replace_science_pack("military-3","chemical-science-pack")
     omni.lib.replace_science_pack("mining-productivity-4","chemical-science-pack")

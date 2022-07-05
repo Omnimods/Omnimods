@@ -13,17 +13,21 @@ function omni.lib.standardise(recipe)
     ---------------------------------------------------------------------------
     local ingredients = {}
     local ingpass = false
+    
     -- check if every ingredient has a name tag, fluids always have them, items not, find mixed recipes
     if recipe.normal.ingredients and recipe.expensive.ingredients and not recipe.ingredients then
         ingpass = true
-        for i,ingred in pairs(recipe.normal.ingredients) do
-            if ingred and ingred.name == nil then ingpass = false end
+        for _, diff in pairs({"normal","expensive"}) do
+            for _, ingred in pairs(recipe[diff].ingredients) do
+                if ingred and ingred.name == nil then ingpass = false end
+            end
         end
     end
 
     if ingpass == false then
         local norm={}
         local expens={}
+
         -- check if each exists and parse to set part of the script
         --.normal.ingredients already exists:
         if recipe.normal.ingredients then
@@ -47,14 +51,23 @@ function omni.lib.standardise(recipe)
                 end
             end
         else
-            error("Error: Corrupted recipe '"..recipe.name.."' has no ingredients set")    
+            error("Error: Corrupted recipe '"..recipe.name.."' has no ingredients set")
         end
 
         if recipe.expensive.ingredients then
-            expens = table.deepcopy(recipe.expensive.ingredients)
-        else --if recipe.ingredients
-            expens = norm
+            for i,ingred in pairs(recipe.expensive.ingredients) do
+                --name tag exists
+                if ingred.name and ingred.amount then -- name tag
+                    expens[i] = ingred
+                --no name tag
+                else
+                    expens[i] = {type="item" ,name = ingred[1], amount = ingred[2] or 1}
+                end
+            end
+        else
+            expens = table.deepcopy(norm)
         end
+
         --set normal and expensive ingredients
         ingredients = {expensive=expens,normal=norm}
 
@@ -78,6 +91,7 @@ function omni.lib.standardise(recipe)
         --nil out non-standard ingredients
         recipe.ingredients = nil
     end
+
     ---------------------------------------------------------------------------
     -- Results Standarisation
     ---------------------------------------------------------------------------
@@ -86,8 +100,10 @@ function omni.lib.standardise(recipe)
     --check if already normalised before jumping in
     if recipe.normal.results and recipe.expensive.results and not (recipe.results or recipe.result) then
         respass = true
-        for i,res in pairs(recipe.normal.results) do
-            if (res and not res.name) or #res ~= 0 then respass = false end
+        for _, diff in pairs({"normal","expensive"}) do
+            for _, res in pairs(recipe[diff].results) do
+                if (res and not res.name) or #res ~= 0 then respass = false end
+            end
         end
     end
 
@@ -98,7 +114,7 @@ function omni.lib.standardise(recipe)
         --normal.results exists
         if recipe.normal.results then
             --norm = table.deepcopy(recipe.normal.results)
-            for i,res in pairs(recipe.normal.results) do
+            for i, res in pairs(recipe.normal.results) do
                 --name tag exists and there are no subtables without tags (#res)
                 if res.name and (res.amount or res.amount_min or res.amount_max) and #res == 0 then
                     norm[i] = res
@@ -127,13 +143,21 @@ function omni.lib.standardise(recipe)
         end
 
         if recipe.expensive.results then
-            expens = table.deepcopy(recipe.expensive.results)
+            for i, res in pairs(recipe.expensive.results) do
+                --name tag exists and there are no subtables without tags (#res)
+                if res.name and (res.amount or res.amount_min or res.amount_max) and #res == 0 then
+                    expens[i] = res
+                --no name tag or broken recipe
+                else
+                    expens[i] = {type="item" ,name = res[1], amount = res[2] or 1}
+                end
+            end
         elseif recipe.expensive.result then
-            expens = {{recipe.expensive.result,recipe.expensive.result_count or 1}}
-            --if not expens[1][2] then expens[1][2]=1 end
+            expens = {{recipe.expensive.result, recipe.expensive.result_count or 1}}
         else
-            expens = norm
+            expens = table.deepcopy(norm)
         end
+
         --set normal and expensive results
         results = {expensive=expens,normal=norm}
 

@@ -1,3 +1,7 @@
+if mods["omnimatter_compression"] then
+    omni.fluid.add_boiler_fluid("concentrated-steam")
+end
+
 --Find mining operations if mining-drones is active
 if mods["Mining_Drones"] then
     for _,rec in pairs(data.raw.recipe) do
@@ -6,6 +10,10 @@ if mods["Mining_Drones"] then
             omni.fluid.excempt_recipe(rec.name)
         end
     end
+end
+
+if mods["pyalternativeenergy"] then
+    omni.fluid.excempt_boiler("solar-tower-building")
 end
 
 if mods["pycoalprocessing"] then
@@ -25,12 +33,19 @@ if mods["pypetroleumhandling"] then
     omni.fluid.add_mining_fluid("drilling-fluid-3")
 end
 
-if mods["omnimatter_compression"] then
-    omni.fluid.add_boiler_fluid("concentrated-steam")
-end
-
-if mods["pyalternativeenergy"] then
-    omni.fluid.excempt_boiler("solar-tower-building")
+if mods["pyrawores"] then
+    local multitemprecs = {
+        "arqad",
+        "oil-breakdown-2",
+        "tar-breakdown-2",
+        "quensch-ovengas",
+        "reheat-coke-gas",
+        "outlet-gas-01",
+        "coke-oven-gas-pyvoid-gas"
+    }
+    for _, rec in pairs(multitemprecs) do
+        omni.fluid.add_multi_temp_recipe(rec)
+    end
 end
 
 if mods["angelspetrochem"] then
@@ -52,5 +67,4 @@ end
 
 if mods["angelssmelting"] then
     omni.fluid.add_multi_temp_recipe("coolant-cool-steam")
-    omni.fluid.add_multi_temp_recipe("coolant-cool-steam-compression")
 end
