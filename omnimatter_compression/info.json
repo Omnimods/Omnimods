@@ -1,6 +1,6 @@
 {
 "name":"omnimatter_compression",
-"version": "4.1.21",
+"version": "4.1.22",
 "title":"Omnicompression",
 "author":"EmperorZelos",
 "contact": "https://discord.gg/WQYks7W",
@@ -34,6 +34,7 @@
     "(?)SeaBlock",
     "(?)space-exploration-postprocess",
     "(?)space-exploration",
-    "(?)pypostprocessing"
+    "(?)pypostprocessing",
+    "(?)248k"
 ]
 }
