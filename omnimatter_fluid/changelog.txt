@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.24
-Date: 2022.06.XX
+Date: 2022.07.05
   Bugfixes:
     - Fixed Pyalienlife korlex milk barrels not being properly replaced due to py using diff. names
     - Fixed Pyrawores coke oven gas items with certain temperatures having no usage

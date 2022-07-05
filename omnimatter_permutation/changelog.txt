@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.5
-Date: 2022.07.XX
+Date: 2022.07.05
   Changes:
     - Added bz-dsr-bridge as hidden dependency
   Bugfixes:
