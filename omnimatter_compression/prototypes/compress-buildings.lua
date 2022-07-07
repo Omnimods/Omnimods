@@ -4,6 +4,7 @@
 local multiplier = settings.startup["omnicompression_multiplier"].value
 local cost_multiplier = settings.startup["omnicompression_cost_mult"].value
 local energy_multiplier = settings.startup["omnicompression_energy_mult"].value
+local costs_do_compound = settings.startup["omnicompression_compounding_building_mults"].value
 local black_list = {--By name
     "creative",
     {"burner", "turbine"},
@@ -467,7 +468,11 @@ local run_entity_updates = function(new, kind, i)
             new.energy_usage = new_effect(new.energy_usage, i)
         else
             new.energy_usage = new_effect(new.energy_usage, i)
-            new.energy_usage = new_effect(new.energy_usage, nil, nil, energy_multiplier)
+            if costs_do_compound then
+                new.energy_usage = new_effect(new.energy_usage, nil, nil, math.pow(energy_multiplier, i))
+            else
+                new.energy_usage = new_effect(new.energy_usage, nil, nil, energy_multiplier)
+            end
         end
     end
 
@@ -698,7 +703,11 @@ local run_entity_updates = function(new, kind, i)
         new.charging_station_count = new.charging_station_count * math.pow(multiplier, i)
         --recharge_minimum has to be >= energy_usage --> Make sure to use the same multiplier
         new.recharge_minimum = new_effect(new.recharge_minimum, i)
-        new.recharge_minimum = new_effect(new.recharge_minimum, nil, nil, energy_multiplier)
+        if costs_do_compound then
+            new.recharge_minimum = new_effect(new.recharge_minimum, nil, nil, math.pow(energy_multiplier, i))
+        else
+            new.recharge_minimum = new_effect(new.recharge_minimum, nil, nil, energy_multiplier)
+        end
     end
     return new
 end
@@ -786,8 +795,13 @@ for _, values in pairs(recipe_results) do
                 if i == 1 then
                     ing  = {{
                         details.item.name,
-                        multiplier * cost_multiplier
+                        math.ceil(multiplier * cost_multiplier)
                     }} 
+                elseif costs_do_compound then
+                    ing = {{
+                        build.name.."-compressed-"..string.lower(compress_level[i-1]),
+                        math.ceil(multiplier * cost_multiplier)
+                    }}
                 else
                     ing = {{
                         build.name.."-compressed-"..string.lower(compress_level[i-1]),
