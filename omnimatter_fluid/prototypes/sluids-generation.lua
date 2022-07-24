@@ -316,7 +316,7 @@ for catname, cat in pairs(fluid_cats) do
                 end
             end
         end
-        --Sluid only: hide unused fluid
+        --Sluid only: hide unused fluids.
         if catname == "sluid" then
             fluid.hidden = true
             fluid.auto_barrel = false
@@ -996,7 +996,7 @@ for _,resource in pairs(data.raw.resource) do
     end
 end
 
---Replace furnace fluid ingredient/result slots with solid slots
+--Replace furnace fluid ingredient/result slots with solid slots. Do not nil fluid boxes since they might be requried for barreling/conversion
 for _, fu in pairs(data.raw["furnace"]) do
     if fu.fluid_boxes then
         for _, box in pairs(fu.fluid_boxes) do
@@ -1006,7 +1006,6 @@ for _, fu in pairs(data.raw["furnace"]) do
                 fu.result_inventory_size = 1
             end
         end
-        fu.fluid_boxes = nil
     end
 end
 
