@@ -1028,8 +1028,8 @@ end
 ---------------------------
 for _, jack in pairs(data.raw["mining-drill"]) do
     --Set the output vector for the solid item to the old output_fluicbox(if multiple are defined, use the first in the table) and nil the output_fluidbox
-    local sluidbox = {0, -2}
     if jack.output_fluid_box then
+        local sluidbox = {0, -2}
         if jack.output_fluid_box.pipe_connections and jack.output_fluid_box.pipe_connections[1] then
             local pipe_con = jack.output_fluid_box.pipe_connections and jack.output_fluid_box.pipe_connections[1]
             if pipe_con.position then
@@ -1039,6 +1039,6 @@ for _, jack in pairs(data.raw["mining-drill"]) do
             end
         end
         jack.output_fluid_box = nil
+        jack.vector_to_place_result = sluidbox
     end
-    jack.vector_to_place_result = sluidbox
 end
