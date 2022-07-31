@@ -1027,11 +1027,18 @@ end
 -----Fluid box removal-----
 ---------------------------
 for _, jack in pairs(data.raw["mining-drill"]) do
-    if string.find(jack.name, "jack") then
-        if jack.output_fluid_box then jack.output_fluid_box = nil end
-        jack.vector_to_place_result = {0, -1.85}
-    elseif string.find(jack.name, "thermal") then
-        if jack.output_fluid_box then jack.output_fluid_box = nil end
-        jack.vector_to_place_result = {-3, 5}
+    --Set the output vector for the solid item to the old output_fluicbox(if multiple are defined, use the first in the table) and nil the output_fluidbox
+    local sluidbox = {0, -2}
+    if jack.output_fluid_box then
+        if jack.output_fluid_box.pipe_connections and jack.output_fluid_box.pipe_connections[1] then
+            local pipe_con = jack.output_fluid_box.pipe_connections and jack.output_fluid_box.pipe_connections[1]
+            if pipe_con.position then
+                sluidbox = table.deepcopy(pipe_con.position)
+            elseif pipe_con.positions and pipe_con.positions[1] then
+                sluidbox = table.deepcopy(pipe_con.positions[1])
+            end
+        end
+        jack.output_fluid_box = nil
     end
+    jack.vector_to_place_result = sluidbox
 end
