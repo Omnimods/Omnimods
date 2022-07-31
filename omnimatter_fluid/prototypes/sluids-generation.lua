@@ -335,19 +335,19 @@ local boiler_tech = {}
 local boiling_steam = {}
 
 for _, boiler in pairs(data.raw.boiler) do
-    --PREPARE DATA FOR MANIPULATION
-    local water = boiler.fluid_box.filter or "water"
-    local steam = boiler.output_fluid_box.filter or "steam"
-    local th_energy = (boiler.target_temperature - data.raw.fluid[water].default_temperature) * omni.lib.get_fuel_number(data.raw.fluid[water].heat_capacity)
-    local boiler_consumption = 60 * omni.lib.get_fuel_number(boiler.energy_consumption) / ((boiler.energy_source.effectivity or 1) * th_energy)
-
-    --clobber fluid_box_filter if it exists
-    if generator_fluid[boiler.output_fluid_box.filter] then
-        generator_fluid[boiler.output_fluid_box.filter] = nil
-    end
-
     --if exists, find recipe, item and entity
     if not omni.fluid.forbidden_boilers[boiler.name] then --and boiler.minable then
+        --PREPARE DATA FOR MANIPULATION
+        local water = boiler.fluid_box.filter or "water"
+        local steam = boiler.output_fluid_box.filter or "steam"
+        local th_energy = (boiler.target_temperature - data.raw.fluid[water].default_temperature) * omni.lib.get_fuel_number(data.raw.fluid[water].heat_capacity)
+        local boiler_consumption = 60 * omni.lib.get_fuel_number(boiler.energy_consumption) / ((boiler.energy_source.effectivity or 1) * th_energy)
+
+        --clobber fluid_box_filter if it exists
+        if generator_fluid[boiler.output_fluid_box.filter] then
+            generator_fluid[boiler.output_fluid_box.filter] = nil
+        end
+
         new_boiler[#new_boiler+1] = {
             type = "recipe-category",
             name = "boiler-omnifluid-"..boiler.name,
@@ -1000,10 +1000,10 @@ end
 for _, fu in pairs(data.raw["furnace"]) do
     if fu.fluid_boxes then
         for _, box in pairs(fu.fluid_boxes) do
-            if type(box) == "table" and box.production_type and box.production_type == "input" and fu.source_inventory_size == 0 then
-                fu.source_inventory_size = 1
-            elseif type(box) == "table" and box.production_type and box.production_type == "output" and fu.result_inventory_size == 0 then
-                fu.result_inventory_size = 1
+            if type(box) == "table" and box.production_type and box.production_type == "input" then
+                fu.source_inventory_size = (fu.source_inventory_size or 0) + 1
+            elseif type(box) == "table" and box.production_type and box.production_type == "output" then
+                fu.result_inventory_size = (fu.result_inventory_size or 0) + 1
             end
         end
     end

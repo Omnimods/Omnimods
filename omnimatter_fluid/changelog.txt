@@ -1,10 +1,13 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.25
 Date: 2022.07.XX
+  Compatibility:
+    - Added compatibility for the SE condenser- and big turbine
   Bugfixes:
     - Fixed that certain (un-)barreling furnaces did not work due to removed fluidboxes
     - Fixed that fluid mining drills with a collision box > 5x5 had their item output vector below
       themselves
+    - Dynamically increase item result slots in furnaces depending on the output fluid box(es)
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.24
 Date: 2022.07.05
