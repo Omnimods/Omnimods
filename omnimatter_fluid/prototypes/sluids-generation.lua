@@ -1000,8 +1000,9 @@ end
 for _, fu in pairs(data.raw["furnace"]) do
     if fu.fluid_boxes then
         for _, box in pairs(fu.fluid_boxes) do
+            --Furnaces can not have more than 1 item ingredient slot
             if type(box) == "table" and box.production_type and box.production_type == "input" then
-                fu.source_inventory_size = (fu.source_inventory_size or 0) + 1
+                fu.source_inventory_size = 1
             elseif type(box) == "table" and box.production_type and box.production_type == "output" then
                 fu.result_inventory_size = (fu.result_inventory_size or 0) + 1
             end
