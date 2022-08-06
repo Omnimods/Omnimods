@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.31
+Date: 2022.08.06
+  Bugfixes:
+    - Fixed multiple issues in omni.lib.create_barrel() regarding localisations and icons
+---------------------------------------------------------------------------------------------------
 Version: 4.1.30
 Date: 2022.07.05
   Changes:
@@ -6,7 +11,6 @@ Date: 2022.07.05
   Bugfixes:
     - Fixed a typo in omni.lib.replace_recipe_result() affecting recipe.expensive
     - Make sure to check all ings/results for both difficulties for nametags in standardisation
-    - Fixed multiple issues in omni.lib.create_barrel() regarding localisations and icons
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.29
 Date: 2022.06.10
