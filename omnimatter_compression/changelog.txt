@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.23
+Date: 2022.08.xx
+  Bugfixes:
+    - Fixed a crash due to hidden techs being compressed while hidden packs do not get compressed
+---------------------------------------------------------------------------------------------------
 Version: 4.1.22
 Date: 2022.07.05
   Bugfixes:
