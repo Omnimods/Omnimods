@@ -81,24 +81,29 @@ data:extend(
         order = "j"
     },
     {
-        type = "int-setting",
+        type = "double-setting",
         name = "omnicompression_energy_mult",
         setting_type = "startup",
         default_value = 1,
         minimum_value = 1,
         maximum_value = 5,
-        allowed_values = {1,2,3,4,5},
         order = "k"
     },
     {
-        type = "int-setting",
+        type = "double-setting",
         name = "omnicompression_cost_mult",
         setting_type = "startup",
         default_value = 1,
         minimum_value = 1,
         maximum_value = 5,
-        allowed_values = {1,2,3,4,5},
         order = "l"
+    },
+    {
+        type = "bool-setting",
+        name = "omnicompression_compounding_building_mults",
+        setting_type = "startup",
+        default_value = false,
+        order = "m"
     },
     {
         type = "bool-setting",

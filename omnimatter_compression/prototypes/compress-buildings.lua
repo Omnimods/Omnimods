@@ -4,6 +4,7 @@
 local multiplier = settings.startup["omnicompression_multiplier"].value
 local cost_multiplier = settings.startup["omnicompression_cost_mult"].value
 local energy_multiplier = settings.startup["omnicompression_energy_mult"].value
+local exp_costs = settings.startup["omnicompression_compounding_building_mults"].value
 local black_list = {--By name
     "creative",
     {"burner", "turbine"},
@@ -463,12 +464,9 @@ local run_entity_updates = function(new, kind, i)
 
     --energy usage
     if not omni.lib.is_in_table(kind,not_energy_use) and new.energy_usage then
-        if omni.lib.string_contained_list(new.name,{"boiler","omnifluid"}) then
-            new.energy_usage = new_effect(new.energy_usage, i)
-        else
-            new.energy_usage = new_effect(new.energy_usage, i)
-            new.energy_usage = new_effect(new.energy_usage, nil, nil, energy_multiplier)
-        end
+        new.energy_usage = new_effect(new.energy_usage, i)
+        -- usage*mult*tier unless exp_costs in which case it's usage*mult^tier
+        new.energy_usage = new_effect(new.energy_usage, nil, nil, exp_costs and math.pow(energy_multiplier, i) or energy_multiplier)
     end
 
     ---------------------------
@@ -698,7 +696,7 @@ local run_entity_updates = function(new, kind, i)
         new.charging_station_count = new.charging_station_count * math.pow(multiplier, i)
         --recharge_minimum has to be >= energy_usage --> Make sure to use the same multiplier
         new.recharge_minimum = new_effect(new.recharge_minimum, i)
-        new.recharge_minimum = new_effect(new.recharge_minimum, nil, nil, energy_multiplier)
+        new.recharge_minimum = new_effect(new.recharge_minimum, nil, nil, exp_costs and math.pow(energy_multiplier, i) or energy_multiplier)
     end
     return new
 end
@@ -783,15 +781,16 @@ for _, values in pairs(recipe_results) do
                 compressed_buildings[#compressed_buildings+1] = item
                 --[[COMPRESSION/DE-COMPRESSION RECIPE CREATION]]--
                 local ing = {}
+                -- ing = {item, count}
                 if i == 1 then
                     ing  = {{
                         details.item.name,
-                        multiplier * cost_multiplier
-                    }} 
+                        math.ceil(multiplier * cost_multiplier)
+                    }}
                 else
                     ing = {{
                         build.name.."-compressed-"..string.lower(compress_level[i-1]),
-                        multiplier
+                        exp_costs and math.ceil(multiplier * cost_multiplier) or multiplier
                     }}
                 end
 

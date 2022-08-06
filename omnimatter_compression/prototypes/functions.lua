@@ -39,6 +39,7 @@ end
 --finds if the object is hidden by flag
 function omni.compression.is_hidden(obj)
     local hidden = false
+    if obj.hidden and obj.hidden == true then return true end
     for _, flag in ipairs(obj.flags or {}) do
         if flag == "hidden" then
             hidden = true

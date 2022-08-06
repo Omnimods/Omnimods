@@ -316,7 +316,7 @@ for catname, cat in pairs(fluid_cats) do
                 end
             end
         end
-        --Sluid only: hide unused fluid
+        --Sluid only: hide unused fluids.
         if catname == "sluid" then
             fluid.hidden = true
             fluid.auto_barrel = false
@@ -335,19 +335,19 @@ local boiler_tech = {}
 local boiling_steam = {}
 
 for _, boiler in pairs(data.raw.boiler) do
-    --PREPARE DATA FOR MANIPULATION
-    local water = boiler.fluid_box.filter or "water"
-    local steam = boiler.output_fluid_box.filter or "steam"
-    local th_energy = (boiler.target_temperature - data.raw.fluid[water].default_temperature) * omni.lib.get_fuel_number(data.raw.fluid[water].heat_capacity)
-    local boiler_consumption = 60 * omni.lib.get_fuel_number(boiler.energy_consumption) / ((boiler.energy_source.effectivity or 1) * th_energy)
-
-    --clobber fluid_box_filter if it exists
-    if generator_fluid[boiler.output_fluid_box.filter] then
-        generator_fluid[boiler.output_fluid_box.filter] = nil
-    end
-
     --if exists, find recipe, item and entity
     if not omni.fluid.forbidden_boilers[boiler.name] then --and boiler.minable then
+        --PREPARE DATA FOR MANIPULATION
+        local water = boiler.fluid_box.filter or "water"
+        local steam = boiler.output_fluid_box.filter or "steam"
+        local th_energy = (boiler.target_temperature - data.raw.fluid[water].default_temperature) * omni.lib.get_fuel_number(data.raw.fluid[water].heat_capacity)
+        local boiler_consumption = 60 * omni.lib.get_fuel_number(boiler.energy_consumption) / ((boiler.energy_source.effectivity or 1) * th_energy)
+
+        --clobber fluid_box_filter if it exists
+        if generator_fluid[boiler.output_fluid_box.filter] then
+            generator_fluid[boiler.output_fluid_box.filter] = nil
+        end
+
         new_boiler[#new_boiler+1] = {
             type = "recipe-category",
             name = "boiler-omnifluid-"..boiler.name,
@@ -996,17 +996,17 @@ for _,resource in pairs(data.raw.resource) do
     end
 end
 
---Replace furnace fluid ingredient/result slots with solid slots
+--Replace furnace fluid ingredient/result slots with solid slots. Do not nil fluid boxes since they might be requried for barreling/conversion
 for _, fu in pairs(data.raw["furnace"]) do
     if fu.fluid_boxes then
         for _, box in pairs(fu.fluid_boxes) do
-            if type(box) == "table" and box.production_type and box.production_type == "input" and fu.source_inventory_size == 0 then
+            --Furnaces can not have more than 1 item ingredient slot
+            if type(box) == "table" and box.production_type and box.production_type == "input" then
                 fu.source_inventory_size = 1
-            elseif type(box) == "table" and box.production_type and box.production_type == "output" and fu.result_inventory_size == 0 then
-                fu.result_inventory_size = 1
+            elseif type(box) == "table" and box.production_type and box.production_type == "output" then
+                fu.result_inventory_size = (fu.result_inventory_size or 0) + 1
             end
         end
-        fu.fluid_boxes = nil
     end
 end
 
@@ -1028,11 +1028,18 @@ end
 -----Fluid box removal-----
 ---------------------------
 for _, jack in pairs(data.raw["mining-drill"]) do
-    if string.find(jack.name, "jack") then
-        if jack.output_fluid_box then jack.output_fluid_box = nil end
-        jack.vector_to_place_result = {0, -1.85}
-    elseif string.find(jack.name, "thermal") then
-        if jack.output_fluid_box then jack.output_fluid_box = nil end
-        jack.vector_to_place_result = {-3, 5}
+    --Set the output vector for the solid item to the old output_fluicbox(if multiple are defined, use the first in the table) and nil the output_fluidbox
+    if jack.output_fluid_box then
+        local sluidbox = {0, -2}
+        if jack.output_fluid_box.pipe_connections and jack.output_fluid_box.pipe_connections[1] then
+            local pipe_con = jack.output_fluid_box.pipe_connections and jack.output_fluid_box.pipe_connections[1]
+            if pipe_con.position then
+                sluidbox = table.deepcopy(pipe_con.position)
+            elseif pipe_con.positions and pipe_con.positions[1] then
+                sluidbox = table.deepcopy(pipe_con.positions[1])
+            end
+        end
+        jack.output_fluid_box = nil
+        jack.vector_to_place_result = sluidbox
     end
 end

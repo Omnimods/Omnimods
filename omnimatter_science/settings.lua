@@ -10,7 +10,7 @@ data:extend({
         type = "bool-setting",
         name = "omniscience-modify-omnimatter-costs",
         setting_type = "startup",
-        default_value = false,
+        default_value = true,
         order="b"
     },
     {
@@ -31,7 +31,7 @@ data:extend({
         type = "double-setting",
         name = "omniscience-cumulative-constant",
         setting_type = "startup",
-        default_value = 1,
+        default_value = 0.66,
         minimum_value = 0.01,
         order="e"
     },
@@ -39,7 +39,7 @@ data:extend({
         type = "double-setting",
         name = "omniscience-cumulative-constant-omni",
         setting_type = "startup",
-        default_value = 1,
+        default_value = 0.5,
         minimum_value = 0.01,
         order="f"
     },
@@ -47,7 +47,7 @@ data:extend({
         type = "double-setting",
         name = "omniscience-chain-constant",
         setting_type = "startup",
-        default_value = 0.75,
+        default_value = 0.5,
         minimum_value = 0.05,
         order="g"
     },

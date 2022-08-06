@@ -133,8 +133,8 @@ end
 -------------------------------------------------------------------------------
 log("Start technology compression")
 for _,tech in pairs(data.raw.technology) do
-    if tech.unit and tech.unit.ingredients and #tech.unit.ingredients > 0 and ((tech.unit.count and type(tech.unit.count)=="number" and tech.unit.count > min_compress) or
-    include_techs(tech) or containsOne(tech.unit.ingredients,alwaysSP) or not tech.unit.count) then
+    if not omni.compression.is_hidden(tech) and tech.unit and tech.unit.ingredients and #tech.unit.ingredients > 0 and
+    ((tech.unit.count and type(tech.unit.count)=="number" and tech.unit.count > min_compress) or include_techs(tech) or containsOne(tech.unit.ingredients,alwaysSP) or not tech.unit.count) then
         --fetch original
         local t = table.deepcopy(tech)
         t.name = "omnipressed-"..t.name

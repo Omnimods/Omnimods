@@ -68,3 +68,9 @@ end
 if mods["angelssmelting"] then
     omni.fluid.add_multi_temp_recipe("coolant-cool-steam")
 end
+
+if mods["space-exploration"] then
+    --Exclude the hidden SE generators since their steam "fuel" is a hidden fluid
+    omni.fluid.excluded_strings[#omni.fluid.excluded_strings+1] = {"se", "condenser", "turbine", "generator"}
+    omni.fluid.excluded_strings[#omni.fluid.excluded_strings+1] = {"se", "big", "turbine", "generator"}
+end
