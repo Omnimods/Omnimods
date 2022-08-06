@@ -503,31 +503,25 @@ end
 
 --Add barrels for fluid that are late.
 function omni.lib.create_barrel(fluid)
+    if type(fluid)=="string" then fluid = data.raw.fluid[fluid] end
+    local reg = {}
     -- Alpha used for barrel masks
     local side_alpha = 0.75
     local top_hoop_alpha = 0.75
-    if type(fluid)=="string" then fluid = data.raw.fluid[fluid] end
 
-    local icons = {}
-
-    local side_tint = util.table.deepcopy(fluid.base_color)
-    side_tint.a = 0.75
-    local top_hoop_tint = util.table.deepcopy(fluid.flow_color)
-    top_hoop_tint.a = 0.75
-
-    icons = {
-        {icon = data.raw.item["empty-barrel"].icon},
-        {icon = "__base__/graphics/icons/fluid/barreling/barrel-side-mask.png",  tint = side_tint},
-        {icon = "__base__/graphics/icons/fluid/barreling/barrel-hoop-top-mask.png", tint = top_hoop_tint}
+    --Filled barrel item
+    local side_tint = util.get_color_with_alpha(fluid.base_color, side_alpha, true)
+    local top_hoop_tint = util.get_color_with_alpha(fluid.flow_color, top_hoop_alpha, true)
+    local masks = {
+        {icon = "__base__/graphics/icons/fluid/barreling/barrel-side-mask.png", icon_size = 64, tint = side_tint},
+        {icon = "__base__/graphics/icons/fluid/barreling/barrel-hoop-top-mask.png", icon_size = 64, tint = top_hoop_tint}
     }
 
-    local reg = {}
     reg[#reg+1] =   {
         type = "item",
         name = fluid.name.."-barrel",
-        localised_name = {"item-name.filled-barrel", {"fluid-name." .. fluid.name}},
-        icon_size = 32,
-        icons = icons,
+        localised_name = {"item-name.filled-barrel", fluid.localised_name or {"fluid-name." .. fluid.name}},
+        icons = util.combine_icons(omni.lib.icon.of(data.raw.item["empty-barrel"]), masks, {}),
         flags = {},
         subgroup = "fill-barrel",
         order = "b",
@@ -535,47 +529,23 @@ function omni.lib.create_barrel(fluid)
     }
     if mods["angelsrefining"] then reg[#reg].subgroup = "angels-fluid-control" end
 
-    side_tint = util.table.deepcopy(fluid.base_color)
-    side_tint.a = 0.75
-    top_hoop_tint = util.table.deepcopy(fluid.flow_color)
-    top_hoop_tint.a = 0.75
-
-
-    icons= {
-        {icon = "__base__/graphics/icons/fluid/barreling/barrel-fill.png"},
-        { icon = "__base__/graphics/icons/fluid/barreling/barrel-fill-side-mask.png", tint = side_tint},
-        {icon = "__base__/graphics/icons/fluid/barreling/barrel-fill-top-mask.png", tint = top_hoop_tint},
+    --Filling recipe
+    masks = {
+        {icon = "__base__/graphics/icons/fluid/barreling/barrel-fill.png", icon_size = 64},
+        {icon = "__base__/graphics/icons/fluid/barreling/barrel-fill-side-mask.png", icon_size = 64, tint = table.deepcopy(side_tint)},
+        {icon = "__base__/graphics/icons/fluid/barreling/barrel-fill-top-mask.png", icon_size = 64, tint = table.deepcopy(top_hoop_tint)}
     }
-    if fluid.icon then
-        icons[#icons+1]=
-        {
-            icon = fluid.icon,
-            scale = 0.5,
-            shift = {4, -8}
-        }
-    else
-        for _, ic in pairs(fluid.icons) do
-            local scale = ic.scale or 1
-            local pos = ic.shift or {0,0}
-            icons[#icons+1]=
-            {
-                icon = ic.icon,
-                scale = 0.5*scale,
-                shift = {4-pos[1], -8-pos[2]}
-            }
-        end
-    end
+
     reg[#reg+1]={
         type = "recipe",
-        name = "fill-" .. fluid.name.."-barrel",
-        localised_name = {"recipe-name.fill-barrel", {"fluid-name." .. fluid.name}},
+        name = "fill-"..fluid.name.."-barrel",
+        localised_name = {"recipe-name.fill-barrel", fluid.localised_name or {"fluid-name." .. fluid.name}},
         category = "crafting-with-fluid",
-        energy_required = 1,
+        energy_required = 0.2,
         subgroup = "fill-barrel",
-        order = "b",
+        order = "b[fill-"..fluid.name.."-barrel".."]",
         enabled = false,
-        icons = icons,
-        icon_size = 32,
+        icons = util.combine_icons(masks, omni.lib.icon.of(fluid), {scale = 0.5, shift = {-8, -8}}),
         ingredients =
         {
             {type = "fluid", name = fluid.name, amount = 250},
@@ -591,48 +561,25 @@ function omni.lib.create_barrel(fluid)
 
     if mods["angelsrefining"] then reg[#reg].subgroup = "angels-fluid-control" end
     if angelsmods and angelsmods.trigger and angelsmods.trigger.enable_auto_barreling then reg[#reg].hidden = true end
-    omni.lib.add_unlock_recipe("fluid-handling","fill-" .. fluid.name.."-barrel")
+    omni.lib.add_unlock_recipe("fluid-handling","fill-"..fluid.name.."-barrel", true)
 
-    side_tint = util.table.deepcopy(fluid.base_color)
-    side_tint.a = side_alpha
-    top_hoop_tint = util.table.deepcopy(fluid.flow_color)
-    top_hoop_tint.a = top_hoop_alpha
-    icons = {
-        {icon = "__base__/graphics/icons/fluid/barreling/barrel-empty.png"},
-        {icon = "__base__/graphics/icons/fluid/barreling/barrel-empty-side-mask.png", tint = side_tint},
-        {icon = "__base__/graphics/icons/fluid/barreling/barrel-empty-top-mask.png", tint = top_hoop_tint},
+    --Emptying recipe
+    masks = {
+        {icon = "__base__/graphics/icons/fluid/barreling/barrel-empty.png", icon_size = 64},
+        {icon = "__base__/graphics/icons/fluid/barreling/barrel-empty-side-mask.png", icon_size = 64, tint = table.deepcopy(side_tint)},
+        {icon = "__base__/graphics/icons/fluid/barreling/barrel-empty-top-mask.png", icon_size = 64, tint = table.deepcopy(top_hoop_tint)}
     }
-    if fluid.icon then
-        icons[#icons+1]=
-        {
-            icon = fluid.icon,
-            scale = 0.5,
-            shift = {4, -8}
-        }
-    else
-        for _, ic in pairs(fluid.icons) do
-            local scale = ic.scale or 1
-            local pos = ic.shift or {0,0}
-            icons[#icons+1]=
-            {
-                icon = ic.icon,
-                scale = 0.5*scale,
-                shift = {4-pos[1], -8-pos[2]}
-            }
-        end
-    end
 
     reg[#reg+1]=  {
         type = "recipe",
-        name = "empty-" .. fluid.name.."-barrel",
-        localised_name = {"recipe-name.empty-filled-barrel", {"fluid-name." .. fluid.name}},
+        name = "empty-"..fluid.name.."-barrel",
+        localised_name = {"recipe-name.empty-filled-barrel", fluid.localised_name or {"fluid-name." .. fluid.name}},
         category = "crafting-with-fluid",
-        energy_required = 1,
+        energy_required = 0.2,
         subgroup = "empty-barrel",
-        order = "c",
+        order = "c[empty-"..fluid.name.."-barrel".."]",
         enabled = false,
-        icons = icons,
-        icon_size = 32,
+        icons = util.combine_icons(masks, omni.lib.icon.of(fluid), {scale = 0.5, shift = {7, 8}}),
         ingredients =
         {
             {type = "item", name = fluid.name.."-barrel", amount = 1}
@@ -645,9 +592,10 @@ function omni.lib.create_barrel(fluid)
         hide_from_stats = true,
         allow_decomposition = false
     }
-    omni.lib.add_unlock_recipe("fluid-handling","empty-" .. fluid.name.."-barrel")
+    omni.lib.add_unlock_recipe("fluid-handling","empty-" .. fluid.name.."-barrel", true)
     if angelsmods and angelsmods.trigger and angelsmods.trigger.enable_auto_barreling then reg[#reg].hidden = true end
     if mods["angelsrefining"] then reg[#reg].subgroup = "angels-fluid-control" end
+
     data:extend(reg)
 end
 
