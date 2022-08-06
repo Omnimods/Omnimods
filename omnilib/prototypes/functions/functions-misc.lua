@@ -50,7 +50,7 @@ omni.lib.ore_tints = {--can add to the tint table with table.insert(omni.lib.ore
     ["raw-rare-metals"] = {r = 0.6, g = 0.3, b = 1  }, --<-- map_color only
     ["raw-borax"] = {r = 0.917, g = 0.917, b = 0.917}, --<-- map_color only
     ["niobium"]   = {r = 0.403, g = 0.6,   b = 0.701}, --<-- map_color only
-    ["chromium"]  = {r = 0.784, g = 0.231, b = 0.  }, --<-- map_color only
+    ["chromium"]  = {r = 0.784, g = 0.231, b = 0.1  }, --<-- map_color only
     ["phosphate-rock"] = {r = 0.998, g = 0.998, b = 0.998}, --<-- map_color only
 }
 
