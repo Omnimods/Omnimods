@@ -26,7 +26,7 @@ BuildGen:import("burner-omni-furnace"):
     setEmissions(4.0):
     setOrder("a[omni-furnace-2]"):
     setFuelCategories("chemical"):
-    setIngredients({"burner-omni-furnace",1},{"omnium-iron-alloy",15},{"iron-plate",20},{"omnium-iron-gear-box",20}):
+    setIngredients({"burner-omni-furnace",1},{"omnium-plate",15},{"iron-plate",20},{"omnium-iron-gear-box",20}):
     setEnabled(false):
     setTechName("advanced-material-processing"):
     setReplace("furnace"):

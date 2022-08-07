@@ -1,3 +1,17 @@
+--Starter Recipe. Can be made in a normal furnace (And a backup to not get stuck when losing the omnifurnace)
+RecGen:create("omnimatter","omnicium-plate-pure"):
+    setItemName("omnicium-plate"):
+    setIcons("omnicium-plate","omnimatter"):
+    setStacksize(200):
+    setIngredients({normal = {{"crushed-omnite",25}},expensive={{"crushed-omnite",40}}}):
+    setResults("omnicium-plate"):
+    setCategory("smelting"):
+    setSubgroup("omnium"):
+    setOrder("aa"):
+    setEnergy(10):
+    setEnabled():
+    extend()
+
 RecGen:create("omnimatter","omnicium-plate"):
     setItemName("omnicium-plate"):
     setIcons("omnicium-plate","omnimatter"):
@@ -6,8 +20,8 @@ RecGen:create("omnimatter","omnicium-plate"):
     setResults({normal = {{"omnicium-plate", 2}},expensive={{"omnicium-plate",1}}}):
     setCategory("smelting"):
     setSubgroup("omnium"):
-    setOrder("aa"):
-    setEnergy(25):
+    setOrder("ab"):
+    setEnergy(3.2):
     setEnabled():
     extend()
 
@@ -19,7 +33,7 @@ ItemGen:create("omnimatter","omnium-plate"):
     setIcons("omnium-plate","omnimatter"):
     setStacksize(200):
     setSubgroup("omnium"):
-    setOrder("aa"):
+    setOrder("ac"):
     extend()
 
 RecGen:create("omnimatter","omnium-plate-mix"):
@@ -33,12 +47,12 @@ RecGen:create("omnimatter","omnium-plate-mix"):
     addSmallIngIcon(3,3):
     setCategory("omnifurnace"):
     setSubgroup("omnium"):
-    setOrder("ab"):
+    setOrder("ac"):
     setEnergy(5):
     setTechName("omnitech-omnium-processing"):
     setTechIcons("omnium-plate", 32):
     setTechPacks(1):
-    setTechCost(30):
+    setTechCost(25):
     --setTechPrereq("omnitech-angels-omnium-smelting-1"):
     extend()
 
@@ -61,7 +75,7 @@ RecGen:create("omnimatter","omnium-iron-gear-box"):
     setSubgroup("omni-gears"):
     setIngredients({"omnium-gear-wheel", 1},{"iron-gear-wheel", 1}):
     addProductivity():
-    setTechName("omnitech-omnitractor-electric-2"):
+    setTechName("omnitech-omnium-processing"):
     setEnergy(0.25):
     extend()
 
