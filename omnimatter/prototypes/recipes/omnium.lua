@@ -11,6 +11,10 @@ RecGen:create("omnimatter","omnicium-plate"):
     setEnabled():
     extend()
 
+--Replace iron plates with omnicium plates for vanilla burner entities
+omni.lib.replace_recipe_ingredient("burner-inserter", "iron-plate", "omnicium-plate")
+omni.lib.replace_recipe_ingredient("burner-mining-drill", "iron-plate", "omnicium-plate")
+
 ItemGen:create("omnimatter","omnium-plate"):
     setIcons("omnium-plate","omnimatter"):
     setStacksize(200):
@@ -30,10 +34,16 @@ RecGen:create("omnimatter","omnium-plate-mix"):
     setCategory("omnifurnace"):
     setSubgroup("omnium"):
     setOrder("ab"):
-    marathon():
     setEnergy(5):
-    setEnabled():
+    setTechName("omnitech-omnium-processing"):
+    setTechIcons("omnium-plate", 32):
+    setTechPacks(1):
+    setTechCost(30):
+    --setTechPrereq("omnitech-angels-omnium-smelting-1"):
     extend()
+
+--Move Steel tech behind omnicium
+omni.lib.add_prerequisite("steel-processing", "omnitech-omnium-processing")
 
 RecGen:create("omnimatter","omnium-gear-wheel"):
     setStacksize(100):
@@ -42,7 +52,7 @@ RecGen:create("omnimatter","omnium-gear-wheel"):
     addProductivity():
     setSubgroup("omni-gears"):
     setOrder("aa"):
-    setEnabled():
+    setTechName("omnitech-omnium-processing"):
     setEnergy(1):
     extend()
 
@@ -51,27 +61,25 @@ RecGen:create("omnimatter","omnium-iron-gear-box"):
     setSubgroup("omni-gears"):
     setIngredients({"omnium-gear-wheel", 1},{"iron-gear-wheel", 1}):
     addProductivity():
-    setEnabled():
+    setTechName("omnitech-omnitractor-electric-2"):
     setEnergy(0.25):
     extend()
 
 if mods["bobplates"] then
+    local plates = {"steel","brass","titanium","tungsten","nitinol"}
+    local plateTech = {"steel-processing","zinc-processing","titanium-processing","tungsten-processing","nitinol-processing"}
 
-local plates = {"steel","brass","titanium","tungsten","nitinol"}
-local plateTech = {"steel-processing","zinc-processing","titanium-processing","tungsten-processing","nitinol-processing"}
-
-for i,p in pairs(plates) do
-    RecGen:create("omnimatter","omnium-"..p.."-gear-box"):
-        setStacksize(100):
-        setEnergy(0.25):
-        addProductivity():
-        setIngredients("omnium-gear-wheel",p.."-gear-wheel"):
-        setCategory("crafting"):
-        setSubgroup("omni-gears"):
-        setTechName(plateTech[i]):
-        extend()
-end
-
+    for i,p in pairs(plates) do
+        RecGen:create("omnimatter","omnium-"..p.."-gear-box"):
+            setStacksize(100):
+            setEnergy(0.25):
+            addProductivity():
+            setIngredients("omnium-gear-wheel",p.."-gear-wheel"):
+            setCategory("crafting"):
+            setSubgroup("omni-gears"):
+            setTechName(plateTech[i]):
+            extend()
+    end
 
     data.raw.item["brass-gear-wheel"].icon="__omnimatter__/graphics/icons/brass-gear-wheel.png"
     data.raw.item["brass-gear-wheel"].icon_size=32

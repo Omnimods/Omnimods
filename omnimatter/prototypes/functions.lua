@@ -187,23 +187,27 @@ function omni.matter.add_omnium_alloy(name,plate,ingot)
             category = "omnifurnace",
             icon_size = 32,
             energy_required = 5,
-            enabled = true,
+            enabled = false,
             ingredients = {
                 {type="item", name="omnium-plate",amount=omni_q},
                 {type="item", name=plate,amount=metal_q},
             },
             results = {{type="item", name="omnium-"..name.."-alloy",amount=omni.lib.round(math.sqrt(omni_q+metal_q))}}
         }
+        local found = false
         for _, tech in pairs(data.raw.technology) do
             if tech.effects then
                 for _, eff in pairs(tech.effects) do
                     if eff.type == "unlock-recipe" and eff.recipe == plate then
-                        table.insert(tech.effects,{type="unlock-recipe",recipe="omnium-"..name.."-alloy-furnace"})
-                        reg[#reg].enabled = false
+                        omni.lib.add_unlock_recipe(tech.name, "omnium-"..name.."-alloy-furnace", true)
+                        found = true
                         break
                     end
                 end
             end
+        end
+        if not found then
+            omni.lib.add_unlock_recipe("omnitech-omnium-processing", "omnium-"..name.."-alloy-furnace", true)
         end
     end
     if #reg > 0 then data:extend(reg) end

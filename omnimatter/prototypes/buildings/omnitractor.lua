@@ -95,7 +95,7 @@ BuildChain:create("omnimatter","omnitractor"):
     setEmissions(function(level,grade) return math.max(3 - ((grade-1) * 0.2), 0.1) end):
     addElectricIcon():
     setTechName("omnitech-omnitractor"):
-    --setTechPrereq(): done in data-updates (extraction-dynamic) after extractions have been created
+    setTechPrereq(function(levels,grade) if grade == 1 then return "omnitech-omnium-processing" end end):
     setTechSuffix("electric"):
     setTechIcons("omnitractor-electric","omnimatter"):
     setTechCost(get_tech_times):
@@ -106,8 +106,8 @@ BuildChain:create("omnimatter","omnitractor"):
         function(levels,grade)
             if grade > 1 and ((grade-1)*omni.fluid_levels_per_tier) <= omni.fluid_levels then
                 return "omnitech-omnisolvent-omnisludge-"..(grade-1)*omni.fluid_levels_per_tier 
-            else 
-                return nil 
+            else
+                return nil
             end
         end):
     setStacksize(50):
