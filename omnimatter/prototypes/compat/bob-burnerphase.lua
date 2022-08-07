@@ -1,12 +1,12 @@
 if mods["bobassembly"] and data.raw.recipe["steam-science-pack"] then
     local tractor_ingredients = {
-        {name="omnicium-iron-gear-box", amount=2},
-        {name="omnicium-gear-wheel", amount=3},
+        {name="omnium-iron-gear-box", amount=2},
+        {name="omnium-gear-wheel", amount=3},
         {name="iron-plate", amount=6}
     }
     local phlog_ingredients = {
-        {type = "item", name = "omnicium-plate", amount = 15},
-        {type = "item", name = "omnicium-gear-wheel", amount = 20},
+        {type = "item", name = "omnium-plate", amount = 15},
+        {type = "item", name = "omnium-gear-wheel", amount = 20},
         {type = "item", name = "iron-plate", amount = 15},
         {type = "item", name = "copper-plate", amount = 10}
     }

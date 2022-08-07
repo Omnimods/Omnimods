@@ -9,10 +9,9 @@ if mods["angelsindustries"] and angelsmods.industries.components then
     }
 else
     phlog_cost = {
-        {type = "item", name = "omnicium-plate", amount = 10},
-        {type = "item", name = "omnicium-gear-wheel", amount = 15},
-        {type = "item", name = "iron-plate", amount = 10},
-        {type = "item", name = "copper-plate", amount = 5},
+        {name = "omnicium-plate", amount = 8},
+        {name = "copper-plate", amount = 4},
+        {name = "omnite-brick", amount = 4},
     }
 end
 
