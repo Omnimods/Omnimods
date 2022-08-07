@@ -26,7 +26,7 @@ BuildGen:import("burner-omni-furnace"):
     setEmissions(4.0):
     setOrder("a[omni-furnace-2]"):
     setFuelCategories("chemical"):
-    setIngredients({"burner-omni-furnace",1},{"omnicium-iron-alloy",15},{"iron-plate",20},{"omnicium-iron-gear-box",20}):
+    setIngredients({"burner-omni-furnace",1},{"omnium-iron-alloy",15},{"iron-plate",20},{"omnium-iron-gear-box",20}):
     setEnabled(false):
     setTechName("advanced-material-processing"):
     setReplace("furnace"):
@@ -45,9 +45,9 @@ BuildGen:import("electric-furnace"):
     setSubgroup("omni-buildings"):
     setOrder("a[omni-furnace-3]"):
     setCrafting("smelting","omnifurnace"):
-    setIngredients({"omni-furnace-2",1},{"omnicium-steel-alloy",15},{"steel-plate",20}):
-    ifAddIngredients(mods["bobplates"],{"omnicium-steel-gear-box",20}):
-    ifAddIngredients(not mods["bobplates"],{"omnicium-iron-gear-box",20}):
+    setIngredients({"omni-furnace-2",1},{"omnium-steel-alloy",15},{"steel-plate",20}):
+    ifAddIngredients(mods["bobplates"],{"omnium-steel-gear-box",20}):
+    ifAddIngredients(not mods["bobplates"],{"omnium-iron-gear-box",20}):
     setEnabled(false):
     setTechName("advanced-material-processing-2"):
     setReplace("furnace"):

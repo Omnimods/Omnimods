@@ -6,7 +6,7 @@ RecGen:create("omnimatter_energy","energy-science-pack"):
     setDurabilityDesc("description.science-pack-remaining-amount"):
     setEnergy(5):
     addProductivity():
-    setIngredients({{"omnicium-plate", 1}, {"omnite-brick", 1}}):
+    setIngredients({{"omnium-plate", 1}, {"omnite-brick", 1}}):
     setSubgroup("science-pack"):
     setCategory("crafting"):
     setOrder("a[aa-energy-science-pack]"):

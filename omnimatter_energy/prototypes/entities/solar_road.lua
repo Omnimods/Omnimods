@@ -47,7 +47,7 @@ data:extend({
         ingredients = 
         {
             {type = "item",name = "crystal-panel", amount = 4},
-            {type = "item",name = "small-omnicium-electric-pole", amount = 1},
+            {type = "item",name = "small-omnium-electric-pole", amount = 1},
             {type = "item",name = "refined-concrete", amount = 4}
         },
         results = {{type = "item",name = "omni-solar-road", amount = 4}}

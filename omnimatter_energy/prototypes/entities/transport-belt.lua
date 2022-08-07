@@ -173,7 +173,7 @@ end
 if data.raw.technology["logistics-0"] then data.raw.technology["logistics-0"] = nil end
 
 local belt = RecGen:create("omnimatter_energy", "basic-transport-belt"):
-    setIngredients({"omnicium-gear-wheel", 1}, {"omni-tablet", 1}):
+    setIngredients({"omnium-gear-wheel", 1}, {"omni-tablet", 1}):
     setResults({"basic-transport-belt", 2}):
     setSubgroup("belt"):
     setEnergy(0.5):
@@ -192,7 +192,7 @@ local belt = RecGen:create("omnimatter_energy", "basic-transport-belt"):
     belt:extend()
 
 local ug = RecGen:create("omnimatter_energy", "basic-underground-belt"):
-    setIngredients({"basic-transport-belt", 5}, {"omnicium-plate", 10}):
+    setIngredients({"basic-transport-belt", 5}, {"omnium-plate", 10}):
     setResults({"basic-underground-belt", 2}):
     setSubgroup("belt"):
     setEnergy(0.5):
@@ -209,7 +209,7 @@ local ug = RecGen:create("omnimatter_energy", "basic-underground-belt"):
     ug:extend()
 
 local splitter = RecGen:create("omnimatter_energy", "basic-splitter"):
-    setIngredients({"basic-transport-belt", 4}, {"omnicium-iron-gear-box", 2}, {"omnicium-gear-wheel", 4}):
+    setIngredients({"basic-transport-belt", 4}, {"omnium-iron-gear-box", 2}, {"omnium-gear-wheel", 4}):
     setResults({"basic-splitter", 1}):
     setSubgroup("belt"):
     setEnergy(0.5):

@@ -56,7 +56,7 @@ local inserter_order = "ab[burner-filter-inserter]"
 if mods["boblogistics"] then inserter_subgroup = "bob-logistic-tier-0" inserter_order = "e[inserter]-a[filter-burner]"end
 
 InsertGen:create("omnimatter_energy","burner-filter-inserter"):
-    setIngredients({"burner-inserter",1},{"omnitor",2},{"omnicium-gear-wheel",2}):
+    setIngredients({"burner-inserter",1},{"omnitor",2},{"omnium-gear-wheel",2}):
     setIcons("burner-filter-inserter","omnimatter_energy"):
     setFilter(1):
     setSpeed(0.0214, 0.01): --vanilla burner inserter speed

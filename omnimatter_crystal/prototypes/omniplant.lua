@@ -30,7 +30,7 @@ if mods["angelsindustries"] and angelsmods.industries.components then
     {name="block-omni-0", amount=5}
     }
 else
-    burner_ings = {{pipe,15},{"omnicium-plate",5},{electronic,5},{"omnite-brick",10},{"iron-gear-wheel",10}}
+    burner_ings = {{pipe,15},{"omnium-plate",5},{electronic,5},{"omnite-brick",10},{"iron-gear-wheel",10}}
 end
 
 BuildGen:create("omnimatter_crystal","burner-omniplant"):

@@ -9,7 +9,7 @@ quant["crystal"] = 4
 quant["circuit"] = 6
 
 local component={}
-component["plate"] = {"omnicium-plate", "omnicium-iron-alloy", "omnicium-steel-alloy"}
+component["plate"] = {"omnium-plate", "omnium-iron-alloy", "omnium-steel-alloy"}
 component["crystal"] = {}
 component["circuit"] = {}
 
@@ -26,8 +26,8 @@ if data.raw.item["quartz-crystal"] then component["crystal"][#component["crystal
 if data.raw.item["cobalt-ore-crystal"] then component["crystal"][#component["crystal"]+1] = "cobalt-ore-crystal" end
 if data.raw.item["silver-ore-crystal"] then component["crystal"][#component["crystal"]+1] = "silver-ore-crystal" end
 
-if data.raw.item["omnicium-aluminium-alloy"] then component["plate"][#component["plate"]+1] = "omnicium-aluminium-alloy" end
-if data.raw.item["omnicium-tungsten-alloy"] then component["plate"][#component["plate"]+1] = "omnicium-tungsten-alloy" end
+if data.raw.item["omnium-aluminium-alloy"] then component["plate"][#component["plate"]+1] = "omnium-aluminium-alloy" end
+if data.raw.item["omnium-tungsten-alloy"] then component["plate"][#component["plate"]+1] = "omnium-tungsten-alloy" end
 
 
 local get_cost = function(tier, size)

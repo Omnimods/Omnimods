@@ -21,16 +21,16 @@ component["bob-plate"]={"iron-plate", "copper-plate", "tin-plate", "lead-plate",
 component["angel-plate"]={"copper-plate","iron-plate","angels-plate-manganese", "angels-plate-chrome", "angels-plate-platinum"}
 component["angels-comp-plate"]={"copper-plate", "iron-plate", "steel-plate","angels-plate-aluminium", "angels-plate-titanium", "angels-plate-tungsten","angels-plate-chrome", "angels-plate-platinum"}
 component["angel-bob-plate"]={"iron-plate", "copper-plate", "tin-plate", "lead-plate", "silver-plate", "zinc-plate", "nickel-plate", "cobalt-plate", "angels-plate-manganese", "gold-plate", "aluminium-plate", "tungsten-plate", "titanium-plate", "angels-plate-chrome", "angels-plate-platinum"}
-component["vanilla-omniplate"]= {"omnicium-plate","omnicium-iron-alloy","omnicium-steel-alloy"}
-component["omni-alloys"] = {"omnicium-plate","omnicium-iron-alloy","omnicium-steel-alloy"}
-component["omni-bob-alloys"] = {"omnicium-plate","omnicium-iron-alloy","omnicium-steel-alloy", "omnicium-aluminium-alloy", "omnicium-tungsten-alloy"}
+component["vanilla-omniplate"]= {"omnium-plate","omnium-iron-alloy","omnium-steel-alloy"}
+component["omni-alloys"] = {"omnium-plate","omnium-iron-alloy","omnium-steel-alloy"}
+component["omni-bob-alloys"] = {"omnium-plate","omnium-iron-alloy","omnium-steel-alloy", "omnium-aluminium-alloy", "omnium-tungsten-alloy"}
 -- GEARS
 component["vanilla-gear-wheel"] = {"iron-gear-wheel"}
 component["bob-gear-wheel"] = {"iron-gear-wheel", "steel-gear-wheel", "brass-gear-wheel", "cobalt-steel-gear-wheel", "titanium-gear-wheel", "tungsten-gear-wheel", "nitinol-gear-wheel"}
 component["angels-gear-wheel"] = {"angels-gear", "angels-axle", "angels-roller-chain", "angels-spring", "angels-bearing"}
-component["vanilla-gear-box"]= {"omnicium-iron-gear-box"}
-component["bob-gear-box"] = {"omnicium-iron-gear-box","omnicium-steel-gear-box","omnicium-brass-gear-box","omnicium-titanium-gear-box","omnicium-tungsten-gear-box","omnicium-nitinol-gear-box"}
-component["angels-gear-box"] = {"omnicium-iron-gear-box","omnicium-steel-gear-box","omnicium-titanium-gear-box","omnicium-tungsten-gear-box"}
+component["vanilla-gear-box"]= {"omnium-iron-gear-box"}
+component["bob-gear-box"] = {"omnium-iron-gear-box","omnium-steel-gear-box","omnium-brass-gear-box","omnium-titanium-gear-box","omnium-tungsten-gear-box","omnium-nitinol-gear-box"}
+component["angels-gear-box"] = {"omnium-iron-gear-box","omnium-steel-gear-box","omnium-titanium-gear-box","omnium-tungsten-gear-box"}
 component["bearing"]={"steel-bearing", nil, "cobalt-steel-bearing", "titanium-bearing", "nitinol-bearing", "ceramic-bearing"}
 
 --------------------------------------------------------------------------------------------------
