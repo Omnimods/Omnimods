@@ -17,7 +17,7 @@ RecGen:create("omnimatter","omnicium-plate"):
     setIcons("omnicium-plate","omnimatter"):
     setStacksize(200):
     setIngredients({normal = {{"omnite",2},{"stone-crushed",4}},expensive={{"omnite",3},{"stone-crushed",6}}}):
-    setResults({normal = {{"omnicium-plate", 2}},expensive={{"omnicium-plate",1}}}):
+    setResults({normal = {{"omnicium-plate", 1}},expensive={{"omnicium-plate",1}}}):
     setCategory("smelting"):
     setSubgroup("omnium"):
     setOrder("ab"):
@@ -26,8 +26,8 @@ RecGen:create("omnimatter","omnicium-plate"):
     extend()
 
 --Replace iron plates with omnicium plates for vanilla burner entities
-omni.lib.replace_recipe_ingredient("burner-inserter", "iron-plate", "omnicium-plate")
-omni.lib.replace_recipe_ingredient("burner-mining-drill", "iron-plate", "omnicium-plate")
+omni.lib.replace_recipe_ingredient("burner-inserter", "iron-plate", {"omnicium-plate", 2})
+omni.lib.replace_recipe_ingredient("burner-mining-drill", "iron-plate", {"omnicium-plate", 6})
 
 ItemGen:create("omnimatter","omnium-plate"):
     setIcons("omnium-plate","omnimatter"):
