@@ -1,7 +1,7 @@
 BuildGen:import("burner-mining-drill"):
     setIngredients(
-    {type="item", name="omnite-brick", amount=1},
-    {type="item", name="iron-plate", amount=4},
+    {type="item", name="iron-gear-wheel", amount=2},
+    {type="item", name="omnicium-plate", amount=4},
     {type="item", name="omnitor", amount=1}):
     setEnabled():
     extend()
@@ -76,7 +76,7 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter"):
 
 --Fix vanilla burner inserter
 RecGen:import("burner-inserter"):
-    setIngredients({"omnitor",1},{"iron-plate",1},{"iron-gear-wheel",1}):
+    setIngredients({"omnitor",1},{"omnicium-plate",2},{"iron-gear-wheel",1}):
     addBurnerIcon():
     extend()
 
