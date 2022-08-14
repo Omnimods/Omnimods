@@ -9,6 +9,8 @@ Date: ????
     - Lock omnium behind T1 technologies
     - Replaced omnium with the new omnicium in all early game recipes
     - Slightly adjusted other ingredients in those recipes if necessary
+  Bugfixes:
+    - Fixed that some SD omnite brick tile transitions pointed to the vanilla brick
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.30
 Date: 2022.07.05

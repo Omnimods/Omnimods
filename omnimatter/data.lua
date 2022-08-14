@@ -21,5 +21,6 @@ require("prototypes.compat.extraction-resources")
 
 --LOAD ALL OTHER PROTOTYPES
 require("prototypes.recipes.omnium")
-require("prototypes.recipes.omnibrick")
 require("prototypes.recipes.omnic-acid")
+require("prototypes.tiles.omnibrick")
+require("prototypes.tiles.omniconcrete")
