@@ -9,6 +9,7 @@ Date: ????
     - Lock omnium behind T1 technologies
     - Replaced omnium with the new omnicium in all early game recipes
     - Slightly adjusted other ingredients in those recipes if necessary
+    - Lowered the omnite brick walking speed modifier from 150% to 140%
   Bugfixes:
     - Fixed that some SD omnite brick tile transitions pointed to the vanilla brick
 ---------------------------------------------------------------------------------------------------
