@@ -1,0 +1,57 @@
+{
+    "item":
+    [
+        ["omnicium-plate", "omnium-plate"],
+        ["omnicium-plate-pure", "omnium-plate-pure"],
+        ["omnicium-plate-mix", "omnium-plate-mix"],
+        ["omnicium-gear-wheel", "omnium-gear-wheel"],
+        ["omnicium-iron-gear-box", "omnium-iron-gear-box"],
+        ["omnicium-steel-gear-box", "omnium-steel-gear-box"],
+        ["omnicium-brass-gear-box", "omnium-brass-gear-box"],
+        ["omnicium-titanium-gear-box", "omnium-titanium-gear-box"],
+        ["omnicium-tungsten-gear-box", "omnium-tungsten-gear-box"],
+        ["omnicium-nitinol-gear-box", "omnium-nitinol-gear-box"],
+        ["processed-omnicium","processed-omnium"],
+        ["ingot-omnicium","ingot-omnium"],
+        ["angels-roll-omnicium","angels-roll-omnium"],
+        ["pellet-omnicium","pellet-omnium"],
+        ["angels-roll-omnicium","angels-roll-omnium"],
+        ["omnicium-iron-alloy","omnium-iron-alloy"],
+        ["omnicium-steel-alloy","omnium-steel-alloy"],
+        ["omnicium-tungsten-alloy","omnium-tungsten-alloy"],
+        ["omnicium-aluminium-alloy","omnium-aluminium-alloy"]
+    ],
+
+    "recipe":
+    [
+        ["omnicium-plate", "omnium-plate"],
+        ["omnicium-gear-wheel-casting","omnium-gear-wheel-casting"],
+        ["omnicium-gear-wheel-casting","omnium-gear-wheel-casting"],
+        ["molten-omnicium-smelting-1","molten-omnium-smelting-1"],
+        ["angels-plate-omnicium","angels-plate-omnium"],
+        ["omnicium-processing","omnium-processing"],
+        ["processed-omnicium-smelting","processed-omnium-smelting"],
+        ["omnicium-processed-processing","omnium-processed-processing"],
+        ["pellet-omnicium-smelting","pellet-omnium-smelting"],
+        ["roll-omnicium-casting","roll-omnium-casting"],
+        ["roll-omnicium-casting-fast","roll-omnium-casting-fast"],
+        ["angels-roll-omnicium-converting","angels-roll-omnium-converting"],
+        ["molten-omnicium-iron-alloy","molten-omnium-iron-alloy"],
+        ["molten-omnicium-steel-alloy","molten-omnium-steel-alloy"],
+        ["molten-omnicium-tungsten-alloy","molten-omnium-tungsten-alloy"],
+        ["molten-omnicium-aluminium-alloy","molten-omnium-aluminium-alloy"],
+        ["angels-plate-omnicium-iron-alloy","angels-plate-omnium-iron-alloy"],
+        ["angels-plate-omnicium-steel-alloy","angels-plate-omnium-steel-alloy"],
+        ["angels-plate-omnicium-tungsten-alloy","angels-plate-omnium-tungsten-alloy"],
+        ["angels-plate-omnicium-aluminium-alloy","angels-plate-omnium-aluminium-alloy"],
+        ["omnicium-iron-alloy-furnace","omnium-iron-alloy-furnace"],
+        ["omnicium-steel-alloy-furnace","omnium-steel-alloy-furnace"],
+        ["omnicium-tungsten-alloy-furnace","omnium-tungsten-alloy-furnace"],
+        ["omnicium-aluminium-alloy-furnace","omnium-aluminium-alloy-furnace"]
+    ],
+
+    "fluid":
+    [
+        ["liquid-molten-omnicium", "liquid-molten-omnium"]
+    ]
+}
