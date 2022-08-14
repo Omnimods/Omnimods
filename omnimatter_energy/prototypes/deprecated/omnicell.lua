@@ -47,7 +47,7 @@ for _,m in pairs(main_ores) do
             setCategory("omniphlog"):
             setSubgroup("Omnicell"):            
             setIngredients(
-                {type="item",name="omnicium-plate",amount=3},
+                {type="item",name="omnium-plate",amount=3},
                 {type="item",name="omnite",amount=10},
                 {type="item",name=m,amount=5},
                 {type="item",name=b,amount=5}):

@@ -173,7 +173,7 @@ end
 if data.raw.technology["logistics-0"] then data.raw.technology["logistics-0"] = nil end
 
 local belt = RecGen:create("omnimatter_energy", "basic-transport-belt"):
-    setIngredients({"omnicium-gear-wheel", 1}, {"omni-tablet", 1}):
+    setIngredients({"iron-gear-wheel", 1}, {"omnicium-plate", 2}):
     setResults({"basic-transport-belt", 2}):
     setSubgroup("belt"):
     setEnergy(0.5):
@@ -209,7 +209,7 @@ local ug = RecGen:create("omnimatter_energy", "basic-underground-belt"):
     ug:extend()
 
 local splitter = RecGen:create("omnimatter_energy", "basic-splitter"):
-    setIngredients({"basic-transport-belt", 4}, {"omnicium-iron-gear-box", 2}, {"omnicium-gear-wheel", 4}):
+    setIngredients({"basic-transport-belt", 4}, {"omnicium-plate", 2}, {"iron-gear-wheel", 4}):
     setResults({"basic-splitter", 1}):
     setSubgroup("belt"):
     setEnergy(0.5):
@@ -236,21 +236,39 @@ RecGen:import("transport-belt"):
     setTechName("logistics"):
     setTechPrereq("automation-science-pack"):
     extend()
+omni.lib.add_prerequisite("logistics", "automation-science-pack")
+omni.lib.add_prerequisite("logistics", "omnitech-omnium-processing")
 
 --Adjust recipes
 omni.lib.replace_recipe_ingredient("transport-belt", "iron-gear-wheel", {"omnitor",1})
-
---Check if gears are already added, angel/bob replace plates with something else
-if not omni.lib.recipe_ingredient_contains("underground-belt", "iron-gear-wheel") then
-    omni.lib.replace_recipe_ingredient("underground-belt", "iron-plate", {"iron-gear-wheel",20})
-end
-if not omni.lib.recipe_ingredient_contains("splitter", "iron-gear-wheel") then
-    omni.lib.replace_recipe_ingredient("splitter", "iron-plate", {"iron-gear-wheel",5})
-end
+omni.lib.replace_recipe_ingredient("transport-belt", "iron-plate", {"omnium-plate",1})
 
 --check if some mod already added basic belts, if not, add them (assume the splitter/ug is not touched in this case aswell)
 if not omni.lib.recipe_ingredient_contains("transport-belt", "basic-transport-belt") then
     omni.lib.add_recipe_ingredient("transport-belt", {"basic-transport-belt", 1})
     omni.lib.add_recipe_ingredient("underground-belt", {"basic-underground-belt", 2})
     omni.lib.add_recipe_ingredient("splitter", {"basic-splitter", 1})
+end
+
+--Replace iron gear wheels of belts with omnium gear wheels
+for _, rec in pairs(data.raw.recipe) do
+    if string.find(rec.name, "%-transport%-belt") then
+        if omni.lib.recipe_ingredient_contains(rec.name, "iron-gear-wheel") then
+            omni.lib.replace_recipe_ingredient(rec.name, "iron-gear-wheel", "omnium-gear-wheel")
+        else
+            omni.lib.replace_recipe_ingredient(rec.name, "iron-plate", "omnium-gear-wheel")
+        end
+    elseif string.find(rec.name, "underground%-belt") then
+        if omni.lib.recipe_ingredient_contains(rec.name, "iron-gear-wheel") then
+            omni.lib.replace_recipe_ingredient(rec.name, "iron-gear-wheel", "omnium-gear-wheel")
+        else
+            omni.lib.replace_recipe_ingredient(rec.name, "iron-plate", "omnium-gear-wheel")
+        end
+    elseif string.find(rec.name, "splitter") then
+        if omni.lib.recipe_ingredient_contains(rec.name, "iron-gear-wheel") then
+            omni.lib.replace_recipe_ingredient(rec.name, "iron-gear-wheel", "omnium-gear-wheel")
+        else
+            omni.lib.replace_recipe_ingredient(rec.name, "iron-plate", "omnium-gear-wheel")
+        end
+    end
 end

@@ -47,7 +47,7 @@ data:extend({
     },
     {
     type = "item",
-    name = "omnicium-",
+    name = "omnium-",
     icons = {
         {icon = "__omnimatter_electricity__/graphics/icons/oxyomnide-salt.png"}
     },

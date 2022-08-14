@@ -1,7 +1,7 @@
 BuildGen:import("burner-mining-drill"):
     setIngredients(
-    {type="item", name="omnite-brick", amount=1},
-    {type="item", name="iron-plate", amount=4},
+    {type="item", name="iron-gear-wheel", amount=2},
+    {type="item", name="omnicium-plate", amount=4},
     {type="item", name="omnitor", amount=1}):
     setEnabled():
     extend()
@@ -56,7 +56,7 @@ local inserter_order = "ab[burner-filter-inserter]"
 if mods["boblogistics"] then inserter_subgroup = "bob-logistic-tier-0" inserter_order = "e[inserter]-a[filter-burner]"end
 
 InsertGen:create("omnimatter_energy","burner-filter-inserter"):
-    setIngredients({"burner-inserter",1},{"omnitor",2},{"omnicium-gear-wheel",2}):
+    setIngredients({"burner-inserter",1},{"omnitor",2},{"omnium-gear-wheel",2}):
     setIcons("burner-filter-inserter","omnimatter_energy"):
     setFilter(1):
     setSpeed(0.0214, 0.01): --vanilla burner inserter speed
@@ -76,7 +76,7 @@ InsertGen:create("omnimatter_energy","burner-filter-inserter"):
 
 --Fix vanilla burner inserter
 RecGen:import("burner-inserter"):
-    setIngredients({"omnitor",1},{"iron-plate",1},{"iron-gear-wheel",1}):
+    setIngredients({"omnitor",1},{"omnicium-plate",2},{"iron-gear-wheel",1}):
     addBurnerIcon():
     extend()
 
@@ -89,7 +89,7 @@ BuildGen:import("lab"):
     setEnabled():
     setInputs("energy-science-pack"):
     setFuelCategory("omnite"):
-    setIngredients({"omnitor", 10},{"copper-plate", 10},{"omnite-brick", 5}):
+    setIngredients({"omnitor", 5},{"copper-plate", 10},{"omnicium-plate", 5}):
     setReplace("lab"):
     setNextUpgrade("lab"):
     setOrder("g[lab-omnitor]"):

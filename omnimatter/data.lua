@@ -20,6 +20,6 @@ require("prototypes.generation.omnite-inf")
 require("prototypes.compat.extraction-resources")
 
 --LOAD ALL OTHER PROTOTYPES
-require("prototypes.recipes.omnicium")
+require("prototypes.recipes.omnium")
 require("prototypes.recipes.omnibrick")
 require("prototypes.recipes.omnic-acid")

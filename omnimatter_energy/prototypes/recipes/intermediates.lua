@@ -5,13 +5,13 @@ RecGen:create("omnimatter_energy","omnitor"):
     setSubgroup("omnienergy-intermediates"):
     setOrder("a"):
     setEnergy(0.75):
-    setIngredients({type="item", name="omnicium-plate", amount=1},{type="item", name="omnicium-gear-wheel", amount=1}):
+    setIngredients({type="item", name="omnicium-plate", amount=4},{type="item", name="iron-gear-wheel", amount=2}):
     addProductivity():
     setEnabled():
     extend()
 
 RecGen:create("omnimatter_energy","anbaric-omnitor"):
-    setIngredients({type="item", name="omnicium-plate", amount=2},{type="item", name="copper-cable", amount=2},{type="item", name="omnitor", amount=1}):
+    setIngredients({type="item", name="omnium-gear-wheel", amount=2},{type="item", name="copper-cable", amount=2},{type="item", name="omnitor", amount=1}):
     addProductivity():
     setStacksize(100):
     addMask(0/255,186/255,184/255):

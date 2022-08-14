@@ -1,14 +1,17 @@
+--Burner
 local burner_ingredients = {}
 if mods["angelsindustries"] and angelsmods.industries.components then
     burner_ingredients = {
-    {name="block-construction-1", amount=1},
-    {name="block-fluidbox-1", amount=1},
-    {name="block-omni-0", amount=1}}
+        {name="block-construction-1", amount=1},
+        {name="block-fluidbox-1", amount=1},
+        {name="block-omni-0", amount=1}
+    }
 else
     burner_ingredients = {
-    {name="omnicium-gear-wheel", amount=2},
-    {name="omnicium-plate", amount=4},
-    {name="iron-plate", amount=3}}
+        {name="omnicium-plate", amount=8},
+        {name="iron-plate", amount=4},
+        {name = "omnite-brick", amount = 4}
+    }
 end
 
 BuildGen:create("omnimatter","burner-omnitractor"):
@@ -92,7 +95,7 @@ BuildChain:create("omnimatter","omnitractor"):
     setEmissions(function(level,grade) return math.max(3 - ((grade-1) * 0.2), 0.1) end):
     addElectricIcon():
     setTechName("omnitech-omnitractor"):
-    --setTechPrereq(): done in data-updates (extraction-dynamic) after extractions have been created
+    setTechPrereq(function(levels,grade) if grade == 1 then return "omnitech-omnium-processing" end end):
     setTechSuffix("electric"):
     setTechIcons("omnitractor-electric","omnimatter"):
     setTechCost(get_tech_times):
@@ -103,8 +106,8 @@ BuildChain:create("omnimatter","omnitractor"):
         function(levels,grade)
             if grade > 1 and ((grade-1)*omni.fluid_levels_per_tier) <= omni.fluid_levels then
                 return "omnitech-omnisolvent-omnisludge-"..(grade-1)*omni.fluid_levels_per_tier 
-            else 
-                return nil 
+            else
+                return nil
             end
         end):
     setStacksize(50):

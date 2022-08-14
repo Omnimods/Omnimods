@@ -132,50 +132,50 @@ function omni.matter.add_initial(ore_name, ore_amount, omnite_amount, fluid_to_m
     end
 end
 
-function omni.matter.add_omnicium_alloy(name,plate,ingot)
+function omni.matter.add_omnium_alloy(name,plate,ingot)
     local reg = {}
 
-    ItemGen:create("omnimatter","omnicium-"..name.."-alloy"):
-            setSubgroup("omnicium"):
+    ItemGen:create("omnimatter","omnium-"..name.."-alloy"):
+            setSubgroup("omnium"):
             setStacksize(400):
-            setIcons("omnicium-plate"):
+            setIcons("omnium-plate"):
             addSmallIcon(plate,3):extend()
 
     if mods["angelssmelting"] then
-        local r = RecGen:create("omnimatter","molten-omnicium-"..name.."-alloy")
+        local r = RecGen:create("omnimatter","molten-omnium-"..name.."-alloy")
             r:fluid():
             setBothColour({r = 1, g = 0, b = 1}):
             setMaxTemp(900):
             setIngredients(
-                {type="item", name="ingot-omnicium", amount=18},
+                {type="item", name="ingot-omnium", amount=18},
                 {type="item", name=ingot, amount=12}
             ):
-            setResults({type="fluid", name="molten-omnicium-"..name.."-alloy", amount=300}):
-            setIcons("liquid-molten-omnicium"):
+            setResults({type="fluid", name="molten-omnium-"..name.."-alloy", amount=300}):
+            setIcons("liquid-molten-omnium"):
             addSmallIcon(ingot,3):
             setCategory("induction-smelting"):
-            setSubgroup("omnicium-alloy-casting"):
-            setOrder("a[molten-omnicium-"..name.."-alloy]"):
+            setSubgroup("omnium-alloy-casting"):
+            setOrder("a[molten-omnium-"..name.."-alloy]"):
             setEnergy(4):
-            setTechName("omnitech-angels-omnicium-"..name.."-alloy-smelting"):
-            setTechIcons("smelting-omnicium-"..name):
+            setTechName("omnitech-angels-omnium-"..name.."-alloy-smelting"):
+            setTechIcons("smelting-omnium-"..name):
             setTechPacks("angels-"..name.."-smelting-1"):
             setTechCost(50):
             setTechTime(30):
             setTechPrereq(
-                "omnitech-angels-omnicium-smelting-1",
+                "omnitech-angels-omnium-smelting-1",
                 "angels-"..name.."-smelting-1"):
             extend()
 
-        RecGen:create("omnimatter","angels-plate-omnicium-"..name.."-alloy"):
-            setIngredients({type="fluid", name="molten-omnicium-"..name.."-alloy", amount=40}):
-            setResults({type="item", name="omnicium-"..name.."-alloy", amount=4}):
+        RecGen:create("omnimatter","angels-plate-omnium-"..name.."-alloy"):
+            setIngredients({type="fluid", name="molten-omnium-"..name.."-alloy", amount=40}):
+            setResults({type="item", name="omnium-"..name.."-alloy", amount=4}):
             addProductivity():
             setCategory("casting"):
             setEnergy(4):
-            setSubgroup("omnicium-alloy-casting"):
-            setOrder("b[molten-omnicium-"..name.."-alloy]"):
-            setTechName("omnitech-angels-omnicium-"..name.."-alloy-smelting"):
+            setSubgroup("omnium-alloy-casting"):
+            setOrder("b[molten-omnium-"..name.."-alloy]"):
+            setTechName("omnitech-angels-omnium-"..name.."-alloy-smelting"):
             extend()
     else
         math.randomseed(string.len(plate..name))
@@ -183,27 +183,31 @@ function omni.matter.add_omnicium_alloy(name,plate,ingot)
         local omni_q = math.random(1,metal_q)
         reg[#reg+1]={
             type = "recipe",
-            name = "omnicium-"..name.."-alloy-furnace",
+            name = "omnium-"..name.."-alloy-furnace",
             category = "omnifurnace",
             icon_size = 32,
             energy_required = 5,
-            enabled = true,
+            enabled = false,
             ingredients = {
-                {type="item", name="omnicium-plate",amount=omni_q},
+                {type="item", name="omnium-plate",amount=omni_q},
                 {type="item", name=plate,amount=metal_q},
             },
-            results = {{type="item", name="omnicium-"..name.."-alloy",amount=omni.lib.round(math.sqrt(omni_q+metal_q))}}
+            results = {{type="item", name="omnium-"..name.."-alloy",amount=omni.lib.round(math.sqrt(omni_q+metal_q))}}
         }
+        local found = false
         for _, tech in pairs(data.raw.technology) do
             if tech.effects then
                 for _, eff in pairs(tech.effects) do
                     if eff.type == "unlock-recipe" and eff.recipe == plate then
-                        table.insert(tech.effects,{type="unlock-recipe",recipe="omnicium-"..name.."-alloy-furnace"})
-                        reg[#reg].enabled = false
+                        omni.lib.add_unlock_recipe(tech.name, "omnium-"..name.."-alloy-furnace", true)
+                        found = true
                         break
                     end
                 end
             end
+        end
+        if not found then
+            omni.lib.add_unlock_recipe("omnitech-omnium-processing", "omnium-"..name.."-alloy-furnace", true)
         end
     end
     if #reg > 0 then data:extend(reg) end

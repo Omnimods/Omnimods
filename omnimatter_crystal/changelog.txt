@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.16
+Date: ????
+  Changes:
+    - Adjustments for omnimatters new omnicium plate
+---------------------------------------------------------------------------------------------------
 Version: 4.1.15
 Date: 2022.08.06
   Bugfixes:
@@ -202,7 +207,7 @@ Version: 0.3.0
 Version: 0.2.5
   Bugfixes:
     - Fixes a few interesting angels compatibility oddities
-    - Fixed so omniplants uses omnicium.
+    - Fixed so omniplants uses omnium.
     - Removed Omniserter and Crystal Reactors, will be elsewhere
   Info:
     - Warning, shards are replaced by other names and they will not be transferred.

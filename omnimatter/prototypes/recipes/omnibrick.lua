@@ -3,15 +3,18 @@ RecGen:create("omnimatter","omnite-brick"):
     setCategory("omnifurnace"):
     setSubgroup("omni-solids"):
     setStacksize(200):
+    setEnergy(1.6):
     setEnabled():
     tile():
-    setPlace("omnite-brick"):extend()
+    setPlace("omnite-brick"):
+    extend()
 
 RecGen:create("omnimatter","early-omnite-brick"):
     setIngredients({"omnite",10},{"stone-brick"}):
     setSubgroup("omni-solids"):
     setResults("omnite-brick"):
-    setEnabled():extend()
+    setEnabled():
+    extend()
 
 local omnitile = table.deepcopy(data.raw.tile["stone-path"])
 omnitile.name = "omnite-brick"

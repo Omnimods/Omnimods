@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.1.14
+Date: ????
+  Changes:
+    - Adjustments for omnimatters new omnicium plate
+    - Replace omnium with the new omnicium plate in early game recipes
+---------------------------------------------------------------------------------------------------
 Version: 3.1.13
 Date: 2022.05.01
   Bugfixes:
@@ -17,7 +23,7 @@ Version: 3.1.11
 Date: 2022.01.17
   Bugfixes:
     - Fixed a crash with Krastorio2 caused by accessing an icon-path that has been moved
-    - Fixed that the small iron and omnicium poles hit- and collision box were too big
+    - Fixed that the small iron and omnium poles hit- and collision box were too big
 ---------------------------------------------------------------------------------------------------
 Version: 3.1.10
 Date: 2022.01.04
@@ -43,11 +49,11 @@ Date: 2021.09.01
 Version: 3.1.6
 Date: 2021.09.01
   Features:
-    - New small iron / omnicium electric pole graphics (Also fixes hitbox issues)
+    - New small iron / omnium electric pole graphics (Also fixes hitbox issues)
   Changes:
-    - Reduced the small omnicium electric pole wire distance to 8.5
+    - Reduced the small omnium electric pole wire distance to 8.5
     - Increased the small iron electric pole supply area radius to 3.5
-    - Iron / omnicium small electric poles now require the previous one to craft
+    - Iron / omnium small electric poles now require the previous one to craft
   Bugfixes:
     - Fixed that coal in rock loot was not replaced with purified omnite anymore
     - Fixed that the Omnifurnace Mk 3 did not allow recipes with multiple ingredients
@@ -130,8 +136,8 @@ Date: 2021.01.08
 Version: 2.1.5
 Date: 2021.01.03
   Changes:
-    - Small omnicium & iron electric poles require 2 copper wires
-    - You get 2 omnicium / iron electric poles per craft now (lib bugfix)
+    - Small omnium & iron electric poles require 2 copper wires
+    - You get 2 omnium / iron electric poles per craft now (lib bugfix)
     - Replaced coal in rock loot with omnified fuel
     - Increased the omni tablet output from 1 to 2 per omnite brick
     - Move logistics behind anbaricity with bobs belt overhaul (early basic belts)
@@ -310,7 +316,7 @@ Date: 2020.04.19
     - Steel Furnaces accept Omnified Fuel
     - Disabled Bob´s burner generator
     - Buff Omnitor Assembler speed when playing without Bob´s assembly
-    - Lower Omnitor Omnicium cost
+    - Lower Omnitor omnium cost
   Bugfixes:
     - Fixed Omni Furnaces not beeing fast replacable
     - Fixed Furnaces having 7 Output slots in some cases

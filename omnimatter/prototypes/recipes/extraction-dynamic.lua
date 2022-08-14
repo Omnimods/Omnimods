@@ -86,7 +86,7 @@ local function check_mining_fluids(tier)
 
             ItemGen:create("omnimatter", "crude-"..v.name):
                 setLocName({"item-name.crude", omni.lib.locale.of(proto).name}):
-                --setSubgroup("angels-omnicium"):
+                --setSubgroup("angels-omnium"):
                 setIcons(ore_icons):
                 extend()
 
