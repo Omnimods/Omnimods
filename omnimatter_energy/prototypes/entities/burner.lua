@@ -89,7 +89,7 @@ BuildGen:import("lab"):
     setEnabled():
     setInputs("energy-science-pack"):
     setFuelCategory("omnite"):
-    setIngredients({"omnitor", 10},{"copper-plate", 10},{"omnite-brick", 5}):
+    setIngredients({"omnitor", 5},{"copper-plate", 10},{"omnium-plate", 5}):
     setReplace("lab"):
     setNextUpgrade("lab"):
     setOrder("g[lab-omnitor]"):

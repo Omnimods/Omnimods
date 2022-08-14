@@ -1,0 +1,16 @@
+{
+    "entity":
+        [
+            ["small-omnicium-electric-pole", "small-omnium-electric-pole"]
+        ],
+
+    "item":
+        [
+            ["small-omnicium-electric-pole", "small-omnium-electric-pole"]
+        ],
+        
+    "technology":
+        [
+            ["omnitech-small-omnicium-electric-pole", "omnitech-small-omnium-electric-pole"]
+        ]
+}
