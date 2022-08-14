@@ -6,6 +6,7 @@ Date: ????
       targeting a faster early (burner-) game
   Changes:
     - Renamed omnicium to omnium
+    - Lock omnium behind T1 technologies
     - Replaced omnium with the new omnicium in all early game recipes
     - Slightly adjusted other ingredients in those recipes if necessary
 ---------------------------------------------------------------------------------------------------
