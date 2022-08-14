@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.31
+Date: ????
+  Features:
+    - Added a new, plate made out of crushed stone and omnite that replaces the old omnicium plate
+      targeting a faster early (burner-) game
+  Changes:
+    - Renamed omnicium to omnium
+    - Replaced omnium with the new omnicium in all early game recipes
+    - Slightly adjusted other ingredients in those recipes if necessary
+---------------------------------------------------------------------------------------------------
 Version: 4.1.30
 Date: 2022.07.05
   Bugfixes:

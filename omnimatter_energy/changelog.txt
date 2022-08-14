@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.1.14
+Date: ????
+  Changes:
+    - Adjustments for omnimatters new omnicium plate
+    - Replace omnium with the new omnicium plate in early game recipes
+---------------------------------------------------------------------------------------------------
 Version: 3.1.13
 Date: 2022.05.01
   Bugfixes:
