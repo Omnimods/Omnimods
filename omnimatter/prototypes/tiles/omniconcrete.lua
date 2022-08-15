@@ -1,6 +1,7 @@
 --Omnite concrete
 RecGen:create("omnimatter","omnite-concrete"):
     setIngredients({"omnite-brick", 10}, {"omnite", 1}, {type = "fluid", name = "omnic-acid", amount = 100}):
+    setResults({"omnite-concrete", 10}):
     setCategory("crafting-with-fluid"):
     setSubgroup("omni-solids"):
     setIcons({{icon="omnite-concrete", icon_size=64}}, "omnimatter"):
@@ -29,6 +30,7 @@ conc.layer = 121
 --Omnite refined concrete
 RecGen:create("omnimatter","omnite-refined-concrete"):
     setIngredients({"omnite-concrete", 20}, {"omnium-plate", 1}, {"omnicium-plate", 2}, {type = "fluid", name = "omnic-acid", amount = 100}):
+    setResults({"omnite-refined-concrete", 10}):
     setCategory("crafting-with-fluid"):
     setSubgroup("omni-solids"):
     setIcons({{icon="omnite-refined-concrete", icon_size=64}}, "omnimatter"):
