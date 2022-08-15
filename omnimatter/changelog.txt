@@ -2,8 +2,10 @@
 Version: 4.1.31
 Date: ????
   Features:
+    - WARNING: THIS WILL BREAK EXISTING SETUPS!
     - Added a new, plate made out of crushed stone and omnite that replaces the old omnicium plate
       targeting a faster early (burner-) game
+    - Added Omcrete and Refined omcrete
   Changes:
     - Renamed omnicium to omnium
     - Lock omnium behind T1 technologies
@@ -11,7 +13,7 @@ Date: ????
     - Slightly adjusted other ingredients in those recipes if necessary
     - Lowered the omnite brick walking speed modifier from 150% to 140%
   Bugfixes:
-    - Fixed that some SD omnite brick tile transitions pointed to the vanilla brick
+    - Fixed that some SD omnite brick tile transitions used vanilla brick pictures
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.30
 Date: 2022.07.05

@@ -20,7 +20,8 @@ local omnitile = table.deepcopy(data.raw.tile["stone-path"])
 omnitile.name = "omnite-brick"
 omnitile.walking_speed_modifier = 1.4
 omnitile.minable.result = "omnite-brick"
-omnitile.map_color = {r = 0.29, g = 0.03, b = 0.43}
+omnitile.map_color = {r = 0.23, g = 0.02, b = 0.35}
+omnitile.layer = 120
 
 --Point (all) graphics to our folder
 local function repoint_folder(pic)

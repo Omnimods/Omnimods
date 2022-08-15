@@ -1,40 +1,51 @@
 --Omnite concrete
 RecGen:create("omnimatter","omnite-concrete"):
-    setIngredients("stone","omnite"):
+    setIngredients({"omnite-brick", 10}, {"omnite", 1}, {type = "fluid", name = "omnic-acid", amount = 100}):
     setCategory("crafting-with-fluid"):
     setSubgroup("omni-solids"):
     setIcons({{icon="omnite-concrete", icon_size=64}}, "omnimatter"):
     setStacksize(500):
     setEnergy(10):
-    setEnabled(false):
     tile():
     setPlace("omnite-concrete"):
+    setEnabled(false):
+    setTechName("omnitech-omnite-concrete"):
+    setTechIcons("omnite-concrete", 64):
+    setTechPacks(3):
+    setTechCost(300):
+    setTechPrereq(omni.lib.get_tech_name("concrete")):
     extend()
+
+omni.lib.replace_recipe_ingredient("rocket-silo", "concrete", "omnite-concrete")
+omni.lib.replace_prerequisite("rocket-silo", "concrete", "omnitech-omnite-concrete")
 
 local conc = table.deepcopy(data.raw.tile["concrete"])
 conc.name = "omnite-concrete"
 conc.walking_speed_modifier = 1.5
 conc.minable.result = "omnite-concrete"
-conc.map_color = {r = 0.29, g = 0.03, b = 0.43}
+conc.map_color = {r = 0.26, g = 0.03, b = 0.39}
+conc.layer = 121
 
 --Omnite refined concrete
 RecGen:create("omnimatter","omnite-refined-concrete"):
-    setIngredients("stone","omnite"):
+    setIngredients({"omnite-concrete", 20}, {"omnium-plate", 1}, {"omnicium-plate", 2}, {type = "fluid", name = "omnic-acid", amount = 100}):
     setCategory("crafting-with-fluid"):
     setSubgroup("omni-solids"):
     setIcons({{icon="omnite-refined-concrete", icon_size=64}}, "omnimatter"):
     setStacksize(500):
-    setEnergy(10):
-    setEnabled(false):
+    setEnergy(15):
     tile():
     setPlace("omnite-refined-concrete"):
+    setEnabled(false):
+    setTechName("omnitech-omnite-concrete"):
     extend()
 
 local reconc = table.deepcopy(data.raw.tile["refined-concrete"])
 reconc.name = "omnite-refined-concrete"
 reconc.walking_speed_modifier = 1.6
 reconc.minable.result = "omnite-refined-concrete"
-reconc.map_color = {r = 0.29, g = 0.03, b = 0.43}
+reconc.map_color = {r = 0.29, g = 0.03, b = 0.43,}
+reconc.layer = 122
 
 --Point (all) graphics to our folder
 local function repoint_folder(pic)
