@@ -117,7 +117,7 @@ BuildGen:create("omnimatter_energy","omnictor"):
     setSubgroup("hydromnide"):
     setStacksize(20):
     setEnergy(25):
-    setIngredients({"omnicium-plate",20},{"basic-oscillo-crystallonic",10},{"boiler",3},{"steel-plate",10}):
+    setIngredients({"omnium-plate",20},{"basic-oscillo-crystallonic",10},{"boiler",3},{"steel-plate",10}):
     setTechName("omnium-power"):
     ifModsReplaceIngredients("bobpower","boiler","boiler-3"):
     setCrafting("omnictor"):
@@ -162,7 +162,7 @@ BuildGen:create("omnimatter_energy","omnium-reactor"):
     setSubgroup("omnielectrobuildings"):
     setStacksize(20):
     setEnergy(30):
-    setIngredients({"omnicium-plate",50},{"basic-oscillo-crystallonic",3},{"boiler",10},{"omnicium-steel-gear-box",10}):
+    setIngredients({"omnium-plate",50},{"basic-oscillo-crystallonic",3},{"boiler",10},{"omnium-steel-gear-box",10}):
     setFluidBox("XWXWX.XXXXX.XXXXX.XXXXX.KXKXK"):
     ifModsReplaceIngredients("bobpower","boiler","boiler-3"):
     setTechName("omnium-power"):
@@ -264,7 +264,7 @@ BuildGen:create("omnimatter_energy","omnium-turbine"):
         setEnergy(30):
         setGenerator():
         setIngredients(
-            {"omnicium-plate",50},
+            {"omnium-plate",50},
             {"basic-oscillo-crystallonic",3},
             {"steam-engine",10}
         ):

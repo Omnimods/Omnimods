@@ -1,4 +1,20 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.31
+Date: 2022.08.17
+  Features:
+    - WARNING: THIS WILL BREAK EXISTING SETUPS!
+    - Added a new, plate made out of crushed stone and omnite that replaces the old omnicium plate
+      targeting a faster early (burner-) game
+    - Added Omcrete and Refined omcrete
+  Changes:
+    - Renamed omnicium to omnium
+    - Lock omnium behind T1 technologies
+    - Replaced omnium with the new omnicium in all early game recipes
+    - Slightly adjusted other ingredients in those recipes if necessary
+    - Lowered the omnite brick walking speed modifier from 150% to 140%
+  Bugfixes:
+    - Fixed that some SD omnite brick tile transitions used vanilla brick pictures
+---------------------------------------------------------------------------------------------------
 Version: 4.1.30
 Date: 2022.07.05
   Bugfixes:
@@ -33,17 +49,17 @@ Date: 2022.02.27
 Version: 4.1.25
 Date: 2022.02.05
   Bugfixes:
-    - Fixed that the omnicium roll item had a tier number as small icon
+    - Fixed that the omnium roll item had a tier number as small icon
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.24
 Date: 2022.01.29
   Changes:
     - Added setting to opt-out of mining fluid requirement (for cowards)
-    - Updated angels omnicium smelting tech and recipe updates
+    - Updated angels omnium smelting tech and recipe updates
   Bugfixes:
     - Fixed that the burner omnitractor could not refine tier 1 crude ores
-    - Fixed that processed omnicium could not be crafted in the ore processor 1
-    - Fixed advanced omnicium casting 2 & 3 not having certain prerequisites
+    - Fixed that processed omnium could not be crafted in the ore processor 1
+    - Fixed advanced omnium casting 2 & 3 not having certain prerequisites
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.23
 Date: 2022.01.17
@@ -73,8 +89,8 @@ Version: 4.1.20
 Date: 2021.09.01
   Bugfixes:
     - Force bob`s infinite ore setting to false when hiding it
-    - Fixed that all omnicium alloy recipes were enabled by default without angels refining
-    - Fixed that advanced omnicium smelting 1 had a wrong localised name set
+    - Fixed that all omnium alloy recipes were enabled by default without angels refining
+    - Fixed that advanced omnium smelting 1 had a wrong localised name set
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.19
 Date: 2021.08.16
@@ -110,7 +126,7 @@ Date: 2021.07.21
   Bugfixes:
     - Complete rewrite of the extraction recipe generation logic to fix an issue where ore groups
       of base - and impure extractions were different if there were too many ores in one tier
-    - Added a missing check for angels smelting in add_omnicium_alloy()
+    - Added a missing check for angels smelting in add_omnium_alloy()
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.15
 Date: 2021.06.20
@@ -181,7 +197,7 @@ Date: 2021.01.08
 Version: 4.1.6
 Date: 2021.01.03
   Changes:
-    - Changed the omnicium gear wheel normal difficulty recipe from 2i n-->2 out to 1 in-->1 out
+    - Changed the omnium gear wheel normal difficulty recipe from 2i n-->2 out to 1 in-->1 out
   Bugfixes:
     - Fixed that stone loot was not replaced on all rocks with omnite
     - Fixed that water omnitraction tech cost was pretty low
@@ -192,7 +208,7 @@ Date: 2020.12.27
   Changes:
     - Added support for Krastorio2 + Angels
   Bugfixes:
-    - Fixed that Bob´s omnicium alloys were created too late to work with Py
+    - Fixed that Bob´s omnium alloys were created too late to work with Py
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.4
 Date: 2020.12.23
@@ -256,15 +272,15 @@ Date: 2020.08.31
     - Improved splitting between impure omnitraction recipes to have more even distribution.
     - Renamed technology "omnitractor-electric-x" to "omnitech-omnitractor-electric-x"
     - Renamed technology "base-impure-extraction" to "omnitech-base-impure-extraction"
-    - Renamed technology "angels-omnicium-smelting-x" to "omnitech-angels-omnicium-smelting-x"
-    - Renamed technology "angels-omnicium-iron-alloy-smelting" to 
-      "omnitech-angels-omnicium-iron-alloy-smelting"
-    - Renamed technology "angels-omnicium-steel-alloy-smelting" to 
-      "omnitech-angels-omnicium-steel-alloy-smelting"
-    - Renamed technology "angels-omnicium-aluminium-alloy-smelting" to 
-      "omnitech-angels-omnicium-aluminium-alloy-smelting"
-    - Renamed technology "angels-omnicium-tungsten-alloy-smelting" to 
-      "omnitech-angels-omnicium-tungsten-alloy-smelting"
+    - Renamed technology "angels-omnium-smelting-x" to "omnitech-angels-omnium-smelting-x"
+    - Renamed technology "angels-omnium-iron-alloy-smelting" to 
+      "omnitech-angels-omnium-iron-alloy-smelting"
+    - Renamed technology "angels-omnium-steel-alloy-smelting" to 
+      "omnitech-angels-omnium-steel-alloy-smelting"
+    - Renamed technology "angels-omnium-aluminium-alloy-smelting" to 
+      "omnitech-angels-omnium-aluminium-alloy-smelting"
+    - Renamed technology "angels-omnium-tungsten-alloy-smelting" to 
+      "omnitech-angels-omnium-tungsten-alloy-smelting"
   Info:
     - This recipe change could require changes to early-game omnitraction setups on existing saves.
 ---------------------------------------------------------------------------------------------------
@@ -315,7 +331,7 @@ Date: 2020.06.19
 Version: 3.18.7
 Date: 2020.05.01
   Changes:
-    - The basic omnicium plate recipe takes now 25 seconds. Don't use it beyond what you must!
+    - The basic omnium plate recipe takes now 25 seconds. Don't use it beyond what you must!
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.6
 Date: 2020.04.26
@@ -323,7 +339,7 @@ Date: 2020.04.26
     - Added steam omnitractor and omniphlog if Bob's burner phase is enabled
     - Updated ore capture and replace script to have increased functionality
   Changes:
-    - Changed Omnicium Plate stack size from 400 to 200
+    - Changed omnium Plate stack size from 400 to 200
     - Changed Omnite Brick stack size from 100 to 200
   Bugfixes:
     - Should not have other ores showing up on map generation screen
@@ -337,14 +353,14 @@ Date: 2020.04.19
 Version: 3.18.4
 Date: 2020.04.19
   Features:
-    - Added Omnicium Gear Casting to casting machines
+    - Added omnium Gear Casting to casting machines
   Changes:
-    - Changed the omnicium plate to gear ratio from 3:2 to 1:1
+    - Changed the omnium plate to gear ratio from 3:2 to 1:1
     - Players now start with 2 Burner Mining Drills
-    - Moved the omnicium and brick recipe Subgroup into the Omnimatter category
+    - Moved the omnium and brick recipe Subgroup into the Omnimatter category
     - Internal Code Refactoring
   Bugfixes:
-    - Fixed mising localisation for Omnicium Sheet Coils
+    - Fixed mising localisation for omnium Sheet Coils
     - Fixed some recipes being in Angel's Casting that should be in the Induction Smelter
 ---------------------------------------------------------------------------------------------------
 Version: 3.18.3

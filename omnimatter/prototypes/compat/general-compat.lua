@@ -1,5 +1,5 @@
 --Disable pumpjack techs and recipes
-for i,tech in pairs(data.raw.technology) do
+for _,tech in pairs(data.raw.technology) do
     if string.find(tech.name, "pumpjack") then
         --table.remove(data.raw.technology,i)
         data.raw.technology[tech.name].enabled=false

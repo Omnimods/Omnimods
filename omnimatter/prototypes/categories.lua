@@ -55,7 +55,7 @@ data:extend(
   },
   {
     type = "item-subgroup",
-    name = "omnicium",
+    name = "omnium",
     group = "omnimatter",
     order = "af",
   },

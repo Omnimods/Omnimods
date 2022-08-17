@@ -7,8 +7,8 @@ for _, sol in pairs(data.raw["solar-panel"]) do
 end
 
 RecGen:import("repair-pack"):
-    setNormalIngredients({type="item", name="omnicium-plate", amount=6},{type="item", name="omni-tablet", amount=2}):
-    setExpensiveIngredients({type="item", name="omnicium-plate", amount=15},{type="item", name="omni-tablet", amount=7}):
+    setNormalIngredients({type="item", name="omnium-plate", amount=6},{type="item", name="omni-tablet", amount=2}):
+    setExpensiveIngredients({type="item", name="omnium-plate", amount=15},{type="item", name="omni-tablet", amount=7}):
     extend()
 
 --Replace lab belt ingredient
@@ -32,8 +32,8 @@ if not (mods["angelsindustries"] and angelsmods.industries.components) then
     omni.lib.add_recipe_ingredient("gun-turret",{"omnitor",4})
     omni.lib.add_recipe_ingredient("engine-unit",{"omnitor",1})
     omni.lib.replace_recipe_ingredient("offshore-pump", component["circuit"][1], {"omnitor",4})
-    omni.lib.replace_recipe_ingredient("burner-omnitractor", "omnicium-gear-wheel", {"omnitor",2})
-    omni.lib.replace_recipe_ingredient("burner-omniphlog", "omnicium-gear-wheel", {"omnitor",5})
+    omni.lib.replace_recipe_ingredient("burner-omnitractor", "omnicium-plate", {"omnitor",2})
+    omni.lib.replace_recipe_ingredient("burner-omniphlog", "omnicium-plate", {"omnitor",5})
 
     --anbaric omnitor
     --anbaric omnitors are generally added to all first tier electric buildings that have "moving" parts

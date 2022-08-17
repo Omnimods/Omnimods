@@ -72,28 +72,28 @@ BuildGen:import("small-electric-pole"):
     extend()
 
 BuildGen:import("small-electric-pole"):
-    setName("small-omnicium-electric-pole"):
-    setIngredients({"omnicium-plate", 1},{"small-iron-electric-pole", 2}):
+    setName("small-omnium-electric-pole"):
+    setIngredients({"omnium-plate", 1},{"small-iron-electric-pole", 2}):
     setArea(3.5):
     setWireDistance(8.5):
-    setOrder("a[energy]-a[small-electric-pole]-omnicium"):
-    setIcons({{icon = "__omnimatter_energy__/graphics/icons/small-omnicium-electric-pole.png", icon_mipmaps = 4, icon_size = 64,}}):
+    setOrder("a[energy]-a[small-electric-pole]-omnium"):
+    setIcons({{icon = "__omnimatter_energy__/graphics/icons/small-omnium-electric-pole.png", icon_mipmaps = 4, icon_size = 64,}}):
     setEnabled(false):
-    setTechName("omnitech-small-omnicium-electric-pole"):
-    setTechLocName("entity-name.small-omnicium-electric-pole"):
+    setTechName("omnitech-small-omnium-electric-pole"):
+    setTechLocName("entity-name.small-omnium-electric-pole"):
     setTechPacks({{"energy-science-pack", 1}}):
     setTechCost(40):
     setTechPrereq("omnitech-small-iron-electric-pole"):
-    setTechIcons({{icon = "__omnimatter_energy__/graphics/icons/small-omnicium-electric-pole.png", icon_mipmaps = 4, icon_size = 64,}}):
+    setTechIcons({{icon = "__omnimatter_energy__/graphics/icons/small-omnium-electric-pole.png", icon_mipmaps = 4, icon_size = 64,}}):
     setPictures({
         layers = {
             {
                 direction_count = 4,
-                filename = "__omnimatter_energy__/graphics/entity/small-omnicium-electric-pole/small-omnicium-electric-pole.png",
+                filename = "__omnimatter_energy__/graphics/entity/small-omnium-electric-pole/small-omnium-electric-pole.png",
                 height = 108,
                 hr_version = {
                     direction_count = 4,
-                    filename = "__omnimatter_energy__/graphics/entity/small-omnicium-electric-pole/hr-small-omnicium-electric-pole.png",
+                    filename = "__omnimatter_energy__/graphics/entity/small-omnium-electric-pole/hr-small-omnium-electric-pole.png",
                     height = 220,
                     priority = "extra-high",
                     scale = 0.5,
@@ -140,16 +140,16 @@ BuildGen:import("small-electric-pole"):
     extend()
 
 --Fix hitboxes, lib changes them for some reason. Remove with new lib
-data.raw["electric-pole"]["small-omnicium-electric-pole"].collision_box = {{-0.15, -0.15}, {0.15, 0.15}}
+data.raw["electric-pole"]["small-omnium-electric-pole"].collision_box = {{-0.15, -0.15}, {0.15, 0.15}}
 data.raw["electric-pole"]["small-iron-electric-pole"].collision_box = {{-0.15, -0.15}, {0.15, 0.15}}
-data.raw["electric-pole"]["small-omnicium-electric-pole"].selection_box = {{-0.4, -0.4}, {0.4, 0.4}}
+data.raw["electric-pole"]["small-omnium-electric-pole"].selection_box = {{-0.4, -0.4}, {0.4, 0.4}}
 data.raw["electric-pole"]["small-iron-electric-pole"].selection_box = {{-0.4, -0.4}, {0.4, 0.4}}
 
 --Set new remnants
 local rem1 = table.deepcopy(data.raw.corpse["small-electric-pole-remnants"])
-rem1.name ="small-omnicium-electric-pole-remnants"
-rem1.localised_name ={"remnant-name", {"entity-name.small-omnicium-electric-pole"}}
-rem1.icon = "__omnimatter_energy__/graphics/icons/small-omnicium-electric-pole.png"
+rem1.name ="small-omnium-electric-pole-remnants"
+rem1.localised_name ={"remnant-name", {"entity-name.small-omnium-electric-pole"}}
+rem1.icon = "__omnimatter_energy__/graphics/icons/small-omnium-electric-pole.png"
 
 local rem2 = table.deepcopy(data.raw.corpse["small-electric-pole-remnants"])
 rem2.name ="small-iron-electric-pole-remnants"
@@ -161,7 +161,7 @@ for i,tab in pairs({rem1.animation, rem1.animation_overlay, rem2.animation, rem2
     for _,sub in pairs(tab) do
         for _,layer in pairs(sub.layers) do
             if layer.filename then
-                local pole = "small-omnicium-electric-pole"
+                local pole = "small-omnium-electric-pole"
                 if i > 2 then pole = "small-iron-electric-pole" end
                 layer.filename  = string.gsub(layer.filename ,"__base__","__omnimatter_energy__")
                 layer.filename  = string.gsub(layer.filename ,"small%-electric%-pole", pole)
@@ -176,5 +176,5 @@ end
 
 data:extend({rem1,rem2})
 
-data.raw["electric-pole"]["small-omnicium-electric-pole"].corpse = "small-omnicium-electric-pole-remnants"
+data.raw["electric-pole"]["small-omnium-electric-pole"].corpse = "small-omnium-electric-pole-remnants"
 data.raw["electric-pole"]["small-iron-electric-pole"].corpse = "small-iron-electric-pole-remnants"

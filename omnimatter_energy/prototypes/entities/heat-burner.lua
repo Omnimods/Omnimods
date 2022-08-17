@@ -2,7 +2,7 @@ BuildGen:create("omnimatter_energy", "omni-heat-burner"):
     setType("burner-generator"):
     setSize(5, 3):
     setIcons("omnium-turbine","omnimatter_energy"):
-    setIngredients({{"anbaric-omnitor",4},{"burner-omni-furnace",1},{"iron-gear-wheel",4},{"omnicium-plate",2}}):
+    setIngredients({{"anbaric-omnitor",4},{"burner-omni-furnace",1},{"iron-gear-wheel",4},{"omnium-plate",2}}):
     setReplace("heat-burner"):
     setSubgroup("omnienergy-power"):
     setStacksize(20):

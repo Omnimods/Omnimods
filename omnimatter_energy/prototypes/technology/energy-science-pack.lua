@@ -6,14 +6,17 @@ RecGen:create("omnimatter_energy","energy-science-pack"):
     setDurabilityDesc("description.science-pack-remaining-amount"):
     setEnergy(5):
     addProductivity():
-    setIngredients({{"omnicium-plate", 1}, {"omnite-brick", 1}}):
+    setIngredients({{"omnicium-plate", 2}, {"omnite-brick", 1}}):
     setSubgroup("science-pack"):
     setCategory("crafting"):
     setOrder("a[aa-energy-science-pack]"):
     setEnabled(true):
     extend()
 
+--Modify the automation science pack
+--Since the gear wheel replacement makes it cheaper, we can fix that by replacing the copper plate with omnium
 omni.lib.replace_recipe_ingredient("automation-science-pack", "iron-gear-wheel", {"omnitor",1})
+omni.lib.replace_recipe_ingredient("automation-science-pack", "copper-plate", "omnium-plate")
 
 --Add the energy SP to all labs that accept the automation Sp aswell (dont mess up late game labs!)
 for _,lab in pairs(data.raw["lab"]) do
