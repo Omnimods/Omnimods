@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.26
+Date: ????
+  Bugfixes:
+    - Fixed that mining drone recipes that require a mining fluid where not properly ignored
+---------------------------------------------------------------------------------------------------
 Version: 4.1.25
 Date: 2022.08.06
   Compatibility:

@@ -2,16 +2,6 @@ if mods["omnimatter_compression"] then
     omni.fluid.add_boiler_fluid("concentrated-steam")
 end
 
---Find mining operations if mining-drones is active
-if mods["Mining_Drones"] then
-    for _,rec in pairs(data.raw.recipe) do
-        if rec.category == "mining-depot" and string.find(rec.name,"mine%-") then
-            --log("Excluded recipe "..rec.name)
-            omni.fluid.excempt_recipe(rec.name)
-        end
-    end
-end
-
 if mods["pyalternativeenergy"] then
     omni.fluid.excempt_boiler("solar-tower-building")
 end
