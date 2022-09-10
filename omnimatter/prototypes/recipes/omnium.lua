@@ -52,7 +52,7 @@ RecGen:create("omnimatter","omnium-plate-mix"):
     setTechName("omnitech-omnium-processing"):
     setTechIcons("omnium-plate", 32):
     setTechPacks(1):
-    setTechCost(25):
+    setTechCost(15):
     --setTechPrereq("omnitech-angels-omnium-smelting-1"):
     extend()
 
