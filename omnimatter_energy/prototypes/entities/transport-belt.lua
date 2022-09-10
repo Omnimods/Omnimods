@@ -185,7 +185,7 @@ local belt = RecGen:create("omnimatter_energy", "basic-transport-belt"):
     setTechIcons("logistics","omnimatter_energy"):
     setTechPacks({{"energy-science-pack", 1}}):
     setTechCost(15):
-    setTechPrereq("omnitech-simple-automation")
+    setTechPrereq("omnitech-simple-automation","omnitech-omnium-processing")
     if data.raw.recipe["basic-transport-belt"] then
         belt:setIcons(omni.lib.icon.of(data.raw.recipe["basic-transport-belt"]))
     end
