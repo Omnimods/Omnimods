@@ -1,4 +1,4 @@
-if bobmods and bobmods.ores then
+if bobmods and bobmods.ores and settings.startup["bobmods-ores-unsortedgemore"].value then
     data:extend({
         {
             type = "recipe",

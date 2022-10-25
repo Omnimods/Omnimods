@@ -3,6 +3,8 @@ Version: 4.1.32
 Date: ????
   Changes:
     - Reduce the required science packs for omnium processing from 25 to 15
+  Bugfixes:
+    - Fixed that the "Sorting gems" recipe was added even though unsorted gems were disabled by bob
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.31
 Date: 2022.08.17
