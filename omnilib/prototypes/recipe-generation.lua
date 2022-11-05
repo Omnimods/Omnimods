@@ -1586,8 +1586,7 @@ function RecGen:ifModsAddIngredients(modis,...)
     return self
 end
 function RecGen:ifSetIngredients(bool,...)
-    local arg = argTable({...},"string","name")
-    if (type(bool)=="boolean" and bool) or mods[bool]  then
+    if bool then
         self:setIngredients(argTable({...},"string","name"))
     end
     return self
