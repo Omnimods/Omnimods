@@ -16,7 +16,8 @@ RecGen:create("omnimatter","omnicium-plate"):
     setItemName("omnicium-plate"):
     setIcons("omnicium-plate","omnimatter"):
     setStacksize(200):
-    setIngredients({normal = {{"omnite",2},{"stone-crushed",4}},expensive={{"omnite",3},{"stone-crushed",6}}}):
+    setIngredients({normal = {{"omnite",2},{"stone-crushed",2}},expensive={{"omnite",3},{"stone-crushed",4}}}):
+    ifSetIngredients(mods["angelsrefining"],{normal={{"omnite",2},{"stone-crushed",4}},expensive={{"omnite",3},{"stone-crushed",6}}}):
     setResults({normal = {{"omnicium-plate", 1}},expensive={{"omnicium-plate",1}}}):
     setCategory("smelting"):
     setSubgroup("omnium"):
@@ -52,7 +53,7 @@ RecGen:create("omnimatter","omnium-plate-mix"):
     setTechName("omnitech-omnium-processing"):
     setTechIcons("omnium-plate", 32):
     setTechPacks(1):
-    setTechCost(25):
+    setTechCost(15):
     --setTechPrereq("omnitech-angels-omnium-smelting-1"):
     extend()
 

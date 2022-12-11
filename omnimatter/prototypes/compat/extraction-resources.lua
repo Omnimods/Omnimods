@@ -80,6 +80,7 @@ if mods["Yuoki"] then
     omni.matter.add_resource("y-res2", 3)
 end
 if mods["baketorio"] then
+    omni.matter.add_initial("salt", 1, 6)
     omni.matter.add_resource("salt", 1)
     omni.matter.add_resource("trona", 2)
 end
@@ -111,6 +112,7 @@ if mods["pypetroleumhandling"] then
     omni.matter.add_resource("oil-sand", 2)
     omni.matter.add_resource("sulfur-patch", 2)
     --Red
+    omni.matter.add_resource("kerogen", 1)
     omni.matter.add_fluid("tar", 1, 1)
     omni.matter.add_fluid("natural-gas", 1, 1)
     --Tier 4
