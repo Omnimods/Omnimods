@@ -112,6 +112,7 @@ if mods["pypetroleumhandling"] then
     omni.matter.add_resource("oil-sand", 2)
     omni.matter.add_resource("sulfur-patch", 2)
     --Red
+    omni.matter.add_resource("kerogen", 1)
     omni.matter.add_fluid("tar", 1, 1)
     omni.matter.add_fluid("natural-gas", 1, 1)
     --Tier 4

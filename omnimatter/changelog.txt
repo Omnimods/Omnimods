@@ -5,7 +5,8 @@ Date: 2022.12.11
     - Reduce the required science packs for omnium processing from 25 to 15
     - Reduce the amount of crushed stone required for omnicium from 4 to 2 without angels refining
   Compatibility:
-    - Added intital salt omnitraction recipes for baketorio
+    - Added intital salt extraction recipes for baketorio
+    - Added kerogen extraction with pypetroleumhandling
   Bugfixes:
     - Fixed that the "Sorting gems" recipe was added even though unsorted gems were disabled by bob
 ---------------------------------------------------------------------------------------------------
