@@ -1,9 +1,11 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.32
-Date: ????
+Date: 2022.12.11
   Changes:
     - Reduce the required science packs for omnium processing from 25 to 15
     - Reduce the amount of crushed stone required for omnicium from 4 to 2 without angels refining
+  Compatibility:
+    - Added intital salt omnitraction recipes for baketorio
   Bugfixes:
     - Fixed that the "Sorting gems" recipe was added even though unsorted gems were disabled by bob
 ---------------------------------------------------------------------------------------------------

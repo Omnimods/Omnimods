@@ -80,6 +80,7 @@ if mods["Yuoki"] then
     omni.matter.add_resource("y-res2", 3)
 end
 if mods["baketorio"] then
+    omni.matter.add_initial("salt", 1, 6)
     omni.matter.add_resource("salt", 1)
     omni.matter.add_resource("trona", 2)
 end
