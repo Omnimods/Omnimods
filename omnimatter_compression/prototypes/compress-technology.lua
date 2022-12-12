@@ -156,7 +156,7 @@ for _,tech in pairs(data.raw.technology) do
         local gcd = {}
         -- Stage 1: Standardize and find our LCM of the various stack sizes
         for _, ings in pairs(t.unit.ingredients) do
-            if ings[1] then
+            if ings[1] and not (ings.name or ings.amount) then
                 ings.name = ings[1]
                 ings.amount = ings[2]
                 ings[1] = nil
