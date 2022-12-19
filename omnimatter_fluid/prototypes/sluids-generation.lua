@@ -340,7 +340,7 @@ for _, boiler in pairs(data.raw.boiler) do
         --PREPARE DATA FOR MANIPULATION
         local water = boiler.fluid_box.filter or "water"
         local steam = boiler.output_fluid_box.filter or "steam"
-        local th_energy = (boiler.target_temperature - data.raw.fluid[water].default_temperature) * omni.lib.get_fuel_number(data.raw.fluid[water].heat_capacity)
+        local th_energy = (boiler.target_temperature - data.raw.fluid[water].default_temperature) * (omni.lib.get_fuel_number(data.raw.fluid[water].heat_capacity) or 1000) --1000 = default heat_capacity
         local boiler_consumption = 60 * omni.lib.get_fuel_number(boiler.energy_consumption) / ((boiler.energy_source.effectivity or 1) * th_energy)
 
         --clobber fluid_box_filter if it exists
