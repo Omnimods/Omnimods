@@ -52,6 +52,7 @@ omni.lib.ore_tints = {--can add to the tint table with table.insert(omni.lib.ore
     ["niobium"]   = {r = 0.403, g = 0.6,   b = 0.701}, --<-- map_color only
     ["chromium"]  = {r = 0.784, g = 0.231, b = 0.1  }, --<-- map_color only
     ["phosphate-rock"] = {r = 0.998, g = 0.998, b = 0.998}, --<-- map_color only
+    ["kerogen"]   = {r = 0.590, g = 0.511, b = 0.357}, -- vanilla
 }
 
 function omni.lib.add_ore_tint(icons, ore_name, alpha)
@@ -939,6 +940,8 @@ end
 
 -- returns the plain fuel value number in J
 function omni.lib.get_fuel_number(fv)
+    --Catch nil or util crashes
+    if type(fv) ~= "string" then return nil end
     --Base game function, returns the fuel number (in J)
     return util.parse_energy(fv)
 end
