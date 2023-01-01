@@ -232,7 +232,7 @@ for _,cat in pairs(fluid_cats) do
             local flu = fluid.temperatures[i]
             if flu.temp_min or flu.temp_max then
                 --Best case: min/max (for the required recipe) equals fluid min/max -->we can use a temperature-less solid (min/max dont have to both exist!!! if only one exists and matches its fine)
-                if ((flu.temp_min or data.raw.fluid[fluid.name].default_temperature) == data.raw.fluid[fluid.name].default_temperature) and ((flu.temp_max or data.raw.fluid[fluid.name].max_temperature) == data.raw.fluid[fluid.name].max_temperature) then
+                if ((flu.temp_min or data.raw.fluid[fluid.name].default_temperature) <= data.raw.fluid[fluid.name].default_temperature) and ((flu.temp_max or data.raw.fluid[fluid.name].max_temperature) >= data.raw.fluid[fluid.name].max_temperature) then
                     found = true
                     temp = "none"
                 else
@@ -811,7 +811,7 @@ for name, _ in pairs(recipe_mods) do
                             local min_temp = ing.minimum_temperature or data.raw.fluid[ing.name].default_temperature
                             --Temp min/max == fluid temp min/max -->use a non temp solid (min/max can exist solo)
                             --Steam sucks, dont replace fluid steam with a temperature less solid
-                            if not omni.fluid.boiler_fluids[ing.name] and (min_temp == data.raw.fluid[ing.name].default_temperature) then-- and max_temp == data.raw.fluid[ing.name].max_temperature) then
+                            if not omni.fluid.boiler_fluids[ing.name] and (min_temp <= data.raw.fluid[ing.name].default_temperature) then-- and max_temp == data.raw.fluid[ing.name].max_temperature) then
                                 new_ing.name = "solid-"..ing.name
                             else
                                 for _,temp in pairs(fluid_cats[cat][ing.name].temperatures) do
