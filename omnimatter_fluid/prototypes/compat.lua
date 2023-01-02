@@ -4,6 +4,7 @@ end
 
 if mods["pyalternativeenergy"] then
     omni.fluid.excempt_boiler("solar-tower-building")
+    omni.fluid.add_multi_temp_recipe("nano-cellulose")
 end
 
 if mods["pycoalprocessing"] then

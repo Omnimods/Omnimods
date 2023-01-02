@@ -1,5 +1,5 @@
 omni.fluid.forbidden_boilers = {}
-omni.fluid.forbidden_assembler = {} --This one is not used for anything yet. If its not required for further fluid box things we can rip it out.
+omni.fluid.forbidden_assembler = {}
 omni.fluid.forbidden_recipe = {}
 --Generator fluids that are normally created in an assembling machine. If the results temp is higher than any boiler, we need to ignore the boiler temperature(s) to create conversion recipes
 omni.fluid.assembler_generator_fluids = {}
@@ -44,6 +44,7 @@ function omni.fluid.add_assembler_generator_fluid(fluid_name)
     end
 end
 
+--Adds recipe copies for each available temperature of the sluid ingredients
 function omni.fluid.add_multi_temp_recipe(recipe_name)
     omni.fluid.multi_temp_recipes[recipe_name] = true
     if mods["omnimatter_compression"] then

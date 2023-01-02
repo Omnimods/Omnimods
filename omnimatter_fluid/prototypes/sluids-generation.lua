@@ -496,7 +496,7 @@ for _, boiler in pairs(data.raw.boiler) do
         new_ent.crafting_speed = 1
 
         --change source location to deal with the new size
-        new_ent.energy_source = boiler.energy_source
+        --new_ent.energy_source = table.deepcopy(boiler.energy_source)
         if new_ent.energy_source and new_ent.energy_source.connections then
             local HS = boiler.energy_source
             HS.connections = omni.fluid.heat_pipe_images.connections
@@ -505,6 +505,17 @@ for _, boiler in pairs(data.raw.boiler) do
             HS.heat_picture = omni.fluid.heat_pipe_images.heat_picture
             HS.heat_glow = omni.fluid.heat_pipe_images.heat_glow
         end
+
+        --Check if its a fluid burning boiler, needs another fluid box
+        if new_ent.energy_source.burns_fluid then
+
+            new_ent.energy_source.fluid_box.production_type = "input"
+            pipe_covers = pipecoverspictures()
+            new_ent.energy_source.fluid_box.base_level = -1
+            new_ent.energy_source.fluid_box.height = 2
+            new_ent.energy_source.fluid_box.pipe_connections = {{type = "input-output", position = {2,0}},{type = "input-output", position = {-2,0}}}
+        end
+
         new_ent.energy_usage = boiler.energy_consumption
         new_ent.ingredient_count = 4
         new_ent.crafting_categories = {"boiler-omnifluid-"..boiler.name, "general-omni-boiler"}
@@ -517,6 +528,7 @@ for _, boiler in pairs(data.raw.boiler) do
             }
         }
         new_ent.fluid_box = nil --removes input box
+        new_ent.output_fluid_box = nil
         new_ent.mode = nil --invalid for assemblers
         --new_ent.minable.result = boiler.name.."-converter"
         if new_ent.next_upgrade then
