@@ -438,7 +438,7 @@ for _, boiler in pairs(data.raw.boiler) do
             for temp,_ in pairs(fugacity.conversions) do
                 --Check the old temperatures table if the required temperature requires a conversion recipe
                 --Create conversion recipes for all mushes up to the boilers target temperature. Generator assembler fluids higher than any boiler temp are added to the highest tier boiler
-                if temp ~= "none"  and (boiler.target_temperature >= temp or (omni.fluid.assembler_generator_fluids[fugacity.name] and boiler.target_temperature == max_boiler_temp)) then
+                if temp ~= "none"  and (boiler.target_temperature >= temp or omni.fluid.assembler_generator_fluids[fugacity.name] or boiler.target_temperature == max_boiler_temp) then
                     local tempstring = string.gsub(temp, "%.", "_")
                     if data.raw.item["solid-"..fugacity.name.."-T-"..tempstring] then
                         new_boiler[#new_boiler+1] = {
@@ -811,7 +811,7 @@ for name, _ in pairs(recipe_mods) do
                         else
                             break
                         end
-                        --Has temperature set in recipe and that temperature is the default temp of the liquid --> use non temperatur solid
+                        --Has temperature set in recipe and that temperature is the default temp of the liquid --> use non temperature solid
                         if ing.temperature and ing.temperature == data.raw.fluid[ing.name].default_temperature then
                             new_ing.name = "solid-"..ing.name
                         --Has temperature set in recipe and that temperature is in our list
