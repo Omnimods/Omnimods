@@ -36,6 +36,7 @@ function omni.fluid.excempt_recipe(recipe_name)
     end
 end
 
+--Fluid is not made in a boiler and has a temperature. Assembler fluids ignore all temperature limitations for conversion recipes
 function omni.fluid.add_assembler_generator_fluid(fluid_name)
     omni.fluid.assembler_generator_fluids[fluid_name] = true
     local base_name = string.gsub(fluid_name, "solid%-", "")

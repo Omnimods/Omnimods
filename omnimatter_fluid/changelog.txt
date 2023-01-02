@@ -7,6 +7,7 @@ Date: ????
     - Fixed that recipe ingredients with a minimum temperature smaller than the fluid's default
       temperature were replaced with a wrong solid
     - Fixed pyanadon's Nanocrystalline cellulose recipe not being available for all temperatures
+    - Assembler fluids now ignore all conversion temperature limitations
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.26
 Date: 2022.12.11
