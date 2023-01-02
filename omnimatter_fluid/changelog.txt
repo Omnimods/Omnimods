@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.27
 Date: ????
+  Changes:
+    - Boiler conversion recipe now require 4x less energy
   Bugfixes:
     - Fixed a crash with boiler fluids that had no heat capacity defined
     - Fixed a crash with fluid burning boilers
