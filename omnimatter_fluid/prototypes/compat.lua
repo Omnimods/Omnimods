@@ -23,6 +23,7 @@ if mods["pypetroleumhandling"] then
     omni.fluid.add_mining_fluid("drilling-fluid-1")
     omni.fluid.add_mining_fluid("drilling-fluid-2")
     omni.fluid.add_mining_fluid("drilling-fluid-3")
+    omni.fluid.add_assembler_generator_fluid("steam")
 end
 
 if mods["pyrawores"] then
