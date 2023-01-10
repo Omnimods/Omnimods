@@ -478,15 +478,17 @@ for _, boiler in pairs(data.raw.boiler) do
             end
         end
 
-        --Create a new entity to not break stuff (from changing vanillas boiler type). Modify the existing items place result.
+        --Modify the existing items place result. (An item might not exist)
         local new_item = data.raw.item[boiler.name]
-        new_item.place_result = boiler.name.."-converter"
-        new_item.localised_name = {"item-name.boiler-converter", omni.lib.locale.of(boiler).name}
+        if new_item then
+            new_item.place_result = boiler.name.."-converter"
+            new_item.localised_name = {"item-name.boiler-converter", omni.lib.locale.of(boiler).name}
+        end
 
         --stop it from being analysed further (stop recursive updates)
         omni.fluid.forbidden_assembler[boiler.name.."-converter"] = true
 
-        --create entity
+        --Create a new entity to not break stuff (convert boiler type to an assembler).
         local new_ent = table.deepcopy(data.raw.boiler[boiler.name])
         new_ent.type = "assembling-machine"
         new_ent.name = boiler.name.."-converter"
