@@ -1,7 +1,7 @@
 # Omnimods
 
 ## Join our Discord for questions & discussions
-![Discord Banner 2](https://discordapp.com/api/guilds/351216213327609858/widget.png?style=banner2)
+[![Discord Banner 2](https://discordapp.com/api/guilds/351216213327609858/widget.png?style=banner2)](https://discord.gg/WQYks7W)
 
 ## Translations for all Omnimods can be found in this crowdin project. Help us to translate them into your language!
 https://crowdin.com/project/factorio-mods-localization
