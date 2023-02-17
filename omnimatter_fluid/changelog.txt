@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.28
+Date: 2023.02.17
+  Bugfixes:
+    - Fixed a crash with boilers that are not a place result of any item
+    - Fixed that heat exchangers only connected in certain rotations to heat pipes
+---------------------------------------------------------------------------------------------------
 Version: 4.1.27
 Date: 2023.01.06
   Changes:

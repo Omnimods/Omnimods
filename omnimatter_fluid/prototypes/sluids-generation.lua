@@ -478,15 +478,17 @@ for _, boiler in pairs(data.raw.boiler) do
             end
         end
 
-        --Create a new entity to not break stuff (from changing vanillas boiler type). Modify the existing items place result.
+        --Modify the existing items place result. (An item might not exist)
         local new_item = data.raw.item[boiler.name]
-        new_item.place_result = boiler.name.."-converter"
-        new_item.localised_name = {"item-name.boiler-converter", omni.lib.locale.of(boiler).name}
+        if new_item then
+            new_item.place_result = boiler.name.."-converter"
+            new_item.localised_name = {"item-name.boiler-converter", omni.lib.locale.of(boiler).name}
+        end
 
         --stop it from being analysed further (stop recursive updates)
         omni.fluid.forbidden_assembler[boiler.name.."-converter"] = true
 
-        --create entity
+        --Create a new entity to not break stuff (convert boiler type to an assembler).
         local new_ent = table.deepcopy(data.raw.boiler[boiler.name])
         new_ent.type = "assembling-machine"
         new_ent.name = boiler.name.."-converter"
@@ -498,17 +500,26 @@ for _, boiler in pairs(data.raw.boiler) do
         --change source location to deal with the new size
         --new_ent.energy_source = table.deepcopy(boiler.energy_source)
         if new_ent.energy_source and new_ent.energy_source.connections then
-            local HS = boiler.energy_source
-            HS.connections = omni.fluid.heat_pipe_images.connections
-            HS.pipe_covers = omni.fluid.heat_pipe_images.pipe_covers
-            HS.heat_pipe_covers = omni.fluid.heat_pipe_images.heat_pipe_covers
-            HS.heat_picture = omni.fluid.heat_pipe_images.heat_picture
-            HS.heat_glow = omni.fluid.heat_pipe_images.heat_glow
+            new_ent.energy_source.connections = omni.fluid.heat_pipe_images.connections
+            new_ent.energy_source.pipe_covers = omni.fluid.heat_pipe_images.pipe_covers
+            new_ent.energy_source.heat_pipe_covers = omni.fluid.heat_pipe_images.heat_pipe_covers
+            new_ent.energy_source.heat_picture = omni.fluid.heat_pipe_images.heat_picture
+            new_ent.energy_source.heat_glow = omni.fluid.heat_pipe_images.heat_glow
+            new_ent.animation = omni.fluid.exchanger_images.animation
+            new_ent.working_visualisations = omni.fluid.exchanger_images.working_visualisations
+        else
+            local tier = string.gsub(boiler.name, "boiler%-", "")
+            if tier and omni.lib.is_number(tier) then
+                new_ent.animation = omni.fluid.boiler_images(tonumber(tier)).animation
+                new_ent.working_visualisations = omni.fluid.boiler_images(tonumber(tier)).working_visualisations
+            else
+                new_ent.animation = omni.fluid.boiler_images().animation
+                new_ent.working_visualisations = omni.fluid.boiler_images().working_visualisations
+            end
         end
 
         --Check if its a fluid burning boiler, needs another fluid box
         if new_ent.energy_source.burns_fluid then
-
             new_ent.energy_source.fluid_box.production_type = "input"
             pipe_covers = pipecoverspictures()
             new_ent.energy_source.fluid_box.base_level = -1
@@ -531,23 +542,11 @@ for _, boiler in pairs(data.raw.boiler) do
         new_ent.output_fluid_box = nil
         new_ent.mode = nil --invalid for assemblers
         --new_ent.minable.result = boiler.name.."-converter"
+
         if new_ent.next_upgrade then
             new_ent.next_upgrade = new_ent.next_upgrade.."-converter"
         end
-        if new_ent.energy_source and new_ent.energy_source.connections then --use HX graphics instead
-            new_ent.animation = omni.fluid.exchanger_images.animation
-            new_ent.working_visualisations = omni.fluid.exchanger_images.working_visualisations
-        else
-            local tier = string.gsub(boiler.name, "boiler%-", "")
-            if tier and omni.lib.is_number(tier) then
-                new_ent.animation = omni.fluid.boiler_images(tonumber(tier)).animation
-                new_ent.working_visualisations = omni.fluid.boiler_images(tonumber(tier)).working_visualisations
-            else
-                new_ent.animation = omni.fluid.boiler_images().animation
-                new_ent.working_visualisations = omni.fluid.boiler_images().working_visualisations
-            end
-            
-        end
+
         new_ent.collision_box = {{-1.29, -1.29}, {1.29, 1.29}}
         new_ent.selection_box = {{-1.5, -1.5}, {1.5, 1.5}}
         new_boiler[#new_boiler+1] = new_ent
