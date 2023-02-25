@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.29
+Date: ????
+  Bugfixes:
+    - Fixed a possible crash when the item of a boiler has a different name than the corresponding
+      entity
+    - Fixed PYs korlex milk barrels not being replaced by solids due to py using different
+      naming conventions for barrels
+---------------------------------------------------------------------------------------------------
 Version: 4.1.28
 Date: 2023.02.17
   Bugfixes:

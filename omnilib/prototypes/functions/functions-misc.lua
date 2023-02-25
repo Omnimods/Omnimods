@@ -663,6 +663,17 @@ local entproto = {
     "spider-leg"
 }
 
+--returns the item that has the given entity as placable result
+function omni.lib.find_placed_by(entityname)
+    for _, p in pairs(data.raw.item) do
+        if p.place_result == entityname then
+            return p.place_result
+        end
+    end
+    --log("Could not find "..entityname.."'s corresponding item prototype.")
+    return nil
+end
+
 function omni.lib.find_entity_prototype(itemname)
     if type(itemname)=="table" then return itemname elseif type(itemname)~="string" then return nil end
     for _, p in pairs(entproto) do
