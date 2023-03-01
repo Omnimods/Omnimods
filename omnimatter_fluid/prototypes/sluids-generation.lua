@@ -606,7 +606,7 @@ local function replace_barrels(recipe)
                 --Replace filled barrels with sluids
                 elseif ing.name and (string.find(ing.name, "%-barrel") or string.find(ing.name, "barrel%-") or string.find(ing.name, "%-canister")) then
                     local flu = string.gsub(ing.name, "%-barrel", "")
-                    flu = string.gsub(ing.name, "barrel%-", "")
+                    flu = string.gsub(flu, "barrel%-", "")
                     flu = string.gsub(flu, "%-gas%-canister", "")
                     flu = string.gsub(flu, "%-canister", "")
 
