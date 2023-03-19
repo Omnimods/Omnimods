@@ -1,9 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.33
+Date: 2023.03.19
+  Changes:
+    - - Reduced the amount of crushed stone required for omnicium from 4 to 3 with angels refining
+---------------------------------------------------------------------------------------------------
 Version: 4.1.32
 Date: 2022.12.11
   Changes:
-    - Reduce the required science packs for omnium processing from 25 to 15
-    - Reduce the amount of crushed stone required for omnicium from 4 to 2 without angels refining
+    - Reduced the required science packs for omnium processing from 25 to 15
+    - Reduced the amount of crushed stone required for omnicium from 4 to 2 without angels refining
   Compatibility:
     - Added intital salt extraction recipes for baketorio
     - Added kerogen extraction with pypetroleumhandling

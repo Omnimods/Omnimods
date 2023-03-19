@@ -479,7 +479,7 @@ for _, boiler in pairs(data.raw.boiler) do
         end
 
         --Modify the existing items place result. (An item might not exist)
-        local new_item = data.raw.item[boiler.name]
+        local new_item = data.raw.item[omni.lib.find_placed_by(boiler.name)]
         if new_item then
             new_item.place_result = boiler.name.."-converter"
             new_item.localised_name = {"item-name.boiler-converter", omni.lib.locale.of(boiler).name}
@@ -604,8 +604,9 @@ local function replace_barrels(recipe)
                 if ing.name and (ing.name == "empty-barrel" or ing.name == "empty-canister"  or ing.name == "empty-gas-canister")then
                     recipe[dif][ingres][j] = nil
                 --Replace filled barrels with sluids
-                elseif ing.name and (string.find(ing.name, "%-barrel") or string.find(ing.name, "%-canister")) then
+                elseif ing.name and (string.find(ing.name, "%-barrel") or string.find(ing.name, "barrel%-") or string.find(ing.name, "%-canister")) then
                     local flu = string.gsub(ing.name, "%-barrel", "")
+                    flu = string.gsub(flu, "barrel%-", "")
                     flu = string.gsub(flu, "%-gas%-canister", "")
                     flu = string.gsub(flu, "%-canister", "")
 
@@ -622,7 +623,7 @@ local function replace_barrels(recipe)
     end
 end
 
---Special Py case 2146321487: replace filled barrel ingredients with solids
+--Special Py case 2146321487: replace filled barrel ingredients with solids (py uses "barel-" as name instead of "-barel")
 for _, rec in pairs(data.raw.recipe) do
     if not omni.fluid.check_string_excluded(rec.name) and not omni.lib.recipe_is_hidden(rec.name)  then
         local std = false
@@ -636,7 +637,7 @@ for _, rec in pairs(data.raw.recipe) do
         for _, dif in pairs({"normal","expensive"}) do
             for _, ingres in pairs({"ingredients","results"}) do
                 for _, ing in pairs(rec[dif][ingres]) do
-                    if string.find(ing.name, "%-barrel") or string.find(ing.name, "%-canister")  or string.find(ing.name, "%-gas%-canister") then
+                    if string.find(ing.name, "%-barrel") or string.find(ing.name, "barrel%-") or string.find(ing.name, "%-canister")  or string.find(ing.name, "%-gas%-canister") then
                         replace_barrels(rec)
                         goto continue
                     end
