@@ -2,6 +2,7 @@
 Version: 4.1.34
 Date: ????
   Bugfixes:
+    - Fixed crushed quartz & tin being unobtainable for initial science with bare PyRO
     - Fixed that adding an ore for initial omnitraction that requires a fluid to mine could cause
       a crash if that same ore was already in tier 1
 ---------------------------------------------------------------------------------------------------
