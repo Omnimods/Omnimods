@@ -131,13 +131,13 @@ if mods["pyrawores"] then
     --disable vanilla coal & stone, raw coal will produce our coal.
     all_time_ores = false
     --Initial omnitractions
-    if not mods["pyalienlife"] and mods["pyrawores"] then
+    if not mods["pyalienlife"] then
         -- not needed as of current portal, leaving for ratio reference
         -- omni.matter.add_initial("ore-aluminium", 1, 14)
         omni.matter.add_initial("ore-tin", 1, 12)
         omni.matter.add_initial("ore-quartz", 1, 12)
     end
-    omni.matter.add_initial("raw-coal", 1, 10)    
+    omni.matter.add_initial("raw-coal", 1, 10)
     -- Pre-sci/red
     omni.matter.add_resource("stone", 1)
     omni.matter.add_resource("ore-aluminium", 1)
