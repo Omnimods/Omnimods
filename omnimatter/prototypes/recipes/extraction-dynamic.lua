@@ -383,7 +383,8 @@ local function create_impure_extraction(tier, split, ore_name)
             focused_ore:setCategory("omnite-extraction")
         end
         if i == 1 then
-            if ores_with_fluid[ore_name] and not omni.matter.omnitial[ore_name] then
+            base_ore_name = ore_name:gsub("crude%-", "")
+            if ores_with_fluid[ore_name] and not omni.matter.omnitial[base_ore_name] then
                 focused_ore:setTechPrereq("omnitech-refinement-"..ore_name)
             elseif tier == 1 then
                 focused_ore:setTechPrereq("omnitech-base-impure-extraction")
