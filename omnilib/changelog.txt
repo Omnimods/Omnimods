@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.36
+Date: ????
+  Changes:
+    - Added omni.lib.mod(a,b) that returns the remainder of the division a/b
+      This function is based on math.fmod() to avoid known precision issues with the lua 5.2
+      implementation of %. (See https://github.com/lua/lua/blob/v5.4.0/llimits.h#L303)
+  Bugfixes:
+    - Fixed omni.lib.gcd(m,n) returning negative values if m >> n due to precision issues with "%"
+---------------------------------------------------------------------------------------------------
 Version: 4.1.35
 Date: 2023.03.19
   Changes:

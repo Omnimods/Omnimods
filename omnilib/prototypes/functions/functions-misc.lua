@@ -282,10 +282,6 @@ function omni.lib.get_end(a,b)
     return string.sub(a,string.len(a)-b+1,string.len(a))
 end
 
-function omni.lib.insert(array, ins)
-    array[#array+1]=ins
-end
-
 ---alpha
 ---@param alphabet_position number
 ---@return string
@@ -299,16 +295,7 @@ end
 
 --mathematics
 function omni.lib.round(number)
-return math.floor(number+0.5)
-end
-
---Omni specific
-function omni.lib.omni_recipe_fluid_change_category(fluid, category)
-    if data.raw.recipe["omnirec-"..fluid.."-a"] then
-        for i=1,omni.matter.get_constant("fluid level") do
-            data.raw.recipe["omnirec-"..fluid.."-"..omni.lib.alpha(i)].category = category
-        end
-    end
+    return math.floor(number+0.5)
 end
 
 --Set tint values for a prototype
@@ -342,27 +329,37 @@ function omni.lib.capitalize(str)
     return string.upper(string.sub(str,1,1))..string.sub(str,2,string.len(str))
 end
 
-function omni.lib.gcd(m,n)
-        while m ~= 0 do
-            if m~=m then
-                error("GCD loop detected, please report with a log file and mod list @ https://discord.gg/xeadqBj")
-            end
-            m, n = n % m, m;
-        end
+--Returns the remainder of the division a/b
+--Based on math.fmod() since % breaks if a >> b in lua 5.2 or if numbers get negative
+function omni.lib.mod(a,b)
+    local m = math.fmod(a, b)
+    if ((m > 0) and (b < 0)) or ((m < 0) and (b > 0)) then
+        m = m + b
+    end
+    return m
+end
 
+--Returns the greatest common divisor of m and n
+function omni.lib.gcd(m,n)
+    while m ~= 0 do
+        if m~=m then
+            error("GCD loop detected, please report with a log file and mod list @ https://discord.gg/xeadqBj")
+        end
+        m, n = omni.lib.mod(n, m), m
+    end
     return n;
 end
+
 -- Recursive GCD for.. reasons
 function omni.lib.pgcd(...)
     local arg = table.pack(...)
-    if #arg > 2
-    then
+    if #arg > 2 then
         local tmp = table.remove(arg, 1)
         return omni.lib.pgcd(tmp, omni.lib.pgcd(table.unpack(arg)))
     elseif #arg == 2 then
         local a, b = table.unpack(arg)
         repeat
-        a, b = b, math.fmod(a, b)
+            a, b = b, math.fmod(a, b)
         until b == 0
         return a
     else
@@ -370,14 +367,13 @@ function omni.lib.pgcd(...)
     end
 end
 
+--Returns the least common multiple of the given numbers
 function omni.lib.lcm(...)
     local arg = {...}
     local val = arg[1]
-
     for i=2,#arg do
         val = val*arg[i]/omni.lib.gcd(val,arg[i])
     end
-
     return val
 end
 
