@@ -333,7 +333,7 @@ end
 --Based on math.fmod() since % breaks if a >> b in lua 5.2 or if numbers get negative
 function omni.lib.mod(a,b)
     local m = math.fmod(a, b)
-    if ((m > 0) and (b < 0)) or ((m < 0) and (b > 0)) then
+    if ((m > 0) and (tonumber(b) < 0)) or ((m < 0) and (tonumber(b) > 0)) then
         m = m + b
     end
     return m
