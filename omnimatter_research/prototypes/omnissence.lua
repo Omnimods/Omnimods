@@ -4,7 +4,7 @@ local omnissence_extraction = {}
 omnissence_extraction[#omnissence_extraction+1] = {"omnite",1}
 omnissence_extraction[#omnissence_extraction+1] = {"omniwood",12}
 
-for tier,ores in pairs(omnisource) do
+for tier,ores in pairs(omni.matter.omnisource) do
     for _, o in pairs(ores) do
         if o.name ~= "stone" then
             omnissence_extraction[#omnissence_extraction+1] = {o.name,tonumber(tier)*7}

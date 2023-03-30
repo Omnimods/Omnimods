@@ -178,7 +178,6 @@ function omni.matter.add_omnium_alloy(name,plate,ingot)
             setTechName("omnitech-angels-omnium-"..name.."-alloy-smelting"):
             extend()
     else
-        math.randomseed(string.len(plate..name))
         local metal_q = math.random(2,6)
         local omni_q = math.random(1,metal_q)
         reg[#reg+1]={

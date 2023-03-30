@@ -113,7 +113,6 @@ for i=1,nr_bots do
       scale = 0.5,
       frame_count = 1,
       shift = {0, 0},
-      scale = 0.5,
       direction_count = 16,
     },
     in_motion =
@@ -126,7 +125,6 @@ for i=1,nr_bots do
       scale = 0.5,
       frame_count = 1,
       shift = {0, 0},
-      scale = 0.5,
       direction_count = 16,
       y = 384
     },
@@ -140,7 +138,6 @@ for i=1,nr_bots do
       scale = 0.5,
       frame_count = 1,
       shift = {0, 0},
-      scale = 0.5,
       direction_count = 16,
       y = 256
     },
@@ -218,6 +215,6 @@ for i=1,nr_bots do
     order = "c-a"
     }
 end
-  
-  
+
+
 data:extend(bot)

@@ -378,7 +378,7 @@ for _,rec in pairs(data.raw.recipe) do
                     end
                 end
             end
-            if kind=="item" then expensive_amount = frac[1] end
+            if component.type=="item" then expensive_amount = frac[1] end
             if marathon_recipes[rec.name] and marathon_recipes[rec.name].normalize then
                 frac[2]=omni.lib.round(frac[2]/frac[1])
                 frac[1]=1

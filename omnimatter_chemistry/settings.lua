@@ -7,7 +7,7 @@ data:extend(
     maximum_value=15,
     minimum_value=4,
     default_value = 4,
-    order=a
+    order="a"
   },
     {
     type = "int-setting",
@@ -16,7 +16,7 @@ data:extend(
     maximum_value=5,
     minimum_value=1,
     default_value = 2,
-    order=a
+    order="a"
   },
 }
 )
