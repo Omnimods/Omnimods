@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.30
+Date: ????
+  Changes:
+    - Moved sluid to fluid conversion recipes from boilers into assemblers. MIGHT BREAK YOUR BASE!
+    - Reduced the crafting time of conversions recipes
+---------------------------------------------------------------------------------------------------
 Version: 4.1.29
 Date: 2023.03.19
   Bugfixes:
