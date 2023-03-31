@@ -21,9 +21,9 @@ component["bob-plate"]={"iron-plate", "copper-plate", "tin-plate", "lead-plate",
 component["angel-plate"]={"copper-plate","iron-plate","angels-plate-manganese", "angels-plate-chrome", "angels-plate-platinum"}
 component["angels-comp-plate"]={"copper-plate", "iron-plate", "steel-plate","angels-plate-aluminium", "angels-plate-titanium", "angels-plate-tungsten","angels-plate-chrome", "angels-plate-platinum"}
 component["angel-bob-plate"]={"iron-plate", "copper-plate", "tin-plate", "lead-plate", "silver-plate", "zinc-plate", "nickel-plate", "cobalt-plate", "angels-plate-manganese", "gold-plate", "aluminium-plate", "tungsten-plate", "titanium-plate", "angels-plate-chrome", "angels-plate-platinum"}
-component["vanilla-omniplate"]= {"omnicium-plate", "omnium-plate","omnium-iron-alloy","omnium-steel-alloy"}
-component["omni-alloys"] = {"omnicium-plate", "omnium-plate","omnium-iron-alloy","omnium-steel-alloy"}
-component["omni-bob-alloys"] = {"omnicium-plate", "omnium-plate","omnium-iron-alloy","omnium-steel-alloy", "omnium-aluminium-alloy", "omnium-tungsten-alloy"}
+component["vanilla-omniplate"]= {"omnium-plate","omnium-iron-alloy","omnium-steel-alloy"}
+component["omni-alloys"] = {"omnium-plate","omnium-iron-alloy","omnium-steel-alloy"}
+component["omni-bob-alloys"] = {"omnium-plate","omnium-iron-alloy","omnium-steel-alloy", "omnium-aluminium-alloy", "omnium-tungsten-alloy"}
 -- GEARS
 component["vanilla-gear-wheel"] = {"iron-gear-wheel"}
 component["bob-gear-wheel"] = {"iron-gear-wheel", "steel-gear-wheel", "brass-gear-wheel", "cobalt-steel-gear-wheel", "titanium-gear-wheel", "tungsten-gear-wheel", "nitinol-gear-wheel"}
