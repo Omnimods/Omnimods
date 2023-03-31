@@ -35,7 +35,7 @@ if mods["angelsindustries"] and angelsmods.industries.components then
         ingredients =
         {
         {type="item", name = "construction-frame-1", amount = 1},
-        {type="item", name = "omnium-plate", amount = 2},
+        {type="item", name = "omnicium-plate", amount = 2},
         },
         results=
         {
