@@ -167,7 +167,7 @@ end
 
 if mods["pyalternativeenergy"] then
     omni.matter.add_resource("antimonium", 1)
-    omni.matter.add_fluid("geothermal-water", 1, 1)
+    omni.matter.add_fluid("geothermal-water", 1, 1, 3000)
 end
 
 if mods["Krastorio2"] then
