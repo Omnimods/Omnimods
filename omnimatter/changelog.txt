@@ -5,6 +5,7 @@ Date: ????
     - Fixed crushed quartz & tin being unobtainable for initial science with bare PyRO
     - Fixed that adding an ore for initial omnitraction that requires a fluid to mine could cause
       a crash if that same ore was already in tier 1
+    - Fixed that fluid omnitractions always outputted the fluid at the default temperature
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.33
 Date: 2023.03.19
