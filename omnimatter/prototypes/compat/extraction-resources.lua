@@ -144,20 +144,8 @@ if mods["pyrawores"] then
     omni.matter.add_resource("ore-tin", 1)
     omni.matter.add_resource("ore-quartz", 1)
     omni.matter.add_resource("raw-coal", 1)
-    omni.matter.add_resource("ore-lead",
-        1,
-        {
-            name = mods["pyfusionenergy"] and "acetylene" or data.raw.resource["ore-lead"].minable.required_fluid,
-            amount = data.raw.resource["ore-lead"].minable.fluid_amount
-        }
-    )
-    omni.matter.add_resource("ore-titanium",
-        1,
-        {
-            name = mods["pyfusionenergy"] and "acetylene" or data.raw.resource["ore-titanium"].minable.required_fluid,
-            amount = data.raw.resource["ore-titanium"].minable.fluid_amount
-        }
-    )
+    omni.matter.add_resource("ore-lead", 1)
+    omni.matter.add_resource("ore-titanium", 1)
     omni.matter.add_resource("salt-rock", 1)
     omni.matter.add_resource("ore-chromium", 1)
     -- Green
