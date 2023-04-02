@@ -153,8 +153,6 @@ end
 local function create_concentrated_recipe(fluid, tier, temp)
     local new_fluid = table.deepcopy(data.raw.fluid[fluid])
     if temp then
-        -- Clamp to valid recipe values
-        temp = math.min(temp, 1000)
         -- Clamp to fluid min/max
         temp = new_fluid.max_temperature and math.min(temp, new_fluid.max_temperature) or temp
         temp = new_fluid.default_temperature and math.max(temp, new_fluid.default_temperature) or temp
