@@ -70,7 +70,7 @@ if not mods["angelsrefining"] then
             local metal_formatted = metal:sub(1,1):upper() .. metal:sub(2)
 
             local tier = 1
-            for i,t in pairs(omni.matter.omnisource) do
+            for _,t in pairs(omni.matter.omnisource) do
                 for _,o in pairs(t) do
                     if o.name == ore then
                         tier = math.min(o.tier,omni.max_tier - 1)
@@ -130,7 +130,7 @@ if not mods["angelsrefining"] then
                 if omni.lib.recipe_ingredient_contains(rec.name, ore) then
                     found = true
                     break
-                end    
+                end
             end
 
             --If yes, copy the recipe
@@ -150,7 +150,8 @@ if not mods["angelsrefining"] then
 
                         if (rec.hidden and rec.hidden == true) or (rec.normal and rec.normal.hidden and rec.normal.hidden ==true) then
                             r:setHidden(rec.hidden)
-                        else
+                        --Only add the recipe as tech unlock if the base recipe is unlockable
+                        elseif omni.lib.get_tech_name(rec.name) or omni.lib.recipe_is_enabled(rec.name) then
                             r:setTechName(omni.lib.get_tech_name(ore.."-crystal"))
                         end
                     end
