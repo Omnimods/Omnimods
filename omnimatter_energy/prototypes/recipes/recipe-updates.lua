@@ -64,7 +64,7 @@ local packs = {
 for i,inputs in pairs(data.raw["lab"]["omnitor-lab"].inputs) do
     for _,pack in pairs(packs) do
         if inputs == pack then
-            table.remove(data.raw["lab"]["omnitor-lab"].inputs,i, pack)
+            table.remove(data.raw["lab"]["omnitor-lab"].inputs, i)
         end
     end
 end

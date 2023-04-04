@@ -138,17 +138,22 @@ for _,tech in pairs(data.raw.technology) do
     end
 end
 
+--Fix old recipe names in module limitation lists
 for _,mod in pairs(data.raw.module) do
-    if mod.limitation then
-        local newRestrict = {}
-        for i, restrict in pairs(mod.limitation) do
-            if techRec[restrict] then
-                newRestrict = omni.lib.iunion(newRestrict, techRec[restrict])
-            else
-                newRestrict[#newRestrict+1] = restrict
+    if mod.limitation or mod.limitation_blacklist then
+        for _, list in pairs({"limitation", "limitation_blacklist"}) do
+            if mod[list] then
+                local newRestrict = {}
+                for _, restrict in pairs(mod[list]) do
+                    if techRec[restrict] then
+                        newRestrict = omni.lib.iunion(newRestrict, techRec[restrict])
+                    else
+                        newRestrict[#newRestrict+1] = restrict
+                    end
+                end
+                mod[list] = table.deepcopy(newRestrict)
             end
         end
-        mod.limitation = table.deepcopy(newRestrict)
     end
 end
 

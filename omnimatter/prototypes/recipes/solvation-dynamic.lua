@@ -158,16 +158,17 @@ for _,tier in pairs(omni.matter.omnifluid) do
             setWaste("omnic-waste"):
             yieldQuant(function(levels,grade) return fluid.ratio*(120+120*(grade-1)/(levels-1)) end ):
             wasteQuant(function(levels,grade) return 240-fluid.ratio*(120+120*(grade-1)/(levels-1)) end)
+
         local thingy = RecChain:create("omnimatter","distillation-"..fluid.name):
             setLocName("fluid-name."..fluid.name):
             setIngredients({
             {type="fluid", name="omniston", amount=240}
             }):
+            setResults(function(levels,grade) return {omni.lib.union(cost:results()(levels,grade)[1], {temperature = fluid.temperature})} end):
             setCategory(omniFluidCat):
             setSubgroup("omni-fluids"):
             setLevel(omni.fluid_levels):
             setIcons(fluid.name):
-            setResults(cost:results()):
             setEnergy(function(levels,grade) return 5 end):
             setTechIcons(generate_distillation_icon(fluid)):
             setTechCost(function(levels,grade) return 25*omni.matter.get_tier_mult(levels,grade,1) end):

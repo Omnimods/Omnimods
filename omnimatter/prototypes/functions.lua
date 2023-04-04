@@ -36,7 +36,7 @@ local function get_resource(name, fluid)
             end
         end
     end
-    return name, fluid        
+    return name, fluid
 end
 
 --------------------------
@@ -45,10 +45,32 @@ end
 --Manipulation of the extraction tables
 --Open for modders to use to add compatibility
 
+--Adds an initial resource to omnimatter (resource name, result ore amount, input omnite amount, fluid required to mine)
+--Initial resources are those that are required to be available at game start witout any tech
+--If no mining fluid is specified, it will use the one specified in the resource
+--If fluid_to_mine = false, no fluid is required even if the resource prototype specified one
+function omni.matter.add_initial(ore_name, ore_amount, omnite_amount, fluid_to_mine)
+    ore_name, fluid_to_mine = get_resource(ore_name, fluid_to_mine)
+
+    omni.matter.omnitial[ore_name] = {
+        ingredients ={{name = "omnite", amount = omnite_amount}},
+        results = {{name = ore_name, amount = ore_amount}, {name = "stone-crushed", amount = (omnite_amount-ore_amount) or 6}}
+    }
+
+    if fluid_to_mine and fluid_to_mine.name and settings.startup["omnimatter-fluid-processing"].value then
+        omni.matter.omnitial[ore_name].fluid = {name = fluid_to_mine.name, amount = fluid_to_mine.amount or 1}
+        omni.matter.omnitial[ore_name].results[1].name = "crude-"..omni.matter.omnitial[ore_name].results[1].name
+    end
+end
+
+--Adds a resource to omnimatter (resource name, tier, fluid required to mine)
+--If no mining fluid is specified, it will use the one specified in the resource
+--If fluid_to_mine = false, no fluid is required even if the resource prototype specified one
 function omni.matter.add_resource(r_name, tier, fluid_to_mine)
     if not tonumber(tier) then
         error("omni.matter.add_resource(): Invalid tier specified for "..r_name)
     end
+
     if not omni.matter.omnisource[tostring(tier)] then
         omni.matter.omnisource[tostring(tier)] = {}
     end
@@ -61,12 +83,13 @@ function omni.matter.add_resource(r_name, tier, fluid_to_mine)
     end
 end
 
-function omni.matter.add_fluid(f_name , tier, ratio)
+function omni.matter.add_fluid(f_name , tier, ratio, f_temperature)
     if not tonumber(tier) then
         error("omni.matter.add_fluid(): Invalid tier specified for "..f_name)
     end
+
     if not omni.matter.omnifluid[tostring(tier)] then omni.matter.omnifluid[tostring(tier)] = {} end
-    omni.matter.omnifluid[tostring(tier)][f_name] = {tier = tier, ratio=ratio, name = f_name}
+    omni.matter.omnifluid[tostring(tier)][f_name] = {tier = tier, ratio=ratio, name = f_name, temperature = f_temperature}
 end
 
 function omni.matter.remove_resource(r_name)
@@ -116,22 +139,6 @@ function omni.matter.set_ore_tier(r_name, tier)
     end
 end
 
---Add initial extraction ores
-function omni.matter.add_initial(ore_name, ore_amount, omnite_amount, fluid_to_mine)
-
-    ore_name, fluid_to_mine = get_resource(ore_name, fluid_to_mine)
-
-    omni.matter.omnitial[ore_name] = {
-        ingredients ={{name = "omnite", amount = omnite_amount}},
-        results = {{name = ore_name, amount = ore_amount}, {name = "stone-crushed", amount = (omnite_amount-ore_amount) or 6}}
-    }
-
-    if fluid_to_mine and fluid_to_mine.name and settings.startup["omnimatter-fluid-processing"].value then
-        omni.matter.omnitial[ore_name].fluid = {name = fluid_to_mine.name, amount = fluid_to_mine.amount or 1}
-        omni.matter.omnitial[ore_name].results[1].name = "crude-"..omni.matter.omnitial[ore_name].results[1].name
-    end
-end
-
 function omni.matter.add_omnium_alloy(name,plate,ingot)
     local reg = {}
 
@@ -178,7 +185,6 @@ function omni.matter.add_omnium_alloy(name,plate,ingot)
             setTechName("omnitech-angels-omnium-"..name.."-alloy-smelting"):
             extend()
     else
-        math.randomseed(string.len(plate..name))
         local metal_q = math.random(2,6)
         local omni_q = math.random(1,metal_q)
         reg[#reg+1]={

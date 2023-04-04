@@ -21,7 +21,7 @@ if mods["Bio_Industries"] then
         icon_size = 64,
         icon_mipmaps = 4,}
     }
-    
+
     data.raw.recipe["bi-seedling-2"].category="omnimutator"
     data.raw.recipe["bi-seedling-2"].icon=nil
     data.raw.recipe["bi-seedling-2"].icons={
@@ -31,7 +31,7 @@ if mods["Bio_Industries"] then
         shift = { 10, 10},
         icon_size=64,}
     }
-    
+
     data.raw.recipe["bi-seedling-3"].category="omnimutator"
     data.raw.recipe["bi-seedling-3"].icon=nil
     data.raw.recipe["bi-seedling-3"].icons={
@@ -41,7 +41,7 @@ if mods["Bio_Industries"] then
         shift = { 10, 10},
         icon_size=64,}
     }
-    
+
     data.raw.recipe["bi-seedling-4"].category="omnimutator"
     data.raw.recipe["bi-seedling-4"].icon=nil
     data.raw.recipe["bi-seedling-4"].icons={
@@ -51,8 +51,8 @@ if mods["Bio_Industries"] then
         shift = { 10, 10},
         icon_size=64,}
     }
-    
-    
+
+
     omni.lib.replace_recipe_result("bi-logs-1","wood",{name = "omniwood", amount =60})
     data.raw.recipe["bi-logs-1"].icon=nil
     data.raw.recipe["bi-logs-1"].icons={
@@ -63,7 +63,7 @@ if mods["Bio_Industries"] then
         icon_size = 64,
         icon_mipmaps = 4,}
     }
-    
+
     omni.lib.replace_recipe_result("bi-logs-2","wood",{name = "omniwood", amount =100})
     data.raw.recipe["bi-logs-2"].icon=nil
     data.raw.recipe["bi-logs-2"].icons={
@@ -73,7 +73,7 @@ if mods["Bio_Industries"] then
         shift = { 10, 10},
         icon_size=64,}
     }
-    
+
     omni.lib.replace_recipe_result("bi-logs-3","wood",{name = "omniwood", amount =150})
     data.raw.recipe["bi-logs-3"].icon=nil
     data.raw.recipe["bi-logs-3"].icons={
@@ -83,7 +83,7 @@ if mods["Bio_Industries"] then
         shift = { 10, 10},
         icon_size=64,}
     }
-    
+
     omni.lib.replace_recipe_result("bi-logs-4","wood",{name = "omniwood", amount =250})
     data.raw.recipe["bi-logs-4"].icon=nil
     data.raw.recipe["bi-logs-4"].icons={
@@ -93,6 +93,6 @@ if mods["Bio_Industries"] then
         shift = { 10, 10},
         icon_size=64,}
     }
-    
-    omni.lib.add_prerequisite("bi-tech-bio-farming", "omnitech-omnimutator") 
+
+    omni.lib.add_prerequisite("bi-tech-bio-farming", "omnitech-omnimutator")
 end

@@ -131,32 +131,21 @@ if mods["pyrawores"] then
     --disable vanilla coal & stone, raw coal will produce our coal.
     all_time_ores = false
     --Initial omnitractions
-    if not mods["pyalienlife"] and mods["pyrawores"]:find("^2.2.[7,8]$") then
-        omni.matter.add_initial("ore-aluminium", 1, 14)
+    if not mods["pyalienlife"] then
+        -- not needed as of current portal, leaving for ratio reference
+        -- omni.matter.add_initial("ore-aluminium", 1, 14)
         omni.matter.add_initial("ore-tin", 1, 12)
         omni.matter.add_initial("ore-quartz", 1, 12)
     end
-    omni.matter.add_initial("raw-coal", 1, 10)    
+    omni.matter.add_initial("raw-coal", 1, 10)
     -- Pre-sci/red
     omni.matter.add_resource("stone", 1)
     omni.matter.add_resource("ore-aluminium", 1)
     omni.matter.add_resource("ore-tin", 1)
     omni.matter.add_resource("ore-quartz", 1)
     omni.matter.add_resource("raw-coal", 1)
-    omni.matter.add_resource("ore-lead",
-        1,
-        {
-            name = mods["pyfusionenergy"] and "acetylene" or data.raw.resource["ore-lead"].minable.required_fluid,
-            amount = data.raw.resource["ore-lead"].minable.fluid_amount
-        }
-    )
-    omni.matter.add_resource("ore-titanium",
-        1,
-        {
-            name = mods["pyfusionenergy"] and "acetylene" or data.raw.resource["ore-titanium"].minable.required_fluid,
-            amount = data.raw.resource["ore-titanium"].minable.fluid_amount
-        }
-    )
+    omni.matter.add_resource("ore-lead", 1)
+    omni.matter.add_resource("ore-titanium", 1)
     omni.matter.add_resource("salt-rock", 1)
     omni.matter.add_resource("ore-chromium", 1)
     -- Green
@@ -166,7 +155,7 @@ end
 
 if mods["pyalternativeenergy"] then
     omni.matter.add_resource("antimonium", 1)
-    omni.matter.add_fluid("geothermal-water", 1, 1)
+    omni.matter.add_fluid("geothermal-water", 1, 1, 3000)
 end
 
 if mods["Krastorio2"] then

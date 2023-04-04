@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.9
+Date: 2023.04.04
+  Changes:
+    - Angelbioprocessing: Readded the algae-green-simple recipe
+  Bugfixes:
+    - Fixed that there was no way to craft green/brown algae in the algae farm 1 with angels
+---------------------------------------------------------------------------------------------------
 Version: 4.1.8
 Date: 2022.05.01
   Bugfixes:
