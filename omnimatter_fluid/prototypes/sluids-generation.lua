@@ -7,7 +7,7 @@ local recipe_mods = analysation.recipe_mods_
 local void_recipes = analysation.void_recipes_
 local min_steam_boiler_temp = analysation.min_boiler_temp_
 
-log(serpent.block(fluid_cats))
+
 ----------------------------
 -----Create solid items-----
 ----------------------------
