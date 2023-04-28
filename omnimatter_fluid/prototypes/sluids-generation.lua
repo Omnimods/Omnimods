@@ -1,12 +1,13 @@
 local analysation = require("prototypes.fluid-analysation")
 local sluid_boiler = require("prototypes.sluid-boiler")
+
 local fluid_cats = analysation.fluid_cats_
 local generator_fluid = analysation.generator_fluid_
 local recipe_mods = analysation.recipe_mods_
 local void_recipes = analysation.void_recipes_
 local min_steam_boiler_temp = analysation.min_boiler_temp_
 
-
+log(serpent.block(fluid_cats))
 ----------------------------
 -----Create solid items-----
 ----------------------------
@@ -30,7 +31,7 @@ for catname, cat in pairs(fluid_cats) do
                         name = "solid-"..fluid.name,
                         localised_name = {"item-name.solid-fluid", fluid.localised_name or {"fluid-name."..fluid.name}},
                         localised_description = {"item-description.solid-fluid", fluid.localised_description or {"fluid-description."..fluid.name}},
-                        icons = omni.lib.icon.of_generic(fluid),
+                        icons = omni.lib.icon.of_generic(data.raw.fluid[fluid.name]),
                         subgroup = "omni-solid-fluids",
                         order = fluid.order or "a",
                         stack_size = omni.fluid.sluid_stack_size,
@@ -41,7 +42,7 @@ for catname, cat in pairs(fluid_cats) do
                         name = "solid-"..fluid.name.."-T-"..string.gsub(temp, "%.", "_"),
                         localised_name = {"item-name.solid-fluid-tmp", fluid.localised_name or {"fluid-name."..fluid.name},"T="..temp},
                         localised_description = {"item-description.solid-fluid", fluid.localised_description or {"fluid-description."..fluid.name}},
-                        icons = omni.lib.icon.of_generic(fluid),
+                        icons = omni.lib.icon.of_generic(data.raw.fluid[fluid.name]),
                         subgroup = "omni-solid-fluids",
                         order = fluid.order or "a",
                         stack_size = omni.fluid.sluid_stack_size,

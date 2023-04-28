@@ -26,7 +26,11 @@ local function sort_fluid(fluidname, category, temperature)
         else
             temperatures = {temperature or {temp = "none"}}
         end
-        fluid_cats[category][fluid.name] = table.deepcopy(fluid)
+        --fluid_cats[category][fluid.name] = table.deepcopy(fluid)
+        --Only copy required attributes from the base fluid to not create huge tables
+        fluid_cats[category][fluid.name] = {
+            name=fluid.name, localised_name=fluid.localised_name, default_temperature = fluid.default_temperature, max_temperature=fluid.max_temperature,fuel_value=fluid.fuel_value,heat_capacity=fluid.heat_capacity
+        }
         fluid_cats[category][fluid.name].temperatures = temperatures
     --Fluid already exists: Update temperatures table if a temperature is specified. Check if "none" is already in the table if no temp is specified
     elseif fluid then
