@@ -68,10 +68,11 @@ local function replace_barrels(recipe)
                     flu = string.gsub(flu, "%-canister", "")
 
                     if fluid_cats["sluid"][flu] or fluid_cats["mush"][flu] then
+                        local tempstring = string.gsub(data.raw.fluid[flu].default_temperature, "%.", "_")
                         if recipe[dif].main_product and recipe[dif].main_product == ing.name then
-                            recipe[dif].main_product = "solid-"..flu
+                            recipe[dif].main_product = "solid-"..flu.."-T-"..tempstring
                         end
-                        ing.name = "solid-"..flu
+                        ing.name = "solid-"..flu.."-T-"..tempstring
                         ing.amount = omni.lib.round(ing.amount*50/omni.fluid.sluid_contain_fluid)
                     end
                 end
@@ -315,6 +316,7 @@ for name, _ in pairs(recipe_mods) do
                         if new_amount > 65535 then
                             log("WARNING: Ingredient "..new_ing.name.." from the recipe "..rec.name.." ran into the upper limit. Amount = "..new_amount.." Mult = "..mult[dif])
                         end
+
                         --Main product checks
                         if ingres == "results" and rec[dif].main_product and rec[dif].main_product == ing.name then
                             rec[dif].main_product = new_ing.name

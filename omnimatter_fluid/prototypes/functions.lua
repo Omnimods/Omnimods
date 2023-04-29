@@ -204,6 +204,10 @@ function omni.fluid.create_temperature_copies(recipe, fluidname, replacement, te
                             end
                         end
                     end
+                    --Main product update
+                    if newrec[dif].main_product and newrec[dif].main_product == replacement then
+                        newrec[dif].main_product = sluid
+                    end
                 end
                 copies[#copies+1] = newrec
                 if tech and not omni.lib.recipe_is_enabled(recipe.name) then
