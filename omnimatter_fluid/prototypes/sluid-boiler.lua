@@ -54,7 +54,7 @@ local function sluid_boiler_generation(fluid_cats, generator_fluid)
             if fluid_cats["sluid"][steam] then category = "sluid" end
             local found = false
             for _, temp in pairs(fluid_cats[category][steam]["consumer"].temperatures) do
-                if type(temp) == "number" and boiler.target_temperature == temp then
+                if boiler.target_temperature == temp then
                     found = true
                     break
                 end

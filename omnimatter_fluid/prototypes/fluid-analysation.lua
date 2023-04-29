@@ -272,8 +272,8 @@ for _,cat in pairs(fluid_cats) do
                 local flu = fluid["consumer"].temperatures[i]
                 local min = flu.temp_min or fluid.default_temperature
                 local max = flu.temp_max or fluid.max_temperature
-                if new_temps["producer"].temperatures then
-                    for _, prod in pairs(new_temps["producer"].temperatures) do
+                if next(new_temps["producer"]) then
+                    for _, prod in pairs(new_temps["producer"]) do
                         if (prod >= min) and (prod <= max) then
                             if flu.conversion then
                                 conversions["consumer"][prod] = true
