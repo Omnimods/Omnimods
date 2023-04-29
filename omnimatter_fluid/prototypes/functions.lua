@@ -191,7 +191,6 @@ function omni.fluid.create_temperature_copies(recipe, fluidname, replacement, te
         for _, temp in pairs(temperatures) do
             local sluid = "solid-"..fluidname.."-T-"..temp
             local tech = omni.lib.get_tech_name(recipe.name)
-            if type(temp) ~= "number" then sluid = "solid-"..fluidname end
             if data.raw.item[sluid] and sluid ~= replacement then
                 local newrec = table.deepcopy(recipe)
                 newrec.name = newrec.name .."-T-"..temp

@@ -18,6 +18,7 @@ local function sluid_boiler_generation(fluid_cats, generator_fluid)
             local steam = boiler.output_fluid_box.filter or "steam"
             local th_energy = (boiler.target_temperature - data.raw.fluid[water].default_temperature) * (omni.lib.get_fuel_number(data.raw.fluid[water].heat_capacity) or 1000) --1000 = default heat_capacity
             local boiler_consumption = 60 * omni.lib.get_fuel_number(boiler.energy_consumption) / ((boiler.energy_source.effectivity or 1) * th_energy)
+            local temp_ing = string.gsub(data.raw.fluid[water].default_temperature, "%.", "_")
 
             --clobber fluid_box_filter if it exists
             if generator_fluid[boiler.output_fluid_box.filter] then
@@ -43,16 +44,16 @@ local function sluid_boiler_generation(fluid_cats, generator_fluid)
                     enabled = true,
                     hide_from_player_crafting = true,
                     main_product = steam,
-                    ingredients = {{type = "item", name = "solid-"..water, amount = 1},},
+                    ingredients = {{type = "item", name = "solid-"..water.."-T-"..temp_ing, amount = 1},},
                     results = {{type = "fluid", name = steam, amount = omni.fluid.sluid_contain_fluid, temperature = math.min(boiler.target_temperature, data.raw.fluid[steam].max_temperature)},},
                 }
             end
 
-            --Create a solid water boiling recipe version if steam with the boiler target temp is required.
+            --Create a solid water boiling recipe version if steam with the boiler target temp is required (registered as consumer).
             local category = "mush"
             if fluid_cats["sluid"][steam] then category = "sluid" end
             local found = false
-            for _, temp in pairs(fluid_cats[category][steam].temperatures) do
+            for _, temp in pairs(fluid_cats[category][steam]["consumer"].temperatures) do
                 if type(temp) == "number" and boiler.target_temperature == temp then
                     found = true
                     break
@@ -71,7 +72,7 @@ local function sluid_boiler_generation(fluid_cats, generator_fluid)
                     enabled = true,
                     hide_from_player_crafting = true,
                     main_product = "solid-"..steam.."-T-"..tempstring,
-                    ingredients = {{type = "item", name = "solid-"..water, amount = 1},},
+                    ingredients = {{type = "item", name = "solid-"..water.."-T-"..temp_ing, amount = 1},},
                     results = {{type = "item", name = "solid-"..steam.."-T-"..tempstring, amount = 1}},
                 }
             end
@@ -197,9 +198,9 @@ local function sluid_boiler_generation(fluid_cats, generator_fluid)
     for _, cats in pairs({"mush", "sluid"}) do
         for _, fugacity in pairs(fluid_cats[cats]) do
             --deal with non-water mush fluids, allow temperature and specific boiler systems
-            for temp,_ in pairs(fugacity.conversions) do
-                --Check the old temperatures table if the required temperature requires a conversion recipe
-                if temp ~= "none" then
+            for _, state in pairs({"producer", "consumer"}) do
+                for temp,_ in pairs(fugacity[state].conversions) do
+                    --Check the old temperatures table if the required temperature requires a conversion recipe
                     local tempstring = string.gsub(temp, "%.", "_")
                     if data.raw.item["solid-"..fugacity.name.."-T-"..tempstring] then
                         new_boiler[#new_boiler+1] = {
@@ -219,22 +220,6 @@ local function sluid_boiler_generation(fluid_cats, generator_fluid)
                     else
                         log("item does not exist:".. fugacity.name.."-fluidisation-"..tempstring)
                     end
-                --no temperature specific fluid. Make sure to check for "none" since fluids outside of this boiler tier can go past the first if
-                elseif temp == "none" then
-                    new_boiler[#new_boiler+1] = {
-                        type = "recipe",
-                        name = fugacity.name.."-fluidisation",
-                        icons = omni.lib.icon.of(fugacity.name, "fluid"),
-                        subgroup = "boiler-sluid-converter",
-                        category = "crafting-with-fluid",
-                        order = "a["..fugacity.name.."]",
-                        energy_required = 0.25,
-                        enabled = true,--may change this to be linked to the boiler unlock if applicable
-                        hide_from_player_crafting = true,
-                        main_product = fugacity.name,
-                        ingredients = {{type = "item", name = "solid-"..fugacity.name, amount = 1}},
-                        results = {{type = "fluid", name = fugacity.name, amount = omni.fluid.sluid_contain_fluid, temperature = data.raw.fluid[fugacity.name].default_temperature}},
-                    }
                 end
             end
         end

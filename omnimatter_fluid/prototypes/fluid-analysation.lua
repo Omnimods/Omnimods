@@ -315,4 +315,4 @@ for _,cat in pairs(fluid_cats) do
     end
 end
 
-return {fluid_cats_ = fluid_cats, generator_fluid_ = generator_fluid, recipe_mods_ = recipe_mods, void_recipes_ = void_recipes, min_boiler_temp_ = min_boiler_temp}
+return {fluid_cats_ = fluid_cats, generator_fluid_ = generator_fluid, recipe_mods_ = recipe_mods, void_recipes_ = void_recipes}
