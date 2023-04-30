@@ -12,7 +12,7 @@ local void_recipes = {} --Recipe has no result(s)
 --Sort by producers and consumer to be able to remove unnecessary temperature copies later on
 local function sort_fluid(fluidname, category, state, temperature)
     local fluid = data.raw.fluid[fluidname]
-    if temperature and not next(temperature) then temperature = nil end
+    if not temperature or (temperature and not next(temperature)) then temperature = {temp = "none"} end
     --Fluid doesnt exist in this category or as mush yet --We need to move stuff
     if fluid and not fluid_cats[category][fluid.name] and not fluid_cats["mush"][fluid.name] then
         --Check for a combination of fluid / sluid. If both is required, add it as mush and remove it from sluids/fluids
@@ -39,8 +39,10 @@ local function sort_fluid(fluidname, category, state, temperature)
         --Create producer/consumer tables
         if not fluid_cats[category][fluid.name]["consumer"] then fluid_cats[category][fluid.name]["consumer"] = {} end
         if not fluid_cats[category][fluid.name]["producer"] then fluid_cats[category][fluid.name]["producer"] = {} end
+        --Force a conversion for fuel fluids
+        if fluid.fuel_value  then temperature.conversion = true end
         --Add the temperatures
-        fluid_cats[category][fluid.name][state].temperatures = omni.lib.union(fluid_cats[category][fluid.name][state].temperatures or {}, {temperature or {temp = "none"}})
+        fluid_cats[category][fluid.name][state].temperatures = omni.lib.union(fluid_cats[category][fluid.name][state].temperatures or {}, {temperature})
 
     --Fluid already exists in a category (has to be a mush at this point):
     --Update temperatures table if a temperature is specified. Check if "none" is already in the table if no temp is specified
@@ -49,7 +51,10 @@ local function sort_fluid(fluidname, category, state, temperature)
         if category ~= "mush" and fluid_cats["mush"][fluid.name] then category = "mush" end
 
         if not fluid_cats[category][fluid.name][state].temperatures then fluid_cats[category][fluid.name][state].temperatures = {} end
-        table.insert(fluid_cats[category][fluid.name][state].temperatures, temperature or {temp = "none"})
+        --Force a conversion for fuel fluids
+        if fluid.fuel_value then temperature.conversion = true end
+        --Add the temperatures
+        table.insert(fluid_cats[category][fluid.name][state].temperatures, temperature)
     else
         log(serpent.block(temperature))
         log("Fail")
@@ -184,7 +189,7 @@ for _, rec in pairs(data.raw.recipe) do
     end
 end
 
--- --Check all fluids for a fuel value -- Required? We should detect all fluid burning generators
+-- --Check all fluids for a fuel value -- Not required, analysation adds conversions for all fuel fluid temps - We dont want to add additional temperatures here
 -- for _,fluid in pairs(data.raw.fluid) do
 --     if fluid.fuel_value then
 --         sort_fluid(fluid.name, "fluid", {temp = "none", conversion = true})
