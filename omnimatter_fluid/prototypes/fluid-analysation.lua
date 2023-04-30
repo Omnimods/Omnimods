@@ -13,33 +13,34 @@ local void_recipes = {} --Recipe has no result(s)
 local function sort_fluid(fluidname, category, state, temperature)
     local fluid = data.raw.fluid[fluidname]
     if temperature and not next(temperature) then temperature = nil end
-    --Fluid doesnt exist in this category or as mush yet
+    --Fluid doesnt exist in this category or as mush yet --We need to move stuff
     if fluid and not fluid_cats[category][fluid.name] and not fluid_cats["mush"][fluid.name] then
         --Check for a combination of fluid / sluid. If both is required, add it as mush and remove it from sluids/fluids
-        local temperatures = {}
         --Pick up the already known temperature table
         if category == "fluid" and fluid_cats["sluid"][fluid.name] then
             category = "mush"
-            temperatures = omni.lib.union(fluid_cats["sluid"][fluid.name][state].temperatures, {temperature or {temp = "none"}})
+            --Move over all old data and nil old table
+            fluid_cats[category][fluid.name] = table.deepcopy(fluid_cats["sluid"][fluid.name])
             fluid_cats["sluid"][fluid.name] = nil
         elseif category == "sluid" and fluid_cats["fluid"][fluid.name] then
             category = "mush"
-            temperatures = omni.lib.union(fluid_cats["fluid"][fluid.name][state].temperatures, {temperature or {temp = "none"}})
+            --Move over all old data and nil old table
+            fluid_cats[category][fluid.name] = table.deepcopy(fluid_cats["fluid"][fluid.name])
             fluid_cats["fluid"][fluid.name] = nil
-        else
-            temperatures = {temperature or {temp = "none"}}
         end
 
         --Only copy required attributes from the base fluid to not create huge tables
-        fluid_cats[category][fluid.name] = {
-            name=fluid.name, localised_name=fluid.localised_name, default_temperature = fluid.default_temperature, max_temperature=fluid.max_temperature or fluid.default_temperature, fuel_value=fluid.fuel_value, heat_capacity=fluid.heat_capacity
-        }
+        if not fluid_cats[category][fluid.name] then
+            fluid_cats[category][fluid.name] = {
+                name=fluid.name, localised_name=fluid.localised_name, default_temperature = fluid.default_temperature, max_temperature=fluid.max_temperature or fluid.default_temperature, fuel_value=fluid.fuel_value, heat_capacity=fluid.heat_capacity
+            }
+        end
+
         --Create producer/consumer tables
         if not fluid_cats[category][fluid.name]["consumer"] then fluid_cats[category][fluid.name]["consumer"] = {} end
         if not fluid_cats[category][fluid.name]["producer"] then fluid_cats[category][fluid.name]["producer"] = {} end
-
         --Add the temperatures
-        fluid_cats[category][fluid.name][state].temperatures = temperatures
+        fluid_cats[category][fluid.name][state].temperatures = omni.lib.union(fluid_cats[category][fluid.name][state].temperatures or {}, {temperature or {temp = "none"}})
 
     --Fluid already exists in a category (has to be a mush at this point):
     --Update temperatures table if a temperature is specified. Check if "none" is already in the table if no temp is specified

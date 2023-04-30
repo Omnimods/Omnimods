@@ -296,7 +296,7 @@ for name, _ in pairs(recipe_mods) do
                             --some fluids might not have any producers, use the default temp as fallback
                             if not next(found_temps) then
                                 found_temps = {flu.default_temperature}
-                                log(ing.name.." does not have any producers, falling back to the default temperature.")
+                                --log(ing.name.." does not have any producers, falling back to the default temperature.")
                             end
                             --Use the first found element for this recipe
                             new_ing.name = "solid-"..ing.name.."-T-"..string.gsub(found_temps[1], "%.", "_")
