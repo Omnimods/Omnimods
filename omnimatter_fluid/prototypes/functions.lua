@@ -36,23 +36,6 @@ function omni.fluid.excempt_recipe(recipe_name)
     end
 end
 
---Fluid is not made in a boiler and has a temperature. Assembler fluids ignore all temperature limitations for conversion recipes
-function omni.fluid.add_assembler_generator_fluid(fluid_name)
-    omni.fluid.assembler_generator_fluids[fluid_name] = true
-    local base_name = string.gsub(fluid_name, "solid%-", "")
-    if mods["omnimatter_compression"] then
-        omni.fluid.forbidden_recipe["solid-concentrated-"..base_name] = true
-    end
-end
-
---Adds recipe copies for each available temperature of the sluid ingredients
-function omni.fluid.add_multi_temp_recipe(recipe_name)
-    omni.fluid.multi_temp_recipes[recipe_name] = true
-    if mods["omnimatter_compression"] then
-        omni.fluid.multi_temp_recipes[recipe_name.."-compression"] = true
-    end
-end
-
 --Adds that fluid as mining fluid, converter recipes will be generated
 function omni.fluid.add_mining_fluid(fluid_name)
     omni.fluid.mining_fluids[fluid_name] = true
@@ -191,7 +174,6 @@ function omni.fluid.create_temperature_copies(recipe, fluidname, replacement, te
         for _, temp in pairs(temperatures) do
             local sluid = "solid-"..fluidname.."-T-"..temp
             local tech = omni.lib.get_tech_name(recipe.name)
-            if type(temp) ~= "number" then sluid = "solid-"..fluidname end
             if data.raw.item[sluid] and sluid ~= replacement then
                 local newrec = table.deepcopy(recipe)
                 newrec.name = newrec.name .."-T-"..temp
@@ -204,6 +186,10 @@ function omni.fluid.create_temperature_copies(recipe, fluidname, replacement, te
                                 break
                             end
                         end
+                    end
+                    --Main product update
+                    if newrec[dif].main_product and newrec[dif].main_product == replacement then
+                        newrec[dif].main_product = sluid
                     end
                 end
                 copies[#copies+1] = newrec

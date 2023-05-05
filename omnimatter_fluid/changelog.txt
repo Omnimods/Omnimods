@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.31
+Date: ????
+  Changes:
+    - WARNING: THIS WILL BREAK SOME OF YOUR BUILDS!
+    - SLUID ITEMS NAMES MIGHT CHANGE DUE TO HAVING A DIFFERENT TEMPERATURE!
+    - Internal rewrite of the whole temperature logic for sluids.
+      This will fix issues with mods that add fluids that have usages in different temperature
+      ranges. If a recipe allows a fluid in a sepecific temperature range, recipe copies for
+      each possible temperature are created (For all in-raange temperatures that are producable).
+---------------------------------------------------------------------------------------------------
 Version: 4.1.30
 Date: 2023.04.04
   Changes:
