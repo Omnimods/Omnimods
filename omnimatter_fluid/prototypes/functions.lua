@@ -36,23 +36,6 @@ function omni.fluid.excempt_recipe(recipe_name)
     end
 end
 
---Fluid is not made in a boiler and has a temperature. Assembler fluids ignore all temperature limitations for conversion recipes
-function omni.fluid.add_assembler_generator_fluid(fluid_name)
-    omni.fluid.assembler_generator_fluids[fluid_name] = true
-    local base_name = string.gsub(fluid_name, "solid%-", "")
-    if mods["omnimatter_compression"] then
-        omni.fluid.forbidden_recipe["solid-concentrated-"..base_name] = true
-    end
-end
-
---Adds recipe copies for each available temperature of the sluid ingredients
-function omni.fluid.add_multi_temp_recipe(recipe_name)
-    omni.fluid.multi_temp_recipes[recipe_name] = true
-    if mods["omnimatter_compression"] then
-        omni.fluid.multi_temp_recipes[recipe_name.."-compression"] = true
-    end
-end
-
 --Adds that fluid as mining fluid, converter recipes will be generated
 function omni.fluid.add_mining_fluid(fluid_name)
     omni.fluid.mining_fluids[fluid_name] = true

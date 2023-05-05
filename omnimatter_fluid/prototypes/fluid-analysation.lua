@@ -189,13 +189,6 @@ for _, rec in pairs(data.raw.recipe) do
     end
 end
 
--- --Check all fluids for a fuel value -- Not required, analysation adds conversions for all fuel fluid temps - We dont want to add additional temperatures here
--- for _,fluid in pairs(data.raw.fluid) do
---     if fluid.fuel_value then
---         sort_fluid(fluid.name, "fluid", {temp = "none", conversion = true})
---     end
--- end
-
 --Always create sluid steam for the lowest boiler temp
 local min_boiler_temp = math.huge
 for _, boiler in pairs(data.raw.boiler) do
