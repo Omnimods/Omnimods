@@ -53,6 +53,7 @@ if mods["angelssmelting"] then
 end
 
 if mods["angelsbioprocessing"] then
+    omni.lib.set_prerequisite("bio-processing-brown", "automation-science-pack")
     --Non component recipe part
     if nocomps then
         omni.lib.add_recipe_ingredient("algae-farm", {"anbaric-omnitor", 2})
