@@ -1,2 +1,2 @@
 --Compat
-require("prototypes.compat")
+require("prototypes.compat.compat")

@@ -1,4 +1,4 @@
-function omni.fluid.boiler_images(tier)
+local function boiler_images(tier)
     local boilername = "boiler"
     if tier and type(tier) == "number" and tier > 1 and tier < 6 then
         boilername = "boiler_"..tier
@@ -303,3 +303,5 @@ omni.fluid.heat_pipe_images = {
         }
     }
 }
+
+return boiler_images

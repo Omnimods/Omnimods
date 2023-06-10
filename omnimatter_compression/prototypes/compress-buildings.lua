@@ -491,8 +491,8 @@ local run_entity_updates = function(new, kind, i)
         -- end
         -- Hide "made in"
         new.flags = new.flags or {}
-        if not omni.lib.is_in_table("hidden", new.flags) then
-            new.flags[#new.flags+1] = "hidden"
+        if not omni.lib.is_in_table("not-in-made-in", new.flags) then
+            new.flags[#new.flags+1] = "not-in-made-in"
         end
     end
     --lab vial slot update (may want to move this to recipe update since tools/items are done later...)
