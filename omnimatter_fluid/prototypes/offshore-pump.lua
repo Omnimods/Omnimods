@@ -1,6 +1,7 @@
 for _, pump in pairs(data.raw["offshore-pump"]) do
+    local pump_result = "solid-"..pump.fluid.."-T-"..string.gsub(data.raw.fluid[pump.fluid].default_temperature, "%.", "_")
     --Safety check if we created a solid for the pump-fluid
-    if data.raw.item["solid-"..pump.fluid] then
+    if data.raw.item[pump_result] then
         pump.selectable_in_game = false
         pump.fluid_box.pipe_connections = {}
 
@@ -13,7 +14,7 @@ for _, pump in pairs(data.raw["offshore-pump"]) do
             type = "recipe",
             name = "solshore-"..pump.name,
             ingredients = {},
-            results = {{name = "solid-"..pump.fluid, amount = math.floor(pump.pumping_speed*60/omni.fluid.sluid_contain_fluid)}},
+            results = {{name = pump_result, amount = math.floor(pump.pumping_speed*60/omni.fluid.sluid_contain_fluid)}},
             enabled = true,
             category = "solshore-"..pump.name,
             energy_required = 1,
