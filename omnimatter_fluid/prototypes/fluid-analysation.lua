@@ -220,6 +220,7 @@ for _,cat in pairs(fluid_cats) do
     for _,fluid in pairs(cat) do
         local new_temps = {consumer = {}, producer = {}}
         local conversions = {consumer = {}, producer = {}}
+        --First loop: Get all entries that have .temperature set
         for _, state in pairs({"producer", "consumer"}) do
             --Some fluids might not have any consumer/producers
             if not fluid[state].temperatures then
@@ -227,7 +228,6 @@ for _,cat in pairs(fluid_cats) do
                 goto continue
             end
 
-            --First loop: Get all entries that have .temperature set
             for i=#(fluid[state].temperatures),1,-1 do
                 --Clean up all cases of "none" - Producers: default fluid temp, consumer: min/max fluid temp
                 if fluid[state].temperatures[i].temp == "none" and state == "producer" then
@@ -304,13 +304,13 @@ for _,cat in pairs(fluid_cats) do
                 log(serpent.block(new_temps["consumer"]))
                 log(serpent.block("Min: "..fluid.default_temperature.." Max: "..fluid.max_temperature))
             end
-
-            --Add the found temperatures to the fluid cats table
-            fluid["consumer"].temperatures = new_temps["consumer"]
-            fluid["consumer"].conversions = conversions["consumer"]
-            fluid["producer"].temperatures = new_temps["producer"]
-            fluid["producer"].conversions = conversions["producer"]
         end
+
+        --Add the found temperatures to the fluid cats table
+        fluid["consumer"].temperatures = new_temps["consumer"]
+        fluid["consumer"].conversions = conversions["consumer"]
+        fluid["producer"].temperatures = new_temps["producer"]
+        fluid["producer"].conversions = conversions["producer"]
     end
 end
 
