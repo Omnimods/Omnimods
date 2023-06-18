@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.33
+Date: 2023.06.18
+  Bugfixes:
+    - Fixed that some producer temperatures were lost in rare combinations of empty consumer tables
+---------------------------------------------------------------------------------------------------
 Version: 4.1.32
 Date: 2023.06.14
   Bugfixes:
