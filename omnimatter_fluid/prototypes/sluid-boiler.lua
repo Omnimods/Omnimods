@@ -198,9 +198,9 @@ local function sluid_boiler_generation(fluid_cats, generator_fluid)
     for _, cats in pairs({"mush", "sluid"}) do
         for _, fugacity in pairs(fluid_cats[cats]) do
             --deal with non-water mush fluids, allow temperature and specific boiler systems
-            --Only need to worry about producers
+            --Only need to worry about consumers
             --for _, state in pairs({"producer", "consumer"}) do
-            for temp,_ in pairs(fugacity["producer"].conversions) do
+            for temp, _ in pairs(fugacity["consumer"].conversions) do
                 --Check the old temperatures table if the required temperature requires a conversion recipe
                 local tempstring = string.gsub(temp, "%.", "_")
                 if data.raw.item["solid-"..fugacity.name.."-T-"..tempstring] then
