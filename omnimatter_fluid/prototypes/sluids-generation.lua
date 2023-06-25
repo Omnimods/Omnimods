@@ -1,7 +1,6 @@
 local analysation = require("prototypes.fluid-analysation")
 local sluid_boiler = require("prototypes.sluid-boiler")
 local fluid_cats = analysation.fluid_cats_
-local generator_fluid = analysation.generator_fluid_
 local recipe_mods = analysation.recipe_mods_
 local void_recipes = analysation.void_recipes_
 
@@ -47,7 +46,7 @@ end
 data:extend(ent)
 
 --Convert boilers to sluid boilers and create converter recipes
-sluid_boiler(fluid_cats, generator_fluid)
+sluid_boiler(fluid_cats)
 
 ----------------------------------
 -----Replacement preparations-----
@@ -382,6 +381,34 @@ end
 log("Highest sluid recipe multiplier: "..max_mult)
 
 
+--Create copies of generator recipes that have a fluid output for the generator fluid
+for gen_recs, fluid_info in pairs(omni.fluid.generator_recipes) do
+    local rec = data.raw.recipe[gen_recs]
+    local gen_fluid = fluid_info.fluid
+    local temp = fluid_info.temp
+    if rec then
+        local new_rec = table.deepcopy(rec)
+        for _, dif in pairs({"normal","expensive"}) do
+            for _, res in pairs(new_rec[dif].results) do
+                if res.name and string.find(res.name, string.gsub(gen_fluid, "%-", "%%-")) then
+                    res.name = gen_fluid
+                    res.type = "fluid"
+                    res.amount = res.amount * omni.fluid.sluid_contain_fluid
+                    res.temperature = temp
+                end
+            end
+        end
+        new_rec.name = new_rec.name.."-fluid-"..gen_fluid
+        if string.find(rec.name, "%-compression") then
+            new_rec.normal.enabled = true
+            new_rec.expensive.enabled = true
+        end
+        data:extend({new_rec})
+        omni.lib.add_unlock_recipe(omni.lib.get_tech_name(rec.name), new_rec.name)
+    end
+end
+
+
 --Create the multi temperature recipe copies
 for _, fluid_data in pairs(add_multi_temp_recipes) do
     local replacement = "solid-"..fluid_data.fluid_name.."-T-"..string.gsub(fluid_data.original, "%.", "_")
@@ -444,7 +471,7 @@ for _, fu in pairs(data.raw["furnace"]) do
     end
 end
 
---Fluid box removal
+--Mining drill fluid box removal
 for _, jack in pairs(data.raw["mining-drill"]) do
     --Set the output vector for the solid item to the old output_fluicbox(if multiple are defined, use the first in the table) and nil the output_fluidbox
     if jack.output_fluid_box then

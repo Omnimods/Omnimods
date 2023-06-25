@@ -3,7 +3,7 @@ local boiler_images = require("prototypes.boiler-images")
 ------------------------------------------
 -----Sluid Boiler (recipe) generation-----
 ------------------------------------------
-local function sluid_boiler_generation(fluid_cats, generator_fluid)
+local function sluid_boiler_generation(fluid_cats)
     local new_boiler = {}
     local ing_replace={}
     local boiler_tech = {}
@@ -21,9 +21,9 @@ local function sluid_boiler_generation(fluid_cats, generator_fluid)
             local temp_ing = string.gsub(data.raw.fluid[water].default_temperature, "%.", "_")
 
             --clobber fluid_box_filter if it exists
-            if generator_fluid[boiler.output_fluid_box.filter] then
-                generator_fluid[boiler.output_fluid_box.filter] = nil
-            end
+            --if generator_fluid[boiler.output_fluid_box.filter] then
+            --    generator_fluid[boiler.output_fluid_box.filter] = nil
+            --end
 
             new_boiler[#new_boiler+1] = {
                 type = "recipe-category",
@@ -88,7 +88,7 @@ local function sluid_boiler_generation(fluid_cats, generator_fluid)
             end
 
             --stop it from being analysed further (stop recursive updates)
-            omni.fluid.forbidden_assembler[boiler.name.."-converter"] = true
+            omni.fluid.forbidden_boilers[boiler.name.."-converter"] = true
 
             --Create a new entity to not break stuff (convert boiler type to an assembler).
             local new_ent = table.deepcopy(data.raw.boiler[boiler.name])

@@ -4,7 +4,6 @@
 local fluid_cats = {fluid = {}, sluid = {}, mush = {}}
 local recipe_mods = {}  --build a list of recipes to modify after the sluids list is generated
 local crafting_category_fluids = {} --Save the highest amount of unique fluid ingredients per crafting category
-local generator_fluid = {} --is used in a generator
 local void_recipes = {} --Recipe has no result(s)
 
 
@@ -73,11 +72,11 @@ for _, gen in pairs(data.raw.generator) do
         --Ignore fluid burning gens, looking for things that must stay fluid like steam and save their required temperature in case of getting mush
         if not gen.burns_fluid and gen.fluid_box and gen.fluid_box.filter then
             --Ignore steam since we create a seperate boiling recipe for that
-            if gen.fluid_box.filter ~= "steam" then
-                sort_fluid(gen.fluid_box.filter, "fluid", "consumer", {temp = gen.maximum_temperature, conversion = true})
-            end
-            generator_fluid[gen.fluid_box.filter] = true --set the fluid up as a known filter
-            --log("Added "..gen.fluid_box.filter.." as fluid. Generator: "..gen.name)
+            --if gen.fluid_box.filter ~= "steam" then
+            sort_fluid(gen.fluid_box.filter, "fluid", "consumer", {temp = gen.maximum_temperature, conversion = true})
+            --end
+            omni.fluid.add_generator_fluid(gen.fluid_box.filter) --set the fluid up as a known filter
+            log("Added "..gen.fluid_box.filter.." as fluid. Generator: "..gen.name)
         end
     end
 end
@@ -182,6 +181,10 @@ for _, rec in pairs(data.raw.recipe) do
                 --if only fluid.temperature is specified and if that matches the fluid´s default temperature, we dont need to register that to get a temperature less replacement
                 if fluid.flu.temperature and fluid.flu.temperature == data.raw.fluid[fluid.flu.name].default_temperature  and not fluid.flu.maximum_temperature then flu_temp = nil end
                 sort_fluid(fluid.flu.name, "sluid", state, {temp = flu_temp, temp_min = fluid.flu.minimum_temperature, temp_max = fluid.flu.maximum_temperature, conversion = conv})
+                --If the recipes outputs a generator fluid, save the recipe name. We need to create a copy later that outputs a fluid version of that
+                if fluid.type =="results"  and omni.fluid.generator_fluids[fluid.flu.name] and not string.find(rec.name, "compress-") and not string.find(rec.name, "concentrated%-grade%-") and not string.find(rec.name, "fluidisation%-") then
+                    omni.fluid.add_generator_recipe(rec.name, fluid.flu.name, flu_temp)
+                end
             end
         end
     else
@@ -314,4 +317,4 @@ for _,cat in pairs(fluid_cats) do
     end
 end
 
-return {fluid_cats_ = fluid_cats, generator_fluid_ = generator_fluid, recipe_mods_ = recipe_mods, void_recipes_ = void_recipes}
+return {fluid_cats_ = fluid_cats, recipe_mods_ = recipe_mods, void_recipes_ = void_recipes}

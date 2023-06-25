@@ -5,11 +5,18 @@ omni.fluid.forbidden_recipe = {}
 omni.fluid.assembler_generator_fluids = {}
 omni.fluid.multi_temp_recipes = {}
 omni.fluid.mining_fluids = {}
+omni.fluid.generator_fluids = {} --fluid is used in a generator
+omni.fluid.generator_recipes = {} --recipes that produce a generator fluid
 omni.fluid.boiler_fluids = {}
 omni.fluid.excluded_strings = {{"empty","barrel"},{"fill","barrel"},{"empty","canister"},{"fill","canister"},{"fluid","unknown"},"barreling-pump","creative"}
 
 local compression_levels = {"compact","nanite","quantum","singularity"}
 if not mods["omnimatter_compression"] then compression_levels = nil end
+
+
+--------------------------
+-----Compat functions-----
+--------------------------
 
 function omni.fluid.excempt_boiler(boiler_name)
     omni.fluid.forbidden_boilers[boiler_name] = true
@@ -24,7 +31,7 @@ function omni.fluid.excempt_assembler(assembler_name)
     omni.fluid.forbidden_assembler[assembler_name] = true
     if compression_levels then
         for _, level in pairs(compression_levels) do
-            omni.fluid.forbidden_boilers[assembler_name.."-compressed-"..level] = true
+            omni.fluid.forbidden_assembler[assembler_name.."-compressed-"..level] = true
         end
     end
 end
@@ -33,6 +40,15 @@ function omni.fluid.excempt_recipe(recipe_name)
     omni.fluid.forbidden_recipe[recipe_name] = true
     if mods["omnimatter_compression"] then
         omni.fluid.forbidden_recipe[recipe_name.."-compression"] = true
+    end
+end
+
+--Adds that fluid as boiler fluid. Required if fluids that are not a boiler output should still be handled like boiler output fluids
+function omni.fluid.add_boiler_fluid(fluid_name)
+    omni.fluid.boiler_fluids[fluid_name] = true
+    local base_name = string.gsub(fluid_name, "solid%-", "")
+    if mods["omnimatter_compression"] then
+        omni.fluid.boiler_fluids["solid-concentrated-"..base_name] = true
     end
 end
 
@@ -45,14 +61,25 @@ function omni.fluid.add_mining_fluid(fluid_name)
     end
 end
 
---Adds that fluid as boiler fluid. Required if fluids that are not a boiler output should still be handled like boiler output fluids
-function omni.fluid.add_boiler_fluid(fluid_name)
-    omni.fluid.boiler_fluids[fluid_name] = true
-    local base_name = string.gsub(fluid_name, "solid%-", "")
-    if mods["omnimatter_compression"] then
-        omni.fluid.boiler_fluids["solid-concentrated-"..base_name] = true
+--Adds that fluid as generator fluid (fluid is used by a generator)
+function omni.fluid.add_generator_fluid(fluid_name)
+    omni.fluid.generator_fluids[fluid_name] = true
+    if mods["omnimatter_compression"] and not string.find(fluid_name, "concentrated%-") then
+        omni.fluid.generator_fluids["concentrated-"..fluid_name] = true
     end
 end
+
+--Adds that fluid as generator recipe (recipe has a generator fluid result
+function omni.fluid.add_generator_recipe(recipe_name, generator_fluid_name, gen_fluid_temperature)
+    omni.fluid.generator_recipes[recipe_name] = {fluid = generator_fluid_name, temp = gen_fluid_temperature}
+    if mods["omnimatter_compression"] and not string.find(recipe_name, "%-compression") then
+        omni.fluid.generator_recipes[recipe_name.."-compression"] = {fluid = "concentrated-"..generator_fluid_name, temp = gen_fluid_temperature}
+    end
+end
+
+---------------------------
+-----Support functions-----
+---------------------------
 
 function omni.fluid.check_string_excluded(comparison) --checks fluid/recipe name against exclusion list
     for _, str in pairs(omni.fluid.excluded_strings) do
