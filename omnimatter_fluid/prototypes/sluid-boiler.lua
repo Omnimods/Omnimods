@@ -39,13 +39,13 @@ local function sluid_boiler_generation(fluid_cats)
                     icons = omni.lib.icon.of(data.raw.fluid[steam]),
                     subgroup = "boiler-sluid-steam",
                     category = "boiler-omnifluid-"..boiler.name,
-                    order = "g[hydromnic-acid]",
+                    order = "a["..steam..boiler.target_temperature.."]",
                     energy_required = math.max(omni.fluid.sluid_contain_fluid/boiler_consumption, 0.0011),
                     enabled = true,
                     hide_from_player_crafting = true,
                     main_product = steam,
-                    ingredients = {{type = "item", name = "solid-"..water.."-T-"..temp_ing, amount = 1},},
-                    results = {{type = "fluid", name = steam, amount = omni.fluid.sluid_contain_fluid, temperature = math.min(boiler.target_temperature, data.raw.fluid[steam].max_temperature)},},
+                    ingredients = {{type = "item", name = "solid-"..water.."-T-"..temp_ing, amount = 1}},
+                    results = {{type = "fluid", name = steam, amount = omni.fluid.sluid_contain_fluid, temperature = math.min(boiler.target_temperature, data.raw.fluid[steam].max_temperature)}}
                 }
             end
 
@@ -67,13 +67,13 @@ local function sluid_boiler_generation(fluid_cats)
                     icons = omni.lib.icon.of(data.raw.fluid[steam]),
                     subgroup = "boiler-sluid-steam",
                     category = "boiler-omnifluid-"..boiler.name,
-                    order = "g[hydromnic-acid]",
+                    order = "a["..steam..boiler.target_temperature.."]",
                     energy_required = math.max(omni.fluid.sluid_contain_fluid/boiler_consumption, 0.0011),
                     enabled = true,
                     hide_from_player_crafting = true,
                     main_product = "solid-"..steam.."-T-"..tempstring,
-                    ingredients = {{type = "item", name = "solid-"..water.."-T-"..temp_ing, amount = 1},},
-                    results = {{type = "item", name = "solid-"..steam.."-T-"..tempstring, amount = 1}},
+                    ingredients = {{type = "item", name = "solid-"..water.."-T-"..temp_ing, amount = 1}},
+                    results = {{type = "item", name = "solid-"..steam.."-T-"..tempstring, amount = 1}}
                 }
             end
 
@@ -188,6 +188,70 @@ local function sluid_boiler_generation(fluid_cats)
                 old.flags = {"hidden"}
             end
             if old.next_upgrade then old.next_upgrade = nil end
+
+            ----------------------------
+            -----Compression compat-----
+            ----------------------------
+            if mods["omnimatter_compression"] then
+                --Create compressed boiling recipes
+                local compression_levels = {["compact"] = 1, ["nanite"] = 2, ["quantum"] = 3, ["singularity"] = 4}
+                local configured_levels = settings.startup["omnicompression_multiplier"].value
+                local comp_water = "concentrated-"..string.gsub(water, "%-concentrated%-grade%-%d", "")
+                local comp_steam = "concentrated-"..string.gsub(steam, "%-concentrated%-grade%-%d", "")
+                local compression_string = string.gsub(boiler.name, "(.*)-", "")
+
+                local level = 0
+                if compression_levels[compression_string] then
+                    level = compression_levels[compression_string]
+                end
+
+                if water ~= steam then
+                    omni.fluid.add_boiler_fluid(comp_steam)
+
+                    new_boiler[#new_boiler+1] = {
+                        type = "recipe",
+                        name = boiler.name.."-boiling-concentrated-steam-"..boiler.target_temperature,
+                        icons = omni.lib.icon.of(data.raw.fluid[comp_steam]),
+                        subgroup = "boiler-sluid-steam",
+                        category = "boiler-omnifluid-"..boiler.name,
+                        order = "b["..comp_steam..boiler.target_temperature.."]",
+                        energy_required = math.max(60*omni.fluid.sluid_contain_fluid/boiler_consumption, 0.0011) / (configured_levels^level),
+                        enabled = true,
+                        hide_from_player_crafting = true,
+                        main_product = comp_steam,
+                        ingredients = {{type = "item", name = "solid-"..comp_water.."-T-"..temp_ing, amount = 1}},
+                        results = {{type = "fluid", name = comp_steam, amount = omni.fluid.sluid_contain_fluid, temperature = math.min(boiler.target_temperature, data.raw.fluid[comp_steam].max_temperature)}}
+                    }
+                end
+
+                --Create a solid water boiling recipe version if steam with the boiler target temp is required (registered as consumer).
+                category = "mush"
+                if fluid_cats["sluid"][comp_steam] then category = "sluid" end
+                found = false
+                for _, temp in pairs(fluid_cats[category][comp_steam]["consumer"].temperatures) do
+                    if boiler.target_temperature == temp then
+                        found = true
+                        break
+                    end
+                end
+                if found == true then
+                    local tempstring = string.gsub(boiler.target_temperature, "%.", "_")
+                    new_boiler[#new_boiler+1] = {
+                        type = "recipe",
+                        name = boiler.name.."-boiling-concentrated-solid-steam-"..tempstring,
+                        icons = omni.lib.icon.of(data.raw.fluid[comp_steam]),
+                        subgroup = "boiler-sluid-steam",
+                        category = "boiler-omnifluid-"..boiler.name,
+                        order = "b["..comp_steam..boiler.target_temperature.."]",
+                        energy_required = math.max(60*omni.fluid.sluid_contain_fluid/boiler_consumption, 0.0011) / (configured_levels^level),
+                        enabled = true,
+                        hide_from_player_crafting = true,
+                        main_product = "solid-"..comp_steam.."-T-"..tempstring,
+                        ingredients = {{type = "item", name = "solid-"..comp_water.."-T-"..temp_ing, amount = 1}},
+                        results = {{type = "item", name = "solid-"..comp_steam.."-T-"..tempstring, amount = 1}}
+                    }
+                end
+            end
         end
     end
 

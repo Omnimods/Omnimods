@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.35
 Date: ????
+  Features:
+    - With omnimatter compression, boilers can directly create (solid-) concentrated steam now
   Changes:
     - Added support for assembler type entities that produce steam for generators
       A recipe copy that outputs fluid (steam) is now added
