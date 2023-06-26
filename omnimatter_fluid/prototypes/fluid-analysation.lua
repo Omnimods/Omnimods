@@ -76,7 +76,7 @@ for _, gen in pairs(data.raw.generator) do
             sort_fluid(gen.fluid_box.filter, "fluid", "consumer", {temp = gen.maximum_temperature, conversion = true})
             --end
             omni.fluid.add_generator_fluid(gen.fluid_box.filter) --set the fluid up as a known filter
-            log("Added "..gen.fluid_box.filter.." as fluid. Generator: "..gen.name)
+            --log("Added "..gen.fluid_box.filter.." as fluid. Generator: "..gen.name)
         end
     end
 end
