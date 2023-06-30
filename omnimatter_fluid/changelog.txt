@@ -6,6 +6,8 @@ Date: ????
   Changes:
     - Added support for assembler type entities that produce steam for generators
       A recipe copy that outputs fluid (steam) is now added
+  Bugfixes:
+    - Fixed that recipe results without any temperature information were not handled correctly
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.34
 Date: 2023.06.19

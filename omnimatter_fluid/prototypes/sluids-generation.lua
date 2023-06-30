@@ -259,7 +259,6 @@ for name, _ in pairs(recipe_mods) do
                 for n, ing in pairs(rec[dif][ingres]) do
                     --Fuid replacement
                     if ing.type == "fluid" then
-                        local found_temp = nil
                         local new_ing={}--start empty to remove all old props to add only what is needed
                         new_ing.type = "item"
                         local cat = ""
@@ -270,7 +269,7 @@ for name, _ in pairs(recipe_mods) do
                         else
                             break
                         end
-                        --Producers: has temp, simply replace
+                        --Producers: has temp, simply replace (no temp = default temp)
                         --Consumers: if temp, replace- otherwise search all possible temperatures
                         -->dont care for type, temp available == replace
                         --temp not available -->search all possible
@@ -279,6 +278,9 @@ for name, _ in pairs(recipe_mods) do
                         --First check: fluid has a specified temp -->simply replace
                         if ing.temperature and omni.lib.is_in_table(ing.temperature, fluid_cats[cat][ing.name][state].temperatures) then
                             new_ing.name = "solid-"..ing.name.."-T-"..string.gsub(ing.temperature, "%.", "_")
+                        --results that have no temperature values --> factorio handles those by using the default fluid temp
+                        elseif state == "producer" and not (ing.temperature or ing.minimum_temperature or ing.maximum_temperature) then
+                            new_ing.name = "solid-"..ing.name.."-T-"..string.gsub(fluid_cats[cat][ing.name].default_temperature, "%.", "_")
                         --No specific temperature - This has to be a consumer (ingredient)
                         --Now we need to add recipe copies for each registered producer temperature that is in the defined range
                         else

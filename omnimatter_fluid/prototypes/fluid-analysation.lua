@@ -178,7 +178,6 @@ for _, rec in pairs(data.raw.recipe) do
                 local conv = nil
                 local flu_temp = fluid.flu.temperature
                 if (fluid.flu.temperature or -65535) > (data.raw.fluid[fluid.flu.name].default_temperature or math.huge) then conv = true end
-                --if only fluid.temperature is specified and if that matches the fluid´s default temperature, we dont need to register that to get a temperature less replacement
                 if fluid.flu.temperature and fluid.flu.temperature == data.raw.fluid[fluid.flu.name].default_temperature  and not fluid.flu.maximum_temperature then flu_temp = nil end
                 sort_fluid(fluid.flu.name, "sluid", state, {temp = flu_temp, temp_min = fluid.flu.minimum_temperature, temp_max = fluid.flu.maximum_temperature, conversion = conv})
                 --If the recipes outputs a generator fluid, save the recipe name. We need to create a copy later that outputs a fluid version of that
