@@ -3,6 +3,7 @@ Version: 4.1.38
 Date: ????
   Features:
     - Added omni.lib.get_min() which returns the lowest numerical value of a table
+    - Added support for updating omnifluid temperature copies of omnimatter chain recipes 
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.37
 Date: 2023.06.10

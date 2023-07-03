@@ -24,11 +24,13 @@ local update_queue = {
 local function get_relative_tier(recipe_name, offset)
     offset = offset or 1
     local is_omniperm = recipe_name:find("%-omniperm")
-    local pattern = "%-(%a)" .. (is_omniperm and "(%-omniperm%-%d%-%d)" or "(.?)") .. "$"
-    local tier = recipe_name:match(pattern)
-    if tier and recipe_name:match("omni") then -- Let's not break other mods upgrades
-        tier = string.char(string.byte(tier) + offset)
-        return recipe_name:gsub(pattern, "-" .. tier .. "%2")
+    local is_omnifluid = recipe_name:find("%-T%-")
+    local pattern = "%-(%a)" .. ((is_omniperm and "(%-omniperm%-%d%-%d)") or (is_omnifluid and "%-T%-%d+") or "(.?)") .. "$"
+    local pos = recipe_name:find(pattern)
+    if pos and recipe_name:match("omni") then -- Let's not break other mods upgrades
+        local tier = recipe_name:sub(pos+1,pos+1)
+        local new_tier = string.char(string.byte(tier) + offset)
+        return recipe_name:sub(1, pos) .. new_tier .. recipe_name:sub(pos+2)
     end
 end
 
