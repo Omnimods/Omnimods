@@ -16,9 +16,10 @@ RecGen:create("omnimatter","omnicium-plate"):
     setItemName("omnicium-plate"):
     setIcons("omnicium-plate","omnimatter"):
     setStacksize(200):
-    setIngredients({normal = {{"omnite",2},{"stone-crushed",2}},expensive={{"omnite",3},{"stone-crushed",3}}}):
+    setIngredients({normal = {{"omnite",4},{"stone-crushed",3}},expensive={{"omnite",5},{"stone-crushed",4}}}):
     ifSetIngredients(mods["angelsrefining"],{normal={{"omnite",2},{"stone-crushed",3}},expensive={{"omnite",3},{"stone-crushed",4}}}):
-    setResults({normal = {{"omnicium-plate", 1}},expensive={{"omnicium-plate",1}}}):
+    setResults({normal = {{"omnicium-plate", 2}},expensive={{"omnicium-plate",2}}}):
+    ifSetResults(mods["angelsrefining"], {normal = {{"omnicium-plate", 1}},expensive={{"omnicium-plate",1}}}):
     setCategory("smelting"):
     setSubgroup("omnium"):
     setOrder("ab"):
