@@ -391,6 +391,15 @@ function omni.lib.divisors(m)
     return div
 end
 
+--get the lowest number out of a table
+function omni.lib.get_min(m)
+    local min = math.huge
+    for i = 1, #m  do
+        min = min < m[i] and min or m[i]
+    end
+    return min
+end
+
 --checks
 function omni.lib.is_number(str)
     return tonumber(str) ~= nil

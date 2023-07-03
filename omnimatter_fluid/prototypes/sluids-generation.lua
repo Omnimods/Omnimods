@@ -299,11 +299,16 @@ for name, _ in pairs(recipe_mods) do
                                 found_temps = {flu.default_temperature}
                                 --log(ing.name.." does not have any producers, falling back to the default temperature.")
                             end
-                            --Use the first found element for this recipe
-                            new_ing.name = "solid-"..ing.name.."-T-"..string.gsub(found_temps[1], "%.", "_")
+                            --If possible, use the default temperature of the fluid for the original recipe.
+                            --Otherwise use the lowest found temperature. This logic is required to be determenistic with what temperature is used for the original recipe with compression for example
+                            local used_temp = flu.default_temperature
+                            if not omni.lib.is_in_table(flu.default_temperature, found_temps) then
+                                used_temp = omni.lib.get_min(found_temps)
+                            end
+                            new_ing.name = "solid-"..ing.name.."-T-"..string.gsub(tostring(used_temp), "%.", "_")
                             --We need to create recipe copies with all other temperatures
                             if #found_temps > 1 then
-                                add_multi_temp_recipes[#add_multi_temp_recipes+1] = {rec_name = rec.name, fluid_name = ing.name, temperatures = found_temps, original = found_temps[1]}
+                                add_multi_temp_recipes[#add_multi_temp_recipes+1] = {rec_name = rec.name, fluid_name = ing.name, temperatures = found_temps, original = used_temp}
                             end
                         end
 
