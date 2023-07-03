@@ -30,7 +30,7 @@ for catname, cat in pairs(fluid_cats) do
                         localised_description = {"item-description.solid-fluid", flu.localised_description or {"fluid-description."..flu.name}},
                         icons = omni.lib.icon.of_generic(flu),
                         subgroup = "omni-solid-fluids",
-                        order = flu.order or "a",
+                        order = (flu.order or "a").."-T-"..string.gsub(temp, "%.", "_"),
                         stack_size = omni.fluid.sluid_stack_size,
                     }
                 end

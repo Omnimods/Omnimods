@@ -83,12 +83,13 @@ end
 
 for _, boiler in pairs(data.raw.boiler) do
     --Check exclusion table
-    if not omni.fluid.check_string_excluded(boiler.name) and not omni.fluid.forbidden_boilers[boiler.name]then
-        --Input fluid == output fluid - Boiler is only used for heating up the fluid
-        if boiler.fluid_box.filter == boiler.output_fluid_box.filter then
+    if not omni.fluid.check_string_excluded(boiler.name) and not omni.fluid.forbidden_boilers[boiler.name] then
+        if boiler.mode == "heat-water-inside" then
             sort_fluid(boiler.fluid_box.filter, "fluid", "producer", {temp = boiler.target_temperature, conversion = true})
+        else
+            sort_fluid(boiler.output_fluid_box.filter, "fluid", "producer", {temp = boiler.target_temperature, conversion = true})
+            --log("Added "..gen.fluid_box.filter.." as fluid. Boiler: "..boiler.name)
         end
-        --log("Added "..gen.fluid_box.filter.." as fluid. Boiler: "..boiler.name)
     end
 end
 
