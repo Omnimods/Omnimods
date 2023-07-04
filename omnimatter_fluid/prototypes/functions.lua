@@ -205,7 +205,7 @@ function omni.fluid.create_temperature_copies(recipe, fluidname, replacement, te
                 local newrec = table.deepcopy(recipe)
                 newrec.name = newrec.name .."-T-"..temp
                 newrec.localised_name = omni.lib.locale.of(recipe).name
-                newrec.order = recipe.order.."-T-"..temp
+                newrec.order = (recipe.order or recipe.name).."-T-"..temp
                 for _, dif in pairs({"normal","expensive"}) do
                     for _, ingres in pairs({"ingredients","results"}) do
                         for _, flu in pairs(newrec[dif][ingres]) do
