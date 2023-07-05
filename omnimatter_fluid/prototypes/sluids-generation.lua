@@ -398,6 +398,10 @@ for gen_recs, fluid_info in pairs(omni.fluid.generator_recipes) do
         for _, dif in pairs({"normal","expensive"}) do
             for _, res in pairs(new_rec[dif].results) do
                 if res.name and string.find(res.name, string.gsub(gen_fluid, "%-", "%%-")) then
+                    --Main product checks
+                    if new_rec[dif].main_product and new_rec[dif].main_product == res.name then
+                        new_rec[dif].main_product = gen_fluid
+                    end
                     res.name = gen_fluid
                     res.type = "fluid"
                     res.amount = res.amount * omni.fluid.sluid_contain_fluid
