@@ -657,6 +657,7 @@ local entproto = {
     "lab",
     "lamp",
     "loader",
+    "loader-1x1",
     "locomotive",
     "logistic-container",
     "mining-drill",
