@@ -572,7 +572,6 @@ local run_entity_updates = function(new, kind, i)
 
     --belts
     if kind == "transport-belt" or kind == "loader" or kind == "splitter" or kind == "underground-belt" or kind == "loader-1x1" then
-        if new.animation_speed_coefficient then new.animation_speed_coefficient = new.animation_speed_coefficient*(i+2) end
         new.speed = new.speed*(i+2)
     end
 
@@ -758,11 +757,16 @@ for _, values in pairs(recipe_results) do
                     build.fast_replaceable_group = build.name
                 end
                 if not omni.lib.is_in_table("not-upgradable", build.flags or {}) and not omni.lib.is_in_table("hidden", item.flags or {}) then
-                    if not new.next_upgrade and i < omni.compression.bld_lvls then
-                        new.next_upgrade = build.name.."-compressed-"..string.lower(compress_level[i+1])                  
+                    if i < omni.compression.bld_lvls then
+                        if new.next_upgrade then
+                            new.next_upgrade = new.next_upgrade.."-compressed-"..string.lower(compress_level[i])
+                        else
+                            new.next_upgrade = build.name.."-compressed-"..string.lower(compress_level[i+1])
+                        end
                     end
                 end
                 new.fast_replaceable_group = build.fast_replaceable_group
+                new.placeable_by = {item = new.name, count = 1}
                 new.icons = omni.lib.add_overlay(build,"building",i)
                 new.icon = nil
                 run_entity_updates(new, new.type, i)

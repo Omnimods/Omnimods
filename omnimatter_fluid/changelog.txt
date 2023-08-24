@@ -1,4 +1,20 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.35
+Date: 2023.08.24
+  Features:
+    - With omnimatter compression, boilers can directly create (solid-) concentrated steam now
+  Changes:
+    - Added support for assembler type entities that produce steam for generators
+      A recipe copy that outputs fluid (steam) is now added
+  Bugfixes:
+    - Fixed that recipe results without any temperature information were not handled correctly
+    - Fixed that certain boiler output temperatures were not recognised
+---------------------------------------------------------------------------------------------------
+Version: 4.1.34
+Date: 2023.06.19
+  Bugfixes:
+    - Fixed that not all sluid->fluid conversion recipes were created due to a typo
+---------------------------------------------------------------------------------------------------
 Version: 4.1.33
 Date: 2023.06.18
   Bugfixes:

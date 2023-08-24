@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.35
+Date: 2023.08.24
+  Changes:
+    - Reduced the required amount of stone / omnite for omnicium
+---------------------------------------------------------------------------------------------------
 Version: 4.1.34
 Date: 2023.04.04
   Bugfixes:
@@ -458,7 +463,7 @@ Version: 1.3.4
     - Introduces a new metal which is made from copper iron and omnite to use in all omni-related
       devices.
 ---------------------------------------------------------------------------------------------------
-Version: 1.2.0
+Version: 1.2.12
   Features:
     - 0.16 Compatibility and other stuff
     - Angel supplied custom sprite
