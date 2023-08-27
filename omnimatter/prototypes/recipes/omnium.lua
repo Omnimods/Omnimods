@@ -1,3 +1,17 @@
+RecGen:create("omnimatter","omnicium-plate"):
+    setItemName("omnicium-plate"):
+    setIcons("omnicium-plate","omnimatter"):
+    setStacksize(200):
+    setIngredients({normal = {{"omnite",2},{"stone-crushed",2}},expensive={{"omnite",3},{"stone-crushed",3}}}):
+    ifSetIngredients(mods["angelsrefining"],{normal={{"omnite",3},{"stone-crushed",4}},expensive={{"omnite",4},{"stone-crushed",6}}}):
+    setResults({normal = {{"omnicium-plate", 2}},expensive={{"omnicium-plate",2}}}):
+    setCategory("smelting"):
+    setSubgroup("omnium"):
+    setOrder("ab"):
+    setEnergy(1.6):
+    setEnabled():
+    extend()
+
 --Starter Recipe. Can be made in a normal furnace (And a backup to not get stuck when losing the omnifurnace)
 RecGen:create("omnimatter","omnicium-plate-pure"):
     setItemName("omnicium-plate"):
@@ -13,19 +27,6 @@ RecGen:create("omnimatter","omnicium-plate-pure"):
     setEnabled():
     extend()
 
-RecGen:create("omnimatter","omnicium-plate"):
-    setItemName("omnicium-plate"):
-    setIcons("omnicium-plate","omnimatter"):
-    setStacksize(200):
-    setIngredients({normal = {{"omnite",2},{"stone-crushed",2}},expensive={{"omnite",3},{"stone-crushed",3}}}):
-    ifSetIngredients(mods["angelsrefining"],{normal={{"omnite",3},{"stone-crushed",4}},expensive={{"omnite",4},{"stone-crushed",6}}}):
-    setResults({normal = {{"omnicium-plate", 2}},expensive={{"omnicium-plate",2}}}):
-    setCategory("smelting"):
-    setSubgroup("omnium"):
-    setOrder("ab"):
-    setEnergy(1.6):
-    setEnabled():
-    extend()
 
 --Replace iron plates with omnicium plates for vanilla burner entities
 omni.lib.replace_recipe_ingredient("burner-inserter", "iron-plate", {"omnicium-plate", 2})
