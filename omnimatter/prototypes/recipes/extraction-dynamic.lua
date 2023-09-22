@@ -109,7 +109,8 @@ local function check_mining_fluids(tier)
             if omni.matter.omnitial[v.name] then
                 crude_rec:setEnabled(true)
             else
-                local scaling = omni.lib.icon.of(proto)[1].icon_size / omni.lib.icon.of(data.raw.fluid[v.fluid.name])[1].icon_size
+                local ic = omni.lib.icon.of(proto)
+                local shift_mult = ic[1].icon_size / 64
                 crude_rec:setEnabled(false):
                     setTechName("omnitech-refinement-crude-"..v.name):
                     setTechLocName({"omnitech-crude-refinement", omni.lib.locale.of(proto).name}):
@@ -118,16 +119,16 @@ local function check_mining_fluids(tier)
                     setTechCost(25 * tier * tier * (tier > 1 and 1 or omni.beginning_tech_help)):
                     setTechIcons(
                         util.combine_icons(
-                        omni.lib.icon.of(proto),
+                        ic,
                         omni.lib.icon.of(data.raw.fluid[v.fluid.name]),
                         {
-                            scale = 0.4375 * scaling,
-                            shift = {-20 * scaling, 20 * scaling}
+                            scale = 0.4375 * 0.75 * ic[1].icon_size / 32,
+                            shift = {-22 * shift_mult, 30 * shift_mult}
                         }
-
                         ))
-                end
-                crude_rec:extend()
+            end
+
+            crude_rec:extend()
 
             --Alter the name in the omnisource table to point extraction recipes to the new item
             v.name = "crude-"..v.name
