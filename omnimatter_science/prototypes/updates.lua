@@ -26,10 +26,10 @@ if mods["omnimatter_crystal"] then
 
     --SP tech manipulation
     omni.lib.remove_science_pack("omnitech-crystallonics-4","utility-science-pack")
-    omni.lib.add_science_pack("electric-engine")
+    omni.lib.add_science_pack("electric-engine", "omni-pack")
 
     if not mods["pycoalprocessing"] then
-        omni.lib.add_science_pack("plastics")
+        omni.lib.add_science_pack("plastics", "omni-pack")
         omni.lib.add_prerequisite("plastics", "omnipack-technology")
     end
 
@@ -74,17 +74,17 @@ if mods["omnimatter_crystal"] then
     end
 
     if mods["angelslogistics"] then
-        omni.lib.add_science_pack("cargo-robots-2")
+        omni.lib.add_science_pack("cargo-robots-2", "omni-pack")
     end
 
     if mods["angelspetrochem"] then
         omni.lib.replace_science_pack("angels-advanced-gas-processing","chemical-science-pack")
         omni.lib.replace_science_pack("angels-advanced-oil-processing","chemical-science-pack")
-        omni.lib.add_science_pack("angels-advanced-chemistry-2")
-        omni.lib.add_science_pack("gas-steam-cracking-1")
-        omni.lib.add_science_pack("oil-steam-cracking-1")
-        omni.lib.add_science_pack("angels-nitrogen-processing-2")
-        omni.lib.add_science_pack("chlorine-processing-2")
+        omni.lib.add_science_pack("angels-advanced-chemistry-2", "omni-pack")
+        omni.lib.add_science_pack("gas-steam-cracking-1", "omni-pack")
+        omni.lib.add_science_pack("oil-steam-cracking-1", "omni-pack")
+        omni.lib.add_science_pack("angels-nitrogen-processing-2", "omni-pack")
+        omni.lib.add_science_pack("chlorine-processing-2", "omni-pack")
     end
 
     if mods["angelssmelting"] then
@@ -116,7 +116,7 @@ if mods["omnimatter_crystal"] then
         omni.lib.replace_science_pack("thermal-water-extraction","chemical-science-pack")
         omni.lib.replace_science_pack("ore-advanced-floatation","chemical-science-pack")
         omni.lib.replace_science_pack("omnitech-angels-omnicium-smelting-3","chemical-science-pack")
-        omni.lib.add_science_pack("angels-coolant-1")
+        omni.lib.add_science_pack("angels-coolant-1", "omni-pack")
 
         if mods ["Clowns-Extended-Minerals"] then
             omni.lib.replace_science_pack("clowns-ore-leaching","chemical-science-pack")
@@ -126,21 +126,21 @@ if mods["omnimatter_crystal"] then
     if mods["angelsbioprocessing"] then
         omni.lib.replace_science_pack("bio-paper-3","chemical-science-pack")
         omni.lib.replace_science_pack("bio-processing-2","chemical-science-pack")
-        omni.lib.add_science_pack("bio-refugium-fish-1")
-        omni.lib.add_science_pack("bio-processing-paste")
+        omni.lib.add_science_pack("bio-refugium-fish-1", "omni-pack")
+        omni.lib.add_science_pack("bio-processing-paste", "omni-pack")
     end
 
     --Bobs
     if mods["bobpower"] then
-        omni.lib.add_science_pack("bob-solar-energy-2")
+        omni.lib.add_science_pack("bob-solar-energy-2", "omni-pack")
     end
 
     if mods["bobplates"] then
-        omni.lib.add_science_pack("gem-processing-1")
+        omni.lib.add_science_pack("gem-processing-1", "omni-pack")
     end
 
     if mods["boblogistics"] then
-        omni.lib.add_science_pack("bob-fluid-handling-2")
+        omni.lib.add_science_pack("bob-fluid-handling-2", "omni-pack")
     end
 
     --Misc

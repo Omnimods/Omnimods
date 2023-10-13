@@ -4,6 +4,7 @@ Date: ????
   Changes:
     - omni.lib.remove_prerequisite() now returns whether the removement was successfull
     - omni.lib.replace_prerequisite() will only add the replacement if it does not already exist
+    - simplify omni.lib.add_science_pack() - only accept strings as second argument
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.38
 Date: 2023.08.24
