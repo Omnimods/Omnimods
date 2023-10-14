@@ -72,15 +72,13 @@ function omni.lib.remove_science_pack(techname,pack)
     end
 end
 
-function omni.lib.replace_science_pack(techname,old, new)
-    local r = new
-    if not r then r = "omni-pack" end
+function omni.lib.replace_science_pack(techname, old, new)
     if data.raw.technology[techname] then
-        for i,ing in pairs(data.raw.technology[techname].unit.ingredients) do
+        for _, ing in pairs(data.raw.technology[techname].unit.ingredients) do
             if ing.name and ing.name == old then
-                ing.name = r
+                ing.name = new
             elseif ing[1] == old then
-                ing[1] = r
+                ing[1] = new
             end
         end
     else
