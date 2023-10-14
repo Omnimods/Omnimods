@@ -82,7 +82,7 @@ function omni.lib.replace_science_pack(techname, old, new)
             end
         end
     else
-        log(techname.." cannot be found, replacement of "..old.." with "..r.." has failed.")
+        log(techname.." cannot be found, replacement of "..old.." with "..new.." has failed.")
     end
 end
 
