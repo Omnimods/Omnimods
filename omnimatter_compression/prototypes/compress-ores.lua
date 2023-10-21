@@ -223,14 +223,6 @@ for name,ore in pairs(data.raw.resource) do
             end
             if compressed and max_stacksize > 0 then
                 compressed_ores[#compressed_ores+1] = new
-                --[[ Migrating to future properly named ores! hurray technical debt ]]--
-                local new_copy = table.deepcopy(new)
-                new_copy.name = ore.name
-                new_copy.name = "compressed-"..new_copy.name.."-ore"
-                if new.category == "basic-fluid" then
-                    new_copy.name = "concentrated-" ..new_copy.name --no need for ore in name      
-                end
-                compressed_ores[#compressed_ores+1] = new_copy
             end
         end
     end
