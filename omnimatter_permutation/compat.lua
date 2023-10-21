@@ -1,4 +1,6 @@
 if mods["space-exploration"] then
+
+    --exclude condenser turbine recipes
     local steam_temperature_ranges = {
         100, -- Min
         165, -- Vanilla boiler
@@ -18,4 +20,5 @@ if mods["space-exploration"] then
         local high = steam_temperature_ranges[i+1]
         omni.permutation.exclude_recipe("se-condenser-turbine-reclaim-water-"..low.."-"..high)
     end
+
 end
