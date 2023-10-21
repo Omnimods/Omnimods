@@ -1,6 +1,9 @@
 if mods["space-exploration"] then
 
-    --exclude condenser turbine recipes
+    --exclude the big turbines internal hidden furnace recipe
+    omni.permutation.exclude_recipe("se-big-turbine-internal")
+
+    --exclude condenser turbine internal hidden furnace recipes
     local steam_temperature_ranges = {
         100, -- Min
         165, -- Vanilla boiler

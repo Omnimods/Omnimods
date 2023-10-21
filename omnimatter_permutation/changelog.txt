@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.7
+Date: ????
+  Compatibility:
+    - Fixed that the SE high temp. turbine generator voided steam due to flipped fluid outputs on
+      the internal furnace recipe
+---------------------------------------------------------------------------------------------------
 Version: 2.1.6
 Date: 2023.04.04
   Bugfixes:
