@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.36
-Date: ????
+Date: 2023.11.05
   Bugfixes:
     - Fixed that the omincium plate recipe icon overlay was also added to the item icon
     - Fixed the scale / shift of the small fluid icon of crude refinement technologies

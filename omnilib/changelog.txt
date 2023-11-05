@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.39
-Date: ????
+Date: 2023.11.05
   Changes:
     - omni.lib.remove_prerequisite() now returns whether the removement was successfull
     - omni.lib.replace_prerequisite() will only add the replacement if it does not already exist
