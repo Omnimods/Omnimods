@@ -10,8 +10,9 @@ omni.science.exclude_tech_from_maths = {} --build this in the override file, thi
 
 omni.science.exclude_tech = {}
 omni.science.remaining_techs = {}
+
 --add techs to omni-pack exclusion list (this is to simplify the below tech_post_find_update function)
-local build_tech_list = function()
+local function build_tech_list()
     log("Building technology list")
     for _,tech in pairs(data.raw.technology) do
         -- if modules
@@ -110,7 +111,7 @@ function omni.science.omnipack_tech_post_update()
             end
 
             if found == true then
-                omni.lib.add_science_pack(techname)
+                omni.lib.add_science_pack(techname, "omni-pack")
                 contains_omnipack[techname] = true
                 omni.lib.remove_from_table(techname, omni.science.remaining_techs)
                 goto continue

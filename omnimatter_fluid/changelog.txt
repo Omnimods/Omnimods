@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.36
+Date: 2023.11.05
+  Compatibility:
+    - Apply mining drones compat to it's fork Mining_Drones_Remastered as well
+  Bugfixes:
+    - Fixed that the localization of some recipe that output single stacksize results broke
+---------------------------------------------------------------------------------------------------
 Version: 4.1.35
 Date: 2023.08.24
   Features:

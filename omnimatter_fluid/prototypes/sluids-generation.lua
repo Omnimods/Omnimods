@@ -367,6 +367,8 @@ for name, _ in pairs(recipe_mods) do
             rec[dif].energy_required = math.max(rec[dif].energy_required*mult[dif], 0.0011)
             --Apply stack size fixes
             if fix_stacksize then
+                --set a localised name - Due to splitting a single result, the recipe might not have one at all
+                rec.localised_name = omni.lib.locale.of(rec).name
                 local add = {}
                 for    _, ing in pairs(rec[dif]["results"]) do
                     local proto = omni.lib.find_prototype(ing.name)

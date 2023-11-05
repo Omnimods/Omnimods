@@ -146,7 +146,7 @@ if mods["bobpower"] then
 end
 
 if mods["omnimatter_science"] then
-    omni.lib.replace_science_pack("omnicells","science-pack-3")
-    omni.lib.replace_science_pack("omnibattery","science-pack-3")
-    omni.lib.add_science_pack("omnium-power")
+    omni.lib.replace_science_pack("omnicells","science-pack-3", "omni-pack")
+    omni.lib.replace_science_pack("omnibattery","science-pack-3", "omni-pack")
+    omni.lib.add_science_pack("omnium-power", "omni-pack")
 end
