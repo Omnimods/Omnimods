@@ -296,8 +296,18 @@ for name, _ in pairs(recipe_mods) do
                             end
                             --some fluids might not have any producers, use the default temp as fallback
                             if not next(found_temps) then
-                                found_temps = {flu.default_temperature}
-                                --log(ing.name.." does not have any producers, falling back to the default temperature.")
+                                if data.raw.item["solid-"..flu.name.."-T-"..flu.default_temperature] then
+                                    found_temps = {flu.default_temperature}
+                                    --log(ing.name.." does not have any producers, falling back to the default temperature.")
+                                else
+                                    local newtemp = fluid_cats[cat][ing.name]["producer"].temperatures[1]
+                                    for _, t in pairs(fluid_cats[cat][ing.name]["producer"].temperatures) do
+                                        if math.abs(min_temp - t) < math.abs(min_temp - newtemp) then
+                                            newtemp = t
+                                        end
+                                    end
+                                    found_temps = {newtemp}
+                                end
                             end
                             --If possible, use the default temperature of the fluid for the original recipe.
                             --Otherwise use the lowest found temperature. This logic is required to be determenistic with what temperature is used for the original recipe with compression for example
