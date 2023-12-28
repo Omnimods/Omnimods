@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.37
-Date: ????
+Date: 2023.12.28
   Bugfixes:
     - Implemented a more robust fallback when the required temperature is not being produced in
       any recipe to avoid crashes
