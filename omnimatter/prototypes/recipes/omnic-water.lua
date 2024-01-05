@@ -1,3 +1,5 @@
+-- Replace the water output from all diefferent types of "water pumps" with omnic water
+-- Mods add all kind of pumps, we have to check all
 --Offshore pump should output omnic water
 for _,pump in pairs(data.raw["offshore-pump"]) do
     if pump.fluid == "water" then
@@ -5,14 +7,36 @@ for _,pump in pairs(data.raw["offshore-pump"]) do
         pump.fluid_box.filter = "omnic-water"
     end
 end
+
 --Check assemblers aswell, some mods add electric "offshore pumps"
 for _,pump in pairs(data.raw["assembling-machine"]) do
-    if pump.fixed_recipe and pump.fluid and pump.fluid  == "water" then
+    if pump.fixed_recipe and omni.lib.recipe_result_contains(pump.fixed_recipe, "water") then
         local rec = data.raw.recipe[pump.fixed_recipe]
-        if omni.lib.recipe_result_contains(rec.name, "water") then
+        --check if the recipe has no ingredients
+        if not (next(rec.ingredients) or (rec.normal and next(rec.normal.ingredients))) then
             omni.lib.replace_recipe_result(rec.name, "water", "omnic-water")
-            pump.fluid = "omnic-water"
-            pump.fluid_box.filter = "omnic-water"
+        end
+    end
+end
+
+--Mining drills
+for _,pump in pairs(data.raw["mining-drill"]) do
+    if pump.output_fluid_box and pump.output_fluid_box.filter == "water" then
+        pump.output_fluid_box.filter  = "omnic-water"
+    end
+end
+
+--Resources
+for _,pump in pairs(data.raw["resource"]) do
+    if pump.minable then
+        if pump.minable.results then
+            for _,res in pairs(pump.minable.results) do
+                if res.type == "fluid" and res.name == "water" then
+                    res.name  = "omnic-water"
+                end
+            end
+        elseif pump.minable.result and pump.minable.result == "water" then
+            pump.minable.result = "omnic-water"
         end
     end
 end
