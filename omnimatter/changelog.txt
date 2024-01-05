@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.37
+Date: 2023.11.05
+  Bugfixes:
+    - Fixed writing invalid prototype attributes for assembling machine type "offshore pumps"
+    - Check mining drills and resources as well for being used as "water pump"
+---------------------------------------------------------------------------------------------------
 Version: 4.1.36
 Date: 2023.11.05
   Bugfixes:
