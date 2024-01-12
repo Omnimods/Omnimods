@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.28
+Date: ????
+  Bugfixes:
+    - Fixed that compressed mining drill's radius visualization was half a tile too big for each
+      second tier
+---------------------------------------------------------------------------------------------------
 Version: 4.1.27
 Date: 2023.11.05
   Changes:
