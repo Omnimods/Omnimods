@@ -447,7 +447,7 @@ local run_entity_updates = function(new, kind, compr_lvl)
     --energy source
     if new.energy_source then
         if new.energy_source.emissions_per_minute then
-            new.energy_source.emissions_per_minute = new.energy_source.emissions_per_minute * math.pow(multiplier,compr_lvl+1)
+            new.energy_source.emissions_per_minute = new.energy_source.emissions_per_minute * math.pow(multiplier, compr_lvl)
         end
         if new.energy_source.buffer_capacity then
             new.energy_source.buffer_capacity = new_effect(new.energy_source.buffer_capacity, compr_lvl)
