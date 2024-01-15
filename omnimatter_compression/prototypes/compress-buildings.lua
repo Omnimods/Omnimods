@@ -567,7 +567,7 @@ local run_entity_updates = function(new, kind, compr_lvl)
         end
         new.mining_speed = new.mining_speed * math.pow(multiplier,compr_lvl/speed_divisor)
         --new.mining_power = new.mining_power * math.pow(multiplier,i/2)
-        --new.resource_searching_radius = math.floor(new.resource_searching_radius *(compr_lvl+1)) + new.resource_searching_radius%1
+        new.resource_searching_radius = math.floor(new.resource_searching_radius *(compr_lvl+1)) + new.resource_searching_radius%1
     end
 
     --belts
