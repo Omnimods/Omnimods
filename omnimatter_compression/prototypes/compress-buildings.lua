@@ -337,7 +337,7 @@ setmetatable(modspec, {
 -------------------------------------------------------------------------------
 --[[Entity Type Specific Properties]]--
 -------------------------------------------------------------------------------
-local run_entity_updates = function(new, kind, i)
+local run_entity_updates = function(new, kind, compr_lvl)
     --[[assembly type updates]]--
     --module slots
     if new.module_specification then
@@ -346,7 +346,7 @@ local run_entity_updates = function(new, kind, i)
         new,
         "slot_count", 
         function(x) 
-            return x and (x * (i + 1))
+            return x and (x * (compr_lvl + 1))
         end
         )
         -- Make sure we don't occlude nearby entities
@@ -447,24 +447,24 @@ local run_entity_updates = function(new, kind, i)
     --energy source
     if new.energy_source then
         if new.energy_source.emissions_per_minute then
-            new.energy_source.emissions_per_minute = new.energy_source.emissions_per_minute * math.pow(multiplier,i+1)
+            new.energy_source.emissions_per_minute = new.energy_source.emissions_per_minute * math.pow(multiplier, compr_lvl)
         end
         if new.energy_source.buffer_capacity then
-            new.energy_source.buffer_capacity = new_effect(new.energy_source.buffer_capacity, i)
+            new.energy_source.buffer_capacity = new_effect(new.energy_source.buffer_capacity, compr_lvl)
         end
         if new.energy_source.drain then
-            new.energy_source.drain = new_effect(new.energy_source.drain, i)
+            new.energy_source.drain = new_effect(new.energy_source.drain, compr_lvl)
         end
         if new.energy_source.input_flow_limit then
-            new.energy_source.input_flow_limit = new_effect(new.energy_source.input_flow_limit, i)
+            new.energy_source.input_flow_limit = new_effect(new.energy_source.input_flow_limit, compr_lvl)
         end
     end
 
     --energy usage
     if not omni.lib.is_in_table(kind,not_energy_use) and new.energy_usage then
-        new.energy_usage = new_effect(new.energy_usage, i)
+        new.energy_usage = new_effect(new.energy_usage, compr_lvl)
         -- usage*mult*tier unless exp_costs in which case it's usage*mult^tier
-        new.energy_usage = new_effect(new.energy_usage, nil, nil, exp_costs and math.pow(energy_multiplier, i) or energy_multiplier)
+        new.energy_usage = new_effect(new.energy_usage, nil, nil, exp_costs and math.pow(energy_multiplier, compr_lvl) or energy_multiplier)
     end
 
     ---------------------------
@@ -485,7 +485,7 @@ local run_entity_updates = function(new, kind, i)
             new_cat[#new_cat+1] = "general-compressed"
         end
         new.crafting_categories = new_cat
-        new.crafting_speed = new.crafting_speed * math.pow(multiplier,i)
+        new.crafting_speed = new.crafting_speed * math.pow(multiplier,compr_lvl)
         -- if new.fluid_boxes then
         --     process_fluid_box(new.fluid_boxes, i, false)
         -- end
@@ -503,47 +503,47 @@ local run_entity_updates = function(new, kind, i)
             end
         end
         if new.researching_speed then 
-            new.researching_speed = new.researching_speed * math.pow(multiplier, i)
+            new.researching_speed = new.researching_speed * math.pow(multiplier, compr_lvl)
         end
     end
 
     --Solar Panels / Reactors
     if kind == "solar-panel" then
-        new.production = new_effect(new.production,i)
+        new.production = new_effect(new.production,compr_lvl)
     elseif kind == "reactor" then
-        new.consumption = new_effect(new.consumption,i)
+        new.consumption = new_effect(new.consumption,compr_lvl)
         if new.heat_buffer then
-            new.heat_buffer.specific_heat = new_effect(new.heat_buffer.specific_heat,i)
-            new.heat_buffer.max_transfer = new_effect(new.heat_buffer.max_transfer,i)
+            new.heat_buffer.specific_heat = new_effect(new.heat_buffer.specific_heat,compr_lvl)
+            new.heat_buffer.max_transfer = new_effect(new.heat_buffer.max_transfer,compr_lvl)
         end
     end
     
     --Heat Pipe
     if kind == "heat-pipe" then
         if new.heat_buffer then
-            new.heat_buffer.specific_heat = new_effect(new.heat_buffer.specific_heat,i)
-            new.heat_buffer.max_transfer = new_effect(new.heat_buffer.max_transfer,i)
+            new.heat_buffer.specific_heat = new_effect(new.heat_buffer.specific_heat,compr_lvl)
+            new.heat_buffer.max_transfer = new_effect(new.heat_buffer.max_transfer,compr_lvl)
         end
     end
 
     --Boiler
     if kind == "boiler" then
-        if new.energy_consumption then new.energy_consumption = new_effect(new.energy_consumption, i, nil, multiplier^i) end
-        if new.energy_source.fuel_inventory_size then new.energy_source.fuel_inventory_size = new.energy_source.fuel_inventory_size*(i+1) end
-        if new.energy_source.effectivity then new.energy_source.effectivity = math.pow(new.energy_source.effectivity,1/(i+1)) end
-        if new.energy_source.specific_heat then new.energy_source.specific_heat = new_effect(new.energy_source.specific_heat, i, nil, multiplier^i) end
-        if new.energy_source.max_transfer then new.energy_source.max_transfer = new_effect(new.energy_source.max_transfer, i, nil, multiplier^i) end
-        process_fluid_box(new.output_fluid_box, i, true, new) -- Make sure output temp gets a recipe
-        process_fluid_box(new.fluid_box, i, true)
+        if new.energy_consumption then new.energy_consumption = new_effect(new.energy_consumption, compr_lvl, nil, multiplier^compr_lvl) end
+        if new.energy_source.fuel_inventory_size then new.energy_source.fuel_inventory_size = new.energy_source.fuel_inventory_size*(compr_lvl+1) end
+        if new.energy_source.effectivity then new.energy_source.effectivity = math.pow(new.energy_source.effectivity,1/(compr_lvl+1)) end
+        if new.energy_source.specific_heat then new.energy_source.specific_heat = new_effect(new.energy_source.specific_heat, compr_lvl, nil, multiplier^compr_lvl) end
+        if new.energy_source.max_transfer then new.energy_source.max_transfer = new_effect(new.energy_source.max_transfer, compr_lvl, nil, multiplier^compr_lvl) end
+        process_fluid_box(new.output_fluid_box, compr_lvl, true, new) -- Make sure output temp gets a recipe
+        process_fluid_box(new.fluid_box, compr_lvl, true)
     end
 
     --Generator
     if kind == "generator" and new.fluid_box then
-        process_fluid_box(new.output_fluid_box, i, nil)
-        process_fluid_box(new.fluid_box, i, true, new) -- Make sure input temp gets a recipe
+        process_fluid_box(new.output_fluid_box, compr_lvl, nil)
+        process_fluid_box(new.fluid_box, compr_lvl, true, new) -- Make sure input temp gets a recipe
         new.scale_fluid_usage = true
         if new.max_power_output then
-            new.max_power_output = new_effect(new.max_power_output, i)
+            new.max_power_output = new_effect(new.max_power_output, compr_lvl)
         end
         -- new.fluid_usage_per_tick = new.fluid_usage_per_tick * math.pow(multiplier, i) / sluid_contain_fluid
         --new.fluid_usage_per_tick*math.pow((multiplier+1)/multiplier,i)
@@ -555,7 +555,7 @@ local run_entity_updates = function(new, kind, i)
         --Make sure Buffer capacity is displayed in Joules again
         new.energy_source.buffer_capacity = string.sub(new.energy_source.buffer_capacity,1,string.len(new.energy_source.buffer_capacity)-1).."J"
         if new.energy_source.usage_priority == "tertiary" then
-            new.energy_source.output_flow_limit = new_effect(new.energy_source.output_flow_limit, i)
+            new.energy_source.output_flow_limit = new_effect(new.energy_source.output_flow_limit, compr_lvl)
         end
     end
 
@@ -565,31 +565,31 @@ local run_entity_updates = function(new, kind, i)
         if new.energy_source and new.energy_source.type ~= "electric" then
             speed_divisor = 1
         end
-        new.mining_speed = new.mining_speed * math.pow(multiplier,i/speed_divisor)
+        new.mining_speed = new.mining_speed * math.pow(multiplier,compr_lvl/speed_divisor)
         --new.mining_power = new.mining_power * math.pow(multiplier,i/2)
-        new.resource_searching_radius = new.resource_searching_radius *(i+1)
+        new.resource_searching_radius = math.floor(new.resource_searching_radius *(compr_lvl+1)) + new.resource_searching_radius%1
     end
 
     --belts
     if kind == "transport-belt" or kind == "loader" or kind == "splitter" or kind == "underground-belt" or kind == "loader-1x1" then
-        new.speed = new.speed*(i+2)
+        new.speed = new.speed*(compr_lvl+2)
     end
 
     --beacons
     if kind == "beacon" then
-        if new.supply_area_distance*(i+1) <= 64 then
-            new.supply_area_distance = new.supply_area_distance*(i+1)
+        if new.supply_area_distance*(compr_lvl+1) <= 64 then
+            new.supply_area_distance = new.supply_area_distance*(compr_lvl+1)
         else
             new.supply_area_distance = 64
         end
-        new.module_specification.module_slots = new.module_specification.module_slots*(i+1)
+        new.module_specification.module_slots = new.module_specification.module_slots*(compr_lvl+1)
     end
 
     --power poles
     if kind == "electric-pole" then
-        new.maximum_wire_distance = math.min(new.maximum_wire_distance*multiplier*i,64)
+        new.maximum_wire_distance = math.min(new.maximum_wire_distance*multiplier*compr_lvl,64)
         -- "Old" formula
-        local new_supply_area = new.supply_area_distance * (i+1)
+        local new_supply_area = new.supply_area_distance * (compr_lvl+1)
         -- Add a little bit based on our multiplier
         new_supply_area = math.ceil(new_supply_area ^ (1 + (multiplier / 50)))
         -- Cap per engine limit
@@ -622,17 +622,17 @@ local run_entity_updates = function(new, kind, i)
     --offshore pumps
     if kind == "offshore-pump" then
         -- new.fluid = "concentrated-"..new.fluid
-        local fl_name = new.fluid.."-concentrated-grade-"..i
+        local fl_name = new.fluid.."-concentrated-grade-"..compr_lvl
         if not data.raw.fluid[fl_name] then 
-            create_concentrated_recipe(new.fluid,i)
+            create_concentrated_recipe(new.fluid,compr_lvl)
         end
         new.fluid = fl_name
     end
 
     --Inserters!
     if kind == "inserter" then
-        new.extension_speed = new.extension_speed * (i + 1)
-        new.rotation_speed = new.rotation_speed * (i + 1)
+        new.extension_speed = new.extension_speed * (compr_lvl + 1)
+        new.rotation_speed = new.rotation_speed * (compr_lvl + 1)
         -- Add a little bit based on our multiplier
         new.extension_speed = new.extension_speed * (1 + (multiplier / 15))
         new.rotation_speed = new.rotation_speed * (1 + (multiplier / 15))
@@ -640,24 +640,24 @@ local run_entity_updates = function(new, kind, i)
 
     --Generators!
     if kind == "burner-generator" then
-        new.max_power_output = new_effect(new.max_power_output, i)
-        new.burner.emissions_per_minute = (new.burner.emissions_per_minute or 0) * math.pow(multiplier,i+1)
+        new.max_power_output = new_effect(new.max_power_output, compr_lvl)
+        new.burner.emissions_per_minute = (new.burner.emissions_per_minute or 0) * math.pow(multiplier,compr_lvl+1)
     end
 
     --Rockets!
     if kind == "rocket-silo" and new.fixed_recipe then
-        new.door_opening_speed = new.door_opening_speed * math.pow(multiplier, i)
+        new.door_opening_speed = new.door_opening_speed * math.pow(multiplier, compr_lvl)
         new.rocket_result_inventory_size = 8
-        new.light_blinking_speed = new.light_blinking_speed * math.pow(multiplier, i)
-        new.rocket_rising_delay = math.ceil((new.rocket_rising_delay or 30) / math.pow(multiplier, i)) -- Defaults are NOT present on the prototype!
-        new.launch_wait_time = math.ceil((new.launch_wait_time or 120) / math.pow(multiplier, i))
+        new.light_blinking_speed = new.light_blinking_speed * math.pow(multiplier, compr_lvl)
+        new.rocket_rising_delay = math.ceil((new.rocket_rising_delay or 30) / math.pow(multiplier, compr_lvl)) -- Defaults are NOT present on the prototype!
+        new.launch_wait_time = math.ceil((new.launch_wait_time or 120) / math.pow(multiplier, compr_lvl))
         local rocket = table.deepcopy(data.raw["rocket-silo-rocket"][new.rocket_entity])
-        rocket.name = "compressed-" .. rocket.name .. "-" .. i
+        rocket.name = "compressed-" .. rocket.name .. "-" .. compr_lvl
         new.rocket_entity = rocket.name
-        rocket.rising_speed = rocket.rising_speed * math.pow(multiplier, i)
-        rocket.engine_starting_speed = rocket.engine_starting_speed * math.pow(multiplier, i)
-        rocket.flying_speed = rocket.flying_speed * math.pow(multiplier, i)
-        rocket.flying_acceleration = rocket.flying_acceleration * math.pow(multiplier, i)
+        rocket.rising_speed = rocket.rising_speed * math.pow(multiplier, compr_lvl)
+        rocket.engine_starting_speed = rocket.engine_starting_speed * math.pow(multiplier, compr_lvl)
+        rocket.flying_speed = rocket.flying_speed * math.pow(multiplier, compr_lvl)
+        rocket.flying_acceleration = rocket.flying_acceleration * math.pow(multiplier, compr_lvl)
         data:extend({rocket})
     end
 
@@ -667,33 +667,33 @@ local run_entity_updates = function(new, kind, i)
         if not new.charging_distance then
             new.charging_distance = 1
         end
-        new.robot_slots_count = new.robot_slots_count * (i + 1)
-        new.material_slots_count = new.material_slots_count * (i + 1)
-        new.logistics_radius = new.logistics_radius * (i + 1)
-        new.construction_radius = new.construction_radius * (i + 1)
-        new.charging_distance = new.charging_distance * (i + 1)
+        new.robot_slots_count = new.robot_slots_count * (compr_lvl + 1)
+        new.material_slots_count = new.material_slots_count * (compr_lvl + 1)
+        new.logistics_radius = new.logistics_radius * (compr_lvl + 1)
+        new.construction_radius = new.construction_radius * (compr_lvl + 1)
+        new.charging_distance = new.charging_distance * (compr_lvl + 1)
         -- Must be >= logistics_radius
-        new.logistics_connection_distance = new.logistics_radius * (i + 1)
+        new.logistics_connection_distance = new.logistics_radius * (compr_lvl + 1)
         -- Add some based on compression ratio
         new.logistics_radius = math.ceil(new.logistics_radius ^ (1 + (multiplier / 50)))
         new.construction_radius = math.ceil(new.construction_radius ^ (1 + (multiplier / 50)))
         new.charging_distance = math.ceil(new.charging_distance ^ (1 + (multiplier / 50)))
         new.logistics_connection_distance = math.ceil(new.logistics_connection_distance ^ (1 + (multiplier / 50)))
         -- Energy output    
-        new.charging_energy = new_effect(new.charging_energy, i)      
+        new.charging_energy = new_effect(new.charging_energy, compr_lvl)      
         -- If we don't change this we get a queue of robots waiting to exit/enter
         if not new.robot_vertical_acceleration then
             new.robot_vertical_acceleration = 0.01
         end
-        new.robot_vertical_acceleration = new.robot_vertical_acceleration * math.pow(multiplier, i)
+        new.robot_vertical_acceleration = new.robot_vertical_acceleration * math.pow(multiplier, compr_lvl)
         -- Wiki says 0 default but it appears to actually be 4
         if not new.charging_station_count then
             new.charging_station_count = 4
         end
-        new.charging_station_count = new.charging_station_count * math.pow(multiplier, i)
+        new.charging_station_count = new.charging_station_count * math.pow(multiplier, compr_lvl)
         --recharge_minimum has to be >= energy_usage --> Make sure to use the same multiplier
-        new.recharge_minimum = new_effect(new.recharge_minimum, i)
-        new.recharge_minimum = new_effect(new.recharge_minimum, nil, nil, exp_costs and math.pow(energy_multiplier, i) or energy_multiplier)
+        new.recharge_minimum = new_effect(new.recharge_minimum, compr_lvl)
+        new.recharge_minimum = new_effect(new.recharge_minimum, nil, nil, exp_costs and math.pow(energy_multiplier, compr_lvl) or energy_multiplier)
     end
     return new
 end
@@ -710,7 +710,7 @@ for _, values in pairs(recipe_results) do
         if build and details.item and details.recipe and not details.recipe.name:find("^uncompress%-") and details.base and build.minable then -- and build.minable.result and data.raw.item[build.minable.result]
             --check that it is a minable entity
             category_exists(build)
-            for i = 1, omni.compression.bld_lvls do
+            for compr_level = 1, omni.compression.bld_lvls do
                 local new = table.deepcopy(build)
                 local item = table.deepcopy(details.item)
                 local rc = table.deepcopy(details.recipe)
@@ -731,45 +731,45 @@ for _, values in pairs(recipe_results) do
                     item.subgroup = "compressor-"..item.subgroup.."-"..build.type
                     rc.subgroup = item.subgroup
                 else --clean up item ordering
-                    item.order = item.order or ("z"..i.."-compressed") --should force it to match, but be after it under all circumstances
+                    item.order = item.order or ("z"..compr_level.."-compressed") --should force it to match, but be after it under all circumstances
                 end
 
                 -------------------------------------------------------------------------------
                 --[[Since running deepcopy, only need to override new props]]--
                 -------------------------------------------------------------------------------
                 --[[ENTITY CREATION]]--
-                new.name = new.name.."-compressed-"..string.lower(compress_level[i])
-                new.localised_name = omni.lib.locale.custom_name(details.base, "compressed-building", compress_level[i])
+                new.name = new.name.."-compressed-"..string.lower(compress_level[compr_level])
+                new.localised_name = omni.lib.locale.custom_name(details.base, "compressed-building", compress_level[compr_level])
                 new.localised_description = omni.lib.locale.custom_name(
                     details.base,
                     "entity-description.compressed-building",
-                    multiplier^i,
-                    {"description-modifier." .. i}
+                    multiplier^compr_level,
+                    {"description-modifier." .. compr_level}
                 )
                 if new.max_health then
-                    new.max_health = new.max_health * math.pow(multiplier, i)
+                    new.max_health = new.max_health * math.pow(multiplier, compr_level)
                     new.max_health = math.min(new.max_health, 2^31-1)
                 end
                 new.minable.result = new.name
-                new.minable.mining_time = (new.minable.mining_time or 10) * i
+                new.minable.mining_time = (new.minable.mining_time or 10) * compr_level
                 -- Fast replace in kind
                 if not build.fast_replaceable_group then
                     build.fast_replaceable_group = build.name
                 end
                 if not omni.lib.is_in_table("not-upgradable", build.flags or {}) and not omni.lib.is_in_table("hidden", item.flags or {}) then
-                    if i < omni.compression.bld_lvls then
+                    if compr_level < omni.compression.bld_lvls then
                         if new.next_upgrade then
-                            new.next_upgrade = new.next_upgrade.."-compressed-"..string.lower(compress_level[i])
+                            new.next_upgrade = new.next_upgrade.."-compressed-"..string.lower(compress_level[compr_level])
                         else
-                            new.next_upgrade = build.name.."-compressed-"..string.lower(compress_level[i+1])
+                            new.next_upgrade = build.name.."-compressed-"..string.lower(compress_level[compr_level+1])
                         end
                     end
                 end
                 new.fast_replaceable_group = build.fast_replaceable_group
                 new.placeable_by = {item = new.name, count = 1}
-                new.icons = omni.lib.add_overlay(build,"building",i)
+                new.icons = omni.lib.add_overlay(build,"building",compr_level)
                 new.icon = nil
-                run_entity_updates(new, new.type, i)
+                run_entity_updates(new, new.type, compr_level)
                 compressed_buildings[#compressed_buildings+1] = new --add entity to the list
 
                 --[[ITEM CREATION]]--
@@ -777,21 +777,21 @@ for _, values in pairs(recipe_results) do
                 item.name = new.name
                 item.place_result = new.name
                 item.stack_size = math.max(5, math.ceil(item.stack_size / multiplier))
-                item.icons = omni.lib.add_overlay(item,"building",i)
+                item.icons = omni.lib.add_overlay(item,"building",compr_level)
                 item.icon = nil
 
                 compressed_buildings[#compressed_buildings+1] = item
                 --[[COMPRESSION/DE-COMPRESSION RECIPE CREATION]]--
                 local ing = {}
                 -- ing = {item, count}
-                if i == 1 then
+                if compr_level == 1 then
                     ing  = {{
                         details.item.name,
                         math.ceil(multiplier * cost_multiplier)
                     }}
                 else
                     ing = {{
-                        build.name.."-compressed-"..string.lower(compress_level[i-1]),
+                        build.name.."-compressed-"..string.lower(compress_level[compr_level-1]),
                         exp_costs and math.ceil(multiplier * cost_multiplier) or multiplier
                     }}
                 end
@@ -799,12 +799,12 @@ for _, values in pairs(recipe_results) do
 
                 local recipe = {
                     type = "recipe",
-                    name = rc.name.."-compressed-"..string.lower(compress_level[i]),
+                    name = rc.name.."-compressed-"..string.lower(compress_level[compr_level]),
                     localised_name = new.localised_name,
                     ingredients = ing,
-                    icons = omni.lib.add_overlay(rc,"building",i),
+                    icons = omni.lib.add_overlay(rc,"building",compr_level),
                     result = new.name,
-                    energy_required = 5*math.floor(math.pow(multiplier,i/2)),
+                    energy_required = 5*math.floor(math.pow(multiplier,compr_level/2)),
                     enabled = false,
                     hidden = omni.lib.recipe_is_hidden(rc.name),
                     category = "crafting-compressed",
@@ -816,7 +816,7 @@ for _, values in pairs(recipe_results) do
                 compressed_buildings[#compressed_buildings+1] = recipe
                 local uncompress = {
                     type = "recipe",
-                    name = "uncompress-"..string.lower(compress_level[i]).."-"..rc.name,
+                    name = "uncompress-"..string.lower(compress_level[compr_level]).."-"..rc.name,
                     localised_name = omni.lib.locale.custom_name(build, 'recipe-name.uncompress-item'),
                     localised_description = omni.lib.locale.custom_description(build, 'recipe-description.uncompress-item'),
                     icons = omni.lib.add_overlay(rc,"uncompress"),
@@ -830,7 +830,7 @@ for _, values in pairs(recipe_results) do
                     },
                     results = ing,
                     --inter_item_count = item_count,
-                    energy_required = 5*math.floor(math.pow(multiplier,i/2)),
+                    energy_required = 5*math.floor(math.pow(multiplier,compr_level/2)),
                     hide_from_player_crafting = rc.hide_from_player_crafting or omni.compression.hide_handcraft
                 }
                 compressed_buildings[#compressed_buildings+1] = uncompress

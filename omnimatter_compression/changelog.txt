@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.28
+Date: 2024.01.17
+  Changes:
+    - Pollution now scales linearly instead of exponentionally with compression tiers.
+  Bugfixes:
+    - Fixed that compressed mining drill's radius visualization was half a tile too big for each
+      second tier
+---------------------------------------------------------------------------------------------------
 Version: 4.1.27
 Date: 2023.11.05
   Changes:
