@@ -482,7 +482,7 @@ if settings.startup["omnicompression_entity_compression"].value then
                 end
                 new_cat[#new_cat+1] = cat.."-compressed" --add cat
             end
-            if kind == "assembling-machine" and string.find(new.name,"assembling") then
+            if kind == "assembling-machine" and string.find(new.name,"assembling") and data.raw["recipe-category"]["general-compressed"] then
                 new_cat[#new_cat+1] = "general-compressed"
             end
             new.crafting_categories = new_cat
