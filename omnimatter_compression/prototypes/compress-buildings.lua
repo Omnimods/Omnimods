@@ -218,12 +218,15 @@ if settings.startup["omnicompression_entity_compression"].value then
             ungrade.normal = ungrade_recipe_data
             ungrade.expensive = table.deepcopy(ungrade_recipe_data)
 
-            grade_compressed.normal = grade_compressed_recipe_data
-            grade_compressed.expensive = table.deepcopy(grade_compressed_recipe_data)
-            ungrade_compressed.normal = ungrade_compressed_recipe_data
-            ungrade_compressed.expensive = table.deepcopy(ungrade_compressed_recipe_data)
+            if settings.startup["omnicompression_item_compression"].value then
+                grade_compressed.normal = grade_compressed_recipe_data
+                grade_compressed.expensive = table.deepcopy(grade_compressed_recipe_data)
+                ungrade_compressed.normal = ungrade_compressed_recipe_data
+                ungrade_compressed.expensive = table.deepcopy(ungrade_compressed_recipe_data)
+                data:extend{grade_compressed, ungrade_compressed}
+            end
 
-            data:extend{grade,ungrade,grade_compressed,ungrade_compressed}
+            data:extend{grade, ungrade}
         end
     end
 
