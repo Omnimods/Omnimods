@@ -121,33 +121,36 @@ BuildGen:create("omnimatter_compression","auto-concentrator"):
     }):
     extend()
 
-BuildGen:create("omnimatter_compression","auto-condensator"):
-    setStacksize(50):
-    setFlags({"placeable-neutral", "placeable-player", "player-creation"}):
-    setSubgroup("production-machine"):
-    setIngredients({{"steel-plate", 50}, {"electronic-circuit", 20}, {"stone-brick", 40}}):
-    setEnergy(10):
-    setModSlots(0):
-    setModEffects():
-    setUsage(225):
-    setSpeed(3):
-    noTech():
-    setIcons("auto-concentrator"):
-    setSize(minify(1, 3)):
-    setFluidBox(fluidbox):
-    setCrafting({"fluid-condensation"}):
-    setAnimation({
-        filename = "__omnimatter_compression__/graphics/liquifier.png",
-        priority = "high",
-        width = 160,
-        height = 160,
-        frame_count = 30,
-        line_length = 10,
-        shift = util.by_pixel(0, -0.5*minify(0.33, 1)),--{0.0, 0.0},
-        scale = minify(0.33, 1)*1.1,
-        animation_speed = 0.25
-    }):
-    extend()
-
 data.raw["furnace"]["auto-concentrator"].scale_entity_info_icon = true
-data.raw["assembling-machine"]["auto-condensator"].scale_entity_info_icon = true
+
+if settings.startup["omnicompression_entity_compression"].value then
+    BuildGen:create("omnimatter_compression","auto-condensator"):
+        setStacksize(50):
+        setFlags({"placeable-neutral", "placeable-player", "player-creation"}):
+        setSubgroup("production-machine"):
+        setIngredients({{"steel-plate", 50}, {"electronic-circuit", 20}, {"stone-brick", 40}}):
+        setEnergy(10):
+        setModSlots(0):
+        setModEffects():
+        setUsage(225):
+        setSpeed(3):
+        noTech():
+        setIcons("auto-concentrator"):
+        setSize(minify(1, 3)):
+        setFluidBox(fluidbox):
+        setCrafting({"fluid-condensation"}):
+        setAnimation({
+            filename = "__omnimatter_compression__/graphics/liquifier.png",
+            priority = "high",
+            width = 160,
+            height = 160,
+            frame_count = 30,
+            line_length = 10,
+            shift = util.by_pixel(0, -0.5*minify(0.33, 1)),--{0.0, 0.0},
+            scale = minify(0.33, 1)*1.1,
+            animation_speed = 0.25
+        }):
+        extend()
+
+    data.raw["assembling-machine"]["auto-condensator"].scale_entity_info_icon = true
+end

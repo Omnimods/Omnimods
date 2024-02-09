@@ -10,7 +10,7 @@ local tech1 = {
     icon = "__omnimatter_compression__/graphics/compress-tech.png",
     icon_size = 128,
     order = "z",
-    effects = {{type = "unlock-recipe",recipe="auto-compressor"},{type = "unlock-recipe",recipe="auto-concentrator"},{type = "unlock-recipe",recipe="auto-condensator"}},
+    effects = {{type = "unlock-recipe",recipe="auto-compressor"}, {type = "unlock-recipe",recipe="auto-concentrator"}},
     upgrade = true,
     prerequisites = {"logistics", "steel-processing"},
     unit =
@@ -25,6 +25,10 @@ local tech1 = {
         time = 20
     }
 }
+if settings.startup["omnicompression_entity_compression"].value then
+    tech1.effects[#tech1.effects+1] = {type = "unlock-recipe",recipe="auto-condensator"}
+end
+
 local tech22 = {
     --ores
     type = "technology",
@@ -47,6 +51,7 @@ local tech22 = {
         time = 35
     }
 }
+
 local tech2 = {
     --ores
     type = "technology",
@@ -69,6 +74,7 @@ local tech2 = {
         time = 20
     }
 }
+
 local tech3 = {
     --ores
     type = "technology",
@@ -139,6 +145,7 @@ local tech5 = {
         time = 20
     }
 }
+
 local tech6 = {
     --ores
     type = "technology",
@@ -163,6 +170,7 @@ local tech6 = {
         time = 20
     }
 }
+
 local tech7 = {
     --ores
     type = "technology",
@@ -187,4 +195,5 @@ local tech7 = {
         time = 20
     }
 }
+
 data:extend({tech1,tech2,tech3,tech4,tech5,tech6,tech7,tech22})

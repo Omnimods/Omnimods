@@ -43,7 +43,7 @@ for _,kind in pairs({"assembling-machine","furnace","rocket-silo"}) do
                 end
             end
         end
-        if has_advanced and not has_general_compressed then
+        if has_advanced and not has_general_compressed and data.raw["recipe-category"]["general-compressed"] then
             build.crafting_categories[#build.crafting_categories+1] = "general-compressed"
         end
         if kind ~= "furnace" then
