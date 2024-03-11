@@ -67,7 +67,20 @@ local function replace_barrels(recipe)
                     flu = string.gsub(flu, "%-canister", "")
 
                     if fluid_cats["sluid"][flu] or fluid_cats["mush"][flu] then
+                        local cat = "sluid"
+                        if not fluid_cats[cat][flu] then cat = "mush" end
+
                         local tempstring = string.gsub(data.raw.fluid[flu].default_temperature, "%.", "_")
+                        --Check if a solid with default temp exists, otherwise take the lowest consumer temp
+                        if not data.raw.item["solid-"..flu.."-T-"..tempstring] then
+                            local lowtemp = math.huge
+                            for _, temp in pairs(fluid_cats[cat][flu].consumer.temperatures) do
+                                if temp < lowtemp then
+                                    lowtemp = temp
+                                end
+                            end
+                            tempstring = string.gsub(lowtemp, "%.", "_")
+                        end
                         if recipe[dif].main_product and recipe[dif].main_product == ing.name then
                             recipe[dif].main_product = "solid-"..flu.."-T-"..tempstring
                         end
