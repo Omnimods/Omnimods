@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.38
+Date: 2024.03.11
+  Bugfixes:
+    - Added a fallback for replacing barrels with sluids if no sluid with the fluid's default
+      temperature exists
+---------------------------------------------------------------------------------------------------
 Version: 4.1.37
 Date: 2023.12.28
   Bugfixes:
