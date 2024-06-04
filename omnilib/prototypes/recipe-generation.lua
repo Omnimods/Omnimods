@@ -684,7 +684,7 @@ function ItemGen:addIcon(icon)
                     local int_sz = c.icon_size or ic_sz
                     ic[#ic+1] = {
                         icon=c.icon,
-                        icon_scale=int_sz,
+                        icon_size=int_sz,
                         scale = (c.scale or (32/int_sz))*(icon.scale or (32/int_sz)),
                         shift = {(c.shift or {0,0})[1]+(icon.shift or {0,0})[1],(c.shift or {0,0})[2]+(icon.shift or {0,0})[2]}
                     }

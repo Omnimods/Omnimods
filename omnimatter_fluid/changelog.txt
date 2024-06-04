@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.39
+Date: 2024.06.04
+  Compatibility:
+    - Avoid converting the fluid ingredient slots of SE's spaceship engines to item slots
+    - Add recipe copies outputting a fluid version for fuels required by SE's spaceship engines
+---------------------------------------------------------------------------------------------------
 Version: 4.1.38
 Date: 2024.03.11
   Bugfixes:

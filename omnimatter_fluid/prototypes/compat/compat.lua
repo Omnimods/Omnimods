@@ -20,4 +20,10 @@ if mods["space-exploration"] then
     --Exclude the hidden SE generators since their steam "fuel" is a hidden fluid
     omni.fluid.excluded_strings[#omni.fluid.excluded_strings+1] = {"se", "condenser", "turbine", "generator"}
     omni.fluid.excluded_strings[#omni.fluid.excluded_strings+1] = {"se", "big", "turbine", "generator"}
+
+    --Exclude SE's spaceship engines and make sure their fuel is obtainable as fluid (Scripted furnaces consuming fluid fuel) 
+    omni.fluid.excluded_strings[#omni.fluid.excluded_strings+1] = {"se", "spaceship", "engine"}
+    omni.fluid.add_generator_fluid("se-ion-stream")
+    omni.fluid.add_generator_fluid("se-antimatter-stream")
+    omni.fluid.add_generator_fluid("se-liquid-rocket-fuel")
 end
