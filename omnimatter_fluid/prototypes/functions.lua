@@ -69,7 +69,7 @@ function omni.fluid.add_generator_fluid(fluid_name)
     end
 end
 
---Adds that fluid as generator recipe (recipe has a generator fluid result
+--Adds that fluid as generator recipe (recipe has a generator fluid result)
 function omni.fluid.add_generator_recipe(recipe_name, generator_fluid_name, gen_fluid_temperature)
     omni.fluid.generator_recipes[recipe_name] = {fluid = generator_fluid_name, temp = gen_fluid_temperature}
     if mods["omnimatter_compression"] and not string.find(recipe_name, "%-compression") then

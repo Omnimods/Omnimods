@@ -182,7 +182,7 @@ for _, rec in pairs(data.raw.recipe) do
                 if fluid.flu.temperature and fluid.flu.temperature == data.raw.fluid[fluid.flu.name].default_temperature  and not fluid.flu.maximum_temperature then flu_temp = nil end
                 sort_fluid(fluid.flu.name, "sluid", state, {temp = flu_temp, temp_min = fluid.flu.minimum_temperature, temp_max = fluid.flu.maximum_temperature, conversion = conv})
                 --If the recipes outputs a generator fluid, save the recipe name. We need to create a copy later that outputs a fluid version of that
-                if fluid.type =="results"  and omni.fluid.generator_fluids[fluid.flu.name] and not string.find(rec.name, "compress-") and not string.find(rec.name, "concentrated%-grade%-") and not string.find(rec.name, "fluidisation%-") then
+                if fluid.type == "results"  and omni.fluid.generator_fluids[fluid.flu.name] and not string.find(rec.name, "compress-") and not string.find(rec.name, "concentrated%-grade%-") and not string.find(rec.name, "fluidisation%-") then
                     omni.fluid.add_generator_recipe(rec.name, fluid.flu.name, flu_temp)
                 end
             end
