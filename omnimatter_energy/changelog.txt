@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.1.18
+Date: 2024.06.17
+  Bugfixes:
+    - Fixed that nuclear power could not be researched when playing with Krastorio 2
+    - Fixed that the Krastorio 2 crash site lab did not accept energy tech cards
+---------------------------------------------------------------------------------------------------
 Version: 3.1.17
 Date: 2023.11.05
   Changes:

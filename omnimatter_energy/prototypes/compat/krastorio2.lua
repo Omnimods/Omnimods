@@ -44,7 +44,7 @@ if mods["Krastorio2"] then
     TechGen:import("omnitech-anbaric-inserter"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():sethidden():extend()
 
     --unify kr-steam-engine tech and omni steam-engine tech
-    omni.lib.replace_prerequisite("nuclear-power","kr-steam-engine","omnitech-steam-power")
+    omni.lib.replace_prerequisite("nuclear-power", "omnitech-steam-power", "kr-steam-engine")
     omni.lib.add_prerequisite("kr-steam-engine", "omnitech-basic-omnium-power")
     TechGen:import("omnitech-steam-power"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():sethidden():extend()
 
@@ -81,11 +81,14 @@ if mods["Krastorio2"] then
             }}
         }
     end
-    
+
+    --Crash site lab needs to accept energy SP
+    table.insert(data.raw["lab"]["kr-crash-site-lab-repaired"].inputs, 1, "energy-science-pack")
+
     ----------------------
     ----- Item compat-----
     ----------------------
-    
+
     --Add omnitors to some recipes
     omni.lib.add_recipe_ingredient("inserter-parts",{"omnitor",2})
     omni.lib.add_recipe_ingredient("kr-crusher",{"omnitor",2})

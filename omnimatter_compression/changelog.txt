@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.29
+Date: 2024.06.17
+  Features:
+    - Added mod settings to optionally (de-)activate item, entity, recipe and resource compression
+      You can freely choose which features you want to play with
+      (Recipe and resource compression require item compression)
+      All features are enabled by default. (Existing saves are not affected)
+---------------------------------------------------------------------------------------------------
 Version: 4.1.28
 Date: 2024.01.17
   Changes:
