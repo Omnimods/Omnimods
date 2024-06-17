@@ -81,11 +81,14 @@ if mods["Krastorio2"] then
             }}
         }
     end
-    
+
+    --Crash site lab needs to accept energy SP
+    table.insert(data.raw["lab"]["kr-crash-site-lab-repaired"].inputs, 1, "energy-science-pack")
+
     ----------------------
     ----- Item compat-----
     ----------------------
-    
+
     --Add omnitors to some recipes
     omni.lib.add_recipe_ingredient("inserter-parts",{"omnitor",2})
     omni.lib.add_recipe_ingredient("kr-crusher",{"omnitor",2})
