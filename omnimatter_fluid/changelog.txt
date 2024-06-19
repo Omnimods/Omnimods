@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.1.40
+Date: ????
+  Bugfixes:
+    - Fixed that pumpjacks output their items on the opposite side of the belt in some directions
+---------------------------------------------------------------------------------------------------
 Version: 4.1.39
 Date: 2024.06.04
   Compatibility:
