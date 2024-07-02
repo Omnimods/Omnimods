@@ -55,7 +55,7 @@ RecGen:create("omnimatter","pulverized-omnite"):
     setCategory(c):
     marathon():
     setIngredients({"crushed-omnite", 5}):
-    setResults({type="item", name="pulverized-omnite", amount=10}):
+    setResults({type="item", name="pulverized-omnite", amount=5}):
     setEnergy(1):
     extend()
 
@@ -101,7 +101,7 @@ RecGen:create("omnimatter","pulver-omnic-waste"):
     setCategory("omniphlog"):
     setIcons("omnic-waste"):
     marathon():
-    setIngredients({"pulverized-omnite", 5},{"pulverized-stone", 15}):
-    setResults({type="fluid", name="omnic-waste", amount=300}):
-    setEnergy(2):
+    setIngredients({"pulverized-omnite", 1},{"pulverized-stone", 6}):
+    setResults({type="fluid", name="omnic-waste", amount=120}):
+    setEnergy(0.8):
     extend()

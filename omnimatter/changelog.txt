@@ -2,7 +2,7 @@
 Version: 4.1.38
 Date: ????
   Changes:
-      - Halfed the amount of crushed omnite produced / consumed for each recipe
+      - Halfed the amount of crushed and pulverized omnite produced / consumed for each recipe
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.37
 Date: 2023.11.05
