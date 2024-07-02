@@ -3,6 +3,7 @@ Version: 3.1.19
 Date: ????
   Changes:
     - Updated basic transport belt icons + sprites
+    - Halfed the amount of crushed omnite produced / consumed for each recipe
 ---------------------------------------------------------------------------------------------------
 Version: 3.1.18
 Date: 2024.06.17
