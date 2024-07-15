@@ -477,7 +477,7 @@ if settings.startup["omnicompression_entity_compression"].value then
         --recipe category settings for assembly/furnace types
         if kind == "assembling-machine" or kind == "furnace" or kind == "rocket-silo" then
             local new_cat = table.deepcopy(new.crafting_categories) --revert each time
-            for j, cat in pairs(new.crafting_categories) do
+            for _, cat in pairs(new.crafting_categories) do
                 if not data.raw["recipe-category"][cat.."-compressed"] then --check if category exists
                     if not omni.lib.is_in_table(cat.."-compressed", recipe_category) then --check not already in the to-expand table
                     recipe_category[#recipe_category+1] = {type = "recipe-category",name = cat.."-compressed"}
@@ -763,6 +763,9 @@ if settings.startup["omnicompression_entity_compression"].value then
                     if not omni.lib.is_in_table("not-upgradable", build.flags or {}) and not omni.lib.is_in_table("hidden", item.flags or {}) then
                         if compr_level < omni.compression.bld_lvls then
                             if new.next_upgrade then
+                                if not data.raw.item[new.next_upgrade] then
+                                    log("WARNING: next_upgrade "..new.next_upgrade.." does not exist ("..build.name.."). Please contact the mod author")
+                                end
                                 new.next_upgrade = new.next_upgrade.."-compressed-"..string.lower(compress_level[compr_level])
                             else
                                 new.next_upgrade = build.name.."-compressed-"..string.lower(compress_level[compr_level+1])
