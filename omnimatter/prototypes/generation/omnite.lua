@@ -191,16 +191,16 @@ data:extend({
         order="b-da",
         infinite = false,
         minable = {
-        mining_particle = "omnite-particle",
-        mining_time = 1,
-        results = {
-            {
-            type = "item",
-            name = "omnite",
-            amount_min = 1,
-            amount_max = 1
+            mining_particle = "omnite-particle",
+            mining_time = 1,
+            results = {
+                {
+                type = "item",
+                name = "omnite",
+                amount_min = 1,
+                amount_max = 1
+                }
             }
-        }
         },
         collision_box = {{ -0.1, -0.1}, {0.1, 0.1}},
         selection_box = {{ -0.5, -0.5}, {0.5, 0.5}},
@@ -210,10 +210,10 @@ data:extend({
             order = "b-da",
             has_starting_area_placement = true,
             base_density = 35,    -- ~richness
+            base_spots_per_km2 = 10, -- ~frequency
             regular_rq_factor_multiplier = 1.8, --Size
             starting_rq_factor_multiplier = 2.4,
             richness_multiplier_distance_bonus = 20,
-            base_spots_per_km2 = 10, -- ~frequency
             peaks = {
             {
                 noise_layer = "omnite",
@@ -224,53 +224,53 @@ data:extend({
         }),
         stage_counts = {1000, 600, 400, 200, 100, 50, 20, 1},
         stages = {
-        sheet = {
-            filename = "__omnimatter__/graphics/entity/ores/omnite.png",
-            priority = "extra-high",
-            width = 64,
-            height = 64,
-            frame_count = 8,
-            variation_count = 8,
-            hr_version = {
-            filename = "__omnimatter__/graphics/entity/ores/hr-omnite.png",
-            priority = "extra-high",
-            width = 128,
-            height = 128,
-            frame_count = 8,
-            variation_count = 8,
-            scale = 0.5
+            sheet = {
+                filename = "__omnimatter__/graphics/entity/ores/omnite.png",
+                priority = "extra-high",
+                width = 64,
+                height = 64,
+                frame_count = 8,
+                variation_count = 8,
+                hr_version = {
+                filename = "__omnimatter__/graphics/entity/ores/hr-omnite.png",
+                priority = "extra-high",
+                width = 128,
+                height = 128,
+                frame_count = 8,
+                variation_count = 8,
+                scale = 0.5
+                }
             }
-        }
         },
         stages_effect = {
-        sheet = {
-            filename = "__omnimatter__/graphics/entity/ores/omnite-glow.png",
-            priority = "extra-high",
-            width = 64,
-            height = 64,
-            frame_count = 8,
-            variation_count = 8,
-            blend_mode = "additive",
-            flags = {"light"},
-            hr_version = {
-            filename = "__omnimatter__/graphics/entity/ores/hr-omnite-glow.png",
-            priority = "extra-high",
-            width = 128,
-            height = 128,
-            frame_count = 8,
-            variation_count = 8,
-            scale = 0.5,
-            blend_mode = "additive",
-            flags = {"light"},
+            sheet = {
+                filename = "__omnimatter__/graphics/entity/ores/omnite-glow.png",
+                priority = "extra-high",
+                width = 64,
+                height = 64,
+                frame_count = 8,
+                variation_count = 8,
+                blend_mode = "additive",
+                flags = {"light"},
+                hr_version = {
+                    filename = "__omnimatter__/graphics/entity/ores/hr-omnite-glow.png",
+                    priority = "extra-high",
+                    width = 128,
+                    height = 128,
+                    frame_count = 8,
+                    variation_count = 8,
+                    scale = 0.5,
+                    blend_mode = "additive",
+                    flags = {"light"},
+                }
             }
-        }
         },
         effect_animation_period = 5,
         effect_animation_period_deviation = 1,
-        effect_darkness_multiplier = 3.6,
-        min_effect_alpha = 0.2,
-        max_effect_alpha = 0.3,
-        map_color = {r=0.34, g=0.00, b=0.51},
+        effect_darkness_multiplier = 4.6,
+        min_effect_alpha = 0.3,
+        max_effect_alpha = 0.5,
+        map_color = {r=0.34, g=0.00, b=0.51}
     }
 })
 
