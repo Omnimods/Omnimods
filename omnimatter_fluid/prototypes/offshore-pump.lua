@@ -33,7 +33,6 @@ for _, pump in pairs(data.raw["offshore-pump"]) do
             order="z",
             icon = "__base__/graphics/icons/offshore-pump.png",
             icon_size = 64,
-            icon_mipmaps = 4,
             --flags = {"placeable-neutral", "player-creation", "not-deconstructable", "not-blueprintable", "placeable-off-grid"},
             flags = {"placeable-neutral", "player-creation", "not-blueprintable", "placeable-off-grid"},
             max_health = 150,

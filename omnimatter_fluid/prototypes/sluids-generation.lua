@@ -57,7 +57,7 @@ local function replace_barrels(recipe)
         for _, ingres in pairs({"ingredients","results"}) do
             for    j, ing in pairs(recipe[dif][ingres]) do
                 --Remove empty barrels
-                if ing.name and (ing.name == "empty-barrel" or ing.name == "empty-canister"  or ing.name == "empty-gas-canister")then
+                if ing.name and (ing.name == "barrel" or ing.name == "empty-canister"  or ing.name == "empty-gas-canister")then
                     recipe[dif][ingres][j] = nil
                 --Replace filled barrels with sluids
                 elseif ing.name and (string.find(ing.name, "%-barrel") or string.find(ing.name, "barrel%-") or string.find(ing.name, "%-canister")) then

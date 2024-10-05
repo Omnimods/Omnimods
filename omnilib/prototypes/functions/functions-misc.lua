@@ -512,7 +512,7 @@ function omni.lib.create_barrel(fluid)
         type = "item",
         name = fluid.name.."-barrel",
         localised_name = {"item-name.filled-barrel", fluid.localised_name or {"fluid-name." .. fluid.name}},
-        icons = util.combine_icons(omni.lib.icon.of(data.raw.item["empty-barrel"]), masks, {}),
+        icons = util.combine_icons(omni.lib.icon.of(data.raw.item["barrel"]), masks, {}),
         flags = {},
         subgroup = "fill-barrel",
         order = "b",
@@ -540,7 +540,7 @@ function omni.lib.create_barrel(fluid)
         ingredients =
         {
             {type = "fluid", name = fluid.name, amount = 250},
-            {type = "item", name = "empty-barrel", amount = 1},
+            {type = "item", name = "barrel", amount = 1},
         },
         results=
         {
@@ -567,7 +567,7 @@ function omni.lib.create_barrel(fluid)
         localised_name = {"recipe-name.empty-filled-barrel", fluid.localised_name or {"fluid-name." .. fluid.name}},
         category = "crafting-with-fluid",
         energy_required = 0.2,
-        subgroup = "empty-barrel",
+        subgroup = "barrel",
         order = "c[empty-"..fluid.name.."-barrel".."]",
         enabled = false,
         icons = util.combine_icons(masks, omni.lib.icon.of(fluid), {scale = 0.5, shift = {7, 8}}),
@@ -578,7 +578,7 @@ function omni.lib.create_barrel(fluid)
         results=
         {
             {type = "fluid", name = fluid.name, amount = 250},
-            {type = "item", name = "empty-barrel", amount = 1}
+            {type = "item", name = "barrel", amount = 1}
         },
         hide_from_stats = true,
         allow_decomposition = false

@@ -229,7 +229,7 @@ for j=1,nr_tiers do
                 noItem():
                 setLocName({"recipe-name.crystal-solar-panel", j, i}):
                 setIcons(omni.lib.icon.of("crystal-solar-panel-tier-"..j.."-size-"..i, "item")):
-                addSmallIcon({{icon = "__core__/graphics/icons/technology/effect-constant/effect-constant-capacity.png", icon_size = 64, scale = 0.6, icon_mipmaps = 2}}, 4):
+                addSmallIcon({{icon = "__core__/graphics/icons/technology/effect-constant/effect-constant-capacity.png", icon_size = 64, scale = 0.6}}, 4):
                 setIngredients(get_cost(j,i)):
                 removeIngredients("crystal-solar-panel-tier-"..(j-1).."-size-"..i):
                 multiplyIngredients(max_size*max_size):
@@ -250,7 +250,7 @@ for j=1,nr_tiers do
                 noItem():
                 setLocName({"recipe-name.crystal-solar-panel", j, i}):
                 setIcons(omni.lib.icon.of("crystal-solar-panel-tier-"..j.."-size-"..i, "item")):
-                addSmallIcon({{icon = "__core__/graphics/icons/technology/effect-constant/effect-constant-movement-speed.png", icon_size = 64, scale = 0.6, icon_mipmaps = 2}}, 4):
+                addSmallIcon({{icon = "__core__/graphics/icons/technology/effect-constant/effect-constant-movement-speed.png", icon_size = 64, scale = 0.6}}, 4):
                 setIngredients(get_cost(j,i)):
                 removeIngredients("crystal-solar-panel-tier-"..j.."-size-"..(i-1),"crystal-solar-panel-tier-"..j.."-size-"..1):
                 multiplyIngredients(max_size-1):

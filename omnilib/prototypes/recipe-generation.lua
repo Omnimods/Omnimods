@@ -632,7 +632,7 @@ function ItemGen:setIcons(icons,mod)
             local setup = {}
             proto = omni.lib.find_prototype(name)
             if proto then
-                setup={{icon=proto.icon,icon_size=proto.icon_size,mipmaps=proto.mipmaps or nil}}
+                setup={{icon=proto.icon,icon_size=proto.icon_size}}
             else
                 setup={{icon = icons, icon_size=ic_sz}}
             end
@@ -643,7 +643,7 @@ function ItemGen:setIcons(icons,mod)
             if proto.icons then
                 self.icons=function(levels,grade) return proto.icons end
             else
-                self.icons=function(levels,grade) return {{icon=proto.icon,icon_size=proto.icon_size,mipmaps=proto.mipmaps or nil}} end
+                self.icons=function(levels,grade) return {{icon=proto.icon,icon_size=proto.icon_size}} end
             end
         else
             self.icons = function(levels,grade) return icons end
@@ -1259,7 +1259,7 @@ function RecGen:import(rec)
             if tech then
                 r:setTechName(tech.name):
                 setTechCost(tech.unit.count):
-                setTechIcons(tech.icons  or {{icon=tech.icon, icon_size=tech.icon_size or 128, icon_mipmaps = tech.icon_mipmaps or nil}}):
+                setTechIcons(tech.icons  or {{icon=tech.icon, icon_size=tech.icon_size or 128}}):
                 setTechLocName(tech.localised_name):
                 setTechLocDesc(tech.localised_description):
                 setTechPacks(tech.unit.ingredients):
@@ -1282,20 +1282,6 @@ function RecGen:importIf(rec)
         return RecGen:create():setGenerationCondition(false)
     end
 end
-function RecGen:importResult(result)
-    if data.raw.recipe[result] then
-        return RecGen:import(result)
-    else
-        for _,rec in pairs(data.raw.recipe) do
-            omni.lib.standardise(rec)
-            for _,res in pairs(rec.normal.results) do
-                if res.name==result then
-                    return RecGen:import(rec.name)
-                end
-            end
-        end
-    end
-end
 function RecGen:find(name)
     if Omni.Gen.Rec[name] then
         return Omni.Gen.Rec[name]:setForce()
@@ -1303,26 +1289,6 @@ function RecGen:find(name)
         return RecGen:importIf(name)
     end
 end
---[[
-r.ingredients = function(levels,grade,dif) return nil end
-    r.results = function(levels,grade,dif) return {{type="item",name=name,amount=1}} end
-    r.enabled=function(levels,grade) return false end
-    r.efficency = efficency
-    r.energy_required = function(levels,grade) return 1 end
-    r.category = function(levels,grade) return nil end
-    r.main_product=function(levels,grade) return nil end
-    r.tech = {
-        cost = function(levels,grade) return 50 end,
-        packs = function(levels,grade) return 1 end,
-        time=function(levels,grade) return 20 end,
-        upgrade = function(levels,grade) return false end,
-        name = function(levels,grade) return self.name end,
-        loc_name = function(levels,grade) return nil end,
-        loc_desc = function(levels,grade) return nil end,
-        icon = function(levels,grade) return nil end,
-        prerequisites = function(level,grade) return nil end}
-]]
-
 
 function RecGen:addProductivity(mod)
     if type(mod)=="nil" then
@@ -4466,10 +4432,10 @@ function InsertGen:generateInserter()
     corpse = self.corpse,
     resistances =
     {
-      {
-        type = "fire",
-        percent = 90
-      }
+        {
+            type = "fire",
+            percent = 90
+        }
     },
     collision_box = {{-size.width+0.25, -size.height+0.25}, {size.width-0.25, size.height-0.25}},
     selection_box = {{-size.width, -size.height}, {size.width, size.height}},

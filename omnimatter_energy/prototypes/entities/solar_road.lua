@@ -44,7 +44,7 @@ data:extend({
         energy_required = 3.0,
         enabled=false,
         order = "ad[solar-panel]-aa[solar-panel-1-a]",
-        ingredients = 
+        ingredients =
         {
             {type = "item",name = "crystal-panel", amount = 4},
             {type = "item",name = "small-omnium-electric-pole", amount = 1},

@@ -157,19 +157,17 @@ if settings.startup["omnicompression_item_compression"].value then
         -- Rockets and whatnot
         if place_result and place_result.fixed_recipe and data.raw["recipe"][place_result.fixed_recipe] then
             local recipe = data.raw["recipe"][place_result.fixed_recipe] 
-            for _, difficulty in pairs ({"normal", "expensive"}) do
-                for _, ingredient in pairs(recipe[difficulty].ingredients) do
-                    ingredient = omni.lib.locale.parse_ingredient(ingredient)
-                    if ingredient.type == "item" and not data.raw["item"]["compressed-"..ingredient.name] then
-                        generate_compressed_item(data.raw.item[ingredient.name])
-                    end
+            for _, ingredient in pairs(recipe.ingredients) do
+                ingredient = omni.lib.locale.parse_ingredient(ingredient)
+                if ingredient.type == "item" and not data.raw["item"]["compressed-"..ingredient.name] then
+                    generate_compressed_item(data.raw.item[ingredient.name])
                 end
-                for _, result in pairs(recipe[difficulty].results) do
-                    result = omni.lib.locale.parse_product(result)
-                    if result.type == "item" and not data.raw["item"]["compressed-" .. result.name] then
-                        omni.compression.include_recipe(result.name)
-                        generate_compressed_item(data.raw.item[result.name])
-                    end
+            end
+            for _, result in pairs(recipe.results) do
+                result = omni.lib.locale.parse_product(result)
+                if result.type == "item" and not data.raw["item"]["compressed-" .. result.name] then
+                    omni.compression.include_recipe(result.name)
+                    generate_compressed_item(data.raw.item[result.name])
                 end
             end
         end

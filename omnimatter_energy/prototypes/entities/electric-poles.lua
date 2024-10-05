@@ -9,14 +9,14 @@ BuildGen:import("small-electric-pole"):
     setArea(3.5):
     setWireDistance(7.5):
     setOrder("a[energy]-a[small-electric-pole]-iron"):
-    setIcons({{icon = "__omnimatter_energy__/graphics/icons/small-iron-electric-pole.png", icon_mipmaps = 4, icon_size = 64,}}):
+    setIcons({{icon = "__omnimatter_energy__/graphics/icons/small-iron-electric-pole.png", icon_size = 64,}}):
     setEnabled(false):
     setTechName("omnitech-small-iron-electric-pole"):
     setTechLocName("entity-name.small-iron-electric-pole"):
     setTechPacks({{"energy-science-pack", 1}}):
     setTechCost(35):
     setTechPrereq("omnitech-anbaricity"):
-    setTechIcons({{icon = "__omnimatter_energy__/graphics/icons/small-iron-electric-pole.png", icon_mipmaps = 4, icon_size = 64,}}):
+    setTechIcons({{icon = "__omnimatter_energy__/graphics/icons/small-iron-electric-pole.png", icon_size = 64,}}):
     setPictures({
         layers = {
             {
@@ -77,14 +77,14 @@ BuildGen:import("small-electric-pole"):
     setArea(3.5):
     setWireDistance(8.5):
     setOrder("a[energy]-a[small-electric-pole]-omnium"):
-    setIcons({{icon = "__omnimatter_energy__/graphics/icons/small-omnium-electric-pole.png", icon_mipmaps = 4, icon_size = 64,}}):
+    setIcons({{icon = "__omnimatter_energy__/graphics/icons/small-omnium-electric-pole.png", icon_size = 64,}}):
     setEnabled(false):
     setTechName("omnitech-small-omnium-electric-pole"):
     setTechLocName("entity-name.small-omnium-electric-pole"):
     setTechPacks({{"energy-science-pack", 1}}):
     setTechCost(40):
     setTechPrereq("omnitech-small-iron-electric-pole"):
-    setTechIcons({{icon = "__omnimatter_energy__/graphics/icons/small-omnium-electric-pole.png", icon_mipmaps = 4, icon_size = 64,}}):
+    setTechIcons({{icon = "__omnimatter_energy__/graphics/icons/small-omnium-electric-pole.png", icon_size = 64,}}):
     setPictures({
         layers = {
             {

@@ -614,7 +614,7 @@ if settings.startup["omnicompression_entity_compression"].value then
                     end
                     -- Name and icons, just copy from the pole. Again, same as LEP data_updates
                     new_lamp.name = new.name .. "-lamp"
-                    for _, v in pairs{"localised_name", "icon", "icons", "icon_size", "icon_mipmaps"} do
+                    for _, v in pairs{"localised_name", "icon", "icons", "icon_size"} do
                         new_lamp[v] = new[v]
                     end
                     -- Aaand done
