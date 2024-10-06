@@ -27,7 +27,7 @@ for _,ore in pairs(data.raw["autoplace-control"]) do
         --log("Removed "..ore.name.." from autoplace control")
     else
         omni.matter.res_to_keep[#omni.matter.res_to_keep+1] = ore.name
-        --log("Excluded "..proto.autoplace.control)
+        --log("Excluded "..ore.name)
     end
 end
 

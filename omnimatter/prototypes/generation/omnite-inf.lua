@@ -1,5 +1,8 @@
 local resource_autoplace = require("resource-autoplace")
 
+-- Initialize the core patch sets in a predictable order
+resource_autoplace.initialize_patch_set("infinite-omnite", true)
+
 local mine={}
 if settings.startup["omnimatter-infinite-omnic-acid"].value then
     mine = {
@@ -50,7 +53,7 @@ data:extend({
         tree_removal_max_distance = 32 * 32,
         infinite_depletion_amount = 10,
         resource_patch_search_radius = 12,
-        order="b",
+        order="b-b",
         --map_color = {r=0.34, g=0.00, b=0.51},
         map_color = {r=0.22, g=0.00, b=0.255},
         infinite=true,
@@ -61,12 +64,12 @@ data:extend({
         minable = mine,
         collision_box = {{ -0.1, -0.1}, {0.1, 0.1}},
         selection_box = {{ -0.5, -0.5}, {0.5, 0.5}},
-        autoplace = 
-            resource_autoplace.resource_autoplace_settings({
+        autoplace = resource_autoplace.resource_autoplace_settings({
             has_starting_area_placement = false,
             name ="infinite-omnite",
             patch_set_name = "omnite",
-            order = "b",
+            autoplace_control_name = "infinite-omnite",
+            order = "b-b",
             base_density = 25, -- ~ richness
             base_spots_per_km2 = 7, --base spots of of normal omnite is 10, if this is the same roughly every patch has infinite omnite
             regular_rq_factor_multiplier = 0.4,
@@ -118,5 +121,8 @@ data:extend({
         }
     }
 })
+
+--Add infinite omnite to nauvis autoplace control
+data.raw.planet["nauvis"]["map_gen_settings"]["autoplace_controls"]["infinite-omnite"] = {}
 
 omni.matter.apply_presets("infinite-omnite")

@@ -1,5 +1,4 @@
-local resource_autoplace = require("resource-autoplace")
-
+--Create omnite item
 ItemGen:create("omnimatter","omnite"):
     setFuelValue(2):
     setStacksize(500):
@@ -28,6 +27,11 @@ ItemGen:create("omnimatter","omnite"):
     }):
     extend()
 
+
+local resource_autoplace = require("resource-autoplace")
+
+-- Initialize the core patch sets in a predictable order
+resource_autoplace.initialize_patch_set("omnite", true)
 
 data:extend(
 {
@@ -174,6 +178,10 @@ data:extend({
         category = "resource",
         order = "b-a"
     },
+    -- {
+    --     type = "noise-layer",
+    --     name = "omnite"
+    -- },
     {
         type = "resource",
         name = "omnite",
@@ -184,7 +192,7 @@ data:extend({
         tree_removal_max_distance = 32 * 32,
         infinite_depletion_amount = 10,
         resource_patch_search_radius = 10,
-        order="b-da",
+        order="b-a",
         infinite = false,
         minable = {
         mining_particle = "omnite-particle",
@@ -200,23 +208,24 @@ data:extend({
         },
         collision_box = {{ -0.1, -0.1}, {0.1, 0.1}},
         selection_box = {{ -0.5, -0.5}, {0.5, 0.5}},
-        autoplace =
-        resource_autoplace.resource_autoplace_settings({
+        autoplace = resource_autoplace.resource_autoplace_settings({
             name = "omnite",
-            order = "b-da",
+            patch_set_name = "omnite",
+            autoplace_control_name = "omnite",
+            order = "b-aa",
             has_starting_area_placement = true,
             base_density = 35,    -- ~richness
             regular_rq_factor_multiplier = 1.8, --Size
             starting_rq_factor_multiplier = 2.4,
             richness_multiplier_distance_bonus = 20,
             base_spots_per_km2 = 10, -- ~frequency
-            peaks = {
-            {
-                noise_layer = "omnite",
-                noise_octaves_difference = -1.5,
-                noise_persistence = 0.3,
-            },
-            },
+            -- peaks = {
+            -- {
+            --     noise_layer = "omnite",
+            --     noise_octaves_difference = -1.5,
+            --     noise_persistence = 0.3,
+            -- },
+            -- },
         }),
         stage_counts = {1000, 600, 400, 200, 100, 50, 20, 1},
         stages = {
@@ -249,6 +258,10 @@ data:extend({
         map_color = {r=0.34, g=0.00, b=0.51},
     }
 })
+
+--Add omnite to nauvis autoplace control
+data.raw.planet["nauvis"]["map_gen_settings"]["autoplace_controls"]["omnite"] = {}
+
 
 --Apply preset configs to omnite and infinite omnite if it exists
 function omni.matter.apply_presets(resource)
