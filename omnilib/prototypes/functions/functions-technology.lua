@@ -13,9 +13,11 @@ function omni.lib.add_unlock_recipe(techname, recipe, force)
         end
         if not found then
             table.insert(data.raw.technology[techname].effects,{type="unlock-recipe",recipe = recipe})
-            omni.lib.disable_recipe(recipe)
+            if data.raw.recipe[recipe] then
+                data.raw.recipe[recipe].enabled = false
+            end
             return
-        end    
+        end
     else
         --log("cannot add recipe to "..techname.." as it doesn't exist")
     end

@@ -175,10 +175,6 @@ data:extend({
         order = "b-a"
     },
     {
-        type = "noise-layer",
-        name = "omnite"
-    },
-    {
         type = "resource",
         name = "omnite",
         icon = "__omnimatter__/graphics/icons/omnite.png",

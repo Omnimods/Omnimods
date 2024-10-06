@@ -822,7 +822,7 @@ function ItemGen:setFuelCategory(fv)
 end
 function ItemGen:fluid()
     self.default_temperature = 25
-    self.heat_capacity = "0.7KJ"
+    self.heat_capacity = "0.7kJ"
     self.base_color = {r = 1, g = 0, b = 1}
     self.flow_color = {r = 1, g = 0, b = 1}
     self.type="fluid"
@@ -872,7 +872,7 @@ end
 function ItemGen:setCapacity(c)
     if self.type=="fluid" then
         if type(c)=="number" then
-            self.heat_capacity=c.."KJ"
+            self.heat_capacity=c.."kJ"
         else
             self.heat_capacity=c
         end
@@ -963,17 +963,19 @@ function ItemGen:setLocName(inname,...)
     else
         rtn[1]=function(levels,grade) return inname end
     end
+
     for _,part in pairs(arg) do
         if type(part) == "function" then
             rtn[#rtn+1] = part
         elseif type(part)=="table" and not #part == 1 then
-            rtn[#rtn+1] = function(levels,grade) return inname[grade] end
+            rtn[#rtn+1] = function(levels,grade) return tostring(inname[grade]) end
         elseif type(part)=="string" and string.find(part,".") and (string.find(part,"name") or string.find(part,"description")) then
             rtn[#rtn+1] = function(levels,grade) return {part} end
         else
             rtn[#rtn+1]=function(levels,grade) return part end
         end
     end
+
     self.loc_name = function(levels,grade)
         local out = {}
         for _, o in pairs(rtn) do
@@ -983,6 +985,7 @@ function ItemGen:setLocName(inname,...)
     end
     return self
 end
+
 function ItemGen:addLocName(key)
     local a = table.deepcopy(self.loc_name)
     local b = function(levels,grade) return {key} end
@@ -992,6 +995,8 @@ function ItemGen:addLocName(key)
         b = function(levels,grade) return key[grade] end
     elseif type(key)=="string" and string.find(key,".") and (string.find(key,"name") or string.find(key,"description")) then
         b = function(levels,grade) return {key} end
+    elseif type(key)=="number" then
+        b=function(levels,grade) return tostring(key) end
     else
         b=function(levels,grade) return key end
     end
@@ -1144,7 +1149,7 @@ function ItemGen:generate_item()
         self.rtn[#self.rtn].place_as_tile={
         result = self.place_result(0,0),
         condition_size = 1,
-        condition = { "water-tile" }
+        condition = { layers = {water_tile = true}}
         }
     else
         self.rtn[#self.rtn].place_result = self.place_result(0,0)
@@ -2092,6 +2097,8 @@ function RecGen:addTechLocName(key)
         b = function(levels,grade) return key[grade] end
     elseif type(key)=="string" and string.find(key,".") and (string.find(key,"name") or string.find(key,"description")) then
         b = function(levels,grade) return {key} end
+    elseif type(key)=="number" then
+        b=function(levels,grade) return tostring(key) end
     else
         b=function(levels,grade) return key end
     end
@@ -2360,7 +2367,7 @@ function RecChain:generate_chain()
         if self.loc_name(m,actualTier) == nil then
             local prefixType = "item"
             if self.type=="fluid" then prefixType = "fluid" end
-            lname = {self.name,actualTier}
+            lname = {self.name, tostring(actualTier)}
         end
         --if self.loc_desc(m,i) == nil and self.main_product then lname=nil end
         local r = RecGen:create(self.mod,"omnirec-"..self.name.."-"..omni.lib.alpha(i)):
@@ -2817,7 +2824,7 @@ function BuildGen:import(name)
         setLight(build.light):
         setSoundWorking(build.working_sound):
         setSoundImpact(build.vehicle_impact_sound):
-        setFluidBox(build.fluid_boxes or build.fluid_box):
+        setFluidBox(build.fluid_boxes or build.fluid_box, build.fluid_boxes_off_when_no_fluid_recipe):
         setFluidInput(build.input_fluid_box):
         setCorpse(build.corpse):
         setMiningSpeed(build.mining_speed):
@@ -3122,13 +3129,11 @@ function BuildGen:setSteam(efficiency,size)
         emissions_per_minute = 10, --fairly sure this scales, so it would be 2 at level 1 speed.
         fluid_box =
         {
-            base_area = 1,
-            height = 2,
-            base_level = -1,
+            volume = 1000,
             pipe_connections =
             {
-                {type = "input-output", position = { 2, 0}},
-                {type = "input-output", position = {-2, 0}}
+                {flow_direction = "input-output", direction = 4, position = { 2, 0}},
+                {flow_direction = "input-output", direction = 12, position = {-2, 0}}
             },
             pipe_covers = pipecoverspictures(),
             pipe_picture = assembler2pipepictures(),
@@ -3358,11 +3363,14 @@ function BuildGen:setFluidBox(s,hide,tmp)
     if type(s) == "table" then
         self.fluid_boxes = function(levels,grade) return s end
     elseif type(s)=="string" then
-        self.fluid_boxes = function(levels,grade) return omni.lib.fluid_box_conversion(self.type,s,hide,tmp) end
+        self.fluid_boxes = function(levels,grade) return omni.lib.fluid_box_conversion(self.type,s,tmp) end
         local spl = omni.lib.split(s,".")
         self:setSize(string.len(spl[1]),#spl)
     elseif type(s) == "function" then
         self.fluid_boxes=s
+    end
+    if hide == true then
+        self.hide_fluid_boxes_when_off = true
     end
     return self
 end
@@ -3526,7 +3534,9 @@ function BuildGen:generateBuilding()
         working_visualisations = self.working_visualisations(0,0),
         vehicle_impact_sound =  self.vehicle_impact_sound,
         burns_fluid=self.burns_fluid(0,0),
+        fluid_box = self.fluid_boxes(0,0),
         fluid_boxes = self.fluid_boxes(0,0),
+        fluid_boxes_off_when_no_fluid_recipe = self.hide_fluid_boxes_when_off,
         effectivity = self.effectivity(0,0),
         fluid_usage_per_tick = self.fluid_usage_per_tick(0,0),
         vertical_animation = self.vertical_animation(0,0),
@@ -3537,7 +3547,6 @@ function BuildGen:generateBuilding()
         connection_points=self.connection_points(0,0),
         radius_visualisation_picture=self.radius_visualisation_picture(0,0),
         light=self.light(0,0),
-        fluid_box = self.fluid_boxes(0,0),
         vector_to_place_result = self.vector_to_place_result(0,0),
         resource_searching_radius  = self.resource_searching_radius(0,0),
         mining_power = self.mining_power(0,0),

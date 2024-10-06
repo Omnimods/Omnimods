@@ -27,7 +27,7 @@ function icon.of_generic(prototype, silent)
         end
         return icons
     end
-    if not prototype.icon or not prototype.icon_size then
+    if not prototype.icon then
         if silent then
             return nil
         end
@@ -35,7 +35,7 @@ function icon.of_generic(prototype, silent)
     end
     return {{
         icon = prototype.icon,
-        icon_size = prototype.icon_size
+        icon_size = prototype.icon_size or 64
     }}
 end
 

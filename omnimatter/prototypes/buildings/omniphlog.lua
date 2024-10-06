@@ -154,7 +154,6 @@ local function modify_fluidboxes(proto)
         fboxes[I].pipe_covers = pipecoverspictures()
         -- Move the north cover up a little
         fboxes[I].pipe_covers.north.layers[1].shift = {0, -0.05}
-        fboxes[I].pipe_covers.north.layers[1].hr_version.shift = {0, -0.05}
         -- Only south should draw "on top"
         fboxes[I].secondary_draw_orders = {
             north = -1,
@@ -171,11 +170,9 @@ local function modify_fluidboxes(proto)
             -- X, Y
             for II=1, 2 do
                 picture.shift[II] = picture.shift[II] + shift[dir][II]
-                picture.hr_version.shift[II] = picture.hr_version.shift[II] + shift[dir][II]
             end
             -- Override the "assembler 3" tint
             picture.tint = {1,0.9,1,1}
-            picture.hr_version.tint = {1,0.9,1,1}
         end
     end
 end
