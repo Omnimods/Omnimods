@@ -77,42 +77,22 @@ data:extend({
             sheet = {
                 filename = "__omnimatter__/graphics/entity/ores/omnite.png",
                 priority = "extra-high",
-                width = 64,
-                height = 64,
+                width = 128,
+                height = 128,
                 frame_count = 8,
                 variation_count = 8,
-                hr_version = {
-                    filename = "__omnimatter__/graphics/entity/ores/hr-omnite.png",
-                    priority = "extra-high",
-                    width = 128,
-                    height = 128,
-                    frame_count = 8,
-                    variation_count = 8,
-                    scale = 0.5
-                }
             }
         },
         stages_effect = {
             sheet = {
                 filename = "__omnimatter__/graphics/entity/ores/omnite-glow.png",
                 priority = "extra-high",
-                width = 64,
-                height = 64,
+                width = 128,
+                height = 128,
                 frame_count = 8,
                 variation_count = 8,
                 blend_mode = "additive",
                 flags = {"light"},
-                hr_version = {
-                    filename = "__omnimatter__/graphics/entity/ores/hr-omnite-glow.png",
-                    priority = "extra-high",
-                    width = 128,
-                    height = 128,
-                    frame_count = 8,
-                    variation_count = 8,
-                    scale = 0.5,
-                    blend_mode = "additive",
-                    flags = {"light"},
-                }
             }
         },
         effect_animation_period = 5,

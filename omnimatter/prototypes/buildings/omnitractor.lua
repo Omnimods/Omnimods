@@ -268,8 +268,9 @@ local function modify_fluidboxes(proto)
         fboxes[I].pipe_connections[1].position = nil
     end
 end
+
 local comp_mode_active = mods["angelsindustries"] and angelsmods.industries.components
-for i=1,math.min(settings.startup["omnimatter-max-tier"].value,5) do
+for i=1,math.min(settings.startup["omnimatter-max-tier"].value, 5) do
     if comp_mode_active then
         -- Add omniblock unlocks
         omni.lib.add_unlock_recipe("omnitech-omnitractor-electric-"..i, "block-omni-"..i)
@@ -281,7 +282,7 @@ for i=1,math.min(settings.startup["omnimatter-max-tier"].value,5) do
         end
     end
     -- Modify our fluid boxes
-    modify_fluidboxes(data.raw["assembling-machine"]["omnitractor-"..i])
+    --modify_fluidboxes(data.raw["assembling-machine"]["omnitractor-"..i])
 end
 -- Burner as well
 modify_fluidboxes(data.raw["assembling-machine"]["burner-omnitractor"])

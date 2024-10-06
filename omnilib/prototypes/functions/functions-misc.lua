@@ -800,7 +800,7 @@ function omni.lib.add_overlay(it, overlay_type, level)
     end
 end
 
-local c=0.9    --0.9
+local c = 0.2    --0.9
 local cord={W={0,-c},S={0,c},A={-c,0},D={c,0},I={0,-c},K={0,c},J={-c,0},L={c,0},T={0,-c},G={0,c},F={-c,0},H={c,0}}
 local dir={W=0,S=8,A=4,D=12,I=0,K=8,J=12,L=4,T=0,G=8,F=12,H=4}
 local inflow={A=true,W=true,S=true,D=true}          --W= North, A=East, S=South, D=West -->Letters have to be used for the given direction!!!
@@ -835,6 +835,52 @@ function omni.lib.assemblingFluidBox(str)
         end
     end
     return box
+end
+
+function omni.lib.generatorFluidBox(str, min_temp, filter)
+    if str==nil then return nil end
+    local code=omni.lib.split(str,".")
+    local box = {
+        volume = 1000,
+        pipe_covers = pipecoverspictures(),
+        pipe_connections ={},
+        production_type = "input-output"
+    }
+    for i, row in pairs(code) do
+        for j=1, string.len(row) do
+            local letter = string.sub(row,j,j)
+            if letter ~= "X" then
+                local b = {}
+                b.pipe_covers = pipecoverspictures()
+                volume = 1000
+                if inflow[letter] then
+                    b.production_type = "input"
+                elseif passthrough[letter] then
+                    b.production_type = "input-output"
+                else
+                    b.production_type = "output"
+                end
+                local pos = {-0.5*(string.len(row)+1)+j,-0.5*(#code+1)+i}
+                pos[1]=pos[1]+dir[letter][1]
+                pos[2]=pos[2]+dir[letter][2]
+                b = { type=b.production_type, position = pos }
+                box.pipe_connections[#box.pipe_connections+1]=table.deepcopy(b)
+            end
+        end
+    end
+    box.filter = filter
+    box.minimum_temperature = min_temp
+    return box
+end
+
+function omni.lib.fluid_box_conversion(kind, stringcode, min_temp, filter)
+    if stringcode==nil then return nil end
+    if kind == "assembling-machine" or kind=="furnace" then
+        return omni.lib.assemblingFluidBox(stringcode)
+    elseif kind == "generator" then
+        return omni.lib.generatorFluidBox(stringcode, min_temp, filter)
+    end
+    return nil
 end
 
 function omni.lib.replaceValue(tab,name,val,flags)
@@ -875,61 +921,6 @@ function omni.lib.replaceValue(tab,name,val,flags)
         t[name]=val
     end
     return t
-end
-
-function omni.lib.generatorFluidBox(str,filter,tmp)
-    if str==nil then return nil end
-    local code=omni.lib.split(str,".")
-    local box = {
-        volume = 1000,
-        pipe_covers = pipecoverspictures(),
-        pipe_connections ={},
-        production_type = "input-output"
-    }
-    for i, row in pairs(code) do
-        for j=1, string.len(row) do
-            local letter = string.sub(row,j,j)
-            if letter ~= "X" then
-                local b = {}
-                b.pipe_covers = pipecoverspictures()
-                volume = 1000
-                if inflow[letter] then
-                    b.production_type = "input"
-                elseif passthrough[letter] then
-                    b.production_type = "input-output"
-                else
-                    b.production_type = "output"
-                end
-                local pos = {-0.5*(string.len(row)+1)+j,-0.5*(#code+1)+i}
-                pos[1]=pos[1]+dir[letter][1]
-                pos[2]=pos[2]+dir[letter][2]
-                b = { type=b.production_type, position = pos }
-                box.pipe_connections[#box.pipe_connections+1]=table.deepcopy(b)
-            end
-        end
-    end
-    box.filter = filter
-    box.minimum_temperature = tmp
-    return box
-end
-
-function omni.lib.fluid_box_conversion(kind,str,tmp)
-    if str==nil then return nil end
-    local box = {}
-    if kind == "assembling-machine" or kind=="furnace" then
-        if type(hide)=="boolean" then
-            box = omni.lib.assemblingFluidBox(str)
-        else
-            box = omni.lib.assemblingFluidBox(str)
-        end
-    elseif kind == "generator" then
-        if hide then
-            box = omni.lib.generatorFluidBox(str,tmp)
-        else
-            box = omni.lib.generatorFluidBox(str)
-        end
-    end
-    return box
 end
 
 --Fuel functions
