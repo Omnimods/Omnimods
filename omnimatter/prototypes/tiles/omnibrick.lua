@@ -26,9 +26,6 @@ omnitile.layer = 120
 --Point (all) graphics to our folder
 local function repoint_folder(pic)
     pic.picture = string.gsub(pic.picture, "__base__", "__omnimatter__")
-    if pic.hr_version then
-        pic.hr_version.picture = string.gsub(pic.hr_version.picture, "__base__", "__omnimatter__")
-    end
 end
 
 for _,tab in pairs({omnitile.transitions, omnitile.transitions_between_transitions, omnitile.variants}) do

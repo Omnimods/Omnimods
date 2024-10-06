@@ -43,7 +43,6 @@ if not data.raw["transport-belt"]["basic-transport-belt"] then
     ebelt.icons = nil
     ebelt.icon = "__omnimatter_energy__/graphics/icons/basic-transport-belt.png"
     ebelt.icon_size = 64
-    ebelt.icon_mipmaps = 4
     ebelt.minable.result = "basic-transport-belt"
     ebelt.next_upgrade = "transport-belt"
     ebelt.related_underground_belt = "basic-underground-belt"
@@ -68,7 +67,6 @@ if not data.raw["transport-belt"]["basic-transport-belt"] then
     eunder.icons = nil
     eunder.icon = "__omnimatter_energy__/graphics/icons/basic-underground-belt.png"
     eunder.icon_size = 64
-    eunder.icon_mipmaps = 4
     eunder.minable.result = "basic-underground-belt"
     eunder.next_upgrade = "underground-belt"
     eunder.speed = 0.015625
@@ -109,7 +107,6 @@ if not data.raw["transport-belt"]["basic-transport-belt"] then
     esplitter.icons = nil
     esplitter.icon = "__omnimatter_energy__/graphics/icons/basic-splitter.png"
     esplitter.icon_size = 64
-    esplitter.icon_mipmaps = 4
     esplitter.minable.result = "basic-splitter"
     esplitter.next_upgrade = "splitter"
     esplitter.speed = 0.015625

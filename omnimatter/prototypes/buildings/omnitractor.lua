@@ -140,72 +140,72 @@ local fbox_positions = {
     {
         {
             -1,
-            -1.95
+            -1--1.95
         },
         {
-            1.9,
+            -1,--1.9,
             -1
         },
         {
             1,
-            1.85
+            -1--1.85
         },
         {
-            -1.9,
+            -1,---1.9,
             1
         }
     },
     {
         {
             1,
-            -1.95
+            -1--   -1.95
         },
         {
-            1.9,
+            1,--    1.9,
             1
         },
         {
             -1,
-            1.85
+            1--     1.85
         },
         {
-            -1.9,
+            -1,--   -1.9,
             -1
         }
     },
     {
         {
             -1,
-            1.85
+            1--     1.85
         },
         {
-            -1.9,
+            -1,--   -1.9,
             -1
         },
         {
             1,
-            -1.95
+            -1--    -1.95
         },
         {
-            1.9,
+            1,--    1.9,
             1
         }
     },
     {
         {
             1,
-            1.85
+            1, --   1.85
         },
         {
-            -1.9,
+            -1,--   -1.9,
             1
         },
         {
             -1,
-            -1.95
+            -1--    -1.95
         },
         {
-            1.9,
+            1,--    1.9,
             -1
         }
     }
@@ -217,7 +217,6 @@ local function modify_fluidboxes(proto)
         fboxes[I].pipe_covers = pipecoverspictures()
         -- Move the north cover up a little
         fboxes[I].pipe_covers.north.layers[1].shift = {0, -0.05}
-        fboxes[I].pipe_covers.north.layers[1].hr_version.shift = {0, -0.05}
         -- Only south should draw "on top"
         fboxes[I].secondary_draw_orders = {
             north = -1,
@@ -229,79 +228,39 @@ local function modify_fluidboxes(proto)
         fboxes[I].pipe_picture = {
             north = {
                 filename = "__base__/graphics/entity/pipe/pipe-straight-vertical.png",
-                height = 64,
-                width = 64,
+                height = 128,
+                width = 128,
                 shift = {
                     0,
                     0.95
                 },
-                hr_version = {
-                    filename = "__base__/graphics/entity/pipe/hr-pipe-straight-vertical.png",
-                    scale = 0.5,
-                    height = 128,
-                    width = 128,
-                    shift = {
-                        0,
-                        0.95
-                    }
-                }
             },
             east = {
                 filename = "__base__/graphics/entity/pipe/pipe-straight-horizontal.png",
-                height = 64,
-                width = 64,
+                height = 128,
+                width = 128,
                 shift = {
                     -0.85,
                     0
                 },
-                hr_version = {
-                    filename = "__base__/graphics/entity/pipe/hr-pipe-straight-horizontal.png",
-                    scale = 0.5,
-                    height = 128,
-                    width = 128,
-                    shift = {
-                        -0.85,
-                        0
-                    }
-                }
             },
             south = {
                 filename = "__omnimatter__/graphics/pipe-patch-south.png",
-                height = 64,
-                width = 64,
+                height = 128,
+                width = 128,
                 shift = {
                     0,
                     -0.299
                 },
-                hr_version = {
-                    filename = "__omnimatter__/graphics/hr-pipe-patch-south.png",
-                    scale = 0.5,
-                    height = 128,
-                    width = 128,
-                    shift = {
-                        0,
-                        -0.299
-                    }
-                }
             },
             west = {
                 filename = "__base__/graphics/entity/pipe/pipe-straight-horizontal.png",
-                height = 64,
-                width = 64,
+                height = 128,
+                width = 128,
                 shift = {
                     0.9,
                     0
                 },
-                hr_version = {
-                    filename = "__base__/graphics/entity/pipe/hr-pipe-straight-horizontal.png",
-                    scale = 0.5,
-                    height = 128,
-                    width = 128,
-                    shift = {
-                        0.9,
-                        0
-                    }
-                }
             }
         }
         fboxes[I].pipe_connections[1].positions = fbox_positions[I]
@@ -326,3 +285,5 @@ for i=1,math.min(settings.startup["omnimatter-max-tier"].value,5) do
 end
 -- Burner as well
 modify_fluidboxes(data.raw["assembling-machine"]["burner-omnitractor"])
+
+--log(serpent.block(data.raw["assembling-machine"]["assembling-machine-1"].energy_source))

@@ -70,7 +70,7 @@ if mods["Krastorio2"] then
             effectivity = 0.5,
             fuel_inventory_size = 1,
             fuel_categories = {"omnite","chemical","vehicle-fuel"},
-            emissions = 0.01,
+            emissions_per_minute = {pollution = 0.01},
             smoke = {{
                 name = "smoke",
                 deviation = {0.1, 0.1},
@@ -103,8 +103,8 @@ if mods["Krastorio2"] then
     omni.lib.add_recipe_ingredient("fast-inserter","inserter")
     omni.lib.add_recipe_ingredient("long-handed-inserter","inserter")
     omni.lib.add_recipe_ingredient("filter-inserter","inserter")
-    omni.lib.add_recipe_ingredient("stack-inserter","fast-inserter")
-    omni.lib.add_recipe_ingredient("stack-filter-inserter","stack-inserter")
+    omni.lib.add_recipe_ingredient("bulk-inserter","fast-inserter")
+    omni.lib.add_recipe_ingredient("stack-filter-inserter","bulk-inserter")
 
     omni.lib.add_recipe_ingredient("kr-superior-inserter","fast-inserter")
     omni.lib.add_recipe_ingredient("kr-superior-long-inserter","long-handed-inserter")

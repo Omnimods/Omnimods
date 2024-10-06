@@ -104,7 +104,7 @@ if mods["bobplates"] then
     data.raw.item["steel-gear-wheel"].icon_size=32
 end
 
-data.raw.item["iron-gear-wheel"].icons={{icon="__omnimatter__/graphics/icons/iron-gear-wheel.png",icon_size=32,mipmaps=1}}
+--data.raw.item["iron-gear-wheel"].icons={{icon="__omnimatter__/graphics/icons/iron-gear-wheel.png"}}
 
 if mods["angelssmelting"] then
     --Get rid of the ore processor 1 ingredient count limit to allow for omnium processing

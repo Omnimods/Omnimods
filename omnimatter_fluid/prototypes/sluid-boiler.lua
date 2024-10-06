@@ -124,9 +124,8 @@ local function sluid_boiler_generation(fluid_cats)
             if new_ent.energy_source.burns_fluid then
                 new_ent.energy_source.fluid_box.production_type = "input"
                 pipe_covers = pipecoverspictures()
-                new_ent.energy_source.fluid_box.base_level = -1
-                new_ent.energy_source.fluid_box.height = 2
-                new_ent.energy_source.fluid_box.pipe_connections = {{type = "input-output", position = {2,0}},{type = "input-output", position = {-2,0}}}
+                new_ent.energy_source.fluid_box.volume = 1000
+                new_ent.energy_source.fluid_box.pipe_connections = {{flow_direction = "input-output", position = {2,0}},{flow_direction = "input-output", position = {-2,0}}}
             end
 
             new_ent.energy_usage = boiler.energy_consumption
@@ -136,8 +135,8 @@ local function sluid_boiler_generation(fluid_cats)
                 {
                     production_type = "output",
                     pipe_covers = pipecoverspictures(),
-                    base_level = 1,
-                    pipe_connections = {{type = "output", position = {0, -2}}}
+                    volume = 1000,
+                    pipe_connections = {{flow_direction = "output", position = {0, -2}}}
                 }
             }
             new_ent.fluid_box = nil --removes input box

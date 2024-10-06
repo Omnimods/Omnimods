@@ -512,7 +512,7 @@ function omni.lib.create_barrel(fluid)
         type = "item",
         name = fluid.name.."-barrel",
         localised_name = {"item-name.filled-barrel", fluid.localised_name or {"fluid-name." .. fluid.name}},
-        icons = util.combine_icons(omni.lib.icon.of(data.raw.item["empty-barrel"]), masks, {}),
+        icons = util.combine_icons(omni.lib.icon.of(data.raw.item["barrel"]), masks, {}),
         flags = {},
         subgroup = "fill-barrel",
         order = "b",
@@ -540,7 +540,7 @@ function omni.lib.create_barrel(fluid)
         ingredients =
         {
             {type = "fluid", name = fluid.name, amount = 250},
-            {type = "item", name = "empty-barrel", amount = 1},
+            {type = "item", name = "barrel", amount = 1},
         },
         results=
         {
@@ -567,7 +567,7 @@ function omni.lib.create_barrel(fluid)
         localised_name = {"recipe-name.empty-filled-barrel", fluid.localised_name or {"fluid-name." .. fluid.name}},
         category = "crafting-with-fluid",
         energy_required = 0.2,
-        subgroup = "empty-barrel",
+        subgroup = "barrel",
         order = "c[empty-"..fluid.name.."-barrel".."]",
         enabled = false,
         icons = util.combine_icons(masks, omni.lib.icon.of(fluid), {scale = 0.5, shift = {7, 8}}),
@@ -578,7 +578,7 @@ function omni.lib.create_barrel(fluid)
         results=
         {
             {type = "fluid", name = fluid.name, amount = 250},
-            {type = "item", name = "empty-barrel", amount = 1}
+            {type = "item", name = "barrel", amount = 1}
         },
         hide_from_stats = true,
         allow_decomposition = false
@@ -592,7 +592,6 @@ end
 
 local itemproto = {
     "item",
-    "mining-tool",
     "gun",
     "ammo",
     "armor",
@@ -604,7 +603,7 @@ local itemproto = {
     "selection-tool",
     "fluid",
     "item-with-entity-data",
-    "spidertron-remote",
+    "rts-tool",
     "item-with-inventory",
     "item-with-tags"
 }
@@ -612,7 +611,11 @@ local itemproto = {
 function omni.lib.find_prototype(item)
     if type(item)=="table" then return item elseif type(item)~="string" then return nil end
     for _, p in pairs(itemproto) do
-        if data.raw[p][item] then return data.raw[p][item] end
+        if not data.raw[p] then
+            return nil
+        else
+            if data.raw[p][item] then return data.raw[p][item] end
+        end
     end
     --log("Could not find "..item.."'s prototype, check it's type.")
     return nil
@@ -797,15 +800,15 @@ function omni.lib.add_overlay(it, overlay_type, level)
     end
 end
 
-local c=0.9
-local dir={W={0,-c},S={0,c},A={-c,0},D={c,0},I={0,-c},K={0,c},J={-c,0},L={c,0},T={0,-c},G={0,c},F={-c,0},H={c,0}}
-local inflow={A=true,W=true,S=true,D=true}        --North,East,South,West -->Letters have to be used for the given direction!!!
-local passthrough={F=true,T=true,H=true,G=true} --North,East,South,West
---output: I, K, J, L
-function omni.lib.assemblingFluidBox(str,hide)
+local c=0.9    --0.9
+local cord={W={0,-c},S={0,c},A={-c,0},D={c,0},I={0,-c},K={0,c},J={-c,0},L={c,0},T={0,-c},G={0,c},F={-c,0},H={c,0}}
+local dir={W=0,S=8,A=4,D=12,I=0,K=8,J=12,L=4,T=0,G=8,F=12,H=4}
+local inflow={A=true,W=true,S=true,D=true}          --W= North, A=East, S=South, D=West -->Letters have to be used for the given direction!!!
+local passthrough={F=true,T=true,H=true,G=true}     --T= North, H=East, G=South, F=West 
+--output: J, I, L, K                                --I= North, L=East, K=South, J=West 
+function omni.lib.assemblingFluidBox(str)
     if str==nil then return nil end
     local code=omni.lib.split(str,".")
-    local size = #code
     local box = {}
     for i, row in pairs(code) do
         for j=1, string.len(row) do
@@ -813,25 +816,24 @@ function omni.lib.assemblingFluidBox(str,hide)
             if letter ~= "X" then
                 local b = {}
                 b.pipe_covers = pipecoverspictures()
-                b.base_area = 120
+                b.volume = 1000
                 if inflow[letter] then
                     b.production_type = "input"
-                    b.base_level = -1
                 elseif passthrough[letter] then
                     b.production_type = "input-output"
                 else
                     b.production_type = "output"
-                    b.base_level = 1
                 end
-                local pos = {-0.5*(string.len(row)+1)+j,-0.5*(#code+1)+i}
-                pos[1]=pos[1]+dir[letter][1]
-                pos[2]=pos[2]+dir[letter][2]
-                b.pipe_connections = {{ type=b.production_type, position = pos }}
+                local pos = {-0.5 * (string.len(row)+1) + j, -0.5*(#code+1) + i}
+
+                pos[1] = pos[1] + cord[letter][1]
+                pos[2] = pos[2] + cord[letter][2]
+
+                b.pipe_connections = {{flow_direction = b.production_type, direction = dir[letter], position = pos }}
                 box[#box+1]=table.deepcopy(b)
             end
         end
     end
-    if type(hide) == "boolean" and hide then box.off_when_no_fluid_recipe = true end
     return box
 end
 
@@ -879,9 +881,7 @@ function omni.lib.generatorFluidBox(str,filter,tmp)
     if str==nil then return nil end
     local code=omni.lib.split(str,".")
     local box = {
-        base_area = 1,
-        height = 2,
-        base_level = -1,
+        volume = 1000,
         pipe_covers = pipecoverspictures(),
         pipe_connections ={},
         production_type = "input-output"
@@ -892,15 +892,13 @@ function omni.lib.generatorFluidBox(str,filter,tmp)
             if letter ~= "X" then
                 local b = {}
                 b.pipe_covers = pipecoverspictures()
-                b.base_area = 10
+                volume = 1000
                 if inflow[letter] then
                     b.production_type = "input"
-                    b.base_level = -1
                 elseif passthrough[letter] then
                     b.production_type = "input-output"
                 else
                     b.production_type = "output"
-                    b.base_level = 1
                 end
                 local pos = {-0.5*(string.len(row)+1)+j,-0.5*(#code+1)+i}
                 pos[1]=pos[1]+dir[letter][1]
@@ -915,18 +913,18 @@ function omni.lib.generatorFluidBox(str,filter,tmp)
     return box
 end
 
-function omni.lib.fluid_box_conversion(kind,str,hide,tmp)
+function omni.lib.fluid_box_conversion(kind,str,tmp)
     if str==nil then return nil end
     local box = {}
     if kind == "assembling-machine" or kind=="furnace" then
         if type(hide)=="boolean" then
-            box = omni.lib.assemblingFluidBox(str,hide)
+            box = omni.lib.assemblingFluidBox(str)
         else
             box = omni.lib.assemblingFluidBox(str)
         end
     elseif kind == "generator" then
         if hide then
-            box = omni.lib.generatorFluidBox(str,hide,tmp)
+            box = omni.lib.generatorFluidBox(str,tmp)
         else
             box = omni.lib.generatorFluidBox(str)
         end

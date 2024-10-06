@@ -1,14 +1,14 @@
 {
 "name":"omnimatter_energy",
-"version": "3.1.19",
+"version": "3.2.0",
 "title":"Omnienergy",
 "author":"EmperorZelos",
 "contact": "https://discord.gg/WQYks7W",
 "description":"Start with burner labs, inserters and assemblers, slow belts, and limited access to fuel. Research electricity with a new science pack and better fuel refining methods up to renewable energy",
-"factorio_version":"1.1",
+"factorio_version":"1.2",
 "dependencies":[
     "base",
-    "omnilib >= 4.1.0",
+    "omnilib >= 4.2.0",
     "omnimatter",
     "? omnimatter_crystal",
     "? boblogistics",

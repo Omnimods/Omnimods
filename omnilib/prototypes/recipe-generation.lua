@@ -632,7 +632,7 @@ function ItemGen:setIcons(icons,mod)
             local setup = {}
             proto = omni.lib.find_prototype(name)
             if proto then
-                setup={{icon=proto.icon,icon_size=proto.icon_size,mipmaps=proto.mipmaps or nil}}
+                setup={{icon=proto.icon,icon_size=proto.icon_size}}
             else
                 setup={{icon = icons, icon_size=ic_sz}}
             end
@@ -643,7 +643,7 @@ function ItemGen:setIcons(icons,mod)
             if proto.icons then
                 self.icons=function(levels,grade) return proto.icons end
             else
-                self.icons=function(levels,grade) return {{icon=proto.icon,icon_size=proto.icon_size,mipmaps=proto.mipmaps or nil}} end
+                self.icons=function(levels,grade) return {{icon=proto.icon,icon_size=proto.icon_size}} end
             end
         else
             self.icons = function(levels,grade) return icons end
@@ -822,7 +822,7 @@ function ItemGen:setFuelCategory(fv)
 end
 function ItemGen:fluid()
     self.default_temperature = 25
-    self.heat_capacity = "0.7KJ"
+    self.heat_capacity = "0.7kJ"
     self.base_color = {r = 1, g = 0, b = 1}
     self.flow_color = {r = 1, g = 0, b = 1}
     self.type="fluid"
@@ -872,7 +872,7 @@ end
 function ItemGen:setCapacity(c)
     if self.type=="fluid" then
         if type(c)=="number" then
-            self.heat_capacity=c.."KJ"
+            self.heat_capacity=c.."kJ"
         else
             self.heat_capacity=c
         end
@@ -963,17 +963,19 @@ function ItemGen:setLocName(inname,...)
     else
         rtn[1]=function(levels,grade) return inname end
     end
+
     for _,part in pairs(arg) do
         if type(part) == "function" then
             rtn[#rtn+1] = part
         elseif type(part)=="table" and not #part == 1 then
-            rtn[#rtn+1] = function(levels,grade) return inname[grade] end
+            rtn[#rtn+1] = function(levels,grade) return tostring(inname[grade]) end
         elseif type(part)=="string" and string.find(part,".") and (string.find(part,"name") or string.find(part,"description")) then
             rtn[#rtn+1] = function(levels,grade) return {part} end
         else
             rtn[#rtn+1]=function(levels,grade) return part end
         end
     end
+
     self.loc_name = function(levels,grade)
         local out = {}
         for _, o in pairs(rtn) do
@@ -983,6 +985,7 @@ function ItemGen:setLocName(inname,...)
     end
     return self
 end
+
 function ItemGen:addLocName(key)
     local a = table.deepcopy(self.loc_name)
     local b = function(levels,grade) return {key} end
@@ -992,6 +995,8 @@ function ItemGen:addLocName(key)
         b = function(levels,grade) return key[grade] end
     elseif type(key)=="string" and string.find(key,".") and (string.find(key,"name") or string.find(key,"description")) then
         b = function(levels,grade) return {key} end
+    elseif type(key)=="number" then
+        b=function(levels,grade) return tostring(key) end
     else
         b=function(levels,grade) return key end
     end
@@ -1144,7 +1149,7 @@ function ItemGen:generate_item()
         self.rtn[#self.rtn].place_as_tile={
         result = self.place_result(0,0),
         condition_size = 1,
-        condition = { "water-tile" }
+        condition = { layers = {water_tile = true}}
         }
     else
         self.rtn[#self.rtn].place_result = self.place_result(0,0)
@@ -1259,7 +1264,7 @@ function RecGen:import(rec)
             if tech then
                 r:setTechName(tech.name):
                 setTechCost(tech.unit.count):
-                setTechIcons(tech.icons  or {{icon=tech.icon, icon_size=tech.icon_size or 128, icon_mipmaps = tech.icon_mipmaps or nil}}):
+                setTechIcons(tech.icons  or {{icon=tech.icon, icon_size=tech.icon_size or 128}}):
                 setTechLocName(tech.localised_name):
                 setTechLocDesc(tech.localised_description):
                 setTechPacks(tech.unit.ingredients):
@@ -1282,20 +1287,6 @@ function RecGen:importIf(rec)
         return RecGen:create():setGenerationCondition(false)
     end
 end
-function RecGen:importResult(result)
-    if data.raw.recipe[result] then
-        return RecGen:import(result)
-    else
-        for _,rec in pairs(data.raw.recipe) do
-            omni.lib.standardise(rec)
-            for _,res in pairs(rec.normal.results) do
-                if res.name==result then
-                    return RecGen:import(rec.name)
-                end
-            end
-        end
-    end
-end
 function RecGen:find(name)
     if Omni.Gen.Rec[name] then
         return Omni.Gen.Rec[name]:setForce()
@@ -1303,26 +1294,6 @@ function RecGen:find(name)
         return RecGen:importIf(name)
     end
 end
---[[
-r.ingredients = function(levels,grade,dif) return nil end
-    r.results = function(levels,grade,dif) return {{type="item",name=name,amount=1}} end
-    r.enabled=function(levels,grade) return false end
-    r.efficency = efficency
-    r.energy_required = function(levels,grade) return 1 end
-    r.category = function(levels,grade) return nil end
-    r.main_product=function(levels,grade) return nil end
-    r.tech = {
-        cost = function(levels,grade) return 50 end,
-        packs = function(levels,grade) return 1 end,
-        time=function(levels,grade) return 20 end,
-        upgrade = function(levels,grade) return false end,
-        name = function(levels,grade) return self.name end,
-        loc_name = function(levels,grade) return nil end,
-        loc_desc = function(levels,grade) return nil end,
-        icon = function(levels,grade) return nil end,
-        prerequisites = function(level,grade) return nil end}
-]]
-
 
 function RecGen:addProductivity(mod)
     if type(mod)=="nil" then
@@ -2088,6 +2059,8 @@ function RecGen:setTechLocName(inname,...)
                     rtn[#rtn+1] = function(levels,grade) return inname[grade] end
                 elseif type(part)=="string" and string.find(part,".") and (string.find(part,"name") or string.find(part,"description")) then
                     rtn[#rtn+1] = function(levels,grade) return {part} end
+                elseif type(part) == "number" then
+                        rtn[#rtn+1] = function(levels,grade) return {tostring(part)} end
                 else
                     rtn[#rtn+1]=function(levels,grade) return part end
                 end
@@ -2103,6 +2076,8 @@ function RecGen:setTechLocName(inname,...)
             rtn[#rtn+1] = function(levels,grade) return inname[grade] end
         elseif type(part)=="string" and string.find(part,".") and (string.find(part,"name") or string.find(part,"description")) then
             rtn[#rtn+1] = function(levels,grade) return {part} end
+        elseif type(part) == "number" then
+            rtn[#rtn+1] = function(levels,grade) return {tostring(part)} end
         else
             rtn[#rtn+1]=function(levels,grade) return part end
         end
@@ -2126,6 +2101,8 @@ function RecGen:addTechLocName(key)
         b = function(levels,grade) return key[grade] end
     elseif type(key)=="string" and string.find(key,".") and (string.find(key,"name") or string.find(key,"description")) then
         b = function(levels,grade) return {key} end
+    elseif type(key)=="number" then
+        b=function(levels,grade) return tostring(key) end
     else
         b=function(levels,grade) return key end
     end
@@ -2394,7 +2371,7 @@ function RecChain:generate_chain()
         if self.loc_name(m,actualTier) == nil then
             local prefixType = "item"
             if self.type=="fluid" then prefixType = "fluid" end
-            lname = {self.name,actualTier}
+            lname = {self.name, tostring(actualTier)}
         end
         --if self.loc_desc(m,i) == nil and self.main_product then lname=nil end
         local r = RecGen:create(self.mod,"omnirec-"..self.name.."-"..omni.lib.alpha(i)):
@@ -2765,7 +2742,7 @@ function setBuildingParameters(b,subpart)
     {
         type = "electric",
         usage_priority = "secondary-input",
-        emissions_per_minute = 1
+        emissions_per_minute = {pollution = 1.0}
     }
     b.energy_usage = function(levels,grade) return "150kW" end
     b.animation = function(levels,grade) return {} end
@@ -2851,7 +2828,7 @@ function BuildGen:import(name)
         setLight(build.light):
         setSoundWorking(build.working_sound):
         setSoundImpact(build.vehicle_impact_sound):
-        setFluidBox(build.fluid_boxes or build.fluid_box):
+        setFluidBox(build.fluid_boxes or build.fluid_box, build.fluid_boxes_off_when_no_fluid_recipe):
         setFluidInput(build.input_fluid_box):
         setCorpse(build.corpse):
         setMiningSpeed(build.mining_speed):
@@ -3131,7 +3108,7 @@ function BuildGen:setBurner(efficiency,size)
         effectivity = efficiency or 0.5,
         fuel_inventory_size = size or 1,
         burnt_inventory_size = size or 1,
-        emissions_per_minute = 1.0,
+        emissions_per_minute = {pollution = 1.0},
         smoke =
         {
             {
@@ -3153,16 +3130,14 @@ function BuildGen:setSteam(efficiency,size)
     {
         type = "fluid",
         effectivity = 1,
-        emissions_per_minute = 10, --fairly sure this scales, so it would be 2 at level 1 speed.
+        emissions_per_minute = {pollution = 10.0}, --fairly sure this scales, so it would be 2 at level 1 speed.
         fluid_box =
         {
-            base_area = 1,
-            height = 2,
-            base_level = -1,
+            volume = 1000,
             pipe_connections =
             {
-                {type = "input-output", position = { 2, 0}},
-                {type = "input-output", position = {-2, 0}}
+                {flow_direction = "input-output", direction = 4, position = { 2, 0}},
+                {flow_direction = "input-output", direction = 12, position = {-2, 0}}
             },
             pipe_covers = pipecoverspictures(),
             pipe_picture = assembler2pipepictures(),
@@ -3204,7 +3179,11 @@ function BuildGen:setEnergySupply()
 end
 
 function BuildGen:setEmissions(em)
-    self.energy_source.emissions_per_minute = em
+    if type(em) == "number" then
+        self.energy_source.emissions_per_minute = {pollution = em}
+    else
+        self.energy_source.emissions_per_minute = em
+    end
     return self
 end
 
@@ -3392,11 +3371,14 @@ function BuildGen:setFluidBox(s,hide,tmp)
     if type(s) == "table" then
         self.fluid_boxes = function(levels,grade) return s end
     elseif type(s)=="string" then
-        self.fluid_boxes = function(levels,grade) return omni.lib.fluid_box_conversion(self.type,s,hide,tmp) end
+        self.fluid_boxes = function(levels,grade) return omni.lib.fluid_box_conversion(self.type,s,tmp) end
         local spl = omni.lib.split(s,".")
         self:setSize(string.len(spl[1]),#spl)
     elseif type(s) == "function" then
         self.fluid_boxes=s
+    end
+    if hide == true then
+        self.hide_fluid_boxes_when_off = true
     end
     return self
 end
@@ -3560,7 +3542,9 @@ function BuildGen:generateBuilding()
         working_visualisations = self.working_visualisations(0,0),
         vehicle_impact_sound =  self.vehicle_impact_sound,
         burns_fluid=self.burns_fluid(0,0),
+        fluid_box = self.fluid_boxes(0,0),
         fluid_boxes = self.fluid_boxes(0,0),
+        fluid_boxes_off_when_no_fluid_recipe = self.hide_fluid_boxes_when_off,
         effectivity = self.effectivity(0,0),
         fluid_usage_per_tick = self.fluid_usage_per_tick(0,0),
         vertical_animation = self.vertical_animation(0,0),
@@ -3571,7 +3555,6 @@ function BuildGen:generateBuilding()
         connection_points=self.connection_points(0,0),
         radius_visualisation_picture=self.radius_visualisation_picture(0,0),
         light=self.light(0,0),
-        fluid_box = self.fluid_boxes(0,0),
         vector_to_place_result = self.vector_to_place_result(0,0),
         resource_searching_radius  = self.resource_searching_radius(0,0),
         mining_power = self.mining_power(0,0),
@@ -3648,7 +3631,7 @@ function BuildChain:setInitialBurner(efficiency,size)
         type = "burner",
         effectivity = efficiency or 0.5,
         fuel_inventory_size = size or 1,
-        emissions_per_minute = 1.0,
+        emissions_per_minute = {pollution = 1.0},
         smoke =
         {
             {
@@ -4466,10 +4449,10 @@ function InsertGen:generateInserter()
     corpse = self.corpse,
     resistances =
     {
-      {
-        type = "fire",
-        percent = 90
-      }
+        {
+            type = "fire",
+            percent = 90
+        }
     },
     collision_box = {{-size.width+0.25, -size.height+0.25}, {size.width-0.25, size.height-0.25}},
     selection_box = {{-size.width, -size.height}, {size.width, size.height}},

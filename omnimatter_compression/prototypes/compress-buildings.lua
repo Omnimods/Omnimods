@@ -293,9 +293,6 @@ if settings.startup["omnicompression_entity_compression"].value then
             end
             fluid_box.filter = fl_name
         end
-        -- if fluid_box.base_area then
-        --   fluid_box.base_area = fluid_box.base_area * math.pow(multiplier, i) / sluid_contain_fluid
-        -- end
         for I=1, #fluid_box do
             if fluid_box[I] then
                 if fluid_box.filter then
@@ -311,9 +308,6 @@ if settings.startup["omnicompression_entity_compression"].value then
                     end
                     fluid_box[I].filter = fl_name
                 end
-                -- if fluid_box[I].base_area then
-                --   fluid_box[I].base_area = fluid_box[I].base_area * math.pow(multiplier, i) / sluid_contain_fluid
-                -- end
             end
         end
     end
@@ -451,7 +445,10 @@ if settings.startup["omnicompression_entity_compression"].value then
         --energy source
         if new.energy_source then
             if new.energy_source.emissions_per_minute then
-                new.energy_source.emissions_per_minute = new.energy_source.emissions_per_minute * math.pow(multiplier, compr_lvl)
+                for k,v in pairs(new.energy_source.emissions_per_minute ) do
+                    v = v * math.pow(multiplier, compr_lvl)
+                end
+
             end
             if new.energy_source.buffer_capacity then
                 new.energy_source.buffer_capacity = new_effect(new.energy_source.buffer_capacity, compr_lvl)
@@ -614,7 +611,7 @@ if settings.startup["omnicompression_entity_compression"].value then
                     end
                     -- Name and icons, just copy from the pole. Again, same as LEP data_updates
                     new_lamp.name = new.name .. "-lamp"
-                    for _, v in pairs{"localised_name", "icon", "icons", "icon_size", "icon_mipmaps"} do
+                    for _, v in pairs{"localised_name", "icon", "icons", "icon_size"} do
                         new_lamp[v] = new[v]
                     end
                     -- Aaand done
@@ -645,7 +642,7 @@ if settings.startup["omnicompression_entity_compression"].value then
         --Generators!
         if kind == "burner-generator" then
             new.max_power_output = new_effect(new.max_power_output, compr_lvl)
-            new.burner.emissions_per_minute = (new.burner.emissions_per_minute or 0) * math.pow(multiplier,compr_lvl+1)
+            new.burner.emissions_per_minute.pollution = (new.burner.emissions_per_minute.pollution or 0) * math.pow(multiplier,compr_lvl+1)
         end
 
         --Rockets!

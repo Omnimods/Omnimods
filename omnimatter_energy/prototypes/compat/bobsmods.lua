@@ -13,7 +13,7 @@ if mods["bobpower"] then
     omni.lib.set_prerequisite("bob-steam-engine-2", "omnitech-steam-power")
     omni.lib.set_prerequisite("bob-boiler-2", "omnitech-steam-power")
     omni.lib.set_prerequisite("automation", "automation-science-pack")
-    omni.lib.set_prerequisite("optics", "automation-science-pack")
+    omni.lib.set_prerequisite("lamp", "automation-science-pack")
 
     --Disable and hide bobs tech
     if data.raw.technology["steam-power"] then data.raw.technology["steam-power"].hidden = true end
