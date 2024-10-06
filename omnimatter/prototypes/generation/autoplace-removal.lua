@@ -25,6 +25,18 @@ for _,ore in pairs(data.raw["autoplace-control"]) do
     if ore.category  and ore.category  == "resource" and ore.name and not omni.lib.is_in_table(ore.name, omni.matter.res_to_keep) then
         data.raw["autoplace-control"][ore.name] = nil
         --log("Removed "..ore.name.." from autoplace control")
+    else
+        omni.matter.res_to_keep[#omni.matter.res_to_keep+1] = ore.name
+        --log("Excluded "..proto.autoplace.control)
+    end
+end
+
+for planname, plan in pairs(data.raw.planet) do
+    for orename, v in pairs(plan["map_gen_settings"]["autoplace_controls"]) do
+        if orename and not omni.lib.is_in_table(orename, omni.matter.res_to_keep) then
+            data.raw.planet[planname]["map_gen_settings"]["autoplace_controls"][orename] = nil
+            log("Removed "..orename.." from planet "..planname.." autoplace control")
+        end
     end
 end
 

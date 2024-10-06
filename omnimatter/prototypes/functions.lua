@@ -24,7 +24,7 @@ local function get_resource(name, fluid)
             name = minable.result 
         elseif minable.results then -- This is more complex, we'll search the results for something matching r_name
             local matched_result = false     -- If we don't find a match, we'll defer to the first result
-            for k, result in pairs(minable.results) do
+            for _, result in pairs(minable.results) do
                 local result_name = result[1] or result.name
                 if result_name == name then
                     matched_result = true
