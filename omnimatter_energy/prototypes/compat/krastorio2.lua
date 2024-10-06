@@ -70,7 +70,7 @@ if mods["Krastorio2"] then
             effectivity = 0.5,
             fuel_inventory_size = 1,
             fuel_categories = {"omnite","chemical","vehicle-fuel"},
-            emissions = 0.01,
+            emissions_per_minute = {pollution = 0.01},
             smoke = {{
                 name = "smoke",
                 deviation = {0.1, 0.1},

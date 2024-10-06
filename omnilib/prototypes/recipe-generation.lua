@@ -2059,6 +2059,8 @@ function RecGen:setTechLocName(inname,...)
                     rtn[#rtn+1] = function(levels,grade) return inname[grade] end
                 elseif type(part)=="string" and string.find(part,".") and (string.find(part,"name") or string.find(part,"description")) then
                     rtn[#rtn+1] = function(levels,grade) return {part} end
+                elseif type(part) == "number" then
+                        rtn[#rtn+1] = function(levels,grade) return {tostring(part)} end
                 else
                     rtn[#rtn+1]=function(levels,grade) return part end
                 end
@@ -2074,6 +2076,8 @@ function RecGen:setTechLocName(inname,...)
             rtn[#rtn+1] = function(levels,grade) return inname[grade] end
         elseif type(part)=="string" and string.find(part,".") and (string.find(part,"name") or string.find(part,"description")) then
             rtn[#rtn+1] = function(levels,grade) return {part} end
+        elseif type(part) == "number" then
+            rtn[#rtn+1] = function(levels,grade) return {tostring(part)} end
         else
             rtn[#rtn+1]=function(levels,grade) return part end
         end
@@ -2738,7 +2742,7 @@ function setBuildingParameters(b,subpart)
     {
         type = "electric",
         usage_priority = "secondary-input",
-        emissions_per_minute = 1
+        emissions_per_minute = {pollution = 1.0}
     }
     b.energy_usage = function(levels,grade) return "150kW" end
     b.animation = function(levels,grade) return {} end
@@ -3104,7 +3108,7 @@ function BuildGen:setBurner(efficiency,size)
         effectivity = efficiency or 0.5,
         fuel_inventory_size = size or 1,
         burnt_inventory_size = size or 1,
-        emissions_per_minute = 1.0,
+        emissions_per_minute = {pollution = 1.0},
         smoke =
         {
             {
@@ -3126,7 +3130,7 @@ function BuildGen:setSteam(efficiency,size)
     {
         type = "fluid",
         effectivity = 1,
-        emissions_per_minute = 10, --fairly sure this scales, so it would be 2 at level 1 speed.
+        emissions_per_minute = {pollution = 10.0}, --fairly sure this scales, so it would be 2 at level 1 speed.
         fluid_box =
         {
             volume = 1000,
@@ -3175,7 +3179,11 @@ function BuildGen:setEnergySupply()
 end
 
 function BuildGen:setEmissions(em)
-    self.energy_source.emissions_per_minute = em
+    if type(em) == "number" then
+        self.energy_source.emissions_per_minute = {pollution = em}
+    else
+        self.energy_source.emissions_per_minute = em
+    end
     return self
 end
 
@@ -3623,7 +3631,7 @@ function BuildChain:setInitialBurner(efficiency,size)
         type = "burner",
         effectivity = efficiency or 0.5,
         fuel_inventory_size = size or 1,
-        emissions_per_minute = 1.0,
+        emissions_per_minute = {pollution = 1.0},
         smoke =
         {
             {

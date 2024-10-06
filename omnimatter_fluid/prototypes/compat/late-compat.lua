@@ -40,7 +40,7 @@ if mods["space-exploration"] then
             data.raw.furnace["se-big-turbine"].fluid_boxes[i] = nil
         else
             --Increase the damn base_area to allow it to hold 2 crafts
-            box.base_area = 100
+            --box.base_area = 100
         end
     end
 end

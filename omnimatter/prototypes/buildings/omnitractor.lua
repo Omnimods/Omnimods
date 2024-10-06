@@ -140,72 +140,72 @@ local fbox_positions = {
     {
         {
             -1,
-            -1.95
+            -1--1.95
         },
         {
-            1.9,
+            -1,--1.9,
             -1
         },
         {
             1,
-            1.85
+            -1--1.85
         },
         {
-            -1.9,
+            -1,---1.9,
             1
         }
     },
     {
         {
             1,
-            -1.95
+            -1--   -1.95
         },
         {
-            1.9,
+            1,--    1.9,
             1
         },
         {
             -1,
-            1.85
+            1--     1.85
         },
         {
-            -1.9,
+            -1,--   -1.9,
             -1
         }
     },
     {
         {
             -1,
-            1.85
+            1--     1.85
         },
         {
-            -1.9,
+            -1,--   -1.9,
             -1
         },
         {
             1,
-            -1.95
+            -1--    -1.95
         },
         {
-            1.9,
+            1,--    1.9,
             1
         }
     },
     {
         {
             1,
-            1.85
+            1, --   1.85
         },
         {
-            -1.9,
+            -1,--   -1.9,
             1
         },
         {
             -1,
-            -1.95
+            -1--    -1.95
         },
         {
-            1.9,
+            1,--    1.9,
             -1
         }
     }
@@ -286,4 +286,4 @@ end
 -- Burner as well
 modify_fluidboxes(data.raw["assembling-machine"]["burner-omnitractor"])
 
---log(serpent.block(data.raw["assembling-machine"]["burner-omnitractor"].fluid_boxes))
+--log(serpent.block(data.raw["assembling-machine"]["assembling-machine-1"].energy_source))

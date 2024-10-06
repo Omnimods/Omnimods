@@ -17,7 +17,7 @@ if not mods["angelssmelting"] then
     icon = "__angelssmelting__/graphics/icons/liquid-coolant.png",
     icon_size = 32,
     default_temperature = 25,
-    heat_capacity = "0.1KJ",
+    heat_capacity = "0.1kJ",
     base_color = {r = 109/255, g = 136/255, b = 179/255},
     flow_color = {r = 109/255, g = 136/255, b = 179/255},
     max_temperature = 300,
@@ -28,7 +28,7 @@ if not mods["angelssmelting"] then
     icon = "__angelssmelting__/graphics/icons/liquid-coolant-used.png",
     icon_size = 32,
     default_temperature = 25,
-    heat_capacity = "0.1KJ",
+    heat_capacity = "0.1kJ",
     base_color = {r = 68/255, g = 85/255, b = 112/255},
     flow_color = {r = 68/255, g = 85/255, b = 112/255},
     max_temperature = 300,
@@ -335,14 +335,12 @@ BuildGen:create("omnimatter_energy","omnium-turbine"):
     selection_box = {{-1.5, -2.5}, {1.5, 2.5}},
     fluid_box =
     {
-      base_area = 1,
-      height = 2,
-      base_level = -1,
+      volume = 1000,
       pipe_covers = pipecoverspictures(),
       pipe_connections =
       {
-        { type = "input-output", position = {2, 0} },
-        { type = "input-output", position = {-2, 0} },
+        { flow_direction = "input-output", position = {2, 0} },
+        { flow_direction = "input-output", position = {-2, 0} },
       },
       production_type = "input-output",
       filter = "omnium",

@@ -800,7 +800,7 @@ function omni.lib.add_overlay(it, overlay_type, level)
     end
 end
 
-local c=0.9
+local c=0.9    --0.9
 local cord={W={0,-c},S={0,c},A={-c,0},D={c,0},I={0,-c},K={0,c},J={-c,0},L={c,0},T={0,-c},G={0,c},F={-c,0},H={c,0}}
 local dir={W=0,S=8,A=4,D=12,I=0,K=8,J=12,L=4,T=0,G=8,F=12,H=4}
 local inflow={A=true,W=true,S=true,D=true}          --W= North, A=East, S=South, D=West -->Letters have to be used for the given direction!!!
@@ -824,7 +824,7 @@ function omni.lib.assemblingFluidBox(str)
                 else
                     b.production_type = "output"
                 end
-                local pos = {-0.5 * (string.len(row)+1) + j, -0.5 * (#code+1) + i}
+                local pos = {-0.5 * (string.len(row)+1) + j, -0.5*(#code+1) + i}
 
                 pos[1] = pos[1] + cord[letter][1]
                 pos[2] = pos[2] + cord[letter][2]

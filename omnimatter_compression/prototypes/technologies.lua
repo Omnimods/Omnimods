@@ -61,7 +61,7 @@ local tech2 = {
     order = "z",
     effects = {},
     upgrade = true,
-    prerequisites = {"compression-initial","advanced-electronics"},
+    prerequisites = {"compression-initial","advanced-circuit"},
     unit =
     {
         count = 1000,
@@ -83,7 +83,7 @@ local tech3 = {
     icon_size = 128,
     order = "z",
     upgrade = true,
-    prerequisites = {"compression-recipes","advanced-electronics-2"},
+    prerequisites = {"compression-recipes","processing-unit"},
     unit =
     {
         count = 1500,
