@@ -52,15 +52,11 @@ data:extend({
         tree_removal_probability = 0.8,
         tree_removal_max_distance = 32 * 32,
         infinite_depletion_amount = 10,
-        resource_patch_search_radius = 12,
+        resource_patch_search_radius = 10,
         order="b-b",
-        --map_color = {r=0.34, g=0.00, b=0.51},
-        map_color = {r=0.22, g=0.00, b=0.255},
         infinite=true,
-        glow = true,
         minimum = 375,
         normal = 1500,
-        maximum = 6000,
         minable = mine,
         collision_box = {{ -0.1, -0.1}, {0.1, 0.1}},
         selection_box = {{ -0.5, -0.5}, {0.5, 0.5}},
@@ -118,7 +114,13 @@ data:extend({
                     flags = {"light"},
                 }
             }
-        }
+        },
+        effect_animation_period = 5,
+        effect_animation_period_deviation = 1,
+        effect_darkness_multiplier = 8.0,
+        min_effect_alpha = 0.1,
+        max_effect_alpha = 0.1,
+        map_color = {r=0.22, g=0.00, b=0.255}
     }
 })
 

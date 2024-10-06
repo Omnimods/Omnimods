@@ -39,7 +39,7 @@ cost = OmniGen:create():
 local omnic_acid = RecChain:create("omnimatter","omnic-acid"):
         setLocName("fluid-name.omnic-acid"):
         setIngredients({
-        {name = "crushed-omnite", amount = quant/2},
+        {name = "crushed-omnite", amount = quant/4},
         {type="fluid", name=water, amount=120},
         {type="fluid", name="steam", amount=120},
         }):

@@ -62,8 +62,8 @@ for _,fuelitem in pairs(data.raw.item) do
         --Get fuel number in MJ (divide by 10^6)
         local FV=omni.lib.get_fuel_number(fuelitem.fuel_value)/10^6
         local props={
-            [5]={ing_add={"crushed-omnite",2}, cat="crafting", sub="omnienergy-fuel-1", time=1.0, tech="omnitech-omnium-power-1", fuelmult = 1.50},
-            [10]={ing_add={"pulverized-omnite",4}, cat="omnifurnace", sub="omnienergy-fuel-2", time=2.0,tech="omnitech-omnium-power-2", fuelmult = 1.45},
+            [5]={ing_add={"crushed-omnite",1}, cat="crafting", sub="omnienergy-fuel-1", time=1.0, tech="omnitech-omnium-power-1", fuelmult = 1.50},
+            [10]={ing_add={"pulverized-omnite",2}, cat="omnifurnace", sub="omnienergy-fuel-2", time=2.0,tech="omnitech-omnium-power-2", fuelmult = 1.45},
             [40]={ing_add={type = "fluid", name = "omnic-acid", amount = 20}, cat="omnite-extraction", sub="omnienergy-fuel-3", time=2.0,tech="omnitech-omnium-power-3", fuelmult = 1.40},
             [250]={ing_add={type = "fluid", name = "omnisludge", amount = 80}, cat="omniphlog", sub="omnienergy-fuel-4", time=4.0,tech="omnitech-omnium-power-4", fuelmult = 1.35},
             [300]={ing_add={type = "fluid", name = "omniston", amount = 40}, cat="omniphlog", sub="omnienergy-fuel-5", time=4.0,tech="omnitech-omnium-power-5", fuelmult = 1.30}
@@ -134,14 +134,14 @@ end
 
 RecGen:create("omnimatter_energy","purified-omnite"):
     setIngredients({type="item", name="crushed-omnite", amount=5}):
-    setResults({type="item", name="purified-omnite", amount=2}):
+    setResults({type="item", name="purified-omnite", amount=4}):
     setStacksize(200):
     setCategory("omnifurnace"):
     setSubgroup("omnienergy-fuel-1"):
     setOrder("a"):
     setFuelCategory("chemical"):
     setFuelValue(2.4):
-    setEnergy(2.0):
+    setEnergy(4.0):
     setEnabled(false):
     setTechName("omnitech-basic-omnium-power"):
     setTechCost(55):

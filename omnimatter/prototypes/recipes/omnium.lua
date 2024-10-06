@@ -16,7 +16,7 @@ RecGen:create("omnimatter","omnicium-plate"):
 RecGen:create("omnimatter","omnicium-plate-pure"):
     setItemName("omnicium-plate"):
     setStacksize(200):
-    setIngredients({normal = {{"crushed-omnite",25}},expensive={{"crushed-omnite",40}}}):
+    setIngredients({normal = {{"crushed-omnite",12}},expensive={{"crushed-omnite",20}}}):
     setResults("omnicium-plate"):
     setIcons("omnicium-plate","omnimatter"):
     addSmallIngIcon(1,3):
