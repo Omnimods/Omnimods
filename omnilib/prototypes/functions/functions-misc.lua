@@ -801,7 +801,7 @@ end
 
 local c = 0.0    --0.9
 local cord={W={0,-c},S={0,c},A={-c,0},D={c,0},I={0,-c},K={0,c},J={-c,0},L={c,0},T={0,-c},G={0,c},F={-c,0},H={c,0}}
-local dir={W=defines.direction.west,S=defines.direction.south,A=defines.direction.east,D=defines.direction.west,I=defines.direction.north,K=defines.direction.south,
+local dir={W=defines.direction.north,S=defines.direction.south,A=defines.direction.east,D=defines.direction.west,I=defines.direction.north,K=defines.direction.south,
 J=defines.direction.west,L=defines.direction.east,T=defines.direction.north,G=defines.direction.south,F=defines.direction.west,H=defines.direction.east}
 local inflow={A=true,W=true,S=true,D=true}          --W= North, A=East, S=South, D=West -->Letters have to be used for the given direction!!!
 local passthrough={F=true,T=true,H=true,G=true}     --T= North, H=East, G=South, F=West 

@@ -141,18 +141,18 @@ local fbox_positions = {
     {
         {
             -1,
-            -1--1.95
+            -1--    -1.95
         },
         {
-            -1,--1.9,
+            1,--   1.9,
             -1
         },
         {
             1,
-            -1--1.85
+            1--    1.85
         },
         {
-            -1,---1.9,
+            -1,--   -1.9,
             1
         }
     },
@@ -231,6 +231,7 @@ local function modify_fluidboxes(proto)
                 filename = "__base__/graphics/entity/pipe/pipe-straight-vertical.png",
                 height = 128,
                 width = 128,
+                scale = 0.5,
                 shift = {
                     0,
                     0.95
@@ -240,6 +241,7 @@ local function modify_fluidboxes(proto)
                 filename = "__base__/graphics/entity/pipe/pipe-straight-horizontal.png",
                 height = 128,
                 width = 128,
+                scale = 0.5,
                 shift = {
                     -0.85,
                     0
@@ -249,6 +251,7 @@ local function modify_fluidboxes(proto)
                 filename = "__omnimatter__/graphics/pipe-patch-south.png",
                 height = 128,
                 width = 128,
+                scale = 0.5,
                 shift = {
                     0,
                     -0.299
@@ -258,6 +261,7 @@ local function modify_fluidboxes(proto)
                 filename = "__base__/graphics/entity/pipe/pipe-straight-horizontal.png",
                 height = 128,
                 width = 128,
+                scale = 0.5,
                 shift = {
                     0.9,
                     0
@@ -283,13 +287,7 @@ for i=1,math.min(settings.startup["omnimatter-max-tier"].value, 5) do
         end
     end
     -- Modify our fluid boxes
-    --modify_fluidboxes(data.raw["assembling-machine"]["omnitractor-"..i])
+    modify_fluidboxes(data.raw["assembling-machine"]["omnitractor-"..i])
 end
 -- Burner as well
 modify_fluidboxes(data.raw["assembling-machine"]["burner-omnitractor"])
-
-
-
---log(serpent.block(data.raw["assembling-machine"]["assembling-machine-3"]))
-
---log(serpent.block(data.raw["assembling-machine"]["omnitractor-1"].fluid_boxes))
