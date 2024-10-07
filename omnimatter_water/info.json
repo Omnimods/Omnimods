@@ -10,7 +10,6 @@
     "base",
     "omnilib >= 4.2.0",
     "omnimatter",
-    "?omnimatter_marathon",
     "?angelsrefining"
 ]
 }

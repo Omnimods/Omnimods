@@ -1,3 +1,78 @@
+function omni.lib.parse_result(product)
+    --Get the given product in the {name = ..., type = ..., amount=..., ..} format.
+    if not product then return end
+
+    if type(product) == "string" then -- Single product
+        return {
+            name = product,
+            amount = 1,
+            type = "item"
+        }
+    end
+
+    local prod = table.deepcopy(product)
+    --Check if prod.type is defined
+    if not prod.type then
+        prod.type = "item"
+    end
+    --Check for nametags
+    if not prod.name then
+        prod.name = prod[1]
+    end
+    if not prod.amount then
+        prod.amount = prod[2]
+    end
+    --No longer necessary
+    prod[1] = nil
+    prod[2] = nil
+    return prod
+end
+
+function omni.lib.parse_ingredient(ingredient)
+    return omni.lib.parse_result(ingredient)
+end
+
+-- Get the full product definition for a product with the given name from the given recipe part.
+function omni.lib.find_product(recipe, name)
+    if recipe.results then
+        for _, product in pairs(recipe.results) do
+            local parsed_product = omni.lib.parse_result(product) -- Format and standardise, return if applicable
+            if parsed_product.name == name then
+                return parsed_product
+            end
+        end
+    end
+    return nil
+end
+
+-- Get the full ingredient definition for a ingredient with the given name from the given recipe part.
+function omni.lib.find_ingredient(recipe, name)
+    if recipe.ingredients then
+        for _, ingredient in pairs(recipe.ingredients) do
+            local parsed_ingredient = omni.lib.parse_ingredient(ingredient)
+            if parsed_ingredient.name == name then
+                return parsed_ingredient
+            end
+        end
+    end
+    return nil
+end
+
+-- Get the main product of the given recipe.
+function omni.lib.get_main_product(recipe)
+    --Empty main product string - nil
+    if recipe.main_product == "" then
+        return nil
+    --Main product is defined
+    elseif recipe.main_product ~= nil then
+        return omni.lib.find_product(recipe, recipe.main_product)
+    --No main product defined - Check if the recipe has only 1 result
+    elseif recipe.results and #recipe.results == 1 then
+        return omni.lib.parse_result(recipe.results[1])
+    end
+    return nil
+end
+
 function omni.lib.set_recipe_ingredients(recipename,...)
     local rec = data.raw.recipe[recipename]
     if rec then
@@ -5,16 +80,7 @@ function omni.lib.set_recipe_ingredients(recipename,...)
         local ing = {}
         for _,v in pairs(arg) do
             local tmp = {}
-            if type(v)=="string" then
-                tmp = {{name = v, type = "item", amount = 1}}
-            elseif type(v) == "table" then
-                if type(v[1]) == "string" then
-                    tmp = {{name = v[1], type = "item", amount = v[2]}}
-                elseif v.name then
-                    tmp = {{name = v.name, type = v.type or "item", amount = v.amount, probability = v.probability, amount_min = v.amount_min, amount_max = v.amount_max}}
-                end
-            end
-            ing = omni.lib.union(ing,tmp)
+            ing = omni.lib.union(ing, omni.lib.parse_ingredient(tmp))
         end
         rec.ingredients = ing
     end
@@ -27,16 +93,7 @@ function omni.lib.set_recipe_results(recipename, ...)
         local res = {}
         for _, v in pairs(arg) do
             local tmp = {}
-            if type(v)=="string" then
-                tmp = {{name = v, type = "item", amount = 1}}
-            elseif type(v)=="table" then
-                if type(v[1]) == "string" then
-                    tmp = {{name = v[1], type="item", amount = v[2]}}
-                elseif v.name then
-                    tmp = {{name = v.name, type = v.type or "item", amount = v.amount, probability = v.probability, amount_min = v.amount_min, amount_max = v.amount_max}}
-                end
-            end
-            res = omni.lib.union(res,tmp)
+            res = omni.lib.union(res, omni.lib.parse_result(tmp))
         end
         rec.results = res
     end
@@ -45,19 +102,7 @@ end
 function omni.lib.add_recipe_ingredient(recipename, ingredient)
     local rec = data.raw.recipe[recipename]
     if rec then
-        local newing = {}
-        if not ingredient.name then
-            if type(ingredient) == "string" then
-                newing = {type="item",name=ingredient,amount=1}
-            elseif ingredient[1].name then
-                newing = ingredient[1]
-            elseif type(ingredient[1])=="string" then
-                newing = {type="item", name=ingredient[1],amount=ingredient[2]}
-            end
-        else
-            newing = table.deepcopy(ingredient)
-        end
-
+        local newing = omni.lib.parse_ingredient(ingredient)
         local found = false
         if rec.ingredients then
             found = false
@@ -87,24 +132,12 @@ end
 function omni.lib.add_recipe_result(recipename, result)
     local rec = data.raw.recipe[recipename]
     if rec then
-        local newres = {}
-        if not result.name then
-            if type(result) == "string" then
-                newres = {type = "item", name = result, amount = 1}
-            elseif result[1].name then
-                newres = result[1]
-            elseif type(result[1])=="string" then
-                newres = {type = "item", name = result[1], amount = result[2]}
-            end
-        else
-            newres = table.deepcopy(result)
-        end
-
+        local newres = omni.lib.parse_result(result)
         local found = false
-        --rec.normal.results
-        if rec.normal.results then
+        --rec .results
+        if rec.results then
             found = false
-            for _,res in pairs(rec.normal.results) do
+            for _,res in pairs(rec.results) do
                 --check if nametags exist (only check res[i] when no name tags exist)
                 if res.name then
                     if res.name == newres.name then
@@ -113,7 +146,6 @@ function omni.lib.add_recipe_result(recipename, result)
                         break
                     end
                 elseif res[1] and res[1] == newres.name then
-                    found= true
                     res[2] = res[2] + newres.amount
                     break
                 end
@@ -347,12 +379,6 @@ function omni.lib.recipe_is_hidden(recipename)
         --Check rec.hidden which has prio
         if rec.hidden ~= nil then
             if rec.hidden == true then
-                return true
-            else
-                return false
-            end
-        elseif (rec.normal and rec.normal.hidden ~= nil) or (rec.expensive and rec.expensive.hidden~= nil) then
-            if (rec.normal and rec.normal.hidden == true) or (rec.expensive and rec.expensive.hidden == true) then
                 return true
             else
                 return false

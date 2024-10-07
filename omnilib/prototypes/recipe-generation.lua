@@ -9,15 +9,11 @@ FluidGen = {}
 RecChain = {}
 RecChain.__index = RecChain
 
-BotGen = {}
-BotGen.__index = BotGen
-
 InsGen = {}
 InsGen.__index = InsGen
 
 TechGen = {}
 TechGen.__index = TechGen
-
 
 BuildGen = {}
 BuildGen.__index = BuildGen
@@ -61,15 +57,6 @@ setmetatable(RecChain, {
 })
 
 setmetatable(BuildGen, {
-    __index = RecGen, -- this is what makes the inheritance work
-    __call = function (cls, ...)
-        local self = setmetatable({}, cls)
-        self:create(...)
-        return self
-    end,
-})
-
-setmetatable(BotGen, {
     __index = RecGen, -- this is what makes the inheritance work
     __call = function (cls, ...)
         local self = setmetatable({}, cls)
@@ -225,24 +212,29 @@ function OmniGen:create()
         }
     },OmniGen)
 end
+
 function OmniGen:linearOutput(total,start,finish)
     self.output.yield.quant = function(levels,grade) return linear_gen(start,finish or total,levels,grade) end
     self.output.waste.quant = function(levels,grade) return total-linear_gen(start,finish or total,levels,grade) end
     return self
 end
+
 function OmniGen:linearPercentOutput(total,start,finish)
     self.output.yield.quant = function(levels,grade) return linear_gen(start*total,(finish or 1)*total,levels,grade) end
     self.output.waste.quant = function(levels,grade) return total-linear_gen(start*total,(finish or 1)*total,levels,grade) end
     return self
 end
+
 function OmniGen:wasteQuant(operation)
     self.output.waste.quant=operation
     return self
 end
+
 function OmniGen:yieldQuant(operation)
     self.output.yield.quant=operation
     return self
 end
+
 function OmniGen:setInputAmount(array)
     if type(array)=="function"  then
         self.input.sum = array
@@ -251,47 +243,47 @@ function OmniGen:setInputAmount(array)
     end
     return self
 end
+
 function OmniGen:setIngredients(array,...)
+    local ings = {{}}
     local arg = {...}
+
+    --Go through each arg and parse into ings
     if #arg > 0 then
-        if array.name then
-            array = {array}
-        elseif type(array[1]) == "string" then
-            array={{name=array[1], amount=array[2] or 0, type="item"}}
-        end
-        for i,v in pairs(arg) do
-            local c = v
-            if type(v[1])=="string" then c = {name=v[1],amount=v[2],type="item"} end
-            array = omni.lib.union(array,{c})
+        for _,v in pairs(arg) do
+            ings = omni.lib.union(ings, {omni.lib.parse_ingredient(v)})
         end
     end
-    if type(array)=="table" then
-        if array.name then
-            self.input.items = {array}
-        else
-            self.input.items = array
-        end
+
+    --Array is a fully defined ingredients table, copy
+    if type(array) == "table" and type(array[1]) == "table" then
+        ings = array
+    --Array is a function
+    elseif type(array)=="function" then
+        ings =  array
+    --Most likely a string, Parse ingredients
     else
-        self.input.items = {{name=array}}
+        ings= omni.lib.union(ings, {omni.lib.parse_ingredient(array)})
     end
+
+    self.input.items = ings
     return self
 end
+
 function OmniGen:addIngredients(...)
     for _,ing in pairs({...}) do
-        local addIng = ing
-        if type(ing[1])=="string" and type(ing[2])=="number" then
-            addIng={name=ing[1],amount=ing[2] or 0, type="item"}
-        end
-        table.insert(self.input.items,addIng)
+        table.insert(self.input.items,omni.lib.parse_ingredient(ing))
     end
     return self
 end
+
 function OmniGen:ifAddIngredients(bool,...)
     if bool then
         return self:addIngredients(...)
     end
     return self
 end
+
 function OmniGen:setYield(array)
     if type(array)=="table" then
         self.output.yield.items = {array}
@@ -300,11 +292,13 @@ function OmniGen:setYield(array)
     end
     return self
 end
+
 function OmniGen:addYield(item)
     local t = item
     if type(item)=="string" then t={name=item} end
     table.insert(self.output.yield.items,t)
 end
+
 function OmniGen:setWaste(array,...)
     local arg = {...}
     if #arg > 0 then
@@ -372,7 +366,7 @@ result_round = function(array)
 end
 
 function OmniGen:chainIngredients()
-    local f = function(levels,grade,dif)
+    local f = function(levels,grade)
 
         local usable = self.input.items
         local sum = table.deepcopy(self.input.sum)(levels,grade)
@@ -404,7 +398,7 @@ function OmniGen:chainIngredients()
 end
 
 function OmniGen:wasteYieldResults()
-    local f = function(levels,grade,dif)
+    local f = function(levels,grade)
         local max_yield = table.deepcopy(self.output.yield.quant)(levels,grade)
         local yieldItems = table.deepcopy(self.output.yield.items)
         local wasteItems = table.deepcopy(self.output.waste.items)
@@ -1170,8 +1164,8 @@ end
 
 function RecGen:create(mod,name,efficency)
     local r = ItemGen:create(mod,name)
-    r.ingredients = function(levels,grade,dif) return nil end
-    r.results = function(levels,grade,dif) return {{type="item",name=name,amount=1}} end
+    r.ingredients = function(levels,grade) return nil end
+    r.results = function(levels,grade) return {{type="item",name=name,amount=1}} end
     r.enabled=function(levels,grade) return false end
     r.efficency = efficency
     r.energy_required = function(levels,grade) return 1 end
@@ -1195,12 +1189,12 @@ function RecGen:create(mod,name,efficency)
 end
 --Must occure after setting ingredients and results
 function RecGen:addSmallIngIcon(nr,place)
-    local ing = self.ingredients(0,0,0)
+    local ing = self.ingredients(0,0)
     self:addSmallIcon(ing[nr].name,place)
     return self
 end
 function RecGen:addSmallResIcon(nr,place)
-    local res = self.results(0,0,0)
+    local res = self.results(0,0)
     self:addSmallIcon(res[nr].name,place)
     return self
 end
@@ -1208,10 +1202,9 @@ end
 function RecGen:import(rec)
     local recipe = data.raw.recipe[rec]
     if recipe then
-        omni.lib.standardise(recipe)
         local r = RecGen:create()
-        if #recipe.normal.results==1 or recipe.main_product and recipe.main_produc ~= "" then
-            local proto = omni.lib.find_prototype(recipe.main_product or recipe.normal.results[1].name)
+        if #recipe.results==1 or recipe.main_product and recipe.main_produc ~= "" then
+            local proto = omni.lib.find_prototype(recipe.main_product or recipe.results[1].name)
             if proto then
                 r:setStacksize(proto.stack_size):
                 setFlags(proto.flags):
@@ -1234,18 +1227,18 @@ function RecGen:import(rec)
             end
         end
         r:setName(recipe.name):
-        setResults({normal = table.deepcopy(recipe.normal.results),expensive=table.deepcopy(recipe.expensive.results)}):
-        setIngredients({normal = table.deepcopy(recipe.normal.ingredients),expensive=table.deepcopy(recipe.expensive.ingredients)}):
+        setResults(table.deepcopy(recipe.results)):
+        setIngredients(table.deepcopy(recipe.ingredients)):
         setMain(recipe.main_product):
-        setEnabled(recipe.normal.enabled or recipe.enabled or false):
-        setEnergy(recipe.energy_required or recipe.normal.energy_required):
+        setEnabled(recipe.enabled or false):
+        setEnergy(recipe.energy_required):
         setCategory(recipe.category):
         setSubgroup(recipe.subgroup or r.subgroup(0,0)):
         setOrder(recipe.order or r.order(0,0)):
         setIcons(recipe.icons or recipe.icon or r.icons(0,0) or omni.lib.icon.of(recipe, true)):
         setHidden(recipe.hidden or false):
-        showAmount(recipe.normal.show_amount_in_title):
-        showProduct(recipe.normal.always_show_products)
+        showAmount(recipe.show_amount_in_title):
+        showProduct(recipe.always_show_products)
 
         for _, module in pairs(data.raw.module) do
             if module.effect.productivity and module.limitation then
@@ -1257,9 +1250,9 @@ function RecGen:import(rec)
             end
         end
 
-        if recipe.enabled == nil and recipe.normal.enabled==nil then r:setEnabled(true) end
+        if recipe.enabled == nil then r:setEnabled(true) end
 
-        if recipe.normal.enabled == false then
+        if recipe.enabled == false then
             local tech = data.raw.technology[omni.lib.get_tech_name(recipe.name)]
             if tech then
                 r:setTechName(tech.name):
@@ -1356,31 +1349,31 @@ end
 function RecGen:multiplyItem(item,c)
     local a = table.deepcopy(self.ingredients)
     local b = table.deepcopy(self.results)
-    self.ingredients=function(levels,grade,dif) return multiplyIngres(a(levels,grade,dif),item,c) end
-    self.results=function(levels,grade,dif) return multiplyIngres(b(levels,grade,dif),item,c) end
+    self.ingredients=function(levels,grade) return multiplyIngres(a(levels,grade),item,c) end
+    self.results=function(levels,grade) return multiplyIngres(b(levels,grade),item,c) end
     return self
 end
 function RecGen:multiplyIngredients(c)
     local a = table.deepcopy(self.ingredients)
-    self.ingredients=function(levels,grade,dif) return multiplyIngres(a(levels,grade,dif),c) end
+    self.ingredients=function(levels,grade) return multiplyIngres(a(levels,grade),c) end
     return self
 end
 function RecGen:multiplyResults(c)
     local a = table.deepcopy(self.results)
-    self.results=function(levels,grade,dif) return multiplyIngres(a(levels,grade,dif),c) end
+    self.results=function(levels,grade) return multiplyIngres(a(levels,grade),c) end
     return self
 end
 function RecGen:multiplyIfIngredients(bool,c)
     if bool then
         local a = table.deepcopy(self.ingredients)
-        self.ingredients=function(levels,grade,dif) return multiplyIngres(a(levels,grade,dif),c) end
+        self.ingredients=function(levels,grade) return multiplyIngres(a(levels,grade),c) end
     end
     return self
 end
 function RecGen:multiplyIfResults(bool,c)
     if bool then
         local a = table.deepcopy(self.results)
-        self.results=function(levels,grade,dif) return multiplyIngres(a(levels,grade,dif),c) end
+        self.results=function(levels,grade) return multiplyIngres(a(levels,grade),c) end
     end
     return self
 end
@@ -1402,116 +1395,45 @@ function RecGen:multiplyIfResults(c,...)
 end
 
 function RecGen:setIngredients(array,...)
+    local ings = {{}}
     local arg = {...}
+
+    --Go through each arg and parse into ings
     if #arg > 0 then
-        if array.name then
-            array = {array}
-        elseif type(array[1]) == "string" then
-            array={{name=array[1], amount=array[2] or 1, type="item"}}
-        elseif type(array)=="string" then
-            array={{name=array, amount=1, type="item"}}
-        end
-        for i,v in pairs(arg) do
-            local c = v
-            if type(v[1])=="string" then
-                c = {name=v[1],amount=v[2] or 1,type="item"}
-            elseif type(v)=="string" then
-                c={name=v,amount=1,type="item"}
-            end
-            array = omni.lib.union(array,{c})
+        for _,v in pairs(arg) do
+            ings = omni.lib.union(ings, {omni.lib.parse_ingredient(v)})
         end
     end
-    if type(array)=="table" then
-        if array.normal then
-            for _,dif in pairs({"normal","expensive"}) do
-                for i,ing in pairs(array[dif]) do
-                    if type(ing[1])=="string" then
-                        if ing[2] then
-                            array[dif][i]={type="item",name=ing[1],amount=ing[2]}
-                        else
-                            array[dif][i]={type="item",name=ing[1],amount=1}
-                        end
-                    end
-                end
-            end
-            self.ingredients = function(levels,grade, dif) if dif == 0 then return table.deepcopy(array.normal) else return table.deepcopy(array.expensive) end end
-        elseif array[1] then
-            if type(array[1]) == "string" and type(array[2]) == "number" then
-                self.ingredients = function(levels,grade, dif) return {{name=array[1],amount=array[2],type="item"}} end
-            elseif type(array[1])=="string" and array[2]==nil then
-                self.ingredients = function(levels,grade, dif) return {{name=array[1],amount=1,type="item"}} end
-            else
-                for i,ing in pairs(array) do
-                    if type(ing)=="string" then
-                        array[i]={type="item",amount=1,name=ing}
-                    elseif type(ing)=="table" and type(ing[1])=="string" and not ing[2] then
-                        array[i]={type="item",amount=1,name=ing[1]}
-                    elseif type(ing)=="table" and type(ing[1])=="string" and type(ing[2])=="number" then
-                        array[i]={type="item",amount=ing[2],name=ing[1]}
-                    end
-                end
-                self.ingredients = function(levels,grade, dif) return array end
-            end
-        elseif array.name and not array.amount then
-            self.ingredients = function(levels,grade, dif) return {{name=array,amount=1,type="item"}} end
-        elseif array.name then
-            self.ingredients = function(levels,grade, dif) return {array} end
-        end
+
+    --Array is a fully defined ingredients table, copy
+    if type(array) == "table" and type(array[1]) == "table" then
+        ings = array
+    --Array is a function
     elseif type(array)=="function" then
-        self.ingredients = array
-    elseif type(array)=="string" then
-        self.ingredients = function(levels,grade, dif) return {{name=array,amount=1}} end
+        ings =  array
+    --Most likely a string, Parse ingredients
+    else
+        ings = omni.lib.union(ings, {omni.lib.parse_ingredient(array)})
     end
+
+    self.ingredients = function(levels,grade) return ings end
     return self
 end
+
 function RecGen:nullIngredients()
     self.ingredients = function(levels,grade) return {} end
     return self
 end
-function RecGen:setNormalIngredients(...)
-    local arg = argTable({...},"string","name")
-    local tmp = RecGen:create("mah","blah"):
-        setIngredients(arg)
-    local a = table.deepcopy(self.ingredients)
-    local b = table.deepcopy(tmp.ingredients)
-    self.ingredients = function(levels,grade,dif) if dif == 0 then return b(levels,grade,dif) else return a(levels,grade,dif) end end
-    return self
-end
-function RecGen:setExpensiveIngredients(...)
-    local arg = argTable({...},"string","name")
-    local tmp = RecGen:create("mah","blah"):
-        setIngredients(arg)
-    local a = table.deepcopy(self.ingredients)
-    local b = table.deepcopy(tmp.ingredients)
-    self.ingredients = function(levels,grade,dif) if dif == 1 then return b(levels,grade,dif) else return a(levels,grade,dif) end end
-    return self
-end
+
 function RecGen:addIngredients(...)
     local tmp = RecGen:create("mah","blah"):
         setIngredients(argTable({...},"string","name"))
     local a = table.deepcopy(self.ingredients)
     local b = table.deepcopy(tmp.ingredients)
-    self.ingredients = function(levels,grade,dif) return omni.lib.union(a(levels,grade,dif),b(levels,grade,dif)) end
+    self.ingredients = function(levels,grade) return omni.lib.union(a(levels,grade),b(levels,grade)) end
     return self
 end
-function RecGen:addNormalIngredients(...)
-    local arg = argTable({...},"string","name")
-    local tmp = RecGen:create("mah","blah"):
-        setIngredients(arg)
-    local a = table.deepcopy(self.ingredients)
-    local b = function(levels,grade,dif) if dif == 0 then return tmp.ingredients(levels,grade,dif) else return {} end end
-    self.ingredients = function(levels,grade,dif) return omni.lib.union(a(levels,grade,dif),b(levels,grade,dif)) end
-    return self
-end
-function RecGen:addExpensiveIngredients(...)
-    local arg = argTable({...},"string","name")
-    local tmp = RecGen:create("mah","blah"):
-        setIngredients(arg)
-    local a = table.deepcopy(self.ingredients)
-    local b = function(levels,grade,dif) if dif == 1 then return tmp.ingredients(levels,grade,dif) else return {} end end
-    self.ingredients = function(levels,grade,dif) return omni.lib.union(a(levels,grade,dif),b(levels,grade,dif)) end
-    return self
-end
+
 function RecGen:replaceIngredients(...)
     local arg = argTable({...})
     if #arg == 2 and (type(arg[1])=="string" or type(arg[1])=="number") then
@@ -1523,15 +1445,17 @@ function RecGen:replaceIngredients(...)
         end
     end
     local ingredients = table.deepcopy(self.ingredients)
-    self.ingredients=function(levels,grade,dif) return replaceIngres(ingredients(levels,grade,dif),arg) end
+    self.ingredients=function(levels,grade) return replaceIngres(ingredients(levels,grade),arg) end
     return self
 end
+
 function RecGen:ifReplaceIngredients(bool,...)
     if bool then
         self:replaceIngredients({...})
     end
     return self
 end
+
 function RecGen:ifModsReplaceIngredients(modis,...)
     if type(modis)=="string" then modis = {modis} end
     local bool = true
@@ -1541,12 +1465,14 @@ function RecGen:ifModsReplaceIngredients(modis,...)
     self:ifReplaceIngredients(bool,argTable({...}))
     return self
 end
+
 function RecGen:ifAddIngredients(bool,...)
     if bool then
         self:addIngredients(argTable({...},"string"))
     end
     return self
 end
+
 function RecGen:ifModsAddIngredients(modis,...)
     if type(modis)=="string" then modis = {modis} end
     local bool = true
@@ -1556,17 +1482,19 @@ function RecGen:ifModsAddIngredients(modis,...)
     self:ifAddIngredients(bool,argTable({...},"string","name"))
     return self
 end
+
 function RecGen:ifSetIngredients(bool,...)
     if bool then
         self:setIngredients(argTable({...},"string","name"))
     end
     return self
 end
+
 function RecGen:removeIngredients(...)
     local args = {...}
     local ingredients = table.deepcopy(self.ingredients)
-    self.ingredients=function(levels,grade,dif)
-        local ings = ingredients(levels,grade,dif)
+    self.ingredients=function(levels,grade)
+        local ings = ingredients(levels,grade)
         local finalIngs = {}
         for c,i in pairs(ings) do
             if not omni.lib.is_in_table(i.name, args) and not omni.lib.is_in_table(c, args) then
@@ -1577,6 +1505,7 @@ function RecGen:removeIngredients(...)
     end
     return self
 end
+
 function RecGen:ifRemoveIngredients(bool,...)
     if bool then
         return self:removeIngredients(...)
@@ -1584,6 +1513,7 @@ function RecGen:ifRemoveIngredients(bool,...)
         return self
     end
 end
+
 function RecGen:ifModsRemoveIngredients(mods,...)
     local args=mods
     if type(args)~="table" then args={args} end
@@ -1593,11 +1523,12 @@ function RecGen:ifModsRemoveIngredients(mods,...)
     end
     return self:ifRemoveIngredients(bool,...)
 end
+
 function RecGen:removeResults(...)
     local args = {...}
     local results = table.deepcopy(self.results)
-    self.results=function(levels,grade,dif)
-        local ings = results(levels,grade,dif)
+    self.results=function(levels,grade)
+        local ings = results(levels,grade)
         local finalIngs = {}
         for c,i in pairs(ings) do
             if not omni.lib.is_in_table(i.name, args) and not omni.lib.is_in_table(c, args) then
@@ -1608,6 +1539,7 @@ function RecGen:removeResults(...)
     end
     return self
 end
+
 function RecGen:ifRemoveResults(bool,...)
     if bool then
         return self:removeResults(...)
@@ -1615,6 +1547,7 @@ function RecGen:ifRemoveResults(bool,...)
         return self
     end
 end
+
 function RecGen:ifModsRemoveResults(mods,...)
     local args=mods
     if type(args)~="table" then args={args} end
@@ -1624,99 +1557,43 @@ function RecGen:ifModsRemoveResults(mods,...)
     end
     return self:ifRemoveResults(bool,...)
 end
+
 function RecGen:setResults(array,...)
+    local res = {{}}
     local arg = {...}
+
+    --Go through each arg and parse into ings
     if #arg > 0 then
-        if array.name then
-            array = {array}
-        elseif type(array[1]) == "string" then
-            array={{name=array[1], amount=array[2] or 1, type="item"}}
-        end
-        for i,v in pairs(arg) do
-            local c = v
-            if type(v[1])=="string" then c = {name=v[1],amount=v[2],type="item"} end
-            array = omni.lib.union(array,{c})
+        for _,v in pairs(arg) do
+            res = omni.lib.union(res, {omni.lib.parse_result(v)})
         end
     end
-    if type(array)=="table" then
-        if array.normal then
-            for _,dif in pairs({"normal","expensive"}) do
-                for i,res in pairs(array[dif]) do
-                    if type(res[1])=="string" then
-                        if res[2] then
-                            array[dif][i]={type="item",name=res[1],amount=res[2]}
-                        else
-                            array[dif][i]={type="item",name=res[1],amount=1}
-                        end
-                    end
-                end
-            end
-            self.results = function(levels,grade, dif) if dif == 0 then return array.normal else return array.expensive end end
-        elseif array[1] then
-            if type(array[1]) == "string" and type(array[2]) == "number" then
-                self.results = function(levels,grade, dif) return {{name=array[1],amount=array[2],type="item"}} end
-            elseif type(array[1])=="string" and array[2]==nil then
-                self.results = function(levels,grade, dif) return {{name=array[1],amount=1,type="item"}} end
-            elseif type(array[1][1])=="table" or array[1].name then
-                self.results = function(levels,grade, dif) return array end
-            end
-        elseif array.name then
-            self.results = function(levels,grade, dif) return {
-            {name=array.name,amount=array.amount,type=array.type or "item",amount_min=array.amount_min,amount_max=array.amount_max,probability=array.probability,temperature=array.temperature}
-            } end
-        end
+
+    --Array is a fully defined results table, copy
+    if type(array) == "table" and type(array[1]) == "table" then
+        res = array
+    --Array is a function
     elseif type(array)=="function" then
-        self.results = array
-    elseif type(array)=="string" then
-        self.results = function(levels,grade, dif) return {{name=array,amount=1,type="item"}} end
+        res =  array
+    --Most likely a string, Parse results
+    else
+        res= omni.lib.union(res, {omni.lib.parse_result(array)})
     end
+
+    self.results = function(levels,grade) return res end
     return self
 end
-function RecGen:setNormalResults(...)
-    local arg = argTable({...},"string","name")
-    local tmp = RecGen:create("mah","blah"):
-        setResults(arg)
-    local a = table.deepcopy(self.results)
-    local b = table.deepcopy(tmp.results)
-    self.results = function(levels,grade,dif) if dif == 0 then return b(levels,grade,dif) else return a(levels,grade,dif) end end
-    return self
-end
-function RecGen:setExpensiveResults(...)
-    local arg = argTable({...},"string","name")
-    local tmp = RecGen:create("mah","blah"):
-        setResults(arg)
-    local a = table.deepcopy(self.results)
-    local b = table.deepcopy(tmp.results)
-    self.results = function(levels,grade,dif) if dif == 1 then return b(levels,grade,dif) else return a(levels,grade,dif) end end
-    return self
-end
+
 function RecGen:addResults(...)
     local arg = argTable({...})
     local tmp = RecGen:create("mah","blah"):
         setResults(arg)
     local a = table.deepcopy(tmp.results)
     local b = table.deepcopy(self.results)
-    self.results = function(levels,grade,dif) return omni.lib.union(a(levels,grade,dif),b(levels,grade,dif)) end
+    self.results = function(levels,grade) return omni.lib.union(a(levels,grade),b(levels,grade)) end
     return self
 end
-function RecGen:addNormalResults(...)
-    local arg = argTable({...},"string","name")
-    local tmp = RecGen:create("mah","blah"):
-        setIngredients(arg)
-    local a = table.deepcopy(self.results)
-    local b = function(levels,grade,dif) if dif == 0 then return arg else return nil end end
-    self.results = function(levels,grade,dif) return omni.table.union(a(levels,grade,dif),b(levels,grade,dif)) end
-    return self
-end
-function RecGen:addExpensiveResults(...)
-    local arg = argTable({...},"string","name")
-    local tmp = RecGen:create("mah","blah"):
-        setIngredients(arg)
-    local a = table.deepcopy(self.results)
-    local b = function(levels,grade,dif) if dif == 1 then return arg else return nil end end
-    self.results = function(levels,grade,dif) return omni.table.union(a(levels,grade,dif),b(levels,grade,dif)) end
-    return self
-end
+
 function RecGen:replaceResults(...)
     local arg = argTable({...})
     if #arg == 2 and type(arg[1])=="string" then
@@ -1728,15 +1605,17 @@ function RecGen:replaceResults(...)
         end
     end
     local results = table.deepcopy(self.results)
-    self.results=function(levels,grade,dif) return replaceIngres(results(levels,grade,dif),arg) end
+    self.results=function(levels,grade) return replaceIngres(results(levels,grade),arg) end
     return self
 end
+
 function RecGen:ifReplaceResults(bool,...)
     if bool then
         self:replaceResults({...})
     end
     return self
 end
+
 function RecGen:ifModsReplaceResults(modis,...)
     if type(modis)=="string" then modis = {modis} end
     local bool = true
@@ -1746,12 +1625,14 @@ function RecGen:ifModsReplaceResults(modis,...)
     self:ifReplaceResults(bool,argTable({...}))
     return self
 end
+
 function RecGen:ifAddResults(bool,...)
     if bool then
         self:addResults(argTable({...},"string","name"))
     end
     return self
 end
+
 function RecGen:ifModsAddResults(modis,...)
     if type(modis)=="string" then modis = {modis} end
     local bool = true
@@ -1761,12 +1642,14 @@ function RecGen:ifModsAddResults(modis,...)
     self:ifAddResults(bool,argTable({...},"string","name"))
     return self
 end
+
 function RecGen:ifSetResults(bool,...)
     if (type(bool)=="boolean" and bool)  then
         self:setResults(argTable({...},"string","name"))
     end
     return self
 end
+
 function RecGen:ifModsResults(modis,...)
     if type(modis)~= "table" then modis={modis} end
     local bool = true
@@ -1776,6 +1659,7 @@ function RecGen:ifModsResults(modis,...)
     self:ifSetResults(bool,argTable({...},"string","name"))
     return self
 end
+
 function RecGen:setEnergy(tid)
     if type(tid)~= "function" then
         self.energy_required=function(levels,grade) return tid end
@@ -1784,6 +1668,7 @@ function RecGen:setEnergy(tid)
     end
     return self
 end
+
 function RecGen:setCategory(cat)
     if type(cat)~= "function" then
         self.category=function(levels,grade) return cat end
@@ -1792,12 +1677,14 @@ function RecGen:setCategory(cat)
     end
     return self
 end
+
 function RecGen:ifCategory(bool,cat)
     if bool or mods[bool] then
         self:setCategory(cat)
     end
     return self
 end
+
 function RecGen:setMain(main)
     if type(main)~= "function" then
         self.main_product = function(levels,grade) return main end
@@ -1807,12 +1694,14 @@ function RecGen:setMain(main)
 
     return self
 end
+
 function ItemGen:setBuildProto(proto)
     self.proto = proto
     return self
 end
+
 function RecGen:generate_recipe()
-    local res = self.results(0,0,0) or {{name=self.name,amount=1,type="item"}}
+    local res = self.results(0,0) or {{name=self.name,amount=1,type="item"}}
     if res and #res == 1 and not self.set_icon then
         self.main_product=function(levels,grade) return res[1].name end
     end
@@ -1953,57 +1842,19 @@ function RecGen:generate_recipe()
         subgroup = self.subgroup(0,0),
         order = self.order(0,0),
         hidden = self.hidden(0,0),
-        normal = {
-            ingredients=table.deepcopy(self.ingredients(0,0,0)) or {},
-            results=table.deepcopy(self.results(0,0,0) or res) or {},
-            enabled = self.enabled(0,0),
-            main_product = self.main_product(0,0),
-            energy_required = self.energy_required(0,0) or 0.5,
-            show_amount_in_title = self.show_amount,
-            always_show_products = self.show_product,
-        },
-        expensive = {
-            ingredients=table.deepcopy(self.ingredients(0,0,1)) or {},
-            results=table.deepcopy(self.results(0,0,1) or res) or {},
-            enabled = self.enabled(0,0),
-            main_product = self.main_product(0,0),
-            energy_required = self.energy_required(0,0) or 0.5,
-            show_amount_in_title = self.show_amount,
-            always_show_products = self.show_product,
-        },
+        ingredients=table.deepcopy(self.ingredients(0,0)) or {},
+        results=table.deepcopy(self.results(0,0) or res) or {},
+        enabled = self.enabled(0,0),
+        main_product = self.main_product(0,0),
+        energy_required = self.energy_required(0,0) or 0.5,
+        show_amount_in_title = self.show_amount,
+        always_show_products = self.show_product,
         icons = self.icons(0,0),
         icon_size = 32,
     }
     return self
 end
-function RecGen:marathon()
-    omni.marathon.exclude_recipe(self.name)
-    return self
-end
-function RecGen:exemptMarathon()
-    omni.marathon.exclude_recipe(self.name)
-    return self
-end
-function RecGen:equalize(item,res)
-    local results = self:results(0,0)
-    local ingredients = self:ingredients(0,0)
-    if #results == 1 then
-        omni.marathon.equalize(item,results[1].name)
-    elseif #results > 1 and #ingredients == 1 then
-        omni.marathon.equalize(ingredients[1].name,item)
-    elseif item and res then
-        omni.marathon.equalize(item,res)
-    end
-    return self
-end
-function RecGen:equalizeMarathon(equalize)
-    return self:equalize(equalize)
-end
-function RecGen:exemptCompression()
---to be fixed
-    omni.marathon.exclude_recipe(self.name)
-    return self
-end
+
 function RecGen:return_array()
     self:generate_recipe()
     return self.rtn
@@ -2436,7 +2287,6 @@ function RecChain:generate_chain()
         end
         --r:setIcons(self.icons(m,i))
 
-        if mods["omnimatter_marathon"] then omni.marathon.exclude_recipe(r.name) end
         r:setIngredients(self.ingredients(self.levels,i))
         r:setResults(self.results(self.levels,i))
         --if #self.chain.output.yield.items == 1 then self:setMain(self.chain.output.yield.items[1]) end
@@ -2745,8 +2595,7 @@ function setBuildingParameters(b,subpart)
         emissions_per_minute = {pollution = 1.0}
     }
     b.energy_usage = function(levels,grade) return "150kW" end
-    b.animation = function(levels,grade) return {} end
-    b.animations = function(levels,grade) return nil end
+    b.graphics_set = function(levels,grade) return {} end
     b.pictures = function(levels,grade) return nil end
     b.vehicle_impact_sound =  { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 }
     b.working_sound = function(levels,grade) return {
@@ -2821,7 +2670,6 @@ function BuildGen:import(name)
         setNextUpgrade(build.next_upgrade):
         setUsage(build.energy_usage):
         setAnimation(build.animation):
-        setAnimations(build.animations):
         setWorkVis(build.working_visualisations):
         setDirectionAnimation(build.horizontal_animation,build.vertical_animation):
         setRadVisPic(build.radius_visualisation_picture):
@@ -3258,14 +3106,6 @@ function BuildGen:setOnAnimation(e)
     end
     return self
 end
-function BuildGen:setAnimations(e)
-    if type(e)=="function" then
-        self.animations = e
-    else
-        self.animations = function(levels,grade) return e end
-    end
-    return self
-end
 function BuildGen:setPictures(e)
     if type(e)=="function" then
         self.pictures = e
@@ -3536,12 +3376,10 @@ function BuildGen:generateBuilding()
         energy_source = source,
         smoke = self.smoke,
         energy_usage = self.energy_usage(0,0),
-        animation =self.animation(0,0),
-        animations =self.animations(0,0),
-        pictures =self.pictures(0,0),
-        working_visualisations = self.working_visualisations(0,0),
+        graphics_set = {animation = self.animation(0,0), working_visualisations = self.working_visualisations(0,0)},
+        pictures = self.pictures(0,0),
         vehicle_impact_sound =  self.vehicle_impact_sound,
-        burns_fluid=self.burns_fluid(0,0),
+        burns_fluid = self.burns_fluid(0,0),
         fluid_box = self.fluid_boxes(0,0),
         fluid_boxes = self.fluid_boxes(0,0),
         fluid_boxes_off_when_no_fluid_recipe = self.hide_fluid_boxes_when_off,
@@ -3569,14 +3407,14 @@ function BuildGen:generateBuilding()
     if self.fuel_categories and next(self.fuel_categories) then self.rtn[#self.rtn].energy_source.fuel_categories = self.fuel_categories end
     if self.working_sound and next(self.working_sound(0,0)) then self.rtn[#self.rtn].working_sound = self.working_sound(0,0) end
     if self.overlay.name then
-        self.rtn[#self.rtn].animation.layers[#self.rtn[#self.rtn].animation.layers+1] = table.deepcopy(self.rtn[#self.rtn].animation.layers[1])
-        self.rtn[#self.rtn].animation.layers[#self.rtn[#self.rtn].animation.layers].filename = "__"..self.mod.."__/graphics/entity/buildings/"..self.overlay.name..".png"
-        self.rtn[#self.rtn].animation.layers[#self.rtn[#self.rtn].animation.layers].tint = omni.tint_level[self.overlay.level]
+        self.rtn[#self.rtn].graphics_set.animation.layers[#self.rtn[#self.rtn].graphics_set.animation.layers+1] = table.deepcopy(self.rtn[#self.rtn].graphics_set.animation.layers[1])
+        self.rtn[#self.rtn].graphics_set.animation.layers[#self.rtn[#self.rtn].graphics_set.animation.layers].filename = "__"..self.mod.."__/graphics/entity/buildings/"..self.overlay.name..".png"
+        self.rtn[#self.rtn].graphics_set.animation.layers[#self.rtn[#self.rtn].graphics_set.animation.layers].tint = omni.tint_level[self.overlay.level]
     end
 
     local stuff = RecGen:create(self.mod,self.name):
-    setIngredients(self.ingredients):
-    setResults({self.name, self.results(0,0,0)[1].amount or 1}):
+    setIngredients(self.ingredients(0,0)):
+    setResults({self.name, self.results(0,0)[1].amount or 1}):
     setIcons(self.icons(0,0)):
     setOrder(self.order(0,0)):
     setBuildProto(self.rtn[#self.rtn]):
@@ -3676,11 +3514,8 @@ function BuildChain:generate_building_chain()
             nextname = nil
         end
 
-        --Must fix so this can adapt to fit normal and expensive
-        local ingnorm,ingexp = self.ingredients(levels,i,0),self.ingredients(levels,i,1)
-        if i>1 and not omni.lib.is_in_table(self.name.."-"..i,ingnorm) then ingnorm[#ingnorm+1]={name=self.name.."-"..i-1,amount=1,type="item"} end
-        if i>1 and not omni.lib.is_in_table(self.name.."-"..i,ingexp) then ingexp[#ingexp+1]={name=self.name.."-"..i-1,amount=1,type="item"} end
-        if i>1 and mods["omnimatter_marathon"] then omni.marathon.equalize(self.name.."-"..i-1,self.name.."-"..i) end
+        local ing = self.ingredients(levels,i)
+        if i>1 and not omni.lib.is_in_table(self.name.."-"..i,ing) then ing[#ing+1]={name=self.name.."-"..i-1,amount=1,type="item"} end
 
         local tprereq = self.tech.prerequisites(levels,i)
         if type(tprereq)=="string" then tprereq={tprereq} end
@@ -3690,7 +3525,7 @@ function BuildChain:generate_building_chain()
             tprereq={prevtname}
         end
         local stuff = BuildGen:create(self.mod,self.name.."-"..i):
-        setIngredients(function(levels,grade,dif) if dif==0 then return ingnorm else return ingexp end end):
+        setIngredients(function(levels,grade) return ing end):
         setResults(self.name.."-"..i):
         setPlace(self.name.."-"..i):
         setEnergy(self.energy_required(levels,i)):
@@ -3724,7 +3559,6 @@ function BuildChain:generate_building_chain()
         setSpeed(self.crafting_speed(levels,i)):
         setSoundWorking(self.working_sound(levels,i)):
         setAnimation(self.animation(levels,i)):
-        setAnimations(self.animations(levels,i)):
         setWorkVis(self.working_visualisations(levels,i)):
         setGenerationCondition(self.requiredMods(levels,i)):
         setEffectivity(self.effectivity(levels,i)):
@@ -3777,284 +3611,12 @@ function BuildChain:extend()
     end
 end
 
-function BotGen:create(mod,name)
-    local b = BuildGen:create(mod,name)
-    b.max_payload_size = function(levels,grade) return 1 end
-    b.speed = function(levels,grade) return 1 end
-    b.max_energy = function(levels,grade) return "1MJ" end
-    b.energy_per_tick = function(levels,grade) return "0.075kJ" end
-    b.speed_multiplier_when_out_of_energy = function(levels,grade) return 0.5 end
-    b.energy_per_move = function(levels,grade) return "7.5kJ" end
-    b.min_to_charge = function(levels,grade) return 0.4 end
-    b.max_to_charge = function(levels,grade) return 0.95 end
-    b.working_light = function(levels,grade) return {intensity = 0.8, size = 3} end
-    b.smoke = function(levels,grade) return {
-      filename = "__base__/graphics/entity/smoke-construction/smoke-01.png",
-      width = 39,
-      height = 32,
-      frame_count = 19,
-      line_length = 19,
-      shift = {0.078125, -0.15625},
-      animation_speed = 0.3,
-    } end
-    b.sparks = function(levels,grade) return {
-      {
-        filename = "__base__/graphics/entity/sparks/sparks-01.png",
-        width = 39,
-        height = 34,
-        frame_count = 19,
-        line_length = 19,
-        shift = {-0.109375, 0.3125},
-        tint = { r = 1.0, g = 0.9, b = 0.0, a = 1.0 },
-        animation_speed = 0.3,
-      },
-      {
-        filename = "__base__/graphics/entity/sparks/sparks-02.png",
-        width = 36,
-        height = 32,
-        frame_count = 19,
-        line_length = 19,
-        shift = {0.03125, 0.125},
-        tint = { r = 1.0, g = 0.9, b = 0.0, a = 1.0 },
-        animation_speed = 0.3,
-      },
-      {
-        filename = "__base__/graphics/entity/sparks/sparks-03.png",
-        width = 42,
-        height = 29,
-        frame_count = 19,
-        line_length = 19,
-        shift = {-0.0625, 0.203125},
-        tint = { r = 1.0, g = 0.9, b = 0.0, a = 1.0 },
-        animation_speed = 0.3,
-      },
-      {
-        filename = "__base__/graphics/entity/sparks/sparks-04.png",
-        width = 40,
-        height = 35,
-        frame_count = 19,
-        line_length = 19,
-        shift = {-0.0625, 0.234375},
-        tint = { r = 1.0, g = 0.9, b = 0.0, a = 1.0 },
-        animation_speed = 0.3,
-      },
-      {
-        filename = "__base__/graphics/entity/sparks/sparks-05.png",
-        width = 39,
-        height = 29,
-        frame_count = 19,
-        line_length = 19,
-        shift = {-0.109375, 0.171875},
-        tint = { r = 1.0, g = 0.9, b = 0.0, a = 1.0 },
-        animation_speed = 0.3,
-      },
-      {
-        filename = "__base__/graphics/entity/sparks/sparks-06.png",
-        width = 44,
-        height = 36,
-        frame_count = 19,
-        line_length = 19,
-        shift = {0.03125, 0.3125},
-        tint = { r = 1.0, g = 0.9, b = 0.0, a = 1.0 },
-        animation_speed = 0.3,
-      },
-    } end
-    b.idle = function(levels,grade) return {
-      filename = "__base__/graphics/entity/construction-robot/construction-robot.png",
-      priority = "high",
-      line_length = 16,
-      width = 32,
-      height = 36,
-      frame_count = 1,
-      shift = {0, -0.15625},
-      direction_count = 16,
-      hr_version = {
-        filename = "__base__/graphics/entity/construction-robot/hr-construction-robot.png",
-        priority = "high",
-        line_length = 16,
-        width = 66,
-        height = 76,
-        frame_count = 1,
-        shift = util.by_pixel(0,-4.5),
-        direction_count = 16,
-        scale = 0.5
-      }
-    } end
-    b.shadow_idle = function(levels,grade) return {
-      filename = "__base__/graphics/entity/construction-robot/construction-robot-shadow.png",
-      priority = "high",
-      line_length = 16,
-      width = 50,
-      height = 24,
-      frame_count = 1,
-      shift = {1.09375, 0.59375},
-      direction_count = 16,
-      hr_version = {
-        filename = "__base__/graphics/entity/construction-robot/hr-construction-robot-shadow.png",
-        priority = "high",
-        line_length = 16,
-        width = 104,
-        height = 49,
-        frame_count = 1,
-        shift = util.by_pixel(33.5, 18.75),
-        direction_count = 16,
-        scale = 0.5
-      }
-    } end
-    b.in_motion = function(levels,grade) return {
-      filename = "__base__/graphics/entity/construction-robot/construction-robot.png",
-      priority = "high",
-      line_length = 16,
-      width = 32,
-      height = 36,
-      frame_count = 1,
-      shift = {0, -0.15625},
-      direction_count = 16,
-      y = 36,
-      hr_version = {
-        filename = "__base__/graphics/entity/construction-robot/hr-construction-robot.png",
-        priority = "high",
-        line_length = 16,
-        width = 66,
-        height = 76,
-        frame_count = 1,
-        shift = util.by_pixel(0, -4.5),
-        direction_count = 16,
-        y = 76,
-        scale = 0.5
-      }
-    } end
-    b.shadow_in_motion = function(levels,grade) return {
-      filename = "__base__/graphics/entity/construction-robot/construction-robot-shadow.png",
-      priority = "high",
-      line_length = 16,
-      width = 50,
-      height = 24,
-      frame_count = 1,
-      shift = {1.09375, 0.59375},
-      direction_count = 16,
-      hr_version = {
-        filename = "__base__/graphics/entity/construction-robot/hr-construction-robot-shadow.png",
-        priority = "high",
-        line_length = 16,
-        width = 104,
-        height = 49,
-        frame_count = 1,
-        shift = util.by_pixel(33.5, 18.75),
-        direction_count = 16,
-        scale = 0.5
-      }
-    } end
-    b.working = function(levels,grade) return {
-      filename = "__base__/graphics/entity/construction-robot/construction-robot-working.png",
-      priority = "high",
-      line_length = 2,
-      width = 28,
-      height = 36,
-      frame_count = 2,
-      shift = {0, -0.15625},
-      direction_count = 16,
-      animation_speed = 0.3,
-      hr_version = {
-        filename = "__base__/graphics/entity/construction-robot/hr-construction-robot-working.png",
-        priority = "high",
-        line_length = 2,
-        width = 57,
-        height = 74,
-        frame_count = 2,
-        shift = util.by_pixel(-0.25, -5),
-        direction_count = 16,
-        animation_speed = 0.3,
-        scale = 0.5
-      }
-    } end
-    b.shadow_working = function(levels,grade) return {
-      stripes = util.multiplystripes(2,
-      {
-        {
-          filename = "__base__/graphics/entity/construction-robot/construction-robot-shadow.png",
-          width_in_frames = 16,
-          height_in_frames = 1,
-        }
-      }),
-      priority = "high",
-      width = 50,
-      height = 24,
-      frame_count = 2,
-      shift = {1.09375, 0.59375},
-      direction_count = 16
-    } end
-    --b.working_sound = function(levels,grade) return flying_robot_sounds() end
-    b.cargo_centered = function(levels,grade) return {0.0, 0.2} end
-    b.construction_vector = function(levels,grade) return {0.30, 0.22} end
-    return setmetatable(b,BotGen)
-end
-function BotGen:setAllAnimation(n)
-    if type(n)=="function" then
-        self.energy_per_tick = n
-    elseif type(n)=="number" then
-        self.energy_per_tick = function(levels,grade) return n.."J" end
-    elseif type(n)=="string" then
-        self.energy_per_tick = function(levels,grade) return n end
-    end
-    return self
-end
-function BotGen:setTickEnergy(n)
-    if type(n)=="function" then
-        self.energy_per_tick = n
-    elseif type(n)=="number" then
-        self.energy_per_tick = function(levels,grade) return n.."J" end
-    elseif type(n)=="string" then
-        self.energy_per_tick = function(levels,grade) return n end
-    end
-    return self
-end
-function BotGen:setChargeLevels(mini,maxi)
-    if type(mini)=="function" then
-        self.min_to_charge = mini
-    else
-        self.min_to_charge = function(levels,grade) return mini end
-    end
-    if type(maxi)=="function" then
-        self.max_to_charge = maxi
-    else
-        self.max_to_charge = function(levels,grade) return maxi end
-    end
-    return self
-end
-function BotGen:setPowerPenalty(n)
-    if type(n)=="function" then
-        self.speed_multiplier_when_out_of_energy = n
-    else
-        self.speed_multiplier_when_out_of_energy = function(levels,grade) return n end
-    end
-    return self
-end
-function BotGen:setPayload(n)
-    if type(n)=="function" then
-        self.max_payload_size = n
-    else
-        self.max_payload_size = function(levels,grade) return n end
-    end
-    return self
-end
-function BotGen:setMaxEnergy(n)
-    if type(n)=="function" then
-        self.max_energy = n
-    elseif type(n)=="number" then
-        self.max_energy = function(levels,grade) return n.."MJ" end
-    elseif type(n)=="string" then
-        self.max_energy = function(levels,grade) return n end
-    end
-    return self
-end
-
 function InsertGen:create(mod,name)
     local b = BuildGen:create(mod,name)
     b.type="inserter"
     b.energy_source = {
-      type = "electric",
-      usage_priority = "secondary-output"
+        type = "electric",
+        usage_priority = "secondary-output"
     }
     b.fast_replaceable_group = function(levels,grade) return "inserter" end
     b.next_upgrade = function(levels,grade) return nil end
@@ -4066,142 +3628,142 @@ function InsertGen:create(mod,name)
     b.energy_usage = function(levels,grade) return {energy_per_movement = "5kJ",energy_per_rotation = "5kJ"} end
     b.speed = function(levels,grade) return {extension_speed = 0.03, rotation_speed = 0.014,} end
     b.working_sound = function(levels,grade) return {
-      match_progress_to_activity = true,
-      sound =
-      {
+        match_progress_to_activity = true,
+        sound =
         {
-          filename = "__base__/sound/inserter-basic-1.ogg",
-          volume = 0.3
-        },
-        {
-          filename = "__base__/sound/inserter-basic-2.ogg",
-          volume = 0.3
-        },
-        {
-          filename = "__base__/sound/inserter-basic-3.ogg",
-          volume = 0.3
-        },
-        {
-          filename = "__base__/sound/inserter-basic-4.ogg",
-          volume = 0.3
-        },
-        {
-          filename = "__base__/sound/inserter-basic-5.ogg",
-          volume = 0.3
+            {
+            filename = "__base__/sound/inserter-basic-1.ogg",
+            volume = 0.3
+            },
+            {
+            filename = "__base__/sound/inserter-basic-2.ogg",
+            volume = 0.3
+            },
+            {
+            filename = "__base__/sound/inserter-basic-3.ogg",
+            volume = 0.3
+            },
+            {
+            filename = "__base__/sound/inserter-basic-4.ogg",
+            volume = 0.3
+            },
+            {
+            filename = "__base__/sound/inserter-basic-5.ogg",
+            volume = 0.3
+            }
         }
-      }
     } end
 
     b.pickup_position = function(levels,grade) return {0, -1} end
     b.insert_position = function(levels,grade) return {0, 1.2} end
-    b.hand_base_picture =function(levels,grade) return {
-      filename = "__base__/graphics/entity/inserter/inserter-hand-base.png",
-      priority = "extra-high",
-      width = 8,
-      height = 33,
-      hr_version =
-      {
-        filename = "__base__/graphics/entity/inserter/hr-inserter-hand-base.png",
+        b.hand_base_picture =function(levels,grade) return {
+        filename = "__base__/graphics/entity/inserter/inserter-hand-base.png",
         priority = "extra-high",
-        width = 32,
-        height = 136,
-        scale = 0.25
-      }
-    } end
-    b.hand_closed_picture =function(levels,grade) return
-    {
-      filename = "__base__/graphics/entity/inserter/inserter-hand-closed.png",
-      priority = "extra-high",
-      width = 18,
-      height = 41,
-      hr_version =
-      {
-        filename = "__base__/graphics/entity/inserter/hr-inserter-hand-closed.png",
-        priority = "extra-high",
-        width = 72,
-        height = 164,
-        scale = 0.25
-      }
-    } end
-    b.hand_open_picture = function(levels,grade) return
-    {
-      filename = "__base__/graphics/entity/inserter/inserter-hand-open.png",
-      priority = "extra-high",
-      width = 18,
-      height = 41,
-      hr_version =
-      {
-        filename = "__base__/graphics/entity/inserter/hr-inserter-hand-open.png",
-        priority = "extra-high",
-        width = 72,
-        height = 164,
-        scale = 0.25
-      }
-    } end
-    b.hand_base_shadow = function(levels,grade) return
-    {
-      filename = "__base__/graphics/entity/burner-inserter/burner-inserter-hand-base-shadow.png",
-      priority = "extra-high",
-      width = 8,
-      height = 33,
-      hr_version =
-      {
-        filename = "__base__/graphics/entity/burner-inserter/hr-burner-inserter-hand-base-shadow.png",
-        priority = "extra-high",
-        width = 32,
-        height = 132,
-        scale = 0.25
-      }
-    } end
-    b.hand_closed_shadow = function(levels,grade) return
-    {
-      filename = "__base__/graphics/entity/burner-inserter/burner-inserter-hand-closed-shadow.png",
-      priority = "extra-high",
-      width = 18,
-      height = 41,
-      hr_version =
-      {
-        filename = "__base__/graphics/entity/burner-inserter/hr-burner-inserter-hand-closed-shadow.png",
-        priority = "extra-high",
-        width = 72,
-        height = 164,
-        scale = 0.25
-      }
-    } end
-    b.hand_open_shadow = function(levels,grade) return
-    {
-      filename = "__base__/graphics/entity/burner-inserter/burner-inserter-hand-open-shadow.png",
-      priority = "extra-high",
-      width = 18,
-      height = 41,
-      hr_version =
-      {
-        filename = "__base__/graphics/entity/burner-inserter/hr-burner-inserter-hand-open-shadow.png",
-        priority = "extra-high",
-        width = 72,
-        height = 164,
-        scale = 0.25
-      }
-    } end
-    b.platform_picture = function(levels,grade) return
-    {
-      sheet =
-      {
-        filename = "__base__/graphics/entity/inserter/inserter-platform.png",
-        priority = "extra-high",
-        width = 46,
-        height = 46,
-        shift = {0.09375, 0},
+        width = 8,
+        height = 33,
         hr_version =
         {
-          filename = "__base__/graphics/entity/inserter/hr-inserter-platform.png",
-          priority = "extra-high",
-          width = 105,
-          height = 79,
-          shift = util.by_pixel(1.5, 7.5-1),
-          scale = 0.5
+            filename = "__base__/graphics/entity/inserter/hr-inserter-hand-base.png",
+            priority = "extra-high",
+            width = 32,
+            height = 136,
+            scale = 0.25
         }
-      }
+        } end
+        b.hand_closed_picture =function(levels,grade) return
+        {
+        filename = "__base__/graphics/entity/inserter/inserter-hand-closed.png",
+        priority = "extra-high",
+        width = 18,
+        height = 41,
+        hr_version =
+        {
+            filename = "__base__/graphics/entity/inserter/hr-inserter-hand-closed.png",
+            priority = "extra-high",
+            width = 72,
+            height = 164,
+            scale = 0.25
+        }
+        } end
+        b.hand_open_picture = function(levels,grade) return
+        {
+        filename = "__base__/graphics/entity/inserter/inserter-hand-open.png",
+        priority = "extra-high",
+        width = 18,
+        height = 41,
+        hr_version =
+        {
+            filename = "__base__/graphics/entity/inserter/hr-inserter-hand-open.png",
+            priority = "extra-high",
+            width = 72,
+            height = 164,
+            scale = 0.25
+        }
+        } end
+        b.hand_base_shadow = function(levels,grade) return
+        {
+        filename = "__base__/graphics/entity/burner-inserter/burner-inserter-hand-base-shadow.png",
+        priority = "extra-high",
+        width = 8,
+        height = 33,
+        hr_version =
+        {
+            filename = "__base__/graphics/entity/burner-inserter/hr-burner-inserter-hand-base-shadow.png",
+            priority = "extra-high",
+            width = 32,
+            height = 132,
+            scale = 0.25
+        }
+        } end
+        b.hand_closed_shadow = function(levels,grade) return
+        {
+        filename = "__base__/graphics/entity/burner-inserter/burner-inserter-hand-closed-shadow.png",
+        priority = "extra-high",
+        width = 18,
+        height = 41,
+        hr_version =
+        {
+            filename = "__base__/graphics/entity/burner-inserter/hr-burner-inserter-hand-closed-shadow.png",
+            priority = "extra-high",
+            width = 72,
+            height = 164,
+            scale = 0.25
+        }
+        } end
+        b.hand_open_shadow = function(levels,grade) return
+        {
+        filename = "__base__/graphics/entity/burner-inserter/burner-inserter-hand-open-shadow.png",
+        priority = "extra-high",
+        width = 18,
+        height = 41,
+        hr_version =
+        {
+            filename = "__base__/graphics/entity/burner-inserter/hr-burner-inserter-hand-open-shadow.png",
+            priority = "extra-high",
+            width = 72,
+            height = 164,
+            scale = 0.25
+        }
+        } end
+        b.platform_picture = function(levels,grade) return
+        {
+        sheet =
+        {
+            filename = "__base__/graphics/entity/inserter/inserter-platform.png",
+            priority = "extra-high",
+            width = 46,
+            height = 46,
+            shift = {0.09375, 0},
+            hr_version =
+            {
+            filename = "__base__/graphics/entity/inserter/hr-inserter-platform.png",
+            priority = "extra-high",
+            width = 105,
+            height = 79,
+            shift = util.by_pixel(1.5, 7.5-1),
+            scale = 0.5
+            }
+        }
     } end
     return setmetatable(b,InsertGen)
 end
@@ -4282,22 +3844,23 @@ function InsertGen:setAnimation(platform,base,baseShadow,open,openShadow,closed,
         self.platform_picture = function(levels,grade) return platform end
     elseif type(platform)=="string" then
         self.platform_picture = function(levels,grade) return {
-        sheet = {
-          filename = "__"..self.mod.."__/graphics/entity/inserter/"..platform.."-platform.png",
-          priority = "extra-high",
-          width = 46,
-          height = 46,
-          shift = {0.09375, 0},
-          hr_version = {
-            filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..platform.."-platform.png",
+            sheet = {
+            filename = "__"..self.mod.."__/graphics/entity/inserter/"..platform.."-platform.png",
             priority = "extra-high",
-            width = 105,
-            height = 79,
-            shift = util.by_pixel(1.5, 7.5-1),
-            scale = 0.5
-          }
+            width = 46,
+            height = 46,
+            shift = {0.09375, 0},
+            hr_version = {
+                filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..platform.."-platform.png",
+                priority = "extra-high",
+                width = 105,
+                height = 79,
+                shift = util.by_pixel(1.5, 7.5-1),
+                scale = 0.5
+            }
+            }
         }
-      } end
+        end
     end
     if type(base)=="function" then
         self.hand_base_picture=base
@@ -4305,19 +3868,19 @@ function InsertGen:setAnimation(platform,base,baseShadow,open,openShadow,closed,
         self.hand_base_picture = function(levels,grade) return base end
     elseif type(base)=="string" then
         self.hand_base_picture = function(levels,grade) return {
-        filename = "__"..self.mod.."__/graphics/entity/inserter/"..base.."-hand-base.png",
-        priority = "extra-high",
-        width = 8,
-        height = 33,
-        hr_version =
-        {
-          filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..base.."-hand-base.png",
-          priority = "extra-high",
-        width = 32,
-        height = 136,
-        scale = 0.25
+            filename = "__"..self.mod.."__/graphics/entity/inserter/"..base.."-hand-base.png",
+            priority = "extra-high",
+            width = 8,
+            height = 33,
+            hr_version = {
+                filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..base.."-hand-base.png",
+                priority = "extra-high",
+                width = 32,
+                height = 136,
+                scale = 0.25
+            }
         }
-      } end
+        end
     end
     if type(baseShadow)=="function" then
         self.hand_base_shadow=baseShadow
@@ -4325,39 +3888,39 @@ function InsertGen:setAnimation(platform,base,baseShadow,open,openShadow,closed,
         self.hand_base_shadow = function(levels,grade) return baseShadow end
     elseif type(baseShadow)=="string" then
         self.hand_base_shadow = function(levels,grade) return {
-        filename = "__"..self.mod.."__/graphics/entity/inserter/"..baseShadow.."-hand-base-shadow.png",
-        priority = "extra-high",
-        width = 8,
-        height = 33,
-        hr_version =
-        {
-          filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..baseShadow.."-hand-base-shadow.png",
-          priority = "extra-high",
-        width = 32,
-        height = 132,
-        scale = 0.25
+            filename = "__"..self.mod.."__/graphics/entity/inserter/"..baseShadow.."-hand-base-shadow.png",
+            priority = "extra-high",
+            width = 8,
+            height = 33,
+            hr_version = {
+                filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..baseShadow.."-hand-base-shadow.png",
+                priority = "extra-high",
+                width = 32,
+                height = 132,
+                scale = 0.25
+            }
         }
-      } end
+        end
     end
     if type(open)=="function" then
         self.hand_open_picture=open
     elseif type(open)=="table" then
         self.hand_open_picture = function(levels,grade) return open end
     elseif type(open)=="string" then
-        self.hand_open_picture = function(levels,grade) return {
-        filename = "__"..self.mod.."__/graphics/entity/inserter/"..open.."-hand-open.png",
-        priority = "extra-high",
-      width = 18,
-      height = 41,
-        hr_version =
-        {
-          filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..open.."-hand-open.png",
-          priority = "extra-high",
-        width = 72,
-        height = 164,
-        scale = 0.25
+            self.hand_open_picture = function(levels,grade) return {
+            filename = "__"..self.mod.."__/graphics/entity/inserter/"..open.."-hand-open.png",
+            priority = "extra-high",
+            width = 18,
+            height = 41,
+            hr_version = {
+                filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..open.."-hand-open.png",
+                priority = "extra-high",
+                width = 72,
+                height = 164,
+                scale = 0.25
+            }
         }
-      } end
+        end
     end
     if type(openShadow)=="function" then
         self.hand_open_shadow=openShadow
@@ -4365,60 +3928,60 @@ function InsertGen:setAnimation(platform,base,baseShadow,open,openShadow,closed,
         self.hand_open_shadow = function(levels,grade) return openShadow end
     elseif type(openShadow)=="string" then
         self.hand_open_shadow = function(levels,grade) return {
-        filename = "__"..self.mod.."__/graphics/entity/inserter/"..openShadow.."-hand-open-shadow.png",
-        priority = "extra-high",
-      width = 18,
-      height = 41,
-        hr_version =
-        {
-          filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..openShadow.."-hand-open-shadow.png",
-          priority = "extra-high",
-        width = 72,
-        height = 164,
-        scale = 0.25
+            filename = "__"..self.mod.."__/graphics/entity/inserter/"..openShadow.."-hand-open-shadow.png",
+            priority = "extra-high",
+            width = 18,
+            height = 41,
+            hr_version = {
+                filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..openShadow.."-hand-open-shadow.png",
+                priority = "extra-high",
+                width = 72,
+                height = 164,
+                scale = 0.25
+            }
         }
-      } end
+        end
     end
     if type(closed)=="function" then
         self.hand_closed_picture=closed
     elseif type(closed)=="table" then
         self.hand_closed_picture = function(levels,grade) return closed end
     elseif type(closed)=="string" then
-        self.hand_closed_picture = function(levels,grade) return {
-        filename = "__"..self.mod.."__/graphics/entity/inserter/"..closed.."-hand-closed.png",
-        priority = "extra-high",
-      width = 18,
-      height = 41,
-        hr_version =
-        {
-          filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..closed.."-hand-closed.png",
-          priority = "extra-high",
-        width = 72,
-        height = 164,
-        scale = 0.25
+            self.hand_closed_picture = function(levels,grade) return {
+            filename = "__"..self.mod.."__/graphics/entity/inserter/"..closed.."-hand-closed.png",
+            priority = "extra-high",
+            width = 18,
+            height = 41,
+            hr_version = {
+                filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..closed.."-hand-closed.png",
+                priority = "extra-high",
+                width = 72,
+                height = 164,
+                scale = 0.25
+            }
         }
-      } end
+        end
     end
     if type(closedShadow)=="function" then
         self.hand_closed_shadow=closedShadow
     elseif type(closedShadow)=="table" then
         self.hand_closed_shadow = function(levels,grade) return closedShadow end
     elseif type(closedShadow)=="string" then
-        self.hand_closed_shadow = function(levels,grade) return
-      {
-        filename = "__"..self.mod.."__/graphics/entity/inserter/"..closedShadow.."-hand-closed-shadow.png",
-        priority = "extra-high",
-      width = 18,
-      height = 41,
-        hr_version =
-        {
-          filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..closedShadow.."-hand-closed-shadow.png",
-          priority = "extra-high",
-        width = 72,
-        height = 164,
-        scale = 0.25
-        }
-      } end
+            self.hand_closed_shadow = function(levels,grade) return {
+                filename = "__"..self.mod.."__/graphics/entity/inserter/"..closedShadow.."-hand-closed-shadow.png",
+                priority = "extra-high",
+                width = 18,
+                height = 41,
+                hr_version =
+                {
+                    filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..closedShadow.."-hand-closed-shadow.png",
+                    priority = "extra-high",
+                    width = 72,
+                    height = 164,
+                    scale = 0.25
+                }
+            }
+        end
     end
     return self
 end
@@ -4435,81 +3998,79 @@ function InsertGen:generateInserter()
         end
     end
     local size = self.size(0,0)
-    self.rtn[#self.rtn+1]={
-    type = "inserter",
-    name = self.name,
-    icons = self.icons(0,0),
-    icon_size = 32,
-    filter_count=self.filter_count(0,0),
-    flags = self.flags,
-    minable = {mining_time = self.mining_time(0,0), result = self.name},
-    fast_replaceable_group = self.fast_replaceable_group(0,0),
-    next_upgrade = self.next_upgrade(0,0),
-    max_health = self.max_health(0,0),
-    corpse = self.corpse,
-    resistances =
-    {
+    self.rtn[#self.rtn+1] = {
+        type = "inserter",
+        name = self.name,
+        icons = self.icons(0,0),
+        icon_size = 32,
+        filter_count=self.filter_count(0,0),
+        flags = self.flags,
+        minable = {mining_time = self.mining_time(0,0), result = self.name},
+        fast_replaceable_group = self.fast_replaceable_group(0,0),
+        next_upgrade = self.next_upgrade(0,0),
+        max_health = self.max_health(0,0),
+        corpse = self.corpse,
+        resistances =
         {
-            type = "fire",
-            percent = 90
-        }
-    },
-    collision_box = {{-size.width+0.25, -size.height+0.25}, {size.width-0.25, size.height-0.25}},
-    selection_box = {{-size.width, -size.height}, {size.width, size.height}},
-    --collision_box = {{-0.15, -0.15}, {0.15, 0.15}},
-    --selection_box = {{-0.4, -0.35}, {0.4, 0.45}},
-    energy_per_movement = self.energy_usage(0,0).energy_per_movement,
-    energy_per_rotation = self.energy_usage(0,0).energy_per_rotation,
-    energy_source =source,
-    extension_speed = self.speed(0,0).extension_speed,
-    rotation_speed = self.speed(0,0).rotation_speed,
-    pickup_position = {0, -1},
-    insert_position = {0, 1.2},
-    --next_upgrade = "fast-inserter",
-    vehicle_impact_sound =  self.vehicle_impact_sound,
-    working_sound =
-    {
-      match_progress_to_activity = true,
-      sound =
-      {
-        {
-          filename = "__base__/sound/inserter-basic-1.ogg",
-          volume = 0.3
+            {
+                type = "fire",
+                percent = 90
+            }
         },
-        {
-          filename = "__base__/sound/inserter-basic-2.ogg",
-          volume = 0.3
+        collision_box = {{-size.width+0.25, -size.height+0.25}, {size.width-0.25, size.height-0.25}},
+        selection_box = {{-size.width, -size.height}, {size.width, size.height}},
+        --collision_box = {{-0.15, -0.15}, {0.15, 0.15}},
+        --selection_box = {{-0.4, -0.35}, {0.4, 0.45}},
+        energy_per_movement = self.energy_usage(0,0).energy_per_movement,
+        energy_per_rotation = self.energy_usage(0,0).energy_per_rotation,
+        energy_source =source,
+        extension_speed = self.speed(0,0).extension_speed,
+        rotation_speed = self.speed(0,0).rotation_speed,
+        pickup_position = {0, -1},
+        insert_position = {0, 1.2},
+        --next_upgrade = "fast-inserter",
+        vehicle_impact_sound =  self.vehicle_impact_sound,
+        working_sound = {
+            match_progress_to_activity = true,
+            sound = {
+                {
+                    filename = "__base__/sound/inserter-basic-1.ogg",
+                    volume = 0.3
+                },
+                {
+                    filename = "__base__/sound/inserter-basic-2.ogg",
+                    volume = 0.3
+                },
+                {
+                    filename = "__base__/sound/inserter-basic-3.ogg",
+                    volume = 0.3
+                },
+                {
+                    filename = "__base__/sound/inserter-basic-4.ogg",
+                    volume = 0.3
+                },
+                {
+                    filename = "__base__/sound/inserter-basic-5.ogg",
+                    volume = 0.3
+                }
+            }
         },
-        {
-          filename = "__base__/sound/inserter-basic-3.ogg",
-          volume = 0.3
-        },
-        {
-          filename = "__base__/sound/inserter-basic-4.ogg",
-          volume = 0.3
-        },
-        {
-          filename = "__base__/sound/inserter-basic-5.ogg",
-          volume = 0.3
-        }
-      }
-    },
-    hand_base_picture = self.hand_base_picture(0,0),
-    hand_closed_picture = self.hand_closed_picture(0,0),
-    hand_open_picture = self.hand_open_picture(0,0),
-    hand_base_shadow = self.hand_base_shadow(),
-    hand_closed_shadow = self.hand_closed_shadow(0,0),
-    hand_open_shadow = self.hand_open_shadow(0,0),
-    platform_picture = self.platform_picture(0,0),
-    circuit_wire_connection_points = circuit_connector_definitions["inserter"].points,
-    circuit_connector_sprites = circuit_connector_definitions["inserter"].sprites,
-    circuit_wire_max_distance = inserter_circuit_wire_max_distance,
-    default_stack_control_input_signal = inserter_default_stack_control_input_signal
-  }
-  if self.fuel_categories and next(self.fuel_categories) then self.rtn[#self.rtn].energy_source.fuel_categories = self.fuel_categories end
+        hand_base_picture = self.hand_base_picture(0,0),
+        hand_closed_picture = self.hand_closed_picture(0,0),
+        hand_open_picture = self.hand_open_picture(0,0),
+        hand_base_shadow = self.hand_base_shadow(),
+        hand_closed_shadow = self.hand_closed_shadow(0,0),
+        hand_open_shadow = self.hand_open_shadow(0,0),
+        platform_picture = self.platform_picture(0,0),
+        circuit_wire_connection_points = circuit_connector_definitions["inserter"].points,
+        circuit_connector_sprites = circuit_connector_definitions["inserter"].sprites,
+        circuit_wire_max_distance = inserter_circuit_wire_max_distance,
+        default_stack_control_input_signal = inserter_default_stack_control_input_signal
+    }
+    if self.fuel_categories and next(self.fuel_categories) then self.rtn[#self.rtn].energy_source.fuel_categories = self.fuel_categories end
 
     local stuff = RecGen:create(self.mod,self.name):
-    setIngredients(self.ingredients):
+    setIngredients(self.ingredients(0,0)):
     setResults(self.name):
     setIcons(self.icons(0,0)):
     setBuildProto(self.rtn[#self.rtn]):
@@ -4532,135 +4093,22 @@ function InsertGen:generateInserter()
     setTechLocName(self.tech.loc_name(0,0)):
     setTechLocDesc(self.tech.loc_desc(0,0)):
     setForce(self.force):
-    setTechPrereq(self.tech.prerequisites(0,0)):return_array()
+    setTechPrereq(self.tech.prerequisites(0,0)):
+    return_array()
+
     for _, p in pairs(stuff) do
         self.rtn[#self.rtn+1] = table.deepcopy(p)
     end
 end
+
+
 function InsertGen:return_array()
     self:generateInserter()
     return self.rtn
 end
+
 function InsertGen:extend()
     if self.requiredMods(0,0) then
         data:extend(self:return_array())
     end
 end
---[[
-platform_picture
-hand_open_shadow
-hand_closed_shadow
-hand_base_shadow
-hand_open_picture
-hand_closed_picture
-hand_base_picture
---[[{
-    corpse = "small-remnants",
-    resistances =
-    {
-      {
-        type = "fire",
-        percent = 90
-      }
-    },
-
-  }
-
-  --[[
-    circuit_wire_connection_points = circuit_connector_definitions["inserter"].points,
-    circuit_connector_sprites = circuit_connector_definitions["inserter"].sprites,
-    circuit_wire_max_distance = inserter_circuit_wire_max_distance,
-    default_stack_control_input_signal = inserter_default_stack_control_input_signal]]
---[[
-{
-    autoplace =
-    {
-      control = "omnite",
-      sharpness = 1,
-      richness_multiplier = 2000,
-      richness_multiplier_distance_bonus = 15,
-      richness_base = 1000,
-      coverage = 0.03,
-      peaks =
-      {
-        {
-          noise_layer = "omnite",
-          noise_octaves_difference = -1.5,
-          noise_persistence = 0.3,
-        },
-      },
-      starting_area_size = 600 * 0.01,
-      starting_area_amount = 1000
-    },
-    stage_counts = {1000, 600, 400, 200, 100, 50, 20, 1},
-    stages =
-    {
-      sheet =
-      {
-        filename = "__omnimatter__/graphics/entity/ores/omnite.png",
-        priority = "extra-high",
-        width = 64,
-        height = 64,
-        frame_count = 8,
-        variation_count = 8,
-        hr_version = {
-          filename = "__omnimatter__/graphics/entity/ores/hr-omnite.png",
-          priority = "extra-high",
-          width = 128,
-          height = 128,
-          frame_count = 8,
-          variation_count = 8,
-          scale = 0.5
-        }
-      }
-    },
-    stages_effect =
-    {
-      sheet =
-      {
-        filename = "__omnimatter__/graphics/entity/ores/omnite-glow.png",
-        priority = "extra-high",
-        width = 64,
-        height = 64,
-        frame_count = 8,
-        variation_count = 8,
-        blend_mode = "additive",
-        flags = {"light"},
-        hr_version = {
-          filename = "__omnimatter__/graphics/entity/ores/hr-omnite-glow.png",
-          priority = "extra-high",
-          width = 128,
-          height = 128,
-          frame_count = 8,
-          variation_count = 8,
-          scale = 0.5,
-          blend_mode = "additive",
-          flags = {"light"},
-        }
-      }
-    },
-    effect_animation_period = 5,
-    effect_animation_period_deviation = 1,
-    effect_darkness_multiplier = 3.6,
-    min_effect_alpha = 0.2,
-    max_effect_alpha = 0.3,
-    map_color = {r=0.34, g=0.00, b=0.51},
-  }
-
-]]
-
---[[
-    1: Make it so particles are generated if its a table but just grabs if its a string.
-]]
-
---[[
-setTechUpgrade(value)
-setTechCost(cost)
-setTechIcons(mod,icon)
-setTechPacks(cost)
-setTechTime(t)
-setTechPrereq(prereq)
-function BuildGen:()
-
-end
-]]

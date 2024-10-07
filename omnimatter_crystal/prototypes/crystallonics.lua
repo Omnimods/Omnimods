@@ -6,14 +6,13 @@ RecGen:create("omnimatter_crystal","hydromnic-acid"):
     fluid():
     setBothColour(1,1,1):
     setEnergy(1):
-    marathon():
     setCategory("omniplant"):
     setSubgroup("crystal-fluids"):
     setTechName("omnitech-omnic-acid-hydrolyzation-1"):
     setIngredients({
-      {type = "item", name = "omnite", amount = 1},
-      {type = "fluid", name = "omnic-acid", amount = 50},
-      {type = "fluid", name = water, amount = 200},
+        {type = "item", name = "omnite", amount = 1},
+        {type = "fluid", name = "omnic-acid", amount = 50},
+        {type = "fluid", name = water, amount = 200},
     }):
     setResults({type = "fluid", name = "hydromnic-acid", amount = 500}):extend()
 
@@ -28,7 +27,6 @@ RecGen:create("omnimatter_crystal","omnine"):
     setStacksize(200):
     --setFuelValue(18):
     --setFuelCategory("crystal"):
-    marathon():
     setTechName("omnitech-crystallology-1"):
     setIngredients({
     {type = "item", name = "omnine-shards", amount=1},
@@ -41,7 +39,6 @@ RecGen:create("omnimatter_crystal","omnine-distillation-quick"):
     setSubgroup("omnine"):
     setCategory("omniplant"):
     setEnergy(180):
-    marathon():
     setTechName("omnitech-crystallology-1"):
     setIngredients({type = "fluid", name = "omnisludge", amount=20000}):
     setResults({type = "item", name = "omnine", amount=1}):
@@ -51,7 +48,6 @@ RecGen:create("omnimatter_crystal","omnine-distillation-slow"):
     setSubgroup("omnine"):
     setCategory("omniplant"):
     setEnergy(1800):
-    marathon():
     setTechName("omnitech-crystallology-1"):
     setIngredients({type = "fluid", name = "omnisludge", amount=2000}):
     setResults({type = "item", name = "omnine", amount=1}):
@@ -66,7 +62,6 @@ RecGen:create("omnimatter_crystal","omnine-shards"):
     --setFuelValue(3.5):
     --setFuelCategory("crystal"):
     setEnergy(1):
-    marathon():
     setTechName("omnitech-crystallology-1"):
     setIngredients({type = "item", name = "omnine", amount=1}):
     setResults({type = "item", name = "omnine-shards", amount=10}):
@@ -80,11 +75,11 @@ RecGen:create("omnimatter_crystal","omnine-shards"):
 
 local crystal_cat = "crystallomnizer"
 if mods["bobplates"] or (mods["angelsindustries"] and angelsmods.industries and angelsmods.industries.overhaul) then
-  ore_circuit = "lead-ore"
-  cry_rod = "tin-ore-crystal"
+    ore_circuit = "lead-ore"
+    cry_rod = "tin-ore-crystal"
 else
-  ore_circuit = "coal"
-  cry_rod = "copper-ore-crystal"
+    ore_circuit = "coal"
+    cry_rod = "copper-ore-crystal"
 end
 
 

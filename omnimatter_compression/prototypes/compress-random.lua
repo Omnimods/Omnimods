@@ -10,14 +10,12 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
             local new_recipe = table.deepcopy(data.raw.recipe[recipe])
             --grab localisation before standardisation
             local loc = omni.lib.locale.custom_name(data.raw.recipe[recipe], "compressed-recipe")
-            --standardise
-            if not mods["omnimatter_marathon"] then omni.lib.standardise(new_recipe) end
             --double check shenanigans are not happening
             new_recipe.ingredients=nil
             new_recipe.ingredient=nil
             new_recipe.result=nil
             new_recipe.results=nil
-            local stored_probabilities = {normal={},expensive={}}
+            local stored_probabilities = {}
             --prob table should include more details than just the number, the order of items seems to get changed in create_compression_recipes
             for _, result in pairs(new_recipe.results) do
                 --check item not already in table

@@ -49,31 +49,6 @@ BuildGen:import("assembling-machine-1"):
 --Update assembling machine 1 ingredients
 omni.lib.add_recipe_ingredient("assembling-machine-1", "omnitor-assembling-machine")
 
-
---Burner filter inserter
-local inserter_subgroup = "inserter"
-local inserter_order = "ab[burner-filter-inserter]"
-if mods["boblogistics"] then inserter_subgroup = "bob-logistic-tier-0" inserter_order = "e[inserter]-a[filter-burner]"end
-
-InsertGen:create("omnimatter_energy","burner-filter-inserter"):
-    setIngredients({"burner-inserter",1},{"omnitor",2},{"omnium-gear-wheel",2}):
-    setIcons("burner-filter-inserter","omnimatter_energy"):
-    setFilter(1):
-    setSpeed(0.0214, 0.01): --vanilla burner inserter speed
-    setAnimation("burner-filter-inserter"):
-    setFuelCategory("omnite"): --not working...
-    setBurner(0.75,1):
-    setNextUpgrade("filter-inserter"):
-    setSubgroup("inserter"):
-    setOrder(inserter_order):
-    setTechName("omnitech-burner-filter"):
-    setTechLocName("omnitech-burner-filter"):
-    setTechIcons("burner-filter","omnimatter_energy"):
-    setTechPacks({{"energy-science-pack", 1}}):
-    setTechCost(25):
-    setTechPrereq("basic-splitter-logistics", "basic-underground-logistics"):
-    extend()
-
 --Fix vanilla burner inserter
 RecGen:import("burner-inserter"):
     setIngredients({"omnitor",1},{"omnicium-plate",2},{"iron-gear-wheel",1}):

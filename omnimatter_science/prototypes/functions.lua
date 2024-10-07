@@ -21,7 +21,7 @@ local function build_tech_list()
             goto continue
         end
         -- if alien science (gold pack)
-        for _,ing in pairs((tech.unit or tech.normal.unit).ingredients) do
+        for _,ing in pairs(tech.unit.ingredients) do
             for _,sub_ing in pairs(ing) do
                 if string.find(sub_ing, "science%-pack%-gold") then 
                 omni.science.exclude_tech[tech.name] = true
@@ -202,7 +202,7 @@ function omni.science.tech_updates()
 
     -- separate techs for processing and set tech time
     for _,tech in pairs(data.raw.technology) do
-        local unit = tech.unit or tech.normal.unit
+        local unit = tech.unit
         --roll through each tech
         if Set.StdTime and omni.lib.start_with(tech.name,"omnipressed-") then --compression tech time standardise?
             --standardised research time
@@ -298,9 +298,9 @@ function omni.science.tech_updates()
         for i,tech in pairs(tech_list.name) do
             local raw_tech = data.raw.technology[tech]
             if Set.Cumul then
-                (raw_tech.unit or raw_tech.normal.unit).count = math.ceil(tech_list.cost[i])
+                raw_tech.unit.count = math.ceil(tech_list.cost[i])
             elseif Set.Expon then
-                (raw_tech.unit or raw_tech.normal.unit).count = math.ceil(Set.ExponInit*math.pow(Set.ExponBase,tech_list.height[i]))
+                raw_tech.unit.count = math.ceil(Set.ExponInit*math.pow(Set.ExponBase,tech_list.height[i]))
             else --no maths changing mode
                 log("why bother with this mod if you don't want cumulative or exponential tech costs?")
             end

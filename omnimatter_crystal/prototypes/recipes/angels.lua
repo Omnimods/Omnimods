@@ -4,8 +4,8 @@
 local ingrediences_solvation=function(recipe)
     local ing = {}
     ing[#ing+1]={type = "fluid", name = "hydromnic-acid", amount = 120}
-    if recipe.normal and recipe.normal.ingredients then
-        for _, i in pairs(recipe.normal.ingredients) do
+    if recipe and recipe.ingredients then
+        for _, i in pairs(recipe.ingredients) do
             if i.name ~= "catalysator-brown" and i.name ~= "angels-void" and i.name ~= "catalysator-green" and i.name ~= "catalysator-orange" then
                 ing[#ing+1]=i
             end
@@ -32,8 +32,8 @@ end
 local results_solvation=function(recipe)
     local ing = {}
     --ing[#ing+1]={type = "fluid", name = "hydromnic-acid", amount = 120}
-    if recipe.normal and recipe.normal.ingredients then
-        for _, i in pairs(recipe.normal.results) do
+    if recipe and recipe.ingredients then
+        for _, i in pairs(recipe.results) do
             if i.name ~= "slag" and not string.find(i.name,"void") then
                 ing[#ing+1]={type = "item", name=i.name.."-omnide-salt", amount = i.amount}
             end
@@ -76,8 +76,8 @@ local salt_omnide_icon = function(metal)
 end
 --checks
 local find_type = function(recipe,name)
-    if recipe.normal and recipe.normal.ingredients then
-        for _,ing in pairs(recipe.normal.ingredients) do
+    if recipe and recipe.ingredients then
+        for _,ing in pairs(recipe.ingredients) do
             if string.find(ing.name,name) then return true end
         end
     elseif recipe.ingredients then
@@ -145,8 +145,8 @@ if angelsmods and angelsmods.refining then
     for _,recipe in pairs(data.raw.recipe) do
         --log(serpent.block (recipe.name))
         local results={}
-        if recipe.normal and recipe.normal.results then --non-standardised check?
-            results=recipe.normal.results
+        if recipe and recipe.results then --non-standardised check?
+            results=recipe.results
         elseif recipe.results then
             results=recipe.results
         end
@@ -196,7 +196,7 @@ if angelsmods and angelsmods.refining then
                         results = res,
                         energy_required = 5,
                     }
-                    if mods["omnimatter_marathon"] then omni.marathon.exclude_recipe(metal.."-salting") end
+
                     crystalines[#crystalines+1]=solution
                     --"angelsore-crushed-mix1-processing"
                     --adding unlocks in sequence, once unlocked, add exclusion...
@@ -239,7 +239,6 @@ if angelsmods and angelsmods.refining then
         RecGen:create("omnimatter_crystal","omni-catalyst"):
         setSubgroup("omnine"):
         setStacksize(500):
-        marathon():
         --setIcons("catalysator-yellow","angelsrefining"):
         setIcons("omni-catalyst"):
         setCategory("crystallizing"):

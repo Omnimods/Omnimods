@@ -7,14 +7,12 @@ if mods["space-exploration"] then
     for _, rec in pairs(data.raw.recipe) do
         if rec.category and rec.category == "condenser-turbine" and string.find(rec.name, "turbine%-reclaim%-water") then
             local temp = string.sub(rec.name, -7, -5)
-            for _, dif in pairs({"normal","expensive"}) do
-                for _, res in pairs(rec[dif].results) do
-                    if res.name == "solid-se-decompressing-steam-T-"..temp then
-                        res.type = "fluid"
-                        res.name = "se-decompressing-steam"
-                        res.amount = res.amount * omni.fluid.sluid_contain_fluid
-                        res.temperature = temp
-                    end
+            for _, res in pairs(rec.results) do
+                if res.name == "solid-se-decompressing-steam-T-"..temp then
+                    res.type = "fluid"
+                    res.name = "se-decompressing-steam"
+                    res.amount = res.amount * omni.fluid.sluid_contain_fluid
+                    res.temperature = temp
                 end
             end
         end
@@ -25,14 +23,12 @@ if mods["space-exploration"] then
         end
     end
     --Big turbine
-    for _, dif in pairs({"normal","expensive"}) do
-        for _, res in pairs(data.raw.recipe["se-big-turbine-internal"][dif].results) do
-            if res.name == "solid-se-decompressing-steam-T-5000" then
-                res.type = "fluid"
-                res.name = "se-decompressing-steam"
-                res.amount = res.amount * omni.fluid.sluid_contain_fluid
-                res.temperature = 5000
-            end
+    for _, res in pairs(data.raw.recipe["se-big-turbine-internal"].results) do
+        if res.name == "solid-se-decompressing-steam-T-5000" then
+            res.type = "fluid"
+            res.name = "se-decompressing-steam"
+            res.amount = res.amount * omni.fluid.sluid_contain_fluid
+            res.temperature = 5000
         end
     end
     for i, box in pairs(data.raw.furnace["se-big-turbine"].fluid_boxes) do

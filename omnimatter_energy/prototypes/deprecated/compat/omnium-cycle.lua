@@ -73,7 +73,6 @@ RecGen:create("omnimatter_energy","oxyomnide-hydromnization"):
         {type="item",name="oxyomnide-salt",amount=1},
         {type="fluid",name="hydromnic-acid",amount=75*3}):
     setResults("hydromnide-salt"):
-    marathon():
     setSubgroup("Omnicell"):
     setIcons("hydromnide-salt","omnimatter_energy"):
     setEnergy(1.5):extend()
@@ -86,9 +85,8 @@ for _,salt in pairs(salts) do
     for i=1,4 do
         for _,eff in pairs(data.raw.technology["omnitech-crystallology-"..i].effects) do
             if eff.type == "unlock-recipe" and not string.find(eff.recipe,"hydronmization") then
-                omni.lib.standardise(data.raw.recipe[eff.recipe])
                 local recipe = data.raw.recipe[eff.recipe]
-                if #recipe.normal.results == 1 and recipe.normal.results[1].name == salt then
+                if #recipe.results == 1 and recipe.results[1].name == salt then
                     level = i
                     --omni.lib.add_unlock_recipe("omnitech-crystallology-"..i,salt.."-hydronmization")
                     tech_found=true
@@ -153,7 +151,6 @@ RecGen:create("omnimatter_energy","molten-hydromnide-salt"):
         {type="item",name="omnicell-denatured",amount = 1}):
     setMain("molten-hydromnide-salt"):
     setSubgroup("omnielectrobuildings"):
-    marathon():
     setStacksize(100):
     setEnergy(5):extend()
     
@@ -193,63 +190,62 @@ local waterLoss = 0.1
 
 
 RecGen:create("omnimatter_energy","omnium"):
-    fluid():
-    setMaxTemp(600):
-    setCapacity(5):
-    setTechName("omnium-power"):
-    setCategory("omnium-reactor"):
-    setIngredients(
-        {type="fluid",name="water",amount = 200},
-        {type="fluid",name="molten-hydromnide-salt",amount = 300}):
-    setResults(
-        {type="fluid",name="molten-oxyomnide-salt",amount = 300*(1-omnide_salt_loss), temperature = 500},
-        {type="fluid",name="omnium",amount = 200*(1-waterLoss), temperature = 500},
-        {type="fluid",name="omnic-waste",amount = 200*waterLoss+300*omnide_salt_loss}):
-    setMain("omnium"):
-    setSubgroup("omnielectrobuildings"):
-    marathon():
-    setEnergy(3):extend()
+fluid():
+setMaxTemp(600):
+setCapacity(5):
+setTechName("omnium-power"):
+setCategory("omnium-reactor"):
+setIngredients(
+    {type="fluid",name="water",amount = 200},
+    {type="fluid",name="molten-hydromnide-salt",amount = 300}):
+setResults(
+    {type="fluid",name="molten-oxyomnide-salt",amount = 300*(1-omnide_salt_loss), temperature = 500},
+    {type="fluid",name="omnium",amount = 200*(1-waterLoss), temperature = 500},
+    {type="fluid",name="omnic-waste",amount = 200*waterLoss+300*omnide_salt_loss}):
+setMain("omnium"):
+setSubgroup("omnielectrobuildings"):
+setEnergy(3):
+extend()
 
-    FluidGen:create("omnimatter_energy","molten-oxyomnide-salt"):
-        setMaxTemp(600):
-        setSubgroup("coolant"):
-        extend()
-        
+FluidGen:create("omnimatter_energy","molten-oxyomnide-salt"):
+setMaxTemp(600):
+setSubgroup("coolant"):
+extend()
+
 for i=5,3,-1 do
-        
     RecGen:create("omnimatter_energy","oxyomnide-cooling-"..i*100):
-        setIcons("molten-oxyomnide-salt"):
-        setLocName("recipe-name.cooling-oxomnide",i*100):
-        setTechName("omnium-power"):
-        setCategory("cooling"):
-        setIngredients(
-            {type="fluid",name="molten-oxyomnide-salt",amount = 100,minimum_temperature=100*i-50,maximum_temperature = 100*i+50},
-            {type="fluid", name="water", amount=50}):
-        setResults(
-            {type="fluid",name="molten-oxyomnide-salt",amount = 100, temperature = (i-1)*100},
-            {type="fluid", name="steam", amount=50, temperature = 200}):
-        --setMain("molten-oxyomnide-salt"):
-        setSubgroup("coolant"):
-        marathon():
-        setEnergy(1):extend()
-end
-    
-RecGen:create("omnimatter_energy","oxyomnide-solidification"):
-    setItemName("oxyomnide-salt"):
-    setStacksize(500):
+    setIcons("molten-oxyomnide-salt"):
+    setLocName("recipe-name.cooling-oxomnide",i*100):
     setTechName("omnium-power"):
     setCategory("cooling"):
-    setIcons("oxyomnide-salt"):
     setIngredients(
-        {type="fluid",name="molten-oxyomnide-salt",amount = 100,maximum_temperature = 250},
+        {type="fluid",name="molten-oxyomnide-salt",amount = 100,minimum_temperature=100*i-50,maximum_temperature = 100*i+50},
         {type="fluid", name="water", amount=50}):
     setResults(
-        {type="item",name="oxyomnide-salt",amount = 1},
+        {type="fluid",name="molten-oxyomnide-salt",amount = 100, temperature = (i-1)*100},
         {type="fluid", name="steam", amount=50, temperature = 200}):
-    setMain("oxyomnide-salt"):
+    --setMain("molten-oxyomnide-salt"):
     setSubgroup("coolant"):
-    marathon():
-    setEnergy(1):extend()
+    setEnergy(1):
+    extend()
+end
+
+RecGen:create("omnimatter_energy","oxyomnide-solidification"):
+setItemName("oxyomnide-salt"):
+setStacksize(500):
+setTechName("omnium-power"):
+setCategory("cooling"):
+setIcons("oxyomnide-salt"):
+setIngredients(
+    {type="fluid",name="molten-oxyomnide-salt",amount = 100,maximum_temperature = 250},
+    {type="fluid", name="water", amount=50}):
+setResults(
+    {type="item",name="oxyomnide-salt",amount = 1},
+    {type="fluid", name="steam", amount=50, temperature = 200}):
+setMain("oxyomnide-salt"):
+setSubgroup("coolant"):
+setEnergy(1):
+extend()
 
 --[[
 if mods["bobpower"] then

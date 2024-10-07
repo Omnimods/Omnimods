@@ -107,154 +107,6 @@ function lib.find_by_name(name)
     return results
 end
 
-function lib.parse_product(product)
--- Get the given product in the `{name = ..., type = ..., ...}` format.
--- Works for most product specifications
-    if not product then return end -- You get nothing! Good day sir
-
-    if type(product) == 'string' then -- Single product
-        return {
-            name = product,
-            type = 'item'
-        }
-    end
-
-    local product = table.deepcopy(product)
-    -- With either strings or tables, default is still item
-    if not product.type then
-        product.type = 'item'
-    end
-
-    if not product.name then
-        product.name = product[1] -- Array instead of table, we'll fix before returning.
-    end
-    if not product.amount then
-        product.amount = product[2]
-    end
-    -- No longer necessary
-    product[1] = nil
-    product[2] = nil
-    
-    return product
-end
-
-function lib.partial.find_product(recipe, name)
--- Get the full product definition for a product with the given name from the given recipe part.
-    if recipe.results then
-        for _, product in pairs(recipe.results) do
-            local parsed_product = lib.parse_product(product) -- Format and standardise, return if applicable
-            if parsed_product.name == name then
-                return parsed_product
-            end
-        end
-    elseif recipe.result == name then -- Recipe named for result i.e. Iron Plate
-        return lib.parse_product(name)
-    end
-    return nil
-end
-
-function lib.partial.get_main_product(recipe)
--- Get the main product of the given recipe part.
-    if recipe.main_product == '' then -- Basically nil
-        return nil
-    elseif recipe.main_product ~= nil then -- Straightforward, standardise and return
-        return lib.partial.find_product(recipe, recipe.main_product)
-    elseif recipe.results then -- Multi-result recipe
-        if table_size(recipe.results) == 1 then -- Not actually
-            return lib.parse_product(recipe.results[1])
-        else -- Multi-results with no primary!
-            return nil
-        end
-    elseif recipe.result then -- Single result as well
-        return lib.parse_product(recipe.result)
-    end
-    return nil
-end
-
-
-function lib.get_main_product(recipe)
--- Get the main product of the given recipe.
--- For normal+expensive definitions, the product is only returned if it's the same for both.
-    if recipe.normal and recipe.expensive then
-        local normal = lib.partial.get_main_product(recipe.normal)
-        local expensive = lib.partial.get_main_product(recipe.expensive)
-        if normal and expensive and -- Expensive does have same results
-        normal.name == expensive.name and 
-        normal.type == expensive.type then 
-            return normal
-        else -- Or it doesn't
-            return nil
-        end
-    end -- See if we were fed a partial recipe
-    return lib.partial.get_main_product(recipe.normal or recipe.expensive or recipe)
-end
-
-function lib.parse_ingredient(ingredient)
--- Get the given ingredient in the `{name = ..., type = ..., ...}` format.
-    local ingredient = table.deepcopy(ingredient)
-    -- With either strings or tables, default is still item
-    if not ingredient.type then
-        ingredient.type = 'item'
-    end
-
-    if not ingredient.name then
-        ingredient.name = ingredient[1] -- Array instead of table, we'll fix before returning.
-    end
-    if not ingredient.amount then
-        ingredient.amount = ingredient[2]
-    end
-    -- No longer necessary
-    ingredient[1] = nil
-    ingredient[2] = nil
-    
-    return ingredient
-end
-
-function lib.partial.find_ingredient(recipe, name)
--- Get the full ingredient definition for a ingredient with the given name from the given recipe part.
-    if recipe.ingredients then
-        for _, ingredient in pairs(recipe.ingredients) do
-            local parsed_ingredient = lib.parse_ingredient(ingredient) -- Format and standardise, return if applicable
-            if parsed_ingredient.name == name then
-                return parsed_ingredient
-            end
-        end
-    end
-    return nil
-end
-
-function lib.partial.get_main_ingredient(recipe)
--- Get the main ingredient of the given recipe part.
-    if recipe.ingredients then -- We actually have ingredients
-        if table_size(recipe.ingredients) == 1 then -- Not actually
-            return lib.parse_ingredient(recipe.ingredients[1])
-        else -- Multi-results with no primary!
-            return nil
-        end
-    end
-    return nil
-end
-
-
-function lib.get_main_ingredient(recipe)
--- Get the main ingredient of the given recipe.
--- For normal+expensive definitions, the ingredient is only returned if it's the same for both.
-    if recipe.normal and recipe.expensive then
-        local normal = lib.partial.get_main_ingredient(recipe.normal)
-        local expensive = lib.partial.get_main_ingredient(recipe.expensive)
-        if normal and expensive and -- Expensive does have same ingredients
-        normal.name == expensive.name and 
-        normal.type == expensive.type then 
-            return normal
-        else -- Or it doesn't
-            return nil
-        end
-    end -- See if we were fed a partial recipe
-    return lib.partial.get_main_ingredient(recipe.normal or recipe.expensive or recipe)
-end
-    
-
-
 local function remove_trailing_level(prototype_name)
     -- locale key for levelled technologies is the technology name with the level removed
     return prototype_name:gsub("-%d+$", "")
@@ -274,13 +126,11 @@ local function key_of(prototype, key_type, locale_type)
     }
 end
 
-
 -- These are the base types that support locale
 lib.localised_types = {}
 for prototype_type in pairs(lib.descendants('prototype-base')) do -- Working downwards through the tree
     lib.localised_types[prototype_type] = true
 end
-
 
 function lib.of_generic(prototype, locale_type)
 -- Get the locale of the given prototype, assuming it's one of the types that use the generic format.
@@ -295,7 +145,6 @@ function lib.of_generic(prototype, locale_type)
         end
     })
 end
-
 
 function lib.of_item(prototype)
 -- Get the locale of the given item.
@@ -340,12 +189,11 @@ function lib.of_item(prototype)
     })
 end
 
-
 function lib.of_recipe(prototype)
 -- Get the locale of the given recipe.
     return lib.resolver { -- Throw to the appropriate function
         main_product = function()
-            local product = lib.get_main_product(prototype)
+            local product = omni.lib.get_main_product(prototype)
             return product and lib.of(
                 lib.find(product.name, product.type)
             ) or {}
@@ -361,7 +209,6 @@ function lib.of_recipe(prototype)
         end,
     }
 end
-
 
 local custom_resolvers = {
     ['recipe'] = lib.of_recipe,

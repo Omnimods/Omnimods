@@ -29,7 +29,6 @@ local burnerEntities = {
     "burner-omnitractor",
     "burner-omniplant",
     "burner-inserter",
-    "burner-filter-inserter",
     "burner-ore-crusher",
     "stone-furnace",
     "stone-mixing-furnace",

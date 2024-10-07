@@ -213,16 +213,12 @@ if settings.startup["omnicompression_entity_compression"].value then
             local ungrade_compressed = table.deepcopy(ungrade)
             ungrade_compressed.name = "uncompress-concentrated-"..fluid.."-concentrated-grade-"..tier..temp_str
 
-            grade.normal = grade_recipe_data
-            grade.expensive = table.deepcopy(grade_recipe_data)
-            ungrade.normal = ungrade_recipe_data
-            ungrade.expensive = table.deepcopy(ungrade_recipe_data)
+            grade = grade_recipe_data
+            ungrade = ungrade_recipe_data
 
             if settings.startup["omnicompression_item_compression"].value then
-                grade_compressed.normal = grade_compressed_recipe_data
-                grade_compressed.expensive = table.deepcopy(grade_compressed_recipe_data)
-                ungrade_compressed.normal = ungrade_compressed_recipe_data
-                ungrade_compressed.expensive = table.deepcopy(ungrade_compressed_recipe_data)
+                grade_compressed = grade_compressed_recipe_data
+                ungrade_compressed = ungrade_compressed_recipe_data
                 data:extend{grade_compressed, ungrade_compressed}
             end
 
@@ -234,7 +230,7 @@ if settings.startup["omnicompression_entity_compression"].value then
     log("calculating building tiers")
     for _, recipe in pairs(data.raw.recipe) do
         --log(recipe.name)
-        local product = omni.lib.locale.get_main_product(recipe)
+        local product = omni.lib.get_main_product(recipe)
         product = product and data.raw[product.type][product.name]
         if product then
             local place_result = (data.raw[product.type][product.name] or {}).place_result
@@ -264,8 +260,8 @@ if settings.startup["omnicompression_entity_compression"].value then
             end
         end
         -- Check for fluid temps here too, generate a recipe for each temp and tier
-        if recipe.normal and recipe.normal.results and recipe.category ~= "fluid-condensation" then
-            local parsed_results = omni.lib.locale.parse_product(recipe.normal.results)
+        if recipe and recipe.results and recipe.category ~= "fluid-condensation" then
+            local parsed_results = omni.lib.parse_result(recipe.results)
             for _, result in pairs(parsed_results) do
                 if result.type == "fluid" and result.temperature then
                     --log("Fluid: " .. result.name .. " (" .. result.temperature .. "C)")

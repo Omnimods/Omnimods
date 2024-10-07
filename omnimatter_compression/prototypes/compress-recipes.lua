@@ -23,7 +23,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
         if #results > 1 then
             return true
         end
-        local product = omni.lib.locale.get_main_product(recipe)
+        local product = omni.lib.get_main_product(recipe)
         -- ???
         if not product then
             return false
@@ -229,7 +229,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
             )) and recipe.name:find("-compression$")
             then
                 local old_recipe = omni.lib.locale.find(recipe.name:gsub("-compression$", ""), "recipe")
-                local old_item = omni.lib.locale.find(omni.lib.locale.get_main_product(old_recipe).name, "item")
+                local old_item = omni.lib.locale.find(omni.lib.get_main_product(old_recipe).name, "item")
                 local product = (proto.rocket_parts_required / old_item.stack_size)
                 local old_req = proto.rocket_parts_required
                 silos[#silos+1] = proto -- For later reference
@@ -292,7 +292,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                 res.amount = res.amount * rocket_mult -- Rockets
                 if res.type == "item" then
                     -- Case: satellite
-                    if omni.lib.locale.get_main_product(recipe) then
+                    if omni.lib.get_main_product(recipe) then
                         -- Satellite
                         local launch_item = omni.lib.locale.find(res.name, "item")
                         local product_table = launch_item.rocket_launch_product and {launch_item.rocket_launch_product}
@@ -346,7 +346,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
         then
             return true
         end
-        local product = omni.lib.locale.get_main_product(recipe) 
+        local product = omni.lib.get_main_product(recipe) 
         if product and (product.name:find("void") or product.amount == 0) then
             return true
         end
@@ -377,11 +377,11 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
     function omni.compression.create_compression_recipe(recipe)
         if not omni.lib.is_in_table(recipe.name, omni.compression.excluded_recipes) then --not excluded
             if not string.find(recipe.name,"creative") then --not creative mod or void
-                if (recipe.normal.results and #recipe.normal.results > 0) then --ingredients.normal.results and 1+
+                if (recipe.results and #recipe.results > 0) then --ingredients.results and 1+
                     if (more_than_one(recipe) or omni.lib.is_in_table(recipe.name, omni.compression.include_recipes)) then
                         local comrec={} --set basis to zero
                         local new_cat = set_category(recipe) or "crafting-compressed" --fallback should not be needed
-                        local icons = omni.lib.add_overlay(recipe,"compress")         
+                        local icons = omni.lib.add_overlay(recipe,"compress")   
 
                         if not_random(recipe) then
                             --log(serpent.block(recipe.name .. " not_random"))
@@ -405,8 +405,8 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                 -- **Find GCD from base recipe** --
                                 -----------------------------------
                                 --set ingredient and result tables from recipe
-                                ing=table.deepcopy(recipe.normal.ingredients)
-                                res=table.deepcopy(recipe.normal.results)
+                                ing=table.deepcopy(recipe.ingredients)
+                                res=table.deepcopy(recipe.results)
                                 --log(serpent.block(ing))
                                 --log(serpent.block(res))
                                 --GCD checks for each recipe
@@ -418,7 +418,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                     parts.fluid[b] = parts.fluid[b] or {}
                                     for _, component in pairs(recipe[io_type]) do
                                         --temp fix for non-standard stuff sneaking through
-                                        component = (io_type == "results" and omni.lib.locale.parse_product(component) or omni.lib.locale.parse_ingredient(component))
+                                        component = (io_type == "results" and omni.lib.parse_result(component) or omni.lib.parse_ingredient(component))
                                         if component.type ~= "fluid" then
                                             if not single_stack then -- No math on single bois
                                                 local amount = math.min(math.max(math.floor(component.amount+0.5),1),65535)  --ensure no decimals on items
@@ -570,7 +570,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                     comrec.subgroup = subgroup
 
                                 end
-                                comrec.hidden = recipe.normal.hidden
+                                comrec.hidden = recipe.hidden
                                 comrec.enabled = false
                                 comrec.main_product = nil
                                 comrec.category=new_cat
@@ -602,8 +602,8 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
     local function create_void(recipe)
         local continue = false
         local prefix = "compressed-"
-        local product = omni.lib.locale.get_main_product(recipe)
-        local ingredient = omni.lib.locale.get_main_ingredient(recipe)
+        local product = omni.lib.get_main_product(recipe)
+        local ingredient = omni.lib.get_main_product(recipe)
         if not omni.lib.is_in_table(recipe.name, omni.compression.excluded_recipes) then --not excluded
             if not more_than_one(recipe) then -- Verify products
                 if ingredient then
@@ -620,8 +620,8 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
             if continue == true then
                 local icons = omni.lib.add_overlay(recipe, "compress")
                 local new_cat = "crafting-compressed"
-                if recipe.normal.category then
-                    new_cat = recipe.normal.category.."-compressed"
+                if recipe.category then
+                    new_cat = recipe.category.."-compressed"
                     if not data.raw["recipe-category"][new_cat] then
                         data:extend({{
                             type = "recipe-category",
@@ -660,7 +660,6 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
     for _,recipe in pairs(data.raw.recipe) do
         --if not already compressed
         if not recipe.category or not (recipe.category == "compression" or string.find(recipe.category,"%-concentration$") or string.find(recipe.category,"%-condensation$") or string.find(recipe.category,"%-compressed$")) then
-            if not mods["omnimatter_marathon"] then omni.lib.standardise(recipe) end --ensure standardised
             if recipe.subgroup ~= "y_personal_equip" then --exclude yuoki's personal equipment subgroup
                 --check for void and swap it to the void system in place of compression_recipe
                 local rc = omni.compression.create_compression_recipe(recipe) --call create recipe

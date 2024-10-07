@@ -22,77 +22,76 @@ if omni.lib.recipe_is_enabled("electronic-circuit") then omni.lib.add_unlock_rec
 if omni.lib.recipe_is_enabled("radar") then omni.lib.add_unlock_recipe("omnitech-anbaric-electronics", "radar") end
 
 RecGen:import("inserter"):
-    setIngredients({"burner-inserter",1},{"anbaric-omnitor",1},{component["circuit"][1],1}):
-    setEnabled(false):
-    setTechName("omnitech-anbaric-inserter"):
-    setTechCost(45):
-    setTechIcons("electric-inserter","omnimatter_energy"):
-    setTechPacks({{"energy-science-pack", 1}}):
-    setTechPrereq("omnitech-anbaric-electronics"):
-    extend()
+setIngredients({"burner-inserter",1},{"anbaric-omnitor",1},{component["circuit"][1],1}):
+setEnabled(false):
+setTechName("omnitech-anbaric-inserter"):
+setTechCost(45):
+setTechIcons("electric-inserter","omnimatter_energy"):
+setTechPacks({{"energy-science-pack", 1}}):
+setTechPrereq("omnitech-anbaric-electronics"):
+extend()
 
 RecGen:import("electric-mining-drill"):
-    ifSetIngredients(not (mods["angelsindustries"] and angelsmods.industries.components),
-    {
-        {type="item", name="iron-gear-wheel", amount=4},
-        {type="item", name="anbaric-omnitor", amount=2},
-        {type="item", name="burner-mining-drill", amount=1}}):
-    setEnabled(false):
-    setTechName("omnitech-anbaric-mining"):
-    setTechCost(40):
-    setTechIcons("mining-drill","omnimatter_energy"):
-    setTechPacks({{"energy-science-pack", 1}}):
-    setTechPrereq("omnitech-anbaricity"):
-    extend()
+ifSetIngredients(not (mods["angelsindustries"] and angelsmods.industries.components),
+{
+    {type="item", name="iron-gear-wheel", amount=4},
+    {type="item", name="anbaric-omnitor", amount=2},
+    {type="item", name="burner-mining-drill", amount=1}}):
+setEnabled(false):
+setTechName("omnitech-anbaric-mining"):
+setTechCost(40):
+setTechIcons("mining-drill","omnimatter_energy"):
+setTechPacks({{"energy-science-pack", 1}}):
+setTechPrereq("omnitech-anbaricity"):
+extend()
 
 RecGen:import("boiler"):
-    addIngredients("omni-heat-burner"):
-    setEnabled(false):
-    setTechName("omnitech-steam-power"):
-    setTechCost(120):
-    setTechLocName("omnitech-steam-power"):
-    setTechPrereq("automation-science-pack","omnitech-basic-omnium-power"):
-    setTechIcons("steam-power","omnimatter_energy"):
-    setTechPacks(1):
-    extend()
+addIngredients("omni-heat-burner"):
+setEnabled(false):
+setTechName("omnitech-steam-power"):
+setTechCost(120):
+setTechLocName("omnitech-steam-power"):
+setTechPrereq("automation-science-pack","omnitech-basic-omnium-power"):
+setTechIcons("steam-power","omnimatter_energy"):
+setTechPacks(1):
+extend()
 
 RecGen:import("steam-engine"):
-    ifSetIngredients(not (mods["angelsindustries"] and angelsmods.industries.components),
-    {
-        {type="item", name="iron-plate", amount=10},
-        {type="item", name="iron-gear-wheel", amount=5},
-        {type="item", name="anbaric-omnitor", amount=3},
-        {type="item",name="omni-heat-burner",amount=1}}):
-    equalize("omni-heat-burner"):
-    setEnabled(false):
-    setTechName("omnitech-steam-power"):
-    extend()
+ifSetIngredients(not (mods["angelsindustries"] and angelsmods.industries.components),
+{
+    {type="item", name="iron-plate", amount=10},
+    {type="item", name="iron-gear-wheel", amount=5},
+    {type="item", name="anbaric-omnitor", amount=3},
+    {type="item",name="omni-heat-burner",amount=1}}):
+setEnabled(false):
+setTechName("omnitech-steam-power"):
+extend()
 
 
 
 --Check if the vanilla lab is locked behind a tech /disabled. If yes, modify the tech
 if data.raw.recipe["lab"].enabled == false then
     RecGen:import("lab"):
-        setTechLocName("omnitech-anbaric-lab"):
-        addIngredients({"omnitor-lab",1}):
-        setTechIcons("lab","omnimatter_energy"):
-        setTechCost(45):
-        setTechPrereq("omnitech-anbaric-electronics"):
-        extend()
+    setTechLocName("omnitech-anbaric-lab"):
+    addIngredients({"omnitor-lab",1}):
+    setTechIcons("lab","omnimatter_energy"):
+    setTechCost(45):
+    setTechPrereq("omnitech-anbaric-electronics"):
+    extend()
 
     --omni.lib.add_prerequisite(omni.lib.get_tech_name("lab"), "omnitech-anbaric-electronics")
 else
 --Create a new tech
     RecGen:import("lab"):
-        setEnabled(false):
-        setTechName("omnitech-anbaric-lab"):
-        setTechLocName("omnitech-anbaric-lab"):
-        addIngredients({"omnitor-lab",1}):
-        setTechCost(45):
-        setTechIcons("lab","omnimatter_energy"):
-        setTechPacks({{"energy-science-pack", 1}}):
-        setTechPrereq("omnitech-anbaric-electronics"):
-        extend()
+    setEnabled(false):
+    setTechName("omnitech-anbaric-lab"):
+    setTechLocName("omnitech-anbaric-lab"):
+    addIngredients({"omnitor-lab",1}):
+    setTechCost(45):
+    setTechIcons("lab","omnimatter_energy"):
+    setTechPacks({{"energy-science-pack", 1}}):
+    setTechPrereq("omnitech-anbaric-electronics"):
+    extend()
 end
 
 --Move logi SP behind electronics (seems weird if it just prereqs automation SP)

@@ -91,7 +91,7 @@ if settings.startup["omnicompression_item_compression"].value then
     --find lowest level in tiered techs that gets compressed to ensure chains are all compressed passed the first one
     for _,tech in pairs(data.raw.technology) do --run always
         local name, lvl = splitTech(tech.name)
-        local unit = tech.unit or tech.normal.unit
+        local unit = tech.unit
         if lvl == "" or lvl == nil then --tweak to allow techs that start with no number
             lvl = 1
             name = tech.name

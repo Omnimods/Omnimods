@@ -435,6 +435,7 @@ end
 
 --Checks if a table contains a specific element
 function omni.lib.is_in_table(element, tab)
+    log(serpent.block(tab))
     if tab then
         for _, t in pairs(tab) do
             if omni.lib.equal(t,element) then return true end
@@ -800,9 +801,10 @@ function omni.lib.add_overlay(it, overlay_type, level)
     end
 end
 
-local c = 0.2    --0.9
+local c = 0.0    --0.9
 local cord={W={0,-c},S={0,c},A={-c,0},D={c,0},I={0,-c},K={0,c},J={-c,0},L={c,0},T={0,-c},G={0,c},F={-c,0},H={c,0}}
-local dir={W=0,S=8,A=4,D=12,I=0,K=8,J=12,L=4,T=0,G=8,F=12,H=4}
+local dir={W=defines.direction.west,S=defines.direction.south,A=defines.direction.east,D=defines.direction.west,I=defines.direction.north,K=defines.direction.south,
+J=defines.direction.west,L=defines.direction.east,T=defines.direction.north,G=defines.direction.south,F=defines.direction.west,H=defines.direction.east}
 local inflow={A=true,W=true,S=true,D=true}          --W= North, A=East, S=South, D=West -->Letters have to be used for the given direction!!!
 local passthrough={F=true,T=true,H=true,G=true}     --T= North, H=East, G=South, F=West 
 --output: J, I, L, K                                --I= North, L=East, K=South, J=West 

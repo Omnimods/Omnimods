@@ -375,8 +375,7 @@ local function create_impure_extraction(tier, split, ore_name)
                 setTechCost(25 * i * tier):
                 setTechLocName({"omnitech-impure-omnitraction", omni.lib.locale.of(proto).name, i}):
                 setTechPacks(math.max(1, tier)):
-                setTechIcons(generate_impure_icon(ore_name)):
-                marathon()
+                setTechIcons(generate_impure_icon(ore_name))
         )
         if tier == 1 then
             focused_ore:setCategory("omnite-extraction-both")
@@ -506,7 +505,6 @@ for ore, dt in pairs(omni.matter.omnitial) do
         setIngredients(dt.ingredients):
         setResults(dt.results):
         setIcons(dt.results[1].name):
-        marathon():
         setLocName({"recipe-name.initial-omni", omni.lib.locale.of(proto).name}):
         addSmallIcon("stone-crushed", 3):
         extend()

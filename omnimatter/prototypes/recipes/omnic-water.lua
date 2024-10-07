@@ -13,7 +13,7 @@ for _,pump in pairs(data.raw["assembling-machine"]) do
     if pump.fixed_recipe and omni.lib.recipe_result_contains(pump.fixed_recipe, "water") then
         local rec = data.raw.recipe[pump.fixed_recipe]
         --check if the recipe has no ingredients
-        if not (next(rec.ingredients) or (rec.normal and next(rec.normal.ingredients))) then
+        if not (next(rec.ingredients)) then
             omni.lib.replace_recipe_result(rec.name, "water", "omnic-water")
         end
     end
@@ -81,8 +81,8 @@ for _, rec in pairs(data.raw.recipe) do
         for _, flu in pairs(fluids) do
             if  omni.lib.recipe_result_contains(rec.name, flu) then
                 local techname = omni.lib.get_tech_name(rec.name)
-                if rec.enabled or (rec.normal and rec.normal.enabled) or (rec.expensive and rec.expensive.enabled) then
-                    omni.lib.enable_recipe("omniflush-"..flu)
+                if rec.enabled == true then
+                    data.raw.recipe["omniflush-"..flu].enabled = true
                 elseif techname then
                     omni.lib.add_unlock_recipe(techname, "omniflush-"..flu)
                 end

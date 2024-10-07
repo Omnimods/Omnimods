@@ -2,15 +2,15 @@
 local burner_ingredients = {}
 if mods["angelsindustries"] and angelsmods.industries.components then
     burner_ingredients = {
-        {name="block-construction-1", amount=1},
-        {name="block-fluidbox-1", amount=1},
-        {name="block-omni-0", amount=1}
+        {name = "block-construction-1", amount = 1, type = "item"},
+        {name = "block-fluidbox-1", amount = 1, type = "item"},
+        {name = "block-omni-0", amount = 1, type = "item"}
     }
 else
     burner_ingredients = {
-        {name="omnicium-plate", amount=8},
-        {name="iron-plate", amount=4},
-        {name = "omnite-brick", amount = 4}
+        {name = "omnicium-plate", amount = 8, type = "item"},
+        {name = "iron-plate", amount = 4, type = "item"},
+        {name = "omnite-brick", amount = 4, type = "item"}
     }
 end
 
@@ -50,6 +50,8 @@ BuildGen:create("omnimatter","burner-omnitractor"):
     }):setOverlay("tractor-over",0):
     setFluidBox("WXW.XXX.KXK",true):
     extend()
+
+log(serpent.block(data.raw.recipe["burner-omnitractor"]))
 
 local function timestier(row,col)
     local first_row = {1,0.5,0.2}
@@ -287,4 +289,8 @@ end
 -- Burner as well
 modify_fluidboxes(data.raw["assembling-machine"]["burner-omnitractor"])
 
---log(serpent.block(data.raw["assembling-machine"]["assembling-machine-1"].energy_source))
+
+
+--log(serpent.block(data.raw["assembling-machine"]["assembling-machine-3"]))
+
+--log(serpent.block(data.raw["assembling-machine"]["omnitractor-1"].fluid_boxes))

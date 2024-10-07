@@ -3,7 +3,6 @@ RecGen:create("omnimatter","stone"):
     setStacksize(200):
     setEnergy(0.25):
     setCategory():
-    marathon():
     setIcons("stone", "base"):
     setIngredients({"stone-crushed", 2}):
     setResults({type="item", name="stone", amount=1}):
@@ -17,7 +16,6 @@ RecGen:create("omnimatter","stone-crushed"):
     setStacksize(200):
     setEnergy(0.1):
     setCategory(c):
-    marathon():
     setIngredients({"stone", 1}):
     setResults({type="item", name="stone-crushed", amount=2}):
     setEnabled():
@@ -27,7 +25,6 @@ RecGen:create("omnimatter","crushed-omnite"):
     setSubgroup("omni-crushing"):
     setStacksize(500):
     setCategory(c):
-    marathon():
     setEnergy(0.2):
     setFuelValue(0.85):
     setIngredients({type="item", name="omnite", amount=1}):
@@ -41,7 +38,6 @@ RecGen:create("omnimatter","crushing-omnite-by-hand"):
     setCategory("crafting"):
     setEnabled():
     setIngredients({"omnite", 2}):
-    marathon():
     setResults({
         {type="item", name="crushed-omnite", amount=1},
         {type="item", name="stone-crushed", amount=1}
@@ -53,7 +49,6 @@ RecGen:create("omnimatter","pulverized-omnite"):
     setSubgroup("omni-crushing"):
     setStacksize(500):
     setCategory(c):
-    marathon():
     setIngredients({"crushed-omnite", 1}):
     setResults({type="item", name="pulverized-omnite", amount=1}):
     setEnergy(0.2):
@@ -64,7 +59,6 @@ RecGen:create("omnimatter","pulverized-stone"):
     setStacksize(500):
     setEnergy(0.1):
     setCategory(c):
-    marathon():
     setIngredients({"stone-crushed", 1}):
     setResults({type="item", name="pulverized-stone", amount=1}):
     extend()
@@ -99,7 +93,6 @@ RecGen:create("omnimatter","pulver-omnic-waste"):
     setSubgroup("omni-fluids"):
     setCategory("omniphlog"):
     setIcons("omnic-waste"):
-    marathon():
     setIngredients({"pulverized-omnite", 1},{"pulverized-stone", 6}):
     setResults({type="fluid", name="omnic-waste", amount=120}):
     setEnergy(0.8):

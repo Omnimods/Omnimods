@@ -2,9 +2,9 @@ RecGen:create("omnimatter","omnicium-plate"):
     setItemName("omnicium-plate"):
     setIcons("omnicium-plate","omnimatter"):
     setStacksize(200):
-    setIngredients({normal = {{"omnite",2},{"stone-crushed",2}},expensive={{"omnite",3},{"stone-crushed",3}}}):
-    ifSetIngredients(mods["angelsrefining"],{normal={{"omnite",3},{"stone-crushed",4}},expensive={{"omnite",4},{"stone-crushed",6}}}):
-    setResults({normal = {{"omnicium-plate", 2}},expensive={{"omnicium-plate",2}}}):
+    setIngredients({{name = "omnite", amount = 2}, {name = "stone-crushed", amount = 2}}):
+    ifSetIngredients(mods["angelsrefining"],{{name = "omnite", amount = 3},{name = "stone-crushed", amount = 4}}):
+    setResults({"omnicium-plate", 2}):
     setCategory("smelting"):
     setSubgroup("omnium"):
     setOrder("ab"):
@@ -16,8 +16,8 @@ RecGen:create("omnimatter","omnicium-plate"):
 RecGen:create("omnimatter","omnicium-plate-pure"):
     setItemName("omnicium-plate"):
     setStacksize(200):
-    setIngredients({normal = {{"crushed-omnite",12}},expensive={{"crushed-omnite",20}}}):
-    setResults("omnicium-plate"):
+    setIngredients({"crushed-omnite",12}):
+    setResults({"omnicium-plate",1}):
     setIcons("omnicium-plate","omnimatter"):
     addSmallIngIcon(1,3):
     setCategory("smelting"):
@@ -43,7 +43,7 @@ RecGen:create("omnimatter","omnium-plate-mix"):
     setIngredients({"omnite",2}):
     ifModsAddIngredients("angelsrefining",{"angels-ore1-crushed",2},{"angels-ore3-crushed",2}):
     ifAddIngredients(not mods["angelsrefining"],{"copper-ore",1},{"iron-ore",1}):
-    setResults({normal = {{"omnium-plate", 2}},expensive={{"omnium-plate",1}}}):
+    setResults({"omnium-plate", 2}):
     addProductivity():
     setIcons("omnium-plate","omnimatter"):
     addSmallIngIcon(2,1):
@@ -64,8 +64,8 @@ omni.lib.add_prerequisite("steel-processing", "omnitech-omnium-processing")
 
 RecGen:create("omnimatter","omnium-gear-wheel"):
     setStacksize(100):
-    setIngredients({normal = {{"omnium-plate", 1}},expensive={{"omnium-plate",2}}}):
-    setResults({normal = {{"omnium-gear-wheel", 1}},expensive={{"omnium-gear-wheel",1}}}):
+    setIngredients({"omnium-plate", 1}):
+    setResults({"omnium-gear-wheel", 1}):
     addProductivity():
     setSubgroup("omni-gears"):
     setOrder("aa"):
@@ -76,7 +76,7 @@ RecGen:create("omnimatter","omnium-gear-wheel"):
 RecGen:create("omnimatter","omnium-iron-gear-box"):
     setStacksize(100):
     setSubgroup("omni-gears"):
-    setIngredients({"omnium-gear-wheel", 1},{"iron-gear-wheel", 1}):
+    setIngredients({{"omnium-gear-wheel", 1},{"iron-gear-wheel", 1}}):
     addProductivity():
     setTechName("omnitech-omnium-processing"):
     setEnergy(0.25):
@@ -118,10 +118,10 @@ if mods["angelssmelting"] then
 
     RecGen:import("iron-ore-smelting"):
         setName("omnite-smelting","omnimatter"):
-        setIngredients(
+        setIngredients({
             {type="item", name="iron-ore", amount=12},
             {type="item", name="copper-ore", amount=12},
-            {type="item", name="omnite", amount=24}):
+            {type="item", name="omnite", amount=24}}):
         replaceResults("ingot-iron","ingot-omnium"):
         setSubgroup("angels-omnium"):
         setIcons("ingot-omnium","omnimatter"):
@@ -240,9 +240,9 @@ if mods["angelssmelting"] then
         setStacksize(100):
         setSubgroup("omnium-casting"):
         setOrder("ub"):
-        setIngredients({normal = {{type="fluid",name="liquid-molten-omnium",amount=40}},expensive={{type="fluid",name="liquid-molten-omnium",amount=40}}}):
+        setIngredients({{type="fluid",name="liquid-molten-omnium",amount=40}}):
         setCategory("casting"):
-        setResults({normal = {{"omnium-gear-wheel", 6}},expensive={{"omnium-gear-wheel",6}}}):
+        setResults({"omnium-gear-wheel", 6}):
         addProductivity():
         setEnergy(2):
         setTechName("omnitech-angels-omnium-smelting-1"):

@@ -44,10 +44,7 @@ function icon.of_recipe(prototype, silent)
     local icons = icon.of_generic(prototype, true)
     if icons then return icons; end
 
-    local product
-    if prototype.normal ~= nil then product = omni.lib.locale.partial.get_main_product(prototype.normal)
-    else product = omni.lib.locale.partial.get_main_product(prototype); end
-
+    local product = omni.lib.get_main_product(prototype)
     if not product then
         if silent then
             return nil
