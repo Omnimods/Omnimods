@@ -20,7 +20,7 @@ function omni.lib.parse_result(product)
         prod.name = prod[1]
     end
     if not prod.amount then
-        prod.amount = prod[2]
+        prod.amount = prod[2] or 1
     end
     --No longer necessary
     prod[1] = nil

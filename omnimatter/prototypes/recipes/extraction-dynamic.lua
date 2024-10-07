@@ -300,7 +300,7 @@ local function create_base_extraction(tier, split, split_num)
             setLocName("recipe-name.base-impure", {"", result_names}):
             setLocDesc(desc):
             setIcons(icons):
-            setIngredients({name = "omnite", type = "item", amount = 10}):
+            setIngredients({"omnite", 10}):
             setSubgroup("omni-impure-basic"):
             setEnergy(5 * (math.floor(tier / 2 + 0.5))):
             setEnabled(false)
@@ -359,7 +359,7 @@ local function create_impure_extraction(tier, split, ore_name)
                 setLocName({"recipe-name.impure-omnitraction", omni.lib.locale.of(proto).name}):
                 setLocDesc(desc):
                 setOrder("a[omnirec-focus-"..tier.."-"..ore_name.."]"):
-                setIngredients({name = "omnite", type = "item", amount = 10}):
+                setIngredients({"omnite", 10}):
                 setSubgroup("omni-impure"):
                 setEnergy(5.0 * (math.floor(tier / 2 + 0.5))):
                 setIcons("omnite"):

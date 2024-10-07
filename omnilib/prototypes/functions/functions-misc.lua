@@ -240,9 +240,8 @@ end
 
 -- Two arrays
 function omni.lib.iunion(dest, source)
-    local base = #dest
-    for I=1, #source do
-        dest[base+I] = source[I]
+    for i=1, #source do
+        dest[#dest+i] = source[i]
     end
     return dest
 end
@@ -435,7 +434,6 @@ end
 
 --Checks if a table contains a specific element
 function omni.lib.is_in_table(element, tab)
-    log(serpent.block(tab))
     if tab then
         for _, t in pairs(tab) do
             if omni.lib.equal(t,element) then return true end
@@ -604,7 +602,7 @@ local itemproto = {
     "selection-tool",
     "fluid",
     "item-with-entity-data",
-    "rts-tool",
+    "spidertron-remote",
     "item-with-inventory",
     "item-with-tags"
 }

@@ -53,12 +53,12 @@ function omni.matter.add_initial(ore_name, ore_amount, omnite_amount, fluid_to_m
     ore_name, fluid_to_mine = get_resource(ore_name, fluid_to_mine)
 
     omni.matter.omnitial[ore_name] = {
-        ingredients ={{name = "omnite", amount = omnite_amount}},
-        results = {{name = ore_name, amount = ore_amount}, {name = "stone-crushed", amount = (omnite_amount-ore_amount) or 6}}
+        ingredients ={{name = "omnite", amount = omnite_amount, type = "item"}},
+        results = {{name = ore_name, amount = ore_amount, type = "item"}, {name = "stone-crushed", amount = (omnite_amount-ore_amount) or 6, type = "item"}}
     }
 
     if fluid_to_mine and fluid_to_mine.name and settings.startup["omnimatter-fluid-processing"].value then
-        omni.matter.omnitial[ore_name].fluid = {name = fluid_to_mine.name, amount = fluid_to_mine.amount or 1}
+        omni.matter.omnitial[ore_name].fluid = {name = fluid_to_mine.name, amount = fluid_to_mine.amount or 1, type = "fluid"}
         omni.matter.omnitial[ore_name].results[1].name = "crude-"..omni.matter.omnitial[ore_name].results[1].name
     end
 end
@@ -79,7 +79,7 @@ function omni.matter.add_resource(r_name, tier, fluid_to_mine)
 
     omni.matter.omnisource[tostring(tier)][r_name] = {tier = tier, name = r_name}
     if fluid_to_mine and fluid_to_mine.name and settings.startup["omnimatter-fluid-processing"].value then
-        omni.matter.omnisource[tostring(tier)][r_name]["fluid"] = {name = fluid_to_mine.name, amount = fluid_to_mine.amount or 1}
+        omni.matter.omnisource[tostring(tier)][r_name]["fluid"] = {name = fluid_to_mine.name, amount = fluid_to_mine.amount or 1, type = "fluid"}
     end
 end
 

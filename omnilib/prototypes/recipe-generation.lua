@@ -25,8 +25,8 @@ OmniGen = {}
 OmniGen.__index = OmniGen
 
 Omni = {
-    Gen = {Rec = {},Item={},Bot={},Ins={},Tech={},Build={}},
-    Chain={Rec = {},Bot={},Ins={},Build={}}
+    Gen = {Rec = {},Item={},Ins={},Tech={},Build={}},
+    Chain={Rec = {},Ins={},Build={}}
 }
 
 setmetatable(RecGen, {
@@ -131,12 +131,12 @@ BuildChain = createClass(RecChain,BuildGen)
 --BuildChain.__index = BuildChain
 
 setmetatable(BuildChain, {
-  __index = cache,
-  __call = function (cls, ...)
-    local self = setmetatable({}, cls)
-    self:create(...)
-    return self
-    end
+    __index = cache,
+    __call = function (cls, ...)
+        local self = setmetatable({}, cls)
+        self:create(...)
+        return self
+        end
 })
 
 --[[
@@ -244,10 +244,9 @@ function OmniGen:setInputAmount(array)
     return self
 end
 
-function OmniGen:setIngredients(array,...)
-    local ings = {{}}
+function OmniGen:setIngredients(array,...) 
+    local ings = {}
     local arg = {...}
-
     --Go through each arg and parse into ings
     if #arg > 0 then
         for _,v in pairs(arg) do
@@ -257,29 +256,29 @@ function OmniGen:setIngredients(array,...)
 
     --Array is a fully defined ingredients table, copy
     if type(array) == "table" and type(array[1]) == "table" then
-        ings = array
+        ings = omni.lib.union(ings, array)
     --Array is a function
     elseif type(array)=="function" then
-        ings =  array
+        self.ingredients = array
+        return self
     --Most likely a string, Parse ingredients
     else
-        ings= omni.lib.union(ings, {omni.lib.parse_ingredient(array)})
+        ings = omni.lib.union(ings, {omni.lib.parse_ingredient(array)})
     end
-
     self.input.items = ings
     return self
 end
 
 function OmniGen:addIngredients(...)
     for _,ing in pairs({...}) do
-        table.insert(self.input.items,omni.lib.parse_ingredient(ing))
+        table.insert(self.input.items, omni.lib.parse_ingredient(ing))
     end
     return self
 end
 
 function OmniGen:ifAddIngredients(bool,...)
     if bool then
-        return self:addIngredients(...)
+        return self:addIngredients(table.unpack({...}))
     end
     return self
 end
@@ -332,9 +331,11 @@ function OmniGen:setWaste(array,...)
     end
     return self
 end
+
 function OmniGen:addWaste(item)
     table.insert(self.output.waste.items,item)
 end
+
 function OmniGen:ingredients()
     if self.type=="chain" then
         return self:chainIngredients()
@@ -342,6 +343,7 @@ function OmniGen:ingredients()
         return self:buildingCost()
     end
 end
+
 function OmniGen:results()
     if self.type=="chain" then
         return self:wasteYieldResults()
@@ -349,6 +351,7 @@ function OmniGen:results()
         return self:buildingCost()
     end
 end
+
 function OmniGen:roundResults()
     self.roundResult = true
     return self
@@ -408,8 +411,8 @@ function OmniGen:wasteYieldResults()
         for j,yield in pairs(yieldItems) do
             local amount = 0
             yield_count = yield_count+1
-            local t = "item"
-            if data.raw.fluid[yield.name] then t = "fluid" end
+            local ty = "item"
+            if data.raw.fluid[yield.name] then ty = "fluid" end
             if not yield.portion then
                 if j < #yieldItems then
                     math.randomseed(#yieldItems*string.len(yield)+j)
@@ -423,10 +426,10 @@ function OmniGen:wasteYieldResults()
             end
             total = total+amount
             if amount > 0 then
-                if self.roundResult or t == "fluid" then
-                    results[#results+1]={type=t,name = yield.name,amount = omni.lib.round(amount)}
+                if self.roundResult or ty == "fluid" then
+                    results[#results+1]={type=ty,name = yield.name,amount = omni.lib.round(amount)}
                 else
-                    results[#results+1]=result_round({type=t,name = yield.name,amount = amount})
+                    results[#results+1]=result_round({type=ty, name = yield.name,amount = amount})
                 end
             end
         end
@@ -435,8 +438,8 @@ function OmniGen:wasteYieldResults()
             local max_waste = table.deepcopy(self.output.waste.quant)(levels,grade)
             for j,waste in pairs(wasteItems) do
                 local amount = 0
-                local t = "item"
-                if data.raw.fluid[waste.name] then t = "fluid" end
+                local ty = "item"
+                if data.raw.fluid[waste.name] then ty = "fluid" end
                 if j < #wasteItems then
                     math.randomseed(#wasteItems*string.len(waste.name)+j)
                     local expected = (max_waste-total)/(#wasteItems-j+1)
@@ -446,10 +449,10 @@ function OmniGen:wasteYieldResults()
                 end
                 total = total+amount
                 if amount > 0 then
-                    if self.roundResult or t == "fluid" then
-                        results[#results+1]={type=t,name = waste.name,amount = omni.lib.round(amount)}
+                    if self.roundResult or ty == "fluid" then
+                        results[#results+1]={type=ty,name = waste.name,amount = omni.lib.round(amount)}
                     else
-                        results[#results+1]=result_round({type=t,name = waste.name,amount = amount})
+                        results[#results+1]=result_round({type=ty,name = waste.name,amount = amount})
                     end
                 end
             end
@@ -1185,6 +1188,7 @@ function RecGen:create(mod,name,efficency)
         icons = function(levels,grade) return nil end,
         prerequisites = function(level,grade) return nil end,
         effects = {}}
+
     return setmetatable(r,RecGen)
 end
 --Must occure after setting ingredients and results
@@ -1395,9 +1399,8 @@ function RecGen:multiplyIfResults(c,...)
 end
 
 function RecGen:setIngredients(array,...)
-    local ings = {{}}
+    local ings = {}
     local arg = {...}
-
     --Go through each arg and parse into ings
     if #arg > 0 then
         for _,v in pairs(arg) do
@@ -1407,15 +1410,15 @@ function RecGen:setIngredients(array,...)
 
     --Array is a fully defined ingredients table, copy
     if type(array) == "table" and type(array[1]) == "table" then
-        ings = array
+        ings = omni.lib.union(ings, table.deepcopy(array))
     --Array is a function
     elseif type(array)=="function" then
-        ings =  array
+        self.ingredients = table.deepcopy(array)
+        return self
     --Most likely a string, Parse ingredients
     else
         ings = omni.lib.union(ings, {omni.lib.parse_ingredient(array)})
     end
-
     self.ingredients = function(levels,grade) return ings end
     return self
 end
@@ -1427,7 +1430,7 @@ end
 
 function RecGen:addIngredients(...)
     local tmp = RecGen:create("mah","blah"):
-        setIngredients(argTable({...},"string","name"))
+        setIngredients(table.unpack({...}))
     local a = table.deepcopy(self.ingredients)
     local b = table.deepcopy(tmp.ingredients)
     self.ingredients = function(levels,grade) return omni.lib.union(a(levels,grade),b(levels,grade)) end
@@ -1451,7 +1454,7 @@ end
 
 function RecGen:ifReplaceIngredients(bool,...)
     if bool then
-        self:replaceIngredients({...})
+        self:replaceIngredients(table.unpack({...}))
     end
     return self
 end
@@ -1462,13 +1465,13 @@ function RecGen:ifModsReplaceIngredients(modis,...)
     for _,m in pairs(modis) do
         bool = bool and mods[m]
     end
-    self:ifReplaceIngredients(bool,argTable({...}))
+    self:ifReplaceIngredients(bool,table.unpack({...}))
     return self
 end
 
 function RecGen:ifAddIngredients(bool,...)
     if bool then
-        self:addIngredients(argTable({...},"string"))
+        self:addIngredients(table.unpack({...}))
     end
     return self
 end
@@ -1479,13 +1482,13 @@ function RecGen:ifModsAddIngredients(modis,...)
     for _,m in pairs(modis) do
         bool = bool and mods[m]
     end
-    self:ifAddIngredients(bool,argTable({...},"string","name"))
+    self:ifAddIngredients(bool,table.unpack({...}))
     return self
 end
 
 function RecGen:ifSetIngredients(bool,...)
     if bool then
-        self:setIngredients(argTable({...},"string","name"))
+        self:setIngredients(table.unpack({...}))
     end
     return self
 end
@@ -1508,7 +1511,7 @@ end
 
 function RecGen:ifRemoveIngredients(bool,...)
     if bool then
-        return self:removeIngredients(...)
+        return self:removeIngredients(table.unpack({...}))
     else
         return self
     end
@@ -1521,7 +1524,7 @@ function RecGen:ifModsRemoveIngredients(mods,...)
     for _,m in pairs(args) do
         bool = bool and mods[m]
     end
-    return self:ifRemoveIngredients(bool,...)
+    return self:ifRemoveIngredients(bool,table.unpack({...}))
 end
 
 function RecGen:removeResults(...)
@@ -1542,7 +1545,7 @@ end
 
 function RecGen:ifRemoveResults(bool,...)
     if bool then
-        return self:removeResults(...)
+        return self:removeResults(table.unpack({...}))
     else
         return self
     end
@@ -1555,14 +1558,13 @@ function RecGen:ifModsRemoveResults(mods,...)
     for _,m in pairs(args) do
         bool = bool and mods[m]
     end
-    return self:ifRemoveResults(bool,...)
+    return self:ifRemoveResults(bool,table.unpack({...}))
 end
 
 function RecGen:setResults(array,...)
-    local res = {{}}
+    local res = {}
     local arg = {...}
-
-    --Go through each arg and parse into ings
+    --Go through each arg and parse into res
     if #arg > 0 then
         for _,v in pairs(arg) do
             res = omni.lib.union(res, {omni.lib.parse_result(v)})
@@ -1571,13 +1573,14 @@ function RecGen:setResults(array,...)
 
     --Array is a fully defined results table, copy
     if type(array) == "table" and type(array[1]) == "table" then
-        res = array
+        res = omni.lib.union(res, table.deepcopy(array))
     --Array is a function
     elseif type(array)=="function" then
-        res =  array
+        self.results = table.deepcopy(array)
+        return self
     --Most likely a string, Parse results
     else
-        res= omni.lib.union(res, {omni.lib.parse_result(array)})
+        res = omni.lib.union(res, {omni.lib.parse_result(array)})
     end
 
     self.results = function(levels,grade) return res end
@@ -1611,7 +1614,7 @@ end
 
 function RecGen:ifReplaceResults(bool,...)
     if bool then
-        self:replaceResults({...})
+        self:replaceResults(table.unpack({...}))
     end
     return self
 end
@@ -1622,13 +1625,13 @@ function RecGen:ifModsReplaceResults(modis,...)
     for _,m in pairs(modis) do
         bool = bool and mods[m]
     end
-    self:ifReplaceResults(bool,argTable({...}))
+    self:ifReplaceResults(bool,table.unpack({...}))
     return self
 end
 
 function RecGen:ifAddResults(bool,...)
     if bool then
-        self:addResults(argTable({...},"string","name"))
+        self:addResults(table.unpack({...}))
     end
     return self
 end
@@ -1639,13 +1642,13 @@ function RecGen:ifModsAddResults(modis,...)
     for _,m in pairs(modis) do
         bool = bool and mods[m]
     end
-    self:ifAddResults(bool,argTable({...},"string","name"))
+    self:ifAddResults(bool,table.unpack({...}))
     return self
 end
 
 function RecGen:ifSetResults(bool,...)
     if (type(bool)=="boolean" and bool)  then
-        self:setResults(argTable({...},"string","name"))
+        self:setResults(table.unpack({...}))
     end
     return self
 end
@@ -1656,7 +1659,7 @@ function RecGen:ifModsResults(modis,...)
     for _,m in pairs(modis) do
         bool=bool and mods[m]
     end
-    self:ifSetResults(bool,argTable({...},"string","name"))
+    self:ifSetResults(bool,table.unpack({...}))
     return self
 end
 
@@ -1833,6 +1836,7 @@ function RecGen:generate_recipe()
             end
         end
     end
+
     self.rtn[#self.rtn+1] ={
         type = "recipe",
         name = self.name,
@@ -1859,6 +1863,7 @@ function RecGen:return_array()
     self:generate_recipe()
     return self.rtn
 end
+
 function RecGen:extend()
     if self.requiredMods(0,0) and self.name then
         Omni.Gen.Rec[self.name] = self
@@ -2078,7 +2083,7 @@ end
 --Fix these
 function RecGen:ifAddTechPrereq(bool, ...)
     if bool then
-        self:addTechPrereq(argTable({...},"table"))
+        self:addTechPrereq(table.unpack({...}))
     end
     return self
 end
@@ -2088,7 +2093,7 @@ function RecGen:ifModsAddTechPrereq(modis, ...)
     for _,m in pairs(modis) do
         bool = bool and mods[m]
     end
-    self:ifAddTechPrereq(bool,argTable({...},"table"))
+    self:ifAddTechPrereq(bool,table.unpack({...}))
     return self
 end
 function RecGen:addTechPrereq(...)
@@ -3524,6 +3529,7 @@ function BuildChain:generate_building_chain()
         elseif i>1 and tprereq == nil then
             tprereq={prevtname}
         end
+
         local stuff = BuildGen:create(self.mod,self.name.."-"..i):
         setIngredients(function(levels,grade) return ing end):
         setResults(self.name.."-"..i):

@@ -31,17 +31,19 @@ local water = "omnic-water"
 if mods["angelsrefining"] then water = "water-purified" end
 
 cost = OmniGen:create():
-        setYield("omnic-acid"):
+        setYield({type = "fluid", name = "omnic-acid"}):
         setIngredients("omnite"):
         setWaste():
         yieldQuant(function(levels,grade) return omni.acid_ratio*(120+(grade-1)*120/(levels-1)) end ):
         wasteQuant(function(levels,grade) return math.max(12-extraction_value(levels,grade),0) end)
+
+
 local omnic_acid = RecChain:create("omnimatter","omnic-acid"):
         setLocName("fluid-name.omnic-acid"):
         setIngredients({
-        {name = "crushed-omnite", amount = quant/4},
-        {type="fluid", name=water, amount=120},
-        {type="fluid", name="steam", amount=120},
+            {type= "item", name = "crushed-omnite", amount = quant/4},
+            {type="fluid", name = "water", amount=120},
+            {type="fluid", name="steam", amount=120},
         }):
         setCategory(omniFluidCat):
         setSubgroup("omni-fluids"):

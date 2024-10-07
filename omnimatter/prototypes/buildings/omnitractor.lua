@@ -51,7 +51,6 @@ BuildGen:create("omnimatter","burner-omnitractor"):
     setFluidBox("WXW.XXX.KXK",true):
     extend()
 
-log(serpent.block(data.raw.recipe["burner-omnitractor"]))
 
 local function timestier(row,col)
     local first_row = {1,0.5,0.2}

@@ -38,7 +38,7 @@ local cost = OmniGen:create():
         yieldQuant(function(levels,grade) return omni.omniston_ratio*(120+(grade-1)*120/(levels-1)) end ):
         wasteQuant(function(levels,grade) return math.max(12-extraction_value(levels,grade),0) end)
 local omniston = RecChain:create("omnimatter","omniston"):
-        setIngredients({{name="pulverized-omnite", amount = quant/6},{name="omnic-acid",type="fluid", amount = 240}}):
+        setIngredients({type="item", name="pulverized-omnite", amount = quant/6},{name="omnic-acid",type="fluid", amount = 240}):
         setLocName("fluid-name.omniston"):
         setCategory(omniFluidCat):
         setResults(cost:results()):
@@ -80,7 +80,7 @@ if mods["omnimatter_crystal"] then
     local omnisludge = RecChain:create("omnimatter","omnisludge"):
             setLocName("recipe-name.omnisludge"):
             setIngredients({
-            {name = "pulverized-stone", amount = quant/2},
+            {type="item", name = "pulverized-stone", amount = quant/2},
             {type="fluid", name="omnic-acid", amount=240}
             }):
             setCategory(omniFluidCat):
