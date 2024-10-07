@@ -56,24 +56,40 @@ function icon.of_recipe(prototype, silent)
     return product and icon.of(product.name, product.type, silent)
 end
 
-
 function icon.of(prototype, ptype, silent)
     --- Get the icons of the given prototype.
-    if type(ptype) == 'string' then
-        prototype = omni.lib.locale.find(prototype, ptype, silent)
-    elseif prototype == nil then
-        if silent then
-            return nil 
+    if type(ptype) == "boolean" then -- wrong arg order
+        silent = ptype
+    end
+    -- We got handed a string.icons
+    if type(prototype) == "string" then
+        if type(ptype) == "boolean" then
+            local list = omni.lib.locale.find_by_name(prototype)
+            if list.item then
+                prototype = list.item
+                ptype = "item"
+            elseif list.recipe then
+                prototype = list.recipe
+                ptype = "recipe"
+            elseif next(list) then
+                ptype, prototype = next(list)
+            else
+                return nil
+            end
+        elseif type(ptype) == "string" then
+            prototype = omni.lib.locale.find(prototype, ptype, silent)
+        elseif prototype == nil then
+            if silent then
+                return nil
+            end
+            error("Can't get icons of nil prototype")
         end
-        error("Can't get icons of nil prototype")
-    elseif type(ptype) == 'boolean' then -- wrong arg order
-        silent = ptype 
     end
     -- We got handed a .icons
     if type(prototype) == "table" and prototype[1] and type(prototype[1]) == "table" and prototype[1].icon then
         return prototype
     end
-    if omni.lib.locale.inherits(prototype.type, 'recipe') then
+    if omni.lib.locale.inherits(prototype.type, "recipe") then
         return icon.of_recipe(prototype, silent)
     else
         return icon.of_generic(prototype, silent)

@@ -1,7 +1,7 @@
 local resource_autoplace = require("resource-autoplace")
 
 -- Initialize the core patch sets in a predictable order
-resource_autoplace.initialize_patch_set("infinite-omnite", true)
+--resource_autoplace.initialize_patch_set("infinite-omnite", true)
 
 local mine={}
 if settings.startup["omnimatter-infinite-omnic-acid"].value then
@@ -63,7 +63,7 @@ data:extend({
         autoplace = resource_autoplace.resource_autoplace_settings({
             has_starting_area_placement = false,
             name ="infinite-omnite",
-            patch_set_name = "omnite",
+            --patch_set_name = "omnite",
             autoplace_control_name = "infinite-omnite",
             order = "b-b",
             base_density = 25, -- ~ richness
@@ -71,6 +71,13 @@ data:extend({
             regular_rq_factor_multiplier = 0.4,
             starting_rq_factor_multiplier = 0.5,
             richness_multiplier_distance_bonus = 20,
+            peaks = {
+                {
+                    noise_layer = "omnite",
+                    noise_octaves_difference = -1.5,
+                    noise_persistence = 0.3,
+                },
+            },
         }),
         stage_counts = {1000, 600, 400, 200, 100, 50, 20, 1},
         stages = {

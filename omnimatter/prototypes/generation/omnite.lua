@@ -220,13 +220,13 @@ data:extend({
             starting_rq_factor_multiplier = 2.4,
             richness_multiplier_distance_bonus = 20,
             base_spots_per_km2 = 10, -- ~frequency
-            -- peaks = {
-            -- {
-            --     noise_layer = "omnite",
-            --     noise_octaves_difference = -1.5,
-            --     noise_persistence = 0.3,
-            -- },
-            -- },
+            peaks = {
+            {
+                noise_layer = "omnite",
+                noise_octaves_difference = -1.5,
+                noise_persistence = 0.3,
+            },
+            },
         }),
         stage_counts = {1000, 600, 400, 200, 100, 50, 20, 1},
         stages = {

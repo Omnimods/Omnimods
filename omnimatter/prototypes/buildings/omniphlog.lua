@@ -17,7 +17,7 @@ end
 
 BuildGen:create("omnimatter","burner-omniphlog"):
     noTech():
-    setIcons("omniphlog"):
+    setIcons("omniphlog", "omnimatter"):
     setBurner(0.75,1):
     setEmissions(5.5):
     setStacksize(50):

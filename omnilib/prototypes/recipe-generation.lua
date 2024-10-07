@@ -567,9 +567,6 @@ end
 function ItemGen:setIcons(icons,mod)
     if not icons then error("No icons specified for "..(self.name or "No Name")) end
     local proto = nil
-    if type(icons)=="string" then
-        proto = omni.lib.find_prototype(icons)
-    end
     --Case "mod" given : expect just a name for the icon(s) without a path
     if type(icons)~= "function" and mod and (type(icons)~= "string" or not string.match(icons, "%_%_(.-)%_%_")) then
         if type(icons) == "table" then
@@ -600,30 +597,8 @@ function ItemGen:setIcons(icons,mod)
             self.icons = function(levels,grade) return {{icon = "__"..(mod or self.mod).."__/graphics/icons/"..icons..".png",icon_size=ic_size}} end
         end
     elseif type(icons)~= "function" then
-        --find icon_size
+        -- --find icon_size
         local ic_sz = 32
-        if type(icons)=="table" and type(icons[1].icon)=="string" then   
-            if icons[1].icon_size then
-                ic_sz=icons[1].icon_size
-            elseif type(icons[1].icon)=="string" then --try to find item name by extracting icon name
-                local name=string.match(icons[1].icon,".*%/(.-).png")
-                --check if a HR icon, if so, update icon_size default
-                if string.match(name,"-HR") then
-                    name=string.sub(name,1,-4)
-                end
-                for _,cat in pairs({"item-with-entity-data","recipe","tool","fluid","item"}) do
-                    if data.raw[cat][name] then
-                        if data.raw[cat][name].icon_size then
-                            ic_sz=data.raw[cat][name].icon_size
-                        elseif data.raw[cat][name].icons and data.raw[cat][name].icons[1].icon_size then
-                            ic_sz=data.raw[cat][name].icons[1].icon_size
-                        else
-                        end
-                    end
-                end
-                icons[1].icon_size=ic_sz
-            end
-        end
         if type(icons)=="string" and string.match(icons, "%_%_(.-)%_%_") then
             local name=string.match(icons,".*%/(.-).png")
             local setup = {}
@@ -634,20 +609,15 @@ function ItemGen:setIcons(icons,mod)
                 setup={{icon = icons, icon_size=ic_sz}}
             end
             self.icons = function(levels,grade)    return setup end
-        elseif type(icons) == "string" and not proto and (mod or self.mod) then
-            self.icons = function(levels,grade) return {{icon = "__"..(mod or self.mod).."__/graphics/icons/"..icons..".png",icon_size=ic_sz}} end
-        elseif proto then
-            if proto.icons then
-                self.icons=function(levels,grade) return proto.icons end
-            else
-                self.icons=function(levels,grade) return {{icon=proto.icon,icon_size=proto.icon_size}} end
-            end
+        elseif type(icons) == "string" and not proto and (mod) then
+            self.icons = function(levels,grade) return {{icon = "__"..(mod or self.mod).."__/graphics/icons/"..icons..".png",icon_size = ic_sz}} end
         else
-            self.icons = function(levels,grade) return icons end
+            self.icons = function(levels,grade) return omni.lib.icon.of(icons, true) end
         end
     else
         self.icons = icons
     end
+    --log(serpent.block(self.icons(0,0)))
     self.set_icon = true
     return self
 end
@@ -750,7 +720,7 @@ function ItemGen:addSmallIcon(icon, nr)
     local icons
     local ic_sz=32
     if type(icon) == "table" and icon[1] and icon[1].icon then
-        icons = icon 
+        icons = icon
     else
         icons = omni.lib.icon.of(icon, true)
     end
@@ -767,7 +737,6 @@ function ItemGen:addSmallIcon(icon, nr)
                 tint = ic.tint or nil})
         end
     else
-        local ic = icon
         self:addIcon({
             icon = icon,
             icon_size = icon.icon_size or ic_sz,

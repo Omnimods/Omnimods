@@ -3,7 +3,7 @@ RecGen:create("omnimatter","stone"):
     setStacksize(200):
     setEnergy(0.25):
     setCategory():
-    setIcons("stone", "base"):
+    setIcons("stone"):
     setIngredients({"stone-crushed", 2}):
     setResults({type="item", name="stone", amount=1}):
     setEnabled():

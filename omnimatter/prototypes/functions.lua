@@ -146,7 +146,8 @@ function omni.matter.add_omnium_alloy(name,plate,ingot)
             setSubgroup("omnium"):
             setStacksize(400):
             setIcons("omnium-plate"):
-            addSmallIcon(plate,3):extend()
+            addSmallIcon(plate,3):
+            extend()
 
     if mods["angelssmelting"] then
         local r = RecGen:create("omnimatter","molten-omnium-"..name.."-alloy")
