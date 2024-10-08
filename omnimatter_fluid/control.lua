@@ -23,12 +23,17 @@ end
 
 local function offshore_pump_placed(entity)
     if prototypes.entity["solshore-"..entity.name] then
-        entity.surface.create_entity{
-            name = "solshore-"..entity.name,
-            position = entity.position,
-            direction = entity.direction,
-            force = entity.force
-        }
+        local fluid = entity.fluidbox.get_filter(1).name
+        if prototypes.recipe["solshore-"..fluid] then
+            local sol = entity.surface.create_entity{
+                name = "solshore-"..entity.name,
+                recipe = "solshore-"..fluid,
+                position = entity.position,
+                direction = entity.direction,
+                force = entity.force
+            }
+            sol.recipe_locked = true
+        end
     end
 end
 

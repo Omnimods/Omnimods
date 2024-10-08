@@ -95,10 +95,12 @@ end
 for _, rec in pairs(data.raw.recipe) do
     if not omni.fluid.check_string_excluded(rec.name) and not omni.lib.recipe_is_hidden(rec.name)  then
         for _, ingres in pairs({"ingredients","results"}) do
-            for _, ing in pairs(rec[ingres]) do
-                if string.find(ing.name, "%-barrel") or string.find(ing.name, "barrel%-") or string.find(ing.name, "%-canister")  or string.find(ing.name, "%-gas%-canister") then
-                    replace_barrels(rec)
-                    goto continue
+            if rec[ingres] and next(rec[ingres]) then
+                for _, ing in pairs(rec[ingres]) do
+                    if string.find(ing.name, "%-barrel") or string.find(ing.name, "barrel%-") or string.find(ing.name, "%-canister")  or string.find(ing.name, "%-gas%-canister") then
+                        replace_barrels(rec)
+                        goto continue
+                    end
                 end
             end
         end
@@ -311,6 +313,10 @@ for name, _ in pairs(recipe_mods) do
                         end
                     end
 
+                    --Move mainproduct over
+                    if ingres == "results" and rec.main_product and rec.main_product == ing.name then
+                        rec.main_product = new_ing.name
+                    end
                     --Finally round again for the case of a precision error like .999
                     local new_amount = 0
                     -- If amount is 0 (void recipes), jump this. Otherwise make sure that the amount is atleast 1
@@ -322,10 +328,6 @@ for name, _ in pairs(recipe_mods) do
                         log("WARNING: Ingredient "..new_ing.name.." from the recipe "..rec.name.." ran into the upper limit. Amount = "..new_amount.." Mult = "..mult)
                     end
 
-                    --Main product checks
-                    if ingres == "results" and rec.main_product and rec.main_product == ing.name then
-                        rec.main_product = new_ing.name
-                    end
                     rec[ingres][n] = new_ing
 
                 --Items:Apply multiplier
@@ -358,18 +360,25 @@ for name, _ in pairs(recipe_mods) do
                     local item_proto = omni.lib.find_prototype(ing.name)
                     if item_proto and ing.amount > 1 and (omni.lib.is_in_table("not-stackable", item_proto.flags or {}) or item_proto.stack_size == 1) then
                         fix_stacksize = true
+
                     end
                 end
             end
         end
         --crafting time adjustment
-        rec.energy_required = math.max(rec.energy_required*mult, 0.0011)
+        if rec.energy_required then
+            rec.energy_required = math.max(rec.energy_required*mult, 0.0011)
+        end
         --Apply stack size fixes
         if fix_stacksize then
             --set a localised name - Due to splitting a single result, the recipe might not have one at all
             rec.localised_name = omni.lib.locale.of(rec).name
+            --If old recipe has only 1 result and no icons defined, set main product
+            if  #rec.results == 1 and not rec.main_product and not rec.icon and not rec.icons then
+                rec.main_product = rec.results[1].name
+            end
             local add = {}
-            for    _, ing in pairs(rec["results"]) do
+            for _, ing in pairs(rec.results) do
                 local proto = omni.lib.find_prototype(ing.name)
                 if proto and (omni.lib.is_in_table("not-stackable", proto.flags or {}) or proto.stack_size == 1) then
                     local to_add = ing.amount - 1

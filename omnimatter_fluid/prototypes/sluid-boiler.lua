@@ -136,7 +136,7 @@ local function sluid_boiler_generation(fluid_cats)
                     production_type = "output",
                     pipe_covers = pipecoverspictures(),
                     volume = 1000,
-                    pipe_connections = {{flow_direction = "output", position = {0, -2}}}
+                    pipe_connections = {{flow_direction = "output", direction = defines.direction.north, position = {0, -1.0}}}
                 }
             }
             new_ent.fluid_box = nil --removes input box
@@ -167,25 +167,7 @@ local function sluid_boiler_generation(fluid_cats)
             --hide and disable old boiler entity
             local old = data.raw.boiler[boiler.name]
             old.enabled = false
-            if old.flags then
-                local I = 1
-                local shouldhide = true
-                -- Iterate and remove "player-creation" from the now-hidden boiler, add "hidden" flag if it doesn't have it already
-                repeat
-                    if old.flags[I] == "player-creation" then
-                        table.remove(old.flags, I)
-                        I = I - 1
-                    elseif old.flags[I] == "hidden" then
-                        shouldhide = false
-                    end
-                    I = I + 1
-                until I > #old.flags
-                if shouldhide then
-                    old.flags[#old.flags+1] = "hidden"
-                end
-            else
-                old.flags = {"hidden"}
-            end
+            old.hidden = true
             if old.next_upgrade then old.next_upgrade = nil end
 
             ----------------------------

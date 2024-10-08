@@ -588,20 +588,20 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                             else
                                 return nil --should not
                             end
-                        else 
+                        else
                             --log(serpent.block(recipe.name .. " random still"))
                         end
-                    else 
+                    else
                         --log(serpent.block(recipe.name .. " stack_size = 1"))
                     end
-                else 
+                else
                     --log(serpent.block(recipe.name .. " results < 1"))
                 end
-            else 
+            else
                 --log(serpent.block(recipe.name .. " has creative or void"))
             end
-        else 
-            --log(serpent.block(recipe.name .. " excluded")) 
+        else
+            --log(serpent.block(recipe.name .. " excluded"))
         end
     end
 
@@ -713,6 +713,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
 
                     newFluid.name = newFluid.name.."-concentrated-grade-"..i
                     newFluid.localised_name = omni.lib.locale.custom_name(data.raw.fluid[name], 'compressed-fluid', tostring(i))
+
                     if not newFluid.heat_capacity then
                         newFluid.heat_capacity = "1kJ"
                     end

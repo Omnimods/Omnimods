@@ -2970,8 +2970,8 @@ function BuildGen:setSteam(efficiency,size)
             volume = 1000,
             pipe_connections =
             {
-                {flow_direction = "input-output", direction = 4, position = { 2, 0}},
-                {flow_direction = "input-output", direction = 12, position = {-2, 0}}
+                {flow_direction = "input-output", direction = defines.direction.east, position = { 2, 0}},
+                {flow_direction = "input-output", direction = defines.direction.west, position = {-2, 0}}
             },
             pipe_covers = pipecoverspictures(),
             pipe_picture = assembler2pipepictures(),
