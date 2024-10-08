@@ -481,7 +481,7 @@ end
 
 --Checks if object exists
 function omni.lib.does_exist(item)
-    for _, p in pairs({"item","mining-tool","gun","ammo","armor","repair-tool","capsule","module","tool","rail-planner","selection-tool","item-with-entity-data","fluid","recipe","technology"}) do
+    for _, p in pairs({"item","gun","ammo","armor","repair-tool","capsule","module","tool","rail-planner","selection-tool","item-with-entity-data","fluid","recipe","technology"}) do
         if data.raw[p][item] then
             if data.raw[p][item] then
                 return true

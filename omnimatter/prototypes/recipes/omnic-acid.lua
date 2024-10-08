@@ -51,7 +51,7 @@ local omnic_acid = RecChain:create("omnimatter","omnic-acid"):
         setResults(cost:results()):
         setEnergy(function(levels,grade) return 3 end):
         setTechSuffix("hydrolyzation"):
-        setTechIcons("omnic-acid","omnimatter"):
+        setTechIcons("omnic-acid", "omnimatter"):
         setTechCost(function(levels,grade) return 25*omni.matter.get_tier_mult(levels,grade,1) end):
         setTechPacks(function(levels,grade) return get_acid_tech_cost(grade) end):
         setTechPrereq(function(levels,grade) return get_omnic_req(grade)  end):

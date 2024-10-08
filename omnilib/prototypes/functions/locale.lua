@@ -163,12 +163,12 @@ function lib.of_item(prototype)
                 or false
             )
         end,
-        placed_as_equipment_result = function()
+        place_as_equipment_result = function()
             return (
-                prototype.placed_as_equipment_result and 
+                prototype.place_as_equipment_result and
                 lib.of_generic( -- Find the type and locale of our equipment result
                     lib.find(
-                        prototype.placed_as_equipment_result,
+                        prototype.place_as_equipment_result,
                         'equipment'
                     ),
                     'equipment'
@@ -179,7 +179,7 @@ function lib.of_item(prototype)
         name = function(self) -- Our most basic hierarchy: set name, place result, equipment, item in that order
             return prototype.localised_name
             or self.place_result and self.place_result.name
-            or self.placed_as_equipment_result and self.placed_as_equipment_result.name
+            or self.place_as_equipment_result and self.place_as_equipment_result.name
             or key_of(prototype, 'name', 'item')
         end,
         description = function(self)

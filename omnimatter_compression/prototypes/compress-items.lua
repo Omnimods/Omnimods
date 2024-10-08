@@ -272,10 +272,12 @@ if settings.startup["omnicompression_item_compression"].value then
     end
 
     for _, rec in pairs(data.raw.recipe) do
-        for _, ing in pairs(rec.ingredients) do
-            if excluded_items[ing.name] and not compressed_item_names["compressed-"..ing.name] then
-                --log("Excluded recipe '"..rec.name.."' due to '"..ing.name.."' being on the blacklist")
-                omni.compression.exclude_recipe(rec.name)
+        if rec.ingredients and next(rec.ingredients) then
+            for _, ing in pairs(rec.ingredients) do
+                if excluded_items[ing.name] and not compressed_item_names["compressed-"..ing.name] then
+                    --log("Excluded recipe '"..rec.name.."' due to '"..ing.name.."' being on the blacklist")
+                    omni.compression.exclude_recipe(rec.name)
+                end
             end
         end
     end

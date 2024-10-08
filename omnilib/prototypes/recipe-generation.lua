@@ -962,7 +962,7 @@ function ItemGen:addLocName(key)
     elseif type(key)=="string" and string.find(key,".") and (string.find(key,"name") or string.find(key,"description")) then
         b = function(levels,grade) return {key} end
     elseif type(key)=="number" then
-        b=function(levels,grade) return tostring(key) end
+        b=function(levels,grade) return {tostring(key)} end
     else
         b=function(levels,grade) return key end
     end
@@ -981,6 +981,8 @@ function ItemGen:setLocDesc(inname,keys)
         self.loc_desc_keys = keys
     elseif type(keys)=="table" then
         self.loc_desc_keys = function(levels,grade) return keys end
+    elseif type(key)=="number" then
+        self.loc_desc_keys = function(levels,grade) return {tostring(keys)} end
     else
         self.loc_desc_keys=function(levels,grade) return {keys} end
     end
@@ -991,8 +993,10 @@ function ItemGen:addLocDescKey(key)
     local k = key
     if type(key)=="table" then
         k=function(levels,grade) return key end
-    elseif type(key)=="string" or type(key)=="number" then
+    elseif type(key)=="string" then
         k=function(levels,grade) return {key} end
+    elseif type(key)=="number" then
+        k = function(levels,grade) return {tostring(key)} end
     end
     self.loc_desc_keys = function(levels,grade) return omni.lib.union(a(levels,grade),k(levels,grade)) end
     return self
@@ -2673,8 +2677,8 @@ function BuildGen:import(name)
         -- if build.working_sound then
         --     b:setSoundWorking(build.working_sound)
         -- end
-        if build.module_specification then
-            b:setModSlots(build.module_specification.module_slots)
+        if build.module_slots then
+            b:setModSlots(build.module_slots)
         else
             b:setModSlots(0)
         end
@@ -3335,10 +3339,7 @@ function BuildGen:generateBuilding()
         dying_explosion = "medium-explosion",
         collision_box = {{-size.width+0.3, -size.height+0.3}, {size.width-0.3, size.height-0.3}},
         selection_box = {{-size.width, -size.height}, {size.width, size.height}},
-        module_specification =
-        {
-            module_slots = self.module.slots(0,0)
-        },
+        module_slots = self.module.slots(0,0),
         allowed_effects = self.module.effects(0,0),
         crafting_categories = craftcat,
         crafting_speed = self.crafting_speed(0,0),

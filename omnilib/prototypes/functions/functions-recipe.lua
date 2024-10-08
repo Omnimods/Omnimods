@@ -1,6 +1,6 @@
 function omni.lib.parse_result(product)
     --Get the given product in the {name = ..., type = ..., amount=..., ..} format.
-    if not product then return end
+    if not product or type(product) == "table" and not next(product) then return end
 
     if type(product) == "string" then -- Single product
         return {

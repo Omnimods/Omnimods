@@ -88,11 +88,11 @@ ItemGen:create("omnimatter","omnisludge"):
     setBothColour(0.41,0.34,0.49):
     extend()
 
-    
+
 RecGen:create("omnimatter","pulver-omnic-waste"):
     setSubgroup("omni-fluids"):
     setCategory("omniphlog"):
-    setIcons("omnic-waste"):
+    setIcons("omnic-waste", "omnimatter"):
     setIngredients({"pulverized-omnite", 1},{"pulverized-stone", 6}):
     setResults({type="fluid", name="omnic-waste", amount=120}):
     setEnergy(0.8):

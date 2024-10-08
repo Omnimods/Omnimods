@@ -41,7 +41,14 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
     end
     --category set
     local function set_category(recipe)
-        if not data.raw["recipe-category"]["general-compressed"] then
+        if recipe.category then
+            if not data.raw["recipe-category"][recipe.category.."-compressed"] then
+                if not omni.lib.is_in_table(recipe.category.."-compressed",new_cat) then
+                    new_cat[#new_cat+1] = {type = "recipe-category", name = recipe.category.."-compressed"}
+                end
+            end
+            return recipe.category.."-compressed"
+        elseif not data.raw["recipe-category"]["general-compressed"] then
             if not omni.lib.is_in_table("general-compressed",new_cat) then
                 new_cat[#new_cat+1] = {type = "recipe-category", name = "general-compressed"}
             end
@@ -74,9 +81,11 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
 
     --checks results for probabilistic returns (probability, amount min, amount max etc)
     local function not_random(recipe)
-        for _,r in pairs(recipe.results) do
-            if r.amount_min or (r.probability and r.probability > 0) or r.amount_max then
-                return false
+        if recipe.results and next(recipe.results) then
+            for _,r in pairs(recipe.results) do
+                if r.amount_min or (r.probability and r.probability > 0) or r.amount_max then
+                    return false
+                end
             end
         end
         return true
@@ -381,7 +390,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                     if (more_than_one(recipe) or omni.lib.is_in_table(recipe.name, omni.compression.include_recipes)) then
                         local comrec={} --set basis to zero
                         local new_cat = set_category(recipe) or "crafting-compressed" --fallback should not be needed
-                        local icons = omni.lib.add_overlay(recipe,"compress")   
+                        local icons = omni.lib.add_overlay(recipe,"compress")
 
                         if not_random(recipe) then
                             --log(serpent.block(recipe.name .. " not_random"))
@@ -397,7 +406,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                 local parts = {}
                                 local res = {}
                                 local ing = {}
-                                local gcd = {}
+                                local gcd = 0
                                 local generatorfluid = nil
                                 local missing_solids = false
                                 local single_stack = not more_than_one(recipe)
@@ -464,9 +473,9 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                     --new crafting time calculations
                                     local tid = {}
                                     if recipe.energy_required then
-                                        tid = recipe.energy_required * mult.normal
+                                        tid = recipe.energy_required * mult
                                     else
-                                        tid = mult.normal
+                                        tid = mult
                                     end
                                     if not single_stack then
                                         tid = tid / gcd
@@ -703,7 +712,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                     end
 
                     newFluid.name = newFluid.name.."-concentrated-grade-"..i
-                    newFluid.localised_name = omni.lib.locale.custom_name(data.raw.fluid[name], 'compressed-fluid', i)
+                    newFluid.localised_name = omni.lib.locale.custom_name(data.raw.fluid[name], 'compressed-fluid', tostring(i))
                     if not newFluid.heat_capacity then
                         newFluid.heat_capacity = "1kJ"
                     end

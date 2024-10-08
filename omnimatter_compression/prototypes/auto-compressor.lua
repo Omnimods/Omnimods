@@ -36,7 +36,7 @@ BuildGen:create("omnimatter_compression","auto-compressor"):
     setStacksize(50):
     setFlags({"placeable-neutral", "placeable-player", "player-creation"}):
     setSubgroup("production-machine"):
-    setIngredients({{"steel-plate", 15}, {"electronic-circuit", 5}, {"stone-brick", 10}}):
+    setIngredients({"steel-plate", 15}, {"electronic-circuit", 5}, {"stone-brick", 10}):
     setEnergy(10):
     setModSlots(0):
     setModEffects():
@@ -95,7 +95,7 @@ BuildGen:create("omnimatter_compression","auto-concentrator"):
     setStacksize(50):
     setFlags({"placeable-neutral", "placeable-player", "player-creation"}):
     setSubgroup("production-machine"):
-    setIngredients({{"steel-plate", 50}, {"electronic-circuit", 20}, {"stone-brick", 40}}):
+    setIngredients({"steel-plate", 50}, {"electronic-circuit", 20}, {"stone-brick", 40}):
     setEnergy(10):
     setModSlots(0):
     setModEffects():
@@ -126,7 +126,7 @@ if settings.startup["omnicompression_entity_compression"].value then
         setStacksize(50):
         setFlags({"placeable-neutral", "placeable-player", "player-creation"}):
         setSubgroup("production-machine"):
-        setIngredients({{"steel-plate", 50}, {"electronic-circuit", 20}, {"stone-brick", 40}}):
+        setIngredients({"steel-plate", 50}, {"electronic-circuit", 20}, {"stone-brick", 40}):
         setEnergy(10):
         setModSlots(0):
         setModEffects():

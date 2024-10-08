@@ -90,26 +90,28 @@ if settings.startup["omnicompression_item_compression"].value then
     end
     --find lowest level in tiered techs that gets compressed to ensure chains are all compressed passed the first one
     for _,tech in pairs(data.raw.technology) do --run always
-        local name, lvl = splitTech(tech.name)
-        local unit = tech.unit
-        if lvl == "" or lvl == nil then --tweak to allow techs that start with no number
-            lvl = 1
-            name = tech.name
-        end
-        --protect against pack removal
-        if containsOne(unit and unit.ingredients, alwaysSP) then
-            if not tiered_tech[name] then
-                tiered_tech[name] = tonumber(lvl)
-            elseif tiered_tech[name] > tonumber(lvl) then --in case techs are added out of order, always add the lowest
-                tiered_tech[name] = tonumber(lvl)
+        if tech.unit and tech.unit.ingredients then
+            local name, lvl = splitTech(tech.name)
+            local unit = tech.unit
+            if lvl == "" or lvl == nil then --tweak to allow techs that start with no number
+                lvl = 1
+                name = tech.name
             end
-        end
-        --protect against cost drops
-        if tech.unit and ((unit.count and type(unit.count)=="number" and unit.count > min_compress)) then
-            if not tiered_tech[name] then
-                tiered_tech[name] = tonumber(lvl)
-            elseif tiered_tech[name] > tonumber(lvl) then --in case techs are added out of order, always add the lowest
-                tiered_tech[name] = tonumber(lvl)
+            --protect against pack removal
+            if containsOne(unit and unit.ingredients, alwaysSP) then
+                if not tiered_tech[name] then
+                    tiered_tech[name] = tonumber(lvl)
+                elseif tiered_tech[name] > tonumber(lvl) then --in case techs are added out of order, always add the lowest
+                    tiered_tech[name] = tonumber(lvl)
+                end
+            end
+            --protect against cost drops
+            if tech.unit and ((unit.count and type(unit.count)=="number" and unit.count > min_compress)) then
+                if not tiered_tech[name] then
+                    tiered_tech[name] = tonumber(lvl)
+                elseif tiered_tech[name] > tonumber(lvl) then --in case techs are added out of order, always add the lowest
+                    tiered_tech[name] = tonumber(lvl)
+                end
             end
         end
     end
@@ -135,15 +137,15 @@ if settings.startup["omnicompression_item_compression"].value then
     log("Start technology compression")
     for _,tech in pairs(data.raw.technology) do
         if not omni.compression.is_hidden(tech) and tech.unit and tech.unit.ingredients and #tech.unit.ingredients > 0 and
-        ((tech.unit.count and type(tech.unit.count)=="number" and tech.unit.count > min_compress) or include_techs(tech) or containsOne(tech.unit.ingredients,alwaysSP) or not tech.unit.count) then
+        ((tech.unit.count and type(tech.unit.count)=="number" and tech.unit.count > min_compress) or include_techs(tech) or containsOne(tech.unit.ingredients, alwaysSP) or not tech.unit.count) then
             --fetch original
             local t = table.deepcopy(tech)
             t.name = "omnipressed-"..t.name
             local class, tier = splitTech(tech.name)
             local locale = omni.lib.locale.of(tech).name
             if tier and tonumber(locale[#locale]) == nil and tech.level == tech.max_level then-- If the last key is a number, or there's multiple levels, it's already tiered.
-                t.localised_name = omni.lib.locale.custom_name(tech, "compressed-tiered", tier)
-                t.localised_description = {"technology-description.compressed-tiered", locale, tier}
+                t.localised_name = omni.lib.locale.custom_name(tech, "compressed-tiered", tostring(tier))
+                t.localised_description = {"technology-description.compressed-tiered", locale, tostring(tier)}
             else
                 t.localised_name = omni.lib.locale.custom_name(tech, "compressed")
                 t.localised_description = {"technology-description.compressed", locale}
@@ -157,30 +159,32 @@ if settings.startup["omnicompression_item_compression"].value then
             local gcd = {}
             -- Stage 1: Standardize and find our LCM of the various stack sizes
             for _, ings in pairs(t.unit.ingredients) do
-                if ings[1] and not (ings.name or ings.amount) then
-                    ings.name = ings[1]
-                    ings.amount = ings[2]
-                    ings[1] = nil
-                    ings[2] = nil
-                end
+                --if ings[1] and not (ings.name or ings.amount) then
+                    local ingname = ings[1]
+                    local ingamount = ings[2]
+                    --ings[1] = nil
+                    --ings[2] = nil
+                --end
                 -- Remove unit_count from our equation for now
-                ings.amount = ings.amount * (t.unit.count or 1)
-                lcm[#lcm+1] = pack_sizes[ings.name]
+                ingamount = ingamount * (t.unit.count or 1)
+                lcm[#lcm+1] = pack_sizes[ingname]
                 -- Amount of packs needed (in stacks)
-                gcd[#gcd+1] = ings.amount / pack_sizes[ings.name]
+                gcd[#gcd+1] = ingamount  / pack_sizes[ingname]
             end
             lcm = omni.lib.lcm(table.unpack(lcm))
             gcd = omni.lib.pgcd(table.unpack(gcd))
 
             -- Stage 2: Determine our amounts and divisor (if we use count_formula)
             for _, ings in pairs(t.unit.ingredients) do
+                local ingname = ings[1]
+                    local ingamount = ings[2]
                 -- Divisor will always be the largest stack size of the packs used in this tech
-                divisor = math.max(divisor, pack_sizes[ings.name])
+                divisor = math.max(divisor, pack_sizes[ingname])
                 -- Divide out our pack size and GCD, the latter will become our unit count
-                ings.amount = (ings.amount / pack_sizes[ings.name]) / gcd
+                ingamount  = (ingamount  / pack_sizes[ingname]) / gcd
                 -- Minimum 1, Maximum 65535, round otherwise
-                ings.amount = math.min(math.max(omni.lib.round(ings.amount), 1), 65535)
-                ings.name = "compressed-"..ings.name
+                ingamount  = math.min(math.max(omni.lib.round(ingamount ), 1), 65535)
+                ingname = "compressed-"..ingname
             end
 
             --if valid remove effects from compressed version
