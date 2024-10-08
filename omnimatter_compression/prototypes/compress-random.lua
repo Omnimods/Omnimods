@@ -2,19 +2,14 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
     local exclusion_list = {"void","flaring","incineration"}
     local check_recipes = random_recipes
 
-    log("start probability style compression")
+    log("start probability style compression with "..#check_recipes.." recipes")
 
     for _, recipe in pairs(check_recipes) do
-        if not omni.lib.is_in_table(recipe,exclusion_list) and not string.find(recipe,"creative") and recipe.results and next(recipe.results) then
+        if not omni.lib.is_in_table(recipe, exclusion_list) and not string.find(recipe,"creative") then
             --local store = data.raw.recipe[recipe]
             local new_recipe = table.deepcopy(data.raw.recipe[recipe])
             --grab localisation before standardisation
             local loc = omni.lib.locale.custom_name(data.raw.recipe[recipe], "compressed-recipe")
-            --double check shenanigans are not happening
-            new_recipe.ingredients=nil
-            new_recipe.ingredient=nil
-            new_recipe.result=nil
-            new_recipe.results=nil
             local stored_probabilities = {}
             --prob table should include more details than just the number, the order of items seems to get changed in create_compression_recipes
             for _, result in pairs(new_recipe.results) do

@@ -906,6 +906,7 @@ function ItemGen:setLocName(inname,...)
     local arg = {...}
     self.unique_loc_name = inname ~= nil
     local rtn = {}
+
     if not inname then return self end
     if type(inname) == "function" and type(inname(0,0)) == "string" then
         rtn[1] = inname
@@ -937,11 +938,12 @@ function ItemGen:setLocName(inname,...)
             rtn[#rtn+1] = function(levels,grade) return tostring(inname[grade]) end
         elseif type(part)=="string" and string.find(part,".") and (string.find(part,"name") or string.find(part,"description")) then
             rtn[#rtn+1] = function(levels,grade) return {part} end
+        elseif type(part) == "number" then
+            rtn[#rtn+1] = function(levels,grade) return tostring(part) end
         else
             rtn[#rtn+1]=function(levels,grade) return part end
         end
     end
-
     self.loc_name = function(levels,grade)
         local out = {}
         for _, o in pairs(rtn) do
@@ -962,7 +964,7 @@ function ItemGen:addLocName(key)
     elseif type(key)=="string" and string.find(key,".") and (string.find(key,"name") or string.find(key,"description")) then
         b = function(levels,grade) return {key} end
     elseif type(key)=="number" then
-        b=function(levels,grade) return {tostring(key)} end
+        b=function(levels,grade) return tostring(key) end
     else
         b=function(levels,grade) return key end
     end
@@ -1873,6 +1875,7 @@ end
 function RecGen:setTechLocName(inname,...)
     local arg = {...}
     local rtn = {}
+
     if type(inname) == "function" then
         rtn[1] = inname
     elseif type(inname)=="table" and inname["grade-1"] then
@@ -1938,6 +1941,7 @@ function RecGen:addTechLocName(key)
     self.tech.loc_name = table.deepcopy(function(levels,grade) return omni.lib.union(a(levels,grade),{b(levels,grade)}) end)
     return self
 end
+
 function RecGen:setTechLocDesc(inname,keys)
         if type(inname) == "function" then
         self.tech.loc_desc = inname
@@ -1955,6 +1959,7 @@ function RecGen:setTechLocDesc(inname,keys)
     end
     return self
 end
+
 function RecGen:setTechUpgrade(value)
     if type(value)~= "function" then
         self.tech.upgrade = function(levels,graede) return value == nil or value end
@@ -1963,6 +1968,7 @@ function RecGen:setTechUpgrade(value)
     end
     return self
 end
+
 function RecGen:setTechCost(cost)
     if type(cost)=="number" then
         self.tech.cost = function(levels,grade) return cost end
@@ -1971,6 +1977,7 @@ function RecGen:setTechCost(cost)
     end
     return self
 end
+
 --setTechIcons() can be called with either:
     --icon name (mod=nil, mod from RecGen() call is used as dir path)
     --icon name + modname
@@ -2008,7 +2015,7 @@ function RecGen:setTechIcons(icons,mod)
         self.tech.icons = function(levels,grade) return ic end
     else
         self.tech.icons = icons
-    end    
+    end
     return self
 end
 function RecGen:setTechPacks(cost)
@@ -2021,6 +2028,7 @@ function RecGen:setTechPacks(cost)
     end
     return self
 end
+
 function RecGen:setTechTime(t)
     if type(t)=="number" then
         self.tech.time = function(levels,grade) return t end
@@ -3313,6 +3321,7 @@ function BuildGen:generateBuilding()
         self.ingredient_count = self.ingredient_count or 1
         self.result_count = self.result_count or 1
     end
+
     local lname = {"entity-name."..self.name}
     if self.loc_name(0,0) and type(self.loc_name(0,0))=="table" then
         lname = self.loc_name(0,0)
@@ -3322,6 +3331,7 @@ function BuildGen:generateBuilding()
     elseif self.loc_name(0,0) then
         lname = {"entity-name."..self.loc_name(0,0)}
     end
+
     if self.type=="lab" and self.inputs(0,0)==nil then error("labs require inputs for science packs, use 'setInputs' on "..self.name..".") end
     self.rtn[#self.rtn+1]= {
         type = self.type,

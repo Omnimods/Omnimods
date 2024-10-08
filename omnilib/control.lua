@@ -309,6 +309,8 @@ local function omnidate(technology)
                     local downgrade_rec = cached_recs[key_value]
                     downgrade_rec.enabled = not toggle
                     -- Compressed version as well
+                    log(serpent.block(correlated_recipes))
+                    log(serpent.block(downgrade_rec.name))
                     local compressed_downgrade = correlated_recipes[downgrade_rec.name].compressed
                     if compressed_downgrade then
                         compressed_downgrade = cached_recs[compressed_downgrade]
@@ -330,6 +332,8 @@ local function omnidate(technology)
                 for tech_name, tech_recipes in pairs(recipe_techs) do
                     if force_techs[tech_name].researched then
                         for recipe_name, recipe_meta in pairs(tech_recipes) do
+                            log("TEST123")
+                            log(serpent.block(tech_name))
                             process_rec(recipe_name, recipe_meta, force_techs[tech_name].researched)
                         end
                     end
