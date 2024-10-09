@@ -498,7 +498,7 @@ function ItemGen:create(mod_name, item_name)
         t.icons = function(levels,grade)
             return {{
                 icon = mod_name.."/graphics/icons/"..item_name..".png",
-                icon_size = 32
+                icon_size = defines.default_icon_size
             }}
         end
     end
@@ -565,17 +565,17 @@ function ItemGen:importIf(item)
 end
 
 function ItemGen:setIcons(icons,mod)
-    if not icons then error("No icons specified for "..(self.name or "No Name")) end
+    if not icons then return self end --error("No icons specified for "..(self.name or "No Name")) end
     local proto = nil
     --Case "mod" given : expect just a name for the icon(s) without a path
     if type(icons)~= "function" and mod and (type(icons)~= "string" or not string.match(icons, "%_%_(.-)%_%_")) then
         if type(icons) == "table" then
             local ic = {}
             local ic_scale
-            local ic_sz = 32
+            local ic_sz = defines.default_icon_size
             for _, c in pairs(icons) do
                 if c.icon_size then    ic_sz=c.icon_size end
-                if c.scale then ic_scale = c.scale*32/ic_sz end
+                if c.scale then ic_scale = c.scale*defines.default_icon_size/ic_sz end
                 if type(c)=="table" then
                     ic[#ic+1] = {icon = "__"..mod.."__/graphics/icons/"..(c.name or c.icon)..".png",
                         icon_size = ic_sz,
@@ -588,7 +588,7 @@ function ItemGen:setIcons(icons,mod)
             end
             self.icons = function(levels,grade) return ic end
         else
-            local ic_size=32
+            local ic_size=defines.default_icon_size
             local check = {}
             if data.raw.item[icons] then
                 check=data.raw.item[icons]
@@ -598,7 +598,7 @@ function ItemGen:setIcons(icons,mod)
         end
     elseif type(icons)~= "function" then
         -- --find icon_size
-        local ic_sz = 32
+        local ic_sz = defines.default_icon_size
         if type(icons)=="string" and string.match(icons, "%_%_(.-)%_%_") then
             local name=string.match(icons,".*%/(.-).png")
             local setup = {}
@@ -632,7 +632,7 @@ function ItemGen:addIcon(icon)
         --Just a name given
         else
             local proto = omni.lib.find_prototype(icon.icon)
-            local ic_sz=32
+            local ic_sz=defines.default_icon_size
             --Find icon size
             if proto then
                 if proto.icon_size then
@@ -652,7 +652,7 @@ function ItemGen:addIcon(icon)
                     ic[#ic+1] = {
                         icon=c.icon,
                         icon_size=int_sz,
-                        scale = (c.scale or (32/int_sz))*(icon.scale or (32/int_sz)),
+                        scale = (c.scale or (defines.default_icon_size/int_sz))*(icon.scale or (defines.default_icon_size/int_sz)),
                         shift = {(c.shift or {0,0})[1]+(icon.shift or {0,0})[1],(c.shift or {0,0})[2]+(icon.shift or {0,0})[2]}
                     }
                 end
@@ -680,7 +680,7 @@ function ItemGen:addMask(...)
     self:addIcon({
         icon = string.sub(icons[#icons].icon,1,-5).."-mask.png",
         tint=table.deepcopy(arg),
-        icon_size = icons[#icons].icon_size or 32
+        icon_size = icons[#icons].icon_size or defines.default_icon_size
     })
     return self
 end
@@ -695,14 +695,14 @@ function ItemGen:setName(lvl,mod)
 end
 function ItemGen:addBurnerIcon()
     self:addIcon({icon = "__omnilib__/graphics/icons/small/burner.png",
-    icon_size=32,
+    icon_size=defines.default_icon_size,
         scale = 0.4375,
         shift = {-10, 10}})
     return self
 end
 function ItemGen:addElectricIcon()
     self:addIcon({icon = "__omnilib__/graphics/icons/small/electric.png",
-    icon_size=32,
+    icon_size=defines.default_icon_size,
         scale = 0.4375,
         shift = {-10, 10}})
     return self
@@ -710,7 +710,7 @@ end
 function ItemGen:addSteamIcon()
     -- CC BY-NC 4.0 Licensed from http://getdrawings.com/get-icon#steam-icon-51.png
     self:addIcon({icon = "__omnilib__/graphics/icons/small/steam-icon-51-32x32.png",
-    icon_size=32,
+    icon_size=defines.default_icon_size,
         scale = 0.4375,
         shift = {-10, 10}})
     return self
@@ -718,7 +718,7 @@ end
 function ItemGen:addSmallIcon(icon, nr)
     local quad = {{10, -10},{-10, -10},{-10, 10},{10, 10}}
     local icons
-    local ic_sz=32
+    local ic_sz=defines.default_icon_size
     if type(icon) == "table" and icon[1] and icon[1].icon then
         icons = icon
     else
@@ -732,7 +732,7 @@ function ItemGen:addSmallIcon(icon, nr)
             end
             self:addIcon({icon = ic.icon,
             icon_size=ic_sz,
-                scale = 0.4375*(ic.scale or (32/ic_sz)),
+                scale = 0.4375*(ic.scale or (defines.default_icon_size/ic_sz)),
                 shift = quad[nr or 1], --currently "centres" the icon if it was already offset, may need to math that out
                 tint = ic.tint or nil})
         end
@@ -1106,7 +1106,7 @@ function ItemGen:generate_item()
         fuel_category = self.fuel_category,
         subgroup = self.subgroup(0,0),
         order = self.order(0,0),
-        icon_size = self.icon_size or 32,
+        icon_size = self.icon_size or defines.default_icon_size,
         stack_size = self.stack_size,
         default_temperature = self.default_temperature,
         heat_capacity=self.heat_capacity,
@@ -1754,14 +1754,14 @@ function RecGen:generate_recipe()
             if item.icons then
                 self.icons = function(levels,grade) return item.icons end
             elseif item.icon then
-                self.icons = function(levels,grade) return {{icon = item.icon, icon_size = item.icon_size or 32}} end
+                self.icons = function(levels,grade) return {{icon = item.icon, icon_size = item.icon_size or defines.default_icon_size}} end
             end
         elseif data.raw.fluid[self.main_product(0,0)] then
             local fluid = data.raw.fluid[self.main_product(0,0)]
             if fluid.icons then
                 self.icons = function(levels,grade) return fluid.icons end
             elseif fluid.icon then
-                self.icons = function(levels,grade) return {{icon = fluid.icon, icon_size = fluid.icon_size or 32}} end
+                self.icons = function(levels,grade) return {{icon = fluid.icon, icon_size = fluid.icon_size or defines.default_icon_size}} end
             end
         end
     end
@@ -1829,7 +1829,7 @@ function RecGen:generate_recipe()
         show_amount_in_title = self.show_amount,
         always_show_products = self.show_product,
         icons = self.icons(0,0),
-        icon_size = 32,
+        icon_size = defines.default_icon_size,
     }
     return self
 end
@@ -2216,7 +2216,7 @@ function RecChain:generate_chain()
         setSubgroup(self.subgroup(self.levels,i)):
         setLocName(lname):
         setLocDesc(self.loc_desc(m,actualTier)):
-        setIcons(self.icons(m,i)):
+        --setIcons(self.icons(m,i)):
         setEnabled(self.enabled(m,i)):
         setSubgroup(self.subgroup(0,0)):
         setOrder(self.order(0,0)):
@@ -2266,12 +2266,13 @@ function RecChain:generate_chain()
             prq={"omnitech-"..techname.."-"..i-1-techDifEnabled}
         end
         r:setTechPrereq(prq)
-        if self.main_product(0,0) then
+        if self.icons(m,i) then
+            r:setIcons(self.icons(m,i))
+        elseif self.main_product(0,0) then
             if not self.set_icon then
                 self:setIcons(self.main_product(0,0))
             end
         end
-        --r:setIcons(self.icons(m,i))
 
         r:setIngredients(self.ingredients(self.levels,i))
         r:setResults(self.results(self.levels,i))
@@ -3336,7 +3337,7 @@ function BuildGen:generateBuilding()
     self.rtn[#self.rtn+1]= {
         type = self.type,
         name = self.name,
-        icon_size = 32,
+        icon_size = defines.default_icon_size,
         order=self.order(0,0),
         localised_name = lname,
         localised_description = self.loc_desc(0,0), --self:setDescLocType("entity"),
@@ -3988,7 +3989,7 @@ function InsertGen:generateInserter()
         type = "inserter",
         name = self.name,
         icons = self.icons(0,0),
-        icon_size = 32,
+        icon_size = defines.default_icon_size,
         filter_count=self.filter_count(0,0),
         flags = self.flags,
         minable = {mining_time = self.mining_time(0,0), result = self.name},

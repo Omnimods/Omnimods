@@ -7,18 +7,19 @@ function icon.of_generic(prototype, silent)
     --- Get icons for the given prototype, assuming it's in the generic format.
     if prototype.icons then
         local icons = {}
-        for i, icon in pairs(prototype.icons) do
-            if icon.icon and icon.icon_size then icons[i] = icon
+        for i, ic in pairs(prototype.icons) do
+            if ic.icon and ic.icon_size then
+                icons[i] = ic
             else
-                local icon_size = icon.icon_size or prototype.icon_size
-                if not icon_size or not icon.icon then
+                local icon_size = ic.icon_size or prototype.icon_size or defines.default_icon_size
+                if ic.icon and not icon_size then
                     if silent then
                         return nil
                     end
                     error(("%s/%s doesn't specify icons correctly"):format(prototype.type, prototype.name))
-                end                
+                end
                 local new = {}
-                for k, v in pairs(icon) do
+                for k, v in pairs(ic) do
                     new[k] = v
                 end
                 new.icon_size = icon_size
@@ -35,7 +36,7 @@ function icon.of_generic(prototype, silent)
     end
     return {{
         icon = prototype.icon,
-        icon_size = prototype.icon_size or 64
+        icon_size = prototype.icon_size or defines.default_icon_size
     }}
 end
 

@@ -10,6 +10,7 @@ local omnifurnace = BuildGen:create("omnimatter","burner-omni-furnace"):
     setCrafting("smelting","omnifurnace"):
     setUsage(45):
     setEnabled():
+    setIcons({"omnifurnace",32}):
     setSoundWorking("steel-furnace"):
     setAnimation({
         layers = {
@@ -97,3 +98,5 @@ local omnifurnace = BuildGen:create("omnimatter","burner-omni-furnace"):
     setReplace("furnace")
 omnifurnace.energy_source.burnt_inventory_size = 1
 omnifurnace:extend()
+
+log(serpent.block(data.raw["assembling-machine"]["burner-omni-furnace"]))

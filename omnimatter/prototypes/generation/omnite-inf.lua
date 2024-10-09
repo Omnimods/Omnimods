@@ -63,7 +63,7 @@ data:extend({
         autoplace = resource_autoplace.resource_autoplace_settings({
             has_starting_area_placement = false,
             name ="infinite-omnite",
-            --patch_set_name = "omnite",
+            patch_set_name = "omnite",
             autoplace_control_name = "infinite-omnite",
             order = "b-b",
             base_density = 25, -- ~ richness
