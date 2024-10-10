@@ -571,11 +571,15 @@ function ItemGen:setIcons(icons,mod)
     if type(icons)~= "function" and mod and (type(icons) ~= "string" or not string.match(icons, "%_%_(.-)%_%_")) then
         if type(icons) == "table" then
             local ic = {}
-            local ic_scale
+            local ic_scale = 1
             local ic_sz = defines.default_icon_size
             for _, c in pairs(icons) do
                 if c.icon_size then    ic_sz=c.icon_size end
-                if c.scale then ic_scale = c.scale*defines.default_icon_size/ic_sz end
+                if c.scale then
+                    ic_scale = c.scale * defines.default_icon_size / ic_sz
+                else
+                    ic_scale = defines.default_icon_size / ic_sz
+                end
                 if type(c)=="table" then
                     ic[#ic+1] = {icon = "__"..mod.."__/graphics/icons/"..(c.name or c.icon)..".png",
                         icon_size = ic_sz,
@@ -583,36 +587,38 @@ function ItemGen:setIcons(icons,mod)
                         scale = ic_scale,
                         shift = c.shift}
                 else
-                    ic[#ic+1]={icon = "__"..mod.."__/graphics/icons/"..c..".png",icon_size=c.icon_size}
+                    ic[#ic+1]={icon = "__"..mod.."__/graphics/icons/"..c..".png", icon_size=c.icon_size, scale = ic_scale,}
                 end
             end
             self.icons = function(levels,grade) return ic end
         else
             local ic_size=defines.default_icon_size
+            local ic_scale = 1
             local check = {}
             if data.raw.item[icons] then
                 check=data.raw.item[icons]
                 if check.icon_size then ic_size=check.icon_size end
             end
-            self.icons = function(levels,grade) return {{icon = "__"..(mod or self.mod).."__/graphics/icons/"..icons..".png",icon_size=ic_size}} end
+            self.icons = function(levels,grade) return {{icon = "__"..(mod or self.mod).."__/graphics/icons/"..icons..".png",icon_size=ic_size, scale = ic_scale,}} end
         end
     elseif type(icons)~= "function" then
         -- --find icon_size
-        local ic_sz = icons.icon_size or (type(icons[2])=="number" and icons[2]) or defines.default_icon_size
         local ic = (type(icons)=="string" and icons) or (type(icons[1])=="string" and icons[1])
+        local ic_sz = icons.icon_size or (type(icons[2])=="number" and icons[2]) or defines.default_icon_size
+        local ic_scale = icons.scale or 1 --defines.default_icon_size / ic_sz
 
         if ic and string.match(ic, "%_%_(.-)%_%_") then
             local name = string.match(ic,".*%/(.-).png")
             local setup = {}
             proto = omni.lib.find_prototype(name)
             if proto then
-                setup={{icon = proto.icon, icon_size = proto.icon_size}}
+                setup={{icon = proto.icon, icon_size = proto.icon_size, scale = proto.scale or ic_scale,}}
             else
-                setup={{icon = ic, icon_size=ic_sz}}
+                setup={{icon = ic, icon_size=ic_sz, scale = ic_scale,}}
             end
             self.icons = function(levels,grade) return setup end
         elseif ic and not proto and (mod or self.mod) then
-            self.icons = function(levels,grade) return {{icon = "__"..(mod or self.mod).."__/graphics/icons/"..ic..".png", icon_size = ic_sz}} end
+            self.icons = function(levels,grade) return {{icon = "__"..(mod or self.mod).."__/graphics/icons/"..ic..".png", icon_size = ic_sz, scale = ic_scale,}} end
         else
             self.icons = function(levels,grade) return omni.lib.icon.of(icons, true) end
         end
@@ -698,14 +704,14 @@ function ItemGen:setName(lvl,mod)
 end
 function ItemGen:addBurnerIcon()
     self:addIcon({icon = "__omnilib__/graphics/icons/small/burner.png",
-    icon_size=32,
+        icon_size = 32,
         scale = 0.4375,
         shift = {-10, 10}})
     return self
 end
 function ItemGen:addElectricIcon()
     self:addIcon({icon = "__omnilib__/graphics/icons/small/electric.png",
-    icon_size=32,
+        icon_size=32,
         scale = 0.4375,
         shift = {-10, 10}})
     return self
@@ -713,7 +719,7 @@ end
 function ItemGen:addSteamIcon()
     -- CC BY-NC 4.0 Licensed from http://getdrawings.com/get-icon#steam-icon-51.png
     self:addIcon({icon = "__omnilib__/graphics/icons/small/steam-icon-51-32x32.png",
-    icon_size=32,
+        icon_size=32,
         scale = 0.4375,
         shift = {-10, 10}})
     return self
@@ -721,7 +727,7 @@ end
 function ItemGen:addSmallIcon(icon, nr)
     local quad = {{10, -10},{-10, -10},{-10, 10},{10, 10}}
     local icons
-    local ic_sz=defines.default_icon_size
+    local ic_sz = defines.default_icon_size
     if type(icon) == "table" and icon[1] and icon[1].icon then
         icons = icon
     else
@@ -735,7 +741,7 @@ function ItemGen:addSmallIcon(icon, nr)
             end
             self:addIcon({icon = ic.icon,
             icon_size=ic_sz,
-                scale = 0.4375*(ic.scale or (defines.default_icon_size/ic_sz)),
+                scale = 0.4375*(ic.scale or (32/ic_sz)),
                 shift = quad[nr or 1], --currently "centres" the icon if it was already offset, may need to math that out
                 tint = ic.tint or nil})
         end
@@ -1113,7 +1119,7 @@ function ItemGen:generate_item()
         fuel_category = self.fuel_category,
         subgroup = self.subgroup(0,0),
         order = self.order(0,0),
-        icon_size = self.icon_size or defines.default_icon_size,
+        --icon_size = self.icon_size or defines.default_icon_size,
         stack_size = self.stack_size,
         default_temperature = self.default_temperature,
         heat_capacity=self.heat_capacity,
