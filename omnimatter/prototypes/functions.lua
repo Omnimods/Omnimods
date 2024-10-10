@@ -145,7 +145,7 @@ function omni.matter.add_omnium_alloy(name,plate,ingot)
     ItemGen:create("omnimatter","omnium-"..name.."-alloy"):
             setSubgroup("omnium"):
             setStacksize(400):
-            setIcons("omnium-plate"):
+            setIcons({"omnium-plate", 32}):
             addSmallIcon(plate,3):
             extend()
 
@@ -159,7 +159,7 @@ function omni.matter.add_omnium_alloy(name,plate,ingot)
                 {type="item", name=ingot, amount=12}
             ):
             setResults({type="fluid", name="molten-omnium-"..name.."-alloy", amount=300}):
-            setIcons("liquid-molten-omnium"):
+            setIcons({"liquid-molten-omnium", 32}):
             addSmallIcon(ingot,3):
             setCategory("induction-smelting"):
             setSubgroup("omnium-alloy-casting"):
@@ -178,6 +178,7 @@ function omni.matter.add_omnium_alloy(name,plate,ingot)
         RecGen:create("omnimatter","angels-plate-omnium-"..name.."-alloy"):
             setIngredients({type="fluid", name="molten-omnium-"..name.."-alloy", amount=40}):
             setResults({type="item", name="omnium-"..name.."-alloy", amount=4}):
+            setIcons({"omnium-"..name.."-alloy", 32}):
             addProductivity():
             setCategory("casting"):
             setEnergy(4):
@@ -280,7 +281,7 @@ function omni.matter.add_omniwater_extraction(mod, element, lvls, tier, gain, st
     --Starter recipe
     if starter_recipe == true then
         RecGen:create(mod,"basic-"..element.."-omnitraction"):
-            setIcons(element):
+            setIcons(omni.lib.icon.of(data.raw.fluid[element])):
             addSmallIcon("__omnilib__/graphics/icons/small/num_1.png", 2):
             setIngredients({type="fluid",name="omnic-water",amount=720}):
             setResults({
@@ -306,7 +307,7 @@ function omni.matter.add_omniwater_extraction(mod, element, lvls, tier, gain, st
         setLocName("recipe-name.omnic-water-omnitraction",{"fluid-name."..element}):
         setIngredients(cost:ingredients()):
         setCategory("omnite-extraction-both"):
-        setIcons(element):
+        setIcons(omni.lib.icon.of(data.raw.fluid[element])):
         setResults(cost:results()):
         setSubgroup("omni-fluid-extraction"):
         setOrder("b["..element.."-omnitraction]"):

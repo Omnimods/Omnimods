@@ -42,6 +42,7 @@ local omniston = RecChain:create("omnimatter","omniston"):
         setLocName("fluid-name.omniston"):
         setCategory(omniFluidCat):
         setResults(cost:results()):
+        setIcons({"omniston", 32}):
         setSubgroup("omni-fluids"):
         setLevel(omni.fluid_levels):
         setEnergy(function(levels,grade) return 5 end):
@@ -168,7 +169,7 @@ for _,tier in pairs(omni.matter.omnifluid) do
             setCategory(omniFluidCat):
             setSubgroup("omni-fluids"):
             setLevel(omni.fluid_levels):
-            setIcons(fluid.name):
+            setIcons(omni.lib.icon.of(data.raw.fluid[fluid.name], true)):
             setEnergy(function(levels,grade) return 5 end):
             setTechIcons(generate_distillation_icon(fluid)):
             setTechCost(function(levels,grade) return 25*omni.matter.get_tier_mult(levels,grade,1) end):

@@ -97,7 +97,7 @@ local function check_mining_fluids(tier)
                     setResults({v.name, 13}):
                     setOrder("z[refinement-"..tier.."-"..v.name.."]"):
                     setSubgroup("omni-pure"):
-                    setIcons(v.name):
+                    setIcons(omni.lib.icon.of(proto, true)):
                     addSmallIcon(v.fluid.name, 3):
                     setLocName({"recipe-name.crude-refinement", omni.lib.locale.of(proto).name}):
                     setEnergy(6.5):
@@ -429,7 +429,7 @@ local function create_pure_extraction(tier, ore_name)
             setLocName({"recipe-name.pure-omnitraction", omni.lib.locale.of(proto).name}):
             setLocDesc(function(levels, grade) return get_desc(levels,grade) end):
             setOrder("a[extraction-"..tier.."-"..ore_name.."]"):
-            setIcons(ore_name):
+            setIcons(omni.lib.icon.of(proto, true)):
             setIngredients(cost:ingredients()):
             setResults(cost:results()):
             setEnabled(false):
@@ -499,7 +499,7 @@ for ore, dt in pairs(omni.matter.omnitial) do
         setSubgroup("omni-basic"):
         setIngredients(dt.ingredients):
         setResults(dt.results):
-        setIcons(dt.results[1].name):
+        setIcons(omni.lib.icon.of(proto, true)):
         setLocName({"recipe-name.initial-omni", omni.lib.locale.of(proto).name}):
         addSmallIcon("stone-crushed", 3):
         extend()

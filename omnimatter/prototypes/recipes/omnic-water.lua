@@ -45,7 +45,7 @@ end
 RecGen:create("omnimatter", "omnic-waste-recycling"):
     setIngredients({type = "fluid", amount = 420, name = "omnic-waste"}):
     setResults({type = "fluid", amount = 60, name = "omnic-water"}):
-    setIcons("omnic-water"):
+    setIcons({"omnic-water", 32}):
     addSmallIcon(omni.lib.icon.of("omnic-waste", "fluid"), 3):
     setCategory("omniphlog"):
     setEnabled(true):
@@ -62,7 +62,7 @@ for _, fluid in pairs(data.raw.fluid) do
         RecGen:create("omnimatter","omniflush-"..fluid.name):
             setIngredients({type="fluid",amount=360,name=fluid.name}):
             setResults({type="fluid",amount=60,name="omnic-water"}):
-            setIcons("omnic-water"):
+            setIcons({"omnic-water", 32}):
             addSmallIcon(omni.lib.icon.of(fluid.name, "fluid"),3):
             setCategory("omniphlog"):
             setEnabled(fluid.name=="omnic-waste"):

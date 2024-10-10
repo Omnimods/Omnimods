@@ -16,7 +16,7 @@ end
 
 BuildGen:create("omnimatter","burner-omnitractor"):
     noTech():
-    setIcons("omnitractor", "omnimatter"):
+    setIcons({"omnitractor", 32}):
     setBurner(1,1):
     setSubgroup("omnitractor"):
     setOrder("a[omnitractor-burner]"):
@@ -91,6 +91,7 @@ BuildChain:create("omnimatter","omnitractor"):
     addElectricIcon():
     setLocName("omnitractor"):
     setIngredients(cost:ingredients()):
+    setIcons({"omnitractor", 32}):
     setEnergy(5):
     setUsage(function(level,grade) return (100+25*grade).."kW" end):
     setEmissions(function(level,grade) return math.max(3 - ((grade-1) * 0.2), 0.1) end):

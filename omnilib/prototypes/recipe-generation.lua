@@ -472,7 +472,7 @@ end
 function ItemGen:create(mod_name, item_name)
     local new_name = item_name
     if type(new_name) ~= "string" then
-        new_name = "omni" 
+        new_name = "omni"
     end
     local t = {
         mod = mod_name,
@@ -565,10 +565,10 @@ function ItemGen:importIf(item)
 end
 
 function ItemGen:setIcons(icons,mod)
-    if not icons then return self end --error("No icons specified for "..(self.name or "No Name")) end
+    if not icons then error("No icons specified for "..(self.name or "No Name")) end
     local proto = nil
     --Case "mod" given : expect just a name for the icon(s) without a path
-    if type(icons)~= "function" and mod and (type(icons)~= "string" or not string.match(icons, "%_%_(.-)%_%_")) then
+    if type(icons)~= "function" and mod and (type(icons) ~= "string" or not string.match(icons, "%_%_(.-)%_%_")) then
         if type(icons) == "table" then
             local ic = {}
             local ic_scale
@@ -598,32 +598,33 @@ function ItemGen:setIcons(icons,mod)
         end
     elseif type(icons)~= "function" then
         -- --find icon_size
-        local ic_sz = defines.default_icon_size
-        if type(icons)=="string" and string.match(icons, "%_%_(.-)%_%_") then
-            local name=string.match(icons,".*%/(.-).png")
+        local ic_sz = icons.icon_size or (type(icons[2])=="number" and icons[2]) or defines.default_icon_size
+        local ic = (type(icons)=="string" and icons) or (type(icons[1])=="string" and icons[1])
+
+        if ic and string.match(ic, "%_%_(.-)%_%_") then
+            local name = string.match(ic,".*%/(.-).png")
             local setup = {}
             proto = omni.lib.find_prototype(name)
             if proto then
-                setup={{icon=proto.icon,icon_size=proto.icon_size}}
+                setup={{icon = proto.icon, icon_size = proto.icon_size}}
             else
-                setup={{icon = icons, icon_size=ic_sz}}
+                setup={{icon = ic, icon_size=ic_sz}}
             end
-            self.icons = function(levels,grade)    return setup end
-        elseif type(icons) == "string" and not proto and (mod) then
-            self.icons = function(levels,grade) return {{icon = "__"..(mod or self.mod).."__/graphics/icons/"..icons..".png",icon_size = ic_sz}} end
+            self.icons = function(levels,grade) return setup end
+        elseif ic and not proto and (mod or self.mod) then
+            self.icons = function(levels,grade) return {{icon = "__"..(mod or self.mod).."__/graphics/icons/"..ic..".png", icon_size = ic_sz}} end
         else
             self.icons = function(levels,grade) return omni.lib.icon.of(icons, true) end
         end
     else
         self.icons = icons
     end
-    --log(serpent.block(self.icons(0,0)))
     self.set_icon = true
     return self
 end
 
 function ItemGen:addIcon(icon)
-    local a = nil
+    local a = function(levels,grade) return {} end
     if type(icon) == "table" and icon.icon then
         local f = string.match(icon.icon, "%_%_(.-)%_%_")
         --Full Path is there
@@ -677,11 +678,13 @@ function ItemGen:addMask(...)
     local arg=argTable({...})
     if not arg.r then arg = {r=arg[1],g=arg[2],b=arg[3]} end
     local icons = self.icons(0,0)
-    self:addIcon({
-        icon = string.sub(icons[#icons].icon,1,-5).."-mask.png",
-        tint=table.deepcopy(arg),
-        icon_size = icons[#icons].icon_size or defines.default_icon_size
-    })
+    if icons then
+        self:addIcon({
+            icon = string.sub(icons[#icons].icon,1,-5).."-mask.png",
+            tint=table.deepcopy(arg),
+            icon_size = icons[#icons].icon_size or defines.default_icon_size
+        })
+    end
     return self
 end
 function ItemGen:addIconLevel(lvl)
@@ -695,14 +698,14 @@ function ItemGen:setName(lvl,mod)
 end
 function ItemGen:addBurnerIcon()
     self:addIcon({icon = "__omnilib__/graphics/icons/small/burner.png",
-    icon_size=defines.default_icon_size,
+    icon_size=32,
         scale = 0.4375,
         shift = {-10, 10}})
     return self
 end
 function ItemGen:addElectricIcon()
     self:addIcon({icon = "__omnilib__/graphics/icons/small/electric.png",
-    icon_size=defines.default_icon_size,
+    icon_size=32,
         scale = 0.4375,
         shift = {-10, 10}})
     return self
@@ -710,7 +713,7 @@ end
 function ItemGen:addSteamIcon()
     -- CC BY-NC 4.0 Licensed from http://getdrawings.com/get-icon#steam-icon-51.png
     self:addIcon({icon = "__omnilib__/graphics/icons/small/steam-icon-51-32x32.png",
-    icon_size=defines.default_icon_size,
+    icon_size=32,
         scale = 0.4375,
         shift = {-10, 10}})
     return self
@@ -971,6 +974,7 @@ function ItemGen:addLocName(key)
     self.loc_name = table.deepcopy(function(levels,grade) return omni.lib.union(a(levels,grade),{b(levels,grade)}) end)
     return self
 end
+
 function ItemGen:setLocDesc(inname,keys)
     if type(inname) == "function" then
         self.loc_desc = inname
@@ -983,13 +987,14 @@ function ItemGen:setLocDesc(inname,keys)
         self.loc_desc_keys = keys
     elseif type(keys)=="table" then
         self.loc_desc_keys = function(levels,grade) return keys end
-    elseif type(key)=="number" then
+    elseif type(keys)=="number" then
         self.loc_desc_keys = function(levels,grade) return {tostring(keys)} end
     else
         self.loc_desc_keys=function(levels,grade) return {keys} end
     end
     return self
 end
+
 function ItemGen:addLocDescKey(key)
     local a = table.deepcopy(self.loc_desc_keys)
     local k = key
@@ -1003,6 +1008,7 @@ function ItemGen:addLocDescKey(key)
     self.loc_desc_keys = function(levels,grade) return omni.lib.union(a(levels,grade),k(levels,grade)) end
     return self
 end
+
 function ItemGen:setNameLocType(kind)
     if self.loc_name(0,0) then
         local r =self.loc_name(0,0)
@@ -1016,6 +1022,7 @@ function ItemGen:setNameLocType(kind)
         return nil
     end
 end
+
 function ItemGen:setGenerationCondition(...)
     local arg = argTable({...})
     if type(arg[1])=="function" then
@@ -1332,16 +1339,19 @@ function RecGen:multiplyItem(item,c)
     self.results=function(levels,grade) return multiplyIngres(b(levels,grade),item,c) end
     return self
 end
+
 function RecGen:multiplyIngredients(c)
     local a = table.deepcopy(self.ingredients)
     self.ingredients=function(levels,grade) return multiplyIngres(a(levels,grade),c) end
     return self
 end
+
 function RecGen:multiplyResults(c)
     local a = table.deepcopy(self.results)
     self.results=function(levels,grade) return multiplyIngres(a(levels,grade),c) end
     return self
 end
+
 function RecGen:multiplyIfIngredients(bool,c)
     if bool then
         local a = table.deepcopy(self.ingredients)
@@ -1349,6 +1359,7 @@ function RecGen:multiplyIfIngredients(bool,c)
     end
     return self
 end
+
 function RecGen:multiplyIfResults(bool,c)
     if bool then
         local a = table.deepcopy(self.results)
@@ -1356,21 +1367,14 @@ function RecGen:multiplyIfResults(bool,c)
     end
     return self
 end
+
 function RecGen:multiplyIfModsIngredients(c,...)
     local arg = {...}
     local bool = true
     for _,m in pairs(arg) do
-        bool=bool and mods[m]
+        bool = bool and mods[m]
     end
     return self:multiplyIfIngredients(bool,c)
-end
-function RecGen:multiplyIfResults(c,...)
-    local arg = {...}
-    local bool = true
-    for _,m in pairs(arg) do
-        bool=bool and mods[m]
-    end
-    return self:multiplyIfResults(bool,c)
 end
 
 function RecGen:setIngredients(array,...)
@@ -2266,6 +2270,7 @@ function RecChain:generate_chain()
             prq={"omnitech-"..techname.."-"..i-1-techDifEnabled}
         end
         r:setTechPrereq(prq)
+
         if self.icons(m,i) then
             r:setIcons(self.icons(m,i))
         elseif self.main_product(0,0) then

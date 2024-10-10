@@ -17,7 +17,7 @@ end
 
 BuildGen:create("omnimatter","burner-omniphlog"):
     noTech():
-    setIcons("omniphlog", "omnimatter"):
+    setIcons({"omniphlog", 32}):
     setBurner(0.75,1):
     setEmissions(5.5):
     setStacksize(50):
@@ -71,6 +71,7 @@ BuildChain:create("omnimatter","omniphlog"):
     setSubgroup("omniphlog"):
     setLocName("omniphlog"):
     setIngredients(cost:ingredients()):
+    setIcons({"omniphlog", 32}):
     setEnergy(5):
     setUsage(function(level,grade) return (200+100*grade).."kW" end):
     setEmissions(function(level,grade) return math.max(3.8 - ((grade-1) * 0.2), 0.1) end):

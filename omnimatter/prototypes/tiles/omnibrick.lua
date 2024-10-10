@@ -2,6 +2,7 @@ RecGen:create("omnimatter","omnite-brick"):
     setIngredients("stone","omnite"):
     setCategory("omnifurnace"):
     setSubgroup("omni-solids"):
+    setIcons({"omnite-brick", 32}):
     setStacksize(200):
     setEnergy(1.6):
     setEnabled():
@@ -13,6 +14,7 @@ RecGen:create("omnimatter","early-omnite-brick"):
     setIngredients({"omnite",10},{"stone-brick"}):
     setSubgroup("omni-solids"):
     setResults("omnite-brick"):
+    setIcons({"omnite-brick", 32}):
     setEnabled():
     extend()
 

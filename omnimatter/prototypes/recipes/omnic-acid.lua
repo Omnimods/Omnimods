@@ -49,6 +49,7 @@ local omnic_acid = RecChain:create("omnimatter","omnic-acid"):
         setSubgroup("omni-fluids"):
         setLevel(omni.fluid_levels):
         setResults(cost:results()):
+        setIcons({"omnic-acid", 32}):
         setEnergy(function(levels,grade) return 3 end):
         setTechSuffix("hydrolyzation"):
         setTechIcons("omnic-acid", "omnimatter"):
