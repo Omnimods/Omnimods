@@ -44,6 +44,7 @@ BuildGen:create("omnimatter_compression","auto-compressor"):
     setSpeed(3):
     setFurnace():
     noTech():
+    setIcons({"auto-compressor", 32}):
     setSize(minify(1, 3)):
     setCrafting({"compression"}):
     setAnimation({
@@ -103,6 +104,7 @@ BuildGen:create("omnimatter_compression","auto-concentrator"):
     setSpeed(3):
     setFurnace():
     noTech():
+    setIcons({"auto-concentrator", 32}):
     setSize(minify(1, 3)):
     setFluidBox(fluidbox):
     setCrafting({"fluid-concentration"}):
@@ -133,7 +135,7 @@ if settings.startup["omnicompression_entity_compression"].value then
         setUsage(225):
         setSpeed(3):
         noTech():
-        setIcons("auto-concentrator"):
+        setIcons({"auto-concentrator", 32}):
         setSize(minify(1, 3)):
         setFluidBox(fluidbox):
         setCrafting({"fluid-condensation"}):
