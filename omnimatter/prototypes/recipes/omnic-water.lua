@@ -1,10 +1,8 @@
 -- Replace the water output from all diefferent types of "water pumps" with omnic water
--- Mods add all kind of pumps, we have to check all
---Offshore pump should output omnic water
-for _,pump in pairs(data.raw["offshore-pump"]) do
-    if pump.fluid == "water" then
-        pump.fluid = "omnic-water"
-        pump.fluid_box.filter = "omnic-water"
+--Ceck tile.fluid for possible pump outputs
+for _, t in pairs(data.raw.tile) do
+    if t.fluid and t.fluid== "water" then
+        t.fluid = "omnic-water"
     end
 end
 
