@@ -10,7 +10,7 @@ for _,pump in pairs(data.raw["offshore-pump"]) do
         --Remove recipe from Techs and disable it
         omni.lib.remove_recipe_all_techs(rec.name)
         --If any recipes use this pump as ingredient, replace it with the vanilla pump
-        omni.lib.replace_all_ingredient(pump.name,"pump")
+        omni.lib.replace_all_ingredient(pump.name, "pump")
         rec.enabled = false
     end
 end

@@ -28,8 +28,20 @@ function omni.lib.parse_result(product)
     return prod
 end
 
+function omni.lib.parse_results(products)
+    local res = {}
+    for _, product in pairs(products) do
+        res[#res+1] = omni.lib.parse_result(product)
+    end
+    return res
+end
+
 function omni.lib.parse_ingredient(ingredient)
     return omni.lib.parse_result(ingredient)
+end
+
+function omni.lib.parse_ingredients(ingredients)
+    return omni.lib.parse_results(ingredients)
 end
 
 -- Get the full product definition for a product with the given name from the given recipe part.
@@ -191,26 +203,82 @@ end
 
 function omni.lib.replace_recipe_result(recipename, result, replacement)
     local rec = data.raw.recipe[recipename]
-    if rec then
-        local resname = result.name or result[1]
-        --Add replacement
-        omni.lib.add_recipe_result(recipename, replacement)
-        --Check if the main product will be replaced
-        if rec.main_product and rec.main_product == resname then
-            rec.main_product = replacement.name or replacement[1]
+    if rec and rec.results and result and replacement then
+        local res = omni.lib.parse_results(rec.results)
+        replacement = omni.lib.parse_result(replacement)
+        local found = false
+
+        --check if the replacement is already an result, add up the current amount
+        for _, r in pairs(res) do
+            if r.name == replacement.name then
+                found = true
+                if replacement.amount_min or replacement.amount_max then
+                    r.amount_min = (r.amount_min or 0) + replacement.amount_min
+                    r.amount_max = (r.amount_max or 0) + replacement.amount_max
+                else
+                    r.amount = r.amount + replacement.amount
+                end
+                break
+            end
         end
-        --remove replacement
-        omni.lib.remove_recipe_result(recipename, result)
+
+        --Check all results to find the one that has to be replaced
+        for num, r in pairs(res) do
+            if r.name == result then
+                --if the replacement was found above, set the calculated amount and nil this result, otherwise replace the result
+                if found then
+                    res[num] = nil
+                else
+                    r.name = replacement.name
+                    r.type = replacement.type
+                    if r.amount_min or r.amount_max then
+                        r.amount_min = replacement.amount_min
+                        r.amount_max = replacement.amount_max
+                    else
+                        r.amount = replacement.amount
+                    end
+                end
+                break
+            end
+        end
+
+        --Check if the main product was replaced
+        if rec.main_product and rec.main_product == result then
+            rec.main_product = replacement.name
+        end
     end
 end
 
 function omni.lib.replace_recipe_ingredient(recipename, ingredient, replacement)
     local rec = data.raw.recipe[recipename]
-    if rec then
-        --Add replacement
-        omni.lib.add_recipe_ingredient(recipename, replacement)
-        --remove replacement
-        omni.lib.remove_recipe_ingredient(recipename, ingredient)
+    if rec and rec.ingredients and ingredient and replacement then
+        local ing = omni.lib.parse_ingredients(rec.ingredients)
+        replacement = omni.lib.parse_ingredient(replacement)
+        local found = false
+
+        --check if the replacement is already an ingredient, add up the current amount
+        for _, i in pairs(ing) do
+            if i.name == replacement.name then
+                found = true
+                i.amount = i.amount + replacement.amount
+                break
+            end
+        end
+
+        --Check all ingredients to find the one that has to be replaced
+        for num, i in pairs(ing) do
+            if i.name == ingredient then
+                --if the replacement was found above, set the calculated amount and nil this result, otherwise replace the ingredient
+                if found then
+                    res[num] = nil
+                else
+                    i.name = replacement.name
+                    i.type = replacement.type
+                    i.amount = replacement.amount
+                end
+                break
+            end
+        end
     end
 end
 
