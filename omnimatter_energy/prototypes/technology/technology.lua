@@ -4,7 +4,7 @@ RecGen:import("automation-science-pack"):
     setTechName("automation-science-pack"):
     setTechLocName("automation-science-pack"):
     setTechIcons(omni.lib.icon.of("automation-science-pack","tool")):
-    setTechPacks({{"energy-science-pack", 1}}):
+    setTechPacks({"energy-science-pack", 1}):
     setTechCost(60):
     setTechPrereq("omnitech-anbaric-inserter","omnitech-anbaric-lab","omnitech-anbaric-mining"):
     extend()
@@ -13,7 +13,7 @@ RecGen:import("automation-science-pack"):
 TechGen:create("omnimatter_energy","omnitech-anbaric-electronics"):
     setCost(35):
     setIcons({{icon = "__omnimatter_energy__/graphics/technology/anbaric-electronics.png", icon_size=256}}):
-    setPacks({{"energy-science-pack", 1}}):
+    setPacks({"energy-science-pack", 1}):
     setPrereq("omnitech-anbaricity"):
     extend()
 
@@ -27,7 +27,7 @@ setEnabled(false):
 setTechName("omnitech-anbaric-inserter"):
 setTechCost(45):
 setTechIcons("electric-inserter","omnimatter_energy"):
-setTechPacks({{"energy-science-pack", 1}}):
+setTechPacks({"energy-science-pack", 1}):
 setTechPrereq("omnitech-anbaric-electronics"):
 extend()
 
@@ -41,7 +41,7 @@ setEnabled(false):
 setTechName("omnitech-anbaric-mining"):
 setTechCost(40):
 setTechIcons("mining-drill","omnimatter_energy"):
-setTechPacks({{"energy-science-pack", 1}}):
+setTechPacks({"energy-science-pack", 1}):
 setTechPrereq("omnitech-anbaricity"):
 extend()
 
@@ -89,7 +89,7 @@ else
     addIngredients({"omnitor-lab",1}):
     setTechCost(45):
     setTechIcons("lab","omnimatter_energy"):
-    setTechPacks({{"energy-science-pack", 1}}):
+    setTechPacks({"energy-science-pack", 1}):
     setTechPrereq("omnitech-anbaric-electronics"):
     extend()
 end

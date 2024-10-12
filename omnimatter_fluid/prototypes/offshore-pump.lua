@@ -34,7 +34,7 @@ for _, pump in pairs(data.raw["offshore-pump"]) do
         localised_description = pump.localised_description,
         selection_box = pump.collision_box,
         collision_box = pump.selection_box,
-        collision_mask = {layers={item = true, meltable = true, object = true, player = true, water_tile = true, is_object = true, is_lower_object = true}, not_colliding_with_itself = true},
+        collision_mask = {layers = {item = true, meltable = true, object = true, player = true, water_tile = true, is_object = true, is_lower_object = true}, not_colliding_with_itself = true},
         animation = pump.picture,
         order="z",
         icon = "__base__/graphics/icons/offshore-pump.png",

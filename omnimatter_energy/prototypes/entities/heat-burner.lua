@@ -1,8 +1,8 @@
 BuildGen:create("omnimatter_energy", "omni-heat-burner"):
     setType("burner-generator"):
     setSize(5, 3):
-    setIcons("omnium-turbine","omnimatter_energy"):
-    setIngredients({{"anbaric-omnitor",4},{"burner-omni-furnace",1},{"iron-gear-wheel",4},{"omnium-plate",2}}):
+    setIcons({"omnium-turbine", 32}):
+    setIngredients({"anbaric-omnitor",4},{"burner-omni-furnace",1},{"iron-gear-wheel",4},{"omnium-plate",2}):
     setReplace("heat-burner"):
     setSubgroup("omnienergy-power"):
     setStacksize(20):
@@ -86,7 +86,7 @@ turbine.burner = {
     fuel_categories = {"omnite", "chemical"},
     effectivity = 0.75,
     fuel_inventory_size = 3,
-    emissions_per_minute = 40,
+    emissions_per_minute = {pollution = 40.0},
     light_flicker =
     {
         minimum_light_size = 1,

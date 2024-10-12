@@ -54,7 +54,7 @@ function omni.lib.add_science_pack(techname, pack)
                 end
             end
         end
-        table.insert(data.raw.technology[techname].unit.ingredients,{type = "item", name = pack, amount = 1})
+        table.insert(data.raw.technology[techname].unit.ingredients,{ pack, 1})
 
         ::found::
     else
@@ -65,8 +65,8 @@ end
 function omni.lib.remove_science_pack(techname,pack)
     if data.raw.technology[techname] then
         for i,ing in pairs(data.raw.technology[techname].unit.ingredients) do
-            if (ing.name and ing.name == pack) or ing[1]==pack then
-                table.remove(data.raw.technology[techname].unit.ingredients,i)
+            if ing[1] == pack then
+                table.remove(data.raw.technology[techname].unit.ingredients, i)
             end
         end
     else
@@ -77,9 +77,7 @@ end
 function omni.lib.replace_science_pack(techname, old, new)
     if data.raw.technology[techname] then
         for _, ing in pairs(data.raw.technology[techname].unit.ingredients) do
-            if ing.name and ing.name == old then
-                ing.name = new
-            elseif ing[1] == old then
+            if ing[1] == old then
                 ing[1] = new
             end
         end

@@ -6,6 +6,7 @@ RecGen:create("omnimatter_crystal","hydromnic-acid"):
     fluid():
     setBothColour(1,1,1):
     setEnergy(1):
+    setIcons({"hydromnic-acid", 32}):
     setCategory("omniplant"):
     setSubgroup("crystal-fluids"):
     setTechName("omnitech-omnic-acid-hydrolyzation-1"):
@@ -24,6 +25,7 @@ RecGen:create("omnimatter_crystal","omnine"):
     setSubgroup("omnine"):
     setCategory("omniplant"):
     setEnergy(10):
+    setIcons({"omnine", 32}):
     setStacksize(200):
     --setFuelValue(18):
     --setFuelCategory("crystal"):
@@ -55,8 +57,10 @@ RecGen:create("omnimatter_crystal","omnine-distillation-slow"):
 
 local cat = "ore-refining-t1"
 if not mods["angelsrefining"] then cat = nil end
+
 RecGen:create("omnimatter_crystal","omnine-shards"):
     setSubgroup("omnine"):
+    setIcons({"omnine-shards", 32}):
     setCategory(cat):
     setStacksize(200):
     --setFuelValue(3.5):
@@ -85,6 +89,7 @@ end
 
 RecGen:create("omnimatter_crystal","crystal-rod"):
     setEnergy(1):
+    setIcons({"crystal-rod", 32}):
     setStacksize(100):
     setSubgroup("crystal-part"):
     setOrder("aa-[crystal-rod]"):
@@ -99,6 +104,7 @@ RecChain:create("omnimatter_crystal","pseudoliquid-amorphous-crystal"):
     fluid():
     setBothColour(1,0,1):
     setEnergy(function(levels,grade) return 0.5+grade/2 end):
+    setIcons({"pseudoliquid-amorphous-crystal", 32}):
     setSubgroup("crystal-part"):
     setCategory("crystallomnizer"):
     setIngredients({type="item",name="omnine",amount=12}):
@@ -127,6 +133,7 @@ RecChain:create("omnimatter_crystal","pseudoliquid-amorphous-crystal"):
 
 RecGen:create("omnimatter_crystal","shattered-omnine"):
     setEnergy(0.5):
+    setIcons({"shattered-omnine", 32}):
     setStacksize(600):
     setSubgroup("crystal-part"):
     addProductivity():
@@ -138,6 +145,7 @@ RecGen:create("omnimatter_crystal","shattered-omnine"):
 
 RecGen:create("omnimatter_crystal","impure-crystal-rod"):
     setEnergy(2):
+    setIcons({"impure-crystal-rod", 32}):
     setStacksize(150):
     setSubgroup("crystal-part"):
     setOrder("ab-[impure-crystal-rod]"):
@@ -154,6 +162,7 @@ RecGen:create("omnimatter_crystal","impure-crystal-rod"):
 
 RecGen:create("omnimatter_crystal","fragment-iron-crystal"):
     setEnergy(2):
+    setIcons({"fragment-iron-crystal", 32}):
     setStacksize(400):
     setSubgroup("crystal-part"):
     setCategory("advanced-crafting"):
@@ -165,6 +174,7 @@ RecGen:create("omnimatter_crystal","fragment-iron-crystal"):
 
 RecGen:create("omnimatter_crystal","fragment-copper-crystal"):
     setEnergy(2):
+    setIcons({"fragment-copper-crystal", 32}):
     setStacksize(400):
     setSubgroup("crystal-part"):
     setCategory("advanced-crafting"):
@@ -176,6 +186,7 @@ RecGen:create("omnimatter_crystal","fragment-copper-crystal"):
 
 RecGen:create("omnimatter_crystal","omnilgium"):
     setEnergy(3):
+    setIcons({"omnilgium", 32}):
     setStacksize(400):
     setSubgroup("crystal-part"):
     setTechName("omnitech-crystallonics-2"):
@@ -191,6 +202,7 @@ RecGen:create("omnimatter_crystal","omnilgium"):
 
 RecGen:create("omnimatter_crystal","quasi-solid-omnistal"):
     setEnergy(1):
+    setIcons({"quasi-solid-omnistal", 32}):
     setStacksize(200):
     setSubgroup("crystal-part"):
     setCategory("crystallomnizer"):
@@ -210,6 +222,7 @@ RecGen:create("omnimatter_crystal","quasi-solid-omnistal"):
 
 RecGen:create("omnimatter_crystal","omnine-structure-crystal"):
     setEnergy(1):
+    setIcons({"omnine-structure-crystal", 32}):
     setStacksize(100):
     setSubgroup("crystal"):
     setOrder("aa-[omnine-structure-crystal]"):
@@ -222,6 +235,7 @@ RecGen:create("omnimatter_crystal","omnine-structure-crystal"):
 
 RecGen:create("omnimatter_crystal","oscillocrystal"):
     setEnergy(3):
+    setIcons({"oscillocrystal", 32}):
     setStacksize(500):
     setSubgroup("crystal"):
     setOrder("av-[oscillocrystal"):
@@ -237,6 +251,7 @@ RecGen:create("omnimatter_crystal","oscillocrystal"):
 
 RecGen:create("omnimatter_crystal","electrocrystal"):
     setEnergy(2):
+    setIcons({"electrocrystal", 32}):
     setStacksize(500):
     setSubgroup("crystal"):
     setOrder("ac-[electrocrystal]"):
@@ -259,6 +274,7 @@ RecGen:create("omnimatter_crystal","electrocrystal"):
 
 RecGen:create("omnimatter_crystal","basic-crystallonic"):
     setEnergy(1):
+    setIcons({"basic-crystallonic", 32}):
     setStacksize(200):
     setSubgroup("crystallonic"):
     setOrder("aa-[basic-crystallonic]"):
@@ -274,6 +290,7 @@ RecGen:create("omnimatter_crystal","basic-crystallonic"):
 
 RecGen:create("omnimatter_crystal","basic-oscillo-crystallonic"):
     setEnergy(1):
+    setIcons({"basic-oscillo-crystallonic", 32}):
     setStacksize(200):
     setSubgroup("crystallonic"):
     setOrder("ab-[basic-oscillo-crystallonic]"):

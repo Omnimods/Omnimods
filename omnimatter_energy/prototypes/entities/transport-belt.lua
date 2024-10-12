@@ -37,7 +37,6 @@ if not data.raw["transport-belt"]["basic-transport-belt"] then
     local ebelt = table.deepcopy(data.raw["transport-belt"]["transport-belt"])
     ebelt.name = "basic-transport-belt"
     ebelt.belt_animation_set.animation_set.filename = "__omnimatter_energy__/graphics/entity/basic-transport-belt/basic-transport-belt.png"
-    ebelt.belt_animation_set.animation_set.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-transport-belt/hr-basic-transport-belt.png"
     ebelt.corpse = "basic-transport-belt-remnants"
 
     ebelt.icons = nil
@@ -52,17 +51,12 @@ if not data.raw["transport-belt"]["basic-transport-belt"] then
     local eunder= table.deepcopy(data.raw["underground-belt"]["underground-belt"])
     eunder.name = "basic-underground-belt"
     eunder.belt_animation_set.animation_set.filename = "__omnimatter_energy__/graphics/entity/basic-transport-belt/basic-transport-belt.png"
-    eunder.belt_animation_set.animation_set.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-transport-belt/hr-basic-transport-belt.png"
     eunder.corpse = "basic-underground-belt-remnants"
 
     eunder.structure.direction_in.sheet.filename = "__omnimatter_energy__/graphics/entity/basic-underground-belt/basic-underground-belt-structure.png"
-    eunder.structure.direction_in.sheet.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-underground-belt/hr-basic-underground-belt-structure.png"
     eunder.structure.direction_in_side_loading.sheet.filename = "__omnimatter_energy__/graphics/entity/basic-underground-belt/basic-underground-belt-structure.png"
-    eunder.structure.direction_in_side_loading.sheet.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-underground-belt/hr-basic-underground-belt-structure.png"
     eunder.structure.direction_out.sheet.filename = "__omnimatter_energy__/graphics/entity/basic-underground-belt/basic-underground-belt-structure.png"
-    eunder.structure.direction_out.sheet.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-underground-belt/hr-basic-underground-belt-structure.png"
     eunder.structure.direction_out_side_loading.sheet.filename = "__omnimatter_energy__/graphics/entity/basic-underground-belt/basic-underground-belt-structure.png"
-    eunder.structure.direction_out_side_loading.sheet.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-underground-belt/hr-basic-underground-belt-structure.png"
 
     eunder.icons = nil
     eunder.icon = "__omnimatter_energy__/graphics/icons/basic-underground-belt.png"
@@ -76,33 +70,20 @@ if not data.raw["transport-belt"]["basic-transport-belt"] then
     local esplitter= table.deepcopy(data.raw["splitter"]["splitter"])
     esplitter.name = "basic-splitter"
     esplitter.belt_animation_set.animation_set.filename = "__omnimatter_energy__/graphics/entity/basic-transport-belt/basic-transport-belt.png"
-    esplitter.belt_animation_set.animation_set.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-transport-belt/hr-basic-transport-belt.png"
     esplitter.corpse = "basic-splitter-remnants"
 
     esplitter.structure.east.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/basic-splitter-east.png"
-    esplitter.structure.east.width = 46
-    esplitter.structure.east.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/hr-basic-splitter-east.png"
-    esplitter.structure.east.hr_version.width = 90
+    esplitter.structure.east.width = 90
     esplitter.structure.north.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/basic-splitter-north.png"
-    esplitter.structure.north.width = 82
-    esplitter.structure.north.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/hr-basic-splitter-north.png"
-    esplitter.structure.north.hr_version.width = 160
+    esplitter.structure.north.width = 160
     esplitter.structure.south.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/basic-splitter-south.png"
-    esplitter.structure.south.width = 82
-    esplitter.structure.south.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/hr-basic-splitter-south.png"
-    esplitter.structure.south.hr_version.width = 164
+    esplitter.structure.south.width = 164
     esplitter.structure.west.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/basic-splitter-west.png"
-    esplitter.structure.west.width = 46
-    esplitter.structure.west.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/hr-basic-splitter-west.png"
-    esplitter.structure.west.hr_version.width = 90
+    esplitter.structure.west.width = 90
     esplitter.structure_patch.east.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/basic-splitter-east-top_patch.png"
-    esplitter.structure_patch.east.width = 46
-    esplitter.structure_patch.east.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/hr-basic-splitter-east-top_patch.png"
-    esplitter.structure_patch.east.hr_version.width = 90
+    esplitter.structure_patch.east.width = 90
     esplitter.structure_patch.west.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/basic-splitter-west-top_patch.png"
-    esplitter.structure_patch.west.width = 46
-    esplitter.structure_patch.west.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/hr-basic-splitter-west-top_patch.png"
-    esplitter.structure_patch.west.hr_version.width = 90
+    esplitter.structure_patch.west.width = 90
 
     esplitter.icons = nil
     esplitter.icon = "__omnimatter_energy__/graphics/icons/basic-splitter.png"
@@ -123,26 +104,13 @@ if not data.raw["transport-belt"]["basic-transport-belt"] then
     {
         filename = "__omnimatter_energy__/graphics/entity/basic-transport-belt/remnants/basic-transport-belt-remnants.png",
         line_length = 1,
-        width = 54,
-        height = 52,
+        width = 106,
+        height = 102,
         frame_count = 1,
         variation_count = 1,
         axially_symmetrical = false,
         direction_count = 4,
         shift = util.by_pixel(1, 0),
-        hr_version =
-        {
-            filename = "__omnimatter_energy__/graphics/entity/basic-transport-belt/remnants/hr-basic-transport-belt-remnants.png",
-            line_length = 1,
-            width = 106,
-            height = 102,
-            frame_count = 1,
-            variation_count = 1,
-            axially_symmetrical = false,
-            direction_count = 4,
-            shift = util.by_pixel(1, -0.5),
-            scale = 0.5
-        }
     })
 
     --Basic UG
@@ -150,14 +118,12 @@ if not data.raw["transport-belt"]["basic-transport-belt"] then
     runder.name = "basic-underground-belt-remnants"
     runder.icon = "__omnimatter_energy__/graphics/icons/basic-underground-belt.png"
     runder.animation.filename = "__omnimatter_energy__/graphics/entity/basic-underground-belt/remnants/basic-underground-belt-remnants.png"
-    runder.animation.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-underground-belt/remnants/hr-basic-underground-belt-remnants.png"
 
     --Basic Splitter
     local rsplitter= table.deepcopy(data.raw["corpse"]["splitter-remnants"])
     rsplitter.name = "basic-splitter-remnants"
     rsplitter.icon = "__omnimatter_energy__/graphics/icons/basic-splitter.png"
     rsplitter.animation.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/remnants/basic-splitter-remnants.png"
-    rsplitter.animation.hr_version.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/remnants/hr-basic-splitter-remnants.png"
 
     data:extend({rbelt, runder, rsplitter})
 end
@@ -180,7 +146,7 @@ local belt = RecGen:create("omnimatter_energy", "basic-transport-belt"):
     setTechName("logistics-0"):
     setTechLocName("technology-name.logistics-0"):
     setTechIcons("logistics","omnimatter_energy"):
-    setTechPacks({{"energy-science-pack", 1}}):
+    setTechPacks({"energy-science-pack", 1}):
     setTechCost(15):
     setTechPrereq("omnitech-simple-automation","omnitech-omnium-processing")
     if data.raw.recipe["basic-transport-belt"] then
@@ -197,7 +163,7 @@ local ug = RecGen:create("omnimatter_energy", "basic-underground-belt"):
     setOrder("b[basic-underground-belt]-a[basic-underground-belt]"):
     setTechName("basic-underground-logistics"):
     setTechIcons("logistics","omnimatter_energy"):
-    setTechPacks({{"energy-science-pack", 1}}):
+    setTechPacks({"energy-science-pack", 1}):
     setTechCost(20):
     setTechPrereq("logistics-0")
     if data.raw.recipe["basic-underground-belt"] then
@@ -214,7 +180,7 @@ local splitter = RecGen:create("omnimatter_energy", "basic-splitter"):
     setOrder("c[basic-splitter]-a[basic-splitter]"):
     setTechName("basic-splitter-logistics"):
     setTechIcons("logistics","omnimatter_energy"):
-    setTechPacks({{"energy-science-pack", 1}}):
+    setTechPacks({"energy-science-pack", 1}):
     setTechCost(20):
     setTechPrereq("logistics-0")
     if data.raw.recipe["basic-splitter"] then

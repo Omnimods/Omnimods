@@ -51,7 +51,7 @@ local cost = OmniGen:create():
 RecChain:create("omnimatter_water","omnic-water-omnitraction"):
     setLocName("recipe-name.omnic-water-omnitraction",{"fluid-name.".."omnic-water"}):
     setIngredients("omnite"):
-    setIcons("omnic-water"):
+    setIcons({"omnic-water", 32},"omnimatter"):
     setIngredients(cost:ingredients()):
     setResults(cost:results()):
     setEnabled(false):
@@ -74,7 +74,7 @@ omni.lib.add_prerequisite("rocket-silo", "omnitech-omnic-water-omnitraction-"..w
 --Add starter recipe with lower yield
 RecGen:create("omnimatter_water","basic-omnic-water-omnitraction"):
     setLocName("recipe-name.basic-omnic-water-omnitraction",{"fluid-name.omnic-water"}):
-    setIcons("omnic-water"):
+    setIcons({"omnic-water", 32},"omnimatter"):
     addSmallIcon("__omnilib__/graphics/icons/small/num_1.png", 2):
     setIngredients({type = "item", name = "omnite", amount = 12}):
     setResults({

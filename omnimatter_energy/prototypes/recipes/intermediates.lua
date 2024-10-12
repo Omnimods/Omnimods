@@ -5,6 +5,7 @@ RecGen:create("omnimatter_energy","omnitor"):
     setSubgroup("omnienergy-intermediates"):
     setOrder("a"):
     setEnergy(0.75):
+    setIcons({"omnitor", 32}):
     setIngredients({type="item", name="omnicium-plate", amount=4},{type="item", name="iron-gear-wheel", amount=2}):
     addProductivity():
     setEnabled():
@@ -19,17 +20,19 @@ RecGen:create("omnimatter_energy","anbaric-omnitor"):
     setSubgroup("omnienergy-intermediates"):
     setOrder("b"):
     setEnergy(0.75):
+    setIcons({"anbaric-omnitor", 32}):
     setTechName("omnitech-anbaricity"):
     setTechIcons(omni.lib.icon.of("electric-engine", "technology")):
     setTechPrereq("basic-splitter-logistics", "basic-underground-logistics"):
     setTechCost(30):
-    setTechPacks({{"energy-science-pack", 1}}):
+    setTechPacks({"energy-science-pack", 1}):
     extend()
 
 RecGen:create("omnimatter_energy", "omni-tablet"):
     setIngredients("omnite-brick"):
     setResults({"omni-tablet",2}):
     setStacksize(200):
+    setIcons({"omni-tablet", 32}):
     setSubgroup("omnienergy-intermediates"):
     setEnabled(true):
     setEnergy(0.5):

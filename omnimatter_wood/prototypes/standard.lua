@@ -8,14 +8,15 @@ if mods["angelsindustries"] and angelsmods.industries.components then
     }
 else
     mutator_cost = {
-      {type = "item", name = "omnicium-plate", amount = 10},
-      {type = "item", name = "iron-plate", amount = 5},
-      {type = "item", name = "copper-plate", amount = 5},
-      {type = "item", name = "burner-omniphlog", amount = 1},}
-end
+        {type = "item", name = "omnicium-plate", amount = 10},
+        {type = "item", name = "iron-plate", amount = 5},
+        {type = "item", name = "copper-plate", amount = 5},
+        {type = "item", name = "burner-omniphlog", amount = 1},}
+    end
 
 local b = BuildGen:create("omnimatter_wood","omnimutator"):
     setIngredients(mutator_cost):
+    setIcons({"omnimutator", 32}):
     setEnergy(10):
     setUsage(250):
     setReplace("omnimutator"):
@@ -32,24 +33,24 @@ local b = BuildGen:create("omnimatter_wood","omnimutator"):
     setTechPrereq({"omnitech-omnic-acid-hydrolyzation-1"}):
     setSpeed(1):
     setAnimation({
-      filename = "__omnimatter_wood__/graphics/entity/buildings/omni-mutator.png",
-      width = 113,
-      height = 91,
-      frame_count = 1,
-      shift = {0.2, 0.15}
+        filename = "__omnimatter_wood__/graphics/entity/buildings/omni-mutator.png",
+        width = 113,
+        height = 91,
+        frame_count = 1,
+        shift = {0.2, 0.15}
     }):
     setWorkVis({
-      {
-        light = {intensity = 1, size = 6},
-        animation =
         {
-          filename = "__omnimatter_wood__/graphics/entity/buildings/mutator-light.png",
-          width = 113,
-          height = 91,
-          frame_count = 1,
-          shift = {0.2, 0.15}
+            light = {intensity = 1, size = 6},
+            animation =
+            {
+                filename = "__omnimatter_wood__/graphics/entity/buildings/mutator-light.png",
+                width = 113,
+                height = 91,
+                frame_count = 1,
+                shift = {0.2, 0.15}
+            }
         }
-      }
     }):
     extend()
 
@@ -57,36 +58,36 @@ local fboxes = data.raw["assembling-machine"]["omnimutator"]["fluid_boxes"]
 fboxes[1].pipe_connections[1].positions = {
     {
         0,
-        -1.85
+        -1--    -1.85
     },
     {
-        2,
+        1,-- 2,
         0
     },
     {
         0,
-        2.05
+        1,--    2.05
     },
     {
-        -2.05,
+        -1,--   -2.05,
         0
     }
 }
 fboxes[2].pipe_connections[1].positions = {
     {
         0,
-        2.05
+        1-- 2.05
     },
     {
-        -2.05,
+        -1,--   -2.05,
         0
     },
     {
         0,
-        -1.85
+        -1--    -1.85
     },
     {
-        2,
+        1,--    2,
         0
     }
 }
@@ -100,7 +101,6 @@ for I=1, 2 do
     -- Remove the "assembler 3" tint
     for _, dir in pairs({"north","east","south","west"}) do
         fboxes[I]["pipe_picture"][dir].tint = {1,0.9,1,1}
-        fboxes[I]["pipe_picture"][dir]["hr_version"].tint = {1,0.9,1,1}
     end
 end
 
@@ -108,7 +108,7 @@ RecGen:create("omnimatter_wood","wasteMutation"):
 setFuelValue(2):
 setSubgroup("omnimutator-items"):
 setStacksize(100):
-setIcons("omniwood","omnimatter_wood"):
+setIcons({"omniwood", 32}):
 setCategory("omniphlog"):
 setEnergy(2):
 setIngredients({
@@ -120,7 +120,7 @@ setEnabled():
 extend()
 
 RecGen:create("omnimatter_wood","wood-omnitraction"):
-setIcons("wood"):
+setIcons("wood","base"):
 setEnergy(2):
 setEnabled():
 setSubgroup("omnimutator-items"):
@@ -131,7 +131,7 @@ extend()
 
 
 RecGen:create("omnimatter_wood","basic-wood-mutation"):
-setIcons("omniwood"):
+setIcons({"omniwood", 32}):
 setCategory("omnimutator"):
 setEnergy(20):
 setIngredients({
@@ -154,6 +154,7 @@ setSubgroup("omnimutator-items"):
 setStacksize(100):
 setCategory("omnimutator"):
 setEnergy(2):
+setIcons({"omniseedling", 32}):
 setIngredients({
     {type = "item", name = "omnite", amount = 5},
     {type = "item", name = "wood", amount = 1},
@@ -168,7 +169,7 @@ extend()
 RecGen:create("omnimatter_wood","basic-omniwood-growth"):
 setSubgroup("omnimutator-items"):
 setCategory("bob-greenhouse"):
-setIcons("omniwood"):
+setIcons({"omniwood", 32}):
 setEnergy(40):
 setIngredients({
     {type = "item", name = "omniseedling", amount = 5},
@@ -183,7 +184,7 @@ extend()
 RecGen:create("omnimatter_wood","fertilized-omniwood-growth"):
 setSubgroup("omnimutator-items"):
 setCategory("bob-greenhouse"):
-setIcons("omniwood"):
+setIcons({"omniwood", 32}):
 setEnergy(30):
 setIngredients({
     {type = "item", name = "omniseedling", amount = 5},

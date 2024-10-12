@@ -37,7 +37,7 @@ end
 local tmp = {{"advanced-circuit"}}
 BuildChain:create("omnimatter_crystal","crystallomnizer"):
     setSubgroup("crystallomnizer"):
-    setIcons("crystallomnizer","omnimatter_crystal"):
+    setIcons({"crystallomnizer", 32}):
     setLocName("crystallomnizer"):
     setIngredients(cost_omnizer:ingredients()):
     setEnergy(5):

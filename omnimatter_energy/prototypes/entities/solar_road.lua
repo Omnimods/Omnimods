@@ -5,6 +5,7 @@ local panel = RecGen:create("omnimatter_energy","crystal-panel"):
     setSubgroup("omnienergy-solar"):
     setOrder("a[crystal-panel]"):
     setEnergy(2):
+    setIcons({"crystal-panel", 32}):
     setEnabled(false):
     setTechName("solar-energy")
 
@@ -31,7 +32,7 @@ data:extend({
         {
             result = "omni-solar-road",
             condition_size = 4,
-            condition = { "water-tile" }
+            condition = {layers = {water_tile = true }}
         }
     },
     {
@@ -60,15 +61,15 @@ data:extend({
         needs_correction = false,
         minable = {mining_time = 0.25, result = "omni-solar-road"},
         mined_sound = { filename = "__base__/sound/deconstruct-bricks.ogg" },
-        collision_mask = {"ground-tile", "not-colliding-with-itself"},
+        collision_mask = {layers = {ground_tile = true}, not_colliding_with_itself = true},
         collision_box = {{-0.5, -0.5}, {0.5, 0.5}},
         walking_speed_modifier = 1.45,
         layer = 62,
-        pollution_absorption_per_second=0,
+        absorptions_per_second = {pollution = 0},
         decorative_removal_probability = 1,
         variants =
         {
-            main = 
+            main =
             {
                 {
                     picture = "__omnimatter_energy__/graphics/entity/tiles/solar1.png",
@@ -77,50 +78,84 @@ data:extend({
                     probability = 1,
                 }
             },
-            inner_corner =
+            transition =
             {
-                picture = "__omnimatter_energy__/graphics/entity/tiles/solar-inner-corner.png",
-                count = 8
-            },
-            outer_corner =
-            {
-                picture = "__omnimatter_energy__/graphics/entity/tiles/solar-outer-corner.png",
-                count = 8
-            },
-            side =
-            {
-                picture = "__omnimatter_energy__/graphics/entity/tiles/solar-side.png",
-                count = 8
-            },
-            u_transition =
-            {
-                picture = "__omnimatter_energy__/graphics/entity/tiles/solar-u.png",
-                count = 8
-            },
-            o_transition =
-            {
-                picture = "__omnimatter_energy__/graphics/entity/tiles/solar-o.png",
-                count = 1
+                overlay_layout =
+                {
+                    inner_corner =
+                    {
+                        spritesheet = "__omnimatter_energy__/graphics/entity/tiles/solar-inner-corner.png",
+                        count = 8
+                    },
+                    outer_corner =
+                    {
+                        spritesheet = "__omnimatter_energy__/graphics/entity/tiles/solar-outer-corner.png",
+                        count = 8
+                    },
+                    side =
+                    {
+                        spritesheet = "__omnimatter_energy__/graphics/entity/tiles/solar-side.png",
+                        count = 8
+                    },
+                    u_transition =
+                    {
+                        spritesheet = "__omnimatter_energy__/graphics/entity/tiles/solar-u.png",
+                        count = 8
+                    },
+                    o_transition =
+                    {
+                        spritesheet = "__omnimatter_energy__/graphics/entity/tiles/solar-o.png",
+                        count = 1
+                    }
+                }
             }
         },
         walking_sound =
         {
             {
-                filename = "__base__/sound/walking/concrete-01.ogg",
+                filename = "__base__/sound/walking/concrete-1.ogg",
                 volume = 1.2
             },
             {
-                filename = "__base__/sound/walking/concrete-02.ogg",
+                filename = "__base__/sound/walking/concrete-2.ogg",
                 volume = 1.2
             },
             {
-                filename = "__base__/sound/walking/concrete-03.ogg",
+                filename = "__base__/sound/walking/concrete-3.ogg",
                 volume = 1.2
             },
             {
-                filename = "__base__/sound/walking/concrete-04.ogg",
+                filename = "__base__/sound/walking/concrete-4.ogg",
                 volume = 1.2
-            }
+            },
+            {
+                filename = "__base__/sound/walking/concrete-5.ogg",
+                volume = 1.2
+            },
+            {
+                filename = "__base__/sound/walking/concrete-6.ogg",
+                volume = 1.2
+            },
+            {
+                filename = "__base__/sound/walking/concrete-7.ogg",
+                volume = 1.2
+            },
+            {
+                filename = "__base__/sound/walking/concrete-8.ogg",
+                volume = 1.2
+            },
+            {
+                filename = "__base__/sound/walking/concrete-9.ogg",
+                volume = 1.2
+            },
+            {
+                filename = "__base__/sound/walking/concrete-10.ogg",
+                volume = 1.2
+            },
+            {
+                filename = "__base__/sound/walking/concrete-11.ogg",
+                volume = 1.2
+            },
         },
         map_color={r=93, g=138, b=168},
         ageing=0,
@@ -131,12 +166,12 @@ data:extend({
         name = "omni-solar-road-pole",
         icon = "__omnimatter_energy__/graphics/icons/omni-solar-tile.png",
         icon_size = 32,
-        flags = {"hidden"},
+        hidden = true,
         subgroup = "energy-pipe-distribution",
         order = "x[bi]-a[bi_bio_farm]",
         place_result = "omni-solar-road-pole",
         stack_size = 50,
-        enable = false,
+        enabled = false,
     },
     {
         type = "electric-pole",
@@ -147,7 +182,7 @@ data:extend({
         selectable_in_game = false,
         max_health = 1,
         resistances = {{type = "fire", percent = 100}},
-        collision_mask = {"ground-tile"},
+        collision_mask = {layers = {ground_tile = true}},
         collision_box = {{-0.0, -0.0}, {0.0, 0.0}},
         selection_box = {{0, 0}, {0, 0}},
         maximum_wire_distance = 1,
@@ -207,12 +242,12 @@ data:extend({
         name = "omni-solar-road-panel",
         icon = "__omnimatter_energy__/graphics/icons/omni-solar-tile.png",
         icon_size = 32,
-        flags = {"hidden"},
+        hidden = true,
         subgroup = "energy",
         order = "x[bi]-a[bi_bio_farm]",
         place_result = "omni-solar-road-panel",
         stack_size = 50,
-        enable = false,
+        enabled = false,
     },
     {
         type = "solar-panel",
@@ -223,7 +258,7 @@ data:extend({
         selectable_in_game = false,
         max_health = 1,
         resistances = {{type = "fire", percent = 100}},
-        collision_mask = {"ground-tile"},
+        collision_mask = {layers = {ground_tile = true}},
         collision_box = {{-0.0, -0.0}, {0.0, 0.0}},
         selection_box = {{0, 0}, {0, 0}},
         energy_source =

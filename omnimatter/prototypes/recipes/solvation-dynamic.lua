@@ -84,6 +84,7 @@ if mods["omnimatter_crystal"] then
             {type="item", name = "pulverized-stone", amount = quant/2},
             {type="fluid", name="omnic-acid", amount=240}
             }):
+            setIcons({"omnisludge", 32}):
             setCategory(omniFluidCat):
             setSubgroup("omni-fluids"):
             setResults(cost:results()):

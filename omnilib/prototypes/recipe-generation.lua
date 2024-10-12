@@ -571,23 +571,27 @@ function ItemGen:setIcons(icons,mod)
     if type(icons)~= "function" and mod and (type(icons) ~= "string" or not string.match(icons, "%_%_(.-)%_%_")) then
         if type(icons) == "table" then
             local ic = {}
-            local ic_scale = 1
-            local ic_sz = defines.default_icon_size
-            for _, c in pairs(icons) do
-                if c.icon_size then    ic_sz=c.icon_size end
-                if c.scale then
-                    ic_scale = c.scale * defines.default_icon_size / ic_sz
-                else
-                    ic_scale = defines.default_icon_size / ic_sz
-                end
-                if type(c)=="table" then
-                    ic[#ic+1] = {icon = "__"..mod.."__/graphics/icons/"..(c.name or c.icon)..".png",
-                        icon_size = ic_sz,
-                        --optional
-                        scale = ic_scale,
-                        shift = c.shift}
-                else
-                    ic[#ic+1]={icon = "__"..mod.."__/graphics/icons/"..c..".png", icon_size=c.icon_size, scale = ic_scale,}
+            if type(icons)=="table"  and icons[1] and type(icons[1]) ~= "table" then
+                ic[#ic+1] = {
+                    icon = "__"..mod.."__/graphics/icons/"..(icons.icon  or (type(icons[1]) == "string" and icons[1]))..".png",
+                    icon_size = icons.icon_size  or (type(icons[2])=="number" and icons[2]),
+                    --optional
+                    scale = icons.scale,
+                    shift = icons.shift
+                }
+            else
+                for _, c in pairs(icons) do
+                    if type(c)=="table" then
+                        ic[#ic+1] = {
+                            icon = "__"..mod.."__/graphics/icons/"..(c.icon  or (type(c[1]) == "string" and c[1]))..".png",
+                            icon_size = c.icon_size  or (type(c[2])=="number" and c[2]),
+                            --optional
+                            scale = c.scale,
+                            shift = c.shift
+                        }
+                    else
+                        ic[#ic+1]={icon = "__"..mod.."__/graphics/icons/"..c..".png"}
+                    end
                 end
             end
             self.icons = function(levels,grade) return ic end
@@ -929,6 +933,8 @@ function ItemGen:setLocName(inname,...)
                 rtn[#rtn+1] = part
             elseif type(part)=="table" and not #part == 1 then
                 rtn[#rtn+1] = function(levels,grade) return part[grade] end
+            elseif type(part) == "number" then
+                rtn[#rtn+1] = function(levels,grade) return tostring(part) end
             --elseif type(part)=="string" and string.find(part,".") and (string.find(part,"name") or string.find(part,"description")) and  then
                 --rtn[#rtn+1] = function(levels,grade) return {part} end
                 --rtn[#rtn+1] = function(levels,grade) return {part} end
@@ -1248,14 +1254,16 @@ function RecGen:import(rec)
             local tech = data.raw.technology[omni.lib.get_tech_name(recipe.name)]
             if tech then
                 r:setTechName(tech.name):
-                setTechCost(tech.unit.count):
                 setTechIcons(tech.icons  or {{icon=tech.icon, icon_size=tech.icon_size or 128}}):
                 setTechLocName(tech.localised_name):
                 setTechLocDesc(tech.localised_description):
-                setTechPacks(tech.unit.ingredients):
                 setTechPrereq(tech.prerequisites):
-                setTechTime(tech.unit.time):
                 setTechUpgrade(tech.upgrade)
+                if tech.unit then
+                    r:setTechPacks(tech.unit.ingredients):
+                    setTechCost(tech.unit.count):
+                    setTechTime(tech.unit.time)
+                end
             end
         end
         return table.deepcopy(r)
@@ -2518,7 +2526,11 @@ function TechGen:generate_tech()
             end
         end
     elseif type(self.packs) == "table" then
-        c=table.deepcopy(self.packs)
+        if self.packs[1] and type(self.packs[1]) ~= "table" then
+            c=table.deepcopy({self.packs})
+        else
+            c=table.deepcopy(self.packs)
+        end
     elseif type(self.packs)=="string" then
         c=table.deepcopy(data.raw.technology[self.packs].unit.ingredients)
     else
@@ -2544,9 +2556,9 @@ function TechGen:generate_tech()
     effects =u,
     unit  =
     {
-      count = omni.lib.round(self.cost*add_cost),
-      ingredients = c,
-      time = self.time
+        count = omni.lib.round(self.cost*add_cost),
+        ingredients = c,
+        time = self.time
     },
     order = "c-a"
     }
@@ -3657,91 +3669,49 @@ function InsertGen:create(mod,name)
         b.hand_base_picture =function(levels,grade) return {
         filename = "__base__/graphics/entity/inserter/inserter-hand-base.png",
         priority = "extra-high",
-        width = 8,
-        height = 33,
-        hr_version =
-        {
-            filename = "__base__/graphics/entity/inserter/hr-inserter-hand-base.png",
-            priority = "extra-high",
-            width = 32,
-            height = 136,
-            scale = 0.25
-        }
+        width = 32,
+        height = 136,
+        scale = 0.25,
         } end
         b.hand_closed_picture =function(levels,grade) return
         {
         filename = "__base__/graphics/entity/inserter/inserter-hand-closed.png",
         priority = "extra-high",
-        width = 18,
-        height = 41,
-        hr_version =
-        {
-            filename = "__base__/graphics/entity/inserter/hr-inserter-hand-closed.png",
-            priority = "extra-high",
-            width = 72,
-            height = 164,
-            scale = 0.25
-        }
+        width = 72,
+        height = 164,
+        scale = 0.25,
         } end
         b.hand_open_picture = function(levels,grade) return
         {
         filename = "__base__/graphics/entity/inserter/inserter-hand-open.png",
         priority = "extra-high",
-        width = 18,
-        height = 41,
-        hr_version =
-        {
-            filename = "__base__/graphics/entity/inserter/hr-inserter-hand-open.png",
-            priority = "extra-high",
-            width = 72,
-            height = 164,
-            scale = 0.25
-        }
+        width = 72,
+        height = 164,
+        scale = 0.25,
         } end
         b.hand_base_shadow = function(levels,grade) return
         {
         filename = "__base__/graphics/entity/burner-inserter/burner-inserter-hand-base-shadow.png",
         priority = "extra-high",
-        width = 8,
-        height = 33,
-        hr_version =
-        {
-            filename = "__base__/graphics/entity/burner-inserter/hr-burner-inserter-hand-base-shadow.png",
-            priority = "extra-high",
-            width = 32,
-            height = 132,
-            scale = 0.25
-        }
+        width = 32,
+        height = 132,
+        scale = 0.25,
         } end
         b.hand_closed_shadow = function(levels,grade) return
         {
         filename = "__base__/graphics/entity/burner-inserter/burner-inserter-hand-closed-shadow.png",
         priority = "extra-high",
-        width = 18,
-        height = 41,
-        hr_version =
-        {
-            filename = "__base__/graphics/entity/burner-inserter/hr-burner-inserter-hand-closed-shadow.png",
-            priority = "extra-high",
-            width = 72,
-            height = 164,
-            scale = 0.25
-        }
+        width = 72,
+        height = 164,
+        scale = 0.25,
         } end
         b.hand_open_shadow = function(levels,grade) return
         {
         filename = "__base__/graphics/entity/burner-inserter/burner-inserter-hand-open-shadow.png",
         priority = "extra-high",
-        width = 18,
-        height = 41,
-        hr_version =
-        {
-            filename = "__base__/graphics/entity/burner-inserter/hr-burner-inserter-hand-open-shadow.png",
-            priority = "extra-high",
-            width = 72,
-            height = 164,
-            scale = 0.25
-        }
+        width = 72,
+        height = 164,
+        scale = 0.25,
         } end
         b.platform_picture = function(levels,grade) return
         {
@@ -3749,18 +3719,10 @@ function InsertGen:create(mod,name)
         {
             filename = "__base__/graphics/entity/inserter/inserter-platform.png",
             priority = "extra-high",
-            width = 46,
-            height = 46,
-            shift = {0.09375, 0},
-            hr_version =
-            {
-            filename = "__base__/graphics/entity/inserter/hr-inserter-platform.png",
-            priority = "extra-high",
             width = 105,
             height = 79,
             shift = util.by_pixel(1.5, 7.5-1),
-            scale = 0.5
-            }
+            scale = 0.5,
         }
     } end
     return setmetatable(b,InsertGen)
@@ -3845,17 +3807,10 @@ function InsertGen:setAnimation(platform,base,baseShadow,open,openShadow,closed,
             sheet = {
             filename = "__"..self.mod.."__/graphics/entity/inserter/"..platform.."-platform.png",
             priority = "extra-high",
-            width = 46,
-            height = 46,
-            shift = {0.09375, 0},
-            hr_version = {
-                filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..platform.."-platform.png",
-                priority = "extra-high",
-                width = 105,
-                height = 79,
-                shift = util.by_pixel(1.5, 7.5-1),
-                scale = 0.5
-            }
+            width = 105,
+            height = 79,
+            shift = util.by_pixel(1.5, 7.5-1),
+            scale = 0.5,
             }
         }
         end
@@ -3868,15 +3823,9 @@ function InsertGen:setAnimation(platform,base,baseShadow,open,openShadow,closed,
         self.hand_base_picture = function(levels,grade) return {
             filename = "__"..self.mod.."__/graphics/entity/inserter/"..base.."-hand-base.png",
             priority = "extra-high",
-            width = 8,
-            height = 33,
-            hr_version = {
-                filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..base.."-hand-base.png",
-                priority = "extra-high",
-                width = 32,
-                height = 136,
-                scale = 0.25
-            }
+            width = 32,
+            height = 136,
+            scale = 0.25,
         }
         end
     end
@@ -3888,15 +3837,9 @@ function InsertGen:setAnimation(platform,base,baseShadow,open,openShadow,closed,
         self.hand_base_shadow = function(levels,grade) return {
             filename = "__"..self.mod.."__/graphics/entity/inserter/"..baseShadow.."-hand-base-shadow.png",
             priority = "extra-high",
-            width = 8,
-            height = 33,
-            hr_version = {
-                filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..baseShadow.."-hand-base-shadow.png",
-                priority = "extra-high",
-                width = 32,
-                height = 132,
-                scale = 0.25
-            }
+            width = 32,
+            height = 132,
+            scale = 0.25,
         }
         end
     end
@@ -3908,15 +3851,9 @@ function InsertGen:setAnimation(platform,base,baseShadow,open,openShadow,closed,
             self.hand_open_picture = function(levels,grade) return {
             filename = "__"..self.mod.."__/graphics/entity/inserter/"..open.."-hand-open.png",
             priority = "extra-high",
-            width = 18,
-            height = 41,
-            hr_version = {
-                filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..open.."-hand-open.png",
-                priority = "extra-high",
-                width = 72,
-                height = 164,
-                scale = 0.25
-            }
+            width = 72,
+            height = 164,
+            scale = 0.25,
         }
         end
     end
@@ -3928,15 +3865,9 @@ function InsertGen:setAnimation(platform,base,baseShadow,open,openShadow,closed,
         self.hand_open_shadow = function(levels,grade) return {
             filename = "__"..self.mod.."__/graphics/entity/inserter/"..openShadow.."-hand-open-shadow.png",
             priority = "extra-high",
-            width = 18,
-            height = 41,
-            hr_version = {
-                filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..openShadow.."-hand-open-shadow.png",
-                priority = "extra-high",
-                width = 72,
-                height = 164,
-                scale = 0.25
-            }
+            width = 72,
+            height = 164,
+            scale = 0.25,
         }
         end
     end
@@ -3948,15 +3879,9 @@ function InsertGen:setAnimation(platform,base,baseShadow,open,openShadow,closed,
             self.hand_closed_picture = function(levels,grade) return {
             filename = "__"..self.mod.."__/graphics/entity/inserter/"..closed.."-hand-closed.png",
             priority = "extra-high",
-            width = 18,
-            height = 41,
-            hr_version = {
-                filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..closed.."-hand-closed.png",
-                priority = "extra-high",
-                width = 72,
-                height = 164,
-                scale = 0.25
-            }
+            width = 72,
+            height = 164,
+            scale = 0.25,
         }
         end
     end
@@ -3968,16 +3893,9 @@ function InsertGen:setAnimation(platform,base,baseShadow,open,openShadow,closed,
             self.hand_closed_shadow = function(levels,grade) return {
                 filename = "__"..self.mod.."__/graphics/entity/inserter/"..closedShadow.."-hand-closed-shadow.png",
                 priority = "extra-high",
-                width = 18,
-                height = 41,
-                hr_version =
-                {
-                    filename = "__"..self.mod.."__/graphics/entity/inserter/hr-"..closedShadow.."-hand-closed-shadow.png",
-                    priority = "extra-high",
-                    width = 72,
-                    height = 164,
-                    scale = 0.25
-                }
+                width = 72,
+                height = 164,
+                scale = 0.25
             }
         end
     end
