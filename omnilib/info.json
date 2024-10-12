@@ -5,7 +5,7 @@
 "author":"EmperorZelos",
 "contact": "https://discord.gg/WQYks7W",
 "description":"A collection of functions that omni-series of mods are using.",
-"factorio_version":"1.2",
+"factorio_version":"2.0",
 "dependencies":[
     "base",
     "(?)angelsrefining",

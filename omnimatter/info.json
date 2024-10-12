@@ -5,7 +5,7 @@
 "author":"EmperorZelos",
 "contact": "https://discord.gg/WQYks7W",
 "description":"This mod condenses all ores into a single ore from which everything is extracted.",
-"factorio_version":"1.2",
+"factorio_version":"2.0",
 "dependencies":[
   "base",
   "omnilib >= 4.2.0",
