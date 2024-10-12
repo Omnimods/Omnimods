@@ -101,11 +101,11 @@ for _,fuelitem in pairs(data.raw.item) do
             omni.lib.add_prerequisite(props_add.tech,omni.lib.get_tech_name(fuelitem.name))
 
         --Copy over fuel related values
-        data.raw.item["omnified-"..fuelitem.name].fuel_acceleration = fuelitem.fuel_acceleration
         data.raw.item["omnified-"..fuelitem.name].fuel_acceleration_multiplier = fuelitem.fuel_acceleration_multiplier
-        data.raw.item["omnified-"..fuelitem.name].fuel_top_speed = fuelitem.fuel_top_speed
+        data.raw.item["omnified-"..fuelitem.name].fuel_acceleration_multiplier = fuelitem.fuel_acceleration_multiplier
         data.raw.item["omnified-"..fuelitem.name].fuel_top_speed_multiplier = fuelitem.fuel_top_speed_multiplier
-        data.raw.item["omnified-"..fuelitem.name].fuel_emissions = fuelitem.fuel_emissions
+        data.raw.item["omnified-"..fuelitem.name].fuel_top_speed_multiplier = fuelitem.fuel_top_speed_multiplier
+        data.raw.item["omnified-"..fuelitem.name].fuel_emissions_multiplier = fuelitem.fuel_emissions_multiplier
         data.raw.item["omnified-"..fuelitem.name].fuel_emissions_multiplier = fuelitem.fuel_emissions_multiplier
         data.raw.item["omnified-"..fuelitem.name].fuel_glow_color = fuelitem.fuel_glow_color 
 
