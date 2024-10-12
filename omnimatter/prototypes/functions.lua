@@ -2,8 +2,8 @@ omni.matter.omnitial = {}
 omni.matter.omnisource = {}
 omni.matter.omnifluid = {}
 omni.matter.res_to_keep = {
-    "omnite",
-    "infinite-omnite"
+    ["omnite"] = true,
+    ["infinite-omnite"] = true,
 }
 -- returns resource_name, fluid_to_mine
 local function get_resource(name, fluid)
@@ -329,14 +329,12 @@ end
 
 --Add a resource to our whitelist. Whitelisted resources will not be removed from autoplace control
 function omni.matter.add_ignore_resource(name)
-    if not omni.lib.is_in_table(name, omni.matter.res_to_keep) then
-        omni.matter.res_to_keep[#omni.matter.res_to_keep+1] = name
-    end
+    omni.matter.res_to_keep[name] = true
 end
 
 --Remove a resource from our whitelist.
 function omni.matter.remove_ignore_resource(name)
-    if omni.lib.is_in_table(name, omni.matter.res_to_keep) then
-        omni.lib.remove_from_table(name, omni.matter.res_to_keep)
+    if omni.matter.res_to_keep[name] then
+        omni.matter.res_to_keep[name] = nil
     end
 end
