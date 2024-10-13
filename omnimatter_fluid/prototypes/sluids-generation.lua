@@ -313,6 +313,11 @@ for name, _ in pairs(recipe_mods) do
                         end
                     end
 
+                    --Apply the mult on the catalyst amount aswell
+                    if ing.ignored_by_productivity then
+                        ing.ignored_by_productivity = omni.lib.round(ing.ignored_by_productivity * mult)
+                    end
+
                     --Move mainproduct over
                     if ingres == "results" and rec.main_product and rec.main_product == ing.name then
                         rec.main_product = new_ing.name
@@ -345,8 +350,8 @@ for name, _ in pairs(recipe_mods) do
                     ing.amount = math.min(new_amount, 65535)
 
                     --Apply the mult on the catalyst amount aswell
-                    if ing.catalyst_amount then
-                        ing.catalyst_amount = omni.lib.round(ing.catalyst_amount * mult)
+                    if ing.ignored_by_productivity then
+                        ing.ignored_by_productivity = omni.lib.round(ing.ignored_by_productivity * mult)
                     end
 
                     --Nil probability related values since these are calculated into the amount now
