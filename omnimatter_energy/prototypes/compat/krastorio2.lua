@@ -70,7 +70,7 @@ if mods["Krastorio2"] then
             effectivity = 0.5,
             fuel_inventory_size = 1,
             fuel_categories = {"omnite","chemical","vehicle-fuel"},
-            emissions = 0.01,
+            emissions_per_minute = {pollution = 0.01},
             smoke = {{
                 name = "smoke",
                 deviation = {0.1, 0.1},
@@ -93,26 +93,15 @@ if mods["Krastorio2"] then
     omni.lib.add_recipe_ingredient("inserter-parts",{"omnitor",2})
     omni.lib.add_recipe_ingredient("kr-crusher",{"omnitor",2})
 
-    --Fix inserter recipes to be like normal K2 (omnitor is already in inserter parts) and set them to require their previous tier
+    --Fix inserter recipes to be like default K2 (omnitor is already in inserter parts) and set them to require their previous tier
     omni.lib.replace_recipe_ingredient("burner-inserter","omnitor","inserter-parts")
     omni.lib.replace_recipe_ingredient("inserter","electronic-circuit","inserter-parts")
     omni.lib.add_recipe_ingredient("inserter","automation-core")
 
-    omni.lib.replace_recipe_ingredient("burner-filter-inserter","omnitor",{"inserter-parts",1})
-
     omni.lib.add_recipe_ingredient("fast-inserter","inserter")
     omni.lib.add_recipe_ingredient("long-handed-inserter","inserter")
-    omni.lib.add_recipe_ingredient("filter-inserter","inserter")
-    omni.lib.add_recipe_ingredient("stack-inserter","fast-inserter")
-    omni.lib.add_recipe_ingredient("stack-filter-inserter","stack-inserter")
+    omni.lib.add_recipe_ingredient("bulk-inserter","fast-inserter")
 
     omni.lib.add_recipe_ingredient("kr-superior-inserter","fast-inserter")
     omni.lib.add_recipe_ingredient("kr-superior-long-inserter","long-handed-inserter")
-    omni.lib.add_recipe_ingredient("kr-superior-filter-inserter","filter-inserter")
-    omni.lib.add_recipe_ingredient("kr-superior-long-filter-inserter","long-handed-inserter")
-
-
-    --Add vehicle fuel cat to burner filter inserter
-    data.raw["inserter"]["burner-filter-inserter"].energy_source.fuel_category = nil
-    data.raw["inserter"]["burner-filter-inserter"].energy_source.fuel_categories = {"chemical","vehicle-fuel"}
 end

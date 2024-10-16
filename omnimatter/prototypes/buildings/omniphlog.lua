@@ -2,22 +2,22 @@
 local phlog_cost = {}
 if mods["angelsindustries"] and angelsmods.industries.components then
     phlog_cost = {
-        {name="block-construction-1", amount=3},
-        {name="block-electronics-0", amount=1},
-        {name="block-fluidbox-1", amount=2},
-        {name="block-omni-0", amount=1}
+        {name="block-construction-1", amount=3, type = "item"},
+        {name="block-electronics-0", amount=1, type = "item"},
+        {name="block-fluidbox-1", amount=2, type = "item"},
+        {name="block-omni-0", amount=1, type = "item"}
     }
 else
     phlog_cost = {
-        {name = "omnicium-plate", amount = 8},
-        {name = "copper-plate", amount = 4},
-        {name = "omnite-brick", amount = 4},
+        {name = "omnicium-plate", amount = 8, type = "item"},
+        {name = "copper-plate", amount = 4, type = "item"},
+        {name = "omnite-brick", amount = 4, type = "item"},
     }
 end
 
 BuildGen:create("omnimatter","burner-omniphlog"):
     noTech():
-    setIcons("omniphlog"):
+    setIcons({"omniphlog", 32}):
     setBurner(0.75,1):
     setEmissions(5.5):
     setStacksize(50):
@@ -71,6 +71,7 @@ BuildChain:create("omnimatter","omniphlog"):
     setSubgroup("omniphlog"):
     setLocName("omniphlog"):
     setIngredients(cost:ingredients()):
+    setIcons({"omniphlog", 32}):
     setEnergy(5):
     setUsage(function(level,grade) return (200+100*grade).."kW" end):
     setEmissions(function(level,grade) return math.max(3.8 - ((grade-1) * 0.2), 0.1) end):
@@ -107,36 +108,36 @@ local fbox_positions = {
     {
         {
             0,
-            -1.95---1.95
+            -1.0--    -1.95
         },
         {
-            1.9,
+            1.0,--       1.9,
             0
         },
         {
             0,
-            1.85
+            1.0,--      1.85
         },
         {
-            -1.9,
+            -1.0,--     -1.9,
             0
         }
     },
     {
         {
             0,
-            1.85
+            1.0,--      1.85
         },
         {
-            -1.9,
+            -1.0,--     -1.9,
             0
         },
         {
             0,
-            -1.95---1.95
+            -1.0--     -1.95
         },
         {
-            1.9,
+            1.0,--      1.9,
             0
         }
     }
@@ -154,7 +155,6 @@ local function modify_fluidboxes(proto)
         fboxes[I].pipe_covers = pipecoverspictures()
         -- Move the north cover up a little
         fboxes[I].pipe_covers.north.layers[1].shift = {0, -0.05}
-        fboxes[I].pipe_covers.north.layers[1].hr_version.shift = {0, -0.05}
         -- Only south should draw "on top"
         fboxes[I].secondary_draw_orders = {
             north = -1,
@@ -171,11 +171,9 @@ local function modify_fluidboxes(proto)
             -- X, Y
             for II=1, 2 do
                 picture.shift[II] = picture.shift[II] + shift[dir][II]
-                picture.hr_version.shift[II] = picture.hr_version.shift[II] + shift[dir][II]
             end
             -- Override the "assembler 3" tint
             picture.tint = {1,0.9,1,1}
-            picture.hr_version.tint = {1,0.9,1,1}
         end
     end
 end

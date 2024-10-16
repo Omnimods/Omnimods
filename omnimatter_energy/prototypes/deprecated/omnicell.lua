@@ -13,7 +13,6 @@ RecGen:create("omnimatter_energy","naturize-omnicell"):
         {type="item",name="omnicell-denatured",amount=1},
         {type="fluid",name="omnic-acid",amount=120*3}):
     setResults("omnicell-natured"):
-    marathon():
     setSubgroup("Omnicell"):
     setStacksize(50):
     setEnergy(1):extend()
@@ -25,7 +24,6 @@ RecGen:create("omnimatter_energy","omnicell-charged"):
         {type="item",name="omnicell-natured",amount=1},
         {type="fluid",name="omniston",amount=50*3}):
     setResults("omnicell-charged"):
-    marathon():
     setSubgroup("Omnicell"):
     setStacksize(50):
     setEnergy(1):extend()
@@ -52,7 +50,6 @@ for _,m in pairs(main_ores) do
                 {type="item",name=m,amount=5},
                 {type="item",name=b,amount=5}):
             setResults("omnicell-natured"):
-            marathon():
             setEnergy(10):extend()
     end
 end

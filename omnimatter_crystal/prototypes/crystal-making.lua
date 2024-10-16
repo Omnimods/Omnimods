@@ -30,7 +30,7 @@ omni.crystal.add_crystal=function(metal,name,recipe)
             setSubgroup("crystallization"):
             setOrder("a["..metal.."-crystal]"):
             setStacksize(500):
-            setIcons(metal.."-crystal"):
+            setIcons({metal.."-crystal", 32}):
             setCategory("omniplant"):
             setIngredients({
                 {type = "item", name = "omnine-shards", amount = 1},
@@ -43,7 +43,7 @@ omni.crystal.add_crystal=function(metal,name,recipe)
 
         ItemGen:create("omnimatter_crystal", metal.."-omnide-salt"):
             setLocName("item-name.omnide-salt", name):
-            setIcons("omnide-salt"):
+            setIcons({"omnide-salt", 32}):
             addSmallIcon(metal,3):
             setSubgroup("crystallization"):
             setStacksize(200):
@@ -55,7 +55,7 @@ omni.crystal.add_crystal=function(metal,name,recipe)
             setBothColour(omni.lib.ore_tints[string.lower(name)] or {1,1,1}):
             setSubgroup("solvation"):
             setOrder("a["..metal.."-omnide-solution]"):
-            setIcons("omnide-solution"):
+            setIcons({"omnide-solution", 32}):
             addSmallIcon(metal,3):
             setCategory("omniplant"):
             setIngredients({

@@ -33,11 +33,6 @@ if settings.startup["omniwood-all-mutated"].value then
     end
 end
 
-if mods["omnimatter_marathon"] then
-    omni.marathon.exclude_recipe("omnic-waste")
-    omni.marathon.exclude_recipe("waste-mutation")
-end
-
 --[[if mods["pycoalprocessing"] then --needs a re-work, the add module restrictions scrip in py is failing with this running
     local pylog = {"log1", "log2", "log3", "log4", "log5", "log6", "log-organics", "log-wood"}
     for _, p in pairs(pylog) do

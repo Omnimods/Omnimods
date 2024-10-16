@@ -54,11 +54,9 @@ for _,kind in pairs({"assembling-machine","furnace","rocket-silo"}) do
                 if rec and compressed_rec then
                     build.fixed_recipe = nil
                     rec.hidden = false
-                    (rec.normal or {}).hidden = false
-                    (rec.expensive or {}).hidden = false
+                    rec.hidden = false
                     compressed_rec.hidden = false
-                    (compressed_rec.normal or {}).hidden = false
-                    (compressed_rec.expensive or {}).hidden = false
+                    compressed_rec.hidden = false
                 end
             end
         end

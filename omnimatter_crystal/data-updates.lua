@@ -26,11 +26,6 @@ if mods["Krastorio2"] then
     omni.crystal.add_crystal("raw-rare-metals","Rare metals")
 end
 
-if mods["omnimatter_marathon"] then
-    omni.marathon.exclude_recipe("omnine-distillation-quick")
-    omni.marathon.exclude_recipe("omnine-distillation-slow")
-end
-
 local salt_omnide_icon = function(metal)
     --Build the icons table
     local icons = util.combine_icons(
@@ -64,7 +59,7 @@ if not mods["angelsrefining"] then
     local added_ores = {}
     for _,rec in pairs(data.raw.recipe) do
         if string.find(rec.name,"crystal") and omni.lib.end_with(rec.name,"omnitraction") and rec.category=="omnite-extraction" then
-            local ore = rec.normal.results[1].name
+            local ore = rec.results[1].name
             added_ores[#added_ores+1] = ore
             local metal = string.gsub(ore,"-ore","")
             local metal_formatted = metal:sub(1,1):upper() .. metal:sub(2)
@@ -148,7 +143,7 @@ if not mods["angelsrefining"] then
                         local metal = string.gsub(ore,"-ore","")
                         r:replaceIngredients(ore, "crystal-powder-"..metal)
 
-                        if (rec.hidden and rec.hidden == true) or (rec.normal and rec.normal.hidden and rec.normal.hidden ==true) then
+                        if omni.lib.recipe_is_hidden(rec) then
                             r:setHidden(rec.hidden)
                         --Only add the recipe as tech unlock if the base recipe is unlockable
                         elseif omni.lib.get_tech_name(rec.name) or omni.lib.recipe_is_enabled(rec.name) then

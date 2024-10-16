@@ -251,8 +251,7 @@ function omni.crystal.generate_control_crystal(board_crystal,circuit_crystal,con
             --log("crystal effect: "..eff.recipe)
             if eff.type=="unlock-recipe" and string.find(eff.recipe,"omnitraction") and data.raw.recipe[eff.recipe] then
                 --log("Circuit: "..eff.recipe)
-                omni.lib.standardise(data.raw.recipe[eff.recipe])
-                for _,res in pairs(data.raw.recipe[eff.recipe].normal.results) do
+                for _,res in pairs(data.raw.recipe[eff.recipe].results) do
                     tech_unlock[i][#tech_unlock[i]+1]=res.name
                 end
             end

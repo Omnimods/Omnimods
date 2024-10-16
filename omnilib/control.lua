@@ -41,7 +41,7 @@ local function update_building_recipes()
         return
     end
     -- Make sure every entity using a tiered recipe (i.e. omnitraction) is up to the current tier
-    local correlated_recipes = global.omni.correlated_recipes
+    local correlated_recipes = storage.omni.correlated_recipes
     for _, surface in pairs(game.surfaces) do
         for _, entity in pairs(surface.find_entities_filtered({type="assembling-machine"})) do
             for _, force in pairs(game.forces) do
@@ -103,35 +103,35 @@ local function omnidate(technology)
     local game = game
     -- Record time spent
     local profiler = game.create_profiler()
-    local logger = global.omni and global.omni.log_to_chat and game.print or log
+    local logger = storage.omni and storage.omni.log_to_chat and game.print or log
     -- Clear cached lists
-    local clear_caches = global.omni and global.omni.clear_caches
+    local clear_caches = storage.omni and storage.omni.clear_caches
     -- Check every recipe/tech
-    local full_iter = global.omni and global.omni.full_iter
-    -- Globals
+    local full_iter = storage.omni and storage.omni.full_iter
+    -- Storages
     if clear_caches then
-        global.omni = {}
-        global.omni.correlated_recipes = {}
-        global.omni.recipe_techs = {}
-        global.omni.stock_recs = {}
+        storage.omni = {}
+        storage.omni.correlated_recipes = {}
+        storage.omni.recipe_techs = {}
+        storage.omni.stock_recs = {}
     end
     -- Make sure we don't trigger ourselves
-    global.omni.needs_update = true
+    storage.omni.needs_update = true
     -- No omnicompression, no omnimatter
     if not settings.startup["omnicompression_one_list"] and not settings.startup["omnimatter-beginner-multiplier"] then
         profiler.stop()
-        global.omni.needs_update = false
+        storage.omni.needs_update = false
         return
     end
     logger("Beginning omnidate" .. (clear_caches and " (full)" or "") .. (full_iter and " (partial)" or ""))
     -- Proxies
-    local correlated_recipes = global.omni.correlated_recipes
-    local recipe_techs = global.omni.recipe_techs
-    local stock_recs = global.omni.stock_recs
+    local correlated_recipes = storage.omni.correlated_recipes
+    local recipe_techs = storage.omni.recipe_techs
+    local stock_recs = storage.omni.stock_recs
     -- Game items
     local forces = game.forces
-    local cached_protos = memoize(game.recipe_prototypes)
-    local cached_techs = memoize(game.technology_prototypes)
+    local cached_protos = memoize(prototypes.recipe)
+    local cached_techs = memoize(prototypes.technology)
     -- Conditional (if we're just doing one tech)
     local tech_force = technology and technology.force or nil
     --
@@ -142,7 +142,7 @@ local function omnidate(technology)
     if clear_caches then
         -- First, build a list of categories
         local cat_filters = {}
-        for category in pairs(game.recipe_category_prototypes) do
+        for category in pairs(prototypes.recipe_category) do
             if category:find("%-compressed$") then
                 cat_filters[#cat_filters+1] = {filter = "category", category = category}
             end
@@ -158,7 +158,7 @@ local function omnidate(technology)
             }
         ]]
         -- Second, build a table of recipes, correlating compressed and uncompressed variants
-        for recipe_name in pairs(game.get_filtered_recipe_prototypes(cat_filters)) do
+        for recipe_name in pairs(prototypes.get_recipe_filtered(cat_filters)) do
             local rmeta = correlated_recipes[recipe_name] or {}
             -- A, check tiered buildings
             if recipe_name:find("%-compressed-") then
@@ -213,7 +213,7 @@ local function omnidate(technology)
         end
 
         -- Third, list techs and their base variants
-        for tech_name, tech in pairs(game.technology_prototypes) do
+        for tech_name, tech in pairs(prototypes.technology) do
             local techrec = recipe_techs[tech_name] or {}
             local has_added = false
             for _, effect in pairs(tech.effects) do
@@ -347,9 +347,9 @@ local function omnidate(technology)
         "Omnidate completed. ",
         profiler
     })
-    global.omni.needs_update = false
-    global.omni.clear_caches = false
-    global.omni.full_iter = false
+    storage.omni.needs_update = false
+    storage.omni.clear_caches = false
+    storage.omni.full_iter = false
 end
 
 
@@ -360,38 +360,38 @@ end
 ---@diagnostic disable
 
 script.on_init(function(event)
-    global.omni = global.omni or {}
-    global.omni.needs_update = true
-    global.omni.clear_caches = true
+    storage.omni = storage.omni or {}
+    storage.omni.needs_update = true
+    storage.omni.clear_caches = true
 end)
 
 script.on_configuration_changed(function(event)
     log("on_configuration_changed\n\t"..serpent.block(event))
-    global.omni = global.omni or {}
-    global.omni.needs_update = true
-    global.omni.clear_caches = true
+    storage.omni = storage.omni or {}
+    storage.omni.needs_update = true
+    storage.omni.clear_caches = true
 end)
 
 commands.add_command("omnidate", "Refreshes control-time data as if you had just researched a new tech", function(command)
-    global.omni = global.omni or {}
-    global.omni.log_to_chat = true
-    global.omni.needs_update = true
+    storage.omni = storage.omni or {}
+    storage.omni.log_to_chat = true
+    storage.omni.needs_update = true
 end)
 commands.add_command("omnidatefull", "Refreshes control-time data as if you had just started a new game", function(command)
-    global.omni = global.omni or {}
-    global.omni.log_to_chat = true
-    global.omni.needs_update = true
-    global.omni.clear_caches = true
+    storage.omni = storage.omni or {}
+    storage.omni.log_to_chat = true
+    storage.omni.needs_update = true
+    storage.omni.clear_caches = true
 end)
 commands.add_command("omnilog", "Tells you how much memory omnilib is using", function(command)
-    global.omni = global.omni or {}
+    storage.omni = storage.omni or {}
     game.print(
         "Memory usage: " .. math.ceil(collectgarbage("count")) .. "K"
     )
 end)
 
 script.on_event(defines.events.on_tick, function(event)
-    if global.omni and global.omni.needs_update then
+    if storage.omni and storage.omni.needs_update then
         omnidate()
     elseif update_queue then
         for _, technology in pairs(update_queue.finished) do
@@ -406,7 +406,7 @@ script.on_event(defines.events.on_tick, function(event)
 end)
 
 script.on_event(defines.events.on_research_finished, function(event)
-    if global.omni and global.omni.needs_update then
+    if storage.omni and storage.omni.needs_update then
         return
     end
     --log("on_research_finished\n\t"..serpent.block(event))
@@ -414,32 +414,32 @@ script.on_event(defines.events.on_research_finished, function(event)
     finished[#finished+1] = event.research
     if #finished >= 3 then -- If our queue is getting too big just do a full omnidate
         finished = {}
-        global.omni.needs_update = true
-        global.omni.full_iter = true
+        storage.omni.needs_update = true
+        storage.omni.full_iter = true
     end
     --omnidate(false, event.research)
 end)
 
 script.on_event(defines.events.on_research_reversed, function(event)
     --log("on_research_reversed\n\t"..serpent.block(event))
-    if global.omni and global.omni.needs_update then
+    if storage.omni and storage.omni.needs_update then
         return
     end
     local reversed = update_queue.reversed
     reversed[#reversed+1] = event.research
     if #reversed >= 3 then -- If our queue is getting too big just do a full omnidate
         reversed = {}
-        global.omni.needs_update = true
+        storage.omni.needs_update = true
     end
     --omnidate(false, event.research)
 end)
 
 script.on_event(defines.events.on_force_created, function(event)
-    global.omni.needs_update = true
+    storage.omni.needs_update = true
 end)
 
 script.on_event(defines.events.on_force_reset, function(event)
-    global.omni.needs_update = true
+    storage.omni.needs_update = true
 end)
 
 script.on_event(defines.events.on_player_created, function(event)

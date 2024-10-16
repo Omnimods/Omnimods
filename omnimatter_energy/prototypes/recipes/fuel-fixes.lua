@@ -11,11 +11,8 @@ for _,fuel in pairs(omni.nil_fuels) do
         --fuelitem.fuel_category = "omni-0"
         fuelitem.fuel_category = nil
         fuelitem.fuel_value = nil
-        fuelitem.fuel_acceleration = nil
         fuelitem.fuel_acceleration_multiplier = nil
-        fuelitem.fuel_top_speed = nil
         fuelitem.fuel_top_speed_multiplier = nil
-        fuelitem.fuel_emissions = nil
         fuelitem.fuel_emissions_multiplier = nil
         fuelitem.fuel_glow_color = nil
     end
@@ -29,7 +26,6 @@ local burnerEntities = {
     "burner-omnitractor",
     "burner-omniplant",
     "burner-inserter",
-    "burner-filter-inserter",
     "burner-ore-crusher",
     "stone-furnace",
     "stone-mixing-furnace",

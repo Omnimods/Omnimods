@@ -34,7 +34,7 @@ script.on_event("decompress-stack", function(event)
                     end
                     player.insert({
                         name = decompressed,
-                        count = math.min(game.item_prototypes[decompressed].stack_size, 65535)
+                        count = math.min(prototypes.item[decompressed].stack_size, 65535)
                     })-- Defaults to a stack?
                     return -- Don't bother continuing
                 end
@@ -64,8 +64,8 @@ local function compression_planner(event, log_only)
     if event.item == "compression-planner" then
         local player = game.players[event.player_index]
         local surface = player.surface
-        local entities = game.entity_prototypes
-        local items = game.item_prototypes
+        local entities = prototypes.entity
+        local items = prototypes.item
         local remainder, iremainder = 0, 0
         local result_table = {}
         for key, entity in pairs(event.entities) do
@@ -170,12 +170,12 @@ script.on_event(defines.events.on_rocket_launched, function(event)
     if rocket_inv and silo_inv then
         -- There can be many things!
         for satellite in pairs(rocket_inv.get_contents()) do
-            if satellite:find("^compressed%-") and #game.item_prototypes[satellite].rocket_launch_products > 0 then
+            if satellite:find("^compressed%-") and #prototypes.item[satellite].rocket_launch_products > 0 then
                 -- Naughty naughty!
                 if not rocket.prototype.name:find("^compressed%-") then
-                    local result_array = game.item_prototypes[satellite].rocket_launch_products or {}
+                    local result_array = prototypes.item[satellite].rocket_launch_products or {}
                     local uncomp_satellite = satellite:gsub("^compressed%-", "")
-                    local uncomp_result_array = game.item_prototypes[uncomp_satellite].rocket_launch_products
+                    local uncomp_result_array = prototypes.item[uncomp_satellite].rocket_launch_products
                     local has_spilled_satellites = false
                     -- Time to spill
                     for i, result in pairs(result_array) do
@@ -191,7 +191,7 @@ script.on_event(defines.events.on_rocket_launched, function(event)
                         silo_inv.remove(result.name)
                         -- Satellites, if we haven't already
                         if not has_spilled_satellites then
-                            local satellite_remainder = game.item_prototypes[normal_result.name].stack_size * result.amount -- Convert to uncompressed count
+                            local satellite_remainder = prototypes.item[normal_result.name].stack_size * result.amount -- Convert to uncompressed count
                             satellite_remainder = satellite_remainder / normal_result.amount -- Divide by result size
                             satellite_remainder = math.max(0, satellite_remainder - 1) -- Get our actual remainder
                             silo.surface.spill_item_stack(
@@ -333,7 +333,7 @@ local function init_discoscience()
         log("DiscoScience not found, skipping compat")
         return
     end
-    local sciencePackPrototypes = game.get_filtered_item_prototypes({{
+    local sciencePackPrototypes = prototypes.get_item_filtered({{
         filter = "type",
         type = "tool"
     }})
