@@ -19,6 +19,7 @@ end
 --Find nauvis exclusive autoplaces
 local non_nauvis_auto = {}
 local nauvis_auto = {}
+local nauvis_excl_auto = {}
 for planname, plan in pairs(data.raw.planet) do
     for orename, v in pairs(plan["map_gen_settings"]["autoplace_controls"]) do
         if orename and not omni.matter.res_to_keep[orename] then
@@ -29,17 +30,26 @@ for planname, plan in pairs(data.raw.planet) do
             end
         end
     end
+    for orename, v in pairs(plan["map_gen_settings"]["autoplace_settings"]["entity"]["settings"]) do
+        if orename and not omni.matter.res_to_keep[orename] then
+            if planname == "nauvis" then
+                nauvis_auto[orename] = true
+            else
+                non_nauvis_auto[orename] = true
+            end
+        end
+    end
 end
 
-for ore, _ in pairs(non_nauvis_auto) do
-    if nauvis_auto[ore] then
-        nauvis_auto[ore] = nil
+for ore, _ in pairs(nauvis_auto) do
+    if not non_nauvis_auto[ore] then
+        nauvis_excl_auto[ore] = true
     end
 end
 
 for _, ore in pairs(data.raw["autoplace-control"]) do
     if ore.category  and ore.category  == "resource" and ore.name and not omni.matter.res_to_keep[ore.name] then
-        --Onlxy nil nauvis exclusive autoplace controls
+        --Only nil nauvis exclusive autoplace controls
         if nauvis_auto[ore.name] then
             data.raw["autoplace-control"][ore.name] = nil
             log("Removed "..ore.name.." from autoplace control")
@@ -52,7 +62,7 @@ end
 
 --Remove resource autoplace controls that are not excluded and nauvis exclusive
 for _,ore in pairs(data.raw["resource"]) do
-    if ore.autoplace and ore.name and not omni.matter.res_to_keep[ore.name] and nauvis_auto[ore.name] then
+    if ore.autoplace and ore.name and not omni.matter.res_to_keep[ore.name] and nauvis_excl_auto[ore.name] then
         ore.autoplace = nil
         log("Removed "..ore.name.." ´s resource autoplace")
     end
@@ -60,12 +70,19 @@ end
 
 --for planname, plan in pairs(data.raw.planet) do
     for orename, v in pairs(data.raw.planet["nauvis"]["map_gen_settings"]["autoplace_controls"]) do
-        if orename and not omni.matter.res_to_keep[orename] then
+        if orename and not omni.matter.res_to_keep[orename] then --and nauvis_auto[orename] then
             data.raw.planet["nauvis"]["map_gen_settings"]["autoplace_controls"][orename] = nil
             log("Removed "..orename.." from planet ".."nauvis".." autoplace control")
         end
     end
 --end
+
+for orename, v in pairs(data.raw.planet["nauvis"]["map_gen_settings"]["autoplace_settings"]["entity"]["settings"]) do
+    if orename and not omni.matter.res_to_keep[orename] and data.raw["resource"][orename] then --and nauvis_auto[orename] then
+        data.raw.planet["nauvis"]["map_gen_settings"]["autoplace_settings"]["entity"]["settings"][orename] = nil
+        log("Removed "..orename.." from planet ".."nauvis".." autoplace settings")
+    end
+end
 
 --map presets
 for _,presets in pairs(data.raw["map-gen-presets"]) do
