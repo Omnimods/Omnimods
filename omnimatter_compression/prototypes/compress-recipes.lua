@@ -497,6 +497,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                     hide_from_player_crafting = recipe.hide_from_player_crafting or omni.compression.hide_handcraft,
                                     category = new_cat,
                                     order = recipe.order,
+                                    surface_conditions = recipe.surface_conditions
                                     }
                                     -------------------------------------------
                                     -- **Normalised stack building setting** --
