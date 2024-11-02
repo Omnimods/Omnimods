@@ -176,12 +176,12 @@ data:extend({
         localised_name = {"", "[entity=omnite] ", {"entity-name.omnite"}},
         richness = true,
         category = "resource",
-        order = "b-a"
+        order = "a-a-omnite"
     },
-    -- {
+    --{
     --     type = "noise-layer",
     --     name = "omnite"
-    -- },
+    --},
     {
         type = "resource",
         name = "omnite",
@@ -192,7 +192,7 @@ data:extend({
         tree_removal_max_distance = 32 * 32,
         infinite_depletion_amount = 10,
         resource_patch_search_radius = 10,
-        order="b-a",
+        order="a-a-omnite",
         infinite = false,
         minable = {
             mining_particle = "omnite-particle",
@@ -212,14 +212,13 @@ data:extend({
             name = "omnite",
             patch_set_name = "omnite",
             autoplace_control_name = "omnite",
-            order = "b-aa",
+            order = "b-ab",
             has_starting_area_placement = true,
             base_density = 35,    -- ~richness
             base_spots_per_km2 = 10, -- ~frequency
             regular_rq_factor_multiplier = 1.8, --Size
             starting_rq_factor_multiplier = 2.4,
             richness_multiplier_distance_bonus = 20,
-            base_spots_per_km2 = 10, -- ~frequency
             peaks = {
             {
                 noise_layer = "omnite",
@@ -262,7 +261,7 @@ data:extend({
 
 --Add omnite to nauvis autoplace control
 data.raw.planet["nauvis"]["map_gen_settings"]["autoplace_controls"]["omnite"] = {}
-
+data.raw.planet["nauvis"]["map_gen_settings"]["autoplace_settings"]["entity"]["settings"]["omnite"] = {}
 
 --Apply preset configs to omnite and infinite omnite if it exists
 function omni.matter.apply_presets(resource)

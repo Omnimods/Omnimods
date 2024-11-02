@@ -1,7 +1,7 @@
 local resource_autoplace = require("resource-autoplace")
 
 -- Initialize the core patch sets in a predictable order
---resource_autoplace.initialize_patch_set("infinite-omnite", true)
+resource_autoplace.initialize_patch_set("infinite-omnite", false)
 
 local mine={}
 if settings.startup["omnimatter-infinite-omnic-acid"].value then
@@ -40,7 +40,7 @@ data:extend({
         name = "infinite-omnite",
         localised_name = {"", "[entity=omnite] ", {"entity-name.infinite-omnite"}},
         richness = true,
-        order = "b-b",
+        order = "a-a-infinite-omnite",
         category = "resource"
     },
     {
@@ -53,7 +53,7 @@ data:extend({
         tree_removal_max_distance = 32 * 32,
         infinite_depletion_amount = 10,
         resource_patch_search_radius = 10,
-        order="b-b",
+        order="a-a-infinite-omnite",
         infinite=true,
         minimum = 375,
         normal = 1500,
@@ -61,11 +61,11 @@ data:extend({
         collision_box = {{ -0.1, -0.1}, {0.1, 0.1}},
         selection_box = {{ -0.5, -0.5}, {0.5, 0.5}},
         autoplace = resource_autoplace.resource_autoplace_settings({
-            has_starting_area_placement = false,
+            has_starting_area_placement = true, --false
             name ="infinite-omnite",
-            patch_set_name = "omnite",
+            patch_set_name = "infinite-omnite",
             autoplace_control_name = "infinite-omnite",
-            order = "b-b",
+            order = "b-aa",
             base_density = 25, -- ~ richness
             base_spots_per_km2 = 7, --base spots of of normal omnite is 10, if this is the same roughly every patch has infinite omnite
             regular_rq_factor_multiplier = 0.4,
@@ -113,5 +113,6 @@ data:extend({
 
 --Add infinite omnite to nauvis autoplace control
 data.raw.planet["nauvis"]["map_gen_settings"]["autoplace_controls"]["infinite-omnite"] = {}
+data.raw.planet["nauvis"]["map_gen_settings"]["autoplace_settings"]["entity"]["settings"]["infinite-omnite"] = {}
 
 omni.matter.apply_presets("infinite-omnite")
