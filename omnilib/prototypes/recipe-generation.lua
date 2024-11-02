@@ -607,7 +607,7 @@ function ItemGen:setIcons(icons,mod)
             end
             self.icons = function(levels,grade) return {{icon = "__"..(mod or self.mod).."__/graphics/icons/"..icons..".png",icon_size=ic_size, scale = ic_scale,}} end
         end
-    elseif type(icons)~= "function" then
+    elseif type(icons) ~= "function" and (type(icons)=="string" or type(icons[1])=="string") then
         -- --find icon_size
         local ic = (type(icons)=="string" and icons) or (type(icons[1])=="string" and icons[1])
         local ic_sz = icons.icon_size or (type(icons[2])=="number" and icons[2]) or defines.default_icon_size
@@ -628,6 +628,8 @@ function ItemGen:setIcons(icons,mod)
         else
             self.icons = function(levels,grade) return omni.lib.icon.of(icons, true) end
         end
+    elseif type(icons) ~= "function" then
+        self.icons = function(levels,grade) return icons end
     else
         self.icons = icons
     end
@@ -636,11 +638,17 @@ function ItemGen:setIcons(icons,mod)
 end
 
 function ItemGen:addIcon(icon)
+    local oldIcons = table.deepcopy(self.icons(0,0))
+    if not oldIcons[1].scale then oldIcons[1].scale = 1 end
+    local first_layer_ic_sz = oldIcons[1].icon_size
     local a = function(levels,grade) return {} end
     if type(icon) == "table" and icon.icon then
         local f = string.match(icon.icon, "%_%_(.-)%_%_")
         --Full Path is there
         if f then
+            if icon.scale then
+                icon.scale = icon.scale * (first_layer_ic_sz / icon.icon_size or defines.default_icon_size)
+            end
             a = function(levels,grade) return {icon} end
         --Just a name given
         else
@@ -656,16 +664,24 @@ function ItemGen:addIcon(icon)
             end
             --Proto with .icon
             if proto and proto.icon then
-                a = function(levels,grade) return {{icon=proto.icon,icon_size=ic_sz,scale=icon.scale*32/ic_sz,shift=icon.shift}} end
+                local sc
+                if proto.scale then
+                    sc = proto.scale * (first_layer_ic_sz / ic_sz)
+                end
+                a = function(levels,grade) return {{icon=proto.icon, icon_size=ic_sz, scale=sc, shift=icon.shift}} end
             --Proto with .icons
             elseif proto and proto.icons then
                 local ic = {}
+                local sc
                 for _, c in pairs(proto.icons) do
                     local int_sz = c.icon_size or ic_sz
+                    if c.scale then
+                        sc = c.scale * (first_layer_ic_sz / ic_sz)
+                    end
                     ic[#ic+1] = {
                         icon=c.icon,
                         icon_size=int_sz,
-                        scale = (c.scale or (defines.default_icon_size/int_sz))*(icon.scale or (defines.default_icon_size/int_sz)),
+                        scale = sc, --(c.scale or (defines.default_icon_size/int_sz))*(icon.scale or (defines.default_icon_size/int_sz)),
                         shift = {(c.shift or {0,0})[1]+(icon.shift or {0,0})[1],(c.shift or {0,0})[2]+(icon.shift or {0,0})[2]}
                     }
                 end
@@ -681,8 +697,7 @@ function ItemGen:addIcon(icon)
     else
         a = function(levels,grade) return {{icon=icon}} end
     end
-    local f = table.deepcopy(self.icons)
-    self.icons = function(levels,grade) return omni.lib.union(f(levels,grade),a(levels,grade)) end
+    self.icons = function(levels,grade) return omni.lib.union(oldIcons, a(levels,grade)) end
     self.set_icon = true
     return self
 end
@@ -700,7 +715,9 @@ function ItemGen:addMask(...)
     return self
 end
 function ItemGen:addIconLevel(lvl)
-    self:addIcon({icon = "__omnilib__/graphics/icons/small/lvl"..lvl..".png",icon_size=64,scale=0.5})
+    self:addIcon({icon = "__omnilib__/graphics/icons/small/lvl"..lvl..".png",
+    icon_size=64,
+    scale=1.0})
     return self
 end
 function ItemGen:setName(lvl,mod)
@@ -745,9 +762,10 @@ function ItemGen:addSmallIcon(icon, nr)
             if ic.icon_size then
                 ic_sz = ic.icon_size
             end
-            self:addIcon({icon = ic.icon,
-            icon_size=ic_sz,
-                scale = 0.4375*(ic.scale or (32/ic_sz)),
+            self:addIcon({
+                icon = ic.icon,
+                icon_size = ic_sz,
+                scale = 0.4375*(ic.scale or (defines.default_icon_size/ic_sz)),
                 shift = quad[nr or 1], --currently "centres" the icon if it was already offset, may need to math that out
                 tint = ic.tint or nil})
         end
