@@ -492,6 +492,7 @@ function ItemGen:create(mod_name, item_name)
         max_temperature = function(levels,grade) return nil end,
         type="item",
         force = false,
+        weight = nil,
     }
     if mod_name then
         mod_name = "__" .. mod_name .. "__"
@@ -515,6 +516,7 @@ function ItemGen:import(item)
         local it = ItemGen:create():
         setName(proto.name):
         setStacksize(proto.stack_size):
+        setWeight(proto.weight):
         setFlags(proto.flags):
         setPlace(proto.place_result):
         setSubgroup(proto.subgroup):
@@ -782,6 +784,10 @@ function ItemGen:setSubgroup(subgroup)
 end
 function ItemGen:setStacksize(size)
     self.stack_size = size
+    return self
+end
+function ItemGen:setWeight(c)
+    self.weight = c
     return self
 end
 function ItemGen:setFuelValue(fv)
@@ -1134,7 +1140,8 @@ function ItemGen:generate_item()
         max_temperature=t,
         durability=self.durability,
         durability_description_key=self.durability_description_key,
-        durability_description_value=self.durability_description_value
+        durability_description_value=self.durability_description_value,
+        weight=self.weight
     }
     if  self.isTile then
         self.rtn[#self.rtn].place_as_tile={
@@ -1205,6 +1212,7 @@ function RecGen:import(rec)
             local proto = omni.lib.find_prototype(recipe.main_product or recipe.results[1].name)
             if proto then
                 r:setStacksize(proto.stack_size):
+                setWeight(proto.weight):
                 setFlags(proto.flags):
                 setPlace(proto.place_result):
                 setSubgroup(proto.subgroup):
@@ -1710,6 +1718,7 @@ function RecGen:generate_recipe()
         setSubgroup(self.subgroup(0,0)):
         setOrder(self.order(0,0)):
         setStacksize(self.stack_size):
+        setWeight(self.weight):
         setFuelValue(self.fuel_value):        
         setPlace(self.place_result(0,0)):
         setFlags(self.flags):
@@ -2189,6 +2198,7 @@ function RecChain:generate_chain()
         setIcons(self.icons(0,0)):
         setSubgroup(self.subgroup(0,0)):
         setStacksize(self.stack_size):
+        setWeight(self.weight):
         setFuelValue(self.fuel_value):
         setOrder(self.order(0,0)):
         setPlace(self.place_result(0,0)):
@@ -3435,6 +3445,7 @@ function BuildGen:generateBuilding()
     setMain(self.main_product(0,0)):
     setPlace(self.name):
     setStacksize(self.stack_size):
+    setWeight(self.weight):
     noTech(self.tech.noTech):
     setTechName(self.tech.name(0,0)):
     setTechUpgrade(self.tech.upgrade(0,0)):
@@ -3548,6 +3559,7 @@ function BuildChain:generate_building_chain()
         setSubgroup(self.subgroup(levels,i)):
         setMain(self.main_product(levels,i)):
         setStacksize(self.stack_size):
+        setWeight(self.weight):
         setIcons(self.icons(levels,i)):
         addIconLevel(i):
         setSize(function(levels,grade) return self.size(self.levels,i) end):

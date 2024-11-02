@@ -28,6 +28,7 @@ BuildGen:create("omnimatter","burner-omnitractor"):
     setReplace("omnitractor"):
     setNextUpgrade("omnitractor-1"):
     setStacksize(50):
+    setWeight(40000):
     setSize(3):
     setCrafting({"omnite-extraction-both","omnite-extraction-burner"}):
     setSpeed(1):
@@ -113,6 +114,7 @@ BuildChain:create("omnimatter","omnitractor"):
             end
         end):
     setStacksize(50):
+    setWeight(40000):
     allowProductivity():
     setLevel(settings.startup["omnimatter-max-tier"].value):
     setSoundWorking("ore-crusher"):

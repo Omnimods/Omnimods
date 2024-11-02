@@ -18,7 +18,7 @@ RecGen:create("omnimatter","stone-crushed"):
     setCategory(c):
     setIngredients({"stone", 1}):
     setResults({type="item", name="stone-crushed", amount=2}):
-    setIcons({"crushed-omnite", 32}):
+    setIcons({"stone-crushed", 32}):
     setEnabled():
     extend()
 

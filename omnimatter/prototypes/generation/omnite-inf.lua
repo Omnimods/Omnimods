@@ -40,7 +40,7 @@ data:extend({
         name = "infinite-omnite",
         localised_name = {"", "[entity=omnite] ", {"entity-name.infinite-omnite"}},
         richness = true,
-        order = "a-a-infinite-omnite",
+        order = "a-b-infinite-omnite",
         category = "resource"
     },
     {
@@ -53,7 +53,7 @@ data:extend({
         tree_removal_max_distance = 32 * 32,
         infinite_depletion_amount = 10,
         resource_patch_search_radius = 10,
-        order="a-a-infinite-omnite",
+        order="a-b-infinite-omnite",
         infinite=true,
         minimum = 375,
         normal = 1500,
@@ -61,7 +61,7 @@ data:extend({
         collision_box = {{ -0.1, -0.1}, {0.1, 0.1}},
         selection_box = {{ -0.5, -0.5}, {0.5, 0.5}},
         autoplace = resource_autoplace.resource_autoplace_settings({
-            has_starting_area_placement = true, --false
+            has_starting_area_placement = false,
             name ="infinite-omnite",
             patch_set_name = "infinite-omnite",
             autoplace_control_name = "infinite-omnite",

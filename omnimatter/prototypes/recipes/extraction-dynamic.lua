@@ -312,7 +312,7 @@ local function create_base_extraction(tier, split, split_num)
             setCategory("omnite-extraction-both"):
             setTechName("omnitech-base-impure-extraction"):
             setTechLocName("omnitech-base-omnitraction"):
-            setTechPrereq(nil)
+            setTechPrereq("automation-science-pack")
     else
         base_impure_ore:
             setCategory("omnite-extraction"):

@@ -5,6 +5,7 @@ local omnifurnace = BuildGen:create("omnimatter","burner-omni-furnace"):
     setEmissions(2.0):
     setIngredients({ "omnicium-plate", 2},{ "omnite-brick", 8},{ "stone-furnace", 1}):
     setStacksize(50):
+    setWeight(40000):
     setSubgroup("omni-buildings"):
     setSize(2):
     setCrafting("smelting","omnifurnace"):

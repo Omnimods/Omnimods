@@ -253,8 +253,8 @@ data:extend({
         effect_animation_period = 5,
         effect_animation_period_deviation = 1,
         effect_darkness_multiplier = 4.6,
-        min_effect_alpha = 0.3,
-        max_effect_alpha = 0.5,
+        min_effect_alpha = 0.2,
+        max_effect_alpha = 0.3,
         map_color = {r=0.34, g=0.00, b=0.51}
     }
 })
