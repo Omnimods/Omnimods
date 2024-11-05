@@ -640,7 +640,7 @@ end
 function ItemGen:addIcon(icon)
     local oldIcons = table.deepcopy(self.icons(0,0))
     if not oldIcons[1].scale then oldIcons[1].scale = 1 end
-    local first_layer_ic_sz = oldIcons[1].icon_size
+    local first_layer_ic_sz = oldIcons[1].icon_size or defines.default_icon_size
     local a = function(levels,grade) return {} end
     if type(icon) == "table" and icon.icon then
         local f = string.match(icon.icon, "%_%_(.-)%_%_")
@@ -1197,16 +1197,17 @@ function RecGen:create(mod,name,efficency)
     r.hidden = function(levels,grade) return nil end
     r.tech = {
         noTech = false,
-        cost = function(levels,grade) return 50 end,
-        packs = function(levels,grade) return 1 end,
-        time=function(levels,grade) return 20 end,
+        cost = function(levels,grade) return nil end,
+        packs = function(levels,grade) return nil end,
+        time = function(levels,grade) return nil end,
         upgrade = function(levels,grade) return false end,
         name = function(levels,grade) return self.name end,
         loc_name = function(levels,grade) return nil end,
         loc_desc = function(levels,grade) return nil end,
         icons = function(levels,grade) return nil end,
         prerequisites = function(level,grade) return nil end,
-        effects = {}}
+        effects = {}
+    }
 
     return setmetatable(r,RecGen)
 end
@@ -1290,6 +1291,9 @@ function RecGen:import(rec)
                     setTechCost(tech.unit.count):
                     setTechTime(tech.unit.time)
                 end
+                if tech.research_trigger then
+                    r:setTechTrigger(tech.research_trigger)
+                end
             end
         end
         return table.deepcopy(r)
@@ -1327,6 +1331,7 @@ function RecChain:create(mod,name)
     local r = RecGen:create(mod,name,0.5)
     r.tech.cost = function(levels,grade) return 50+50*grade end
     r.tech.packs = function(levels,grade) return math.floor(grade/levels*5+1) end
+    r.tech.time = function(levels,grade) return 20 end
     r.tech.upgrade = function(levels,grade) return false end
     --r.ingredients=function(levels,grade) return chainIngredients(r,levels,grade) end
     --r.results=function(levels,grade) return wasteYieldResults(r,levels,grade) end
@@ -1825,17 +1830,23 @@ function RecGen:generate_recipe()
 
         if not data.raw.technology[tname] and self.tech.icons(0,0)~= nil then
             --omni.lib.remove_unlock_recipe(self.tech.name(0,0),self.name)
-            self.rtn[#self.rtn+1]=TechGen:create(self.mod,self.tech.name(0,0)):
-            setCost(self.tech.cost(0,0)):
-            setPacks(self.tech.packs(0,0)):
-            setTime(self.tech.time(0,0)):
-            setIcons(self.tech.icons(0,0)):
-            setUpgrade(self.tech.upgrade(0,0) or false):
-            addUnlocks(omni.lib.union(self.tech.effects,{self.name})):
-            setPrereq(self.tech.prerequisites(0,0)):
-            setLocDesc(self.tech.loc_desc(0,0)):
-            setLocName(self.tech.loc_name(0,0)):
-            return_array()[1]
+            --self.rtn[#self.rtn+1]=TechGen:create(self.mod,self.tech.name(0,0)):
+            local tt  = TechGen:create(self.mod,self.tech.name(0,0)):
+                setTrigger(self.tech.trigger):
+                setIcons(self.tech.icons(0,0)):
+                setUpgrade(self.tech.upgrade(0,0) or false):
+                addUnlocks(omni.lib.union(self.tech.effects,{self.name})):
+                setPrereq(self.tech.prerequisites(0,0)):
+                setLocDesc(self.tech.loc_desc(0,0)):
+                setLocName(self.tech.loc_name(0,0))
+
+            if self.tech.packs(0,0) then
+                tt:setCost(self.tech.cost(0,0)):
+                setPacks(self.tech.packs(0,0)):
+                setTime(self.tech.time(0,0))
+            end
+            tt:return_array()
+            self.rtn[#self.rtn+1] = tt.rtn[1]
         else
             --Force recipe unlock since the recipe is not generated yet
             omni.lib.add_unlock_recipe(tname, self.name, true)
@@ -1856,7 +1867,6 @@ function RecGen:generate_recipe()
             end
         end
     end
-
     self.rtn[#self.rtn+1] ={
         type = "recipe",
         name = self.name,
@@ -2063,6 +2073,7 @@ function RecGen:setTechIcons(icons,mod)
     end
     return self
 end
+
 function RecGen:setTechPacks(cost)
     if type(cost)=="number" or type(cost)=="string" then
         self.tech.packs = function(levels,grade) return cost end
@@ -2074,6 +2085,11 @@ function RecGen:setTechPacks(cost)
     return self
 end
 
+function RecGen:setTechTrigger(t)
+    self.tech.trigger = t
+    return self
+end
+
 function RecGen:setTechTime(t)
     if type(t)=="number" then
         self.tech.time = function(levels,grade) return t end
@@ -2082,6 +2098,7 @@ function RecGen:setTechTime(t)
     end
     return self
 end
+
 function RecGen:setTechPrereq(...)
     local arg={...}
     if #arg==1 and type(arg[1])~="string" then
@@ -2356,12 +2373,12 @@ function TechGen:create(mod,name)
         mod = mod,
         name=name or mod,
         rtn = {},
-        cost = 50,
-        packs = 1,
+        --cost = 50,
+        --packs = 1,
         unlock={},
         upgrade = false,
         prereq={},
-        time = 20,
+        --time = 20,
         type="technology",
         allowed = true
 
@@ -2379,12 +2396,19 @@ function TechGen:import(name)
         local t = TechGen:create():
         setName(name):
         setIcons(omni.lib.icon.of(tech,true)):
-        setPacks(tech.unit.ingredients):
-        setCost(tech.unit.count):
-        setTime(tech.unit.time):
         setPrereq(tech.prerequisites):
         setUpgrade(tech.upgrade):
         setEnabled(tech.enabled)
+
+        if tech.unit then
+            t:setPacks(tech.unit.ingredients):
+            setCost(tech.unit.count):
+            setTime(tech.unit.time)
+        end
+
+        if tech.research_trigger then
+            t:setTrigger(tech.research_trigger)
+        end
 
         local uns = {}
         for _,unlock in pairs(tech.effects) do
@@ -2459,6 +2483,10 @@ function TechGen:setCost(c)
 end
 function TechGen:setTime(t)
     self.time = t
+    return self
+end
+function TechGen:setTrigger(tt)
+    self.trigger = tt
     return self
 end
 function TechGen:setPrereq(...)
@@ -2545,24 +2573,26 @@ end
 function TechGen:generate_tech()
     local c = {}
     local add_cost = 1
-    if type(self.packs)=="number" then
-        for i=1,self.packs do
-            if omni.sciencepacks[i] then
-                table.insert(c,{omni.sciencepacks[i],1})
-            else
-                add_cost = add_cost *2
+    if self.packs then
+        if type(self.packs)=="number" then
+            for i=1,self.packs do
+                if omni.sciencepacks[i] then
+                    table.insert(c,{omni.sciencepacks[i],1})
+                else
+                    add_cost = add_cost *2
+                end
             end
-        end
-    elseif type(self.packs) == "table" then
-        if self.packs[1] and type(self.packs[1]) ~= "table" then
-            c=table.deepcopy({self.packs})
+        elseif type(self.packs) == "table" then
+            if self.packs[1] and type(self.packs[1]) ~= "table" then
+                c=table.deepcopy({self.packs})
+            else
+                c=table.deepcopy(self.packs)
+            end
+        elseif type(self.packs)=="string" then
+            c=table.deepcopy(data.raw.technology[self.packs].unit.ingredients)
         else
-            c=table.deepcopy(self.packs)
+            error("Tech ingredient costs must be a number, table or function that gives the former two.")
         end
-    elseif type(self.packs)=="string" then
-        c=table.deepcopy(data.raw.technology[self.packs].unit.ingredients)
-    else
-        error("Tech ingredient costs must be a number, table or function that gives the former two.")
     end
     local u = {}
     for _, rec in pairs(self.unlock) do
@@ -2573,23 +2603,29 @@ function TechGen:generate_tech()
         if data.raw.recipe[rec] then data.raw.recipe[rec].enabled=false end
     end
     local tech = {
-    name = self.name,
-    type = "technology",
-    icons = self.icons,
-    upgrade = self.upgrade,
-    --icon_size = 128,
-    prerequisites = self.prereq,
-    enabled = self.enabled,
-    hidden = self.hidden,
-    effects =u,
-    unit  =
-    {
-        count = omni.lib.round(self.cost*add_cost),
-        ingredients = c,
-        time = self.time
-    },
-    order = "c-a"
+        name = self.name,
+        type = "technology",
+        icons = self.icons,
+        upgrade = self.upgrade,
+        --icon_size = 128,
+        prerequisites = self.prereq,
+        enabled = self.enabled,
+        hidden = self.hidden,
+        effects = u,
+        order = "c-a"
     }
+    if self.packs then
+        tech.unit  =
+        {
+            count = omni.lib.round(self.cost*add_cost),
+            ingredients = c,
+            time = self.time or 20
+        }
+    end
+    if self.trigger then
+        tech.research_trigger = self.trigger
+    end
+
     --if type(tech.icon) == "table" and tech.icon[1] then
     --    tech.icons = self.icon
     --    tech.icon = nil
@@ -3467,16 +3503,29 @@ function BuildGen:generateBuilding()
     noTech(self.tech.noTech):
     setTechName(self.tech.name(0,0)):
     setTechUpgrade(self.tech.upgrade(0,0)):
-    setTechCost(self.tech.cost(0,0)):
     setTechIcons(self.tech.icons(0,0)):
-    setTechPacks(self.tech.packs(0,0)):
     setSubgroup(self.subgroup(0,0)):
-    setTechTime(self.tech.time(0,0)):
     setTechLocName(self.tech.loc_name(0,0)):
     setTechLocDesc(self.tech.loc_desc(0,0)):
     setForce(self.force):
     setTechPrereq(self.tech.prerequisites(0,0)):
+    setTechPacks(self.tech.packs(0,0)):
+    setTechCost(self.tech.cost(0,0)):
+    setTechTime(self.tech.time(0,0)):
     return_array()
+
+    -- if self.tech.packs then
+    --     stuff:setTechPacks(self.tech.packs(0,0)):
+    --     setTechCost(self.tech.cost(0,0)):
+    --     setTechTime(self.tech.time(0,0))
+    -- end
+
+    -- if self.tech.trigger then
+    --     stuff:setTechTrigger(self.tech.trigger)
+    -- end
+
+    -- stuff:return_array()
+
     for _, p in pairs(stuff) do
         self.rtn[#self.rtn+1] = table.deepcopy(p)
     end
@@ -4033,6 +4082,7 @@ function InsertGen:generateInserter()
     setTechCost(self.tech.cost(0,0)):
     setTechIcons(self.tech.icons(0,0)):
     setTechPacks(self.tech.packs(0,0)):
+    setTechTrigger(self.tech.trigger):
     setSubgroup(self.subgroup(0,0)):
     setOrder(self.order(0,0)):
     setTechTime(self.tech.time(0,0)):

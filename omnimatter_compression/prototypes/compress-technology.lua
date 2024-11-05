@@ -186,9 +186,6 @@ if settings.startup["omnicompression_item_compression"].value then
                 ingamount  = math.min(math.max(omni.lib.round(ingamount ), 1), 65535)
                 ingname = "compressed-"..ingname
             end
-            if tech.name == "rocket-silo" then
-                log(serpent.block(t.effects))
-            end
             --if valid remove effects from compressed version
             local valid_effects = {}
             if t.effects then
@@ -200,9 +197,6 @@ if settings.startup["omnicompression_item_compression"].value then
                 t.effects = valid_effects
             end
 
-            if tech.name == "rocket-silo" then
-                log(serpent.block(t.effects))
-            end
             -- Divide our time and unit count to account for our changes
             if t.unit.count then
                 -- new time is total time divided by our new unit count
@@ -244,7 +238,3 @@ if settings.startup["omnicompression_item_compression"].value then
 
     log("Technology compression finished: "..(#compressed_techs or 0).. " techs")
 end
-
-
-log(serpent.block(data.raw["technology"]["rocket-silo"].effects))
-log(serpent.block(data.raw["technology"]["omnipressed-rocket-silo"].effects))
