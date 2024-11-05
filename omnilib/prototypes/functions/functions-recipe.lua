@@ -241,7 +241,7 @@ function omni.lib.replace_recipe_result(recipename, result, replacement)
                 break
             end
         end
-
+        rec.results = res
         --Check if the main product was replaced
         if rec.main_product and rec.main_product == result then
             rec.main_product = replacement.name
@@ -270,7 +270,7 @@ function omni.lib.replace_recipe_ingredient(recipename, ingredient, replacement)
             if i.name == ingredient then
                 --if the replacement was found above, set the calculated amount and nil this result, otherwise replace the ingredient
                 if found then
-                    res[num] = nil
+                    ing[num] = nil
                 else
                     i.name = replacement.name
                     i.type = replacement.type
@@ -279,6 +279,7 @@ function omni.lib.replace_recipe_ingredient(recipename, ingredient, replacement)
                 break
             end
         end
+        rec.ingredients = ing
     end
 end
 
