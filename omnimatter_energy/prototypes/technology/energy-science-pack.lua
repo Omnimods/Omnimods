@@ -10,7 +10,10 @@ RecGen:create("omnimatter_energy","energy-science-pack"):
     setSubgroup("science-pack"):
     setCategory("crafting"):
     setOrder("a[aa-energy-science-pack]"):
-    setEnabled(true):
+    setEnabled(false):
+    setTechName("omnitech-energy-science-pack"):
+    setTechIcons("energy-science-pack","omnimatter_energy"):
+    setTechTrigger({item = "omnitor-lab", type = "craft-item"}):
     extend()
 
 --Modify the automation science pack

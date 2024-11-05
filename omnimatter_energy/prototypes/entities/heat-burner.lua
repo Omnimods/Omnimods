@@ -74,6 +74,9 @@ BuildGen:create("omnimatter_energy", "omni-heat-burner"):
     extend()
 
 
+
+    
+
 --Set special attributes that we dont have in our lib
 local turbine = data.raw["burner-generator"]["omni-heat-burner"]
 turbine.max_power_output = "1MW"

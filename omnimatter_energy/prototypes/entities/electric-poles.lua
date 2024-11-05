@@ -1,7 +1,9 @@
-RecGen:import("small-electric-pole"):
-    setEnabled(false):
-    setTechName("omnitech-anbaricity"):
-    extend()
+--Move electric pole unlocks to anbaricity
+omni.lib.add_unlock_recipe("omnitech-anbaricity", "small-electric-pole")
+omni.lib.add_unlock_recipe("omnitech-anbaricity","copper-cable")
+
+omni.lib.remove_unlock_recipe("electronics", "small-electric-pole")
+omni.lib.remove_unlock_recipe("electronics","copper-cable")
 
 BuildGen:import("small-electric-pole"):
     setName("small-iron-electric-pole"):

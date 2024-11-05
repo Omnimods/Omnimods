@@ -25,20 +25,17 @@ if mods["Krastorio2"] then
     data.raw.tool["energy-science-pack"].localised_name = {"technology-name.energy-tech-card"}
 
     --Move lab behind anbaricity again
-    omni.lib.replace_prerequisite("omnitech-anbaric-lab", "omnitech-anbaric-electronics", "omnitech-anbaricity")
+    omni.lib.replace_prerequisite("omnitech-anbaric-lab", "electronics", "omnitech-anbaricity")
 
     --Move basic tech card techs without prereq behind that
     omni.lib.add_prerequisite("kr-automation-core", "basic-tech-card")
     omni.lib.add_prerequisite("kr-iron-pickaxe", "basic-tech-card")
     omni.lib.add_prerequisite("military", "basic-tech-card")
 
-    --Remove anbaric-electronics, K2 fixed up vanilla electronics
-    omni.lib.replace_prerequisite("omnitech-anbaric-inserter", "omnitech-anbaric-electronics", "electronics")
-    --omni.lib.replace_prerequisite("omnitech-anbaric-lab", "omnitech-anbaric-electronics", "electronics")
-    TechGen:import("omnitech-anbaric-electronics"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():sethidden():extend()
-
-    --remove omni mining drill tech
-    TechGen:import("omnitech-anbaric-mining"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():sethidden():extend()
+    --Remove electronics, K2 fixed up vanilla electronics
+    omni.lib.replace_prerequisite("omnitech-anbaric-inserter", "electronics", "electronics")
+    --omni.lib.replace_prerequisite("omnitech-anbaric-lab", "electronics", "electronics")
+    TechGen:import("electronics"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():sethidden():extend()
 
     --remove omni inserter tech
     TechGen:import("omnitech-anbaric-inserter"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():sethidden():extend()

@@ -26,11 +26,6 @@ elseif nocomps then
     omni.lib.add_recipe_ingredient("steam-turbine",{"anbaric-omnitor",10})
 end
 
-
-if mods["bobmining"] then
-    omni.lib.add_prerequisite("bob-drills-1", "omnitech-anbaric-mining")
-end
-
 if mods["boblogistics"] then
 
 
@@ -46,8 +41,8 @@ end
 
 if mods["bobelectronics"] then
     omni.lib.add_recipe_ingredient("wooden-board", {"omni-tablet",1})
-    omni.lib.add_unlock_recipe("omnitech-anbaric-electronics", "wooden-board")
-    omni.lib.add_unlock_recipe("omnitech-anbaric-electronics", "basic-circuit-board")
+    omni.lib.add_unlock_recipe("electronics", "wooden-board")
+    omni.lib.add_unlock_recipe("-electronics", "basic-circuit-board")
 end
 
 if mods["bobassembly"] then
