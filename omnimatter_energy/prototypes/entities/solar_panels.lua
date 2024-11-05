@@ -105,8 +105,8 @@ for j=1,nr_tiers do
     for i=1,max_size do
         --panel pictures
         local pic = {}
-        local icons={{icon="__omnimatter_energy__/graphics/icons/empty.png",icon_size=32}}
-        local ticons={{icon="__omnimatter_energy__/graphics/technology/empty.png",icon_size=32}}
+        local icons={{icon="__omnimatter_energy__/graphics/icons/empty.png", icon_size=32, scale = 1}}
+        local ticons={{icon="__omnimatter_energy__/graphics/technology/empty.png", icon_size=32, scale = 1}}
         for k=i,1,-1 do
             for l=1, i do
                 --entity pictures
@@ -130,7 +130,7 @@ for j=1,nr_tiers do
                 ticons[#ticons+1]={
                     icon="__omnimatter_energy__/graphics/technology/zolar-panel.png",
                     icon_size= 128,
-                    scale = 1/i*72/128,
+                    scale = 1/i * 72/128,
                     shift={(k-i/2-0.5)*32/i,(l-i/2-0.5)*32/i}
                 }
             end
@@ -151,7 +151,7 @@ for j=1,nr_tiers do
                 ticons[#icons+1]={
                     icon="__omnimatter_energy__/graphics/entity/buildings/zolar-crystal.png",
                     icon_size=192,
-                    scale = 1/i*72/192,
+                    scale = 1/i * 72/192,
                     shift={(k-i/2)*32/i,(l-i/2)*32/i}
                 }
 
@@ -159,7 +159,7 @@ for j=1,nr_tiers do
                 ticons[#ticons+1]={
                     icon="__omnimatter_energy__/graphics/entity/buildings/zolar-crystal.png",
                     icon_size=192,
-                    scale = 1/i*72/192,
+                    scale = 1/i * 72/192,
                     shift={(k-i/2)*32/i,(l-i/2)*32/i}
                 }
             end
@@ -208,8 +208,9 @@ for j=1,nr_tiers do
             setEnabled(false):
             setStacksize(50):
             setTechName("omnitech-crystal-solar-panel-tier-"..j.."-size-"..i):
-            setTechLocName("omnitech-crystal-solar-panel", j, i):
-            setTechIcons(ticons):        
+            setTechLocName({"omnitech-crystal-solar-panel", tostring(j), tostring(i)}):
+            --setTechLocName({"omnitech-impure-omnitraction", omni.lib.locale.of(proto).name, tostring(i)}):
+            setTechIcons(ticons):
             setTechCost(150+((j-1)*max_size+i)*75+j*100):    --base_cost+...*cost_between_techs+...*addidional_cost_between_tiers
             setTechPacks(get_scienceing(j)):
             setTechPrereq(get_req(j,i)):

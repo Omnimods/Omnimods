@@ -111,7 +111,7 @@ RecChain:create("omnimatter_crystal","pseudoliquid-amorphous-crystal"):
     setResults(function (levels,grade) return {{type="fluid",name="pseudoliquid-amorphous-crystal",amount=240+2160*(grade-1)/levels}} end):
     setLevel(omni.fluid_levels):
     setTechName("omnitech-pseudoliquid-amorphous-crystal"):
-    setTechLocName("omnitech-pseudoliquid-amorphous-crystal",function (levels,grade) return grade end):
+    setTechLocName("omnitech-pseudoliquid-amorphous-crystal"):
     setTechIcons("amorphous-crystal","omnimatter_crystal"):
     setTechCost(function(levels,grade) return 500+50*grade end):
     setTechPacks(function(levels,grade) return 3+math.floor(grade*3/levels) end):

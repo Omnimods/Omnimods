@@ -2457,7 +2457,7 @@ function TechGen:setLocName(n)
     else
         self.loc_name = {n}
     end
-    if self.loc_name[1] and not string.find(self.loc_name[1],"name.") then
+    if self.loc_name[1] and type(self.loc_name[1]) == "string" and not string.find(self.loc_name[1], "name.") then
         self.loc_name[1]="technology-name."..self.loc_name[1]
     end
     return self
