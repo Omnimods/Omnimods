@@ -725,16 +725,7 @@ function omni.lib.add_overlay(it, overlay_type, level)
     if overlay_type =="technology" then
         base_scale = icons[1] and icons[1].scale or (256 / 2) / base_size
     end
-
-    if it.name =="omnipressed-research-productivity" then
-        log(overlay_type)
-        log(serpent.block(it))
-        log(serpent.block(icons))
-
-        log(serpent.block(base_size))
-        log(serpent.block(base_scale))
-    end
-
+    
     level = level or "" -- So we can build our table
     local overlays = { -- Since we normalize for 32px/no mipmap icons below, we only need to set those properties for exceptions
         extraction = { -- omnimatter tiered extraction
