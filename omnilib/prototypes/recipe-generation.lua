@@ -2696,7 +2696,7 @@ function setBuildingParameters(b,subpart)
     b.overlay={}
     b.place_result = function(levels,grade) return b.name end
     b.next_upgrade = function(levels,grade) return nil end
-    b.vector_to_place_result = function(levels,grade) return {0, -1.85} end
+    b.vector_to_place_result = function(levels,grade) return nil end
     b.crafting_categories = function(levels,grade) return nil end
     b.working_visualisations = function(levels,grade) return nil end
     b.effectivity = function(levels,grade) return 1 end
