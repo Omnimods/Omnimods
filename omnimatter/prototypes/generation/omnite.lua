@@ -6,22 +6,22 @@ ItemGen:create("omnimatter","omnite"):
     setItemPictures({
         {
             filename = "__omnimatter__/graphics/icons/omnite.png",
-            scale = 0.25,
+            scale = 0.5,
             size = 64
         },
         {
             filename = "__omnimatter__/graphics/icons/omnite-1.png",
-            scale = 0.25,
+            scale = 0.5,
             size = 64
         },
         {
             filename = "__omnimatter__/graphics/icons/omnite-2.png",
-            scale = 0.25,
+            scale = 0.5,
             size = 64
         },
         {
             filename = "__omnimatter__/graphics/icons/omnite-3.png",
-            scale = 0.25,
+            scale = 0.5,
             size = 64
         }
     }):
