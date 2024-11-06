@@ -43,7 +43,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
     local function set_category(recipe)
         if recipe.category then
             if not data.raw["recipe-category"][recipe.category.."-compressed"] then
-                if not omni.lib.is_in_table(recipe.category.."-compressed",new_cat) then
+                if not omni.lib.is_in_table(recipe.category.."-compressed", new_cat) then
                     new_cat[#new_cat+1] = {type = "recipe-category", name = recipe.category.."-compressed"}
                 end
             end
@@ -493,7 +493,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                     ingredients = new_val.ingredients,
                                     results = new_val.results,
                                     energy_required = math.max(0.0011, tid),
-                                    subgroup = recipe.subgr,
+                                    subgroup = recipe.subgroup,
                                     hide_from_player_crafting = recipe.hide_from_player_crafting or omni.compression.hide_handcraft,
                                     category = new_cat,
                                     order = recipe.order,
@@ -546,6 +546,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                 r.icons = icons
                                 r.icon = nil
                                 r.category=new_cat
+                                r.subgroup = recipe.subgroup
                                 r.energy_required = concentrationRatio*r.energy_required
                                 r.hide_from_player_crafting = r.hide_from_player_crafting or omni.compression.hide_handcraft
                                 for _,ingres in pairs({"ingredients","results"}) do
@@ -566,7 +567,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                     data.raw["item-subgroup"][comrec.subgroup]
                                     )
                                     subgroup =  subgroup and subgroup.group and data.raw["item-group"][subgroup.group]
-                                    subgroup = subgroup and subgroup.order 
+                                    subgroup = subgroup and subgroup.order
                                     subgroup = "compressed-" .. (subgroup or "crafting") .. "-" .. (comrec.subgroup or "general")
                                     if not data.raw["item-subgroup"][subgroup] then
                                         local item_cat = {
@@ -578,7 +579,6 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                         data:extend({item_cat}) --create it if it didn't already exist
                                     end
                                     comrec.subgroup = subgroup
-
                                 end
                                 comrec.hidden = recipe.hidden
                                 comrec.enabled = false
