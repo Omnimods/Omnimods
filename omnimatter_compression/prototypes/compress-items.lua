@@ -167,11 +167,14 @@ if settings.startup["omnicompression_item_compression"].value then
             rocket_launch_product = table.deepcopy(item.rocket_launch_product),
             rocket_launch_products = table.deepcopy(item.rocket_launch_products)
         }
+        if item.weight then
+            new_item.weight = item.weight * item.stack_size
+        end
         if item.spoil_result then
             new_item.spoil_result = "compressed-"..item.spoil_result
         end
         if item.spoil_to_trigger_result then
-            new_item.spoil_to_trigger_result = item.spoil_to_trigger_result
+            new_item.spoil_to_trigger_result = table.deepcopy(item.spoil_to_trigger_result)
             new_item.spoil_to_trigger_result.trigger.action_delivery.source_effects[1].repeat_count = (item.spoil_to_trigger_result.trigger.action_delivery.source_effects[1].repeat_count or 1) * item.stack_size
         end
         if science_list[item.name] then
