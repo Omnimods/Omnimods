@@ -54,7 +54,7 @@ if settings.startup["omnicompression_item_compression"].value then
                 new_fluid.fuel_value = new_fluid.fuel_value and omni.lib.mult_fuel_value(new_fluid.fuel_value, concentrationRatio)
                 compressed_item_names[new_fluid.name] = true
                 compress_items[#compress_items+1] = new_fluid
-                
+
                 --Create the compress recipe
                 local compress = {
                     type = "recipe",
@@ -156,11 +156,24 @@ if settings.startup["omnicompression_item_compression"].value then
             fuel_acceleration_multiplier = item.fuel_acceleration_multiplier,
             fuel_top_speed_multiplier = item.fuel_top_speed_multiplier,
             fuel_emissions_multiplier = item.fuel_emissions_multiplier,
+            fuel_acceleration_multiplier_quality_bonus = item.fuel_acceleration_multiplier_quality_bonus,
+            fuel_top_speed_multiplier_quality_bonus = item.fuel_top_speed_multiplier_quality_bonus,
             fuel_glow_color = item.fuel_glow_color,
             durability = item.durability,
+            ingredient_to_weight_coefficient = item.ingredient_to_weight_coefficient,
+            default_import_location = item.default_import_location,
+            spoil_ticks = item.spoil_ticks,
+            destroyed_by_dropping_trigger = item.destroyed_by_dropping_trigger,
             rocket_launch_product = table.deepcopy(item.rocket_launch_product),
             rocket_launch_products = table.deepcopy(item.rocket_launch_products)
         }
+        if item.spoil_result then
+            new_item.spoil_result = "compressed-"..item.spoil_result
+        end
+        if item.spoil_to_trigger_result then
+            new_item.spoil_to_trigger_result = item.spoil_to_trigger_result
+            new_item.spoil_to_trigger_result.trigger.action_delivery.source_effects[1].repeat_count = (item.spoil_to_trigger_result.trigger.action_delivery.source_effects[1].repeat_count or 1) * item.stack_size
+        end
         if science_list[item.name] then
             new_item.type = "tool"
             new_item.stack_size = compressed_item_stack_size
