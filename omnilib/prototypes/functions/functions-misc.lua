@@ -709,7 +709,6 @@ function omni.lib.add_overlay(it, overlay_type, level)
     -- `it` is the item/recipe table, not the name (can search for it if wrong)
     -- overlay_type is a string for type or an iconspecification table
     -- level is required for extraction, building and compress-fluid and should be a number
-
     if type(it) == "string" then --parsed whole table not the name...
         it = omni.lib.find_prototype(it)
     end
@@ -719,35 +718,46 @@ function omni.lib.add_overlay(it, overlay_type, level)
         log("Invalid prototype specified")
         return
     end
-    local base_size = icons[1] and icons[1].icon_size
-    local base_scale = icons[1] and icons[1].scale or 1
-    if not base_size then
-        base_size = 32
-        log("No icon size found for " .. it.name)
-    else
-        base_size = base_size * base_scale
+
+    local base_size = (icons[1] and icons[1].icon_size) or defines.default_icon_size
+    local base_scale = icons[1] and icons[1].scale or (defines.default_icon_size / 2) / base_size
+    --Techs default to 256 icon_size instead of 64
+    if overlay_type =="technology" then
+        base_scale = icons[1] and icons[1].scale or (256 / 2) / base_size
     end
+
+    if it.name =="omnipressed-research-productivity" then
+        log(overlay_type)
+        log(serpent.block(it))
+        log(serpent.block(icons))
+
+        log(serpent.block(base_size))
+        log(serpent.block(base_scale))
+    end
+
     level = level or "" -- So we can build our table
     local overlays = { -- Since we normalize for 32px/no mipmap icons below, we only need to set those properties for exceptions
         extraction = { -- omnimatter tiered extraction
-            icon = "__omnimatter__/graphics/icons/extraction-"..level..".png"
+            icon = "__omnimatter__/graphics/icons/extraction-"..level..".png",
+            icon_size = 32,
+            scale = 1.0 * base_scale * (base_size / 32),
         },
         building = {
-            icon = "__omnimatter_compression__/graphics/compress-"..level.."-32.png"
+            icon = "__omnimatter_compression__/graphics/compress-"..level.."-32.png",
+            icon_size = 32,
+            scale = 1.0 * base_scale * (base_size / 32),
         },
         compress = { -- compressed item/recipe
-            icon = "__omnimatter_compression__/graphics/compress-blank-32.png",
+            icon = "__omnimatter_compression__/graphics/compress-blank-64.png",
+            icon_size = 64,
             tint = {
                 r = 0.65,
                 g = 0,
                 b = 0.65,
                 a = 1
             },
-            scale = 1.5,
-            shift = {
-                -8,
-                8
-            }
+            scale = 1.0 * base_scale * (base_size / 64),
+
         },
         uncompress = { -- decompression recipe
             icon = "__omnimatter_compression__/graphics/compress-out-arrow-32.png"
@@ -760,11 +770,11 @@ function omni.lib.add_overlay(it, overlay_type, level)
         technology = { -- compressed techs
             icon = "__omnimatter_compression__/graphics/compress-tech-128.png",
             icon_size = 128,
-            scale = 1.5 * (base_size / 128),
-            shift = {
-                -32 * (base_size / 128),
-                32 * (base_size / 128),
-            },
+            scale = 1.0 * base_scale * (base_size / 128), --1.5 * (base_size / 128),
+            -- shift = {
+            --     -32 * (base_size / 128),
+            --     32 * (base_size / 128),
+            -- },
             tint = {
                 r = 1,
                 g = 1,
@@ -793,7 +803,8 @@ function omni.lib.add_overlay(it, overlay_type, level)
                 overlay.icon_size = overlay.icon_size or 32
                 overlay = {overlay}
             end
-            icons = util.combine_icons(icons, overlay, {})
+            -- icons = util.combine_icons(icons, overlay, {})
+            icons = omni.lib.union(icons, overlay)
         end
         return icons
     end
