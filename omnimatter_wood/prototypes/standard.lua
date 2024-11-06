@@ -28,6 +28,7 @@ local b = BuildGen:create("omnimatter_wood","omnimutator"):
     setFluidBox("XWX.XXX.XSX"):
     setTechName("omnitech-omnimutator"):
     setTechIcons("mutator","omnimatter_wood"):
+    setTechPacks(1):
     setTechCost(50):
     setTechTime(15):
     setTechPrereq({"omnitech-omnic-acid-hydrolyzation-1"}):
