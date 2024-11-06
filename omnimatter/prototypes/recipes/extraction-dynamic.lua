@@ -28,7 +28,8 @@ local function generate_impure_icon(ore_name)
         {
             {
                 icon = "__omnimatter__/graphics/technology/extraction-generic.png",
-                icon_size = 128
+                icon_size = 128,
+                scale = 1
             },
             {
                 icon = "__omnimatter__/graphics/icons/omnite.png",
@@ -53,7 +54,8 @@ local function generate_pure_icon(ore_name)
         {
             {
                 icon = "__omnimatter__/graphics/technology/extraction-generic.png",
-                icon_size = 128
+                icon_size = 128,
+                scale = 1
             }
         },
         ore_icon

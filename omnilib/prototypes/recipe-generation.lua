@@ -599,7 +599,7 @@ function ItemGen:setIcons(icons,mod)
             self.icons = function(levels,grade) return ic end
         else
             local ic_size=defines.default_icon_size
-            local ic_scale = 1
+            local ic_scale = (defines.default_icon_size / 2) / ic_size
             local check = {}
             if data.raw.item[icons] then
                 check=data.raw.item[icons]
@@ -611,7 +611,7 @@ function ItemGen:setIcons(icons,mod)
         -- --find icon_size
         local ic = (type(icons)=="string" and icons) or (type(icons[1])=="string" and icons[1])
         local ic_sz = icons.icon_size or (type(icons[2])=="number" and icons[2]) or defines.default_icon_size
-        local ic_scale = icons.scale or 1 --defines.default_icon_size / ic_sz
+        local ic_scale = icons.scale or (defines.default_icon_size / 2) / ic_sz --defines.default_icon_size / ic_sz
 
         if ic and string.match(ic, "%_%_(.-)%_%_") then
             local name = string.match(ic,".*%/(.-).png")
@@ -639,7 +639,7 @@ end
 
 function ItemGen:addIcon(icon)
     local oldIcons = table.deepcopy(self.icons(0,0))
-    if not oldIcons[1].scale then oldIcons[1].scale = 1 end
+    if not oldIcons[1].scale then oldIcons[1].scale = (defines.default_icon_size / 2) /  oldIcons[1].icon_size or defines.default_icon_size end
     local first_layer_ic_sz = oldIcons[1].icon_size or defines.default_icon_size
     local a = function(levels,grade) return {} end
     if type(icon) == "table" and icon.icon then
@@ -647,7 +647,7 @@ function ItemGen:addIcon(icon)
         --Full Path is there
         if f then
             if icon.scale then
-                icon.scale = icon.scale * (first_layer_ic_sz / icon.icon_size or defines.default_icon_size)
+                icon.scale = icon.scale * oldIcons[1].scale * (first_layer_ic_sz / icon.icon_size or defines.default_icon_size)
             end
             a = function(levels,grade) return {icon} end
         --Just a name given

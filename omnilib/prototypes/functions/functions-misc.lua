@@ -722,10 +722,10 @@ function omni.lib.add_overlay(it, overlay_type, level)
     local base_size = (icons[1] and icons[1].icon_size) or defines.default_icon_size
     local base_scale = icons[1] and icons[1].scale or (defines.default_icon_size / 2) / base_size
     --Techs default to 256 icon_size instead of 64
-    if overlay_type =="technology" then
+    if overlay_type == "technology" then
         base_scale = icons[1] and icons[1].scale or (256 / 2) / base_size
     end
-    
+
     level = level or "" -- So we can build our table
     local overlays = { -- Since we normalize for 32px/no mipmap icons below, we only need to set those properties for exceptions
         extraction = { -- omnimatter tiered extraction
@@ -780,8 +780,8 @@ function omni.lib.add_overlay(it, overlay_type, level)
         overlay = overlays[overlay_type]
     elseif type(overlay_type) == "table" then
         overlay = overlay_type
-        if overlay.scale then
-            overlay.scale = overlay.scale * base_scale
+        for _, ic in pairs(overlay) do
+            ic.scale = (ic.scale or 1) * base_scale * (base_size / 256)
         end
     else
         error("add_overlay: invalid overlay_type specified")
@@ -794,7 +794,7 @@ function omni.lib.add_overlay(it, overlay_type, level)
                 overlay.icon_size = overlay.icon_size or 32
                 overlay = {overlay}
             end
-            -- icons = util.combine_icons(icons, overlay, {})
+            --icons = util.combine_icons(icons, overlay, {})
             icons = omni.lib.union(icons, overlay)
         end
         return icons
