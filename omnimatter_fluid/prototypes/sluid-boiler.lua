@@ -107,16 +107,13 @@ local function sluid_boiler_generation(fluid_cats)
                 new_ent.energy_source.heat_pipe_covers = omni.fluid.heat_pipe_images.heat_pipe_covers
                 new_ent.energy_source.heat_picture = omni.fluid.heat_pipe_images.heat_picture
                 new_ent.energy_source.heat_glow = omni.fluid.heat_pipe_images.heat_glow
-                new_ent.animation = omni.fluid.exchanger_images.animation
-                new_ent.working_visualisations = omni.fluid.exchanger_images.working_visualisations
+                new_ent.graphics_set = {animation = omni.fluid.exchanger_images.animation, working_visualisations = omni.fluid.exchanger_images.working_visualisations}
             else
                 local tier = string.gsub(boiler.name, "boiler%-", "")
                 if tier and omni.lib.is_number(tier) then
-                    new_ent.animation = boiler_images(tonumber(tier)).animation
-                    new_ent.working_visualisations = boiler_images(tonumber(tier)).working_visualisations
+                    new_ent.graphics_set = {animation = boiler_images(tonumber(tier)).animation, working_visualisations = boiler_images(tonumber(tier)).working_visualisations}
                 else
-                    new_ent.animation = boiler_images().animation
-                    new_ent.working_visualisations = boiler_images().working_visualisations
+                    new_ent.graphics_set = {animation = boiler_images().animation, working_visualisations = boiler_images().working_visualisations}
                 end
             end
 
