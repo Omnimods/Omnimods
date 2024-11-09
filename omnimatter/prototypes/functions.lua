@@ -113,10 +113,10 @@ function omni.matter.remove_fluid(f_name)
 end
 
 function omni.matter.get_ore_tier(r_name)
-    for _, tiers in pairs(omni.matter.omnisource) do
-        for _,ores in pairs(tiers) do
-            if ores.name == r_name then
-                return ores.tier
+    for _, dat in pairs(omni.matter.omnisource) do
+        for ore, inf in pairs(dat) do
+            if ore == r_name then
+                return inf.tier
             end
         end
     end
@@ -133,6 +133,33 @@ function omni.matter.set_ore_tier(r_name, tier)
         omni.matter.omnisource[tostring(t)][r_name] = nil
         if not omni.matter.omnisource[tostring(tier)] then omni.matter.omnisource[tostring(tier)] = {} end
         omni.matter.omnisource[tostring(tier)][r_name] = res
+        return true
+    else
+        return nil
+    end
+end
+
+function omni.matter.get_fluid_tier(r_name)
+    for _, dat in pairs(omni.matter.omnifluid) do
+        for ore, inf in pairs(dat) do
+            if ore == r_name then
+                return inf.tier
+            end
+        end
+    end
+    return nil
+end
+
+function omni.matter.set_fluid_tier(r_name, tier)
+    if not tonumber(tier) then
+        error("omni.matter.set_fluid_tier(): Invalid tier specified for "..r_name)
+    end
+    local t = omni.matter.get_fluid_tier(r_name)
+    if t then
+        local res = table.deepcopy(omni.matter.omnifluid[tostring(t)][r_name])
+        omni.matter.omnifluid[tostring(t)][r_name] = nil
+        if not omni.matter.omnifluid[tostring(tier)] then omni.matter.omnifluid[tostring(tier)] = {} end
+        omni.matter.omnifluid[tostring(tier)][r_name] = res
         return true
     else
         return nil

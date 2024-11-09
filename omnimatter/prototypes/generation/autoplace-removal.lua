@@ -121,3 +121,18 @@ for _,rock in pairs(data.raw["simple-entity"]) do
         end
     end
 end
+
+--Fix research triggers with type = mine-resource that were affected by autoplace removal
+for _,tech in pairs(data.raw["technology"]) do
+    if tech.research_trigger and tech.research_trigger.type == "mine-entity" then
+        if omni.matter.omnitial[tech.research_trigger.entity] or omni.matter.get_ore_tier(tech.research_trigger.entity) then
+            tech.research_trigger.type = "craft-item"
+            tech.research_trigger.item = tech.research_trigger.entity
+            tech.research_trigger.entity = nil
+        elseif omni.matter.get_fluid_tier(tech.research_trigger.entity) then
+            tech.research_trigger.type = "craft-fluid"
+            tech.research_trigger.fluid = tech.research_trigger.entity
+            tech.research_trigger.entity = nil
+        end
+    end
+end
