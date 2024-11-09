@@ -135,8 +135,9 @@ if settings.startup["omnicompression_entity_compression"].value then
     --new fluids for boilers and generators
     local function create_concentrated_fluid(fluid, tier)
         local new_fluid = table.deepcopy(data.raw.fluid[fluid])
-        new_fluid.localised_name = omni.lib.locale.custom_name(new_fluid, "compressed-fluid", tostring(tier))
         new_fluid.name = new_fluid.name.."-concentrated-grade-"..tier
+        new_fluid.localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], "compressed-fluid", tostring(tier))
+
         if new_fluid.heat_capacity then
             new_fluid.heat_capacity = new_effect(new_fluid.heat_capacity, tier, nil, multiplier^tier)
         end
@@ -173,12 +174,11 @@ if settings.startup["omnicompression_entity_compression"].value then
             local grade = {
                 type = "recipe",
                 name = fluid.."-concentrated-grade-"..tier..temp_str,
-                --localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
+                localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tostring(tier)),
                 category = "fluid-condensation",
                 enabled = true,
                 icons = omni.lib.add_overlay(new_fluid, "compress-fluid", tier),
                 order = new_fluid.order or ("z".."[condensed-"..fluid .."]"),
-
                 energy_required = math.max(0.0011, multiplier^(tier+1)/60),
                 hide_from_player_crafting = true,
                 ingredients = table.deepcopy(base_fluid_data),
@@ -187,13 +187,12 @@ if settings.startup["omnicompression_entity_compression"].value then
             local ungrade = {
                 type = "recipe",
                 name = "uncompress-"..fluid.."-concentrated-grade-"..tier..temp_str,
-                --localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
+                localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tostring(tier)),
                 icons = omni.lib.add_overlay(omni.lib.add_overlay(new_fluid, "compress-fluid", tier),"uncompress"),
                 category = "fluid-condensation",
                 subgroup = "concentrator-fluids",
                 enabled = true,
                 order = new_fluid.order or ("z".."[condensed-"..fluid .."]"),
-
                 energy_required = math.max(0.0011, multiplier^(tier+1)/60),
                 hide_from_player_crafting = true,
                 ingredients = table.deepcopy(grade_fluid_data),
@@ -211,7 +210,6 @@ if settings.startup["omnicompression_entity_compression"].value then
                 ungrade_compressed.results = table.deepcopy(compress_fluid_data)
                 data:extend{grade_compressed, ungrade_compressed}
             end
-
             data:extend{grade, ungrade}
         end
     end

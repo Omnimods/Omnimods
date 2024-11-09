@@ -310,7 +310,7 @@ function omni.matter.add_omniwater_extraction(mod, element, lvls, tier, gain, st
     if starter_recipe == true then
         RecGen:create(mod,"basic-"..element.."-omnitraction"):
             setIcons(omni.lib.icon.of(data.raw.fluid[element])):
-            addSmallIcon("__omnilib__/graphics/icons/small/num_1.png", 2):
+            addSmallIcon({{icon = "__omnilib__/graphics/icons/small/num_1.png", icon_size = 32}}, 2):
             setIngredients({type="fluid",name="omnic-water",amount=720}):
             setResults({
                 {type = "fluid", name = element, amount = gain*0.5},

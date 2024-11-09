@@ -713,7 +713,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                     end
 
                     newFluid.name = newFluid.name.."-concentrated-grade-"..i
-                    newFluid.localised_name = omni.lib.locale.custom_name(data.raw.fluid[name], 'compressed-fluid', tostring(i))
+                    newFluid.localised_name = omni.lib.locale.custom_name(data.raw.fluid[name], "compressed-fluid", tostring(i))
 
                     if not newFluid.heat_capacity then
                         newFluid.heat_capacity = "1kJ"

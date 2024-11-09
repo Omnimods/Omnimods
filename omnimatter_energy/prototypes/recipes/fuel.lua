@@ -84,7 +84,7 @@ for _,fuelitem in pairs(data.raw.item) do
         RecGen:create("omnimatter_energy","omnified-"..fuelitem.name):
             setLocName("item-name.omnified", "item-name."..fuelitem.name):
             setIcons(omni.lib.icon.of(fuelitem)):
-            addSmallIcon("__omnimatter_energy__/graphics/icons/omnicell-charged.png",3):
+            addSmallIcon({{icon = "__omnimatter_energy__/graphics/icons/omnicell-charged.png", icon_size = 32}},3):
             setResults({"omnified-"..fuelitem.name,1}):
             setSubgroup(props_add.sub):
             setIngredients({fuelitem.name,1},props_add.ing_add):
