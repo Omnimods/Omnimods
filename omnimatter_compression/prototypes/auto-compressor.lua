@@ -121,7 +121,7 @@ BuildGen:create("omnimatter_compression","auto-concentrator"):
     }):
     extend()
 
-data.raw["furnace"]["auto-concentrator"].scale_entity_info_icon = true
+data.raw["furnace"]["auto-concentrator"].fluid_boxes[1].volume = 2 * omni.compression.sluid_contain_fluid * omni.compression.sluid_contain_fluid
 
 if settings.startup["omnicompression_entity_compression"].value then
     BuildGen:create("omnimatter_compression","auto-condensator"):
@@ -151,6 +151,4 @@ if settings.startup["omnicompression_entity_compression"].value then
             animation_speed = 0.25
         }):
         extend()
-
-    data.raw["assembling-machine"]["auto-condensator"].scale_entity_info_icon = true
 end
