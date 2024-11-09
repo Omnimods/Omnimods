@@ -12,7 +12,7 @@ RecGen:create("omnimatter_energy","energy-science-pack"):
     setOrder("a[aa-energy-science-pack]"):
     setEnabled(false):
     setTechName("omnitech-energy-science-pack"):
-    setTechIcons("energy-science-pack","omnimatter_energy"):
+    setTechIcons({{icon = "energy-science-pack", icon_size = 64}},"omnimatter_energy"):
     setTechTrigger({item = "omnitor-lab", type = "craft-item"}):
     extend()
 
