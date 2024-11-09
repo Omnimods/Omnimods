@@ -14,7 +14,12 @@ omni.science.remaining_techs = {}
 --add techs to omni-pack exclusion list (this is to simplify the below tech_post_find_update function)
 local function build_tech_list()
     log("Building technology list")
-    for _,tech in pairs(data.raw.technology) do
+    for _, tech in pairs(data.raw.technology) do
+        --No science packs -> Trigger tech
+        if not tech.unit or not next(tech.unit) then
+            omni.science.exclude_tech[tech.name] = true
+            goto continue
+        end
         -- if modules
         if string.find(tech.name,"-module") or tech.name == "module-merging" then
             omni.science.exclude_tech[tech.name] = true
@@ -23,9 +28,9 @@ local function build_tech_list()
         -- if alien science (gold pack)
         for _,ing in pairs(tech.unit.ingredients) do
             for _,sub_ing in pairs(ing) do
-                if string.find(sub_ing, "science%-pack%-gold") then 
-                omni.science.exclude_tech[tech.name] = true
-                goto continue 
+                if string.find(sub_ing, "science%-pack%-gold") then
+                    omni.science.exclude_tech[tech.name] = true
+                    goto continue
                 end
             end
         end
@@ -68,7 +73,11 @@ function omni.science.omnipack_tech_post_update()
 
         for _,techname in pairs(omni.science.remaining_techs) do
             local tech = data.raw.technology[techname]
-
+            --No tech packs
+            if not tech.unit or not next(tech.unit) then
+                omni.lib.remove_from_table(techname, omni.science.remaining_techs)
+                goto continue
+            end
             --Check if tech already contains omnipacks
             local contains = false
             for _,ing in pairs(tech.unit.ingredients) do
@@ -98,12 +107,16 @@ function omni.science.omnipack_tech_post_update()
                     if not data.raw.technology[prereq] then
                         error("Prereq "..prereq.." of Technology "..techname.." does not exist")
                     end
-                    for _,ing in pairs(data.raw.technology[prereq].unit.ingredients) do
-                        if omni.lib.is_in_table("omni-pack", ing) then
-                            contains_omnipack[prereq] = true
-                            omni.lib.remove_from_table(prereq, omni.science.remaining_techs)
-                            found = true
-                            break
+                    if not data.raw.technology[prereq].unit or not next(data.raw.technology[prereq].unit) then
+                        omni.lib.remove_from_table(prereq, omni.science.remaining_techs)
+                    else
+                        for _,ing in pairs(data.raw.technology[prereq].unit.ingredients) do
+                            if omni.lib.is_in_table("omni-pack", ing) then
+                                contains_omnipack[prereq] = true
+                                omni.lib.remove_from_table(prereq, omni.science.remaining_techs)
+                                found = true
+                                break
+                            end
                         end
                     end
                     if found == true then break end
@@ -203,33 +216,35 @@ function omni.science.tech_updates()
     -- separate techs for processing and set tech time
     for _,tech in pairs(data.raw.technology) do
         local unit = tech.unit
-        --roll through each tech
-        if Set.StdTime and omni.lib.start_with(tech.name,"omnipressed-") then --compression tech time standardise?
-            --standardised research time
-            unit.time = Set.StdTimeConst
-        end
-        --if contains packs as ingredients
-        if unit.count then
-            if not omni.lib.start_with(tech.name,"omnitech") or (Set.ModOmCost and omni.lib.start_with(tech.name,"omnitech")) and
-            (#omni.science.exclude_tech_from_maths >=1) and not omni.science.exclude_tech_from_maths(tech.name) then --omnitech with start-up setting
-                --check compliance before adding to table
-                if not tech.prerequisites or #tech.prerequisites == 0 or not hasLabIngredients(tech) then
-                    --non-compliant, set height to 1
+        if unit then
+            --roll through each tech
+            if Set.StdTime and omni.lib.start_with(tech.name,"omnipressed-") then --compression tech time standardise?
+                --standardised research time
+                unit.time = Set.StdTimeConst
+            end
+            --if contains packs as ingredients
+            if unit.count then
+                if not omni.lib.start_with(tech.name,"omnitech") or (Set.ModOmCost and omni.lib.start_with(tech.name,"omnitech")) and
+                (#omni.science.exclude_tech_from_maths >=1) and not omni.science.exclude_tech_from_maths(tech.name) then --omnitech with start-up setting
+                    --check compliance before adding to table
+                    if not tech.prerequisites or #tech.prerequisites == 0 or not hasLabIngredients(tech) then
+                        --non-compliant, set height to 1
+                        tech_list.name[#tech_list.name+1] = tech.name
+                        tech_list.cost[#tech_list.cost+1] = unit.count --just incase does not have count
+                        tech_list.height[#tech_list.height+1] = 1
+                    else
+                        check_techs[#check_techs+1] = tech.name
+                    end
+                elseif omni.lib.start_with(tech.name,"omnitech") and not Set.ModOmCost then
+                    --set height to 0 (so multiplier is 1)
                     tech_list.name[#tech_list.name+1] = tech.name
-                    tech_list.cost[#tech_list.cost+1] = unit.count --just incase does not have count
-                    tech_list.height[#tech_list.height+1] = 1
-                else
+                    tech_list.cost[#tech_list.cost+1] = tech.unit.count or tech.unit[2]
+                    tech_list.height[#tech_list.height+1] = 0
+                elseif omni.lib.start_with(tech.name,"omnitech") then
                     check_techs[#check_techs+1] = tech.name
+                else
+                    log("what? ".. tech.name .." does not compute?")--this should NEVER show up :D
                 end
-            elseif omni.lib.start_with(tech.name,"omnitech") and not Set.ModOmCost then
-                --set height to 0 (so multiplier is 1)
-                tech_list.name[#tech_list.name+1] = tech.name
-                tech_list.cost[#tech_list.cost+1] = tech.unit.count or tech.unit[2]
-                tech_list.height[#tech_list.height+1] = 0
-            elseif omni.lib.start_with(tech.name,"omnitech") then
-                check_techs[#check_techs+1] = tech.name
-            else
-                log("what? ".. tech.name .." does not compute?")--this should NEVER show up :D
             end
         end
     end
