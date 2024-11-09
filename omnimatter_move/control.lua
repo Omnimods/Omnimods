@@ -94,8 +94,8 @@ script.on_event(defines.events.on_player_alt_selected_area, function(event)
 
         --Define blocker tiles / entities
         local area = {{centre.x + min_x, centre.y + min_y},{centre.x + max_x, centre.y + max_y}}
-        local blocker_tile = surface.find_tiles_filtered{area = area, collision_mask = {"water-tile"}}
-        local blocker_ent = surface.find_entities_filtered{area = area, type= {"cliff","resource"}}
+        local blocker_tile = surface.find_tiles_filtered{area = area, collision_mask = "water_tile"}
+        local blocker_ent = surface.find_entities_filtered{area = area, type= {"cliff", "resource"}}
 
         --Dont do anything if a blocking entity / tile was found (print info msg)
         if next(blocker_ent) or next(blocker_tile) then
