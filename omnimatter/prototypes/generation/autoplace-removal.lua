@@ -52,11 +52,11 @@ for _, ore in pairs(data.raw["autoplace-control"]) do
         --Only nil nauvis exclusive autoplace controls
         if nauvis_auto[ore.name] then
             data.raw["autoplace-control"][ore.name] = nil
-            log("Removed "..ore.name.." from autoplace control")
+            --log("Removed "..ore.name.." from autoplace control")
         end
     elseif not omni.matter.res_to_keep[ore.name] then
         omni.matter.res_to_keep[ore.name] = true
-        log("Excluded "..ore.name)
+        --log("Excluded "..ore.name)
     end
 end
 
@@ -64,7 +64,7 @@ end
 for _,ore in pairs(data.raw["resource"]) do
     if ore.autoplace and ore.name and not omni.matter.res_to_keep[ore.name] and nauvis_excl_auto[ore.name] then
         ore.autoplace = nil
-        log("Removed "..ore.name.." ´s resource autoplace")
+        --log("Removed "..ore.name.." ´s resource autoplace")
     end
 end
 
@@ -72,7 +72,7 @@ end
     for orename, v in pairs(data.raw.planet["nauvis"]["map_gen_settings"]["autoplace_controls"]) do
         if orename and not omni.matter.res_to_keep[orename] then --and nauvis_auto[orename] then
             data.raw.planet["nauvis"]["map_gen_settings"]["autoplace_controls"][orename] = nil
-            log("Removed "..orename.." from planet ".."nauvis".." autoplace control")
+            --log("Removed "..orename.." from planet ".."nauvis".." autoplace control")
         end
     end
 --end
@@ -80,7 +80,7 @@ end
 for orename, v in pairs(data.raw.planet["nauvis"]["map_gen_settings"]["autoplace_settings"]["entity"]["settings"]) do
     if orename and not omni.matter.res_to_keep[orename] and data.raw["resource"][orename] then --and nauvis_auto[orename] then
         data.raw.planet["nauvis"]["map_gen_settings"]["autoplace_settings"]["entity"]["settings"][orename] = nil
-        log("Removed "..orename.." from planet ".."nauvis".." autoplace settings")
+        --log("Removed "..orename.." from planet ".."nauvis".." autoplace settings")
     end
 end
 
@@ -91,7 +91,7 @@ for _,presets in pairs(data.raw["map-gen-presets"]) do
             for ore_name,ore in pairs(preset.basic_settings.autoplace_controls) do
                 if ore_name and not omni.matter.res_to_keep[ore_name] then
                     preset.basic_settings.autoplace_controls[ore_name] = nil
-                    log("Removed "..ore_name.." ´s autoplace controls from presets")
+                    --log("Removed "..ore_name.." ´s autoplace controls from presets")
                 end
             end
         end
