@@ -136,84 +136,153 @@ if settings.startup["omnicompression_item_compression"].value then
     -------------------------------------------------------------------------------
     log("Start technology compression")
     for _,tech in pairs(data.raw.technology) do
-        if not omni.compression.is_hidden(tech) and tech.unit and tech.unit.ingredients and #tech.unit.ingredients > 0 and
-        ((tech.unit.count and type(tech.unit.count)=="number" and tech.unit.count > min_compress) or include_techs(tech) or containsOne(tech.unit.ingredients, alwaysSP) or not tech.unit.count) then
-            --fetch original
-            local t = table.deepcopy(tech)
-            t.name = "omnipressed-"..t.name
-            local class, tier = splitTech(tech.name)
-            local locale = omni.lib.locale.of(tech).name
-            if tier and tonumber(locale[#locale]) == nil and tech.level == tech.max_level then-- If the last key is a number, or there's multiple levels, it's already tiered.
-                t.localised_name = omni.lib.locale.custom_name(tech, "compressed-tiered", tostring(tier))
-                t.localised_description = {"technology-description.compressed-tiered", locale, tostring(tier)}
-            else
-                t.localised_name = omni.lib.locale.custom_name(tech, "compressed")
-                t.localised_description = {"technology-description.compressed", locale}
-            end
-            --Handle icons
-            t.icons = omni.lib.add_overlay(t, "technology")
-            t.icon = nil
-            --if we req more than a (compressed) stack, we increment this counter
-            local divisor = 1
-            local lcm = {1}
-            local gcd = {}
-            -- Stage 1: Standardize and find our LCM of the various stack sizes
-            for _, ings in pairs(t.unit.ingredients) do
-                --if ings[1] and not (ings.name or ings.amount) then
-                    local ingname = ings[1]
-                    local ingamount = ings[2]
-                    --ings[1] = nil
-                    --ings[2] = nil
-                --end
-                -- Remove unit_count from our equation for now
-                ingamount = ingamount * (t.unit.count or 1)
-                lcm[#lcm+1] = pack_sizes[ingname]
-                -- Amount of packs needed (in stacks)
-                gcd[#gcd+1] = ingamount  / pack_sizes[ingname]
-            end
-            lcm = omni.lib.lcm(table.unpack(lcm))
-            gcd = omni.lib.pgcd(table.unpack(gcd))
-
-            -- Stage 2: Determine our amounts and divisor (if we use count_formula)
-            for _, ings in pairs(t.unit.ingredients) do
-                local ingname = ings[1]
-                    local ingamount = ings[2]
-                -- Divisor will always be the largest stack size of the packs used in this tech
-                divisor = math.max(divisor, pack_sizes[ingname])
-                -- Divide out our pack size and GCD, the latter will become our unit count
-                ingamount  = (ingamount  / pack_sizes[ingname]) / gcd
-                -- Minimum 1, Maximum 65535, round otherwise
-                ingamount  = math.min(math.max(omni.lib.round(ingamount ), 1), 65535)
-                ingname = "compressed-"..ingname
-            end
-            --if valid remove effects from compressed version
-            local valid_effects = {}
-            if t.effects then
-                for _, eff in pairs(t.effects) do
-                    if eff.type == "unlock-recipe" then
-                        valid_effects[#valid_effects+1] = eff
-                    end
+        if not omni.compression.is_hidden(tech) then
+            if tech.unit and tech.unit.ingredients and #tech.unit.ingredients > 0 and
+            ((tech.unit.count and tech.unit.count > min_compress) or include_techs(tech) or containsOne(tech.unit.ingredients, alwaysSP) or not tech.unit.count)  then
+                --fetch original
+                local t = table.deepcopy(tech)
+                t.name = "omnipressed-"..t.name
+                local class, tier = splitTech(tech.name)
+                local locale = omni.lib.locale.of(tech).name
+                if tier and tonumber(locale[#locale]) == nil and tech.level == tech.max_level then-- If the last key is a number, or there's multiple levels, it's already tiered.
+                    t.localised_name = omni.lib.locale.custom_name(tech, "compressed-tiered", tostring(tier))
+                    t.localised_description = {"technology-description.compressed-tiered", locale, tostring(tier)}
+                else
+                    t.localised_name = omni.lib.locale.custom_name(tech, "compressed")
+                    t.localised_description = {"technology-description.compressed", locale}
                 end
-                t.effects = valid_effects
+                --Handle icons
+                t.icons = omni.lib.add_overlay(t, "technology")
+                t.icon = nil
+                --if we req more than a (compressed) stack, we increment this counter
+                local divisor = 1
+                local lcm = {1}
+                local gcd = {}
+                -- Stage 1: Standardize and find our LCM of the various stack sizes
+                for _, ings in pairs(t.unit.ingredients) do
+                    --if ings[1] and not (ings.name or ings.amount) then
+                        local ingname = ings[1]
+                        local ingamount = ings[2]
+                        --ings[1] = nil
+                        --ings[2] = nil
+                    --end
+                    -- Remove unit_count from our equation for now
+                    ingamount = ingamount * (t.unit.count or 1)
+                    lcm[#lcm+1] = pack_sizes[ingname]
+                    -- Amount of packs needed (in stacks)
+                    gcd[#gcd+1] = ingamount  / pack_sizes[ingname]
+                end
+                lcm = omni.lib.lcm(table.unpack(lcm))
+                gcd = omni.lib.pgcd(table.unpack(gcd))
+
+                -- Stage 2: Determine our amounts and divisor (if we use count_formula)
+                for _, ings in pairs(t.unit.ingredients) do
+                    local ingname = ings[1]
+                        local ingamount = ings[2]
+                    -- Divisor will always be the largest stack size of the packs used in this tech
+                    divisor = math.max(divisor, pack_sizes[ingname])
+                    -- Divide out our pack size and GCD, the latter will become our unit count
+                    ingamount  = (ingamount  / pack_sizes[ingname]) / gcd
+                    -- Minimum 1, Maximum 65535, round otherwise
+                    ingamount  = math.min(math.max(omni.lib.round(ingamount ), 1), 65535)
+                    ingname = "compressed-"..ingname
+                end
+                --if valid remove effects from compressed version
+                local valid_effects = {}
+                if t.effects then
+                    for _, eff in pairs(t.effects) do
+                        if eff.type == "unlock-recipe" then
+                            valid_effects[#valid_effects+1] = eff
+                        end
+                    end
+                    t.effects = valid_effects
+                end
+
+                -- Divide our time and unit count to account for our changes
+                if t.unit.count then
+                    -- new time is total time divided by our new unit count
+                    t.unit.time = omni.lib.round((t.unit.time * t.unit.count) / math.max(gcd, 1))
+                    -- and clamped
+                    t.unit.time = math.min(math.max(t.unit.time, 1), 2^64-1)
+                    -- new unit count is our gcd, rounded
+                    t.unit.count = omni.lib.round(gcd)
+                    -- and clamped
+                    t.unit.count = math.min(math.max(t.unit.count, 1), 2^64-1)
+
+                else
+                    t.unit.time = math.max(1, t.unit.time / gcd)
+                    t.unit.count_formula = "(" .. t.unit.count_formula..")*".. string.format("%f", 1 / divisor)
+                end
+
+                compressed_techs[#compressed_techs+1]=table.deepcopy(t)
+            --Trigger tech, update trigger to compressed version
+            elseif tech.research_trigger then
+                --fetch original
+                local t = table.deepcopy(tech)
+                t.name = "omnipressed-"..t.name
+                local class, tier = splitTech(tech.name)
+                local locale = omni.lib.locale.of(tech).name
+                if tier and tonumber(locale[#locale]) == nil and tech.level == tech.max_level then-- If the last key is a number, or there's multiple levels, it's already tiered.
+                    t.localised_name = omni.lib.locale.custom_name(tech, "compressed-tiered", tostring(tier))
+                    t.localised_description = {"technology-description.compressed-tiered", locale, tostring(tier)}
+                else
+                    t.localised_name = omni.lib.locale.custom_name(tech, "compressed")
+                    t.localised_description = {"technology-description.compressed", locale}
+                end
+                --Handle icons
+                t.icons = omni.lib.add_overlay(t, "technology")
+                t.icon = nil
+                --if valid remove effects from compressed version
+                local valid_effects = {}
+                if t.effects then
+                    for _, eff in pairs(t.effects) do
+                        if eff.type == "unlock-recipe" then
+                            valid_effects[#valid_effects+1] = eff
+                        end
+                    end
+                    t.effects = valid_effects
+                end
+                --fetch trigger type
+                local t_type = t.research_trigger.type
+                if t_type == "mine-entity" then
+                    local ent_types = omni.lib.locale.find_by_name(t.research_trigger.entity)
+                    local found_ent
+                    if ent_types then
+                        for _,ent in pairs(ent_types) do
+                            if ent.type ~= "item" and ent.type ~= "fluid" then
+                                found_ent = data.raw[ent.type][ent.name]
+                            end
+                        end
+                    end
+                    if found_ent and found_ent.type == "resource" and data.raw.resource["compressed-resource-"..found_ent.name]  then
+                        t.research_trigger.entity = "compressed-resource-"..found_ent.name
+                    elseif found_ent and data.raw.resource[found_ent.name.."-compressed-compact"] then
+                        t.research_trigger.entity = found_ent.name.."-compressed-compact"
+                    end
+                elseif t_type == "craft-item" then
+                    if data.raw.item["compressed-"..t.research_trigger.item] then
+                        t.research_trigger.item = "compressed-"..t.research_trigger.item
+                    end
+                elseif t_type == "craft-fluid" then
+                    if data.raw.fluid["concentrated-"..t.research_trigger.fluid] then
+                        t.research_trigger.fluid = "concentrated-"..t.research_trigger.fluid
+                    end
+                elseif t_type == "send-item-to-orbit" then
+                    if data.raw.item["compressed-"..t.research_trigger.item] then
+                        t.research_trigger.item = "compressed-"..t.research_trigger.item
+                    end
+                elseif t_type == "capture-spawner" then
+                    --Nothing to do
+                elseif t_type == "build-entity" then
+                    local ent =  t.research_trigger.entity.."-compressed-compact"
+                    if omni.lib.locale.find_by_name(ent) then
+                        t.research_trigger.item = ent
+                    end
+                elseif t_type == "create-space-platform" then
+                    --Nothing to do
+                end
+                compressed_techs[#compressed_techs+1]=table.deepcopy(t)
             end
-
-            -- Divide our time and unit count to account for our changes
-            if t.unit.count then
-                -- new time is total time divided by our new unit count
-                t.unit.time = omni.lib.round((t.unit.time * t.unit.count) / math.max(gcd, 1))
-                -- and clamped
-                t.unit.time = math.min(math.max(t.unit.time, 1), 2^64-1)
-                -- new unit count is our gcd, rounded
-                t.unit.count = omni.lib.round(gcd)
-                -- and clamped
-                t.unit.count = math.min(math.max(t.unit.count, 1), 2^64-1)
-
-            else
-                t.unit.time = math.max(1, t.unit.time / gcd)
-                t.unit.count_formula = "(" .. t.unit.count_formula..")*".. string.format("%f", 1 / divisor)
-            end
-
-            compressed_techs[#compressed_techs+1]=table.deepcopy(t)
         end
     end
 

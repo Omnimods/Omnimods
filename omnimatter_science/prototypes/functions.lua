@@ -74,22 +74,20 @@ function omni.science.omnipack_tech_post_update()
         for _,techname in pairs(omni.science.remaining_techs) do
             local tech = data.raw.technology[techname]
             --No tech packs
-            if not tech.unit or not next(tech.unit) then
-                omni.lib.remove_from_table(techname, omni.science.remaining_techs)
-                goto continue
-            end
-            --Check if tech already contains omnipacks
-            local contains = false
-            for _,ing in pairs(tech.unit.ingredients) do
-                --techunits[#techunits+1]=ing[1]
-                if omni.lib.is_in_table("omni-pack", ing) then
-                    contains_omnipack[techname] = true
-                    omni.lib.remove_from_table(techname, omni.science.remaining_techs)
-                    contains = true
-                    break
+            if  tech.unit and next(tech.unit) then
+                --Check if tech already contains omnipacks
+                local contains = false
+                for _,ing in pairs(tech.unit.ingredients) do
+                    --techunits[#techunits+1]=ing[1]
+                    if omni.lib.is_in_table("omni-pack", ing) then
+                        contains_omnipack[techname] = true
+                        omni.lib.remove_from_table(techname, omni.science.remaining_techs)
+                        contains = true
+                        break
+                    end
                 end
+                if contains == true then goto continue end
             end
-            if contains == true then goto continue end
 
             --When this tech has no prereqs, remove it from the list
             if not tech.prerequisites or not next(tech.prerequisites) then
@@ -107,9 +105,7 @@ function omni.science.omnipack_tech_post_update()
                     if not data.raw.technology[prereq] then
                         error("Prereq "..prereq.." of Technology "..techname.." does not exist")
                     end
-                    if not data.raw.technology[prereq].unit or not next(data.raw.technology[prereq].unit) then
-                        omni.lib.remove_from_table(prereq, omni.science.remaining_techs)
-                    else
+                    if data.raw.technology[prereq].unit and next(data.raw.technology[prereq].unit) then
                         for _,ing in pairs(data.raw.technology[prereq].unit.ingredients) do
                             if omni.lib.is_in_table("omni-pack", ing) then
                                 contains_omnipack[prereq] = true
@@ -223,32 +219,31 @@ function omni.science.tech_updates()
                 unit.time = Set.StdTimeConst
             end
             --if contains packs as ingredients
-            if unit.count then
-                if not omni.lib.start_with(tech.name,"omnitech") or (Set.ModOmCost and omni.lib.start_with(tech.name,"omnitech")) and
-                (#omni.science.exclude_tech_from_maths >=1) and not omni.science.exclude_tech_from_maths(tech.name) then --omnitech with start-up setting
-                    --check compliance before adding to table
-                    if not tech.prerequisites or #tech.prerequisites == 0 or not hasLabIngredients(tech) then
-                        --non-compliant, set height to 1
-                        tech_list.name[#tech_list.name+1] = tech.name
-                        tech_list.cost[#tech_list.cost+1] = unit.count --just incase does not have count
-                        tech_list.height[#tech_list.height+1] = 1
-                    else
-                        check_techs[#check_techs+1] = tech.name
-                    end
-                elseif omni.lib.start_with(tech.name,"omnitech") and not Set.ModOmCost then
-                    --set height to 0 (so multiplier is 1)
+            if not omni.lib.start_with(tech.name,"omnitech") or (Set.ModOmCost and omni.lib.start_with(tech.name,"omnitech")) and
+            (#omni.science.exclude_tech_from_maths >=1) and not omni.science.exclude_tech_from_maths(tech.name) then --omnitech with start-up setting
+                --check compliance before adding to table
+                if not tech.prerequisites or #tech.prerequisites == 0 or not hasLabIngredients(tech) then
+                    --non-compliant, set height to 1
                     tech_list.name[#tech_list.name+1] = tech.name
-                    tech_list.cost[#tech_list.cost+1] = tech.unit.count or tech.unit[2]
-                    tech_list.height[#tech_list.height+1] = 0
-                elseif omni.lib.start_with(tech.name,"omnitech") then
-                    check_techs[#check_techs+1] = tech.name
+                    tech_list.cost[#tech_list.cost+1] = unit.count or 1 --just incase does not have count
+                    tech_list.height[#tech_list.height+1] = 1
                 else
-                    log("what? ".. tech.name .." does not compute?")--this should NEVER show up :D
+                    check_techs[#check_techs+1] = tech.name
                 end
+            elseif omni.lib.start_with(tech.name,"omnitech") and not Set.ModOmCost then
+                --set height to 0 (so multiplier is 1)
+                tech_list.name[#tech_list.name+1] = tech.name
+                tech_list.cost[#tech_list.cost+1] = tech.unit.count or tech.unit[2] or 1
+                tech_list.height[#tech_list.height+1] = 0
+            elseif omni.lib.start_with(tech.name,"omnitech") then
+                check_techs[#check_techs+1] = tech.name
+            else
+                log("what? ".. tech.name .." does not compute?")--this should NEVER show up :D
             end
         end
     end
 
+    --log(serpent.block(check_techs))
     -- select and update costings of techs in check_techs
     local found = true --used to allow multi-pass calculations
     while #check_techs > 0 and found do
@@ -257,7 +252,7 @@ function omni.science.tech_updates()
             local techno = data.raw.technology[tech] --set shortening of something used commonly
             if all_pre_in_table(tech) and (techno.unit.count or techno.unit[2]) then
                 found = true --this re-initiates the loop, this prevents lockups if a loop fails to modify
-                table.insert(tech_list.name,tech)
+                table.insert(tech_list.name, tech)
                 local cost = techno.unit.count or techno.unit[2]
                 local h = 0
                 local add = 0
