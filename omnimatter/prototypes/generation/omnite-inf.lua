@@ -116,3 +116,23 @@ data.raw.planet["nauvis"]["map_gen_settings"]["autoplace_controls"]["infinite-om
 data.raw.planet["nauvis"]["map_gen_settings"]["autoplace_settings"]["entity"]["settings"]["infinite-omnite"] = {}
 
 omni.matter.apply_presets("infinite-omnite")
+
+
+
+--log(serpent.block(data.raw["resource"]["omnite"].autoplace))
+--log(serpent.block(data.raw["resource"]["infinite-omnite"].autoplace))
+--log(serpent.block(data.raw["resource"]["iron-ore"]))
+
+--data.raw["resource"]["infinite-omnite"].autoplace.probability_expression = "(var('control:omnite:size') > 0) * (clamp(var('default-omnite-patches'), 0, 1) * var('control:infinite-omnite:size') > 0) * (clamp(var('default-infinite-omnite-patches'), 0, 1))"
+--data.raw["resource"]["infinite-omnite"].autoplace.richness_expression = "(var('control:omnite:size') > 0) * (1*var('control:omnite:richness')*(var('default-infinite-omnite-patches'))*max((1000+distance)/2600,1))"
+
+--log(serpent.block(data.raw["resource"]["infinite-omnite"].autoplace))
+
+--log(serpent.block(data.raw["noise-expression"]["default-omnite-patches"]))
+--log(serpent.block(data.raw["noise-expression"]["default-infinite-omnite-patches"]))
+
+--data.raw["noise-expression"]["default-infinite-omnite-patches"].expression = "resource_autoplace_all_patches{base_density = 25,base_spots_per_km2 = 7,candidate_spot_count = 21,frequency_multiplier = var('control:infinite-omnite:frequency'),has_starting_area_placement = 1,random_spot_size_minimum = 0.25,random_spot_size_maximum = 2,regular_blob_amplitude_multiplier = 0.125,regular_patch_set_count = default_regular_resource_patch_set_count,regular_patch_set_index = 6,regular_rq_factor = 0.04,seed1 = 100,size_multiplier = var('control:infinite-omnite:size'),starting_blob_amplitude_multiplier = 0.125,starting_patch_set_count = default_starting_resource_patch_set_count,starting_patch_set_index = 5,starting_rq_factor = 0.071428571428571}"
+--log(serpent.block(data.raw["noise-expression"]["default-infinite-omnite-patches"]))
+
+
+--log(serpent.block(data.raw["autoplace-control"]))
