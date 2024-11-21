@@ -21,21 +21,23 @@ local non_nauvis_auto = {}
 local nauvis_auto = {}
 local nauvis_excl_auto = {}
 for planname, plan in pairs(data.raw.planet) do
-    for orename, v in pairs(plan["map_gen_settings"]["autoplace_controls"]) do
-        if orename and not omni.matter.res_to_keep[orename] then
-            if planname == "nauvis" then
-                nauvis_auto[orename] = true
-            else
-                non_nauvis_auto[orename] = true
+    if plan["map_gen_settings"] and plan["map_gen_settings"]["autoplace_controls"] then
+        for orename, v in pairs(plan["map_gen_settings"]["autoplace_controls"]) do
+            if orename and not omni.matter.res_to_keep[orename] then
+                if planname == "nauvis" then
+                    nauvis_auto[orename] = true
+                else
+                    non_nauvis_auto[orename] = true
+                end
             end
         end
-    end
-    for orename, v in pairs(plan["map_gen_settings"]["autoplace_settings"]["entity"]["settings"]) do
-        if orename and not omni.matter.res_to_keep[orename] then
-            if planname == "nauvis" then
-                nauvis_auto[orename] = true
-            else
-                non_nauvis_auto[orename] = true
+        for orename, v in pairs(plan["map_gen_settings"]["autoplace_settings"]["entity"]["settings"]) do
+            if orename and not omni.matter.res_to_keep[orename] then
+                if planname == "nauvis" then
+                    nauvis_auto[orename] = true
+                else
+                    non_nauvis_auto[orename] = true
+                end
             end
         end
     end
