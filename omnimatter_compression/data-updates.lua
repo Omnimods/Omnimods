@@ -21,16 +21,6 @@ omni.compression.exclude_recipe("vehicle-solar-panel-4")
 omni.compression.exclude_recipe("vehicle-solar-panel-5")
 omni.compression.exclude_recipe("vehicle-solar-panel-6")
 
-if mods["omnimatter_marathon"] then
-    omni.compression.exclude_recipe("ye_fish2_recipe")
-    omni.compression.exclude_recipe("salination-plant")
-    for _, rec in pairs(data.raw.recipe) do
-        if (rec.category and string.find(rec.category,"farming")) or (rec.normal and rec.normal.category and string.find(rec.category,"farming")) or (rec.expensive and rec.normal.expensive and string.find(rec.category,"farming")) then
-            omni.compression.exclude_recipe(rec.name)
-        end
-    end
-end
-
 omni.compression.exclude_recipe("railgun-dart")
 omni.compression.exclude_recipe("railgun")
 omni.compression.exclude_recipe("player-port")

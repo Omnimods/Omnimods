@@ -2,8 +2,8 @@ omni.matter.omnitial = {}
 omni.matter.omnisource = {}
 omni.matter.omnifluid = {}
 omni.matter.res_to_keep = {
-    "omnite",
-    "infinite-omnite"
+    ["omnite"] = true,
+    ["infinite-omnite"] = true,
 }
 -- returns resource_name, fluid_to_mine
 local function get_resource(name, fluid)
@@ -24,7 +24,7 @@ local function get_resource(name, fluid)
             name = minable.result 
         elseif minable.results then -- This is more complex, we'll search the results for something matching r_name
             local matched_result = false     -- If we don't find a match, we'll defer to the first result
-            for k, result in pairs(minable.results) do
+            for _, result in pairs(minable.results) do
                 local result_name = result[1] or result.name
                 if result_name == name then
                     matched_result = true
@@ -53,12 +53,12 @@ function omni.matter.add_initial(ore_name, ore_amount, omnite_amount, fluid_to_m
     ore_name, fluid_to_mine = get_resource(ore_name, fluid_to_mine)
 
     omni.matter.omnitial[ore_name] = {
-        ingredients ={{name = "omnite", amount = omnite_amount}},
-        results = {{name = ore_name, amount = ore_amount}, {name = "stone-crushed", amount = (omnite_amount-ore_amount) or 6}}
+        ingredients ={{name = "omnite", amount = omnite_amount, type = "item"}},
+        results = {{name = ore_name, amount = ore_amount, type = "item"}, {name = "stone-crushed", amount = (omnite_amount-ore_amount) or 6, type = "item"}}
     }
 
     if fluid_to_mine and fluid_to_mine.name and settings.startup["omnimatter-fluid-processing"].value then
-        omni.matter.omnitial[ore_name].fluid = {name = fluid_to_mine.name, amount = fluid_to_mine.amount or 1}
+        omni.matter.omnitial[ore_name].fluid = {name = fluid_to_mine.name, amount = fluid_to_mine.amount or 1, type = "fluid"}
         omni.matter.omnitial[ore_name].results[1].name = "crude-"..omni.matter.omnitial[ore_name].results[1].name
     end
 end
@@ -79,7 +79,7 @@ function omni.matter.add_resource(r_name, tier, fluid_to_mine)
 
     omni.matter.omnisource[tostring(tier)][r_name] = {tier = tier, name = r_name}
     if fluid_to_mine and fluid_to_mine.name and settings.startup["omnimatter-fluid-processing"].value then
-        omni.matter.omnisource[tostring(tier)][r_name]["fluid"] = {name = fluid_to_mine.name, amount = fluid_to_mine.amount or 1}
+        omni.matter.omnisource[tostring(tier)][r_name]["fluid"] = {name = fluid_to_mine.name, amount = fluid_to_mine.amount or 1, type = "fluid"}
     end
 end
 
@@ -113,10 +113,10 @@ function omni.matter.remove_fluid(f_name)
 end
 
 function omni.matter.get_ore_tier(r_name)
-    for _, tiers in pairs(omni.matter.omnisource) do
-        for _,ores in pairs(tiers) do
-            if ores.name == r_name then
-                return ores.tier
+    for _, dat in pairs(omni.matter.omnisource) do
+        for ore, inf in pairs(dat) do
+            if ore == r_name then
+                return inf.tier
             end
         end
     end
@@ -139,14 +139,42 @@ function omni.matter.set_ore_tier(r_name, tier)
     end
 end
 
+function omni.matter.get_fluid_tier(r_name)
+    for _, dat in pairs(omni.matter.omnifluid) do
+        for ore, inf in pairs(dat) do
+            if ore == r_name then
+                return inf.tier
+            end
+        end
+    end
+    return nil
+end
+
+function omni.matter.set_fluid_tier(r_name, tier)
+    if not tonumber(tier) then
+        error("omni.matter.set_fluid_tier(): Invalid tier specified for "..r_name)
+    end
+    local t = omni.matter.get_fluid_tier(r_name)
+    if t then
+        local res = table.deepcopy(omni.matter.omnifluid[tostring(t)][r_name])
+        omni.matter.omnifluid[tostring(t)][r_name] = nil
+        if not omni.matter.omnifluid[tostring(tier)] then omni.matter.omnifluid[tostring(tier)] = {} end
+        omni.matter.omnifluid[tostring(tier)][r_name] = res
+        return true
+    else
+        return nil
+    end
+end
+
 function omni.matter.add_omnium_alloy(name,plate,ingot)
     local reg = {}
 
     ItemGen:create("omnimatter","omnium-"..name.."-alloy"):
             setSubgroup("omnium"):
             setStacksize(400):
-            setIcons("omnium-plate"):
-            addSmallIcon(plate,3):extend()
+            setIcons({"omnium-plate", 32}):
+            addSmallIcon(plate,3):
+            extend()
 
     if mods["angelssmelting"] then
         local r = RecGen:create("omnimatter","molten-omnium-"..name.."-alloy")
@@ -158,7 +186,7 @@ function omni.matter.add_omnium_alloy(name,plate,ingot)
                 {type="item", name=ingot, amount=12}
             ):
             setResults({type="fluid", name="molten-omnium-"..name.."-alloy", amount=300}):
-            setIcons("liquid-molten-omnium"):
+            setIcons({"liquid-molten-omnium", 32}):
             addSmallIcon(ingot,3):
             setCategory("induction-smelting"):
             setSubgroup("omnium-alloy-casting"):
@@ -177,6 +205,7 @@ function omni.matter.add_omnium_alloy(name,plate,ingot)
         RecGen:create("omnimatter","angels-plate-omnium-"..name.."-alloy"):
             setIngredients({type="fluid", name="molten-omnium-"..name.."-alloy", amount=40}):
             setResults({type="item", name="omnium-"..name.."-alloy", amount=4}):
+            setIcons({"omnium-"..name.."-alloy", 32}):
             addProductivity():
             setCategory("casting"):
             setEnergy(4):
@@ -190,6 +219,7 @@ function omni.matter.add_omnium_alloy(name,plate,ingot)
         reg[#reg+1]={
             type = "recipe",
             name = "omnium-"..name.."-alloy-furnace",
+            localised_name = {"item-name.omnium-"..name.."-alloy"},
             category = "omnifurnace",
             icon_size = 32,
             energy_required = 5,
@@ -279,8 +309,8 @@ function omni.matter.add_omniwater_extraction(mod, element, lvls, tier, gain, st
     --Starter recipe
     if starter_recipe == true then
         RecGen:create(mod,"basic-"..element.."-omnitraction"):
-            setIcons(element):
-            addSmallIcon("__omnilib__/graphics/icons/small/num_1.png", 2):
+            setIcons(omni.lib.icon.of(data.raw.fluid[element])):
+            addSmallIcon({{icon = "__omnilib__/graphics/icons/small/num_1.png", icon_size = 32}}, 2):
             setIngredients({type="fluid",name="omnic-water",amount=720}):
             setResults({
                 {type = "fluid", name = element, amount = gain*0.5},
@@ -305,7 +335,7 @@ function omni.matter.add_omniwater_extraction(mod, element, lvls, tier, gain, st
         setLocName("recipe-name.omnic-water-omnitraction",{"fluid-name."..element}):
         setIngredients(cost:ingredients()):
         setCategory("omnite-extraction-both"):
-        setIcons(element):
+        setIcons(omni.lib.icon.of(data.raw.fluid[element])):
         setResults(cost:results()):
         setSubgroup("omni-fluid-extraction"):
         setOrder("b["..element.."-omnitraction]"):
@@ -327,14 +357,12 @@ end
 
 --Add a resource to our whitelist. Whitelisted resources will not be removed from autoplace control
 function omni.matter.add_ignore_resource(name)
-    if not omni.lib.is_in_table(name, omni.matter.res_to_keep) then
-        omni.matter.res_to_keep[#omni.matter.res_to_keep+1] = name
-    end
+    omni.matter.res_to_keep[name] = true
 end
 
 --Remove a resource from our whitelist.
 function omni.matter.remove_ignore_resource(name)
-    if omni.lib.is_in_table(name, omni.matter.res_to_keep) then
-        omni.lib.remove_from_table(name, omni.matter.res_to_keep)
+    if omni.matter.res_to_keep[name] then
+        omni.matter.res_to_keep[name] = nil
     end
 end

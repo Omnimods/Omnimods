@@ -31,25 +31,28 @@ local water = "omnic-water"
 if mods["angelsrefining"] then water = "water-purified" end
 
 cost = OmniGen:create():
-        setYield("omnic-acid"):
+        setYield({type = "fluid", name = "omnic-acid"}):
         setIngredients("omnite"):
         setWaste():
         yieldQuant(function(levels,grade) return omni.acid_ratio*(120+(grade-1)*120/(levels-1)) end ):
         wasteQuant(function(levels,grade) return math.max(12-extraction_value(levels,grade),0) end)
+
+
 local omnic_acid = RecChain:create("omnimatter","omnic-acid"):
         setLocName("fluid-name.omnic-acid"):
         setIngredients({
-        {name = "crushed-omnite", amount = quant/2},
-        {type="fluid", name=water, amount=120},
-        {type="fluid", name="steam", amount=120},
+            {type= "item", name = "crushed-omnite", amount = quant/4},
+            {type="fluid", name = "water", amount=120},
+            {type="fluid", name="steam", amount=120},
         }):
         setCategory(omniFluidCat):
         setSubgroup("omni-fluids"):
         setLevel(omni.fluid_levels):
         setResults(cost:results()):
+        setIcons({"omnic-acid", 32}):
         setEnergy(function(levels,grade) return 3 end):
         setTechSuffix("hydrolyzation"):
-        setTechIcons("omnic-acid","omnimatter"):
+        setTechIcons("omnic-acid", "omnimatter"):
         setTechCost(function(levels,grade) return 25*omni.matter.get_tier_mult(levels,grade,1) end):
         setTechPacks(function(levels,grade) return get_acid_tech_cost(grade) end):
         setTechPrereq(function(levels,grade) return get_omnic_req(grade)  end):

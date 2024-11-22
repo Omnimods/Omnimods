@@ -18,8 +18,7 @@ if mods["Bio_Industries"] then
         {icon="__base__/graphics/icons/fluid/water.png",
         scale = 0.23,
         shift = { 10, 10},
-        icon_size = 64,
-        icon_mipmaps = 4,}
+        icon_size = 64}
     }
 
     data.raw.recipe["bi-seedling-2"].category="omnimutator"
@@ -60,8 +59,7 @@ if mods["Bio_Industries"] then
         {icon="__base__/graphics/icons/fluid/water.png",
         scale = 0.23,
         shift = { 10, 10},
-        icon_size = 64,
-        icon_mipmaps = 4,}
+        icon_size = 64}
     }
 
     omni.lib.replace_recipe_result("bi-logs-2","wood",{name = "omniwood", amount =100})

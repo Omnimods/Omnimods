@@ -135,9 +135,9 @@ if settings.startup["omnicompression_entity_compression"].value then
     --new fluids for boilers and generators
     local function create_concentrated_fluid(fluid, tier)
         local new_fluid = table.deepcopy(data.raw.fluid[fluid])
-
-        new_fluid.localised_name = omni.lib.locale.custom_name(new_fluid, "compressed-fluid", tier)
         new_fluid.name = new_fluid.name.."-concentrated-grade-"..tier
+        new_fluid.localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], "compressed-fluid", tostring(tier))
+
         if new_fluid.heat_capacity then
             new_fluid.heat_capacity = new_effect(new_fluid.heat_capacity, tier, nil, multiplier^tier)
         end
@@ -170,62 +170,46 @@ if settings.startup["omnicompression_entity_compression"].value then
             local base_fluid_data = {{name = base_fluid, type = "fluid", amount = omni.compression.sluid_contain_fluid*multiplier^(tier+1), temperature=temp}}
             local compress_fluid_data = {{name = "concentrated-"..base_fluid, type = "fluid", amount = multiplier^(tier+1), temperature=temp}}
             local grade_fluid_data = {{name = fluid.."-concentrated-grade-"..tier, type = "fluid", amount = omni.compression.sluid_contain_fluid*multiplier, temperature=temp}}
-            local grade_recipe_data = {
-                energy_required = math.max(0.0011, multiplier^(tier+1)/60),
-                enabled = true,
-                hide_from_player_crafting = true
-            }
-            local ungrade_recipe_data = table.deepcopy(grade_recipe_data) --deepcopy to safeguard against pointer nonsense
-            local grade_compressed_recipe_data = table.deepcopy(grade_recipe_data)
-            local ungrade_compressed_recipe_data = table.deepcopy(grade_compressed_recipe_data)
-
-            grade_recipe_data.ingredients = base_fluid_data
-            grade_recipe_data.results = grade_fluid_data
-            grade_compressed_recipe_data.ingredients = compress_fluid_data
-            grade_compressed_recipe_data.results = table.deepcopy(grade_fluid_data)
-
-            ungrade_recipe_data.ingredients = table.deepcopy(grade_fluid_data)
-            ungrade_recipe_data.results = table.deepcopy(base_fluid_data)
-            ungrade_compressed_recipe_data.ingredients = table.deepcopy(grade_fluid_data)
-            ungrade_compressed_recipe_data.results = table.deepcopy(compress_fluid_data)
 
             local grade = {
                 type = "recipe",
                 name = fluid.."-concentrated-grade-"..tier..temp_str,
-                --localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
+                localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tostring(tier)),
                 category = "fluid-condensation",
                 enabled = true,
                 icons = omni.lib.add_overlay(new_fluid, "compress-fluid", tier),
-                order = new_fluid.order or ("z".."[condensed-"..fluid .."]")
+                order = new_fluid.order or ("z".."[condensed-"..fluid .."]"),
+                energy_required = math.max(0.0011, multiplier^(tier+1)/60),
+                hide_from_player_crafting = true,
+                ingredients = table.deepcopy(base_fluid_data),
+                results = table.deepcopy(grade_fluid_data)
             }
             local ungrade = {
                 type = "recipe",
                 name = "uncompress-"..fluid.."-concentrated-grade-"..tier..temp_str,
-                --localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tier),
+                localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tostring(tier)),
                 icons = omni.lib.add_overlay(omni.lib.add_overlay(new_fluid, "compress-fluid", tier),"uncompress"),
                 category = "fluid-condensation",
                 subgroup = "concentrator-fluids",
                 enabled = true,
-                order = new_fluid.order or ("z".."[condensed-"..fluid .."]")
+                order = new_fluid.order or ("z".."[condensed-"..fluid .."]"),
+                energy_required = math.max(0.0011, multiplier^(tier+1)/60),
+                hide_from_player_crafting = true,
+                ingredients = table.deepcopy(grade_fluid_data),
+                results = table.deepcopy(base_fluid_data)
             }
             local grade_compressed = table.deepcopy(grade)
             grade_compressed.name = "concentrated-"..grade.name
             local ungrade_compressed = table.deepcopy(ungrade)
             ungrade_compressed.name = "uncompress-concentrated-"..fluid.."-concentrated-grade-"..tier..temp_str
 
-            grade.normal = grade_recipe_data
-            grade.expensive = table.deepcopy(grade_recipe_data)
-            ungrade.normal = ungrade_recipe_data
-            ungrade.expensive = table.deepcopy(ungrade_recipe_data)
-
             if settings.startup["omnicompression_item_compression"].value then
-                grade_compressed.normal = grade_compressed_recipe_data
-                grade_compressed.expensive = table.deepcopy(grade_compressed_recipe_data)
-                ungrade_compressed.normal = ungrade_compressed_recipe_data
-                ungrade_compressed.expensive = table.deepcopy(ungrade_compressed_recipe_data)
+                grade_compressed.ingredients = table.deepcopy(compress_fluid_data)
+                grade_compressed.results = table.deepcopy(grade_fluid_data)
+                ungrade_compressed.ingredients = table.deepcopy(grade_fluid_data)
+                ungrade_compressed.results = table.deepcopy(compress_fluid_data)
                 data:extend{grade_compressed, ungrade_compressed}
             end
-
             data:extend{grade, ungrade}
         end
     end
@@ -233,44 +217,46 @@ if settings.startup["omnicompression_entity_compression"].value then
     local recipe_results = {}
     log("calculating building tiers")
     for _, recipe in pairs(data.raw.recipe) do
-        --log(recipe.name)
-        local product = omni.lib.locale.get_main_product(recipe)
-        product = product and data.raw[product.type][product.name]
-        if product then
-            local place_result = (data.raw[product.type][product.name] or {}).place_result
-            place_result = place_result and omni.lib.locale.find(place_result, 'entity', true)
-            if place_result and -- Valid
-            building_list[place_result.type] and
-            not omni.lib.string_contained_list(place_result.name, black_list) and --not on exclusion list
-            not omni.compression.is_hidden(place_result) and (--Not hidden
-            not omni.compression.compress_entity[place_result] or (
-                omni.compression.compress_entity[place_result] and (
-                not omni.compression.compress_entity[place_result].exclude or omni.compression.compress_entity[place_result].include
-                ) -- Not excluded or included
-            )) 
-            then
-                local top_result =  find_top_tier(place_result, place_result.type)
-                if top_result and top_result.name == place_result.name and building_list[top_result.type] then
-                    --log("Highest tier of " .. place_result.name .. " is " .. top_result.name)
-                    recipe_results[top_result.name] = recipe_results[top_result.name] or {}
-                    local res = recipe_results[top_result.name]
-                        res[#res+1] = {
-                        recipe = recipe,
-                        item = product,
-                        building = top_result,
-                        base = place_result
-                    }
+        if recipe.results and next(recipe.results) then
+            --log(recipe.name)
+            local product = omni.lib.get_main_product(recipe)
+            product = product and data.raw[product.type][product.name]
+            if product then
+                local place_result = (data.raw[product.type][product.name] or {}).place_result
+                place_result = place_result and omni.lib.locale.find(place_result, 'entity', true)
+                if place_result and -- Valid
+                building_list[place_result.type] and
+                not omni.lib.string_contained_list(place_result.name, black_list) and --not on exclusion list
+                not omni.compression.is_hidden(place_result) and (--Not hidden
+                not omni.compression.compress_entity[place_result] or (
+                    omni.compression.compress_entity[place_result] and (
+                    not omni.compression.compress_entity[place_result].exclude or omni.compression.compress_entity[place_result].include
+                    ) -- Not excluded or included
+                )) 
+                then
+                    local top_result =  find_top_tier(place_result, place_result.type)
+                    if top_result and top_result.name == place_result.name and building_list[top_result.type] then
+                        --log("Highest tier of " .. place_result.name .. " is " .. top_result.name)
+                        recipe_results[top_result.name] = recipe_results[top_result.name] or {}
+                        local res = recipe_results[top_result.name]
+                            res[#res+1] = {
+                            recipe = recipe,
+                            item = product,
+                            building = top_result,
+                            base = place_result
+                        }
+                    end
                 end
             end
-        end
-        -- Check for fluid temps here too, generate a recipe for each temp and tier
-        if recipe.normal and recipe.normal.results and recipe.category ~= "fluid-condensation" then
-            local parsed_results = omni.lib.locale.parse_product(recipe.normal.results)
-            for _, result in pairs(parsed_results) do
-                if result.type == "fluid" and result.temperature then
-                    --log("Fluid: " .. result.name .. " (" .. result.temperature .. "C)")
-                    for i = 1, omni.compression.bld_lvls do                    
-                        create_concentrated_recipe(result.name, i, result.temperature)
+            -- Check for fluid temps here too, generate a recipe for each temp and tier
+            if recipe and recipe.results and recipe.category ~= "fluid-condensation" then
+                for _, result in pairs(recipe.results) do
+                    local parsed_result = omni.lib.parse_result(result)
+                    if parsed_result.type == "fluid" and result.temperature then
+                        --log("Fluid: " .. result.name .. " (" .. result.temperature .. "C)")
+                        for i = 1, omni.compression.bld_lvls do              
+                            create_concentrated_recipe(parsed_result.name, i, parsed_result.temperature)
+                        end
                     end
                 end
             end
@@ -293,9 +279,6 @@ if settings.startup["omnicompression_entity_compression"].value then
             end
             fluid_box.filter = fl_name
         end
-        -- if fluid_box.base_area then
-        --   fluid_box.base_area = fluid_box.base_area * math.pow(multiplier, i) / sluid_contain_fluid
-        -- end
         for I=1, #fluid_box do
             if fluid_box[I] then
                 if fluid_box.filter then
@@ -311,32 +294,9 @@ if settings.startup["omnicompression_entity_compression"].value then
                     end
                     fluid_box[I].filter = fl_name
                 end
-                -- if fluid_box[I].base_area then
-                --   fluid_box[I].base_area = fluid_box[I].base_area * math.pow(multiplier, i) / sluid_contain_fluid
-                -- end
             end
         end
     end
-    -- These names are ass
-    local modspec = {
-        slot_count = "module_slots",
-        columns = "module_info_max_icons_per_row",
-        rows = "module_info_max_icon_rows",
-        shift = "module_info_icon_shift",
-        scale = "module_info_icon_scale",
-        gap_size = "module_info_separation_multiplier",
-        y_offset = "module_info_multi_row_initial_height_modifier"
-    }
-    -- Help us keep the code clean
-    setmetatable(modspec, {
-        __call = function(self, proto, key, expression)
-                if expression then
-                    proto.module_specification[self[key]] = expression(proto.module_specification[self[key]])
-                end
-                return proto.module_specification[self[key]]
-        end
-    })
-
 
     -------------------------------------------------------------------------------
     --[[Entity Type Specific Properties]]--
@@ -344,105 +304,8 @@ if settings.startup["omnicompression_entity_compression"].value then
     local run_entity_updates = function(new, kind, compr_lvl)
         --[[assembly type updates]]--
         --module slots
-        if new.module_specification then
-            -- Add slots
-            modspec(
-            new,
-            "slot_count", 
-            function(x) 
-                return x and (x * (compr_lvl + 1))
-            end
-            )
-            -- Make sure we don't occlude nearby entities
-            local bounding_box = new.selection_box or {
-            {
-                x = 0,
-                y = 0
-            },
-            {
-                x = 0,
-                y = 0
-            }
-            }
-            for entry=1, #bounding_box do -- Remove numbered and convert to explicit
-                for index=1, #bounding_box[entry] do
-                    bounding_box[entry][string.char(119+index)] = bounding_box[entry][index]
-                    bounding_box[entry][index] = nil
-                end
-            end
-            -- Onwards!
-            modspec(
-            new,
-            "scale", 
-            function(x)
-                x = modspec(new, "slot_count")
-                -- Approach according to module count
-                x = (x * 0.33) / (x + 2) + 0.25
-                return x
-            end
-            )
-            local scale_factor = modspec(new, "scale") / 0.5
-            modspec(
-            new,
-            "shift", 
-            function(x) 
-                x = x or {0, 0.7}
-                x[1] = x[1]
-                x[2] = x[2]
-                return x
-            end
-            )
-            modspec(
-            new,
-            "gap_size", 
-            function(x) 
-                return x or 1.1
-            end
-            )
-            modspec(
-            new,
-            "y_offset", 
-            function(x) 
-                return x or -0.1
-            end
-            )
-            modspec(
-            new,
-            "columns", 
-            function(x)
-                x = util.distance(
-                {bounding_box[1].x, 0},
-                {bounding_box[2].x, 0}
-                ) * 1.85
-                -- Account for shift
-                x = x - modspec(new, "shift")[1]
-                -- And for gap size as well
-                x = x - 0.05 * modspec(new, "gap_size") * scale_factor
-                -- Apply scale
-                x = x  / scale_factor
-                return math.max(1, x)
-            end
-            )
-            modspec(
-            new,
-            "rows", 
-            function(x)
-                -- Get our stock height
-                x = util.distance(
-                {0, bounding_box[1].y},
-                {0, bounding_box[2].y}
-                ) * 0.9
-                -- Take out shift
-                x = x - modspec(new, "shift")[2]
-                -- y offset
-                x = x - modspec(new, "y_offset")
-                -- And for gap size as well
-                x = x - 0.05 * modspec(new, "gap_size") * scale_factor
-                -- Scale
-                x = x / scale_factor
-                return math.max(1, x)
-            end
-            )
+        if new.module_slots then
+            new.module_slots = new.module_slots * (compr_lvl + 1)
         end
 
         --------------------------
@@ -451,7 +314,10 @@ if settings.startup["omnicompression_entity_compression"].value then
         --energy source
         if new.energy_source then
             if new.energy_source.emissions_per_minute then
-                new.energy_source.emissions_per_minute = new.energy_source.emissions_per_minute * math.pow(multiplier, compr_lvl)
+                for k,v in pairs(new.energy_source.emissions_per_minute ) do
+                    v = v * math.pow(multiplier, compr_lvl)
+                end
+
             end
             if new.energy_source.buffer_capacity then
                 new.energy_source.buffer_capacity = new_effect(new.energy_source.buffer_capacity, compr_lvl)
@@ -477,7 +343,7 @@ if settings.startup["omnicompression_entity_compression"].value then
         --recipe category settings for assembly/furnace types
         if kind == "assembling-machine" or kind == "furnace" or kind == "rocket-silo" then
             local new_cat = table.deepcopy(new.crafting_categories) --revert each time
-            for j, cat in pairs(new.crafting_categories) do
+            for _, cat in pairs(new.crafting_categories) do
                 if not data.raw["recipe-category"][cat.."-compressed"] then --check if category exists
                     if not omni.lib.is_in_table(cat.."-compressed", recipe_category) then --check not already in the to-expand table
                     recipe_category[#recipe_category+1] = {type = "recipe-category",name = cat.."-compressed"}
@@ -586,7 +452,7 @@ if settings.startup["omnicompression_entity_compression"].value then
             else
                 new.supply_area_distance = 64
             end
-            new.module_specification.module_slots = new.module_specification.module_slots*(compr_lvl+1)
+            new.module_slots = new.module_slots*(compr_lvl+1)
         end
 
         --power poles
@@ -614,7 +480,7 @@ if settings.startup["omnicompression_entity_compression"].value then
                     end
                     -- Name and icons, just copy from the pole. Again, same as LEP data_updates
                     new_lamp.name = new.name .. "-lamp"
-                    for _, v in pairs{"localised_name", "icon", "icons", "icon_size", "icon_mipmaps"} do
+                    for _, v in pairs{"localised_name", "icon", "icons", "icon_size"} do
                         new_lamp[v] = new[v]
                     end
                     -- Aaand done
@@ -623,15 +489,15 @@ if settings.startup["omnicompression_entity_compression"].value then
             end
         end
 
-        --offshore pumps
-        if kind == "offshore-pump" then
-            -- new.fluid = "concentrated-"..new.fluid
-            local fl_name = new.fluid.."-concentrated-grade-"..compr_lvl
-            if not data.raw.fluid[fl_name] then 
-                create_concentrated_recipe(new.fluid,compr_lvl)
-            end
-            new.fluid = fl_name
-        end
+        --offshore pumps -- No longer have a fluid attached to them with 2.0
+        -- if kind == "offshore-pump" then
+        --     -- new.fluid = "concentrated-"..new.fluid
+        --     local fl_name = new.fluid.."-concentrated-grade-"..compr_lvl
+        --     if not data.raw.fluid[fl_name] then 
+        --         create_concentrated_recipe(new.fluid,compr_lvl)
+        --     end
+        --     new.fluid = fl_name
+        -- end
 
         --Inserters!
         if kind == "inserter" then
@@ -645,7 +511,7 @@ if settings.startup["omnicompression_entity_compression"].value then
         --Generators!
         if kind == "burner-generator" then
             new.max_power_output = new_effect(new.max_power_output, compr_lvl)
-            new.burner.emissions_per_minute = (new.burner.emissions_per_minute or 0) * math.pow(multiplier,compr_lvl+1)
+            new.burner.emissions_per_minute.pollution = (new.burner.emissions_per_minute.pollution or 0) * math.pow(multiplier,compr_lvl+1)
         end
 
         --Rockets!
@@ -747,7 +613,7 @@ if settings.startup["omnicompression_entity_compression"].value then
                     new.localised_description = omni.lib.locale.custom_name(
                         details.base,
                         "entity-description.compressed-building",
-                        multiplier^compr_level,
+                        tostring(multiplier^compr_level),
                         {"description-modifier." .. compr_level}
                     )
                     if new.max_health then
@@ -763,6 +629,9 @@ if settings.startup["omnicompression_entity_compression"].value then
                     if not omni.lib.is_in_table("not-upgradable", build.flags or {}) and not omni.lib.is_in_table("hidden", item.flags or {}) then
                         if compr_level < omni.compression.bld_lvls then
                             if new.next_upgrade then
+                                if not data.raw.item[new.next_upgrade] then
+                                    log("WARNING: next_upgrade "..new.next_upgrade.." does not exist ("..build.name.."). Please contact the mod author")
+                                end
                                 new.next_upgrade = new.next_upgrade.."-compressed-"..string.lower(compress_level[compr_level])
                             else
                                 new.next_upgrade = build.name.."-compressed-"..string.lower(compress_level[compr_level+1])
@@ -790,13 +659,15 @@ if settings.startup["omnicompression_entity_compression"].value then
                     -- ing = {item, count}
                     if compr_level == 1 then
                         ing  = {{
-                            details.item.name,
-                            math.ceil(multiplier * cost_multiplier)
+                            name = details.item.name,
+                            amount = math.ceil(multiplier * cost_multiplier),
+                            type = "item"
                         }}
                     else
                         ing = {{
-                            build.name.."-compressed-"..string.lower(compress_level[compr_level-1]),
-                            exp_costs and math.ceil(multiplier * cost_multiplier) or multiplier
+                            name = build.name.."-compressed-"..string.lower(compress_level[compr_level-1]),
+                            amount = exp_costs and math.ceil(multiplier * cost_multiplier) or multiplier,
+                            type = "item"
                         }}
                     end
 
@@ -807,7 +678,7 @@ if settings.startup["omnicompression_entity_compression"].value then
                         localised_name = new.localised_name,
                         ingredients = ing,
                         icons = omni.lib.add_overlay(rc,"building",compr_level),
-                        result = new.name,
+                        results = {{name = new.name, amount = 1, type = "item"}},
                         energy_required = 5*math.floor(math.pow(multiplier,compr_level/2)),
                         enabled = false,
                         hidden = omni.lib.recipe_is_hidden(rc.name),
@@ -829,9 +700,7 @@ if settings.startup["omnicompression_entity_compression"].value then
                         category = "compression",
                         enabled = true,
                         hidden = true,
-                        ingredients = {
-                        {new.name, 1}
-                        },
+                        ingredients = {{name = new.name, amount = 1, type = "item"}},
                         results = ing,
                         --inter_item_count = item_count,
                         energy_required = 5*math.floor(math.pow(multiplier,compr_level/2)),

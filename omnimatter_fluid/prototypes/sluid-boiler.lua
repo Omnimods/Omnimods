@@ -107,16 +107,13 @@ local function sluid_boiler_generation(fluid_cats)
                 new_ent.energy_source.heat_pipe_covers = omni.fluid.heat_pipe_images.heat_pipe_covers
                 new_ent.energy_source.heat_picture = omni.fluid.heat_pipe_images.heat_picture
                 new_ent.energy_source.heat_glow = omni.fluid.heat_pipe_images.heat_glow
-                new_ent.animation = omni.fluid.exchanger_images.animation
-                new_ent.working_visualisations = omni.fluid.exchanger_images.working_visualisations
+                new_ent.graphics_set = {animation = omni.fluid.exchanger_images.animation, working_visualisations = omni.fluid.exchanger_images.working_visualisations}
             else
                 local tier = string.gsub(boiler.name, "boiler%-", "")
                 if tier and omni.lib.is_number(tier) then
-                    new_ent.animation = boiler_images(tonumber(tier)).animation
-                    new_ent.working_visualisations = boiler_images(tonumber(tier)).working_visualisations
+                    new_ent.graphics_set = {animation = boiler_images(tonumber(tier)).animation, working_visualisations = boiler_images(tonumber(tier)).working_visualisations}
                 else
-                    new_ent.animation = boiler_images().animation
-                    new_ent.working_visualisations = boiler_images().working_visualisations
+                    new_ent.graphics_set = {animation = boiler_images().animation, working_visualisations = boiler_images().working_visualisations}
                 end
             end
 
@@ -124,9 +121,8 @@ local function sluid_boiler_generation(fluid_cats)
             if new_ent.energy_source.burns_fluid then
                 new_ent.energy_source.fluid_box.production_type = "input"
                 pipe_covers = pipecoverspictures()
-                new_ent.energy_source.fluid_box.base_level = -1
-                new_ent.energy_source.fluid_box.height = 2
-                new_ent.energy_source.fluid_box.pipe_connections = {{type = "input-output", position = {2,0}},{type = "input-output", position = {-2,0}}}
+                new_ent.energy_source.fluid_box.volume = 1000
+                new_ent.energy_source.fluid_box.pipe_connections = {{flow_direction = "input-output", position = {2,0}},{flow_direction = "input-output", position = {-2,0}}}
             end
 
             new_ent.energy_usage = boiler.energy_consumption
@@ -136,8 +132,8 @@ local function sluid_boiler_generation(fluid_cats)
                 {
                     production_type = "output",
                     pipe_covers = pipecoverspictures(),
-                    base_level = 1,
-                    pipe_connections = {{type = "output", position = {0, -2}}}
+                    volume = 1000,
+                    pipe_connections = {{flow_direction = "output", direction = defines.direction.north, position = {0, -1.0}}}
                 }
             }
             new_ent.fluid_box = nil --removes input box
@@ -168,25 +164,7 @@ local function sluid_boiler_generation(fluid_cats)
             --hide and disable old boiler entity
             local old = data.raw.boiler[boiler.name]
             old.enabled = false
-            if old.flags then
-                local I = 1
-                local shouldhide = true
-                -- Iterate and remove "player-creation" from the now-hidden boiler, add "hidden" flag if it doesn't have it already
-                repeat
-                    if old.flags[I] == "player-creation" then
-                        table.remove(old.flags, I)
-                        I = I - 1
-                    elseif old.flags[I] == "hidden" then
-                        shouldhide = false
-                    end
-                    I = I + 1
-                until I > #old.flags
-                if shouldhide then
-                    old.flags[#old.flags+1] = "hidden"
-                end
-            else
-                old.flags = {"hidden"}
-            end
+            old.hidden = true
             if old.next_upgrade then old.next_upgrade = nil end
 
             ----------------------------

@@ -8,27 +8,27 @@ end
 local fluidbox = minify({
     {
         pipe_covers = pipecoverspictures(),
-        base_area = 120,
+        volume = 1000,
         production_type = "input",
-        base_level = -1,
         pipe_connections = {{
-            type = "input",
+            flow_direction = "input",
+            direction = defines.direction.south,
             position = {
                 0,
-                -1
+                -0.1
             }
         }}
     },
     {
         pipe_covers = pipecoverspictures(),
-        base_area = 120,
+        volume = 1000,
         production_type = "output",
-        base_level = 1,
         pipe_connections = {{
-            type = "output",
+            flow_direction = "output",
+            direction = defines.direction.north,
             position = {
                 0,
-                1
+                0.1
             }
         }}
     }
@@ -38,7 +38,7 @@ BuildGen:create("omnimatter_compression","auto-compressor"):
     setStacksize(50):
     setFlags({"placeable-neutral", "placeable-player", "player-creation"}):
     setSubgroup("production-machine"):
-    setIngredients({{"steel-plate", 15}, {"electronic-circuit", 5}, {"stone-brick", 10}}):
+    setIngredients({"steel-plate", 15}, {"electronic-circuit", 5}, {"stone-brick", 10}):
     setEnergy(10):
     setModSlots(0):
     setModEffects():
@@ -46,6 +46,7 @@ BuildGen:create("omnimatter_compression","auto-compressor"):
     setSpeed(3):
     setFurnace():
     noTech():
+    setIcons({"auto-compressor", 32}):
     setSize(minify(1, 3)):
     setCrafting({"compression"}):
     setAnimation({
@@ -97,7 +98,7 @@ BuildGen:create("omnimatter_compression","auto-concentrator"):
     setStacksize(50):
     setFlags({"placeable-neutral", "placeable-player", "player-creation"}):
     setSubgroup("production-machine"):
-    setIngredients({{"steel-plate", 50}, {"electronic-circuit", 20}, {"stone-brick", 40}}):
+    setIngredients({"steel-plate", 50}, {"electronic-circuit", 20}, {"stone-brick", 40}):
     setEnergy(10):
     setModSlots(0):
     setModEffects():
@@ -105,6 +106,7 @@ BuildGen:create("omnimatter_compression","auto-concentrator"):
     setSpeed(3):
     setFurnace():
     noTech():
+    setIcons({"auto-concentrator", 32}):
     setSize(minify(1, 3)):
     setFluidBox(fluidbox):
     setCrafting({"fluid-concentration"}):
@@ -121,21 +123,21 @@ BuildGen:create("omnimatter_compression","auto-concentrator"):
     }):
     extend()
 
-data.raw["furnace"]["auto-concentrator"].scale_entity_info_icon = true
+data.raw["furnace"]["auto-concentrator"].fluid_boxes[1].volume = 2 * omni.compression.sluid_contain_fluid * omni.compression.sluid_contain_fluid
 
 if settings.startup["omnicompression_entity_compression"].value then
     BuildGen:create("omnimatter_compression","auto-condensator"):
         setStacksize(50):
         setFlags({"placeable-neutral", "placeable-player", "player-creation"}):
         setSubgroup("production-machine"):
-        setIngredients({{"steel-plate", 50}, {"electronic-circuit", 20}, {"stone-brick", 40}}):
+        setIngredients({"steel-plate", 50}, {"electronic-circuit", 20}, {"stone-brick", 40}):
         setEnergy(10):
         setModSlots(0):
         setModEffects():
         setUsage(225):
         setSpeed(3):
         noTech():
-        setIcons("auto-concentrator"):
+        setIcons({"auto-concentrator", 32}):
         setSize(minify(1, 3)):
         setFluidBox(fluidbox):
         setCrafting({"fluid-condensation"}):
@@ -151,6 +153,4 @@ if settings.startup["omnicompression_entity_compression"].value then
             animation_speed = 0.25
         }):
         extend()
-
-    data.raw["assembling-machine"]["auto-condensator"].scale_entity_info_icon = true
 end

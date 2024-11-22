@@ -7,22 +7,11 @@ for _, sol in pairs(data.raw["solar-panel"]) do
 end
 
 RecGen:import("repair-pack"):
-    setNormalIngredients({type="item", name="omnium-plate", amount=6},{type="item", name="omni-tablet", amount=2}):
-    setExpensiveIngredients({type="item", name="omnium-plate", amount=15},{type="item", name="omni-tablet", amount=7}):
+    setIngredients({type="item", name="omnium-plate", amount=6},{type="item", name="omni-tablet", amount=2}):
     extend()
 
 --Replace lab belt ingredient
 omni.lib.replace_recipe_ingredient("lab", "transport-belt", "basic-transport-belt")
-
---Replace normal inserter with a burner filter inserter (check if it contains one to not mess up bob)
-if omni.lib.recipe_ingredient_contains("filter-inserter", "fast-inserter") then
-    RecGen:import("filter-inserter"):
-        replaceIngredients("fast-inserter", "burner-filter-inserter"):
-        addIngredients("anbaric-omnitor",2):
-        extend()
-
-    omni.lib.add_prerequisite(omni.lib.get_tech_name("filter-inserter"), "omnitech-burner-filter")
-end
 
 if not (mods["angelsindustries"] and angelsmods.industries.components) then
     omni.lib.add_recipe_ingredient("electric-furnace", {"steel-furnace", 1})

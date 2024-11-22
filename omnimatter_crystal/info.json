@@ -1,14 +1,14 @@
 {
 "name":"omnimatter_crystal",
-"version": "4.1.17",
+"version": "4.2.0",
 "title":"Omnicrystal",
 "author":"EmperorZelos",
 "contact": "https://discord.gg/WQYks7W",
 "description":"Adds crystalline branches for technology",
-"factorio_version":"1.1",
+"factorio_version":"2.0",
 "dependencies":[
     "base",
-    "omnilib >= 4.1.0",
+    "omnilib >= 4.2.0",
     "omnimatter"
 ]
 }

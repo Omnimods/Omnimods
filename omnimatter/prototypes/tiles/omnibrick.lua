@@ -2,6 +2,7 @@ RecGen:create("omnimatter","omnite-brick"):
     setIngredients("stone","omnite"):
     setCategory("omnifurnace"):
     setSubgroup("omni-solids"):
+    setIcons({"omnite-brick", 32}):
     setStacksize(200):
     setEnergy(1.6):
     setEnabled():
@@ -13,6 +14,7 @@ RecGen:create("omnimatter","early-omnite-brick"):
     setIngredients({"omnite",10},{"stone-brick"}):
     setSubgroup("omni-solids"):
     setResults("omnite-brick"):
+    setIcons({"omnite-brick", 32}):
     setEnabled():
     extend()
 
@@ -25,22 +27,21 @@ omnitile.layer = 120
 
 --Point (all) graphics to our folder
 local function repoint_folder(pic)
-    pic.picture = string.gsub(pic.picture, "__base__", "__omnimatter__")
-    if pic.hr_version then
-        pic.hr_version.picture = string.gsub(pic.hr_version.picture, "__base__", "__omnimatter__")
-    end
+    local str = "picture"
+    if not pic[str] then str = "spritesheet" end
+    pic[str] = string.gsub(pic[str] , "__base__", "__omnimatter__")
 end
 
-for _,tab in pairs({omnitile.transitions, omnitile.transitions_between_transitions, omnitile.variants}) do
+for _,tab in pairs({omnitile.transitions, omnitile.transitions_between_transitions, omnitile.variants.main, omnitile.variants.transition}) do
     for _, trans in pairs(tab) do
-        if type(trans) == "table" and trans.picture then
-            if not string.find(trans.picture, "effect%-maps") then
+        if type(trans) == "table" and (trans.picture or trans.spritesheet) then
+            if  (trans.picture and not string.find(trans.picture, "effect%-maps")) or (trans.spritesheet and not string.find(trans.spritesheet, "effect%-maps")) then
                 repoint_folder(trans)
             end
         else
             for _, pic in pairs(trans) do
-                if pic and type(pic) == "table" and pic.picture then
-                    if not string.find(pic.picture, "effect%-maps") then
+                if pic and type(pic) == "table" then
+                    if (pic.picture and not string.find(pic.picture, "effect%-maps")) or (pic.spritesheet and not string.find(pic.spritesheet, "effect%-maps")) then
                         repoint_folder(pic)
                     end
                 end

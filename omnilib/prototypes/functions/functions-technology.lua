@@ -13,9 +13,11 @@ function omni.lib.add_unlock_recipe(techname, recipe, force)
         end
         if not found then
             table.insert(data.raw.technology[techname].effects,{type="unlock-recipe",recipe = recipe})
-            omni.lib.disable_recipe(recipe)
+            if data.raw.recipe[recipe] then
+                data.raw.recipe[recipe].enabled = false
+            end
             return
-        end    
+        end
     else
         --log("cannot add recipe to "..techname.." as it doesn't exist")
     end
@@ -52,7 +54,7 @@ function omni.lib.add_science_pack(techname, pack)
                 end
             end
         end
-        table.insert(data.raw.technology[techname].unit.ingredients,{type = "item", name = pack, amount = 1})
+        table.insert(data.raw.technology[techname].unit.ingredients,{ pack, 1})
 
         ::found::
     else
@@ -61,10 +63,10 @@ function omni.lib.add_science_pack(techname, pack)
 end
 
 function omni.lib.remove_science_pack(techname,pack)
-    if data.raw.technology[techname] then
+    if data.raw.technology[techname] and data.raw.technology[techname].unit and data.raw.technology[techname].unit.ingredients then
         for i,ing in pairs(data.raw.technology[techname].unit.ingredients) do
-            if (ing.name and ing.name == pack) or ing[1]==pack then
-                table.remove(data.raw.technology[techname].unit.ingredients,i)
+            if ing[1] == pack then
+                table.remove(data.raw.technology[techname].unit.ingredients, i)
             end
         end
     else
@@ -73,11 +75,9 @@ function omni.lib.remove_science_pack(techname,pack)
 end
 
 function omni.lib.replace_science_pack(techname, old, new)
-    if data.raw.technology[techname] then
+    if data.raw.technology[techname] and data.raw.technology[techname].unit and data.raw.technology[techname].unit.ingredients then
         for _, ing in pairs(data.raw.technology[techname].unit.ingredients) do
-            if ing.name and ing.name == old then
-                ing.name = new
-            elseif ing[1] == old then
+            if ing[1] == old then
                 ing[1] = new
             end
         end

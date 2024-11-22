@@ -1,4 +1,4 @@
-global.offshore_pumps = {}
+storage.offshore_pumps = {}
 
 -----------------------
 ---Support functions---
@@ -22,13 +22,18 @@ local function remove_entities(surface, names, position, area)
 end
 
 local function offshore_pump_placed(entity)
-    if game.entity_prototypes["solshore-"..entity.name] then
-        entity.surface.create_entity{
-            name = "solshore-"..entity.name,
-            position = entity.position,
-            direction = entity.direction,
-            force = entity.force
-        }
+    if prototypes.entity["solshore-"..entity.name] then
+        local fluid = entity.fluidbox.get_filter(1).name
+        if prototypes.recipe["solshore-"..fluid] then
+            local sol = entity.surface.create_entity{
+                name = "solshore-"..entity.name,
+                recipe = "solshore-"..fluid,
+                position = entity.position,
+                direction = entity.direction,
+                force = entity.force
+            }
+            sol.recipe_locked = true
+        end
     end
 end
 
@@ -36,17 +41,17 @@ end
 ---Event functions---
 ----------------------
 local function on_init()
-    --Save the name of all found offshore pumps in globals
-    local pumps = game.get_filtered_entity_prototypes({{filter = "type", type = "offshore-pump"}})
+    --Save the name of all found offshore pumps in storage
+    local pumps = prototypes.get_entity_filtered({{filter = "type", type = "offshore-pump"}})
     for name, pump in pairs(pumps) do
-        table.insert(global.offshore_pumps, name)
+        table.insert(storage.offshore_pumps, name)
     end
 
     --Call Picker Dollies remnote interface to disable the fake offshore assemblers movement. Due to it being an assembler, it could be moved to land by dollies otherwise
     if remote.interfaces["PickerDollies"] and remote.interfaces["PickerDollies"]["add_blacklist_name"] then
-        for _, name in pairs(global.offshore_pumps) do
+        for _, name in pairs(storage.offshore_pumps) do
             local sol = "solshore-"..name
-            if game.entity_prototypes[sol] then
+            if prototypes.entity[sol] then
                 remote.call("PickerDollies", "add_blacklist_name", name)
                 remote.call("PickerDollies", "add_blacklist_name", sol)
             end
@@ -57,7 +62,7 @@ end
 local function on_entity_created(event)
     local entity = event.created_entity or event.entity
     if entity and entity.valid then
-        if entity.type == "offshore-pump" and in_table(entity.name, global.offshore_pumps) then
+        if entity.type == "offshore-pump" and in_table(entity.name, storage.offshore_pumps) then
             offshore_pump_placed(entity)
         end
     end
@@ -69,10 +74,10 @@ local function on_entity_removed(event)
         if entity.type == "assembling-machine" or entity.type == "offshore-pump" then
             local ori = entity.name:gsub("solshore%-", "")
             --Case offshore pmp destroyed
-            if in_table(entity.name, global.offshore_pumps) then
+            if in_table(entity.name, storage.offshore_pumps) then
                 remove_entities(entity.surface, {"solshore-"..entity.name}, entity.position, 0.5)
             --Case assembler destroyed
-            elseif in_table(ori, global.offshore_pumps) then
+            elseif in_table(ori, storage.offshore_pumps) then
                 remove_entities(entity.surface, {ori}, entity.position, 0.5)
             end
         end

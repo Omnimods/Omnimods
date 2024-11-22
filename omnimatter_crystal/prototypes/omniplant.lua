@@ -24,18 +24,23 @@ if mods["bobelectronics"] then electronic="basic-circuit-board" end
 local burner_ings = {}
 if mods["angelsindustries"] and angelsmods.industries.components then
     burner_ings = {
-    {name="block-construction-1", amount=5},
-    {name="block-electronics-0", amount=3},
-    {name="block-fluidbox-1", amount=5},
-    {name="block-omni-0", amount=5}
+    {name="block-construction-1", amount = 5, type = "item"},
+    {name="block-electronics-0", amount = 3, type = "item"},
+    {name="block-fluidbox-1", amount = 5 , type = "item"},
+    {name="block-omni-0", amount = 5, type = "item"}
     }
 else
-    burner_ings = {{pipe,15},{"omnicium-plate",5},{electronic,5},{"omnite-brick",10},{"iron-gear-wheel",10}}
+    burner_ings = {
+        {name = pipe, amount = 15, type = "item"},
+        {name = "omnicium-plate", amount = 5, type = "item"},
+        {name = electronic, amount = 5, type = "item"},
+        {name = "omnite-brick", amount = 10, type = "item"},
+        {name = "iron-gear-wheel", amount = 10, type = "item"}}
 end
 
 BuildGen:create("omnimatter_crystal","burner-omniplant"):
     noTech():
-    setIcons("omniplant"):
+    setIcons({"omniplant", 32}):
     setBurner(0.75,2):
     setEmissions(3.5):
     setSubgroup("omniplant"):
@@ -95,6 +100,7 @@ end
 BuildChain:create("omnimatter_crystal","omniplant"):
     setSubgroup("omniplant"):
     setLocName("omniplant"):
+    setIcons({"omniplant", 32}):
     setIngredients(cost_plant:ingredients()):
     setEnergy(5):
     setUsage(function(level,grade) return (200+50*grade).."kW" end):

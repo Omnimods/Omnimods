@@ -21,6 +21,6 @@ end
 
 for _,rec in pairs(data.raw.recipe) do
     if omni.lib.recipe_result_contains_string(rec.name, "pumpjack") then
-        omni.lib.disable_recipe(rec.name)
+        rec.enabled = false
     end
 end

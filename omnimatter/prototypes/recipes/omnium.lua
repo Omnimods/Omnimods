@@ -1,10 +1,10 @@
 RecGen:create("omnimatter","omnicium-plate"):
     setItemName("omnicium-plate"):
-    setIcons("omnicium-plate","omnimatter"):
+    setIcons({"omnicium-plate", 32}):
     setStacksize(200):
-    setIngredients({normal = {{"omnite",2},{"stone-crushed",2}},expensive={{"omnite",3},{"stone-crushed",3}}}):
-    ifSetIngredients(mods["angelsrefining"],{normal={{"omnite",3},{"stone-crushed",4}},expensive={{"omnite",4},{"stone-crushed",6}}}):
-    setResults({normal = {{"omnicium-plate", 2}},expensive={{"omnicium-plate",2}}}):
+    setIngredients({"omnite", 2}, {"stone-crushed", 2}):
+    ifSetIngredients(mods["angelsrefining"],{"omnite", 3},{"stone-crushed", 4}):
+    setResults({"omnicium-plate", 2}):
     setCategory("smelting"):
     setSubgroup("omnium"):
     setOrder("ab"):
@@ -16,9 +16,9 @@ RecGen:create("omnimatter","omnicium-plate"):
 RecGen:create("omnimatter","omnicium-plate-pure"):
     setItemName("omnicium-plate"):
     setStacksize(200):
-    setIngredients({normal = {{"crushed-omnite",25}},expensive={{"crushed-omnite",40}}}):
-    setResults("omnicium-plate"):
-    setIcons("omnicium-plate","omnimatter"):
+    setIngredients({"crushed-omnite",12}):
+    setResults({"omnicium-plate",1}):
+    setIcons({"omnicium-plate", 32}):
     addSmallIngIcon(1,3):
     setCategory("smelting"):
     setSubgroup("omnium"):
@@ -33,7 +33,7 @@ omni.lib.replace_recipe_ingredient("burner-inserter", "iron-plate", {"omnicium-p
 omni.lib.replace_recipe_ingredient("burner-mining-drill", "iron-plate", {"omnicium-plate", 6})
 
 ItemGen:create("omnimatter","omnium-plate"):
-    setIcons("omnium-plate","omnimatter"):
+    setIcons({"omnium-plate", 32}):
     setStacksize(200):
     setSubgroup("omnium"):
     setOrder("ac"):
@@ -43,9 +43,9 @@ RecGen:create("omnimatter","omnium-plate-mix"):
     setIngredients({"omnite",2}):
     ifModsAddIngredients("angelsrefining",{"angels-ore1-crushed",2},{"angels-ore3-crushed",2}):
     ifAddIngredients(not mods["angelsrefining"],{"copper-ore",1},{"iron-ore",1}):
-    setResults({normal = {{"omnium-plate", 2}},expensive={{"omnium-plate",1}}}):
+    setResults({"omnium-plate", 2}):
     addProductivity():
-    setIcons("omnium-plate","omnimatter"):
+    setIcons({"omnium-plate", 32}):
     addSmallIngIcon(2,1):
     addSmallIngIcon(3,3):
     setCategory("omnifurnace"):
@@ -54,6 +54,7 @@ RecGen:create("omnimatter","omnium-plate-mix"):
     setEnergy(5):
     setTechName("omnitech-omnium-processing"):
     setTechIcons("omnium-plate", 32):
+    setTechPrereq("automation-science-pack"):
     setTechPacks(1):
     setTechCost(15):
     --setTechPrereq("omnitech-angels-omnium-smelting-1"):
@@ -64,8 +65,9 @@ omni.lib.add_prerequisite("steel-processing", "omnitech-omnium-processing")
 
 RecGen:create("omnimatter","omnium-gear-wheel"):
     setStacksize(100):
-    setIngredients({normal = {{"omnium-plate", 1}},expensive={{"omnium-plate",2}}}):
-    setResults({normal = {{"omnium-gear-wheel", 1}},expensive={{"omnium-gear-wheel",1}}}):
+    setIngredients({"omnium-plate", 1}):
+    setResults({"omnium-gear-wheel", 1}):
+    setIcons({"omnium-gear-wheel", 32}):
     addProductivity():
     setSubgroup("omni-gears"):
     setOrder("aa"):
@@ -77,6 +79,7 @@ RecGen:create("omnimatter","omnium-iron-gear-box"):
     setStacksize(100):
     setSubgroup("omni-gears"):
     setIngredients({"omnium-gear-wheel", 1},{"iron-gear-wheel", 1}):
+    setIcons({"omnium-iron-gear-box", 32}):
     addProductivity():
     setTechName("omnitech-omnium-processing"):
     setEnergy(0.25):
@@ -92,6 +95,7 @@ if mods["bobplates"] then
             setEnergy(0.25):
             addProductivity():
             setIngredients("omnium-gear-wheel",p.."-gear-wheel"):
+            setIcons({"omnium-"..p.."-gear-box", 32}):
             setCategory("crafting"):
             setSubgroup("omni-gears"):
             setTechName(plateTech[i]):
@@ -104,7 +108,7 @@ if mods["bobplates"] then
     data.raw.item["steel-gear-wheel"].icon_size=32
 end
 
-data.raw.item["iron-gear-wheel"].icons={{icon="__omnimatter__/graphics/icons/iron-gear-wheel.png",icon_size=32,mipmaps=1}}
+--data.raw.item["iron-gear-wheel"].icons={{icon="__omnimatter__/graphics/icons/iron-gear-wheel.png"}}
 
 if mods["angelssmelting"] then
     --Get rid of the ore processor 1 ingredient count limit to allow for omnium processing
@@ -113,18 +117,18 @@ if mods["angelssmelting"] then
     ItemGen:import("ingot-iron"):
         setName("ingot-omnium","omnimatter"):
         setSubgroup("angels-omnium"):
-        setIcons({{icon ="ingot-omnium", icon_size = 32}}, "omnimatter"):
+        setIcons({"ingot-omnium", 32}, "omnimatter"):
         extend()
 
     RecGen:import("iron-ore-smelting"):
         setName("omnite-smelting","omnimatter"):
-        setIngredients(
+        setIngredients({
             {type="item", name="iron-ore", amount=12},
             {type="item", name="copper-ore", amount=12},
-            {type="item", name="omnite", amount=24}):
+            {type="item", name="omnite", amount=24}}):
         replaceResults("ingot-iron","ingot-omnium"):
         setSubgroup("angels-omnium"):
-        setIcons("ingot-omnium","omnimatter"):
+        setIcons({"ingot-omnium", 32},"omnimatter"):
         addSmallIcon({{icon = "__omnilib__/graphics/icons/small/num_1.png", icon_size = 32, tint = {a=1,b=0,g=0.8,r=1}}}, 2):
         setTechName("omnitech-angels-omnium-smelting-1"):
         setTechLocName("technology-name.omnitech-angels-omnium-smelting-casting",1):
@@ -137,7 +141,7 @@ if mods["angelssmelting"] then
         replaceIngredients("ingot-iron","ingot-omnium"):
         replaceResults("liquid-molten-iron","liquid-molten-omnium"):
         setSubgroup("omnium-casting"):
-        setIcons({{icon = "molten-omnium", icon_size = 256}}, "omnimatter"):
+        setIcons({"molten-omnium", 256}, "omnimatter"):
         setBothColour({r = 125/255, g = 0/255, b = 161/255}):
         setTechName("omnitech-angels-omnium-smelting-1"):
         extend()
@@ -147,7 +151,7 @@ if mods["angelssmelting"] then
         replaceIngredients("liquid-molten-iron","liquid-molten-omnium"):
         replaceResults("angels-plate-iron","omnium-plate"):
         setSubgroup("omnium-casting"):
-        setIcons("omnium-plate","omnimatter"):
+        setIcons({"omnium-plate", 32},"omnimatter"):
         addSmallIcon("molten-omnium",1):
         addProductivity():
         setTechName("omnitech-angels-omnium-smelting-1"):
@@ -159,7 +163,7 @@ if mods["angelssmelting"] then
         setIngredients({"iron-ore",2},{"copper-ore",2},{"omnite",4}):
         replaceResults("processed-iron","processed-omnium"):
         setSubgroup("angels-omnium"):
-        setIcons("processed-omnium","omnimatter"):
+        setIcons({"processed-omnium", 32},"omnimatter"):
         setTechName("omnitech-angels-omnium-smelting-2"):
         setTechPrereq("omnitech-angels-omnium-smelting-1", "ore-processing-1"):
         setTechIcons("smelting-omnium-tech", 256):
@@ -172,7 +176,7 @@ if mods["angelssmelting"] then
         replaceIngredients("solid-coke",{type="fluid",name="omnic-acid",amount=40}):
         replaceResults("ingot-iron","ingot-omnium"):
         setSubgroup("angels-omnium"):
-        setIcons("ingot-omnium","omnimatter"):
+        setIcons({"ingot-omnium", 32} ,"omnimatter"):
         addSmallIcon({{icon = "__omnilib__/graphics/icons/small/num_2.png", icon_size = 32, tint = {a=1,b=0,g=0.8,r=1}}}, 2):
         setTechName("omnitech-angels-omnium-smelting-2"):
         extend()
@@ -183,7 +187,7 @@ if mods["angelssmelting"] then
         replaceIngredients("processed-iron","processed-omnium"):
         replaceResults("pellet-iron","pellet-omnium"):
         setSubgroup("angels-omnium"):
-        setIcons("pellet-omnium","omnimatter"):
+        setIcons({"pellet-omnium", 32},"omnimatter"):
         setTechName("omnitech-angels-omnium-smelting-3"):
         setTechPrereq("omnitech-angels-omnium-smelting-2", "ore-processing-2"):
         setTechIcons("smelting-omnium-tech", 256):
@@ -196,7 +200,7 @@ if mods["angelssmelting"] then
         ifModsReplaceIngredients("omnimatter_crystal","solid-coke","omnine"):
         replaceResults("ingot-iron","ingot-omnium"):
         setSubgroup("angels-omnium"):
-        setIcons("ingot-omnium","omnimatter"):
+        setIcons({"ingot-omnium", 32},"omnimatter"):
         addSmallIcon({{icon = "__omnilib__/graphics/icons/small/num_3.png", icon_size = 32, tint = {a=1,b=0,g=0.8,r=1}}}, 2):
         setTechName("omnitech-angels-omnium-smelting-3"):
         setTechIcons("smelting-omnium-tech", 256):
@@ -208,7 +212,7 @@ if mods["angelssmelting"] then
         replaceIngredients("liquid-molten-iron","liquid-molten-omnium"):
         replaceResults("angels-roll-iron","angels-roll-omnium"):
         setSubgroup("omnium-casting"):
-        setIcons("roll-omnium","omnimatter"):
+        setIcons({"roll-omnium", 32},"omnimatter"):
         addSmallIcon({{icon = "__omnilib__/graphics/icons/small/num_1.png", icon_size = 32, tint = {a=1,b=0,g=0.8,r=1}}}, 2):
         setTechName("omnitech-angels-omnium-smelting-2"):
         extend()
@@ -218,7 +222,7 @@ if mods["angelssmelting"] then
         replaceIngredients("liquid-molten-iron","liquid-molten-omnium"):
         replaceResults("angels-roll-iron","angels-roll-omnium"):
         setSubgroup("omnium-casting"):
-        setIcons("roll-omnium","omnimatter"):
+        setIcons({"roll-omnium", 32},"omnimatter"):
         addSmallIcon({{icon = "__omnilib__/graphics/icons/small/num_2.png", icon_size = 32, tint = {a=1,b=0,g=0.8,r=1}}}, 2):
         setTechName("omnitech-angels-omnium-smelting-3"):
         extend()
@@ -228,7 +232,7 @@ if mods["angelssmelting"] then
         replaceIngredients("angels-roll-iron","angels-roll-omnium"):
         replaceResults("angels-plate-iron","omnium-plate"):
         setSubgroup("omnium-casting"):
-        setIcons("omnium-plate"):
+        setIcons({"omnium-plate", 32}, "omnimatter"):
         addSmallIcon("angels-roll-omnium", 2):
         setTechName("omnitech-angels-omnium-smelting-2"):
         extend()
@@ -240,9 +244,9 @@ if mods["angelssmelting"] then
         setStacksize(100):
         setSubgroup("omnium-casting"):
         setOrder("ub"):
-        setIngredients({normal = {{type="fluid",name="liquid-molten-omnium",amount=40}},expensive={{type="fluid",name="liquid-molten-omnium",amount=40}}}):
+        setIngredients({{type="fluid",name="liquid-molten-omnium",amount=40}}):
         setCategory("casting"):
-        setResults({normal = {{"omnium-gear-wheel", 6}},expensive={{"omnium-gear-wheel",6}}}):
+        setResults({"omnium-gear-wheel", 6}):
         addProductivity():
         setEnergy(2):
         setTechName("omnitech-angels-omnium-smelting-1"):

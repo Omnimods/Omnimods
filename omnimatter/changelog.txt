@@ -1,4 +1,19 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.2.1
+Date: 2024.11.19
+  Bugfixes:
+    - Fixed a missing nil check in autoplace removal that caused a crash with Factorissimo 3
+---------------------------------------------------------------------------------------------------
+Version: 4.2.0
+Date: 2024.11.19
+  Changes:
+    - Updated fopr factorio 2.0
+---------------------------------------------------------------------------------------------------
+Version: 4.1.38
+Date: ????
+  Changes:
+      - Halfed the amount of crushed and pulverized omnite produced / consumed for each recipe
+---------------------------------------------------------------------------------------------------
 Version: 4.1.37
 Date: 2023.11.05
   Bugfixes:

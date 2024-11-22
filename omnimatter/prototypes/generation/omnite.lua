@@ -1,5 +1,4 @@
-local resource_autoplace = require("resource-autoplace")
-
+--Create omnite item
 ItemGen:create("omnimatter","omnite"):
     setFuelValue(2):
     setStacksize(500):
@@ -7,27 +6,32 @@ ItemGen:create("omnimatter","omnite"):
     setItemPictures({
         {
             filename = "__omnimatter__/graphics/icons/omnite.png",
-            scale = 0.25,
+            scale = 0.5,
             size = 64
         },
         {
             filename = "__omnimatter__/graphics/icons/omnite-1.png",
-            scale = 0.25,
+            scale = 0.5,
             size = 64
         },
         {
             filename = "__omnimatter__/graphics/icons/omnite-2.png",
-            scale = 0.25,
+            scale = 0.5,
             size = 64
         },
         {
             filename = "__omnimatter__/graphics/icons/omnite-3.png",
-            scale = 0.25,
+            scale = 0.5,
             size = 64
         }
     }):
     extend()
 
+
+local resource_autoplace = require("resource-autoplace")
+
+-- Initialize the core patch sets in a predictable order
+resource_autoplace.initialize_patch_set("omnite", true)
 
 data:extend(
 {
@@ -172,12 +176,12 @@ data:extend({
         localised_name = {"", "[entity=omnite] ", {"entity-name.omnite"}},
         richness = true,
         category = "resource",
-        order = "b-a"
+        order = "a-a-omnite"
     },
-    {
-        type = "noise-layer",
-        name = "omnite"
-    },
+    --{
+    --     type = "noise-layer",
+    --     name = "omnite"
+    --},
     {
         type = "resource",
         name = "omnite",
@@ -188,32 +192,33 @@ data:extend({
         tree_removal_max_distance = 32 * 32,
         infinite_depletion_amount = 10,
         resource_patch_search_radius = 10,
-        order="b-da",
+        order="a-a-omnite",
         infinite = false,
         minable = {
-        mining_particle = "omnite-particle",
-        mining_time = 1,
-        results = {
-            {
-            type = "item",
-            name = "omnite",
-            amount_min = 1,
-            amount_max = 1
+            mining_particle = "omnite-particle",
+            mining_time = 1,
+            results = {
+                {
+                type = "item",
+                name = "omnite",
+                amount_min = 1,
+                amount_max = 1
+                }
             }
-        }
         },
         collision_box = {{ -0.1, -0.1}, {0.1, 0.1}},
         selection_box = {{ -0.5, -0.5}, {0.5, 0.5}},
-        autoplace =
-        resource_autoplace.resource_autoplace_settings({
+        autoplace = resource_autoplace.resource_autoplace_settings({
             name = "omnite",
-            order = "b-da",
+            patch_set_name = "omnite",
+            autoplace_control_name = "omnite",
+            order = "b-ab",
             has_starting_area_placement = true,
             base_density = 35,    -- ~richness
+            base_spots_per_km2 = 10, -- ~frequency
             regular_rq_factor_multiplier = 1.8, --Size
             starting_rq_factor_multiplier = 2.4,
             richness_multiplier_distance_bonus = 20,
-            base_spots_per_km2 = 10, -- ~frequency
             peaks = {
             {
                 noise_layer = "omnite",
@@ -227,52 +232,36 @@ data:extend({
         sheet = {
             filename = "__omnimatter__/graphics/entity/ores/omnite.png",
             priority = "extra-high",
-            width = 64,
-            height = 64,
-            frame_count = 8,
-            variation_count = 8,
-            hr_version = {
-            filename = "__omnimatter__/graphics/entity/ores/hr-omnite.png",
-            priority = "extra-high",
             width = 128,
             height = 128,
             frame_count = 8,
             variation_count = 8,
-            scale = 0.5
-            }
         }
         },
         stages_effect = {
         sheet = {
             filename = "__omnimatter__/graphics/entity/ores/omnite-glow.png",
             priority = "extra-high",
-            width = 64,
-            height = 64,
-            frame_count = 8,
-            variation_count = 8,
-            blend_mode = "additive",
-            flags = {"light"},
-            hr_version = {
-            filename = "__omnimatter__/graphics/entity/ores/hr-omnite-glow.png",
-            priority = "extra-high",
             width = 128,
             height = 128,
             frame_count = 8,
             variation_count = 8,
-            scale = 0.5,
             blend_mode = "additive",
             flags = {"light"},
-            }
         }
         },
         effect_animation_period = 5,
         effect_animation_period_deviation = 1,
-        effect_darkness_multiplier = 3.6,
+        effect_darkness_multiplier = 4.6,
         min_effect_alpha = 0.2,
         max_effect_alpha = 0.3,
-        map_color = {r=0.34, g=0.00, b=0.51},
+        map_color = {r=0.34, g=0.00, b=0.51}
     }
 })
+
+--Add omnite to nauvis autoplace control
+data.raw.planet["nauvis"]["map_gen_settings"]["autoplace_controls"]["omnite"] = {}
+data.raw.planet["nauvis"]["map_gen_settings"]["autoplace_settings"]["entity"]["settings"]["omnite"] = {}
 
 --Apply preset configs to omnite and infinite omnite if it exists
 function omni.matter.apply_presets(resource)

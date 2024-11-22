@@ -2,21 +2,21 @@
 local burner_ingredients = {}
 if mods["angelsindustries"] and angelsmods.industries.components then
     burner_ingredients = {
-        {name="block-construction-1", amount=1},
-        {name="block-fluidbox-1", amount=1},
-        {name="block-omni-0", amount=1}
+        {name = "block-construction-1", amount = 1, type = "item"},
+        {name = "block-fluidbox-1", amount = 1, type = "item"},
+        {name = "block-omni-0", amount = 1, type = "item"}
     }
 else
     burner_ingredients = {
-        {name="omnicium-plate", amount=8},
-        {name="iron-plate", amount=4},
-        {name = "omnite-brick", amount = 4}
+        {name = "omnicium-plate", amount = 8, type = "item"},
+        {name = "iron-plate", amount = 4, type = "item"},
+        {name = "omnite-brick", amount = 4, type = "item"}
     }
 end
 
 BuildGen:create("omnimatter","burner-omnitractor"):
     noTech():
-    setIcons("omnitractor"):
+    setIcons({"omnitractor", 32}):
     setBurner(1,1):
     setSubgroup("omnitractor"):
     setOrder("a[omnitractor-burner]"):
@@ -28,6 +28,7 @@ BuildGen:create("omnimatter","burner-omnitractor"):
     setReplace("omnitractor"):
     setNextUpgrade("omnitractor-1"):
     setStacksize(50):
+    setWeight(40000):
     setSize(3):
     setCrafting({"omnite-extraction-both","omnite-extraction-burner"}):
     setSpeed(1):
@@ -50,6 +51,7 @@ BuildGen:create("omnimatter","burner-omnitractor"):
     }):setOverlay("tractor-over",0):
     setFluidBox("WXW.XXX.KXK",true):
     extend()
+
 
 local function timestier(row,col)
     local first_row = {1,0.5,0.2}
@@ -90,6 +92,7 @@ BuildChain:create("omnimatter","omnitractor"):
     addElectricIcon():
     setLocName("omnitractor"):
     setIngredients(cost:ingredients()):
+    setIcons({"omnitractor", 32}):
     setEnergy(5):
     setUsage(function(level,grade) return (100+25*grade).."kW" end):
     setEmissions(function(level,grade) return math.max(3 - ((grade-1) * 0.2), 0.1) end):
@@ -111,6 +114,7 @@ BuildChain:create("omnimatter","omnitractor"):
             end
         end):
     setStacksize(50):
+    setWeight(40000):
     allowProductivity():
     setLevel(settings.startup["omnimatter-max-tier"].value):
     setSoundWorking("ore-crusher"):
@@ -140,72 +144,72 @@ local fbox_positions = {
     {
         {
             -1,
-            -1.95
+            -1--    -1.95
         },
         {
-            1.9,
+            1,--   1.9,
             -1
         },
         {
             1,
-            1.85
+            1--    1.85
         },
         {
-            -1.9,
+            -1,--   -1.9,
             1
         }
     },
     {
         {
             1,
-            -1.95
+            -1--   -1.95
         },
         {
-            1.9,
+            1,--    1.9,
             1
         },
         {
             -1,
-            1.85
+            1--     1.85
         },
         {
-            -1.9,
+            -1,--   -1.9,
             -1
         }
     },
     {
         {
             -1,
-            1.85
+            1--     1.85
         },
         {
-            -1.9,
+            -1,--   -1.9,
             -1
         },
         {
             1,
-            -1.95
+            -1--    -1.95
         },
         {
-            1.9,
+            1,--    1.9,
             1
         }
     },
     {
         {
             1,
-            1.85
+            1, --   1.85
         },
         {
-            -1.9,
+            -1,--   -1.9,
             1
         },
         {
             -1,
-            -1.95
+            -1--    -1.95
         },
         {
-            1.9,
+            1,--    1.9,
             -1
         }
     }
@@ -217,7 +221,6 @@ local function modify_fluidboxes(proto)
         fboxes[I].pipe_covers = pipecoverspictures()
         -- Move the north cover up a little
         fboxes[I].pipe_covers.north.layers[1].shift = {0, -0.05}
-        fboxes[I].pipe_covers.north.layers[1].hr_version.shift = {0, -0.05}
         -- Only south should draw "on top"
         fboxes[I].secondary_draw_orders = {
             north = -1,
@@ -229,79 +232,43 @@ local function modify_fluidboxes(proto)
         fboxes[I].pipe_picture = {
             north = {
                 filename = "__base__/graphics/entity/pipe/pipe-straight-vertical.png",
-                height = 64,
-                width = 64,
+                height = 128,
+                width = 128,
+                scale = 0.5,
                 shift = {
                     0,
                     0.95
                 },
-                hr_version = {
-                    filename = "__base__/graphics/entity/pipe/hr-pipe-straight-vertical.png",
-                    scale = 0.5,
-                    height = 128,
-                    width = 128,
-                    shift = {
-                        0,
-                        0.95
-                    }
-                }
             },
             east = {
                 filename = "__base__/graphics/entity/pipe/pipe-straight-horizontal.png",
-                height = 64,
-                width = 64,
+                height = 128,
+                width = 128,
+                scale = 0.5,
                 shift = {
                     -0.85,
                     0
                 },
-                hr_version = {
-                    filename = "__base__/graphics/entity/pipe/hr-pipe-straight-horizontal.png",
-                    scale = 0.5,
-                    height = 128,
-                    width = 128,
-                    shift = {
-                        -0.85,
-                        0
-                    }
-                }
             },
             south = {
                 filename = "__omnimatter__/graphics/pipe-patch-south.png",
-                height = 64,
-                width = 64,
+                height = 128,
+                width = 128,
+                scale = 0.5,
                 shift = {
                     0,
                     -0.299
                 },
-                hr_version = {
-                    filename = "__omnimatter__/graphics/hr-pipe-patch-south.png",
-                    scale = 0.5,
-                    height = 128,
-                    width = 128,
-                    shift = {
-                        0,
-                        -0.299
-                    }
-                }
             },
             west = {
                 filename = "__base__/graphics/entity/pipe/pipe-straight-horizontal.png",
-                height = 64,
-                width = 64,
+                height = 128,
+                width = 128,
+                scale = 0.5,
                 shift = {
                     0.9,
                     0
                 },
-                hr_version = {
-                    filename = "__base__/graphics/entity/pipe/hr-pipe-straight-horizontal.png",
-                    scale = 0.5,
-                    height = 128,
-                    width = 128,
-                    shift = {
-                        0.9,
-                        0
-                    }
-                }
             }
         }
         fboxes[I].pipe_connections[1].positions = fbox_positions[I]
@@ -309,8 +276,9 @@ local function modify_fluidboxes(proto)
         fboxes[I].pipe_connections[1].position = nil
     end
 end
+
 local comp_mode_active = mods["angelsindustries"] and angelsmods.industries.components
-for i=1,math.min(settings.startup["omnimatter-max-tier"].value,5) do
+for i=1,math.min(settings.startup["omnimatter-max-tier"].value, 5) do
     if comp_mode_active then
         -- Add omniblock unlocks
         omni.lib.add_unlock_recipe("omnitech-omnitractor-electric-"..i, "block-omni-"..i)
@@ -326,3 +294,6 @@ for i=1,math.min(settings.startup["omnimatter-max-tier"].value,5) do
 end
 -- Burner as well
 modify_fluidboxes(data.raw["assembling-machine"]["burner-omnitractor"])
+
+-- log(serpent.block(data.raw.item["omnitractor-1"]))
+-- log(serpent.block(data.raw.item["omnitractor-1"].icons[3]))

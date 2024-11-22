@@ -103,7 +103,7 @@ end
 
 function omni.fluid.has_fluid(recipe)
     for _,ingres in pairs({"ingredients","results"}) do
-        for _,component in pairs(recipe.normal[ingres]) do
+        for _,component in pairs(recipe[ingres]) do
             if component.type == "fluid" then return true end
         end
     end
@@ -166,15 +166,8 @@ function omni.fluid.compact_array(array) --individual ingredient/result table
 end
 
 function omni.fluid.is_fluid_void(recipe)
-    local results = {}
-    local ingredients = {}
-    if recipe.normal then
-        results = recipe.normal.results
-        ingredients = recipe.normal.ingredients
-    elseif recipe.results then
-        results = recipe.results
-        ingredients = recipe.ingredients
-    end
+    local results = recipe.results
+    local ingredients = recipe.ingredients
     --need to check results since it can be nil when .result exists
     if results and next(results) and #results == 1 and results[1].amount and results[1].amount == 0  and next(ingredients) and ingredients[1].type and ingredients[1].type == "fluid" then
         return true
@@ -188,11 +181,7 @@ function omni.fluid.create_temperature_copies(recipe, fluidname, replacement, te
         for _, ent in pairs(data.raw["assembling-machine"]) do
             if ent.fixed_recipe and ent.fixed_recipe == recipe.name then
                 ent.fixed_recipe = nil
-                omni.lib.enable_recipe(recipe.name)
-                if recipe.normal then
-                    recipe.normal.hidden = false
-                    recipe.expensive.hidden = false
-                end
+                recipe.enabled = true
                 if recipe.hidden then recipe.hidden = false end
             end
         end
@@ -206,19 +195,17 @@ function omni.fluid.create_temperature_copies(recipe, fluidname, replacement, te
                 newrec.name = newrec.name .."-T-"..temp
                 newrec.localised_name = omni.lib.locale.of(recipe).name
                 newrec.order = (recipe.order or recipe.name).."-T-"..temp
-                for _, dif in pairs({"normal","expensive"}) do
-                    for _, ingres in pairs({"ingredients","results"}) do
-                        for _, flu in pairs(newrec[dif][ingres]) do
-                            if flu.name and flu.name == replacement then
-                                flu.name = sluid
-                                break
-                            end
+                for _, ingres in pairs({"ingredients","results"}) do
+                    for _, flu in pairs(newrec[ingres]) do
+                        if flu.name and flu.name == replacement then
+                            flu.name = sluid
+                            break
                         end
                     end
-                    --Main product update
-                    if newrec[dif].main_product and newrec[dif].main_product == replacement then
-                        newrec[dif].main_product = sluid
-                    end
+                end
+                --Main product update
+                if newrec.main_product and newrec.main_product == replacement then
+                    newrec.main_product = sluid
                 end
                 copies[#copies+1] = newrec
                 if tech and not omni.lib.recipe_is_enabled(recipe.name) then

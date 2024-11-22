@@ -1,10 +1,8 @@
 -- Replace the water output from all diefferent types of "water pumps" with omnic water
--- Mods add all kind of pumps, we have to check all
---Offshore pump should output omnic water
-for _,pump in pairs(data.raw["offshore-pump"]) do
-    if pump.fluid == "water" then
-        pump.fluid = "omnic-water"
-        pump.fluid_box.filter = "omnic-water"
+--Ceck tile.fluid for possible pump outputs
+for _, t in pairs(data.raw.tile) do
+    if t.fluid and t.fluid== "water" then
+        t.fluid = "omnic-water"
     end
 end
 
@@ -13,7 +11,7 @@ for _,pump in pairs(data.raw["assembling-machine"]) do
     if pump.fixed_recipe and omni.lib.recipe_result_contains(pump.fixed_recipe, "water") then
         local rec = data.raw.recipe[pump.fixed_recipe]
         --check if the recipe has no ingredients
-        if not (next(rec.ingredients) or (rec.normal and next(rec.normal.ingredients))) then
+        if not (next(rec.ingredients)) then
             omni.lib.replace_recipe_result(rec.name, "water", "omnic-water")
         end
     end
@@ -45,7 +43,7 @@ end
 RecGen:create("omnimatter", "omnic-waste-recycling"):
     setIngredients({type = "fluid", amount = 420, name = "omnic-waste"}):
     setResults({type = "fluid", amount = 60, name = "omnic-water"}):
-    setIcons("omnic-water"):
+    setIcons({"omnic-water", 32}):
     addSmallIcon(omni.lib.icon.of("omnic-waste", "fluid"), 3):
     setCategory("omniphlog"):
     setEnabled(true):
@@ -62,7 +60,7 @@ for _, fluid in pairs(data.raw.fluid) do
         RecGen:create("omnimatter","omniflush-"..fluid.name):
             setIngredients({type="fluid",amount=360,name=fluid.name}):
             setResults({type="fluid",amount=60,name="omnic-water"}):
-            setIcons("omnic-water"):
+            setIcons({"omnic-water", 32}):
             addSmallIcon(omni.lib.icon.of(fluid.name, "fluid"),3):
             setCategory("omniphlog"):
             setEnabled(fluid.name=="omnic-waste"):
@@ -81,8 +79,8 @@ for _, rec in pairs(data.raw.recipe) do
         for _, flu in pairs(fluids) do
             if  omni.lib.recipe_result_contains(rec.name, flu) then
                 local techname = omni.lib.get_tech_name(rec.name)
-                if rec.enabled or (rec.normal and rec.normal.enabled) or (rec.expensive and rec.expensive.enabled) then
-                    omni.lib.enable_recipe("omniflush-"..flu)
+                if rec.enabled == true then
+                    data.raw.recipe["omniflush-"..flu].enabled = true
                 elseif techname then
                     omni.lib.add_unlock_recipe(techname, "omniflush-"..flu)
                 end

@@ -240,9 +240,8 @@ end
 
 -- Two arrays
 function omni.lib.iunion(dest, source)
-    local base = #dest
-    for I=1, #source do
-        dest[base+I] = source[I]
+    for i=1, #source do
+        dest[#dest+i] = source[i]
     end
     return dest
 end
@@ -482,7 +481,7 @@ end
 
 --Checks if object exists
 function omni.lib.does_exist(item)
-    for _, p in pairs({"item","mining-tool","gun","ammo","armor","repair-tool","capsule","module","tool","rail-planner","selection-tool","item-with-entity-data","fluid","recipe","technology"}) do
+    for _, p in pairs({"item","gun","ammo","armor","repair-tool","capsule","module","tool","rail-planner","selection-tool","item-with-entity-data","fluid","recipe","technology"}) do
         if data.raw[p][item] then
             if data.raw[p][item] then
                 return true
@@ -512,7 +511,7 @@ function omni.lib.create_barrel(fluid)
         type = "item",
         name = fluid.name.."-barrel",
         localised_name = {"item-name.filled-barrel", fluid.localised_name or {"fluid-name." .. fluid.name}},
-        icons = util.combine_icons(omni.lib.icon.of(data.raw.item["empty-barrel"]), masks, {}),
+        icons = util.combine_icons(omni.lib.icon.of(data.raw.item["barrel"]), masks, {}),
         flags = {},
         subgroup = "fill-barrel",
         order = "b",
@@ -540,7 +539,7 @@ function omni.lib.create_barrel(fluid)
         ingredients =
         {
             {type = "fluid", name = fluid.name, amount = 250},
-            {type = "item", name = "empty-barrel", amount = 1},
+            {type = "item", name = "barrel", amount = 1},
         },
         results=
         {
@@ -567,7 +566,7 @@ function omni.lib.create_barrel(fluid)
         localised_name = {"recipe-name.empty-filled-barrel", fluid.localised_name or {"fluid-name." .. fluid.name}},
         category = "crafting-with-fluid",
         energy_required = 0.2,
-        subgroup = "empty-barrel",
+        subgroup = "barrel",
         order = "c[empty-"..fluid.name.."-barrel".."]",
         enabled = false,
         icons = util.combine_icons(masks, omni.lib.icon.of(fluid), {scale = 0.5, shift = {7, 8}}),
@@ -578,7 +577,7 @@ function omni.lib.create_barrel(fluid)
         results=
         {
             {type = "fluid", name = fluid.name, amount = 250},
-            {type = "item", name = "empty-barrel", amount = 1}
+            {type = "item", name = "barrel", amount = 1}
         },
         hide_from_stats = true,
         allow_decomposition = false
@@ -592,7 +591,6 @@ end
 
 local itemproto = {
     "item",
-    "mining-tool",
     "gun",
     "ammo",
     "armor",
@@ -612,7 +610,11 @@ local itemproto = {
 function omni.lib.find_prototype(item)
     if type(item)=="table" then return item elseif type(item)~="string" then return nil end
     for _, p in pairs(itemproto) do
-        if data.raw[p][item] then return data.raw[p][item] end
+        if not data.raw[p] then
+            return nil
+        else
+            if data.raw[p][item] then return data.raw[p][item] end
+        end
     end
     --log("Could not find "..item.."'s prototype, check it's type.")
     return nil
@@ -688,10 +690,10 @@ end
 
 --returns a table of all recipes that have the given result
 function omni.lib.find_recipes(itemname)
-    if type(itemname)=="table" then return itemname elseif type(itemname)~="string" then return nil end
+    if type(itemname) == "table" then return itemname elseif type(itemname) ~= "string" then return nil end
     local recipes = {}
     for _, rec in pairs(data.raw.recipe) do
-        if omni.lib.recipe_result_contains(rec.name,itemname) then
+        if omni.lib.recipe_result_contains(rec.name, itemname) then
             recipes[#recipes+1] = rec
         end
     end
@@ -707,7 +709,6 @@ function omni.lib.add_overlay(it, overlay_type, level)
     -- `it` is the item/recipe table, not the name (can search for it if wrong)
     -- overlay_type is a string for type or an iconspecification table
     -- level is required for extraction, building and compress-fluid and should be a number
-
     if type(it) == "string" then --parsed whole table not the name...
         it = omni.lib.find_prototype(it)
     end
@@ -717,35 +718,37 @@ function omni.lib.add_overlay(it, overlay_type, level)
         log("Invalid prototype specified")
         return
     end
-    local base_size = icons[1] and icons[1].icon_size
-    local base_scale = icons[1] and icons[1].scale or 1
-    if not base_size then
-        base_size = 32
-        log("No icon size found for " .. it.name)
-    else
-        base_size = base_size * base_scale
+
+    local base_size = (icons[1] and icons[1].icon_size) or defines.default_icon_size
+    local base_scale = icons[1] and icons[1].scale or (defines.default_icon_size / 2) / base_size
+    --Techs default to 256 icon_size instead of 64
+    if overlay_type == "technology" then
+        base_scale = icons[1] and icons[1].scale or (256 / 2) / base_size
     end
+
     level = level or "" -- So we can build our table
     local overlays = { -- Since we normalize for 32px/no mipmap icons below, we only need to set those properties for exceptions
         extraction = { -- omnimatter tiered extraction
-            icon = "__omnimatter__/graphics/icons/extraction-"..level..".png"
+            icon = "__omnimatter__/graphics/icons/extraction-"..level..".png",
+            icon_size = 32,
+            scale = 1.0 * base_scale * (base_size / 32),
         },
         building = {
-            icon = "__omnimatter_compression__/graphics/compress-"..level.."-32.png"
+            icon = "__omnimatter_compression__/graphics/compress-"..level.."-32.png",
+            icon_size = 32,
+            scale = 1.0 * base_scale * (base_size / 32),
         },
         compress = { -- compressed item/recipe
-            icon = "__omnimatter_compression__/graphics/compress-blank-32.png",
+            icon = "__omnimatter_compression__/graphics/compress-blank-64.png",
+            icon_size = 64,
             tint = {
                 r = 0.65,
                 g = 0,
                 b = 0.65,
                 a = 1
             },
-            scale = 1.5,
-            shift = {
-                -8,
-                8
-            }
+            scale = 1.0 * base_scale * (base_size / 64),
+
         },
         uncompress = { -- decompression recipe
             icon = "__omnimatter_compression__/graphics/compress-out-arrow-32.png"
@@ -758,11 +761,11 @@ function omni.lib.add_overlay(it, overlay_type, level)
         technology = { -- compressed techs
             icon = "__omnimatter_compression__/graphics/compress-tech-128.png",
             icon_size = 128,
-            scale = 1.5 * (base_size / 128),
-            shift = {
-                -32 * (base_size / 128),
-                32 * (base_size / 128),
-            },
+            scale = 1.0 * base_scale * (base_size / 128), --1.5 * (base_size / 128),
+            -- shift = {
+            --     -32 * (base_size / 128),
+            --     32 * (base_size / 128),
+            -- },
             tint = {
                 r = 1,
                 g = 1,
@@ -777,8 +780,8 @@ function omni.lib.add_overlay(it, overlay_type, level)
         overlay = overlays[overlay_type]
     elseif type(overlay_type) == "table" then
         overlay = overlay_type
-        if overlay.scale then
-            overlay.scale = overlay.scale * base_scale
+        for _, ic in pairs(overlay) do
+            ic.scale = (ic.scale or 1) * base_scale * (base_size / 256)
         end
     else
         error("add_overlay: invalid overlay_type specified")
@@ -791,21 +794,23 @@ function omni.lib.add_overlay(it, overlay_type, level)
                 overlay.icon_size = overlay.icon_size or 32
                 overlay = {overlay}
             end
-            icons = util.combine_icons(icons, overlay, {})
+            --icons = util.combine_icons(icons, overlay, {})
+            icons = omni.lib.union(icons, overlay)
         end
         return icons
     end
 end
 
-local c=0.9
-local dir={W={0,-c},S={0,c},A={-c,0},D={c,0},I={0,-c},K={0,c},J={-c,0},L={c,0},T={0,-c},G={0,c},F={-c,0},H={c,0}}
-local inflow={A=true,W=true,S=true,D=true}        --North,East,South,West -->Letters have to be used for the given direction!!!
-local passthrough={F=true,T=true,H=true,G=true} --North,East,South,West
---output: I, K, J, L
-function omni.lib.assemblingFluidBox(str,hide)
+local c = 0.0    --0.9
+local cord={W={0,-c},S={0,c},A={-c,0},D={c,0},I={0,-c},K={0,c},J={-c,0},L={c,0},T={0,-c},G={0,c},F={-c,0},H={c,0}}
+local dir={W=defines.direction.north,S=defines.direction.south,A=defines.direction.east,D=defines.direction.west,I=defines.direction.north,K=defines.direction.south,
+J=defines.direction.west,L=defines.direction.east,T=defines.direction.north,G=defines.direction.south,F=defines.direction.west,H=defines.direction.east}
+local inflow={A=true,W=true,S=true,D=true}          --W= North, A=East, S=South, D=West -->Letters have to be used for the given direction!!!
+local passthrough={F=true,T=true,H=true,G=true}     --T= North, H=East, G=South, F=West 
+--output: J, I, L, K                                --I= North, L=East, K=South, J=West 
+function omni.lib.assemblingFluidBox(str)
     if str==nil then return nil end
     local code=omni.lib.split(str,".")
-    local size = #code
     local box = {}
     for i, row in pairs(code) do
         for j=1, string.len(row) do
@@ -813,26 +818,71 @@ function omni.lib.assemblingFluidBox(str,hide)
             if letter ~= "X" then
                 local b = {}
                 b.pipe_covers = pipecoverspictures()
-                b.base_area = 120
+                b.volume = 1000
                 if inflow[letter] then
                     b.production_type = "input"
-                    b.base_level = -1
                 elseif passthrough[letter] then
                     b.production_type = "input-output"
                 else
                     b.production_type = "output"
-                    b.base_level = 1
                 end
-                local pos = {-0.5*(string.len(row)+1)+j,-0.5*(#code+1)+i}
-                pos[1]=pos[1]+dir[letter][1]
-                pos[2]=pos[2]+dir[letter][2]
-                b.pipe_connections = {{ type=b.production_type, position = pos }}
+                local pos = {-0.5 * (string.len(row)+1) + j, -0.5*(#code+1) + i}
+
+                pos[1] = pos[1] + cord[letter][1]
+                pos[2] = pos[2] + cord[letter][2]
+
+                b.pipe_connections = {{flow_direction = b.production_type, direction = dir[letter], position = pos }}
                 box[#box+1]=table.deepcopy(b)
             end
         end
     end
-    if type(hide) == "boolean" and hide then box.off_when_no_fluid_recipe = true end
     return box
+end
+
+function omni.lib.generatorFluidBox(str, min_temp, filter)
+    if str==nil then return nil end
+    local code=omni.lib.split(str,".")
+    local box = {
+        volume = 1000,
+        pipe_covers = pipecoverspictures(),
+        pipe_connections ={},
+        production_type = "input-output"
+    }
+    for i, row in pairs(code) do
+        for j=1, string.len(row) do
+            local letter = string.sub(row,j,j)
+            if letter ~= "X" then
+                local b = {}
+                b.pipe_covers = pipecoverspictures()
+                volume = 1000
+                if inflow[letter] then
+                    b.production_type = "input"
+                elseif passthrough[letter] then
+                    b.production_type = "input-output"
+                else
+                    b.production_type = "output"
+                end
+                local pos = {-0.5*(string.len(row)+1)+j,-0.5*(#code+1)+i}
+                pos[1]=pos[1]+dir[letter][1]
+                pos[2]=pos[2]+dir[letter][2]
+                b = { type=b.production_type, position = pos }
+                box.pipe_connections[#box.pipe_connections+1]=table.deepcopy(b)
+            end
+        end
+    end
+    box.filter = filter
+    box.minimum_temperature = min_temp
+    return box
+end
+
+function omni.lib.fluid_box_conversion(kind, stringcode, min_temp, filter)
+    if stringcode==nil then return nil end
+    if kind == "assembling-machine" or kind=="furnace" then
+        return omni.lib.assemblingFluidBox(stringcode)
+    elseif kind == "generator" then
+        return omni.lib.generatorFluidBox(stringcode, min_temp, filter)
+    end
+    return nil
 end
 
 function omni.lib.replaceValue(tab,name,val,flags)
@@ -873,65 +923,6 @@ function omni.lib.replaceValue(tab,name,val,flags)
         t[name]=val
     end
     return t
-end
-
-function omni.lib.generatorFluidBox(str,filter,tmp)
-    if str==nil then return nil end
-    local code=omni.lib.split(str,".")
-    local box = {
-        base_area = 1,
-        height = 2,
-        base_level = -1,
-        pipe_covers = pipecoverspictures(),
-        pipe_connections ={},
-        production_type = "input-output"
-    }
-    for i, row in pairs(code) do
-        for j=1, string.len(row) do
-            local letter = string.sub(row,j,j)
-            if letter ~= "X" then
-                local b = {}
-                b.pipe_covers = pipecoverspictures()
-                b.base_area = 10
-                if inflow[letter] then
-                    b.production_type = "input"
-                    b.base_level = -1
-                elseif passthrough[letter] then
-                    b.production_type = "input-output"
-                else
-                    b.production_type = "output"
-                    b.base_level = 1
-                end
-                local pos = {-0.5*(string.len(row)+1)+j,-0.5*(#code+1)+i}
-                pos[1]=pos[1]+dir[letter][1]
-                pos[2]=pos[2]+dir[letter][2]
-                b = { type=b.production_type, position = pos }
-                box.pipe_connections[#box.pipe_connections+1]=table.deepcopy(b)
-            end
-        end
-    end
-    box.filter = filter
-    box.minimum_temperature = tmp
-    return box
-end
-
-function omni.lib.fluid_box_conversion(kind,str,hide,tmp)
-    if str==nil then return nil end
-    local box = {}
-    if kind == "assembling-machine" or kind=="furnace" then
-        if type(hide)=="boolean" then
-            box = omni.lib.assemblingFluidBox(str,hide)
-        else
-            box = omni.lib.assemblingFluidBox(str)
-        end
-    elseif kind == "generator" then
-        if hide then
-            box = omni.lib.generatorFluidBox(str,hide,tmp)
-        else
-            box = omni.lib.generatorFluidBox(str)
-        end
-    end
-    return box
 end
 
 --Fuel functions

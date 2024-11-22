@@ -77,4 +77,8 @@ if mods["angelsbioprocessing"] then
     end
 end
 
-RecGen:importIf("solid-soil"):setCategory("omnimutator"):addIngredients({type="fluid",name="omnic-acid",amount=20}):setTechName("omnitech-omnimutator"):extend()
+RecGen:importIf("solid-soil"):
+    setCategory("omnimutator"):
+    addIngredients({type="fluid",name="omnic-acid",amount=20}):
+    setTechName("omnitech-omnimutator"):
+    extend()

@@ -161,7 +161,7 @@ end
 
 local function call_remote_functions()
     --K2 crash site
-    if game.active_mods["Krastorio2"] and remote.interfaces["kr-crash-site"] then
+    if script.active_mods["Krastorio2"] and remote.interfaces["kr-crash-site"] then
         remote.call("kr-crash-site","remove_crash_site_entity","kr-crash-site-generator")
     end
     --DiscoScience

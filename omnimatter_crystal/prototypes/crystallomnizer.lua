@@ -34,10 +34,10 @@ else
     setQuant("circuit",5,dif)
 end
 
-local tmp = {{"advanced-electronics"}}
+local tmp = {{"advanced-circuit"}}
 BuildChain:create("omnimatter_crystal","crystallomnizer"):
     setSubgroup("crystallomnizer"):
-    setIcons("crystallomnizer","omnimatter_crystal"):
+    setIcons({"crystallomnizer", 32}):
     setLocName("crystallomnizer"):
     setIngredients(cost_omnizer:ingredients()):
     setEnergy(5):
@@ -54,7 +54,7 @@ BuildChain:create("omnimatter_crystal","crystallomnizer"):
     setTechPrereq(function(levels,grade)
         local tmp = {"omnitech-crystallology-"..math.min(grade,omni.max_tier-1)}
         if grade == 1 then
-            tmp[#tmp+1]="advanced-electronics"
+            tmp[#tmp+1]="advanced-circuit"
         else
             tmp[#tmp+1]="omnitech-crystallonics-"..(grade-1)
         end

@@ -1,7 +1,9 @@
-RecGen:import("small-electric-pole"):
-    setEnabled(false):
-    setTechName("omnitech-anbaricity"):
-    extend()
+--Move electric pole unlocks to anbaricity
+omni.lib.add_unlock_recipe("omnitech-anbaricity", "small-electric-pole")
+omni.lib.add_unlock_recipe("omnitech-anbaricity","copper-cable")
+
+omni.lib.remove_unlock_recipe("electronics", "small-electric-pole")
+omni.lib.remove_unlock_recipe("electronics","copper-cable")
 
 BuildGen:import("small-electric-pole"):
     setName("small-iron-electric-pole"):
@@ -9,63 +11,38 @@ BuildGen:import("small-electric-pole"):
     setArea(3.5):
     setWireDistance(7.5):
     setOrder("a[energy]-a[small-electric-pole]-iron"):
-    setIcons({{icon = "__omnimatter_energy__/graphics/icons/small-iron-electric-pole.png", icon_mipmaps = 4, icon_size = 64,}}):
+    setIcons({{icon = "__omnimatter_energy__/graphics/icons/small-iron-electric-pole.png", icon_size = 64,}}):
     setEnabled(false):
     setTechName("omnitech-small-iron-electric-pole"):
     setTechLocName("entity-name.small-iron-electric-pole"):
-    setTechPacks({{"energy-science-pack", 1}}):
+    setTechPacks({"energy-science-pack", 1}):
     setTechCost(35):
     setTechPrereq("omnitech-anbaricity"):
-    setTechIcons({{icon = "__omnimatter_energy__/graphics/icons/small-iron-electric-pole.png", icon_mipmaps = 4, icon_size = 64,}}):
+    setTechIcons({{icon = "__omnimatter_energy__/graphics/icons/small-iron-electric-pole.png", icon_size = 64,}}):
     setPictures({
         layers = {
             {
                 direction_count = 4,
                 filename = "__omnimatter_energy__/graphics/entity/small-iron-electric-pole/small-iron-electric-pole.png",
-                height = 108,
-                hr_version = {
-                    direction_count = 4,
-                    filename = "__omnimatter_energy__/graphics/entity/small-iron-electric-pole/hr-small-iron-electric-pole.png",
-                    height = 220,
-                    priority = "extra-high",
-                    scale = 0.5,
-                    shift = {
-                    0.046875,
-                    -1.328125
-                    },
-                    width = 72
-                },
+                height = 220,
+                width = 72,
                 priority = "extra-high",
                 shift = {
                     0.0625,
                     -1.3125
                 },
-                width = 36
             },
             {
                 direction_count = 4,
                 draw_as_shadow = true,
                 filename = "__base__/graphics/entity/small-electric-pole/small-electric-pole-shadow.png",
-                height = 28,
-                hr_version = {
-                    direction_count = 4,
-                    draw_as_shadow = true,
-                    filename = "__base__/graphics/entity/small-electric-pole/hr-small-electric-pole-shadow.png",
-                    height = 52,
-                    priority = "extra-high",
-                    scale = 0.5,
-                    shift = {
-                    1.59375,
-                    0.09375
-                    },
-                    width = 256
-                },
+                height = 52,
+                width = 256,
                 priority = "extra-high",
                 shift = {
                     1.5625,
                     0.0625
                 },
-                width = 130
             }
         }
     }):
@@ -77,63 +54,38 @@ BuildGen:import("small-electric-pole"):
     setArea(3.5):
     setWireDistance(8.5):
     setOrder("a[energy]-a[small-electric-pole]-omnium"):
-    setIcons({{icon = "__omnimatter_energy__/graphics/icons/small-omnium-electric-pole.png", icon_mipmaps = 4, icon_size = 64,}}):
+    setIcons({{icon = "__omnimatter_energy__/graphics/icons/small-omnium-electric-pole.png", icon_size = 64,}}):
     setEnabled(false):
     setTechName("omnitech-small-omnium-electric-pole"):
     setTechLocName("entity-name.small-omnium-electric-pole"):
-    setTechPacks({{"energy-science-pack", 1}}):
+    setTechPacks({"energy-science-pack", 1}):
     setTechCost(40):
     setTechPrereq("omnitech-small-iron-electric-pole"):
-    setTechIcons({{icon = "__omnimatter_energy__/graphics/icons/small-omnium-electric-pole.png", icon_mipmaps = 4, icon_size = 64,}}):
+    setTechIcons({{icon = "__omnimatter_energy__/graphics/icons/small-omnium-electric-pole.png", icon_size = 64,}}):
     setPictures({
         layers = {
             {
                 direction_count = 4,
                 filename = "__omnimatter_energy__/graphics/entity/small-omnium-electric-pole/small-omnium-electric-pole.png",
-                height = 108,
-                hr_version = {
-                    direction_count = 4,
-                    filename = "__omnimatter_energy__/graphics/entity/small-omnium-electric-pole/hr-small-omnium-electric-pole.png",
-                    height = 220,
-                    priority = "extra-high",
-                    scale = 0.5,
-                    shift = {
-                    0.046875,
-                    -1.328125
-                    },
-                    width = 72
-                },
+                height = 220,
+                width = 72,
                 priority = "extra-high",
                 shift = {
                     0.0625,
                     -1.3125
                 },
-                width = 36
             },
             {
                 direction_count = 4,
                 draw_as_shadow = true,
                 filename = "__base__/graphics/entity/small-electric-pole/small-electric-pole-shadow.png",
-                height = 28,
-                hr_version = {
-                    direction_count = 4,
-                    draw_as_shadow = true,
-                    filename = "__base__/graphics/entity/small-electric-pole/hr-small-electric-pole-shadow.png",
-                    height = 52,
-                    priority = "extra-high",
-                    scale = 0.5,
-                    shift = {
-                    1.59375,
-                    0.09375
-                    },
-                    width = 256
-                },
+                height = 52,
+                width = 256,
                 priority = "extra-high",
                 shift = {
                     1.5625,
                     0.0625
                 },
-                width = 130
             }
         }
     }):
@@ -165,10 +117,6 @@ for i,tab in pairs({rem1.animation, rem1.animation_overlay, rem2.animation, rem2
                 if i > 2 then pole = "small-iron-electric-pole" end
                 layer.filename  = string.gsub(layer.filename ,"__base__","__omnimatter_energy__")
                 layer.filename  = string.gsub(layer.filename ,"small%-electric%-pole", pole)
-                if layer.hr_version and layer.hr_version.filename then
-                    layer.hr_version.filename  = string.gsub(layer.hr_version.filename ,"__base__","__omnimatter_energy__")
-                    layer.hr_version.filename  = string.gsub(layer.hr_version.filename ,"small%-electric%-pole", pole)
-                end
             end
         end
     end

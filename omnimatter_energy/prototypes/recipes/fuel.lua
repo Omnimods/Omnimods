@@ -39,7 +39,7 @@ end
 -----FUEL CREATION-----
 -----------------------
 
-for _,fuelitem in pairs(data.raw.item) do  
+for _,fuelitem in pairs(data.raw.item) do
     --Check if item is on the "ignore" list
     for _,blockeditem in pairs(ignore) do
         if fuelitem.name == blockeditem and fuelitem.fuel_category then
@@ -62,8 +62,8 @@ for _,fuelitem in pairs(data.raw.item) do
         --Get fuel number in MJ (divide by 10^6)
         local FV=omni.lib.get_fuel_number(fuelitem.fuel_value)/10^6
         local props={
-            [5]={ing_add={"crushed-omnite",2}, cat="crafting", sub="omnienergy-fuel-1", time=1.0, tech="omnitech-omnium-power-1", fuelmult = 1.50},
-            [10]={ing_add={"pulverized-omnite",4}, cat="omnifurnace", sub="omnienergy-fuel-2", time=2.0,tech="omnitech-omnium-power-2", fuelmult = 1.45},
+            [5]={ing_add={"crushed-omnite",1}, cat="crafting", sub="omnienergy-fuel-1", time=1.0, tech="omnitech-omnium-power-1", fuelmult = 1.50},
+            [10]={ing_add={"pulverized-omnite",2}, cat="omnifurnace", sub="omnienergy-fuel-2", time=2.0,tech="omnitech-omnium-power-2", fuelmult = 1.45},
             [40]={ing_add={type = "fluid", name = "omnic-acid", amount = 20}, cat="omnite-extraction", sub="omnienergy-fuel-3", time=2.0,tech="omnitech-omnium-power-3", fuelmult = 1.40},
             [250]={ing_add={type = "fluid", name = "omnisludge", amount = 80}, cat="omniphlog", sub="omnienergy-fuel-4", time=4.0,tech="omnitech-omnium-power-4", fuelmult = 1.35},
             [300]={ing_add={type = "fluid", name = "omniston", amount = 40}, cat="omniphlog", sub="omnienergy-fuel-5", time=4.0,tech="omnitech-omnium-power-5", fuelmult = 1.30}
@@ -83,8 +83,8 @@ for _,fuelitem in pairs(data.raw.item) do
         end
         RecGen:create("omnimatter_energy","omnified-"..fuelitem.name):
             setLocName("item-name.omnified", "item-name."..fuelitem.name):
-            setIcons(fuelitem.icons or {{icon = fuelitem.icon,icon_size = fuelitem.icon_size}}):
-            addSmallIcon("__omnimatter_energy__/graphics/icons/omnicell-charged.png",3):
+            setIcons(omni.lib.icon.of(fuelitem)):
+            addSmallIcon({{icon = "__omnimatter_energy__/graphics/icons/omnicell-charged.png", icon_size = 32}},3):
             setResults({"omnified-"..fuelitem.name,1}):
             setSubgroup(props_add.sub):
             setIngredients({fuelitem.name,1},props_add.ing_add):
@@ -101,11 +101,11 @@ for _,fuelitem in pairs(data.raw.item) do
             omni.lib.add_prerequisite(props_add.tech,omni.lib.get_tech_name(fuelitem.name))
 
         --Copy over fuel related values
-        data.raw.item["omnified-"..fuelitem.name].fuel_acceleration = fuelitem.fuel_acceleration
         data.raw.item["omnified-"..fuelitem.name].fuel_acceleration_multiplier = fuelitem.fuel_acceleration_multiplier
-        data.raw.item["omnified-"..fuelitem.name].fuel_top_speed = fuelitem.fuel_top_speed
+        data.raw.item["omnified-"..fuelitem.name].fuel_acceleration_multiplier = fuelitem.fuel_acceleration_multiplier
         data.raw.item["omnified-"..fuelitem.name].fuel_top_speed_multiplier = fuelitem.fuel_top_speed_multiplier
-        data.raw.item["omnified-"..fuelitem.name].fuel_emissions = fuelitem.fuel_emissions
+        data.raw.item["omnified-"..fuelitem.name].fuel_top_speed_multiplier = fuelitem.fuel_top_speed_multiplier
+        data.raw.item["omnified-"..fuelitem.name].fuel_emissions_multiplier = fuelitem.fuel_emissions_multiplier
         data.raw.item["omnified-"..fuelitem.name].fuel_emissions_multiplier = fuelitem.fuel_emissions_multiplier
         data.raw.item["omnified-"..fuelitem.name].fuel_glow_color = fuelitem.fuel_glow_color 
 
@@ -134,18 +134,19 @@ end
 
 RecGen:create("omnimatter_energy","purified-omnite"):
     setIngredients({type="item", name="crushed-omnite", amount=5}):
-    setResults({type="item", name="purified-omnite", amount=2}):
+    setResults({type="item", name="purified-omnite", amount=4}):
+    setIcons({"purified-omnite", 32}):
     setStacksize(200):
     setCategory("omnifurnace"):
     setSubgroup("omnienergy-fuel-1"):
     setOrder("a"):
     setFuelCategory("chemical"):
     setFuelValue(2.4):
-    setEnergy(2.0):
+    setEnergy(4.0):
     setEnabled(false):
     setTechName("omnitech-basic-omnium-power"):
     setTechCost(55):
-    setTechPacks({{"energy-science-pack", 1}}):
+    setTechPacks({"energy-science-pack", 1}):
     setTechIcons("purified-omnite","omnimatter_energy"):
     setTechPrereq("omnitech-anbaricity"):
     extend()

@@ -6,14 +6,14 @@ RecGen:create("omnimatter_crystal","hydromnic-acid"):
     fluid():
     setBothColour(1,1,1):
     setEnergy(1):
-    marathon():
+    setIcons({"hydromnic-acid", 32}):
     setCategory("omniplant"):
     setSubgroup("crystal-fluids"):
     setTechName("omnitech-omnic-acid-hydrolyzation-1"):
     setIngredients({
-      {type = "item", name = "omnite", amount = 1},
-      {type = "fluid", name = "omnic-acid", amount = 50},
-      {type = "fluid", name = water, amount = 200},
+        {type = "item", name = "omnite", amount = 1},
+        {type = "fluid", name = "omnic-acid", amount = 50},
+        {type = "fluid", name = water, amount = 200},
     }):
     setResults({type = "fluid", name = "hydromnic-acid", amount = 500}):extend()
 
@@ -25,10 +25,10 @@ RecGen:create("omnimatter_crystal","omnine"):
     setSubgroup("omnine"):
     setCategory("omniplant"):
     setEnergy(10):
+    setIcons({"omnine", 32}):
     setStacksize(200):
     --setFuelValue(18):
     --setFuelCategory("crystal"):
-    marathon():
     setTechName("omnitech-crystallology-1"):
     setIngredients({
     {type = "item", name = "omnine-shards", amount=1},
@@ -41,7 +41,6 @@ RecGen:create("omnimatter_crystal","omnine-distillation-quick"):
     setSubgroup("omnine"):
     setCategory("omniplant"):
     setEnergy(180):
-    marathon():
     setTechName("omnitech-crystallology-1"):
     setIngredients({type = "fluid", name = "omnisludge", amount=20000}):
     setResults({type = "item", name = "omnine", amount=1}):
@@ -51,7 +50,6 @@ RecGen:create("omnimatter_crystal","omnine-distillation-slow"):
     setSubgroup("omnine"):
     setCategory("omniplant"):
     setEnergy(1800):
-    marathon():
     setTechName("omnitech-crystallology-1"):
     setIngredients({type = "fluid", name = "omnisludge", amount=2000}):
     setResults({type = "item", name = "omnine", amount=1}):
@@ -59,14 +57,15 @@ RecGen:create("omnimatter_crystal","omnine-distillation-slow"):
 
 local cat = "ore-refining-t1"
 if not mods["angelsrefining"] then cat = nil end
+
 RecGen:create("omnimatter_crystal","omnine-shards"):
     setSubgroup("omnine"):
+    setIcons({"omnine-shards", 32}):
     setCategory(cat):
     setStacksize(200):
     --setFuelValue(3.5):
     --setFuelCategory("crystal"):
     setEnergy(1):
-    marathon():
     setTechName("omnitech-crystallology-1"):
     setIngredients({type = "item", name = "omnine", amount=1}):
     setResults({type = "item", name = "omnine-shards", amount=10}):
@@ -80,16 +79,17 @@ RecGen:create("omnimatter_crystal","omnine-shards"):
 
 local crystal_cat = "crystallomnizer"
 if mods["bobplates"] or (mods["angelsindustries"] and angelsmods.industries and angelsmods.industries.overhaul) then
-  ore_circuit = "lead-ore"
-  cry_rod = "tin-ore-crystal"
+    ore_circuit = "lead-ore"
+    cry_rod = "tin-ore-crystal"
 else
-  ore_circuit = "coal"
-  cry_rod = "copper-ore-crystal"
+    ore_circuit = "coal"
+    cry_rod = "copper-ore-crystal"
 end
 
 
 RecGen:create("omnimatter_crystal","crystal-rod"):
     setEnergy(1):
+    setIcons({"crystal-rod", 32}):
     setStacksize(100):
     setSubgroup("crystal-part"):
     setOrder("aa-[crystal-rod]"):
@@ -104,13 +104,14 @@ RecChain:create("omnimatter_crystal","pseudoliquid-amorphous-crystal"):
     fluid():
     setBothColour(1,0,1):
     setEnergy(function(levels,grade) return 0.5+grade/2 end):
+    setIcons({"pseudoliquid-amorphous-crystal", 32}):
     setSubgroup("crystal-part"):
     setCategory("crystallomnizer"):
     setIngredients({type="item",name="omnine",amount=12}):
     setResults(function (levels,grade) return {{type="fluid",name="pseudoliquid-amorphous-crystal",amount=240+2160*(grade-1)/levels}} end):
     setLevel(omni.fluid_levels):
     setTechName("omnitech-pseudoliquid-amorphous-crystal"):
-    setTechLocName("omnitech-pseudoliquid-amorphous-crystal",function (levels,grade) return grade end):
+    setTechLocName("omnitech-pseudoliquid-amorphous-crystal"):
     setTechIcons("amorphous-crystal","omnimatter_crystal"):
     setTechCost(function(levels,grade) return 500+50*grade end):
     setTechPacks(function(levels,grade) return 3+math.floor(grade*3/levels) end):
@@ -132,6 +133,7 @@ RecChain:create("omnimatter_crystal","pseudoliquid-amorphous-crystal"):
 
 RecGen:create("omnimatter_crystal","shattered-omnine"):
     setEnergy(0.5):
+    setIcons({"shattered-omnine", 32}):
     setStacksize(600):
     setSubgroup("crystal-part"):
     addProductivity():
@@ -143,6 +145,7 @@ RecGen:create("omnimatter_crystal","shattered-omnine"):
 
 RecGen:create("omnimatter_crystal","impure-crystal-rod"):
     setEnergy(2):
+    setIcons({"impure-crystal-rod", 32}):
     setStacksize(150):
     setSubgroup("crystal-part"):
     setOrder("ab-[impure-crystal-rod]"):
@@ -159,6 +162,7 @@ RecGen:create("omnimatter_crystal","impure-crystal-rod"):
 
 RecGen:create("omnimatter_crystal","fragment-iron-crystal"):
     setEnergy(2):
+    setIcons({"fragment-iron-crystal", 32}):
     setStacksize(400):
     setSubgroup("crystal-part"):
     setCategory("advanced-crafting"):
@@ -170,6 +174,7 @@ RecGen:create("omnimatter_crystal","fragment-iron-crystal"):
 
 RecGen:create("omnimatter_crystal","fragment-copper-crystal"):
     setEnergy(2):
+    setIcons({"fragment-copper-crystal", 32}):
     setStacksize(400):
     setSubgroup("crystal-part"):
     setCategory("advanced-crafting"):
@@ -181,6 +186,7 @@ RecGen:create("omnimatter_crystal","fragment-copper-crystal"):
 
 RecGen:create("omnimatter_crystal","omnilgium"):
     setEnergy(3):
+    setIcons({"omnilgium", 32}):
     setStacksize(400):
     setSubgroup("crystal-part"):
     setTechName("omnitech-crystallonics-2"):
@@ -196,6 +202,7 @@ RecGen:create("omnimatter_crystal","omnilgium"):
 
 RecGen:create("omnimatter_crystal","quasi-solid-omnistal"):
     setEnergy(1):
+    setIcons({"quasi-solid-omnistal", 32}):
     setStacksize(200):
     setSubgroup("crystal-part"):
     setCategory("crystallomnizer"):
@@ -215,6 +222,7 @@ RecGen:create("omnimatter_crystal","quasi-solid-omnistal"):
 
 RecGen:create("omnimatter_crystal","omnine-structure-crystal"):
     setEnergy(1):
+    setIcons({"omnine-structure-crystal", 32}):
     setStacksize(100):
     setSubgroup("crystal"):
     setOrder("aa-[omnine-structure-crystal]"):
@@ -227,6 +235,7 @@ RecGen:create("omnimatter_crystal","omnine-structure-crystal"):
 
 RecGen:create("omnimatter_crystal","oscillocrystal"):
     setEnergy(3):
+    setIcons({"oscillocrystal", 32}):
     setStacksize(500):
     setSubgroup("crystal"):
     setOrder("av-[oscillocrystal"):
@@ -242,6 +251,7 @@ RecGen:create("omnimatter_crystal","oscillocrystal"):
 
 RecGen:create("omnimatter_crystal","electrocrystal"):
     setEnergy(2):
+    setIcons({"electrocrystal", 32}):
     setStacksize(500):
     setSubgroup("crystal"):
     setOrder("ac-[electrocrystal]"):
@@ -264,6 +274,7 @@ RecGen:create("omnimatter_crystal","electrocrystal"):
 
 RecGen:create("omnimatter_crystal","basic-crystallonic"):
     setEnergy(1):
+    setIcons({"basic-crystallonic", 32}):
     setStacksize(200):
     setSubgroup("crystallonic"):
     setOrder("aa-[basic-crystallonic]"):
@@ -279,6 +290,7 @@ RecGen:create("omnimatter_crystal","basic-crystallonic"):
 
 RecGen:create("omnimatter_crystal","basic-oscillo-crystallonic"):
     setEnergy(1):
+    setIcons({"basic-oscillo-crystallonic", 32}):
     setStacksize(200):
     setSubgroup("crystallonic"):
     setOrder("ab-[basic-oscillo-crystallonic]"):
