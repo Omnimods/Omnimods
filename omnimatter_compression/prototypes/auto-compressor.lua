@@ -11,10 +11,11 @@ local fluidbox = minify({
         volume = 1000,
         production_type = "input",
         pipe_connections = {{
-            type = "input",
+            flow_direction = "input",
+            direction = defines.direction.south,
             position = {
                 0,
-                -1
+                -0.1
             }
         }}
     },
@@ -24,9 +25,10 @@ local fluidbox = minify({
         production_type = "output",
         pipe_connections = {{
             flow_direction = "output",
+            direction = defines.direction.north,
             position = {
                 0,
-                1
+                0.1
             }
         }}
     }
