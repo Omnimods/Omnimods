@@ -192,14 +192,12 @@ function OmniGen:create()
         type = "chain",
         shift = {},
         input = {
-            items = {
-            },
-            sum=function(levels,grade) return 12 end
+            items = {},
+            sum = function(levels,grade) return 12 end
         },
         output = {
             yield={
-                items = {
-                },
+                items = {},
                 quant = function(levels,grade) return linear_gen(6,12,levels,grade) end
             },
             waste = {
@@ -210,7 +208,8 @@ function OmniGen:create()
                 quant = function(levels,grade) return 12 - linear_gen(6,12,levels,grade) end
             }
         }
-    },OmniGen)
+    },
+    OmniGen)
 end
 
 function OmniGen:linearOutput(total,start,finish)
@@ -244,7 +243,7 @@ function OmniGen:setInputAmount(array)
     return self
 end
 
-function OmniGen:setIngredients(array,...) 
+function OmniGen:setIngredients(array,...)
     local ings = {}
     local arg = {...}
     --Go through each arg and parse into ings
@@ -382,6 +381,7 @@ function OmniGen:chainIngredients()
             local amount = 0
             if ing.amount then
                 amount = ing.amount
+                if sum then ing.amount = sum end
             else
                 local ingname = ing.name or ing[1] or ing or ""
                 math.randomseed(#usable*string.len(ingname)*j)
