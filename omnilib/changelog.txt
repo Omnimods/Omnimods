@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.2.2
+Date: 2024.11.23
+  Changes:
+    - Unified setAnimation() and setWorkingVis() into setGraphics()
+  Bugfixes:
+    - Fixed that graphics_set was not loaded in some cases when importing entities
+---------------------------------------------------------------------------------------------------
 Version: 4.2.1
 Date: 2024.11.23
   Bugfixes:

@@ -67,20 +67,22 @@ BuildChain:create("omnimatter_crystal","crystallomnizer"):
     setSpeed(function(levels,grade) return 0.5+grade/2 end):
     setSoundWorking("oil-refinery",1,"base"):
     setSoundVolume(2):
-    setAnimation({
-    layers={
-    {
-        filename = "__omnimatter_crystal__/graphics/buildings/iron-curtain.png",
-        priority = "extra-high",
-        width = 164,
-        height = 162,
-        frame_count = 36,
-        line_length = 6,
-        shift = {0.00, -0.8},
-        scale = 0.8,
-        animation_speed = 0.3
-    },
-    }
+    setGraphics({
+        animation = {
+            layers= {
+                {
+                    filename = "__omnimatter_crystal__/graphics/buildings/iron-curtain.png",
+                    priority = "extra-high",
+                    width = 164,
+                    height = 162,
+                    frame_count = 36,
+                    line_length = 6,
+                    shift = {0.00, -0.8},
+                    scale = 0.8,
+                    animation_speed = 0.3
+                },
+            }
+        }
     }):
     setFluidBox("XWX.XXX.XKX"):
     extend()

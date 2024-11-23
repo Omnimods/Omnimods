@@ -51,24 +51,26 @@ BuildGen:import("electric-furnace"):
     setEnabled(false):
     setTechName("advanced-material-processing-2"):
     setReplace("furnace"):
-    setAnimation({
-        layers = {
-            {
-                filename = "__omnimatter_energy__/graphics/entity/buildings/electric-omni-furnace.png",
-                priority = "high",
-                width = 239,
-                height = 219,
-                frame_count = 1,
-            },
-            {
-                filename = "__base__/graphics/entity/electric-furnace/electric-furnace-shadow.png",
-                priority = "high",
-                width = 227,
-                height = 171,
-                frame_count = 1,
-                draw_as_shadow = true,
-                shift = util.by_pixel(13.5, 0),
-            },
-        },
-        }):
+    setGraphics({
+        animation = {
+            layers = {
+                {
+                    filename = "__omnimatter_energy__/graphics/entity/buildings/electric-omni-furnace.png",
+                    priority = "high",
+                    width = 239,
+                    height = 219,
+                    frame_count = 1,
+                },
+                {
+                    filename = "__base__/graphics/entity/electric-furnace/electric-furnace-shadow.png",
+                    priority = "high",
+                    width = 227,
+                    height = 171,
+                    frame_count = 1,
+                    draw_as_shadow = true,
+                    shift = util.by_pixel(13.5, 0),
+                }
+            }
+        }
+    }):
     extend()

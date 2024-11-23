@@ -49,48 +49,51 @@ BuildGen:create("omnimatter_compression","auto-compressor"):
     setIcons({"auto-compressor", 32}):
     setSize(minify(1, 3)):
     setCrafting({"compression"}):
-    setAnimation({
-        layers = {
-        {
-            filename = "__omnimatter_compression__/graphics/auto-compressor-sheet.png",
-            priority = "high",
-            width = 160,
-            height = 160,
-            frame_count = 25,
-            line_length = 5,
-            shift = util.by_pixel(0, -0.5*minify(0.33, 1)),--{0.0, 0.0},
-            scale = minify(0.33, 1)*1.1,
-            animation_speed = 0.25
-        },
-        {
-            filename = "__omnimatter_compression__/graphics/auto-compressor-sheet-mask.png",
-            priority = "high",
-            tint = {
-                r = 0.6,
-                g = 0.6,
-                b = 0.6,
-                a = 0.8
-            },
-            width = 160,
-            height = 160,
-            frame_count = 25,
-            line_length = 5,
-            shift = util.by_pixel(0, -0.5*minify(0.33, 1)),--{0.0, 0.0},
-            scale = minify(0.33, 1)*1.1,
-            animation_speed = 0.25
-        },
-        {
-            filename = "__omnimatter_compression__/graphics/auto-compressor-sheet-highlights.png",
-            priority = "high",
-            blend_mode = "additive",
-            width = 160,
-            height = 160,
-            frame_count = 25,
-            line_length = 5,
-            shift = util.by_pixel(0, -0.5*minify(0.33, 1)),--{0.0, 0.0},
-            scale = minify(0.33, 1)*1.1,
-            animation_speed = 0.25
-        }}
+    setGraphics({
+        animation = {
+            layers = {
+                {
+                    filename = "__omnimatter_compression__/graphics/auto-compressor-sheet.png",
+                    priority = "high",
+                    width = 160,
+                    height = 160,
+                    frame_count = 25,
+                    line_length = 5,
+                    shift = util.by_pixel(0, -0.5*minify(0.33, 1)),--{0.0, 0.0},
+                    scale = minify(0.33, 1)*1.1,
+                    animation_speed = 0.25
+                },
+                {
+                    filename = "__omnimatter_compression__/graphics/auto-compressor-sheet-mask.png",
+                    priority = "high",
+                    tint = {
+                        r = 0.6,
+                        g = 0.6,
+                        b = 0.6,
+                        a = 0.8
+                    },
+                    width = 160,
+                    height = 160,
+                    frame_count = 25,
+                    line_length = 5,
+                    shift = util.by_pixel(0, -0.5*minify(0.33, 1)),--{0.0, 0.0},
+                    scale = minify(0.33, 1)*1.1,
+                    animation_speed = 0.25
+                },
+                {
+                    filename = "__omnimatter_compression__/graphics/auto-compressor-sheet-highlights.png",
+                    priority = "high",
+                    blend_mode = "additive",
+                    width = 160,
+                    height = 160,
+                    frame_count = 25,
+                    line_length = 5,
+                    shift = util.by_pixel(0, -0.5*minify(0.33, 1)),--{0.0, 0.0},
+                    scale = minify(0.33, 1)*1.1,
+                    animation_speed = 0.25
+                }
+            }
+        }
     }):
     extend()
 
@@ -110,16 +113,22 @@ BuildGen:create("omnimatter_compression","auto-concentrator"):
     setSize(minify(1, 3)):
     setFluidBox(fluidbox):
     setCrafting({"fluid-concentration"}):
-    setAnimation({
-        filename = "__omnimatter_compression__/graphics/liquifier.png",
-        priority = "high",
-        width = 160,
-        height = 160,
-        frame_count = 30,
-        line_length = 10,
-        shift = util.by_pixel(0, -0.5*minify(0.33, 1)),--{0.0, 0.0},
-        scale = minify(0.33, 1)*1.1,
-        animation_speed = 0.25
+    setGraphics({
+        animation = {
+            layers = {
+                {
+                    filename = "__omnimatter_compression__/graphics/liquifier.png",
+                    priority = "high",
+                    width = 160,
+                    height = 160,
+                    frame_count = 30,
+                    line_length = 10,
+                    shift = util.by_pixel(0, -0.5*minify(0.33, 1)),--{0.0, 0.0},
+                    scale = minify(0.33, 1)*1.1,
+                    animation_speed = 0.25
+                }
+            }
+        }
     }):
     extend()
 
@@ -141,16 +150,22 @@ if settings.startup["omnicompression_entity_compression"].value then
         setSize(minify(1, 3)):
         setFluidBox(fluidbox):
         setCrafting({"fluid-condensation"}):
-        setAnimation({
-            filename = "__omnimatter_compression__/graphics/liquifier.png",
-            priority = "high",
-            width = 160,
-            height = 160,
-            frame_count = 30,
-            line_length = 10,
-            shift = util.by_pixel(0, -0.5*minify(0.33, 1)),--{0.0, 0.0},
-            scale = minify(0.33, 1)*1.1,
-            animation_speed = 0.25
+        setGraphics({
+            animation = {
+                layers = {
+                    {
+                        filename = "__omnimatter_compression__/graphics/liquifier.png",
+                        priority = "high",
+                        width = 160,
+                        height = 160,
+                        frame_count = 30,
+                        line_length = 10,
+                        shift = util.by_pixel(0, -0.5*minify(0.33, 1)),--{0.0, 0.0},
+                        scale = minify(0.33, 1)*1.1,
+                        animation_speed = 0.25
+                    }
+                }
+            }
         }):
         extend()
 end

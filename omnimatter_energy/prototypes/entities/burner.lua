@@ -6,6 +6,8 @@ BuildGen:import("burner-mining-drill"):
     setEnabled():
     extend()
 
+    log(serpent.block(data.raw["mining-drill"]["burner-mining-drill"]))
+
 --Burner assembler
 BuildGen:import("assembling-machine-1"):
     setName("omnitor-assembling-machine"):
@@ -22,16 +24,20 @@ BuildGen:import("assembling-machine-1"):
     setSpeed(0.25):
     setIngredients({"omnitor",1},{"iron-plate",2},{"burner-inserter",1}):
     setOrder("a[assembling-machine-0]"):
-    setAnimation({
-        layers={{
-            filename = "__omnimatter_energy__/graphics/entity/omnitor-assembling-machine/omnitor-assembling-machine.png",
-            priority="high",
-            width = 214,
-            height = 226,
-            frame_count = 32,
-            line_length = 8,
-            shift = util.by_pixel(0, 2),
-        }}
+    setGraphics({
+        animation = {
+            layers = {
+                {
+                    filename = "__omnimatter_energy__/graphics/entity/omnitor-assembling-machine/omnitor-assembling-machine.png",
+                    priority="high",
+                    width = 214,
+                    height = 226,
+                    frame_count = 32,
+                    line_length = 8,
+                    shift = util.by_pixel(0, 2),
+                }
+            }
+        }
     }):
     setNextUpgrade("assembling-machine-1"):
     extend()

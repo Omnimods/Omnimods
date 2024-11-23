@@ -2698,7 +2698,7 @@ function setBuildingParameters(b,subpart)
     b.next_upgrade = function(levels,grade) return nil end
     b.vector_to_place_result = function(levels,grade) return nil end
     b.crafting_categories = function(levels,grade) return nil end
-    b.working_visualisations = function(levels,grade) return nil end
+    b.circuit_connector  = function(levels,grade) return nil end
     b.effectivity = function(levels,grade) return 1 end
     b.fluid_usage_per_tick = function(levels,grade) return 1 end
     b.burns_fluid = function(levels,grade) return false end
@@ -2743,8 +2743,8 @@ function BuildGen:import(name)
         setOrder(build.order):
         setNextUpgrade(build.next_upgrade):
         setUsage(build.energy_usage):
-        setAnimation(build.animation):
-        setWorkVis(build.working_visualisations):
+        setGraphics(build.graphics_set):
+        setCircuitConnector(build.circuit_connector):
         setDirectionAnimation(build.horizontal_animation,build.vertical_animation):
         setRadVisPic(build.radius_visualisation_picture):
         setLight(build.light):
@@ -3156,11 +3156,11 @@ function BuildGen:setUsage(operation)
     return self
 end
 
-function BuildGen:setAnimation(e)
+function BuildGen:setGraphics(e)
     if type(e)=="function" then
-        self.animation = e
+        self.graphics_set = e
     else
-        self.animation = function(levels,grade) return e end
+        self.graphics_set = function(levels,grade) return e end
     end
     return self
 end
@@ -3217,11 +3217,11 @@ function BuildGen:setHorizontalAnimation(a)
     end
     return self
 end
-function BuildGen:setWorkVis(e)
+function BuildGen:setCircuitConnector(e)
     if type(e)=="function" then
-        self.working_visualisations = e
+        self.circuit_connector = e
     else
-        self.working_visualisations = function(levels,grade) return e end
+        self.circuit_connector = function(levels,grade) return e end
     end
     return self
 end
@@ -3449,7 +3449,8 @@ function BuildGen:generateBuilding()
         energy_source = source,
         smoke = self.smoke,
         energy_usage = self.energy_usage(0,0),
-        graphics_set = {animation = self.animation(0,0), working_visualisations = self.working_visualisations(0,0)},
+        graphics_set = self.graphics_set(0,0),
+        circuit_connector = self.circuit_connector(0,0),
         pictures = self.pictures(0,0),
         vehicle_impact_sound =  self.vehicle_impact_sound,
         burns_fluid = self.burns_fluid(0,0),
@@ -3647,8 +3648,8 @@ function BuildChain:generate_building_chain()
         setFluidBurn(self.burns_fluid(levels,i)):
         setSpeed(self.crafting_speed(levels,i)):
         setSoundWorking(self.working_sound(levels,i)):
-        setAnimation(self.animation(levels,i)):
-        setWorkVis(self.working_visualisations(levels,i)):
+        setGraphics(self.graphics_set(levels,i)):
+        setCircuitConnector(self.circuit_connector(levels,i)):
         setGenerationCondition(self.requiredMods(levels,i)):
         setEffectivity(self.effectivity(levels,i)):
         setFluidConsumption(self.fluid_usage_per_tick(levels,i)):
