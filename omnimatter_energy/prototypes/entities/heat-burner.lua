@@ -8,71 +8,6 @@ BuildGen:create("omnimatter_energy", "omni-heat-burner"):
     setStacksize(20):
     setOrder("aa"):
     setTechName("omnitech-anbaricity"):
-    setGraphics({
-        animation = {
-            north = {
-                layers = {
-                    {
-                        filename = "__omnimatter_energy__/graphics/entity/buildings/omnium-turbine-h.png",
-                        frame_count = 36,
-                        height = 160,
-                        line_length = 6,
-                        run_mode = "backward",
-                        shift = {
-                        0,
-                        -0.078125
-                        },
-                        width = 224
-                    },
-                    {
-                        draw_as_shadow = true,
-                        filename = "__base__/graphics/entity/steam-turbine/steam-turbine-H-shadow.png",
-                        frame_count = 1,
-                        height = 74,
-                        line_length = 1,
-                        repeat_count = 36,
-                        run_mode = "backward",
-                        shift = {
-                        0.8984375,
-                        0.5625
-                        },
-                        width = 217
-                    }
-                }
-            },
-            east = {
-                layers = {
-                    {
-                        filename = "__omnimatter_energy__/graphics/entity/buildings/omnium-turbine-v.png",
-                        frame_count = 36,
-                        height = 224,
-                        line_length = 6,
-                        run_mode = "backward",
-                        shift = {
-                        -0.07,
-                        0.25
-                        },
-                        scale = 0.92,
-                        width = 160
-                    },
-                    {
-                        draw_as_shadow = true,
-                        filename = "__base__/graphics/entity/steam-turbine/steam-turbine-V-shadow.png",
-                        frame_count = 1,
-                        height = 131,
-                        line_length = 1,
-                        repeat_count = 36,
-                        run_mode = "backward",
-                        shift = {
-                            1.234375,
-                            0.765625
-                            },
-                        width = 151
-                    }
-                }
-            }
-        }
-    }):
     extend()
 
 
@@ -122,3 +57,67 @@ turbine.working_sound = {
 }
 turbine.min_perceived_performance = 0.25
 turbine.performance_to_sound_speedup = 0.5
+
+turbine.animation = {
+    north = {
+        layers = {
+            {
+                filename = "__omnimatter_energy__/graphics/entity/buildings/omnium-turbine-h.png",
+                frame_count = 36,
+                height = 160,
+                line_length = 6,
+                run_mode = "backward",
+                shift = {
+                0,
+                -0.078125
+                },
+                width = 224
+            },
+            {
+                draw_as_shadow = true,
+                filename = "__base__/graphics/entity/steam-turbine/steam-turbine-H-shadow.png",
+                frame_count = 1,
+                height = 74,
+                line_length = 1,
+                repeat_count = 36,
+                run_mode = "backward",
+                shift = {
+                0.8984375,
+                0.5625
+                },
+                width = 217
+            },
+        }
+    },
+    east = {
+        layers = {
+            {
+                filename = "__omnimatter_energy__/graphics/entity/buildings/omnium-turbine-v.png",
+                frame_count = 36,
+                height = 224,
+                line_length = 6,
+                run_mode = "backward",
+                shift = {
+                -0.07,
+                0.25
+                },
+                scale = 0.92,
+                width = 160
+            },
+            {
+                draw_as_shadow = true,
+                filename = "__base__/graphics/entity/steam-turbine/steam-turbine-V-shadow.png",
+                frame_count = 1,
+                height = 131,
+                line_length = 1,
+                repeat_count = 36,
+                run_mode = "backward",
+                shift = {
+                    1.234375,
+                    0.765625
+                    },
+                width = 151
+            }
+        }
+    }
+}

@@ -60,6 +60,7 @@ BuildGen:import("electric-furnace"):
                     width = 239,
                     height = 219,
                     frame_count = 1,
+                    scale = 0.5
                 },
                 {
                     filename = "__base__/graphics/entity/electric-furnace/electric-furnace-shadow.png",
@@ -69,6 +70,7 @@ BuildGen:import("electric-furnace"):
                     frame_count = 1,
                     draw_as_shadow = true,
                     shift = util.by_pixel(13.5, 0),
+                    scale = 0.5
                 }
             }
         }
