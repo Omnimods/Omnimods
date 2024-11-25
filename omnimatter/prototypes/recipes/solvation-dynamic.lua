@@ -1,4 +1,4 @@
-local omniFluidCat = "chemistry"
+local omniFluidCat = "omnite-extraction-both"
 if mods["omnimatter_crystal"] then omniFluidCat = "omniplant" end
 
 
