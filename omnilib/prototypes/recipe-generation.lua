@@ -2761,6 +2761,8 @@ function BuildGen:import(name)
         setPlaceShift(build.vector_to_place_result):
         setMiningTime(build.minable.mining_time):
         setCrafting(build.crafting_categories):
+        setAlertIconShift(build.alert_icon_shift):
+        setAlertIconScale(build.alert_icon_scale):
         setSearchRadius(build.resource_searching_radius):
         setResourceCategory(build.resource_categories):
         setInputs(build.inputs):
@@ -3376,7 +3378,22 @@ function BuildGen:setCrafting(...)
     end
     return self
 end
-
+function BuildGen:setAlertIconShift(s)
+    if type(s)=="table" then
+        self.alert_icon_shift = table.deepcopy(s)
+    else
+        self.alert_icon_shift = s
+    end
+    return self
+end
+function BuildGen:setAlertIconScale(s)
+    if type(s)=="table" then
+        self.alert_icon_scale = table.deepcopy(s)
+    else
+        self.alert_icon_scale = s
+    end
+    return self
+end
 function BuildGen:generateBuilding()
     local size = self.size(0,0)
     local source = {}
@@ -3474,7 +3491,9 @@ function BuildGen:generateBuilding()
         resource_categories=self.resource_categories(0,0),
         inputs=self.inputs(0,0),
         off_animation=self.off_animation(0,0),
-        on_animation=self.on_animation(0,0)
+        on_animation=self.on_animation(0,0),
+        alert_icon_shift=self.alert_icon_shift,
+        alert_icon_scale=self.alert_icon_scale
     }
 
     if self.fluid_boxes(0,0) and type(self.fluid_boxes(0,0))=="table" and type(self.fluid_boxes(0,0)[1])=="table" then self.rtn[#self.rtn].fluid_box = self.fluid_boxes(0,0)[1] end
@@ -3621,6 +3640,8 @@ function BuildChain:generate_building_chain()
         setUsage(self.energy_usage(levels,i)):
         setEmissions(self.energy_source.emissions_per_minute(levels,i)):
         setCrafting(self.category(levels,i)):
+        setAlertIconShift(self.alert_icon_shift):
+        setAlertIconScale(self.alert_icon_scale):
         setLocName(self.loc_name(levels,i)):
         addLocName(i):
         setLocDesc(self.loc_desc(levels,i)):
