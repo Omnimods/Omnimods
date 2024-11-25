@@ -31,6 +31,7 @@ BuildGen:import("small-electric-pole"):
                     0.0625,
                     -1.3125
                 },
+                scale = 0.5,
             },
             {
                 direction_count = 4,
@@ -43,6 +44,7 @@ BuildGen:import("small-electric-pole"):
                     1.5625,
                     0.0625
                 },
+                scale = 0.5,
             }
         }
     }):
@@ -74,6 +76,7 @@ BuildGen:import("small-electric-pole"):
                     0.0625,
                     -1.3125
                 },
+                scale = 0.5,
             },
             {
                 direction_count = 4,
@@ -86,6 +89,7 @@ BuildGen:import("small-electric-pole"):
                     1.5625,
                     0.0625
                 },
+                scale = 0.5,
             }
         }
     }):
