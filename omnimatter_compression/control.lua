@@ -10,11 +10,10 @@ local function find_tier(class_name)
     end
 end
 
-local function flying_text(entity, say_string)
-    entity.surface.create_entity{
-        name = "tutorial-flying-text",
-        position = entity.position,
-        text = say_string
+local function flying_text(player, string)
+    player.create_local_flying_text{
+        text = string,
+        create_at_cursor = true
     }
 end
 
