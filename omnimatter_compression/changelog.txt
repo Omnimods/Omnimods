@@ -1,6 +1,19 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.2.3
+Date: 2024.11.26
+  Bugfixes:
+    - Fixed a scripting error when launching a rocket without SA enabled
+    - Fixed compressed satellites not having send_to_orbit_mode set
+    - Fixed a scripting error when using the decompression hotkey
+    - Fixed science packs in compressed techs not being replaced properly
+---------------------------------------------------------------------------------------------------
+Version: 4.2.2
+Date: 2024.11.23
+  Changes:
+    - Updated graphics definition for omnilib 4.2.2
+---------------------------------------------------------------------------------------------------
 Version: 4.2.1
-Date: 2024.11.122
+Date: 2024.11.22
   Bugfixes:
     - Fixed a crash when 1x1 compressors were enabled due to faulty fluidbox definitions
 ---------------------------------------------------------------------------------------------------

@@ -160,33 +160,28 @@ if settings.startup["omnicompression_item_compression"].value then
                 local gcd = {}
                 -- Stage 1: Standardize and find our LCM of the various stack sizes
                 for _, ings in pairs(t.unit.ingredients) do
-                    --if ings[1] and not (ings.name or ings.amount) then
-                        local ingname = ings[1]
-                        local ingamount = ings[2]
-                        --ings[1] = nil
-                        --ings[2] = nil
-                    --end
                     -- Remove unit_count from our equation for now
-                    ingamount = ingamount * (t.unit.count or 1)
-                    lcm[#lcm+1] = pack_sizes[ingname]
+                    ings[2] = ings[2] * (t.unit.count or 1)
+                    lcm[#lcm+1] = pack_sizes[ings[1]]
                     -- Amount of packs needed (in stacks)
-                    gcd[#gcd+1] = ingamount  / pack_sizes[ingname]
+                    gcd[#gcd+1] = ings[2]  / pack_sizes[ings[1]]
                 end
                 lcm = omni.lib.lcm(table.unpack(lcm))
                 gcd = omni.lib.pgcd(table.unpack(gcd))
 
+                --log(serpent.block(t.unit.ingredients[1][1]))
+                --log(serpent.block(t.unit.ingredients[1][1]))
                 -- Stage 2: Determine our amounts and divisor (if we use count_formula)
                 for _, ings in pairs(t.unit.ingredients) do
-                    local ingname = ings[1]
-                        local ingamount = ings[2]
                     -- Divisor will always be the largest stack size of the packs used in this tech
-                    divisor = math.max(divisor, pack_sizes[ingname])
+                    divisor = math.max(divisor, pack_sizes[ings[1]])
                     -- Divide out our pack size and GCD, the latter will become our unit count
-                    ingamount  = (ingamount  / pack_sizes[ingname]) / gcd
+                    ings[2] = (ings[2] / pack_sizes[ings[1]]) / gcd
                     -- Minimum 1, Maximum 65535, round otherwise
-                    ingamount  = math.min(math.max(omni.lib.round(ingamount ), 1), 65535)
-                    ingname = "compressed-"..ingname
+                    ings[2] = math.min(math.max(omni.lib.round(ings[2]), 1), 65535)
+                    ings[1] = "compressed-"..ings[1]
                 end
+
                 --if valid remove effects from compressed version
                 local valid_effects = {}
                 if t.effects then

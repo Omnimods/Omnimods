@@ -1,5 +1,6 @@
 local tiers = {"compact","nanite","quantum","singularity"}
 local items_per_tier = settings.startup["omnicompression_multiplier"].value
+local SA = script.active_mods["space-age"]
 
 local function find_tier(class_name)
     for index, tier in pairs(tiers) do
@@ -9,11 +10,10 @@ local function find_tier(class_name)
     end
 end
 
-local function flying_text(entity, say_string)
-    entity.surface.create_entity{
-        name = "tutorial-flying-text",
-        position = entity.position,
-        text = say_string
+local function flying_text(player, string)
+    player.create_local_flying_text{
+        text = string,
+        create_at_cursor = true
     }
 end
 
@@ -158,50 +158,53 @@ local function compression_planner(event, log_only)
 end
 
 script.on_event(defines.events.on_rocket_launched, function(event)
-    local rocket = event.rocket
-    local silo = event.rocket_silo
-    local player = event.player_index
-    if not rocket or not silo then
-        return
-    end
-    -- Silo has packs, rocket has satellite
-    local silo_inv = silo.get_inventory(defines.inventory.rocket_silo_result)
-    local rocket_inv = rocket.get_inventory(defines.inventory.rocket)
-    if rocket_inv and silo_inv then
-        -- There can be many things!
-        for satellite in pairs(rocket_inv.get_contents()) do
-            if satellite:find("^compressed%-") and #prototypes.item[satellite].rocket_launch_products > 0 then
-                -- Naughty naughty!
-                if not rocket.prototype.name:find("^compressed%-") then
-                    local result_array = prototypes.item[satellite].rocket_launch_products or {}
-                    local uncomp_satellite = satellite:gsub("^compressed%-", "")
-                    local uncomp_result_array = prototypes.item[uncomp_satellite].rocket_launch_products
-                    local has_spilled_satellites = false
-                    -- Time to spill
-                    for i, result in pairs(result_array) do
-                        -- Science
-                        local normal_result = uncomp_result_array[i]
-                        silo.surface.spill_item_stack(
-                            silo.position,
-                            {
-                                name = normal_result.name,
-                                count = normal_result.amount
-                            }
-                        )
-                        silo_inv.remove(result.name)
-                        -- Satellites, if we haven't already
-                        if not has_spilled_satellites then
-                            local satellite_remainder = prototypes.item[normal_result.name].stack_size * result.amount -- Convert to uncompressed count
-                            satellite_remainder = satellite_remainder / normal_result.amount -- Divide by result size
-                            satellite_remainder = math.max(0, satellite_remainder - 1) -- Get our actual remainder
-                            silo.surface.spill_item_stack(
-                                silo.position,
-                                {
-                                    name = uncomp_satellite,
-                                    count = satellite_remainder
-                                }
-                            )
-                            has_spilled_satellites = true
+    log(serpent.block(event))
+    if not SA then
+        local rocket = event.rocket
+        local silo = event.rocket_silo
+        if not rocket then
+            return
+        end
+        -- Silo has packs, rocket has satellite
+        local rocket_inv = rocket.cargo_pod.get_inventory(defines.inventory.cargo_unit)
+
+        if rocket_inv then --and silo_inv then
+            -- There can be many things!
+            for _, satellite in pairs(rocket_inv.get_contents()) do
+                if satellite.name:find("^compressed%-") and #prototypes.item[satellite.name].rocket_launch_products > 0 then
+                    -- Naughty naughty!
+                    if not rocket.prototype.name:find("^compressed%-") then
+                        local result_array = prototypes.item[satellite.name].rocket_launch_products or {}
+                        local uncomp_satellite = satellite.name:gsub("^compressed%-", "")
+                        local uncomp_result_array = prototypes.item[uncomp_satellite].rocket_launch_products
+                        local has_spilled_satellites = false
+
+                        -- Time to spill
+                        for i, result in pairs(result_array) do
+                            -- Science
+                            local normal_result = uncomp_result_array[i]
+                            --Insert uncompressed science
+                            rocket_inv.insert({name = normal_result.name, count = normal_result.amount})
+                            -- Satellites, if we haven't already
+                            if not has_spilled_satellites then
+                                local satellite_remainder = prototypes.item[normal_result.name].stack_size * result.amount -- Convert to uncompressed count
+                                satellite_remainder = satellite_remainder / normal_result.amount -- Divide by result size
+                                satellite_remainder = math.max(0, satellite_remainder - 1) -- Get our actual remainder
+
+                                --Remove compressed satellite
+                                rocket_inv.remove(satellite.name)
+
+                                silo.surface.spill_item_stack(
+                                    {
+                                        position = silo.position,
+                                        stack = {
+                                            name = uncomp_satellite,
+                                            count = satellite_remainder
+                                        }
+                                    }
+                                )
+                                has_spilled_satellites = true
+                            end
                         end
                     end
                 end

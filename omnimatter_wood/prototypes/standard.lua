@@ -33,25 +33,32 @@ local b = BuildGen:create("omnimatter_wood","omnimutator"):
     setTechTime(15):
     setTechPrereq({"omnitech-omnic-acid-hydrolyzation-1"}):
     setSpeed(1):
-    setAnimation({
-        filename = "__omnimatter_wood__/graphics/entity/buildings/omni-mutator.png",
-        width = 113,
-        height = 91,
-        frame_count = 1,
-        shift = {0.2, 0.15}
-    }):
-    setWorkVis({
+    setGraphics({
+        animation = {
+            layers = {
+                {
+                    filename = "__omnimatter_wood__/graphics/entity/buildings/omni-mutator.png",
+                    width = 113,
+                    height = 91,
+                    frame_count = 1,
+                    shift = {0.2, 0.15}
+                }
+            },
+        },
+        working_visualisation =
         {
-            light = {intensity = 1, size = 6},
-            animation =
             {
-                filename = "__omnimatter_wood__/graphics/entity/buildings/mutator-light.png",
-                width = 113,
-                height = 91,
-                frame_count = 1,
-                shift = {0.2, 0.15}
+                light = {intensity = 1, size = 6},
+                animation =
+                {
+                    filename = "__omnimatter_wood__/graphics/entity/buildings/mutator-light.png",
+                    width = 113,
+                    height = 91,
+                    frame_count = 1,
+                    shift = {0.2, 0.15}
+                }
             }
-        }
+        },
     }):
     extend()
 

@@ -25,66 +25,71 @@ if mods["bobassembly"] and data.raw.recipe["steam-science-pack"] then
     end
 
     BuildGen:create("omnimatter","steam-omnitractor"):
-        noTech():
-        setIcons("omnitractor"):
-        setSubgroup("omnitractor"):
-        setIngredients(tractor_ingredients):
-        setEnergy(10):
-        setSteam(1,1):
-        setUsage(100):
-        setReplace("omnitractor"):
-        setStacksize(10):
-        setSize(3):
-        setCrafting({"omnite-extraction-both","omnite-extraction-burner"}):
-        setSpeed(1):
-        setSoundWorking("ore-crusher"):
-        setSoundVolume(2):
-        setAnimation({
-        layers={
-        {
-            filename = "__omnimatter__/graphics/entity/buildings/tractor.png",
-            priority = "extra-high",
-            width = 160,
-            height = 160,
-            frame_count = 36,
-            line_length = 6,
-            shift = {0.00, -0.05},
-            scale = 0.90,
-            animation_speed = 0.5
+    noTech():
+    setIcons("omnitractor"):
+    setSubgroup("omnitractor"):
+    setIngredients(tractor_ingredients):
+    setEnergy(10):
+    setSteam(1,1):
+    setUsage(100):
+    setReplace("omnitractor"):
+    setStacksize(10):
+    setSize(3):
+    setCrafting({"omnite-extraction-both","omnite-extraction-burner"}):
+    setSpeed(1):
+    setSoundWorking("ore-crusher"):
+    setSoundVolume(2):
+    setGraphics({
+        animation = {
+            layers = {
+                {
+                    filename = "__omnimatter__/graphics/entity/buildings/tractor.png",
+                    priority = "extra-high",
+                    width = 160,
+                    height = 160,
+                    frame_count = 36,
+                    line_length = 6,
+                    shift = {0.00, -0.05},
+                    scale = 0.90,
+                    animation_speed = 0.5
+                },
+            }
         },
-        },
-        }):setOverlay("tractor-over",0):
-        setFluidBox("WXW.XXX.KXK",true):
-        extend()
-        
-        BuildGen:create("omnimatter","steam-omniphlog"):
-        noTech():
-        setIcons("omniphlog"):
-        setSteam(1,1):
-        setStacksize(10):
-        setSubgroup("omniphlog"):
-        setReplace("omniphlog"):
-        setSize(3):
-        setCrafting("omniphlog"):
-        setFluidBox("XWX.XXX.XKX"):
-        setUsage(300):
-        setAnimation({
-        layers={
-        {
-            filename = "__omnimatter__/graphics/entity/buildings/omniphlog.png",
-            priority = "extra-high",
-            width = 160,
-            height = 160,
-            frame_count = 36,
-            line_length = 6,
-            shift = {0.00, -0.05},
-            scale = 0.90,
-            animation_speed = 0.5
-        },
+    }):
+    setOverlay("tractor-over",0):
+    setFluidBox("WXW.XXX.KXK",true):
+    extend()
+
+    BuildGen:create("omnimatter","steam-omniphlog"):
+    noTech():
+    setIcons("omniphlog"):
+    setSteam(1,1):
+    setStacksize(10):
+    setSubgroup("omniphlog"):
+    setReplace("omniphlog"):
+    setSize(3):
+    setCrafting("omniphlog"):
+    setFluidBox("XWX.XXX.XKX"):
+    setUsage(300):
+    setGraphics({
+        animation = {
+            layers = {
+                {
+                    filename = "__omnimatter__/graphics/entity/buildings/omniphlog.png",
+                    priority = "extra-high",
+                    width = 160,
+                    height = 160,
+                    frame_count = 36,
+                    line_length = 6,
+                    shift = {0.00, -0.05},
+                    scale = 0.90,
+                    animation_speed = 0.5
+                },
+            }
         }
-        }):
-        setIngredients(phlog_ingredients):
-        extend()
+    }):
+    setIngredients(phlog_ingredients):
+    extend()
 
     omni.lib.add_unlock_recipe("steam-automation", "steam-omnitractor")
     omni.lib.add_unlock_recipe("steam-automation", "steam-omniphlog")

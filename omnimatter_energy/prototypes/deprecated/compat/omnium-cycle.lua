@@ -120,20 +120,22 @@ BuildGen:create("omnimatter_energy","omnictor"):
     ifModsReplaceIngredients("bobpower","boiler","boiler-3"):
     setCrafting("omnictor"):
     setUsage(250):
-    setAnimation({
-    layers={
-    {
-        filename = "__omnimatter_energy__/graphics/entity/buildings/omnictor.png",
-        priority = "extra-high",
-        width = 128,
-        height = 128,
-        frame_count = 16,
-        line_length = 4,
-        shift = {0.40, -0.40},
-        scale = 1,
-        animation_speed = 0.5
-    },
-    }
+    setGraphics({
+        animation = {
+            layers = {
+                {
+                    filename = "__omnimatter_energy__/graphics/entity/buildings/omnictor.png",
+                    priority = "extra-high",
+                    width = 128,
+                    height = 128,
+                    frame_count = 16,
+                    line_length = 4,
+                    shift = {0.40, -0.40},
+                    scale = 1,
+                    animation_speed = 0.5
+                },
+            }
+        }
     }):
     setSoundWorking("oil-refinery",1,"base"):
     setSoundIdle("idle1",0.5,"base"):
@@ -153,8 +155,8 @@ RecGen:create("omnimatter_energy","molten-hydromnide-salt"):
     setSubgroup("omnielectrobuildings"):
     setStacksize(100):
     setEnergy(5):extend()
-    
-  
+
+
 BuildGen:create("omnimatter_energy","omnium-reactor"):
     setSubgroup("omnielectrobuildings"):
     setStacksize(20):
@@ -165,20 +167,22 @@ BuildGen:create("omnimatter_energy","omnium-reactor"):
     setTechName("omnium-power"):
     setCrafting("omnium-reactor"):
     setUsage(250):
-    setAnimation({
-    layers={
-    {
-        filename = "__omnimatter_energy__/graphics/entity/buildings/omnium-reactor.png",
-        priority = "extra-high",
-        width = 420,
-        height = 360,
-        frame_count = 1,
-        line_length = 1,
-        shift = {0.50, -0.30},
-        scale = 0.45,
-        animation_speed = 0.5
-    },
-    }
+    setGraphics({
+        animation = {
+            layers = {
+                {
+                    filename = "__omnimatter_energy__/graphics/entity/buildings/omnium-reactor.png",
+                    priority = "extra-high",
+                    width = 420,
+                    height = 360,
+                    frame_count = 1,
+                    line_length = 1,
+                    shift = {0.50, -0.30},
+                    scale = 0.45,
+                    animation_speed = 0.5
+                },
+            }
+        }
     }):
     setSoundWorking("oil-refinery",1,"base"):
     setSoundIdle("idle1",0.5,"base"):extend()

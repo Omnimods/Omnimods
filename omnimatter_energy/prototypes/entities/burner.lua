@@ -22,16 +22,21 @@ BuildGen:import("assembling-machine-1"):
     setSpeed(0.25):
     setIngredients({"omnitor",1},{"iron-plate",2},{"burner-inserter",1}):
     setOrder("a[assembling-machine-0]"):
-    setAnimation({
-        layers={{
-            filename = "__omnimatter_energy__/graphics/entity/omnitor-assembling-machine/omnitor-assembling-machine.png",
-            priority="high",
-            width = 214,
-            height = 226,
-            frame_count = 32,
-            line_length = 8,
-            shift = util.by_pixel(0, 2),
-        }}
+    setGraphics({
+        animation = {
+            layers = {
+                {
+                    filename = "__omnimatter_energy__/graphics/entity/omnitor-assembling-machine/omnitor-assembling-machine.png",
+                    priority="high",
+                    width = 214,
+                    height = 226,
+                    frame_count = 32,
+                    line_length = 8,
+                    shift = util.by_pixel(0, 2),
+                    scale = 0.5,
+                }
+            }
+        }
     }):
     setNextUpgrade("assembling-machine-1"):
     extend()
@@ -68,6 +73,7 @@ BuildGen:import("lab"):
             line_length = 11,
             animation_speed = 1 / 3,
             shift = util.by_pixel(0, 1.5),
+            scale = 0.5
             },
             {
             filename = "__base__/graphics/entity/lab/lab-integration.png",
@@ -78,6 +84,7 @@ BuildGen:import("lab"):
             repeat_count = 33,
             animation_speed = 1 / 3,
             shift = util.by_pixel(0, 15.5),
+            scale = 0.5
             },
             {
             filename = "__base__/graphics/entity/lab/lab-light.png",
@@ -89,6 +96,7 @@ BuildGen:import("lab"):
             blend_mode = "additive",
             draw_as_light = true,
             shift = {0, 0},
+            scale = 0.5
             },
             {
             filename = "__base__/graphics/entity/lab/lab-shadow.png",
@@ -100,6 +108,7 @@ BuildGen:import("lab"):
             animation_speed = 1 / 3,
             shift = util.by_pixel(13, 11),
             draw_as_shadow = true,
+            scale = 0.5
             }
         }
     }):
@@ -111,6 +120,7 @@ BuildGen:import("lab"):
             height = 174,
             frame_count = 1,
             shift = util.by_pixel(0, 1.5),
+            scale = 0.5,
             },
             {
             filename = "__base__/graphics/entity/lab/lab-integration.png",
@@ -118,6 +128,7 @@ BuildGen:import("lab"):
             height = 162,
             frame_count = 1,
             shift = util.by_pixel(0, 15.5),
+            scale = 0.5,
             },
             {
             filename = "__base__/graphics/entity/lab/lab-shadow.png",
@@ -126,6 +137,7 @@ BuildGen:import("lab"):
             frame_count = 1,
             shift = util.by_pixel(13, 11),
             draw_as_shadow = true,
+            scale = 0.5,
             }
         }
     }):

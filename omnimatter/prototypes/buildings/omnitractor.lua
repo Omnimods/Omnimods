@@ -34,21 +34,24 @@ BuildGen:create("omnimatter","burner-omnitractor"):
     setSpeed(1):
     setSoundWorking("ore-crusher"):
     setSoundVolume(2):
-    setAnimation({
-    layers={
-    {
-        filename = "__omnimatter__/graphics/entity/buildings/tractor.png",
-        priority = "extra-high",
-        width = 160,
-        height = 160,
-        frame_count = 36,
-        line_length = 6,
-        shift = {0.00, -0.05},
-        scale = 0.90,
-        animation_speed = 0.5
-    },
-    },
-    }):setOverlay("tractor-over",0):
+    setGraphics({
+        animation = {
+            layers = {
+                {
+                    filename = "__omnimatter__/graphics/entity/buildings/tractor.png",
+                    priority = "extra-high",
+                    width = 160,
+                    height = 160,
+                    frame_count = 36,
+                    line_length = 6,
+                    shift = {0.00, -0.05},
+                    scale = 0.90,
+                    animation_speed = 0.5
+                }
+            }
+        }
+    }):
+    setOverlay("tractor-over",0):
     setFluidBox("WXW.XXX.KXK",true):
     extend()
 
@@ -123,21 +126,24 @@ BuildChain:create("omnimatter","omnitractor"):
     setCrafting({"omnite-extraction-both","omnite-extraction"}):
     setSpeed(function(levels,grade) return 0.5+grade/2 end):
     setFluidBox("WXW.XXX.KXK",true):
-    setAnimation({
-    layers={
-    {
-        filename = "__omnimatter__/graphics/entity/buildings/tractor.png",
-        priority = "extra-high",
-        width = 160,
-        height = 160,
-        frame_count = 36,
-        line_length = 6,
-        shift = {0.00, -0.05},
-        scale = 0.90,
-        animation_speed = 0.5
-    },
-    },
-    }):setOverlay("tractor-over"):
+    setGraphics({
+        animation = {
+            layers = {
+                {
+                    filename = "__omnimatter__/graphics/entity/buildings/tractor.png",
+                    priority = "extra-high",
+                    width = 160,
+                    height = 160,
+                    frame_count = 36,
+                    line_length = 6,
+                    shift = {0.00, -0.05},
+                    scale = 0.90,
+                    animation_speed = 0.5
+                }
+            }
+        }
+    }):
+    setOverlay("tractor-over"):
     extend()
 
 local fbox_positions = {

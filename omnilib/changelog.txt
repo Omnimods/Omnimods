@@ -1,4 +1,22 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.2.3
+Date: 2024.11.26
+  Bugfixes:
+    - Fixed alert_icon_scale and shift not being imported correctly
+    - Fixed that omnitraction recipes input amount was sometimes not set correctly
+---------------------------------------------------------------------------------------------------
+Version: 4.2.2
+Date: 2024.11.23
+  Changes:
+    - Unified setAnimation() and setWorkingVis() into setGraphics()
+  Bugfixes:
+    - Fixed that graphics_set was not loaded in some cases when importing entities
+---------------------------------------------------------------------------------------------------
+Version: 4.2.1
+Date: 2024.11.23
+  Bugfixes:
+    - Fixed that input amounts were not correctly set for chained recipes
+---------------------------------------------------------------------------------------------------
 Version: 4.2.0
 Date: 2024.11.19
   Changes:

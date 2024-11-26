@@ -57,20 +57,22 @@ BuildGen:create("omnimatter_crystal","burner-omniplant"):
     setSpeed(1):
     setSoundWorking("oil-refinery",1,"base"):
     setSoundVolume(2):
-    setAnimation({
-    layers={
-    {
-        filename = "__omnimatter_crystal__/graphics/buildings/omni-plant.png",
-        priority = "extra-high",
-        width = 224,
-        height = 224,
-        frame_count = 36,
-        line_length = 6,
-        shift = {0.00, -0.05},
-        scale = 1,
-        animation_speed = 0.5
-    },
-    }
+    setGraphics({
+        animation = {
+            layers={
+                {
+                    filename = "__omnimatter_crystal__/graphics/buildings/omni-plant.png",
+                    priority = "extra-high",
+                    width = 224,
+                    height = 224,
+                    frame_count = 36,
+                    line_length = 6,
+                    shift = {0.00, -0.05},
+                    scale = 1,
+                    animation_speed = 0.5
+                }
+            }
+        }
     }):
     setOverlay("omni-plant-overlay"):
     setFluidBox("XWXWX.XXXXX.XXXXX.XXXXX.XKXKX"):
@@ -126,20 +128,22 @@ BuildChain:create("omnimatter_crystal","omniplant"):
     setSoundWorking("oil-refinery",1,"base"):
     setSoundVolume(2):
     allowProductivity():
-    setAnimation({
-    layers={
-    {
-        filename = "__omnimatter_crystal__/graphics/buildings/omni-plant.png",
-        priority = "extra-high",
-        width = 224,
-        height = 224,
-        frame_count = 36,
-        line_length = 6,
-        shift = {0.00, -0.05},
-        scale = 1,
-        animation_speed = 0.5
-    },
-    }
+    setGraphics({
+        animation = {
+            layers = {
+                {
+                    filename = "__omnimatter_crystal__/graphics/buildings/omni-plant.png",
+                    priority = "extra-high",
+                    width = 224,
+                    height = 224,
+                    frame_count = 36,
+                    line_length = 6,
+                    shift = {0.00, -0.05},
+                    scale = 1,
+                    animation_speed = 0.5
+                },
+            }
+        }
     }):
     setOverlay("omni-plant-overlay"):
     setFluidBox("XWXWX.XXXXX.XXXXX.XXXXX.XKXKX"):
