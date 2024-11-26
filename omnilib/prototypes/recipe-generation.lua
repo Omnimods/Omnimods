@@ -193,7 +193,7 @@ function OmniGen:create()
         shift = {},
         input = {
             items = {},
-            sum = function(levels,grade) return 12 end
+            sum = function(levels,grade) return nil end
         },
         output = {
             yield={
@@ -381,7 +381,7 @@ function OmniGen:chainIngredients()
             local amount = 0
             if ing.amount then
                 amount = ing.amount
-                if sum then ing.amount = sum end
+                if sum then amount = sum end
             else
                 local ingname = ing.name or ing[1] or ing or ""
                 math.randomseed(#usable*string.len(ingname)*j)
@@ -391,9 +391,10 @@ function OmniGen:chainIngredients()
                 else
                     amount = sum-total
                 end
+                if sum then amount = sum end
             end
             total = total+amount
-            ingredients[#ingredients+1]={type=t,name = ing.name,amount = amount}
+            ingredients[#ingredients+1] = {type = t, name = ing.name, amount = amount}
         end
         return ingredients
     end

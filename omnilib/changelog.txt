@@ -3,6 +3,7 @@ Version: 4.2.3
 Date: ????
   Bugfixes:
     - Fixed alert_icon_scale and shift not being imported correctly
+    - Fixed that omnitraction recipes input amount was sometimes not set correctly
 ---------------------------------------------------------------------------------------------------
 Version: 4.2.2
 Date: 2024.11.23
