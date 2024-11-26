@@ -6,8 +6,6 @@ BuildGen:import("burner-mining-drill"):
     setEnabled():
     extend()
 
-    log(serpent.block(data.raw["mining-drill"]["burner-mining-drill"]))
-
 --Burner assembler
 BuildGen:import("assembling-machine-1"):
     setName("omnitor-assembling-machine"):

@@ -164,8 +164,8 @@ if settings.startup["omnicompression_item_compression"].value then
             default_import_location = item.default_import_location,
             spoil_ticks = item.spoil_ticks,
             destroyed_by_dropping_trigger = item.destroyed_by_dropping_trigger,
-            rocket_launch_product = table.deepcopy(item.rocket_launch_product),
-            rocket_launch_products = table.deepcopy(item.rocket_launch_products)
+            rocket_launch_products = table.deepcopy(item.rocket_launch_products),
+            send_to_orbit_mode = item.send_to_orbit_mode
         }
         if item.weight then
             new_item.weight = item.weight * item.stack_size
@@ -182,12 +182,7 @@ if settings.startup["omnicompression_item_compression"].value then
             new_item.stack_size = compressed_item_stack_size
         end
         -- Case: satellite
-        local product_table = (
-            new_item.rocket_launch_product and
-            {new_item.rocket_launch_product}
-            or new_item.rocket_launch_products
-            or {}
-        )
+        local product_table = (new_item.rocket_launch_product and {new_item.rocket_launch_product} or new_item.rocket_launch_products or {})
         -- Case: Nuclear fuel
         if item.burnt_result then
             new_item.burnt_result = "compressed-"..item.burnt_result
