@@ -131,7 +131,7 @@ if not mods["angelsrefining"] then
             --If yes, copy the recipe
             if found == true then
                 local r = RecGen:import(rec.name)
-                local iproto = omni.lib.find_prototype(rec.name)
+                local iproto = omni.locale.find(rec.name, "item")
                 r:setName("crystal-powder-"..rec.name):
                 setLocName({"recipe-name.crystalline", omni.lib.locale.of(rec).name}):
                 setEnabled(false):

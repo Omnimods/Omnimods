@@ -512,7 +512,7 @@ function FluidGen:create(mod,name)
 end
 
 function ItemGen:import(item)
-    local proto = omni.lib.find_prototype(item)
+    local proto = omni.locale.find(item, "item")
     if proto then
         local it = ItemGen:create():
         setName(proto.name):
@@ -617,7 +617,7 @@ function ItemGen:setIcons(icons,mod)
         if ic and string.match(ic, "%_%_(.-)%_%_") then
             local name = string.match(ic,".*%/(.-).png")
             local setup = {}
-            proto = omni.lib.find_prototype(name)
+            proto = omni.locale.find(name, "item")
             if proto then
                 setup={{icon = proto.icon, icon_size = proto.icon_size, scale = proto.scale or ic_scale,}}
             else
@@ -653,7 +653,7 @@ function ItemGen:addIcon(icon)
             a = function(levels,grade) return {icon} end
         --Just a name given
         else
-            local proto = omni.lib.find_prototype(icon.icon)
+            local proto = omni.locale.find(icon.icon, "item")
             local ic_sz=defines.default_icon_size
             --Find icon size
             if proto then
@@ -1229,7 +1229,7 @@ function RecGen:import(rec)
     if recipe then
         local r = RecGen:create()
         if #recipe.results==1 or recipe.main_product and recipe.main_produc ~= "" then
-            local proto = omni.lib.find_prototype(recipe.main_product or recipe.results[1].name)
+            local proto = omni.locale.find(recipe.main_product or recipe.results[1].name, "item")
             if proto then
                 r:setStacksize(proto.stack_size):
                 setWeight(proto.weight):
@@ -1734,9 +1734,9 @@ function RecGen:generate_recipe()
         self.main_product=function(levels,grade) return res[1].name end
     end
     if ((
-    (res and #res == 1 and omni.lib.find_prototype(res[1].name)==nil) or 
-    (self.main_product(0,0) and omni.lib.find_prototype(self.main_product(0,0))==nil) or
-    (self.item_name and omni.lib.find_prototype(self.item_name)==nil)) and (self.noItem ~= false and self.noItem ~= nil)) or self.force then
+    (res and #res == 1 and omni.locale.find(res[1].name, "item")==nil) or 
+    (self.main_product(0,0) and omni.locale.find(self.main_product(0,0), "item")==nil) or
+    (self.item_name and omni.locale.find(self.item_name, "item")==nil)) and (self.noItem ~= false and self.noItem ~= nil)) or self.force then
         local it = ItemGen:create(self.mod,self.item_name or self.main_product(0,0) or res[1].name):
         setIcons(self.icons(0,0)):
         setSubgroup(self.subgroup(0,0)):
@@ -1768,7 +1768,7 @@ function RecGen:generate_recipe()
     local lname = self.loc_name(0,0)
     if not self.unique_loc_name then
         if not lname and ((res and #res == 1) or self.main_product(0,0)) then
-            local it = omni.lib.find_prototype(self.main_product(0,0) or res[1].name)
+            local it = omni.locale.find(self.main_product(0,0) or res[1].name, "item")
             if not it then error("The item/fluid "..(self.main_product(0,0) or res[1].name).." does not seem to exist.") end
             if it.place_result then
                 local entity = omni.lib.find_entity_prototype(it.place_result) or self.proto
@@ -2228,8 +2228,8 @@ function RecChain:generate_chain()
             break
         end
     end
-    if ((#res == 1 and omni.lib.find_prototype(res[1].name)==nil) or (self.main_product(0,0) and omni.lib.find_prototype(self.main_product(0,0))==nil) or
-        (self.item_name and omni.lib.find_prototype(self.item_name)==nil)) and (self.noItem ~= false and self.noItem ~= nil) then
+    if ((#res == 1 and omni.locale.find(res[1].name, "item")==nil) or (self.main_product(0,0) and omni.locale.find(self.main_product(0,0), "item")==nil) or
+        (self.item_name and omni.locale.find(self.item_name, "item")==nil)) and (self.noItem ~= false and self.noItem ~= nil) then
         local it = ItemGen:create(self.mod,self.item_name or self.main_product(0,0) or res[1].name):
         setIcons(self.icons(0,0)):
         setSubgroup(self.subgroup(0,0)):

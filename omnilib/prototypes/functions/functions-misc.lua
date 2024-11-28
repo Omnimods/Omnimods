@@ -589,44 +589,19 @@ function omni.lib.create_barrel(fluid)
     data:extend(reg)
 end
 
-local itemproto = {
-    "item",
-    "gun",
-    "ammo",
-    "armor",
-    "repair-tool",
-    "capsule",
-    "module",
-    "tool",
-    "rail-planner",
-    "selection-tool",
-    "fluid",
-    "item-with-entity-data",
-    "spidertron-remote",
-    "item-with-inventory",
-    "item-with-tags"
-}
-
-function omni.lib.find_prototype(item)
-    if type(item)=="table" then return item elseif type(item)~="string" then return nil end
-    for _, p in pairs(itemproto) do
-        if not data.raw[p] then
-            return nil
-        else
-            if data.raw[p][item] then return data.raw[p][item] end
-        end
-    end
-    --log("Could not find "..item.."'s prototype, check it's type.")
-    return nil
-end
-
 function omni.lib.find_stacksize(item)
     if data.raw.fluid[item] or (type(item)=="table" and item.type=="fluid") then return 50 end
-    if type(item)=="table" then return item.stack_size elseif type(item)~="string" then return nil end
-    for _, p in pairs(itemproto) do
-        if data.raw[p][item] and data.raw[p][item].stack_size then return data.raw[p][item].stack_size end
+    if type(item)=="table" then
+        return item.stack_size
+    elseif type(item)~="string" then
+        return nil
     end
-    log("Could not find "..item.."'s stack size, check it's type.")
+    local proto = omni.lib.find(item, "item")
+    if proto then
+        return proto.stacksize
+    else
+        log("Could not find "..item.."'s stack size, check it's type.")
+    end
 end
 
 local entproto = {

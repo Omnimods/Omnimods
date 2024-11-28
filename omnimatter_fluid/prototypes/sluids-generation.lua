@@ -362,7 +362,7 @@ for name, _ in pairs(recipe_mods) do
                         log("WARNING: Ingredient "..ing.name.." from the recipe "..rec.name.." ran into the upper limit. Amount = "..new_amount.." Mult = "..mult)
                     end
                     --Check stacksize. If the stacksize is smaller than the amount, we need to split up the result/ingredien
-                    local item_proto = omni.lib.find_prototype(ing.name)
+                    local item_proto = omni.lib.locale.find(ing.name, "item")
                     if item_proto and ing.amount > 1 and (omni.lib.is_in_table("not-stackable", item_proto.flags or {}) or item_proto.stack_size == 1) then
                         fix_stacksize = true
 
@@ -384,7 +384,7 @@ for name, _ in pairs(recipe_mods) do
             end
             local add = {}
             for _, ing in pairs(rec.results) do
-                local proto = omni.lib.find_prototype(ing.name)
+                local proto = omni.lib.locale.find(ing.name, "item")
                 if proto and (omni.lib.is_in_table("not-stackable", proto.flags or {}) or proto.stack_size == 1) then
                     local to_add = ing.amount - 1
                     ing.amount = 1
