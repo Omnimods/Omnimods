@@ -54,10 +54,10 @@ sluid_boiler(fluid_cats)
 --Replace barrels with sluids before doing all other replacement so it can properly divide down the recipe ingredients/results
 local function replace_barrels(recipe)
         for _, ingres in pairs({"ingredients","results"}) do
-            for    j, ing in pairs(recipe[ingres]) do
+            for j, ing in pairs(recipe[ingres]) do
                 --Remove empty barrels
                 if ing.name and (ing.name == "barrel" or ing.name == "empty-canister"  or ing.name == "empty-gas-canister")then
-                    recipe[ingres][j] = nil
+                    omni.lib.remove_from_table(recipe[ingres][j], recipe[ingres])
                 --Replace filled barrels with sluids
                 elseif ing.name and (string.find(ing.name, "%-barrel") or string.find(ing.name, "barrel%-") or string.find(ing.name, "%-canister")) then
                     local flu = string.gsub(ing.name, "%-barrel", "")
