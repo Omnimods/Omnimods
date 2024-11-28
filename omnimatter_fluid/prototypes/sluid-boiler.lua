@@ -122,7 +122,7 @@ local function sluid_boiler_generation(fluid_cats)
                 new_ent.energy_source.fluid_box.production_type = "input"
                 pipe_covers = pipecoverspictures()
                 new_ent.energy_source.fluid_box.volume = 1000
-                new_ent.energy_source.fluid_box.pipe_connections = {{flow_direction = "input-output", position = {2,0}},{flow_direction = "input-output", position = {-2,0}}}
+                new_ent.energy_source.fluid_box.pipe_connections = {{flow_direction = "input-output", direction = defines.direction.east, position = {1.2,0}}, {flow_direction = "input-output", direction = defines.direction.west, position = {-1.2,0}}}
             end
 
             new_ent.energy_usage = boiler.energy_consumption
