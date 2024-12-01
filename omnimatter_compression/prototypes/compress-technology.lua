@@ -77,7 +77,7 @@ if settings.startup["omnicompression_item_compression"].value then
         end
         for _, ing in pairs(lab.inputs) do
             local hidden = false
-            local proto = omni.locale.find(ing, "item")
+            local proto = omni.lib.locale.find(ing, "item")
             if proto then
                 for _, flag in ipairs(proto.flags or {}) do
                     if flag == "hidden" then hidden = true end

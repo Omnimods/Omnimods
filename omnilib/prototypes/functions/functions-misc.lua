@@ -596,9 +596,9 @@ function omni.lib.find_stacksize(item)
     elseif type(item)~="string" then
         return nil
     end
-    local proto = omni.lib.find(item, "item")
+    local proto = omni.lib.locale.find(item, "item", true)
     if proto then
-        return proto.stacksize
+        return proto.stack_size
     else
         log("Could not find "..item.."'s stack size, check it's type.")
     end

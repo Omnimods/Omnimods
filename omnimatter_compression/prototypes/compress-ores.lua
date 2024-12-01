@@ -51,7 +51,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                 for _,drop in ipairs(new.minable.results) do
                     for _,comp in pairs({"compressed-", "concentrated-"}) do
                         if compressed_item_names[comp .. drop.name] then
-                            max_stacksize = math.max(omni.lib.find_stacksize(drop.name),max_stacksize) --returns 50 for fluids
+                            max_stacksize = math.max(omni.lib.find_stacksize(drop.name), max_stacksize) --returns 50 for fluids
                             drop.name = comp .. drop.name
                             compressed = true
                         end
