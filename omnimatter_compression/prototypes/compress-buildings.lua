@@ -224,10 +224,12 @@ if settings.startup["omnicompression_entity_compression"].value then
             if product then
                 local place_result = (data.raw[product.type][product.name] or {}).place_result
                 place_result = place_result and omni.lib.locale.find(place_result, 'entity', true)
+                local it = data.raw.item[product.name]
                 if place_result and -- Valid
                 building_list[place_result.type] and
                 not omni.lib.string_contained_list(place_result.name, black_list) and --not on exclusion list
-                not omni.compression.is_hidden(place_result) and (--Not hidden
+                not omni.compression.is_hidden(place_result) and  -- Not hidden
+                not omni.compression.is_hidden(it) and (--Not hidden
                 not omni.compression.compress_entity[place_result] or (
                     omni.compression.compress_entity[place_result] and (
                     not omni.compression.compress_entity[place_result].exclude or omni.compression.compress_entity[place_result].include

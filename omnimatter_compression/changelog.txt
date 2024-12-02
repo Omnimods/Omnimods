@@ -3,6 +3,8 @@ Version: 4.2.4
 Date: ????
   Changes:
     - Updated for omnilib 4.2.4
+  Bugfixes:
+    - Fixed that the place results of hidden items were compressed if they were not hidden as well
 ---------------------------------------------------------------------------------------------------
 Version: 4.2.3
 Date: 2024.11.26
