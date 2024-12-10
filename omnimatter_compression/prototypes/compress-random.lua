@@ -5,7 +5,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
     log("start probability style compression with "..#check_recipes.." recipes")
 
     for _, recipe in pairs(check_recipes) do
-        if not omni.lib.is_in_table(recipe, exclusion_list) and not string.find(recipe,"creative") then
+        if not omni.lib.string_contained_list(recipe, exclusion_list) and not string.find(recipe, "creative") then
             --local store = data.raw.recipe[recipe]
             local new_recipe = table.deepcopy(data.raw.recipe[recipe])
             --grab localisation before standardisation
