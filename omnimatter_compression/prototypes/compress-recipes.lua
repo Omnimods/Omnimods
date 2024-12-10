@@ -497,7 +497,22 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                     hide_from_player_crafting = recipe.hide_from_player_crafting or omni.compression.hide_handcraft,
                                     category = new_cat,
                                     order = recipe.order,
-                                    surface_conditions = recipe.surface_conditions
+                                    surface_conditions = recipe.surface_conditions,
+                                    preserve_products_in_machine_output = recipe.preserve_products_in_machine_output,
+                                    result_is_always_fresh = recipe.result_is_always_fresh,
+                                    allow_consumption_message = recipe.allow_consumption_message,
+                                    allow_speed_message = recipe.allow_speed_message,
+                                    allow_productivity_message = recipe.allow_productivity_message,
+                                    allow_pollution_message = recipe.allow_pollution_message,
+                                    allow_quality_message = recipe.allow_quality_message,
+                                    hide_from_signal_gui = recipe.hide_from_signal_gui,
+                                    allow_consumption = recipe.allow_consumption,
+                                    allow_speed = recipe.allow_speed,
+                                    allow_productivity = recipe.allow_productivity,
+                                    allow_pollution = recipe.allow_pollution,
+                                    allow_quality = recipe.allow_quality,
+                                    allowed_module_categories = recipe.allowed_module_categories,
+                                    alternative_unlock_methods = recipe.alternative_unlock_methods
                                     }
                                     -------------------------------------------
                                     -- **Normalised stack building setting** --
