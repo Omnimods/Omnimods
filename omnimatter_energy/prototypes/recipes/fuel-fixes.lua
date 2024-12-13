@@ -18,6 +18,20 @@ for _,fuel in pairs(omni.nil_fuels) do
     end
 end
 
+for type, enti in pairs(data.raw) do
+    if omni.lib.locale.inherits(type, "entity-with-owner") then
+        for _, proto in pairs(enti) do
+            if proto.energy_source and proto.energy_source.initial_fuel then
+                local it = proto.energy_source.initial_fuel
+                if omni.lib.string_contained_list(it, omni.nil_fuels) then
+                    proto.energy_source.initial_fuel = "omnified-"..it
+                end
+            end
+        end
+    end
+end
+
+--Update fuel categories of burner entities
 local burnerEntities = {
     "burner-mining-drill",
     "burner-research_facility",
