@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.2.1
+Date: 2024.12.13
+  Changes:
+    - Updated for omnilib 4.2.4
+  Bugfixes:
+    - Fixed a crash with Py caused by leaving behind a broken recipe reesults table
+    - Fixed a crash caused by missing fluidboy directions for boiler converters
+---------------------------------------------------------------------------------------------------
 Version: 4.2.0
 Date: 2024.11.19
   Changes:

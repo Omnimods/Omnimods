@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.2.4
+Date: 2024.12.13
+  Changes:
+    - Updated for omnilib 4.2.4
+  Bugfixes:
+    - Fixed that the place results of hidden items were compressed if they were not hidden as well
+    - Fixed that compressed recipes did not allow productivity / quality modules
+---------------------------------------------------------------------------------------------------
 Version: 4.2.3
 Date: 2024.11.26
   Bugfixes:
