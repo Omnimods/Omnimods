@@ -44,14 +44,14 @@ for _,fuelitem in pairs(data.raw.item) do
     for _,blockeditem in pairs(ignore) do
         if fuelitem.name == blockeditem and fuelitem.fuel_category then
             fuelitem.fuel_value = omni.lib.mult_fuel_value(fuelitem.fuel_value, 0.8)
-            goto continue 
+            goto continue
         end
     end
     --Check if item is on the "to nil" list
     for _,nilit in pairs(nilfuel) do
         if fuelitem.name == nilit and fuelitem.fuel_category then
             omni.nil_fuels[#omni.nil_fuels+1] = fuelitem.name
-            goto continue 
+            goto continue
         end
     end
 
