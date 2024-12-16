@@ -513,7 +513,7 @@ if settings.startup["omnicompression_entity_compression"].value then
         --Generators!
         if kind == "burner-generator" then
             new.max_power_output = new_effect(new.max_power_output, compr_lvl)
-            new.burner.emissions_per_minute.pollution = (new.burner.emissions_per_minute.pollution or 0) * math.pow(multiplier,compr_lvl+1)
+            new.burner.emissions_per_second.pollution = (new.burner.emissions_per_second.pollution or 0) * math.pow(multiplier,compr_lvl+1)
         end
 
         --Rockets!
