@@ -205,18 +205,20 @@ function omni.lib.replace_recipe_result(recipename, result, replacement)
     local rec = data.raw.recipe[recipename]
     if rec and rec.results and result and replacement then
         local res = omni.lib.parse_results(rec.results)
-        replacement = omni.lib.parse_result(replacement)
+        --Parse replacment and nil amount of the local table if not specified
+        local repl = omni.lib.parse_ingredient(replacement)
+        if type(replacement) == "string" or not replacement.amount then repl.amount = nil end
         local found = false
 
         --check if the replacement is already an result, add up the current amount
         for _, r in pairs(res) do
-            if r.name == replacement.name then
+            if r.name == repl.name then
                 found = true
-                if replacement.amount_min or replacement.amount_max then
-                    r.amount_min = (r.amount_min or 0) + replacement.amount_min
-                    r.amount_max = (r.amount_max or 0) + replacement.amount_max
+                if repl.amount_min or repl.amount_max then
+                    r.amount_min = (r.amount_min or 0) + repl.amount_min
+                    r.amount_max = (r.amount_max or 0) + repl.amount_max
                 else
-                    r.amount = r.amount + replacement.amount
+                    r.amount = r.amount + (repl.amount or 1)
                 end
                 break
             end
@@ -229,13 +231,13 @@ function omni.lib.replace_recipe_result(recipename, result, replacement)
                 if found then
                     res[num] = nil
                 else
-                    r.name = replacement.name
-                    r.type = replacement.type
+                    r.name = repl.name
+                    r.type = repl.type
                     if r.amount_min or r.amount_max then
-                        r.amount_min = replacement.amount_min
-                        r.amount_max = replacement.amount_max
+                        r.amount_min = repl.amount_min
+                        r.amount_max = repl.amount_max
                     else
-                        r.amount = replacement.amount
+                        r.amount = repl.amount or r.amount
                     end
                 end
                 break
@@ -244,7 +246,7 @@ function omni.lib.replace_recipe_result(recipename, result, replacement)
         rec.results = res
         --Check if the main product was replaced
         if rec.main_product and rec.main_product == result then
-            rec.main_product = replacement.name
+            rec.main_product = repl.name
         end
     end
 end
@@ -252,34 +254,36 @@ end
 function omni.lib.replace_recipe_ingredient(recipename, ingredient, replacement)
     local rec = data.raw.recipe[recipename]
     if rec and rec.ingredients and ingredient and replacement then
-        local ing = omni.lib.parse_ingredients(rec.ingredients)
-        replacement = omni.lib.parse_ingredient(replacement)
+        local ings = omni.lib.parse_ingredients(rec.ingredients)
         local found = false
+        --Parse replacment and nil amount of the local table if not specified
+        local repl = omni.lib.parse_ingredient(replacement)
+        if type(replacement) == "string" or not replacement.amount then repl.amount = nil end
 
         --check if the replacement is already an ingredient, add up the current amount
-        for _, i in pairs(ing) do
-            if i.name == replacement.name then
+        for _, i in pairs(ings) do
+            if i.name == repl.name then
                 found = true
-                i.amount = i.amount + replacement.amount
+                i.amount = i.amount + (repl.amount or 1)
                 break
             end
         end
 
         --Check all ingredients to find the one that has to be replaced
-        for num, i in pairs(ing) do
+        for num, i in pairs(ings) do
             if i.name == ingredient then
                 --if the replacement was found above, set the calculated amount and nil this result, otherwise replace the ingredient
                 if found then
-                    ing[num] = nil
+                    ings[num] = nil
                 else
-                    i.name = replacement.name
-                    i.type = replacement.type
-                    i.amount = replacement.amount
+                    i.name = repl.name
+                    i.type = repl.type
+                    i.amount = repl.amount or i.amount
                 end
                 break
             end
         end
-        rec.ingredients = ing
+        rec.ingredients = ings
     end
 end
 
