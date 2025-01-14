@@ -132,7 +132,9 @@ BuildGen:create("omnimatter_compression","auto-concentrator"):
     }):
     extend()
 
+--Increase the volume of the input /output fluidbox to make sure that atleast 2 crafts worth of fluid fit. Otherwise the recipe may not be usable
 data.raw["furnace"]["auto-concentrator"].fluid_boxes[1].volume = 2 * omni.compression.sluid_contain_fluid * omni.compression.sluid_contain_fluid
+data.raw["furnace"]["auto-concentrator"].fluid_boxes[2].volume = 2 * omni.compression.sluid_contain_fluid * omni.compression.sluid_contain_fluid
 
 if settings.startup["omnicompression_entity_compression"].value then
     BuildGen:create("omnimatter_compression","auto-condensator"):
