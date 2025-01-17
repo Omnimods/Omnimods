@@ -496,16 +496,19 @@ end
 for _, jack in pairs(data.raw["mining-drill"]) do
     --Set the output vector for the solid item to the old output_fluidbox(if multiple are defined, use the first in the table) and nil the output_fluidbox
     if jack.output_fluid_box then
+        log(serpent.block(jack.name))
+        log(serpent.block(jack.output_fluid_box))
         local sluidbox = {0, -1.85}
         if jack.output_fluid_box.pipe_connections and jack.output_fluid_box.pipe_connections[1] then
-            local pipe_con = jack.output_fluid_box.pipe_connections and jack.output_fluid_box.pipe_connections[1]
+            local pipe_con = jack.output_fluid_box.pipe_connections[1]
             if pipe_con.position then
                 sluidbox = table.deepcopy(pipe_con.position)
             elseif pipe_con.positions and pipe_con.positions[1] then
                 sluidbox = table.deepcopy(pipe_con.positions[1])
             end
-            --make sure to use the inner side of the belt
-            sluidbox = {sluidbox[1], sluidbox[2]+0.15}
+            -- -1.0: Fluidbox is defined inside the bounding box. Result vector needs to be outside
+            -- +0.15: make sure to use the inner side of the belt
+            sluidbox = {sluidbox[1], sluidbox[2] + 0.15 - 1.0}
         end
         jack.output_fluid_box = nil
         jack.vector_to_place_result = sluidbox
