@@ -554,7 +554,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                 --contains only fluids and results with no probability--
                                 -------------------------------------------------------------------------------
                             else --not not_only_fluids(recipe)
-                                --log(serpent.block(recipe.name .. " only_fluids"))
+                                --log(serpent.block(recipe))
                                 --------------------------------------------------
                                 -- **Copy base recipe** --
                                     -- no stack size shenanigans required for fluids
@@ -567,7 +567,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                 r.icon = nil
                                 r.category=new_cat
                                 r.subgroup = recipe.subgroup
-                                r.energy_required = concentrationRatio*r.energy_required
+                                r.energy_required = (r.energy_required or 0.5) * concentrationRatio --Default to 0.5
                                 r.hide_from_player_crafting = r.hide_from_player_crafting or omni.compression.hide_handcraft
                                 for _,ingres in pairs({"ingredients","results"}) do
                                     if r[ingres] then
