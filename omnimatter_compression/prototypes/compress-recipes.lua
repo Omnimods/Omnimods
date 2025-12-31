@@ -570,8 +570,10 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                 r.energy_required = concentrationRatio*r.energy_required
                                 r.hide_from_player_crafting = r.hide_from_player_crafting or omni.compression.hide_handcraft
                                 for _,ingres in pairs({"ingredients","results"}) do
-                                    for i,item in pairs(r[ingres]) do
-                                        r[ingres][i].name="concentrated-"..r[ingres][i].name
+                                    if r[ingres] then
+                                        for i,item in pairs(r[ingres]) do
+                                            r[ingres][i].name="concentrated-"..r[ingres][i].name
+                                        end
                                     end
                                 end
                                 comrec = r
