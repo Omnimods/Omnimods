@@ -333,9 +333,8 @@ function omni.crystal.generate_hybrid_circuit(control_crystal,electronic_circuit
         energy_required = 1,
     }
     data:extend(items)
-    
-    
-    
+
+
     for i=1,4 do
         for _,eff in pairs(data.raw.technology["omnitech-crystallonics-"..i].effects) do
             if eff.type == "unlock-recipe" and eff.recipe == cc then
@@ -362,7 +361,7 @@ function omni.crystal.find_crystallonic(ingredients, class)
         end
     end
     circuit_name=circuit_name.."-circuit-"..class
-    if not data.raw.item[circuit_name] then    
+    if not data.raw.item[circuit_name] then
         --log(circuit_name.." does not exist, may cause issues.")
     end
     return circuit_name 
@@ -387,5 +386,5 @@ function omni.crystal.find_hybrid(ingredients,class,electric)
     if not data.raw.item[circuit_name] then    
         --log(circuit_name.." does not exist, may cause issues.")
     end
-    return circuit_name 
+    return circuit_name
 end

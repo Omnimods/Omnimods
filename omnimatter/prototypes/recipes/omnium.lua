@@ -86,15 +86,15 @@ RecGen:create("omnimatter","omnium-iron-gear-box"):
     extend()
 
 if mods["bobplates"] then
-    local plates = {"steel","brass","titanium","tungsten","nitinol"}
-    local plateTech = {"steel-processing","zinc-processing","titanium-processing","tungsten-processing","nitinol-processing"}
+    local plates = {"bob-steel","bob-brass","bob-titanium","bob-tungsten","bob-nitinol"}
+    local plateTech = {"steel-processing","bob-zinc-processing","bob-titanium-processing","bob-tungsten-processing","bob-nitinol-processing"}
 
     for i,p in pairs(plates) do
         RecGen:create("omnimatter","omnium-"..p.."-gear-box"):
             setStacksize(100):
             setEnergy(0.25):
             addProductivity():
-            setIngredients("omnium-gear-wheel",p.."-gear-wheel"):
+            setIngredients("omnium-gear-wheel" ,p.."-gear-wheel"):
             setIcons({"omnium-"..p.."-gear-box", 32}):
             setCategory("crafting"):
             setSubgroup("omni-gears"):
@@ -102,10 +102,10 @@ if mods["bobplates"] then
             extend()
     end
 
-    data.raw.item["brass-gear-wheel"].icon="__omnimatter__/graphics/icons/brass-gear-wheel.png"
-    data.raw.item["brass-gear-wheel"].icon_size=32
-    data.raw.item["steel-gear-wheel"].icon="__omnimatter__/graphics/icons/steel-gear-wheel.png"
-    data.raw.item["steel-gear-wheel"].icon_size=32
+    data.raw.item["bob-brass-gear-wheel"].icon="__omnimatter__/graphics/icons/brass-gear-wheel.png"
+    data.raw.item["bob-brass-gear-wheel"].icon_size=32
+    data.raw.item["bob-steel-gear-wheel"].icon="__omnimatter__/graphics/icons/steel-gear-wheel.png"
+    data.raw.item["bob-steel-gear-wheel"].icon_size=32
 end
 
 --data.raw.item["iron-gear-wheel"].icons={{icon="__omnimatter__/graphics/icons/iron-gear-wheel.png"}}

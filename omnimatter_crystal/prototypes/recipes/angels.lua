@@ -127,7 +127,7 @@ local angelsores = {
     {ore = "thorium-ore", product = "Thorium"},
     {ore = "chrome-ore", product = "Chrome"},
     {ore = "platinum-ore", product = "Platinum"}
-  }
+}
 
 if angelsmods and angelsmods.refining then
 
