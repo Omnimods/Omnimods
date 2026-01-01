@@ -640,16 +640,14 @@ end
 
 function ItemGen:addIcon(icon)
     local oldIcons = table.deepcopy(self.icons(0,0))
-    if not oldIcons[1].scale then oldIcons[1].scale = (defines.default_icon_size / 2) /  oldIcons[1].icon_size or defines.default_icon_size end
+    if not oldIcons[1].scale then oldIcons[1].scale = (defines.default_icon_size / 2) /  oldIcons[1].icon_size or defines.default_icon_size end -- In case no scale of the main icon is defined, we need to set it (0.5 for 64px)
     local first_layer_ic_sz = oldIcons[1].icon_size or defines.default_icon_size
     local a = function(levels,grade) return {} end
     if type(icon) == "table" and icon.icon then
         local f = string.match(icon.icon, "%_%_(.-)%_%_")
         --Full Path is there
         if f then
-            if icon.scale then
-                icon.scale = icon.scale * oldIcons[1].scale * (first_layer_ic_sz / icon.icon_size or defines.default_icon_size)
-            end
+            icon.scale = (icon.scale or 1) * oldIcons[1].scale * (first_layer_ic_sz / icon.icon_size or defines.default_icon_size)
             a = function(levels,grade) return {icon} end
         --Just a name given
         else
@@ -768,7 +766,7 @@ function ItemGen:addSmallIcon(icon, nr)
             self:addIcon({
                 icon = ic.icon,
                 icon_size = ic_sz,
-                scale = 0.4375*(ic.scale or (defines.default_icon_size/ic_sz)),
+                scale = 0.4375 * (ic.scale or 1), -- Do not calculate any multiplicators to default / main icon scales yet as the relative comparison to the main icon is done in addIcon()
                 shift = quad[nr or 1], --currently "centres" the icon if it was already offset, may need to math that out
                 tint = ic.tint or nil})
         end
