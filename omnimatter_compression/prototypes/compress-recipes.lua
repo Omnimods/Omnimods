@@ -339,7 +339,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                 for _, ing in pairs(recipe.ingredients) do
                     ing.amount = (ing.amount/div) * rocket_mult -- More rockets
                 end
-                recipe.energy_required = (recipe.energy_required / div) * rocket_mult -- Rockets
+                recipe.energy_required = ((recipe.energy_required or 0.5) / div) * rocket_mult -- Rockets
             end
         end
         return recipe
@@ -472,11 +472,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                     end
                                     --new crafting time calculations
                                     local tid = {}
-                                    if recipe.energy_required then
-                                        tid = recipe.energy_required * mult
-                                    else
-                                        tid = mult
-                                    end
+                                    tid = (recipe.energy_required or 0.5) * mult
                                     if not single_stack then
                                         tid = tid / gcd
                                     end
@@ -527,7 +523,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                             for _,ing in pairs(r.ingredients) do
                                                 ing.amount = math.ceil(ing.amount/r.results[1].amount)
                                             end
-                                            r.energy_required = math.max(0.0011, r.energy_required/r.results[1].amount)
+                                            r.energy_required = math.max(0.0011, (r.energy_required or 0.5)/r.results[1].amount)
                                             r.results[1].amount=1
                                         end
                                     end

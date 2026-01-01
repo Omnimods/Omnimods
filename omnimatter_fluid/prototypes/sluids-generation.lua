@@ -372,7 +372,7 @@ for name, _ in pairs(recipe_mods) do
         end
         --crafting time adjustment
         if rec.energy_required then
-            rec.energy_required = math.max(rec.energy_required*mult, 0.0011)
+            rec.energy_required = math.max((rec.energy_required or 0.5) * mult, 0.0011)
         end
         --Apply stack size fixes
         if fix_stacksize then
