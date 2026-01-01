@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.2.7
+Date: ????
+  Bugfixes:
+    - Fixed a crash with recipes where energy_required is not defined
+    - Fixed a crash with certain recipes that have no ingredient table
+---------------------------------------------------------------------------------------------------
 Version: 4.2.6
 Date: 2025.01.14
   Bugfixes:
