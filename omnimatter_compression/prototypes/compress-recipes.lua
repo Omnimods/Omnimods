@@ -450,7 +450,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                         end
                                     end
                                 end
-                                
+
                                 -- finish finding gcd before applying calculation to parts
                                 for b, io_type in pairs({"ingredients","results"}) do
                                     for _, item_type in pairs{"solid", "fluid"} do
@@ -785,6 +785,32 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
             if ent.fixed_recipe and string.find(ent.name, "-compressed") and string.find(ent.crafting_categories[1],"-compressed") and not string.find(ent.fixed_recipe, "-compressed") then
                 if data.raw.recipe[ent.fixed_recipe.."-compression"] then
                     ent.fixed_recipe = ent.fixed_recipe.."-compression"
+                end
+            end
+        end
+    end
+
+    -------------------------------------------------------------------------------
+    --[[Register compressed recipes for technology productivity]]--
+    -------------------------------------------------------------------------------
+    for _,tech in pairs(data.raw.technology) do
+        if not omni.compression.is_hidden(tech) then
+            if tech.effects then
+                local t_effects = {}
+                local found = false
+
+                for _, eff in pairs(tech.effects) do
+                    if eff.type == "change-recipe-productivity" and data.raw.recipe[eff.recipe.."-compression"] then
+                        found = true
+                        t_effects[#t_effects+1] = {
+                            change = eff.change,
+                            recipe = eff.recipe.."-compression",
+                            type = "change-recipe-productivity"
+                        }
+                    end
+                end
+                if found then
+                    tech.effects = omni.lib.union(tech.effects, t_effects)
                 end
             end
         end
