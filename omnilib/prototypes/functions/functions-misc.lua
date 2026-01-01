@@ -26,25 +26,25 @@ omni.lib.ore_tints = {--can add to the tint table with table.insert(omni.lib.ore
     ["stone"]     = {r = 0.690, g = 0.611, b = 0.427}, -- vanilla
     ["uranium"]   = {r = 0    , g = 0.7  , b = 0    }, -- vanilla
     ["omnite"]    = {r = 0.396, g = 0    , b = 0.729}, -- omni
-    ["tin"]       = {r = 0.85 , g = 0.85 , b = 0.85 }, --made a bit darker, normally all 0.95, barely distinguishable from quartz tho. map_color = {r = 0.600, g = 0.600, b = 0.600}
-    ["lead"]      = {r = 0.5  , g = 0.5  , b = 0.5  }, --map_color = {r=0.0, g=0.0, b=0.50}
-    ["titanium"]  = {r = 0.8  , g = 0.55 , b = 0.7  }, --map_color = {r=0.610, g=0.325, b=0.500}
-    ["silicon"]   = {r = 1    , g = 1    , b = 1    }, --map_color = {r = 1, g = 1, b = 1}
+    ["bob-tin"]       = {r = 0.85 , g = 0.85 , b = 0.85 }, --made a bit darker, normally all 0.95, barely distinguishable from quartz tho. map_color = {r = 0.600, g = 0.600, b = 0.600}
+    ["bob-lead"]      = {r = 0.5  , g = 0.5  , b = 0.5  }, --map_color = {r=0.0, g=0.0, b=0.50}
+    ["bob-titanium"]  = {r = 0.8  , g = 0.55 , b = 0.7  }, --map_color = {r=0.610, g=0.325, b=0.500}
+    ["bob-silicon"]   = {r = 1    , g = 1    , b = 1    }, --map_color = {r = 1, g = 1, b = 1}
+    ["bob-nickel"]    = {r = 0.54 , g = 0.8  , b = 0.75 }, --map_color = {r=0.4, g=0.8, b=0.6}
+    ["bob-zinc"]      = {r = 0.34 , g = 0.9  , b = 0.81 }, --map_color = {r=0.5, g=1, b=1}
+    ["bob-silver"]    = {r = 0.875, g = 0.975, b = 1    }, --map_color = {r=0.7, g=0.9, b=0.9}
+    ["bob-gold"]      = {r = 1    , g = 0.75 , b = 0    }, --map_color = {r=1, g=0.7, b=0}
+    ["bob-tungsten"]  = {r = 0.75 , g = 0.5  , b = 0.25 }, --map_color = {r = 0.5, g = 0.0, b = 0.0}
+    ["bob-platinum"]  = {r = 1    , g = 1    , b = 1    },
+    ["bob-thorium"]   = {r = 1    , g = 1    , b = 0.25 }, --map_color = {r = 0.75, g = 1, b = 0.25}
+    ["bob-cobalt"]    = {r = 0.3  , g = 0.53 , b = 0.77 }, --map_color = {r=0.18, g=0.35, b=0.53}
     ["quartz"]    = {r = 1    , g = 1    , b = 1    }, --map_color = {r = 1, g = 1, b = 1}
-    ["nickel"]    = {r = 0.54 , g = 0.8  , b = 0.75 }, --map_color = {r=0.4, g=0.8, b=0.6}
-    ["zinc"]      = {r = 0.34 , g = 0.9  , b = 0.81 }, --map_color = {r=0.5, g=1, b=1}
-    ["silver"]    = {r = 0.875, g = 0.975, b = 1    }, --map_color = {r=0.7, g=0.9, b=0.9}
-    ["gold"]      = {r = 1    , g = 0.75 , b = 0    }, --map_color = {r=1, g=0.7, b=0}
-    ["tungsten"]  = {r = 0.75 , g = 0.5  , b = 0.25 }, --map_color = {r = 0.5, g = 0.0, b = 0.0}
     ["manganese"] = {r = 1    , g = 1    , b = 1    },
     ["chrome"]    = {r = 1    , g = 1    , b = 1    },
-    ["platinum"]  = {r = 1    , g = 1    , b = 1    },
-    ["thorium"]   = {r = 1    , g = 1    , b = 0.25 }, --map_color = {r = 0.75, g = 1, b = 0.25}
-    ["cobalt"]    = {r = 0.3  , g = 0.53 , b = 0.77 }, --map_color = {r=0.18, g=0.35, b=0.53}
     ["aluminium"] = {r = 0.777, g = 0.7  , b = 0.333}, --map_color = {r=0.777, g=0.7, b=0.333}
     ["sulfur"]    = {r = 0.8  , g = 0.75 , b = 0.1  }, --map_color = {r=1, g=1, b=0}
-    ["bauxite"]   = {r = 0.777, g = 0.7  , b = 0.333}, --<-- map_color only
-    ["rutile"]    = {r = 0.8  , g = 0.55 , b = 0.7  }, --map_color = {r=0.610, g=0.325, b=0.500}
+    ["bob-bauxite"]   = {r = 0.777, g = 0.7  , b = 0.333}, --<-- map_color only
+    ["bob-rutile"]    = {r = 0.8  , g = 0.55 , b = 0.7  }, --map_color = {r=0.610, g=0.325, b=0.500}
     ["gems"]      = {r = 0.25 , g = 1    , b = 0.25 }, --<-- map_color only
     ["raw-imersite"] = {r = 1 , g = 0.5     , b = 1    }, --<-- map_color only
     ["raw-rare-metals"] = {r = 0.6, g = 0.3, b = 1  }, --<-- map_color only

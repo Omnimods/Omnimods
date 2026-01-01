@@ -33,23 +33,23 @@ else
     omni.matter.add_initial("copper-ore", 1, 7)
     if bobmods and bobmods.ores then
         local has_gems = settings.startup["bobmods-ores-unsortedgemore"].value
-        local levels={        
+        local levels={
             --["iron-ore"]=1,
             --["copper-ore"]=1,
-            ["lead-ore"]=1,
-            ["tin-ore"]=1,
-            ["quartz"]=2,
-            ["zinc-ore"]=2,
-            ["nickel-ore"]=2,
-            ["bauxite-ore"]=2,
-            ["rutile-ore"]=3,
-            ["gold-ore"]=3,
-            ["cobalt-ore"]=3,
-            ["silver-ore"]=3,
-            ["tungsten-ore"]=3,
+            ["bob-lead-ore"]=1,
+            ["bob-tin-ore"]=1,
+            ["bob-quartz"]=2,
+            ["bob-zinc-ore"]=2,
+            ["bob-nickel-ore"]=2,
+            ["bob-bauxite-ore"]=2,
+            ["bob-rutile-ore"]=3,
+            ["bob-gold-ore"]=3,
+            ["bob-cobalt-ore"]=3,
+            ["bob-silver-ore"]=3,
+            ["bob-tungsten-ore"]=3,
             --["uranium-ore"]=3,
-            ["thorium-ore"]=3,
-            ["gem-ore"]=has_gems and 3 or nil,
+            ["bob-thorium-ore"]=3,
+            ["bob-gem-ore"]=has_gems and 3 or nil,
             ["sulfur"]=2
         }
         for i, ore in pairs(bobmods.ores) do --check ore triggers (works with plates)
@@ -63,9 +63,9 @@ else
         end
         --Force Gem ore, certain bob settings disable it in the table checked above
         if has_gems then
-            omni.matter.add_resource("gem-ore", 3)
+            omni.matter.add_resource("bob-gem-ore", 3)
         end
-        omni.matter.add_fluid("lithia-water", 2, 1)
+        omni.matter.add_fluid("bob-lithia-water", 2, 1)
     end
 end
 

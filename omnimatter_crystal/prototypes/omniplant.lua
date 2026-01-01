@@ -18,8 +18,8 @@ end
 --SETTING VANILLA INGREDIENTS FIRST
 local pipe="pipe"
 local electronic="electronic-circuit"
-if mods["boblogistics"] then pipe="copper-pipe" end
-if mods["bobelectronics"] then electronic="basic-circuit-board" end
+if mods["boblogistics"] then pipe = "bob-copper-pipe" end
+if mods["bobelectronics"] then electronic = "bob-basic-circuit-board" end
 
 local burner_ings = {}
 if mods["angelsindustries"] and angelsmods.industries.components then

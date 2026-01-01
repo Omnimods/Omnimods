@@ -12,7 +12,7 @@ end
 
 if settings.startup["omniwood-pure-wood-only"].value then
     if mods["bobelectronics"] then
-        omni.lib.remove_recipe_all_techs("synthetic-wood")
+        omni.lib.remove_recipe_all_techs("bob-synthetic-wood")
         omni.lib.remove_recipe_all_techs("bob-resin-wood")
     end
 end

@@ -1,7 +1,7 @@
 
 omni.crystal.metals = {}
 
-local salt_omnide_icon = function(metal)
+local function salt_omnide_icon(metal)
     --Build the icons table
     local icons = util.combine_icons(
         {{
@@ -19,71 +19,71 @@ local salt_omnide_icon = function(metal)
 end
 
 
-omni.crystal.add_crystal=function(metal,name,recipe)
-    if data.raw.item[metal] and not data.raw.recipe[metal.."-crystal"] then
-        omni.crystal.metals[#omni.crystal.metals+1]=data.raw.item[metal]
+function omni.crystal.add_crystal(ore_name, metal_name)
+    if data.raw.item[ore_name] and not data.raw.recipe[ore_name.."-crystal"] then
+        omni.crystal.metals[#omni.crystal.metals+1]=data.raw.item[ore_name]
 
-        RecGen:create("omnimatter_crystal", metal.."-crystal"):
-            setLocName("recipe-name.crystal", name):
+        RecGen:create("omnimatter_crystal", ore_name.."-crystal"):
+            setLocName("recipe-name.crystal", metal_name):
             --setFuelValue(35):
             --setFuelCategory("crystal"):
             setSubgroup("crystallization"):
-            setOrder("a["..metal.."-crystal]"):
+            setOrder("a["..ore_name.."-crystal]"):
             setStacksize(500):
-            setIcons({metal.."-crystal", 32}):
+            setIcons({ore_name.."-crystal", 32}):
             setCategory("omniplant"):
             setIngredients({
                 {type = "item", name = "omnine-shards", amount = 1},
-                {type = "fluid", name = metal.."-omnide-solution", amount = 120},
+                {type = "fluid", name = ore_name.."-omnide-solution", amount = 120},
                 {type = "fluid", name = "omnisludge", amount = 120},
                 }):
-            setResults({type = "item", name = metal.."-crystal", amount=10}):
+            setResults({type = "item", name = ore_name.."-crystal", amount=10}):
             setEnergy(2.5):
             extend()
 
-        ItemGen:create("omnimatter_crystal", metal.."-omnide-salt"):
-            setLocName("item-name.omnide-salt", name):
+        ItemGen:create("omnimatter_crystal", ore_name.."-omnide-salt"):
+            setLocName("item-name.omnide-salt", metal_name):
             setIcons({"omnide-salt", 32}):
-            addSmallIcon(metal,3):
+            addSmallIcon(ore_name, 3):
             setSubgroup("crystallization"):
             setStacksize(200):
             extend()
 
-        RecGen:create("omnimatter_crystal", metal.."-omnide-solution"):
-            setLocName("recipe-name.ore-solvation", name):
+        RecGen:create("omnimatter_crystal", ore_name.."-omnide-solution"):
+            setLocName("recipe-name.ore-solvation", metal_name):
             fluid():
-            setBothColour(omni.lib.ore_tints[string.lower(name)] or {1,1,1}):
+            setBothColour(omni.lib.ore_tints[string.lower(metal_name)] or {1,1,1}):
             setSubgroup("solvation"):
-            setOrder("a["..metal.."-omnide-solution]"):
+            setOrder("a["..ore_name.."-omnide-solution]"):
             setIcons({"omnide-solution", 32}):
-            addSmallIcon(metal,3):
+            addSmallIcon(ore_name, 3):
             setCategory("omniplant"):
             setIngredients({
-                {type = "item", name = metal.."-omnide-salt", amount = 1},
+                {type = "item", name = ore_name.."-omnide-salt", amount = 1},
                 {type = "fluid", name = "water", amount = 100},
                 }):
-            setResults({type = "fluid", name = metal.."-omnide-solution", amount=120}):
+            setResults({type = "fluid", name = ore_name.."-omnide-solution", amount=120}):
             setEnergy(2.5):
             extend()
 
         --Since vanilla creates barrel recipes in data-updates, we need to create barreling recipes for this manually
-        omni.lib.create_barrel(metal.."-omnide-solution")
+        omni.lib.create_barrel(ore_name.."-omnide-solution")
 
-        RecGen:create("omnimatter_crystal", metal.."-crystal-omnitraction"):
-            setLocName("recipe-name.crystal-omnitraction","item-name."..metal):
+        RecGen:create("omnimatter_crystal", ore_name.."-crystal-omnitraction"):
+            setLocName("recipe-name.crystal-omnitraction","item-name."..ore_name):
             setSubgroup("traction"):
-            setOrder("a["..metal.."-crystal-omnitraction]"):
-            setIcons(metal):
+            setOrder("a["..ore_name.."-crystal-omnitraction]"):
+            setIcons(ore_name):
             setCategory("omnite-extraction"):
             addProductivity():
-            setIngredients({type = "item", name = metal.."-crystal", amount=3}):
-            setResults({type = "item", name = metal, amount=4}):
+            setIngredients({type = "item", name = ore_name.."-crystal", amount=3}):
+            setResults({type = "item", name = ore_name, amount=4}):
             setEnergy(1.5):
             extend()
     end
 end
 
-local ingrediences_solvation=function(recipe)
+local function ingrediences_solvation(recipe)
     local ing = {}
     ing[#ing+1]={type = "fluid", name = "hydromnic-acid", amount = 120}
     for _, i in pairs(data.raw.recipe[recipe].ingredients) do
@@ -94,7 +94,7 @@ local ingrediences_solvation=function(recipe)
     return ing
 end
 
-local results_solvation=function(recipe)
+local function results_solvation(recipe)
     local ing = {}
     --ing[#ing+1]={type = "fluid", name = "hydromnic-acid", amount = 120}
     for _, i in pairs(data.raw.recipe[recipe].results) do
@@ -106,9 +106,7 @@ local results_solvation=function(recipe)
     return ing
 end
 
-
---Dead function ?
-omni.crystal.add_recipe=function(recipe,name)
+function omni.crystal.add_recipe(recipe,name)
     crystalines={}
     local ing = ingrediences_solvation(recipe)
     local res = results_solvation(recipe)

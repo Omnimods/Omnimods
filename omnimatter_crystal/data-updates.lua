@@ -61,8 +61,6 @@ if not mods["angelsrefining"] then
         if string.find(rec.name,"crystal") and omni.lib.end_with(rec.name,"omnitraction") and rec.category=="omnite-extraction" then
             local ore = rec.results[1].name
             added_ores[#added_ores+1] = ore
-            local metal = string.gsub(ore,"-ore","")
-            local metal_formatted = metal:sub(1,1):upper() .. metal:sub(2)
 
             local tier = 1
             for _,t in pairs(omni.matter.omnisource) do
@@ -72,7 +70,7 @@ if not mods["angelsrefining"] then
                     end
                 end
             end
-            
+
             --Create salting recipes
             RecGen:create("omnimatter_crystal", ore.."-salting"):
                 setIngredients({
@@ -96,6 +94,14 @@ if not mods["angelsrefining"] then
             omni.lib.add_unlock_recipe("omnitech-crystallology-"..tier, ore.."-crystal")
 
             --Create crystal powder item if it doesnt exist yet
+            local metal = string.gsub(ore,"-ore","")
+            local metal_formatted = ""
+            if bobmods and bobmods.ores then
+                metal_formatted = string.gsub(metal, "bob%-", "")
+                metal_formatted = metal_formatted:sub(1,1):upper() .. metal_formatted:sub(2)
+            else
+                metal_formatted = metal:sub(1,1):upper() .. metal:sub(2)
+            end
             if not data.raw.item["crystal-powder-"..metal] then
                 ItemGen:create("omnimatter_crystal", "crystal-powder-"..metal):
                     setLocName({"item-name.crystal-powder", metal_formatted}):
