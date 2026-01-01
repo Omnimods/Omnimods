@@ -716,9 +716,11 @@ function ItemGen:addMask(...)
     return self
 end
 function ItemGen:addIconLevel(lvl)
-    self:addIcon({icon = "__omnilib__/graphics/icons/small/lvl"..lvl..".png",
-    icon_size=64,
-    scale=1.0})
+    self:addIcon({
+        icon = "__omnilib__/graphics/icons/small/lvl"..lvl..".png",
+        icon_size=64,
+        scale=1.0
+    })
     return self
 end
 function ItemGen:setName(lvl,mod)
@@ -1150,7 +1152,6 @@ function ItemGen:generate_item()
         fuel_category = self.fuel_category,
         subgroup = self.subgroup(0,0),
         order = self.order(0,0),
-        --icon_size = self.icon_size or defines.default_icon_size,
         stack_size = self.stack_size,
         default_temperature = self.default_temperature,
         heat_capacity=self.heat_capacity,
@@ -1237,7 +1238,7 @@ function RecGen:import(rec)
                 setPlace(proto.place_result):
                 setSubgroup(proto.subgroup):
                 setOrder(proto.order):
-                setIcons(proto.icons or proto.icon or omni.lib.icon.of(proto, true)):
+                setIcons(proto.icons or omni.lib.icon.of(proto, true)):
                 setFuelValue(proto.fuel_value)
                 if proto.fuel_category then r:setFuelCategory(proto.fuel_category) end
                 if proto.place_as_tile then r:tile():setPlace(proto.place_as_tile.result) end
@@ -1261,7 +1262,8 @@ function RecGen:import(rec)
         setCategory(recipe.category):
         setSubgroup(recipe.subgroup or r.subgroup(0,0)):
         setOrder(recipe.order or r.order(0,0)):
-        setIcons(recipe.icons or recipe.icon or r.icons(0,0) or omni.lib.icon.of(recipe, true)):
+        --setIcons(recipe.icons or recipe.icon or r.icons(0,0) or omni.lib.icon.of(recipe, true)):
+        setIcons(recipe.icons or r.icons(0,0) or omni.lib.icon.of(recipe, true)):
         setHidden(recipe.hidden or false):
         showAmount(recipe.show_amount_in_title):
         showProduct(recipe.always_show_products)
@@ -1885,7 +1887,7 @@ function RecGen:generate_recipe()
         show_amount_in_title = self.show_amount,
         always_show_products = self.show_product,
         icons = self.icons(0,0),
-        icon_size = defines.default_icon_size,
+        --icon_size = defines.default_icon_size,
     }
     return self
 end
