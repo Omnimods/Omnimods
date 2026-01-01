@@ -161,7 +161,7 @@ BuildGen:create("omnimatter_energy","omnium-reactor"):
     setSubgroup("omnielectrobuildings"):
     setStacksize(20):
     setEnergy(30):
-    setIngredients({"omnium-plate",50},{"basic-oscillo-crystallonic",3},{"boiler",10},{"omnium-steel-gear-box",10}):
+    setIngredients({"omnium-plate",50},{"basic-oscillo-crystallonic",3},{"boiler",10},{component["gear-box"][2],10}):
     setFluidBox("XWXWX.XXXXX.XXXXX.XXXXX.KXKXK"):
     ifModsReplaceIngredients("bobpower","boiler","boiler-3"):
     setTechName("omnium-power"):

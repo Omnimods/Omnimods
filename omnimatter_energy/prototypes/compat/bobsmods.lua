@@ -5,19 +5,11 @@ if mods["angelsindustries"] and angelsmods.industries.components then
 end
 
 if mods["bobpower"] then
-    --Bob has a steam power tech as well.
-    --Remove unlocks (they are already unlocked by our tech)
-    omni.lib.remove_unlock_recipe ("bob-steam-power", "steam-engine")
-    omni.lib.remove_unlock_recipe ("bob-steam-power", "boiler")
-    --Point prereqs to our techs again
-    omni.lib.set_prerequisite("bob-steam-engine-2", "omnitech-steam-power")
-    omni.lib.set_prerequisite("bob-boiler-2", "omnitech-steam-power")
-    omni.lib.set_prerequisite("automation", "automation-science-pack")
-    omni.lib.set_prerequisite("lamp", "automation-science-pack")
+    -- --Point prereqs to our techs again
+    omni.lib.set_prerequisite("bob-steam-engine-2", "steam-power")
+    omni.lib.set_prerequisite("bob-boiler-2", "steam-power")
 
     --Disable and hide bobs tech
-    if data.raw.technology["bob-steam-power"] then data.raw.technology["bob-steam-power"].hidden = true end
-
     if data.raw.technology["bob-solar-energy-2"] then data.raw.technology["bob-solar-energy-2"].hidden = true end
     if data.raw.technology["bob-solar-energy-3"] then data.raw.technology["bob-solar-energy-3"].hidden = true end
     if data.raw.technology["bob-solar-energy-4"] then data.raw.technology["bob-solar-energy-4"].hidden = true end
