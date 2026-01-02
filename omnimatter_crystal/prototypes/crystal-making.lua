@@ -21,7 +21,7 @@ end
 
 function omni.crystal.add_crystal(ore_name, metal_name)
     if data.raw.item[ore_name] and not data.raw.recipe[ore_name.."-crystal"] then
-        omni.crystal.metals[#omni.crystal.metals+1]=data.raw.item[ore_name]
+        omni.crystal.metals[#omni.crystal.metals+1] = data.raw.item[ore_name]
 
         RecGen:create("omnimatter_crystal", ore_name.."-crystal"):
             setLocName("recipe-name.crystal", metal_name):

@@ -193,7 +193,7 @@ if angelsmods and angelsmods.refining then
                         energy_required = 5,
                     }
 
-                    crystalines[#crystalines+1]=solution
+                    crystalines[#crystalines+1] = solution
                     --"angels-ore-crushed-mix1-processing"
                     --adding unlocks in sequence, once unlocked, add exclusion...
 
@@ -218,7 +218,7 @@ if angelsmods and angelsmods.refining then
                     -- Force unlock recipe since data:extend() is called later
                     omni.lib.add_unlock_recipe("omnitech-crystallology-"..tier, metal.."-salting", true)
                     --check and set unlock tier
-                    for _,ore in pairs(res) do
+                    for _,ore in pairs(results) do
                         if not processed[ore.name] then
                             processed[ore.name]=tier
                         end
@@ -234,9 +234,7 @@ if angelsmods and angelsmods.refining then
     for _,suf in pairs(suffixes) do
         for ore,i in pairs(processed) do
             if ore~="slag" then
-                for _,eff in pairs(data.raw.technology["omnitech-crystallology-"..math.min(i,maxcrystaltech)].effects) do
-                    omni.lib.add_unlock_recipe("omnitech-crystallology-"..math.min(i,maxcrystaltech), ore..suf)
-                end
+                omni.lib.add_unlock_recipe("omnitech-crystallology-"..math.min(i,maxcrystaltech), ore..suf)
             end
         end
     end
