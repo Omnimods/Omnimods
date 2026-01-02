@@ -71,10 +71,10 @@ if mods["angelsbioprocessing"] then
         omni.lib.replace_recipe_result("angels-wood-sawing-manual","wood","omniwood")
         omni.lib.remove_recipe_all_techs("bob-greenhouse")
 
-        data.raw.recipe["angels-wood-sawing-manual"].icons[1].icon = data.raw.item["omniwood"].icons[1].icon
-        data.raw.recipe["angels-wood-sawing-manual"].icons[1].icon_size = 32
-        data.raw.recipe["angels-wood-sawing-manual"].icons[1].scale = 1
-        data.raw.recipe["angels-wood-sawing-manual"].localised_name = {"item-name.omniwood"}
+        -- data.raw.recipe["wood-sawing-manual"].icons[1].icon = data.raw.item["omniwood"].icons[1].icon
+        -- data.raw.recipe["wood-sawing-manual"].icons[1].icon_size = 32
+        -- data.raw.recipe["wood-sawing-manual"].icons[1].scale = 1
+        -- data.raw.recipe["wood-sawing-manual"].localised_name = {"item-name.omniwood"}
     end
 
     RecGen:importIf("angels-solid-soil"):
