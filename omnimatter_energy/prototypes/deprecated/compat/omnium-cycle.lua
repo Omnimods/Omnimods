@@ -13,8 +13,8 @@ if not mods["angelssmelting"] then
     
 --[[{
     type = "fluid",
-    name = "angels-liquid-coolant",
-    icon = "__angelssmelting__/graphics/icons/angels-liquid-coolant.png",
+    name = "liquid-coolant",
+    icon = "__angelssmelting__/graphics/icons/liquid-coolant.png",
     icon_size = 32,
     default_temperature = 25,
     heat_capacity = "0.1kJ",
@@ -24,8 +24,8 @@ if not mods["angelssmelting"] then
 },
 {
     type = "fluid",
-    name = "angels-liquid-coolant-used",
-    icon = "__angelssmelting__/graphics/icons/angels-liquid-coolant-used.png",
+    name = "liquid-coolant-used",
+    icon = "__angelssmelting__/graphics/icons/liquid-coolant-used.png",
     icon_size = 32,
     default_temperature = 25,
     heat_capacity = "0.1kJ",

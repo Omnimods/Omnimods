@@ -154,7 +154,6 @@ end
 
 for _,tier in pairs(omni.matter.omnifluid) do
     for _, fluid in pairs(tier) do
-        if not data.raw.fluid[fluid.name] then error("Fluid "..fluid.name.." not found!") end
         local cost = OmniGen:create():
             setYield(fluid.name):
             setIngredients("omnite"):

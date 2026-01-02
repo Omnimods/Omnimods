@@ -1,9 +1,6 @@
 ---------------------------------------------------------------------------------------------------
-Version: 4.2.6
-Date: ????
-  Changes:
-    - Updated compat for Angelsmods
----------------------------------------------------------------------------------------------------
+<<<<<<< Updated upstream
+=======
 Version: 4.2.5
 Date: 2026-01-02
   Changes:
@@ -12,6 +9,7 @@ Date: 2026-01-02
     - Fixed small icons of dynamic extraction recipes / technologies having a wrong scale  and
       shift with certain mods
 ---------------------------------------------------------------------------------------------------
+>>>>>>> Stashed changes
 Version: 4.2.4
 Date: 2024.12.16
   Bugfixes:
@@ -40,7 +38,7 @@ Date: 2024.11.19
 Version: 4.1.38
 Date: ????
   Changes:
-    - Halfed the amount of crushed and pulverized omnite produced / consumed for each recipe
+      - Halfed the amount of crushed and pulverized omnite produced / consumed for each recipe
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.37
 Date: 2023.11.05
