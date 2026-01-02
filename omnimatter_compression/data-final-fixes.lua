@@ -5,9 +5,7 @@ if mods["bobpower"] and mods["bobrevamp"] and mods["bobplates"] then
     local tierless_buildings = omni.compression.tierless_buildings
     tierless_buildings["nuclear-reactor-3"] = true
     tierless_buildings["nuclear-reactor-2"] = true
-    if settings.startup["bobmods-plates-nuclearupdate"].value == true or mods["bobores"] then
-        tierless_buildings["nuclear-reactor"] = true
-    end
+    tierless_buildings["nuclear-reactor"] = true
 end
 
 require("prototypes/compress-items")

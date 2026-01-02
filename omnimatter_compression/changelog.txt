@@ -1,6 +1,9 @@
 ---------------------------------------------------------------------------------------------------
-<<<<<<< Updated upstream
-=======
+Version: 4.2.8
+Date: 2026-01-02
+  Bugfixes:
+    - Updated for new release of Bovrevamp (Removed nuclear setting)
+---------------------------------------------------------------------------------------------------
 Version: 4.2.7
 Date: 2026-01-02
   Bugfixes:
@@ -10,7 +13,6 @@ Date: 2026-01-02
     - Fixed a crash with certain recipes that have no ingredient table
     - Fixed recipe productivity unlocked by techs not being applied to compressed recipes
 ---------------------------------------------------------------------------------------------------
->>>>>>> Stashed changes
 Version: 4.2.6
 Date: 2025.01.14
   Bugfixes:
