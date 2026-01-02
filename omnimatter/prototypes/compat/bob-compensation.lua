@@ -6,7 +6,7 @@ if bobmods and bobmods.ores and settings.startup["bobmods-ores-unsortedgemore"].
             energy_required = 1,
             icon_size = 32,
             ingredients = {
-                {"bob-gem-ore", 1},
+                {type="item", name = "bob-gem-ore", amount = 1},
             },
             results = {
                 {type="item", name="bob-ruby-ore", amount=1, probability = bobmods.gems.RubyRatio},
@@ -30,6 +30,6 @@ if bobmods and bobmods.ores and settings.startup["bobmods-ores-unsortedgemore"].
 end
 
 if mods["bobplates"] then
-    omni.matter.add_omnium_alloy("bob-aluminium","bob-aluminium-plate","bob-ingot-aluminium")
-    omni.matter.add_omnium_alloy("bob-tungsten","bob-tungsten-plate","bob-casting-powder-tungsten")
+    omni.matter.add_omnium_alloy("aluminium","bob-aluminium-plate","ingot-aluminium")
+    omni.matter.add_omnium_alloy("tungsten","bob-tungsten-plate","casting-powder-tungsten")
 end

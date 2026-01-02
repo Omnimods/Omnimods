@@ -23,7 +23,7 @@ component["angels-comp-plate"]={"copper-plate", "iron-plate", "steel-plate","ang
 component["angel-bob-plate"]={"iron-plate", "copper-plate", "tin-plate", "lead-plate", "silver-plate", "zinc-plate", "nickel-plate", "cobalt-plate", "angels-plate-manganese", "gold-plate", "aluminium-plate", "tungsten-plate", "titanium-plate", "angels-plate-chrome", "angels-plate-platinum"}
 component["vanilla-omniplate"]= {"omnium-plate","omnium-iron-alloy","omnium-steel-alloy"}
 component["omni-alloys"] = {"omnium-plate","omnium-iron-alloy","omnium-steel-alloy"}
-component["omni-bob-alloys"] = {"omnium-plate","omnium-iron-alloy","omnium-steel-alloy", "omnium-bob-aluminium-alloy", "omnium-bob-tungsten-alloy"}
+component["omni-bob-alloys"] = {"omnium-plate","omnium-iron-alloy","omnium-steel-alloy", "omnium-aluminium-alloy", "omnium-tungsten-alloy"}
 -- GEARS
 component["vanilla-gear-wheel"] = {"iron-gear-wheel"}
 component["bob-gear-wheel"] = {"iron-gear-wheel", "bob-steel-gear-wheel", "bob-brass-gear-wheel", "bob-cobalt-steel-gear-wheel", "bob-titanium-gear-wheel", "bob-tungsten-gear-wheel", "bob-nitinol-gear-wheel"}
