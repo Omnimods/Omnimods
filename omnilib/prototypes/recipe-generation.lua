@@ -640,16 +640,14 @@ end
 
 function ItemGen:addIcon(icon)
     local oldIcons = table.deepcopy(self.icons(0,0))
-    if not oldIcons[1].scale then oldIcons[1].scale = (defines.default_icon_size / 2) /  oldIcons[1].icon_size or defines.default_icon_size end
+    if not oldIcons[1].scale then oldIcons[1].scale = (defines.default_icon_size / 2) /  oldIcons[1].icon_size or defines.default_icon_size end -- In case no scale of the main icon is defined, we need to set it (0.5 for 64px)
     local first_layer_ic_sz = oldIcons[1].icon_size or defines.default_icon_size
     local a = function(levels,grade) return {} end
     if type(icon) == "table" and icon.icon then
         local f = string.match(icon.icon, "%_%_(.-)%_%_")
         --Full Path is there
         if f then
-            if icon.scale then
-                icon.scale = icon.scale * oldIcons[1].scale * (first_layer_ic_sz / icon.icon_size or defines.default_icon_size)
-            end
+            icon.scale = (icon.scale or 1) * oldIcons[1].scale * (first_layer_ic_sz / icon.icon_size or defines.default_icon_size)
             a = function(levels,grade) return {icon} end
         --Just a name given
         else
@@ -716,9 +714,11 @@ function ItemGen:addMask(...)
     return self
 end
 function ItemGen:addIconLevel(lvl)
-    self:addIcon({icon = "__omnilib__/graphics/icons/small/lvl"..lvl..".png",
-    icon_size=64,
-    scale=1.0})
+    self:addIcon({
+        icon = "__omnilib__/graphics/icons/small/lvl"..lvl..".png",
+        icon_size=64,
+        scale=1.0
+    })
     return self
 end
 function ItemGen:setName(lvl,mod)
@@ -766,7 +766,7 @@ function ItemGen:addSmallIcon(icon, nr)
             self:addIcon({
                 icon = ic.icon,
                 icon_size = ic_sz,
-                scale = 0.4375*(ic.scale or (defines.default_icon_size/ic_sz)),
+                scale = 0.4375 * (ic.scale or 1), -- Do not calculate any multiplicators to default / main icon scales yet as the relative comparison to the main icon is done in addIcon()
                 shift = quad[nr or 1], --currently "centres" the icon if it was already offset, may need to math that out
                 tint = ic.tint or nil})
         end
@@ -1150,7 +1150,6 @@ function ItemGen:generate_item()
         fuel_category = self.fuel_category,
         subgroup = self.subgroup(0,0),
         order = self.order(0,0),
-        --icon_size = self.icon_size or defines.default_icon_size,
         stack_size = self.stack_size,
         default_temperature = self.default_temperature,
         heat_capacity=self.heat_capacity,
@@ -1237,7 +1236,7 @@ function RecGen:import(rec)
                 setPlace(proto.place_result):
                 setSubgroup(proto.subgroup):
                 setOrder(proto.order):
-                setIcons(proto.icons or proto.icon or omni.lib.icon.of(proto, true)):
+                setIcons(proto.icons or omni.lib.icon.of(proto, true)):
                 setFuelValue(proto.fuel_value)
                 if proto.fuel_category then r:setFuelCategory(proto.fuel_category) end
                 if proto.place_as_tile then r:tile():setPlace(proto.place_as_tile.result) end
@@ -1261,7 +1260,8 @@ function RecGen:import(rec)
         setCategory(recipe.category):
         setSubgroup(recipe.subgroup or r.subgroup(0,0)):
         setOrder(recipe.order or r.order(0,0)):
-        setIcons(recipe.icons or recipe.icon or r.icons(0,0) or omni.lib.icon.of(recipe, true)):
+        --setIcons(recipe.icons or recipe.icon or r.icons(0,0) or omni.lib.icon.of(recipe, true)):
+        setIcons(recipe.icons or r.icons(0,0) or omni.lib.icon.of(recipe, true)):
         setHidden(recipe.hidden or false):
         showAmount(recipe.show_amount_in_title):
         showProduct(recipe.always_show_products)
@@ -1885,7 +1885,7 @@ function RecGen:generate_recipe()
         show_amount_in_title = self.show_amount,
         always_show_products = self.show_product,
         icons = self.icons(0,0),
-        icon_size = defines.default_icon_size,
+        --icon_size = defines.default_icon_size,
     }
     return self
 end

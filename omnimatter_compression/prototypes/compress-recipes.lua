@@ -339,7 +339,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                 for _, ing in pairs(recipe.ingredients) do
                     ing.amount = (ing.amount/div) * rocket_mult -- More rockets
                 end
-                recipe.energy_required = (recipe.energy_required / div) * rocket_mult -- Rockets
+                recipe.energy_required = ((recipe.energy_required or 0.5) / div) * rocket_mult -- Rockets
             end
         end
         return recipe
@@ -450,7 +450,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                         end
                                     end
                                 end
-                                
+
                                 -- finish finding gcd before applying calculation to parts
                                 for b, io_type in pairs({"ingredients","results"}) do
                                     for _, item_type in pairs{"solid", "fluid"} do
@@ -472,11 +472,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                     end
                                     --new crafting time calculations
                                     local tid = {}
-                                    if recipe.energy_required then
-                                        tid = recipe.energy_required * mult
-                                    else
-                                        tid = mult
-                                    end
+                                    tid = (recipe.energy_required or 0.5) * mult
                                     if not single_stack then
                                         tid = tid / gcd
                                     end
@@ -527,7 +523,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                             for _,ing in pairs(r.ingredients) do
                                                 ing.amount = math.ceil(ing.amount/r.results[1].amount)
                                             end
-                                            r.energy_required = math.max(0.0011, r.energy_required/r.results[1].amount)
+                                            r.energy_required = math.max(0.0011, (r.energy_required or 0.5)/r.results[1].amount)
                                             r.results[1].amount=1
                                         end
                                     end
@@ -554,7 +550,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                 --contains only fluids and results with no probability--
                                 -------------------------------------------------------------------------------
                             else --not not_only_fluids(recipe)
-                                --log(serpent.block(recipe.name .. " only_fluids"))
+                                --log(serpent.block(recipe))
                                 --------------------------------------------------
                                 -- **Copy base recipe** --
                                     -- no stack size shenanigans required for fluids
@@ -567,11 +563,13 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                 r.icon = nil
                                 r.category=new_cat
                                 r.subgroup = recipe.subgroup
-                                r.energy_required = concentrationRatio*r.energy_required
+                                r.energy_required = (r.energy_required or 0.5) * concentrationRatio --Default to 0.5
                                 r.hide_from_player_crafting = r.hide_from_player_crafting or omni.compression.hide_handcraft
                                 for _,ingres in pairs({"ingredients","results"}) do
-                                    for i,item in pairs(r[ingres]) do
-                                        r[ingres][i].name="concentrated-"..r[ingres][i].name
+                                    if r[ingres] then
+                                        for i,item in pairs(r[ingres]) do
+                                            r[ingres][i].name="concentrated-"..r[ingres][i].name
+                                        end
                                     end
                                 end
                                 comrec = r
@@ -787,6 +785,32 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
             if ent.fixed_recipe and string.find(ent.name, "-compressed") and string.find(ent.crafting_categories[1],"-compressed") and not string.find(ent.fixed_recipe, "-compressed") then
                 if data.raw.recipe[ent.fixed_recipe.."-compression"] then
                     ent.fixed_recipe = ent.fixed_recipe.."-compression"
+                end
+            end
+        end
+    end
+
+    -------------------------------------------------------------------------------
+    --[[Register compressed recipes for technology productivity]]--
+    -------------------------------------------------------------------------------
+    for _,tech in pairs(data.raw.technology) do
+        if not omni.compression.is_hidden(tech) then
+            if tech.effects then
+                local t_effects = {}
+                local found = false
+
+                for _, eff in pairs(tech.effects) do
+                    if eff.type == "change-recipe-productivity" and data.raw.recipe[eff.recipe.."-compression"] then
+                        found = true
+                        t_effects[#t_effects+1] = {
+                            change = eff.change,
+                            recipe = eff.recipe.."-compression",
+                            type = "change-recipe-productivity"
+                        }
+                    end
+                end
+                if found then
+                    tech.effects = omni.lib.union(tech.effects, t_effects)
                 end
             end
         end

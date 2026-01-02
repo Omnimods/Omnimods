@@ -197,7 +197,7 @@ setEnergy(30):
 setIngredients({
     {type = "item", name = "omniseedling", amount = 5},
     {type = "fluid", name = "omnic-water", amount = 50},
-    {type = "item", name = "fertiliser", amount = 5}
+    {type = "item", name = "bob-fertiliser", amount = 5}
 }):
 setTechName("bob-greenhouse"):
 setGenerationCondition(mods["bobgreenhouse"]~= nil and not mods["angelsbioprocessing"]):

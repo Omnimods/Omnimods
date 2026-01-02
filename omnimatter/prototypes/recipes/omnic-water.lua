@@ -64,7 +64,6 @@ for _, fluid in pairs(data.raw.fluid) do
             addSmallIcon(omni.lib.icon.of(fluid.name, "fluid"),3):
             setCategory("omniphlog"):
             setEnabled(fluid.name=="omnic-waste"):
-            --setSubgroup(fluid.subgroup):
             setSubgroup("omnilation"):
             --Same subgroup & order, but put the omnic water block behind all other recipes in that subgroup
             setOrder("zzz"..(fluid.order or "")):

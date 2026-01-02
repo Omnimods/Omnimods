@@ -372,7 +372,7 @@ for name, _ in pairs(recipe_mods) do
         end
         --crafting time adjustment
         if rec.energy_required then
-            rec.energy_required = math.max(rec.energy_required*mult, 0.0011)
+            rec.energy_required = math.max((rec.energy_required or 0.5) * mult, 0.0011)
         end
         --Apply stack size fixes
         if fix_stacksize then
@@ -496,8 +496,6 @@ end
 for _, jack in pairs(data.raw["mining-drill"]) do
     --Set the output vector for the solid item to the old output_fluidbox(if multiple are defined, use the first in the table) and nil the output_fluidbox
     if jack.output_fluid_box then
-        log(serpent.block(jack.name))
-        log(serpent.block(jack.output_fluid_box))
         local sluidbox = {0, -1.85}
         if jack.output_fluid_box.pipe_connections and jack.output_fluid_box.pipe_connections[1] then
             local pipe_con = jack.output_fluid_box.pipe_connections[1]

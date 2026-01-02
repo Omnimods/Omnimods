@@ -1,5 +1,5 @@
--- As of 1.1.0
--- Many thanks to TheRustyKnife for working out the inheritance tree
+-- As of 2.0.72
+-- Many thanks to TheRustyKnife for working out the initial inheritance tree for 1.0
 -- Top down: Start with our type and find the parent
 -- Bottom up: Start with a parent and find it"s children
 return {
@@ -233,6 +233,7 @@ return {
         ["asteroid-collector"] = "entity-with-owner",
         asteroid = "entity-with-owner",
         thruster = "entity-with-owner",
+        valve = "entity-with-owner",
     },
     bottom_up = {
         ["prototype-base"] = {
@@ -369,6 +370,7 @@ return {
                         },
                         ["heat-interface"] = {},
                         ["linked-container"] = {},
+                        valve = {},
                     },
                     fish = {},
                     ["simple-entity"] = {},

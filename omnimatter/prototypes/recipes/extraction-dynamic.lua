@@ -18,12 +18,14 @@ end
 
 local function generate_impure_icon(ore_name)
     local ore_icon = table.deepcopy(omni.lib.icon.of(ore_name, "item"))
-    for _, layer in pairs(ore_icon) do
-        layer.shift = {
-            5 * (64 / layer.icon_size),
-            (layer.icon_size * 0.5 + 5) * (64 / layer.icon_size)
+    for _, ic in pairs(ore_icon) do
+        ic.shift = {
+            16,
+            44
         }
     end
+    ore_icon[1].scale = (ore_icon[1].scale or 1) * 0.5 * (64 / ore_icon[1].icon_size)
+
     return omni.lib.add_overlay(
         {
             {
@@ -35,7 +37,7 @@ local function generate_impure_icon(ore_name)
                 icon = "__omnimatter__/graphics/icons/omnite.png",
                 icon_size = 64,
                 scale = 0.5,
-                shift = {-8, 32}
+                shift = {0, 32}
             }
         },
         ore_icon
@@ -44,12 +46,14 @@ end
 
 local function generate_pure_icon(ore_name)
     local ore_icon = table.deepcopy(omni.lib.icon.of(ore_name, "item"))
-    for _, layer in pairs(ore_icon) do
-        layer.shift = {
+    for _, ic in pairs(ore_icon) do
+        ic.shift = {
             0,
-            layer.icon_size * 0.5 * (64 / layer.icon_size)
+            32
         }
     end
+    ore_icon[1].scale = (ore_icon[1].scale or 1) * (64 / ore_icon[1].icon_size)
+
     return omni.lib.add_overlay(
         {
             {
@@ -79,7 +83,12 @@ local function check_mining_fluids(tier)
                 ore = string.gsub(v.name, "%-ore", "")
             end
 
-            local ore_icons = {{icon = "__omnimatter__/graphics/icons/ore_base_b.png", icon_size = 64}, omni.lib.add_ore_tint({icon = "__omnimatter__/graphics/icons/ore_base.png", icon_size = 64}, ore, 0.8)}
+            local ore_icons = {{
+                    icon = "__omnimatter__/graphics/icons/ore_base_b.png",
+                    icon_size = 64
+                },
+                omni.lib.add_ore_tint({icon = "__omnimatter__/graphics/icons/ore_base.png", icon_size = 64}, ore, 0.8)
+            }
             local cat = "omnite-extraction"
             if tier <= 1 then cat = "omnite-extraction-both" end
 
@@ -92,6 +101,8 @@ local function check_mining_fluids(tier)
                 setIcons(ore_icons):
                 extend()
 
+            local ic = omni.lib.icon.of(proto, true)
+            local fluid_ic = omni.lib.icon.of(v.fluid.name, true)
             local crude_rec =
                 RecGen:create("omnimatter", "crude-"..v.name):
                     setIngredients({"crude-"..v.name, 13}):
@@ -99,8 +110,8 @@ local function check_mining_fluids(tier)
                     setResults({v.name, 13}):
                     setOrder("z[refinement-"..tier.."-"..v.name.."]"):
                     setSubgroup("omni-pure"):
-                    setIcons(omni.lib.icon.of(proto, true)):
-                    addSmallIcon(v.fluid.name, 3):
+                    setIcons(ic):
+                    addSmallIcon(fluid_ic, 3):
                     setLocName({"recipe-name.crude-refinement", omni.lib.locale.of(proto).name}):
                     setEnergy(6.5):
                     setCategory(cat):
@@ -111,8 +122,6 @@ local function check_mining_fluids(tier)
             if omni.matter.omnitial[v.name] then
                 crude_rec:setEnabled(true)
             else
-                local ic = omni.lib.icon.of(proto)
-                local shift_mult = ic[1].icon_size / 64
                 crude_rec:setEnabled(false):
                     setTechName("omnitech-refinement-crude-"..v.name):
                     setTechLocName({"omnitech-crude-refinement", omni.lib.locale.of(proto).name}):
@@ -121,13 +130,13 @@ local function check_mining_fluids(tier)
                     setTechCost(25 * tier * tier * (tier > 1 and 1 or omni.beginning_tech_help)):
                     setTechIcons(
                         util.combine_icons(
-                        ic,
-                        omni.lib.icon.of(data.raw.fluid[v.fluid.name]),
-                        {
-                            scale = 0.4375 * 0.75 * ic[1].icon_size / 32,
-                            shift = {-22 * shift_mult, 30 * shift_mult}
-                        }
-                        ))
+                            ic,
+                            fluid_ic,
+                            {
+                                shift = {-48, 48}
+                            }
+                        )
+                    )
             end
 
             crude_rec:extend()
