@@ -1632,6 +1632,9 @@ function RecGen:replaceResults(...)
             a[2]={type="item",name=a[1],amount=a[2] or 1}
         end
     end
+    if self.main_product(0,0) and self.main_product(0,0) == arg[1][1] then
+        self.main_product = function(levels,grade) return arg[1][2] end
+    end
     local results = table.deepcopy(self.results)
     self.results=function(levels,grade) return replaceIngres(results(levels,grade),arg) end
     return self
