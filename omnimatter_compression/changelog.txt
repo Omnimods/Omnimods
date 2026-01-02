@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+<<<<<<< Updated upstream
+=======
+Version: 4.2.7
+Date: 2026-01-02
+  Bugfixes:
+    - Fixed a crash with recipes where energy_required is not defined
+    - Fixed certain recipe crafting times being off due to energy_required defaulting to 1
+      instead of 0.5 when not specified in the original recipe
+    - Fixed a crash with certain recipes that have no ingredient table
+    - Fixed recipe productivity unlocked by techs not being applied to compressed recipes
+---------------------------------------------------------------------------------------------------
+>>>>>>> Stashed changes
 Version: 4.2.6
 Date: 2025.01.14
   Bugfixes:
