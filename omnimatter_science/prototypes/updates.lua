@@ -62,29 +62,29 @@ if mods["omnimatter_crystal"] then
 
     --Angels
     if mods["angelsrefining"] then
-        omni.lib.replace_science_pack("angels-advanced-ore-refining-3", "chemical-science-pack", "omni-pack")
-        omni.lib.replace_science_pack("angels-ore-leaching", "chemical-science-pack", "omni-pack")
-        omni.lib.replace_science_pack("angels-ore-processing-2", "chemical-science-pack", "omni-pack")
-        omni.lib.replace_science_pack("angels-ore-processing-3", "production-science-pack", "omni-pack")
-        omni.lib.replace_science_pack("angels-ore-processing-4","utility-science-pack", "omni-pack")
-        omni.lib.replace_science_pack("angels-ore-leaching", "chemical-science-pack", "omni-pack")
-        omni.lib.replace_science_pack("angels-slag-processing-2", "chemical-science-pack", "omni-pack")
-        omni.lib.replace_science_pack("angels-thermal-water-extraction-2", "chemical-science-pack", "omni-pack")
-        omni.lib.replace_science_pack("angels-ore-powderizer", "chemical-science-pack", "omni-pack")
+        omni.lib.replace_science_pack("advanced-ore-refining-3", "chemical-science-pack", "omni-pack")
+        omni.lib.replace_science_pack("ore-leaching", "chemical-science-pack", "omni-pack")
+        omni.lib.replace_science_pack("ore-processing-2", "chemical-science-pack", "omni-pack")
+        omni.lib.replace_science_pack("ore-processing-3", "production-science-pack", "omni-pack")
+        omni.lib.replace_science_pack("ore-processing-4","utility-science-pack", "omni-pack")
+        omni.lib.replace_science_pack("ore-leaching", "chemical-science-pack", "omni-pack")
+        omni.lib.replace_science_pack("slag-processing-2", "chemical-science-pack", "omni-pack")
+        omni.lib.replace_science_pack("thermal-water-extraction-2", "chemical-science-pack", "omni-pack")
+        omni.lib.replace_science_pack("ore-powderizer", "chemical-science-pack", "omni-pack")
     end
 
     if mods["angelslogistics"] then
-        omni.lib.add_science_pack("cangels-argo-robots-2", "omni-pack")
+        omni.lib.add_science_pack("cargo-robots-2", "omni-pack")
     end
 
     if mods["angelspetrochem"] then
         omni.lib.replace_science_pack("angels-advanced-gas-processing","chemical-science-pack", "omni-pack")
         omni.lib.replace_science_pack("angels-advanced-oil-processing","chemical-science-pack", "omni-pack")
         omni.lib.add_science_pack("angels-advanced-chemistry-2", "omni-pack")
-        omni.lib.add_science_pack("angels-gas-steam-cracking-1", "omni-pack")
-        omni.lib.add_science_pack("angels-oil-steam-cracking-1", "omni-pack")
+        omni.lib.add_science_pack("gas-steam-cracking-1", "omni-pack")
+        omni.lib.add_science_pack("oil-steam-cracking-1", "omni-pack")
         omni.lib.add_science_pack("angels-nitrogen-processing-2", "omni-pack")
-        omni.lib.add_science_pack("angels-chlorine-processing-2", "omni-pack")
+        omni.lib.add_science_pack("chlorine-processing-2", "omni-pack")
     end
 
     if mods["angelssmelting"] then
@@ -111,10 +111,10 @@ if mods["omnimatter_crystal"] then
         omni.lib.replace_science_pack("angels-stone-smelting-3","chemical-science-pack", "omni-pack")
         omni.lib.replace_science_pack("angels-metallurgy-3","chemical-science-pack", "omni-pack")
         omni.lib.replace_science_pack("angels-metallurgy-4","utility-science-pack", "omni-pack")
-        omni.lib.replace_science_pack("angels-powder-metallurgy-2","chemical-science-pack", "omni-pack")
-        omni.lib.replace_science_pack("angels-strand-casting-2","chemical-science-pack", "omni-pack")
-        omni.lib.replace_science_pack("angels-thermal-water-extraction","chemical-science-pack", "omni-pack")
-        omni.lib.replace_science_pack("angels-ore-advanced-floatation","chemical-science-pack", "omni-pack")
+        omni.lib.replace_science_pack("powder-metallurgy-2","chemical-science-pack", "omni-pack")
+        omni.lib.replace_science_pack("strand-casting-2","chemical-science-pack", "omni-pack")
+        omni.lib.replace_science_pack("thermal-water-extraction","chemical-science-pack", "omni-pack")
+        omni.lib.replace_science_pack("ore-advanced-floatation","chemical-science-pack", "omni-pack")
         omni.lib.replace_science_pack("omnitech-angels-omnicium-smelting-3","chemical-science-pack", "omni-pack")
         omni.lib.add_science_pack("angels-coolant-1", "omni-pack")
 
@@ -124,10 +124,10 @@ if mods["omnimatter_crystal"] then
     end
 
     if mods["angelsbioprocessing"] then
-        omni.lib.replace_science_pack("angels-bio-paper-3","chemical-science-pack", "omni-pack")
-        omni.lib.replace_science_pack("angels-bio-processing-2","chemical-science-pack", "omni-pack")
-        omni.lib.add_science_pack("angels-bio-refugium-fish-1", "omni-pack")
-        omni.lib.add_science_pack("angels-bio-processing-paste", "omni-pack")
+        omni.lib.replace_science_pack("bio-paper-3","chemical-science-pack", "omni-pack")
+        omni.lib.replace_science_pack("bio-processing-2","chemical-science-pack", "omni-pack")
+        omni.lib.add_science_pack("bio-refugium-fish-1", "omni-pack")
+        omni.lib.add_science_pack("bio-processing-paste", "omni-pack")
     end
 
     --Bobs
