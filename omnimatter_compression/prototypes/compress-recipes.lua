@@ -349,13 +349,13 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
     -- IS VOID? check for the word void in recipe name or products --
     -----------------------------------------------------------------
     local is_void = function(recipe)
-        if recipe.name:find("void") or 
-            recipe.name:find("flaring") or 
+        if recipe.name:find("void") or
+            recipe.name:find("flaring") or
             recipe.name:find("incineration")
         then
             return true
         end
-        local product = omni.lib.get_main_product(recipe) 
+        local product = omni.lib.get_main_product(recipe)
         if product and (product.name:find("void") or product.amount == 0) then
             return true
         end
@@ -631,7 +631,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
         local continue = false
         local prefix = "compressed-"
         local product = omni.lib.get_main_product(recipe)
-        local ingredient = omni.lib.get_main_product(recipe)
+        local ingredient = omni.lib.parse_ingredient(recipe.ingredients[1])
         if not omni.lib.is_in_table(recipe.name, omni.compression.excluded_recipes) then --not excluded
             if not more_than_one(recipe) then -- Verify products
                 if ingredient then
@@ -670,9 +670,6 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                 new_rc.category = new_cat
                 new_rc.ingredients[1].name = prefix .. ingredient.name
                 --new_rc.results[1].probability = 0 --set to never actually give
-                if string.find(recipe.name,"%-car$") then
-                    log(serpent.block(new_rc))
-                end
                 return table.deepcopy(new_rc)
             end
             return nil
