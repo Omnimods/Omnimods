@@ -73,7 +73,7 @@ function omni.crystal.add_crystal(ore_name, metal_name)
             setLocName("recipe-name.crystal-omnitraction","item-name."..ore_name):
             setSubgroup("traction"):
             setOrder("a["..ore_name.."-crystal-omnitraction]"):
-            setIcons(ore_name):
+            setIcons(omni.lib.icon.of(ore_name, true)):
             setCategory("omnite-extraction"):
             addProductivity():
             setIngredients({type = "item", name = ore_name.."-crystal", amount=3}):

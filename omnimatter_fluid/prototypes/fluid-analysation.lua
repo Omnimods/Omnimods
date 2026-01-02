@@ -166,6 +166,8 @@ for _, rec in pairs(data.raw.recipe) do
             else
                 local conv = nil
                 local flu_temp = fluid.flu.temperature
+                log(serpent.block(fluid))
+                log(serpent.block(data.raw.fluid[fluid.flu.name]))
                 if (fluid.flu.temperature or -65535) > (data.raw.fluid[fluid.flu.name].default_temperature or math.huge) then conv = true end
                 if fluid.flu.temperature and fluid.flu.temperature == data.raw.fluid[fluid.flu.name].default_temperature  and not fluid.flu.maximum_temperature then flu_temp = nil end
                 sort_fluid(fluid.flu.name, "sluid", state, {temp = flu_temp, temp_min = fluid.flu.minimum_temperature, temp_max = fluid.flu.maximum_temperature, conversion = conv})

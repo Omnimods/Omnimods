@@ -38,7 +38,7 @@ function omni.crystal.oscillocrystal(material)
             ingredients = {
             {type = "item", name = crystal, amount=1}
             },
-            order = "a[angelsore1-crushed]",
+            order = "a[angels-ore1-crushed]",
             icon = board,
             icon_size = 32,
             results = {{type = "item", name = material.."-oscillocrystal", amount=3}},
@@ -71,7 +71,7 @@ function omni.crystal.electrocrystal(material)
             ingredients = {
             {type = "item", name = crystal, amount=1}
             },
-            order = "a[angelsore1-crushed]",
+            order = "a[angels-ore1-crushed]",
             icon = board,
             icon_size = 32,
             results = {{type = "item", name = material.."-electrocrystal", amount=6}},
@@ -103,7 +103,7 @@ function omni.crystal.electrocrystal(material)
             ingredients = {
             {type = "item", name = crystal, amount=1}
             },
-            order = "a[angelsore1-crushed]",
+            order = "a[angels-ore1-crushed]",
             icon = board,
             icon_size = 32,
             results = {{type = "item", name = material.."-thermocrystal", amount=4}},
@@ -163,7 +163,7 @@ function omni.crystal.generate_control_crystal(board_crystal,circuit_crystal,con
             ingredients = {
             {type = "item", name = crystal, amount=1}
             },
-            order = "a[angelsore1-crushed]",
+            order = "a[angels-ore1-crushed]",
             icons = board,
             icon_size = 32,
             results = {{type = "item", name = board_crystal.."-crystal-board", amount=1}},
@@ -229,7 +229,7 @@ function omni.crystal.generate_control_crystal(board_crystal,circuit_crystal,con
         subgroup = "omnine",
         enabled = false,
         ingredients = ing,
-        order = "a[angelsore1-crushed]",
+        order = "a[angels-ore1-crushed]",
         icons = icons,
         icon_size = 32,
         results = {{type = "item", name = circuit_name, amount=1}},
@@ -327,7 +327,7 @@ function omni.crystal.generate_hybrid_circuit(control_crystal,electronic_circuit
         subgroup = "omnine",
         enabled = false,
         ingredients = {{type="item",name=cc,amount=1},{type="item",name=electronic_circuit,amount=1}},
-        order = "a[angelsore1-crushed]",
+        order = "a[angels-ore1-crushed]",
         icons = icons,
         results = {{type = "item", name = cc.."-"..electronic_circuit.."-hybrid", amount=1}},
         energy_required = 1,
