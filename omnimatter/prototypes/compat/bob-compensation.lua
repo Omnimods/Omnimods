@@ -2,19 +2,19 @@ if bobmods and bobmods.ores and settings.startup["bobmods-ores-unsortedgemore"].
     data:extend({
         {
             type = "recipe",
-            name = "sort-gem-ore",
+            name = "bob-sort-gem-ore",
             energy_required = 1,
             icon_size = 32,
             ingredients = {
-                {"gem-ore", 1},
+                {"bob-gem-ore", 1},
             },
             results = {
-                {type="item", name="ruby-ore", amount=1, probability = bobmods.gems.RubyRatio},
-                {type="item", name="sapphire-ore", amount=1, probability = bobmods.gems.SapphireRatio},
-                {type="item", name="emerald-ore", amount=1, probability = bobmods.gems.EmeraldRatio},
-                {type="item", name="amethyst-ore", amount=1, probability = bobmods.gems.AmethystRatio},
-                {type="item", name="topaz-ore", amount=1, probability = bobmods.gems.TopazRatio},
-                {type="item", name="diamond-ore", amount=1, probability = bobmods.gems.DiamondRatio},
+                {type="item", name="bob-ruby-ore", amount=1, probability = bobmods.gems.RubyRatio},
+                {type="item", name="bob-sapphire-ore", amount=1, probability = bobmods.gems.SapphireRatio},
+                {type="item", name="bob-emerald-ore", amount=1, probability = bobmods.gems.EmeraldRatio},
+                {type="item", name="bob-amethyst-ore", amount=1, probability = bobmods.gems.AmethystRatio},
+                {type="item", name="bob-topaz-ore", amount=1, probability = bobmods.gems.TopazRatio},
+                {type="item", name="bob-diamond-ore", amount=1, probability = bobmods.gems.DiamondRatio},
             },
             subgroup = "bob-ores",
             icon = "__bobores__/graphics/icons/gem-ore.png",
@@ -23,13 +23,13 @@ if bobmods and bobmods.ores and settings.startup["bobmods-ores-unsortedgemore"].
     })
     
     if data.raw["item-subgroup"]["bob-gems-ore"] then
-        data.raw.recipe["sort-gem-ore"].subgroup = "bob-gems-ore"
+        data.raw.recipe["bob-sort-gem-ore"].subgroup = "bob-gems-ore"
     end
 
-    bobmods.lib.module.add_productivity_limitation("sort-gem-ore")
+    bobmods.lib.module.add_productivity_limitation("bob-sort-gem-ore")
 end
 
 if mods["bobplates"] then
-    omni.matter.add_omnium_alloy("aluminium","aluminium-plate","ingot-aluminium")
-    omni.matter.add_omnium_alloy("tungsten","tungsten-plate","casting-powder-tungsten")
+    omni.matter.add_omnium_alloy("bob-aluminium","bob-aluminium-plate","bob-ingot-aluminium")
+    omni.matter.add_omnium_alloy("bob-tungsten","bob-tungsten-plate","bob-casting-powder-tungsten")
 end

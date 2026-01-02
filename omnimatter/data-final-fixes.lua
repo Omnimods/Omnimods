@@ -17,7 +17,7 @@ if omni.rocket_locked then
     --Get highest ore and fluid tier
     local max_tier = 0
     local max_fluid_tier = 0
-    
+
     for k,v in pairs(omni.matter.omnisource) do
         max_tier = math.max(max_tier, tonumber(k))
     end

@@ -249,6 +249,9 @@ local function sluid_boiler_generation(fluid_cats)
                     new_boiler[#new_boiler+1] = {
                         type = "recipe",
                         name = fugacity.name.."-fluidisation-"..tempstring,
+                        localised_name = {"item-name.fluidisation", omni.lib.locale.of(data.raw.fluid[fugacity.name]).name, tempstring},
+                        show_amount_in_title = false,
+                        --main_product = fugacity.name,
                         icons = omni.lib.icon.of(fugacity.name,"fluid"),
                         subgroup = "boiler-sluid-converter",
                         category = "crafting-with-fluid",
@@ -256,7 +259,6 @@ local function sluid_boiler_generation(fluid_cats)
                         energy_required = 0.25,
                         enabled = true,
                         hide_from_player_crafting = true,
-                        main_product = fugacity.name,
                         ingredients = {{type = "item", name = "solid-"..fugacity.name.."-T-"..tempstring, amount = 1}},
                         results = {{type = "fluid", name = fugacity.name, amount = omni.fluid.sluid_contain_fluid, temperature = temp}},
                     }

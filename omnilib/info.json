@@ -1,6 +1,6 @@
 {
 "name":"omnilib",
-"version": "4.2.5",
+"version": "4.2.6",
 "title":"Omnilibrary",
 "author":"EmperorZelos",
 "contact": "https://discord.gg/WQYks7W",
@@ -14,6 +14,7 @@
     "(?)pypetroleumhandling",
     "(?)pyrawores",
     "(?)pycoalprocessing",
-    "(?)Krastorio2"
+    "(?)Krastorio2",
+    "! omnia"
 ]
 }
