@@ -266,18 +266,15 @@ if settings.startup["omnicompression_item_compression"].value then
             for _, item in pairs(data.raw[group]) do
                 --Check for hidden flag to skip later
                 local hidden = omni.compression.is_hidden(item) --check hidden
-                if item.stack_size >= 1 and
-                    (item.stack_size <= max_stack_size_to_compress or science_list[item.name]) and
-                    omni.compression.is_stackable(item) and
-                    not (hidden or item.name:find("creative-mode"))
-                then
+                if item.stack_size >= 1 and (item.stack_size <= max_stack_size_to_compress or science_list[item.name]) and
+                    omni.compression.is_stackable(item) and not (hidden or item.name:find("creative-mode")) then
                     generate_compressed_item(item)
                 elseif not compressed_item_names["compressed-"..item.name] then--exclude item
                     if item.stack_size > max_stack_size_to_compress then
                         log("Excluding >max stack size: " .. item.name .. "(" .. item.stack_size .. ")")
                     end
                     excluded_items[item.name] = true
-                end      
+                end
             end
         end
     end
