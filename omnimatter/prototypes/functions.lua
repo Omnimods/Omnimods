@@ -172,7 +172,7 @@ function omni.matter.add_omnium_alloy(name,plate,ingot)
     ItemGen:create("omnimatter","omnium-"..name.."-alloy"):
             setSubgroup("omnium"):
             setStacksize(400):
-            setIcons({"omnium-plate", 32}):
+            setIcons({"omnium-plate", 32}, "omnimatter"):
             addSmallIcon(plate,3):
             extend()
 
@@ -182,11 +182,11 @@ function omni.matter.add_omnium_alloy(name,plate,ingot)
             setBothColour({r = 1, g = 0, b = 1}):
             setMaxTemp(900):
             setIngredients(
-                {type="item", name="ingot-omnium", amount=18},
-                {type="item", name=ingot, amount=12}
+                {type = "item", name = "ingot-omnium", amount = 18},
+                {type = "item", name = ingot, amount = 12}
             ):
             setResults({type="fluid", name="molten-omnium-"..name.."-alloy", amount=300}):
-            setIcons({"liquid-molten-omnium", 32}):
+            setIcons({"molten-omnium", 32}, "omnimatter"):
             addSmallIcon(ingot,3):
             setCategory("induction-smelting"):
             setSubgroup("omnium-alloy-casting"):
@@ -205,7 +205,7 @@ function omni.matter.add_omnium_alloy(name,plate,ingot)
         RecGen:create("omnimatter","angels-plate-omnium-"..name.."-alloy"):
             setIngredients({type="fluid", name="molten-omnium-"..name.."-alloy", amount=40}):
             setResults({type="item", name="omnium-"..name.."-alloy", amount=4}):
-            setIcons({"omnium-"..name.."-alloy", 32}):
+            --setIcons("omnium-"..name.."-alloy"):
             addProductivity():
             setCategory("casting"):
             setEnergy(4):

@@ -41,5 +41,5 @@ omni.compression.exclude_recipe("portable-chests-steel-chest")
 omni.compression.exclude_recipe("aircraft-afterburner")
 
 if mods["angelspetrochem"] then
-    omni.lib.replace_recipe_result("fill-heavy-oil-barrel","heavy-oil-barrel","liquid-naphtha-barrel")
+    omni.lib.replace_recipe_result("fill-heavy-oil-barrel","heavy-oil-barrel","angels-liquid-naphtha-barrel")
 end

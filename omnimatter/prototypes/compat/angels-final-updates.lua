@@ -5,7 +5,7 @@ if mods["angelsrefining"] then
 
     RecGen:import("coal-liquefaction"):
         replaceIngredients("heavy-oil","omniston"):
-        replaceIngredients("liquid-naphtha","omniston"):
+        replaceIngredients("angels-liquid-naphtha","omniston"):
         extend()
 end
 
