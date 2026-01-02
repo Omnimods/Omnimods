@@ -19,7 +19,7 @@ if angelsmods and angelsmods.refining then
     omni.matter.add_resource("angels-ore1", 1)
     omni.matter.add_resource("angels-ore3", 1) 
     omni.matter.add_resource("angels-ore4", 3)
-    omni.matter.add_fluid("thermal-water", 3, 3)
+    omni.matter.add_fluid("angels-thermal-water", 3, 3)
     if bobmods and bobmods.ores or (angelsmods.industries and angelsmods.industries.overhaul) then
         omni.matter.add_resource("angels-ore2", 3)
         omni.matter.add_resource("angels-ore5", 2)
@@ -182,8 +182,8 @@ end
 ----------------------------------------------------------------------------
 if angelsmods and angelsmods.petrochem then
     vanilla_fluids = false
-    omni.matter.add_fluid("gas-natural-1", 1, 3+4/7)
-    omni.matter.add_fluid("liquid-multi-phase-oil", 2, 1+3/8)
+    omni.matter.add_fluid("angels-gas-natural-1", 1, 3+4/7)
+    omni.matter.add_fluid("angels-liquid-multi-phase-oil", 2, 1+3/8)
     if not mods["omnimatter_water"] and not mods["pypetroleumhandling"] then omni.matter.add_resource("sulfur", 2) end
 end
 
