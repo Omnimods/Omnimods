@@ -203,7 +203,7 @@ function OmniGen:create()
             waste = {
                 items = {
                     "omnic-waste",
-                    "stone-crushed"
+                    "angels-stone-crushed"
                 },
                 quant = function(levels,grade) return 12 - linear_gen(6,12,levels,grade) end
             }

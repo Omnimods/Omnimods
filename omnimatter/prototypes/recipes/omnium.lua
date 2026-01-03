@@ -2,8 +2,8 @@ RecGen:create("omnimatter","omnicium-plate"):
     setItemName("omnicium-plate"):
     setIcons({"omnicium-plate", 32}):
     setStacksize(200):
-    setIngredients({"omnite", 2}, {"stone-crushed", 2}):
-    ifSetIngredients(mods["angelsrefining"],{"omnite", 3},{"stone-crushed", 4}):
+    setIngredients({"omnite", 2}, {"angels-stone-crushed", 2}):
+    ifSetIngredients(mods["angelsrefining"],{"omnite", 3},{"angels-stone-crushed", 4}):
     setResults({"omnicium-plate", 2}):
     setCategory("smelting"):
     setSubgroup("omnium"):

@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.2.7
 Date: ????
+  Changes:
+    - Renamed stone-crushed to angels-stone-crushed
   Bugfixes:
     - More icon fixes
     - Fixed some angels smelting recipes outputting iron plates instead of omnium due to a typo

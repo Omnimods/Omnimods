@@ -54,7 +54,7 @@ function omni.matter.add_initial(ore_name, ore_amount, omnite_amount, fluid_to_m
 
     omni.matter.omnitial[ore_name] = {
         ingredients ={{name = "omnite", amount = omnite_amount, type = "item"}},
-        results = {{name = ore_name, amount = ore_amount, type = "item"}, {name = "stone-crushed", amount = (omnite_amount-ore_amount) or 6, type = "item"}}
+        results = {{name = ore_name, amount = ore_amount, type = "item"}, {name = "angels-stone-crushed", amount = (omnite_amount-ore_amount) or 6, type = "item"}}
     }
 
     if fluid_to_mine and fluid_to_mine.name and settings.startup["omnimatter-fluid-processing"].value then

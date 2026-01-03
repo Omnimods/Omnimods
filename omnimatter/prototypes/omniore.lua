@@ -3,7 +3,7 @@ RecGen:create("omnimatter","stone"):
     setStacksize(200):
     setEnergy(0.25):
     setCategory():
-    setIngredients({"stone-crushed", 2}):
+    setIngredients({"angels-stone-crushed", 2}):
     setResults({type="item", name="stone", amount=1}):
     setIcons("stone", "base"):
     setEnabled():
@@ -11,14 +11,14 @@ RecGen:create("omnimatter","stone"):
 
 local c = nil
 if mods["angelsrefining"] then c = "ore-refining-t1" end
-RecGen:create("omnimatter","stone-crushed"):
+RecGen:create("omnimatter","angels-stone-crushed"):
     setSubgroup("omni-crushing"):
     setStacksize(200):
     setEnergy(0.1):
     setCategory(c):
     setIngredients({"stone", 1}):
-    setResults({type="item", name="stone-crushed", amount=2}):
-    setIcons({"stone-crushed", 32}):
+    setResults({type="item", name="angels-stone-crushed", amount=2}):
+    setIcons({"angels-stone-crushed", 32}):
     setEnabled():
     extend()
 
@@ -41,7 +41,7 @@ RecGen:create("omnimatter","crushing-omnite-by-hand"):
     setIngredients({"omnite", 2}):
     setResults({
         {type="item", name="crushed-omnite", amount=1},
-        {type="item", name="stone-crushed", amount=1}
+        {type="item", name="angels-stone-crushed", amount=1}
     }):
     setIcons({"crushed-omnite", 32}):
     extend()
@@ -61,7 +61,7 @@ RecGen:create("omnimatter","pulverized-stone"):
     setStacksize(500):
     setEnergy(0.1):
     setCategory(c):
-    setIngredients({"stone-crushed", 1}):
+    setIngredients({"angels-stone-crushed", 1}):
     setResults({type="item", name="pulverized-stone", amount=1}):
     setIcons({"pulverized-stone", 32}):
     extend()

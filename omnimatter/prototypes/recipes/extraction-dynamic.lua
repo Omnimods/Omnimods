@@ -262,7 +262,7 @@ local function build_result_table(tier, split, focused_ore_name, level)
     split_ores[#split_ores + 1] =
         result_round(
         {
-            name = "stone-crushed",
+            name = "angels-stone-crushed",
             amount = stone_amount,
             type = "item"
         }
@@ -411,7 +411,7 @@ local function create_pure_extraction(tier, ore_name)
             setInputAmount(12):
             setYield(ore_name):
             setIngredients("omnite"):
-            setWaste("stone-crushed"):
+            setWaste("angels-stone-crushed"):
             yieldQuant(
                 function(levels, grade)
                     return extraction_value(levels, grade)
@@ -512,7 +512,7 @@ for ore, dt in pairs(omni.matter.omnitial) do
         setResults(dt.results):
         setIcons(omni.lib.icon.of(proto, true)):
         setLocName({"recipe-name.initial-omni", omni.lib.locale.of(proto).name}):
-        addSmallIcon("stone-crushed", 3):
+        addSmallIcon("angels-stone-crushed", 3):
         extend()
 end
 
