@@ -3,6 +3,7 @@ Version: 4.2.7
 Date: ????
   Bugfixes:
     - Fixed replaceResults() not replacing recipe.main_product
+    - Fixed RecGen:import() crashing on recipes with no results table
 ---------------------------------------------------------------------------------------------------
 Version: 4.2.6
 Date: 2026-01-02

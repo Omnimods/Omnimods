@@ -1227,7 +1227,7 @@ function RecGen:import(rec)
     local recipe = data.raw.recipe[rec]
     if recipe then
         local r = RecGen:create()
-        if #recipe.results==1 or recipe.main_product and recipe.main_produc ~= "" then
+        if recipe.results and #recipe.results==1 or recipe.main_product and recipe.main_produc ~= "" then
             local proto = omni.lib.locale.find(recipe.main_product or recipe.results[1].name, "item", true) or omni.lib.locale.find(recipe.main_product or recipe.results[1].name, "fluid", true)
             if proto then
                 r:setStacksize(proto.stack_size):

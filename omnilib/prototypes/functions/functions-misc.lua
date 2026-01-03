@@ -58,8 +58,8 @@ omni.lib.ore_tints = {--can add to the tint table with table.insert(omni.lib.ore
     ["aluminium"]           = {r = 0.777, g = 0.7  , b = 0.333}, --map_color = {r=0.777, g=0.7, b=0.333}
     ["sulfur"]              = {r = 0.8  , g = 0.75 , b = 0.1  }, --map_color = {r=1, g=1, b=0}
     ["gems"]                = {r = 0.25 , g = 1    , b = 0.25 }, --<-- map_color only
-    ["raw-imersite"]        = {r = 1 , g = 0.5     , b = 1    }, --<-- map_color only
-    ["raw-rare-metals"]     = {r = 0.6, g = 0.3, b = 1  }, --<-- map_color only
+    ["kr-imersite"]         = {r = 1 ,    g = 0.5  , b = 1    }, --<-- map_color only
+    ["kr-rare-metal-ore"]   = {r = 0.6,   g = 0.3  , b = 1    }, --<-- map_color only
     ["raw-borax"]           = {r = 0.917, g = 0.917, b = 0.917}, --<-- map_color only
     ["niobium"]             = {r = 0.403, g = 0.6,   b = 0.701}, --<-- map_color only
     ["chromium"]            = {r = 0.784, g = 0.231, b = 0.1  }, --<-- map_color only
