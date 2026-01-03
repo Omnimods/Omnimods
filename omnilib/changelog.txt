@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.2.8
+Date: 2026-01-03
+  Bugfixes:
+    - Fixed typo in ingredient generation possibly causing a crash with bobsmods
+    - Fixed small icons not properly scaling when multiple are added as icons table
+---------------------------------------------------------------------------------------------------
 Version: 4.2.7
 Date: 2026-01-03
   Changes:

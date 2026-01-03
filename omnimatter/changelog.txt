@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.2.7
+Date: 2026-01-03
+  Changes:
+    - Renamed stone-crushed to angels-stone-crushed
+  Bugfixes:
+    - More icon fixes
+    - Fixed some angels smelting recipes outputting iron plates / rolls instead of omnium
+    - Fixed broken localisations of Omnium gearboxes
+---------------------------------------------------------------------------------------------------
 Version: 4.2.6
 Date: 2026-01-03
   Changes:

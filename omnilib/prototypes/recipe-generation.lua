@@ -203,7 +203,7 @@ function OmniGen:create()
             waste = {
                 items = {
                     "omnic-waste",
-                    "stone-crushed"
+                    "angels-stone-crushed"
                 },
                 quant = function(levels,grade) return 12 - linear_gen(6,12,levels,grade) end
             }
@@ -575,21 +575,23 @@ function ItemGen:setIcons(icons,mod)
         if type(icons) == "table" then
             local ic = {}
             if type(icons)=="table"  and icons[1] and type(icons[1]) ~= "table" then
+                local ic_sz = icons.icon_size  or (type(icons[2])=="number" and icons[2] or defines.default_icon_size)
                 ic[#ic+1] = {
                     icon = "__"..mod.."__/graphics/icons/"..(icons.icon  or (type(icons[1]) == "string" and icons[1]))..".png",
-                    icon_size = icons.icon_size  or (type(icons[2])=="number" and icons[2]),
+                    icon_size = ic_sz,
+                    scale = icons.scale or 1,
                     --optional
-                    scale = icons.scale,
                     shift = icons.shift
                 }
             else
                 for _, c in pairs(icons) do
                     if type(c)=="table" then
+                        local ic_sz = c.icon_size  or (type(c[2])=="number" and c[2])
                         ic[#ic+1] = {
                             icon = "__"..mod.."__/graphics/icons/"..(c.icon  or (type(c[1]) == "string" and c[1]))..".png",
-                            icon_size = c.icon_size  or (type(c[2])=="number" and c[2]),
+                            icon_size = ic_sz,
+                            scale = c.scale or 1,
                             --optional
-                            scale = c.scale,
                             shift = c.shift
                         }
                     else
@@ -599,8 +601,8 @@ function ItemGen:setIcons(icons,mod)
             end
             self.icons = function(levels,grade) return ic end
         else
-            local ic_size=defines.default_icon_size
-            local ic_scale = (defines.default_icon_size / 2) / ic_size
+            local ic_size = icons.icon_size or defines.default_icon_size
+            local ic_scale = 1
             local check = {}
             if data.raw.item[icons] then
                 check=data.raw.item[icons]
@@ -612,7 +614,7 @@ function ItemGen:setIcons(icons,mod)
         -- --find icon_size
         local ic = (type(icons)=="string" and icons) or (type(icons[1])=="string" and icons[1])
         local ic_sz = icons.icon_size or (type(icons[2])=="number" and icons[2]) or defines.default_icon_size
-        local ic_scale = icons.scale or (defines.default_icon_size / 2) / ic_sz --defines.default_icon_size / ic_sz
+        local ic_scale = icons.scale or 1 --defines.default_icon_size / ic_sz
 
         if ic and string.match(ic, "%_%_(.-)%_%_") then
             local name = string.match(ic,".*%/(.-).png")
@@ -759,16 +761,22 @@ function ItemGen:addSmallIcon(icon, nr)
     end
     if icons then
         ic_sz = icons.icon_size or ic_sz
-        for _, ic in pairs(icons) do
-            if ic.icon_size then
-                ic_sz = ic.icon_size
+        for i = 1, table_size(icons) do
+            if icons[i].icon_size then
+                ic_sz = icons[i].icon_size
+            end
+            --In case we have an incos table with multiple icons, we might need to fix the scale of icon 2...n based on the size/scale of the first icon
+            local fixed_scale = (icons[i].scale or 1)
+            if i > 1 then
+                fixed_scale = (icons[i].scale or 1) / (icons[1].scale or 1) * (ic_sz / icons[1].icon_size)
             end
             self:addIcon({
-                icon = ic.icon,
+                icon = icons[i].icon,
                 icon_size = ic_sz,
-                scale = 0.4375 * (ic.scale or 1), -- Do not calculate any multiplicators to default / main icon scales yet as the relative comparison to the main icon is done in addIcon()
+                scale = 0.4375 * fixed_scale, -- Do not calculate any multiplicators to default / main icon scales yet as the relative comparison to the main icon is done in addIcon()
                 shift = quad[nr or 1], --currently "centres" the icon if it was already offset, may need to math that out
-                tint = ic.tint or nil})
+                tint = icons[i].tint or nil
+            })
         end
     else
         self:addIcon({
