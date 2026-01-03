@@ -129,7 +129,7 @@ for name, _ in pairs(recipe_mods) do
         local lcm_mult = 1
         for _, ingres in pairs({"ingredients","results"}) do
             --First loop: Calculate the lcm respecting omni.fluid.sluid_contain_fluid
-            for    _, ing in pairs(rec[ingres]) do
+            for _, ing in pairs(rec[ingres] or {}) do
                 local amount = 0
                 if ing.type == "fluid" and ing.amount and ing.amount ~= 0 then
                     --Round the fluid amount to get rid of weird base numbers, divide afterwards to not lose precision
@@ -165,7 +165,7 @@ for name, _ in pairs(recipe_mods) do
 
         --Second loop: Find GCD of all ingres multiplied with the LCM multiplier we just calculated (with sluid_contain_fluid applied for fluids)
         for _, ingres in pairs({"ingredients","results"}) do
-            for    _, ing in pairs(rec[ingres]) do
+            for    _, ing in pairs(rec[ingres] or {}) do
                 local amount = 0
                 if ing.type == "fluid" and ing.amount and ing.amount ~= 0 then
                     amount = omni.lib.round(omni.fluid.get_true_amount(ing) * mult) / omni.fluid.sluid_contain_fluid
@@ -196,7 +196,7 @@ for name, _ in pairs(recipe_mods) do
             max_amount = 0
             lcm_mult = 1
             for _, ingres in pairs({"ingredients","results"}) do
-                for    _, ing in pairs(rec[ingres]) do
+                for    _, ing in pairs(rec[ingres] or {}) do
                     local amount = 0
                     if ing.type == "fluid" then
                         --Round the fluid amount to get rid of weird base numbers, divide afterwards to not lose precision
@@ -247,7 +247,7 @@ for name, _ in pairs(recipe_mods) do
         --Now Replace fluids with sluids and apply the mult too all ingres and crafting time
         local fix_stacksize = false
         for _, ingres in pairs({"ingredients","results"}) do
-            for n, ing in pairs(rec[ingres]) do
+            for n, ing in pairs(rec[ingres] or {}) do
                 --Fuid replacement
                 if ing.type == "fluid" then
                     local new_ing={}--start empty to remove all old props to add only what is needed
