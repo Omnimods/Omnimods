@@ -3,6 +3,7 @@ Version: 4.2.7
 Date: ????
   Bugfixes:
     - More icon fixes
+    - Fixed some angels smelting recipes outputting iron plates instead of omnium due to a typo
 ---------------------------------------------------------------------------------------------------
 Version: 4.2.6
 Date: 2026-01-03
