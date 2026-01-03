@@ -29,7 +29,7 @@ component["vanilla-gear-wheel"] = {"iron-gear-wheel"}
 component["bob-gear-wheel"] = {"iron-gear-wheel", "bob-steel-gear-wheel", "bob-brass-gear-wheel", "bob-cobalt-steel-gear-wheel", "bob-titanium-gear-wheel", "bob-tungsten-gear-wheel", "bob-nitinol-gear-wheel"}
 component["angels-gear-wheel"] = {"angels-gear", "angels-axle", "angels-roller-chain", "angels-spring", "angels-bearing"}
 component["vanilla-gear-box"]= {"omnium-iron-gear-box"}
-component["bob-gear-box"] = {"omnium-iron-gear-box","omnium-bob-steel-gear-box","omnium-bob-brass-gear-box","omnium-bob-titanium-gear-box","omnium-bob-tungsten-gear-box","omnium-bob-itinol-gear-box"}
+component["bob-gear-box"] = {"omnium-iron-gear-box","omnium-bob-steel-gear-box","omnium-bob-brass-gear-box","omnium-bob-titanium-gear-box","omnium-bob-tungsten-gear-box","omnium-bob-nitinol-gear-box"}
 component["angels-gear-box"] = {"omnium-iron-gear-box","omnium-steel-gear-box","omnium-titanium-gear-box","omnium-tungsten-gear-box"}
 component["bearing"]={"bob-steel-bearing", nil, "bob-cobalt-steel-bearing", "bob-titanium-bearing", "bob-nitinol-bearing", "bob-ceramic-bearing"}
 
