@@ -31,8 +31,8 @@ else
     --Non-Angel initial omnitractions
     omni.matter.add_initial("iron-ore", 1, 7)
     omni.matter.add_initial("copper-ore", 1, 7)
-    omni.matter.add_initial("bob-quartz", 1, 7)
     if bobmods and bobmods.ores then
+        omni.matter.add_initial("bob-quartz", 1, 7)
         local has_gems = settings.startup["bobmods-ores-unsortedgemore"].value
         local levels={
             --["iron-ore"]=1,
