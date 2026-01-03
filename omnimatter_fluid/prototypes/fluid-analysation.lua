@@ -138,7 +138,7 @@ for _, rec in pairs(data.raw.recipe) do
         for _, ingres in pairs({"ingredients","results"}) do --ignore result/ingredient as they don't handle fluids
             if rec[ingres] then
                 for _, it in pairs(rec[ingres]) do
-                    if it and it.type and it.type == "fluid" then
+                    if it and it.type and it.type == "fluid" and ((it.amount and it.amount > 0 and (it.probability or 1) > 0) or (it.amount_min and it.amount_min > 0 and (it.probability or 1) > 0)) then
                         fluids[#fluids+1] = {flu = it, type = ingres}
                         recipe_mods[rec.name] = recipe_mods[rec.name] or {ingredients = {}, results = {}}
                         if ingres == "ingredients" then ing_fluids = ing_fluids + 1 end

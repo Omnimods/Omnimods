@@ -10,8 +10,8 @@ omni.matter.add_omniwater_extraction("omnimatter", "water", omni.fluid_levels, 1
 -----------------------
 require("prototypes.compat.bob-compensation")
 
-omni.matter.add_omnium_alloy("steel","steel-plate","ingot-steel")
-omni.matter.add_omnium_alloy("iron","iron-plate","ingot-iron")
+omni.matter.add_omnium_alloy("steel","steel-plate","angels-ingot-steel")
+omni.matter.add_omnium_alloy("iron","iron-plate","angels-ingot-iron")
 
 --Add crushing recipes to base impure extraction
 omni.lib.add_unlock_recipe("omnitech-base-impure-extraction","crushed-omnite")

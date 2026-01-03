@@ -166,10 +166,13 @@ function omni.fluid.compact_array(array) --individual ingredient/result table
 end
 
 function omni.fluid.is_fluid_void(recipe)
+    -- No results and fluid ingredient
     local results = recipe.results
     local ingredients = recipe.ingredients
-    --need to check results since it can be nil when .result exists
-    if results and next(results) and #results == 1 and results[1].amount and results[1].amount == 0  and next(ingredients) and ingredients[1].type and ingredients[1].type == "fluid" then
+    local ing_is_fluid = ingredients and next(ingredients) and ingredients[1].type and ingredients[1].type == "fluid"
+    local has_no_result = not results or (results and not next(results)) or (next(results) and #results == 1 and ((results[1].amount and results[1].amount == 0) or (results[1].probability and results[1].probability == 0)))
+
+    if ing_is_fluid and has_no_result then
         return true
     end
     return false
@@ -196,7 +199,7 @@ function omni.fluid.create_temperature_copies(recipe, fluidname, replacement, te
                 newrec.localised_name = omni.lib.locale.of(recipe).name
                 newrec.order = (recipe.order or recipe.name).."-T-"..temp
                 for _, ingres in pairs({"ingredients","results"}) do
-                    for _, flu in pairs(newrec[ingres]) do
+                    for _, flu in pairs(newrec[ingres] or {}) do
                         if flu.name and flu.name == replacement then
                             flu.name = sluid
                             break

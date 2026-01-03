@@ -21,7 +21,7 @@ end
 
 function omni.crystal.add_crystal(ore_name, metal_name)
     if data.raw.item[ore_name] and not data.raw.recipe[ore_name.."-crystal"] then
-        omni.crystal.metals[#omni.crystal.metals+1]=data.raw.item[ore_name]
+        omni.crystal.metals[#omni.crystal.metals+1] = data.raw.item[ore_name]
 
         RecGen:create("omnimatter_crystal", ore_name.."-crystal"):
             setLocName("recipe-name.crystal", metal_name):
@@ -73,7 +73,7 @@ function omni.crystal.add_crystal(ore_name, metal_name)
             setLocName("recipe-name.crystal-omnitraction","item-name."..ore_name):
             setSubgroup("traction"):
             setOrder("a["..ore_name.."-crystal-omnitraction]"):
-            setIcons(ore_name):
+            setIcons(omni.lib.icon.of(ore_name, true)):
             setCategory("omnite-extraction"):
             addProductivity():
             setIngredients({type = "item", name = ore_name.."-crystal", amount=3}):

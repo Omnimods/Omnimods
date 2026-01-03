@@ -19,7 +19,7 @@ if angelsmods and angelsmods.refining then
     omni.matter.add_resource("angels-ore1", 1)
     omni.matter.add_resource("angels-ore3", 1) 
     omni.matter.add_resource("angels-ore4", 3)
-    omni.matter.add_fluid("thermal-water", 3, 3)
+    omni.matter.add_fluid("angels-thermal-water", 3, 3)
     if bobmods and bobmods.ores or (angelsmods.industries and angelsmods.industries.overhaul) then
         omni.matter.add_resource("angels-ore2", 3)
         omni.matter.add_resource("angels-ore5", 2)
@@ -32,13 +32,14 @@ else
     omni.matter.add_initial("iron-ore", 1, 7)
     omni.matter.add_initial("copper-ore", 1, 7)
     if bobmods and bobmods.ores then
+        omni.matter.add_initial("bob-quartz", 1, 7)
         local has_gems = settings.startup["bobmods-ores-unsortedgemore"].value
         local levels={
             --["iron-ore"]=1,
             --["copper-ore"]=1,
-            ["bob-lead-ore"]=1,
-            ["bob-tin-ore"]=1,
-            ["bob-quartz"]=2,
+            ["bob-lead-ore"]=2,
+            ["bob-tin-ore"]=2,
+            ["bob-quartz"]=1,
             ["bob-zinc-ore"]=2,
             ["bob-nickel-ore"]=2,
             ["bob-bauxite-ore"]=2,
@@ -52,7 +53,7 @@ else
             ["bob-gem-ore"]=has_gems and 3 or nil,
             ["sulfur"]=2
         }
-        for i, ore in pairs(bobmods.ores) do --check ore triggers (works with plates)
+        for _, ore in pairs(bobmods.ores) do --check ore triggers (works with plates)
             if ore.enabled and not (ore.category and ore.category == "water") then
                 if levels[ore.name] then
                     omni.matter.add_resource(ore.name,levels[ore.name])
@@ -164,10 +165,10 @@ if mods["Krastorio2"] then
     -- T1
     omni.matter.add_resource("coal", 1)
     -- T2
-    omni.matter.add_resource("raw-rare-metals", 2)
-    omni.matter.add_fluid("mineral-water", 2, 1)
+    omni.matter.add_resource("kr-rare-metal-ore", 2)
+    omni.matter.add_fluid("kr-mineral-water", 2, 1)
     -- T5
-    omni.matter.add_resource("raw-imersite", 5)
+    omni.matter.add_resource("kr-imersite", 5)
     -- Only add stone and uranium when angels is not present
     if not (angelsmods and angelsmods.refining) then
         -- T1
@@ -182,8 +183,8 @@ end
 ----------------------------------------------------------------------------
 if angelsmods and angelsmods.petrochem then
     vanilla_fluids = false
-    omni.matter.add_fluid("gas-natural-1", 1, 3+4/7)
-    omni.matter.add_fluid("liquid-multi-phase-oil", 2, 1+3/8)
+    omni.matter.add_fluid("angels-gas-natural-1", 1, 3+4/7)
+    omni.matter.add_fluid("angels-liquid-multi-phase-oil", 2, 1+3/8)
     if not mods["omnimatter_water"] and not mods["pypetroleumhandling"] then omni.matter.add_resource("sulfur", 2) end
 end
 

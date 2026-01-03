@@ -1,6 +1,13 @@
 ---------------------------------------------------------------------------------------------------
-<<<<<<< Updated upstream
-=======
+Version: 4.2.7
+Date: 2026-01-03
+  Changes:
+    - Added omni.lib.has_science_pack()
+  Bugfixes:
+    - Fixed replaceResults() not replacing recipe.main_product
+    - Fixed RecGen:import() crashing on recipes with no results table
+    - Fixed RecGen:import() generating an item prototype in some cases when the main prod is ""
+---------------------------------------------------------------------------------------------------
 Version: 4.2.6
 Date: 2026-01-02
   Changes:
@@ -9,7 +16,6 @@ Date: 2026-01-02
   Bugfixes:
     - Fixed various logical issues with addIcon() and addSmallIcon()
 ---------------------------------------------------------------------------------------------------
->>>>>>> Stashed changes
 Version: 4.2.5
 Date: 2024.12.21
   Bugfixes:

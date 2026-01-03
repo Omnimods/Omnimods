@@ -45,18 +45,25 @@ function omni.lib.replace_unlock_recipe(techname, recipe,new)
     --data.raw.technology[techname].effects=res
 end
 
-function omni.lib.add_science_pack(techname, pack)
+function omni.lib.has_science_pack(techname, pack)
     if data.raw.technology[techname] and type(pack) == "string" then
         for __,sp in pairs(data.raw.technology[techname].unit.ingredients) do
             for _,ing in pairs(sp) do
                 if ing == pack then
-                    goto found
+                    return true
                 end
             end
         end
-        table.insert(data.raw.technology[techname].unit.ingredients,{ pack, 1})
+        return false
+    else
+        log("Cannot find "..techname..", ignoring it.")
+    end
+end
 
-        ::found::
+function omni.lib.add_science_pack(techname, pack)
+    if data.raw.technology[techname] and type(pack) == "string" then
+        if omni.lib.has_science_pack(techname, pack) then return end
+        table.insert(data.raw.technology[techname].unit.ingredients,{ pack, 1})
     else
         log("Cannot find "..techname..", ignoring it.")
     end
@@ -67,8 +74,10 @@ function omni.lib.remove_science_pack(techname,pack)
         for i,ing in pairs(data.raw.technology[techname].unit.ingredients) do
             if ing[1] == pack then
                 table.remove(data.raw.technology[techname].unit.ingredients, i)
+                return true
             end
         end
+        return false
     else
         log("Can not find tech "..techname.." to replace science pack "..pack)
     end
@@ -79,8 +88,10 @@ function omni.lib.replace_science_pack(techname, old, new)
         for _, ing in pairs(data.raw.technology[techname].unit.ingredients) do
             if ing[1] == old then
                 ing[1] = new
+                return true
             end
         end
+        return false
     else
         log(techname.." cannot be found, replacement of "..old.." with "..new.." has failed.")
     end

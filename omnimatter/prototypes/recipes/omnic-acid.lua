@@ -27,8 +27,6 @@ end
 local quant = 24
 local omniFluidCat = "omnite-extraction-both"
 if mods["omnimatter_crystal"] then omniFluidCat = "omniplant" end
-local water = "omnic-water"
-if mods["angelsrefining"] then water = "water-purified" end
 
 cost = OmniGen:create():
         setYield({type = "fluid", name = "omnic-acid"}):

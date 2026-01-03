@@ -1178,7 +1178,7 @@ function ItemGen:return_array()
     return self.rtn
 end
 function ItemGen:extend()
-    if self.requiredMods(0,0) and self.name then
+    if self.requiredMods(0,0) and self.name and self.name ~= ""  then
         Omni.Gen.Item[self.name] = self
         data:extend(self:return_array())
     end
@@ -1227,8 +1227,9 @@ function RecGen:import(rec)
     local recipe = data.raw.recipe[rec]
     if recipe then
         local r = RecGen:create()
-        if #recipe.results==1 or recipe.main_product and recipe.main_produc ~= "" then
-            local proto = omni.lib.locale.find(recipe.main_product or recipe.results[1].name, "item", true) or omni.lib.locale.find(recipe.main_product or recipe.results[1].name, "fluid", true)
+        if not self.noItem then r:noitem() end
+        if (recipe.results and #recipe.results==1) or (recipe.main_product and recipe.main_product ~= "") then
+            local proto = omni.lib.locale.find((recipe.main_product ~= "" and recipe.main_product) or recipe.results[1].name, "item", true) or omni.lib.locale.find((recipe.main_product ~= "" and recipe.main_product) or recipe.results[1].name, "fluid", true)
             if proto then
                 r:setStacksize(proto.stack_size):
                 setWeight(proto.weight):
@@ -1362,7 +1363,7 @@ function RecGen:setHidden(en)
     return self
 end
 function RecGen:noItem()
-    self.noItem=true
+    self.noItem = true
     return self
 end
 function RecGen:noTech(b)
@@ -1631,6 +1632,9 @@ function RecGen:replaceResults(...)
         if type(a[2])=="table" and not a[2].name then
             a[2]={type="item",name=a[1],amount=a[2] or 1}
         end
+    end
+    if self.main_product(0,0) and self.main_product(0,0) == arg[1][1] then
+        self.main_product = function(levels,grade) return arg[1][2] end
     end
     local results = table.deepcopy(self.results)
     self.results=function(levels,grade) return replaceIngres(results(levels,grade),arg) end

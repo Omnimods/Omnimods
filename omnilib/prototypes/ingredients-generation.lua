@@ -20,10 +20,10 @@ component["vanilla-plate"]={"copper-plate","iron-plate"}
 component["bob-plate"]={"iron-plate", "copper-plate", "bob-tin-plate", "bob-lead-plate", "bob-silver-plate", "bob-zinc-plate", "bob-nickel-plate", "bob-cobalt-plate", "bob-gold-plate", "bob-aluminium-plate", "bob-tungsten-plate", "bob-titanium-plate"}
 component["angel-plate"]={"copper-plate","iron-plate","angels-plate-manganese", "angels-plate-chrome", "angels-plate-platinum"}
 component["angels-comp-plate"]={"copper-plate", "iron-plate", "steel-plate","angels-plate-aluminium", "angels-plate-titanium", "angels-plate-tungsten","angels-plate-chrome", "angels-plate-platinum"}
-component["angel-bob-plate"]={"iron-plate", "copper-plate", "tin-plate", "lead-plate", "silver-plate", "zinc-plate", "nickel-plate", "cobalt-plate", "angels-plate-manganese", "gold-plate", "aluminium-plate", "tungsten-plate", "titanium-plate", "angels-plate-chrome", "angels-plate-platinum"}
+component["angel-bob-plate"]={"iron-plate", "copper-plate", "angels-plate-tin", "angels-plate-lead", "angels-plate-silver", "angels-plate-zinc", "angels-plate-nickel", "angels-plate-cobalt", "angels-plate-manganese", "angels-plate-gold", "angels-plate-aluminium", "angels-plate-tungste", "angels-plate-titanium", "angels-plate-chrome", "angels-plate-platinum"}
 component["vanilla-omniplate"]= {"omnium-plate","omnium-iron-alloy","omnium-steel-alloy"}
 component["omni-alloys"] = {"omnium-plate","omnium-iron-alloy","omnium-steel-alloy"}
-component["omni-bob-alloys"] = {"omnium-plate","omnium-iron-alloy","omnium-steel-alloy", "omnium-bob-aluminium-alloy", "omnium-bob-tungsten-alloy"}
+component["omni-bob-alloys"] = {"omnium-plate","omnium-iron-alloy","omnium-steel-alloy", "omnium-aluminium-alloy", "omnium-tungsten-alloy"}
 -- GEARS
 component["vanilla-gear-wheel"] = {"iron-gear-wheel"}
 component["bob-gear-wheel"] = {"iron-gear-wheel", "bob-steel-gear-wheel", "bob-brass-gear-wheel", "bob-cobalt-steel-gear-wheel", "bob-titanium-gear-wheel", "bob-tungsten-gear-wheel", "bob-nitinol-gear-wheel"}
