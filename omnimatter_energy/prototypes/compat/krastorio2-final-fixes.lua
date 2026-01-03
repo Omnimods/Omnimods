@@ -11,9 +11,13 @@ if mods["Krastorio2"] then
     end
 
     --Add the energy pack to all basic/Red SP techs
+    --Remove it from late game techs where K2 removed red SP too as those are researched in special labs
     for _, tech in pairs(data.raw.technology) do
-        if tech.unit and tech.unit.ingredients and (omni.lib.is_in_table("kr-basic-tech-card", tech.unit.ingredients[1]) or omni.lib.is_in_table("automation-science-pack", tech.unit.ingredients[1])) then
+        if tech.unit and tech.unit.ingredients and (omni.lib.has_science_pack(tech.name, "kr-basic-tech-card") or omni.lib.has_science_pack(tech.name, "automation-science-pack")) then
             omni.lib.add_science_pack(tech.name, "energy-science-pack")
+        elseif tech.unit and tech.unit.ingredients and #tech.unit.ingredients >= 2 and omni.lib.has_science_pack(tech.name, "energy-science-pack") and not (omni.lib.has_science_pack(tech.name, "kr-basic-tech-card") or omni.lib.has_science_pack(tech.name, "automation-science-pack")) then
+            log(serpent.block(tech.unit.ingredients ))
+            omni.lib.remove_science_pack(tech.name, "energy-science-pack")
         end
     end
 end
