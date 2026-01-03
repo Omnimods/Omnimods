@@ -55,7 +55,8 @@ local function update_building_recipes()
                             local recipe_meta = correlated_recipes[candidate] or {}
                             local is_compressed = recipe_meta.compressed == candidate
                             local upgrade = recipe_meta.upgrade -- If we're using compressed make sure we get the right upgrade
-                            upgrade = upgrade and (is_compressed and correlated_recipes[upgrade].compressed or upgrade)
+                            local upgrade_meta = upgrade and correlated_recipes[upgrade]
+                            upgrade = upgrade and (is_compressed and upgrade_meta and upgrade_meta.compressed or upgrade)
                             upgrade = upgrade and force_recs[upgrade]
                             if upgrade then
                                 local upgrade_name = upgrade.name
@@ -250,7 +251,7 @@ local function omnidate(technology)
         -- Localise where applicable
         local cached_recs = memoize(force.recipes)
         local force_techs = memoize(force.technologies)
-        local has_compression = force_techs["compression-recipes"] and force_techs["compression-recipes"].researched
+        local has_compression = force_techs["compression-recipes"] and force_techs["compression-recipes"].researched or false
         local technology_name = technology and technology.name or ""
         -- If we're just a single tech, we can end here if we don't meet the criteria
         if technology then
@@ -298,21 +299,29 @@ local function omnidate(technology)
         end
         -- It's defined here since scope --_(v-v)_--
         local function process_rec(rec_name, rec_meta, toggle)
+            if not rec_meta then return end
             toggle = not not toggle
             for key_name, key_value in pairs(rec_meta) do
                 local is_tier = tiers_unlocked[key_name]
                 if is_tier ~= nil then
-                    cached_recs[key_value].enabled = toggle and is_tier
+                    local rec = cached_recs[key_value]
+                    if rec then rec.enabled = toggle and is_tier end
                 elseif key_name == "compressed" then
-                    cached_recs[key_value].enabled = toggle and has_compression
+                    local rec = cached_recs[key_value]
+                    if rec then rec.enabled = toggle and has_compression end
                 elseif key_name == "downgrade" then -- If we're enabled, disable downgrade
                     local downgrade_rec = cached_recs[key_value]
-                    downgrade_rec.enabled = not toggle
-                    -- Compressed version as well
-                    local compressed_downgrade = correlated_recipes[downgrade_rec.name].compressed
-                    if compressed_downgrade then
-                        compressed_downgrade = cached_recs[compressed_downgrade]
-                        compressed_downgrade.enabled = has_compression and not toggle
+                    if downgrade_rec then
+                        downgrade_rec.enabled = not toggle
+                        -- Compressed version as well
+                        local downgrade_meta = correlated_recipes[downgrade_rec.name]
+                        local compressed_downgrade = downgrade_meta and downgrade_meta.compressed
+                        if compressed_downgrade then
+                            compressed_downgrade = cached_recs[compressed_downgrade]
+                            if compressed_downgrade then
+                                compressed_downgrade.enabled = has_compression and not toggle
+                            end
+                        end
                     end
                 end
             end
@@ -328,9 +337,10 @@ local function omnidate(technology)
                 end
                 -- Iterate techs, set their given recipe state
                 for tech_name, tech_recipes in pairs(recipe_techs) do
-                    if force_techs[tech_name].researched then
+                    local tech = force_techs[tech_name]
+                    if tech and tech.researched then
                         for recipe_name, recipe_meta in pairs(tech_recipes) do
-                            process_rec(recipe_name, recipe_meta, force_techs[tech_name].researched)
+                            process_rec(recipe_name, recipe_meta, tech.researched)
                         end
                     end
                 end
