@@ -16,7 +16,6 @@ if mods["Krastorio2"] then
         if tech.unit and tech.unit.ingredients and (omni.lib.has_science_pack(tech.name, "kr-basic-tech-card") or omni.lib.has_science_pack(tech.name, "automation-science-pack")) then
             omni.lib.add_science_pack(tech.name, "energy-science-pack")
         elseif tech.unit and tech.unit.ingredients and #tech.unit.ingredients >= 2 and omni.lib.has_science_pack(tech.name, "energy-science-pack") and not (omni.lib.has_science_pack(tech.name, "kr-basic-tech-card") or omni.lib.has_science_pack(tech.name, "automation-science-pack")) then
-            log(serpent.block(tech.unit.ingredients ))
             omni.lib.remove_science_pack(tech.name, "energy-science-pack")
         end
     end

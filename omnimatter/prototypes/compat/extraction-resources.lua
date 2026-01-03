@@ -31,14 +31,15 @@ else
     --Non-Angel initial omnitractions
     omni.matter.add_initial("iron-ore", 1, 7)
     omni.matter.add_initial("copper-ore", 1, 7)
+    omni.matter.add_initial("bob-quartz", 1, 7)
     if bobmods and bobmods.ores then
         local has_gems = settings.startup["bobmods-ores-unsortedgemore"].value
         local levels={
             --["iron-ore"]=1,
             --["copper-ore"]=1,
-            ["bob-lead-ore"]=1,
-            ["bob-tin-ore"]=1,
-            ["bob-quartz"]=2,
+            ["bob-lead-ore"]=2,
+            ["bob-tin-ore"]=2,
+            ["bob-quartz"]=1,
             ["bob-zinc-ore"]=2,
             ["bob-nickel-ore"]=2,
             ["bob-bauxite-ore"]=2,
@@ -52,7 +53,7 @@ else
             ["bob-gem-ore"]=has_gems and 3 or nil,
             ["sulfur"]=2
         }
-        for i, ore in pairs(bobmods.ores) do --check ore triggers (works with plates)
+        for _, ore in pairs(bobmods.ores) do --check ore triggers (works with plates)
             if ore.enabled and not (ore.category and ore.category == "water") then
                 if levels[ore.name] then
                     omni.matter.add_resource(ore.name,levels[ore.name])
