@@ -22,8 +22,8 @@ if mods["baketorio"] then
 end
 
 if mods["Krastorio2"] then
-    omni.crystal.add_crystal("raw-imersite","Imersite")
-    omni.crystal.add_crystal("raw-rare-metals","Rare metals")
+    omni.crystal.add_crystal("kr-imersite","Imersite")
+    omni.crystal.add_crystal("kr-rare-metal-ore","Rare metals")
 end
 
 local salt_omnide_icon = function(metal)

@@ -10,7 +10,7 @@ local ignore = {
     "omnite",
     "crushed-omnite",
     "omniwood",
-    "seedling",
+    "bob-seedling",
     "omniseedling",
 }
 
@@ -23,7 +23,7 @@ local nilfuel = {
 --Fuel categories that get omnified
 local fuelcats = {
     "chemical",
-    "vehicle-fuel" --K2 thing
+    "kr-vehicle-fuel" --K2 thing
 }
 
 -- Things to only insert if certain mods are present

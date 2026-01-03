@@ -59,7 +59,7 @@ local fuelcats = {
     "omnite",
     "chemical"
 }
-if mods["Krastorio2"] then fuelcats[#fuelcats+1] = "vehicle-fuel" end
+if mods["Krastorio2"] then fuelcats[#fuelcats+1] = "kr-vehicle-fuel" end
 
 for _,entity in pairs(burnerEntities) do
     local build = omni.lib.find_entity_prototype(entity)

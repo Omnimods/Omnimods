@@ -23,7 +23,7 @@ lab_ignore_pack = omni.science.triggers.lab_ignore_pack or {}
 lab_ignore_pack["lab-alien"] = true
 lab_ignore_pack["lab-module"] = true
 lab_ignore_pack["omnitor-lab"] = true
-lab_ignore_pack["kr-crash-site-lab-repaired"] = true
+lab_ignore_pack["kr-spaceship-research-computer"] = true  --K2 early lab
 
 require("prototypes.functions")
 require("prototypes.omni-pack")

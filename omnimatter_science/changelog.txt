@@ -3,6 +3,7 @@ Version: 4.2.1
 Date: ????
   Changes:
     - Updated compat for Angelsmods
+    - Updated compat for Krastorio 2
 ---------------------------------------------------------------------------------------------------
 Version: 4.1.8
 Date: 2023.11.05

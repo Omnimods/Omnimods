@@ -164,10 +164,10 @@ if mods["Krastorio2"] then
     -- T1
     omni.matter.add_resource("coal", 1)
     -- T2
-    omni.matter.add_resource("raw-rare-metals", 2)
-    omni.matter.add_fluid("mineral-water", 2, 1)
+    omni.matter.add_resource("kr-rare-metal-ore", 2)
+    omni.matter.add_fluid("kr-mineral-water", 2, 1)
     -- T5
-    omni.matter.add_resource("raw-imersite", 5)
+    omni.matter.add_resource("kr-imersite", 5)
     -- Only add stone and uranium when angels is not present
     if not (angelsmods and angelsmods.refining) then
         -- T1
