@@ -1,12 +1,16 @@
 ---------------------------------------------------------------------------------------------------
-<<<<<<< Updated upstream
-=======
+Version: 4.2.4
+Date: ????
+  Changes:
+    - Updated SE compat for 2.0
+  Bugfixes:
+    - Fixed a possible crash with recipes specifying a fluid result with amount = 0
+---------------------------------------------------------------------------------------------------
 Version: 4.2.3
 Date: 2026-01-02
   Bugfixes:
     - Fixed fluidisation recipes broken localisation
 ---------------------------------------------------------------------------------------------------
->>>>>>> Stashed changes
 Version: 4.2.2
 Date: 2025.01.17
   Bugfixes:

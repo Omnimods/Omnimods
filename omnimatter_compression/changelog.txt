@@ -1,8 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.2.9
 Date: ????
-  Changes:
-    - Updated compat for Angelsmods
   Bugfixes:
     - Fixed copypaste error in void recipe handling causing a crash in rare situations
 ---------------------------------------------------------------------------------------------------
