@@ -81,6 +81,7 @@ RecGen:create("omnimatter","omnium-iron-gear-box"):
     setIngredients({"omnium-gear-wheel", 1},{"iron-gear-wheel", 1}):
     setIcons({"omnium-iron-gear-box", 32}):
     addProductivity():
+    setLocName("item-name.omnium-alloy-gear-box", "iron"):
     setTechName("omnitech-omnium-processing"):
     setEnergy(0.25):
     extend()
@@ -88,6 +89,7 @@ RecGen:create("omnimatter","omnium-iron-gear-box"):
 if mods["bobplates"] then
     local plates = {"bob-steel","bob-brass","bob-titanium","bob-tungsten","bob-nitinol"}
     local plateTech = {"steel-processing","bob-zinc-processing","bob-titanium-processing","bob-tungsten-processing","bob-nitinol-processing"}
+    local metal = {"steel","brass","titanium","tungsten","nitinol"}
 
     for i,p in pairs(plates) do
         RecGen:create("omnimatter","omnium-"..p.."-gear-box"):
@@ -98,6 +100,7 @@ if mods["bobplates"] then
             setIcons({"omnium-"..p.."-gear-box", 32}):
             setCategory("crafting"):
             setSubgroup("omni-gears"):
+            setLocName("item-name.omnium-alloy-gear-box", metal[i]):
             setTechName(plateTech[i]):
             extend()
     end
