@@ -3,7 +3,7 @@ if angelsmods and angelsmods.refining then
     --"angelsore7-crystallization-"
     if not settings.startup["omnicrystal-sloth"].value then
         for _,rec in pairs(data.raw.recipe) do
-            if omni.lib.start_with(rec.name,"slag-processing-") and not omni.lib.recipe_result_contains(rec.name,"slag-slurry") and not omni.lib.recipe_result_contains(rec.name,"mineral-sludge") and rec.name ~= "slag-processing-stone" then
+            if omni.lib.start_with(rec.name,"angels-slag-processing-") and not omni.lib.recipe_result_contains(rec.name,"angels-slag-slurry") and not omni.lib.recipe_result_contains(rec.name,"angels-mineral-sludge") and rec.name ~= "angels-slag-processing-stone" then
                 omni.lib.remove_recipe_all_techs(rec.name)
                 rec.enabled = false
             end

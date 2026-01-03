@@ -1,6 +1,6 @@
 
 local water = "water"
-if mods["angelsrefining"] then water = "water-purified" end
+if mods["angelsrefining"] then water = "angels-water-purified" end
 
 RecGen:create("omnimatter_crystal","hydromnic-acid"):
     fluid():

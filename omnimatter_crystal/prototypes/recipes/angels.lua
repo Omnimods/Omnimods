@@ -1,64 +1,67 @@
 
---local angel_stupid = {"manganese","chrome"}
 --ingredient lists (may need to remove old nodule stuff)
-local ingrediences_solvation=function(recipe)
+local function ingrediences_solvation(recipe)
     local ing = {}
     ing[#ing+1]={type = "fluid", name = "hydromnic-acid", amount = 120}
     if recipe and recipe.ingredients then
         for _, i in pairs(recipe.ingredients) do
-            if i.name ~= "catalysator-brown" and i.name ~= "angels-void" and i.name ~= "catalysator-green" and i.name ~= "catalysator-orange" then
+            if i.name ~= "angels-catalysator-brown" and i.name ~= "angels-void" and i.name ~= "angels-catalysator-green" and i.name ~= "angels-catalysator-orange" then
                 ing[#ing+1]=i
             end
         end
     elseif recipe.ingredients then
         for _, i in pairs(recipe.ingredients) do
-            if i.name ~= "catalysator-brown" and i.name ~= "angels-void" and i.name ~= "catalysator-green" and i.name ~= "catalysator-orange" then
+            if i.name ~= "angels-catalysator-brown" and i.name ~= "angels-void" and i.name ~= "angels-catalysator-green" and i.name ~= "angels-catalysator-orange" then
                 ing[#ing+1]=i
             end
         end
     end
     return ing
 end
-local ingrediences_nodule_solvation=function(recipe)
-    local ing = {}
-    ing[#ing+1]={type = "fluid", name = "hydromnic-acid", amount = 120}
-    for _, i in pairs(recipe.ingredients) do
-        if i.name ~= "catalysator-brown" and i.name ~= "angels-void" and i.name ~= "catalysator-green" then
-            ing[#ing+1]=i
-        end
-    end
-    return ing
-end
-local results_solvation=function(recipe)
+
+-- local ingrediences_nodule_solvation=function(recipe)
+--     local ing = {}
+--     ing[#ing+1]={type = "fluid", name = "hydromnic-acid", amount = 120}
+--     for _, i in pairs(recipe.ingredients) do
+--         if i.name ~= "catalysator-brown" and i.name ~= "angels-void" and i.name ~= "catalysator-green" then
+--             ing[#ing+1]=i
+--         end
+--     end
+--     return ing
+-- end
+
+local function results_solvation(recipe)
     local ing = {}
     --ing[#ing+1]={type = "fluid", name = "hydromnic-acid", amount = 120}
     if recipe and recipe.ingredients then
         for _, i in pairs(recipe.results) do
-            if i.name ~= "slag" and not string.find(i.name,"void") then
+            if i.name ~= "angels-slag" and not string.find(i.name,"void") then
                 ing[#ing+1]={type = "item", name=i.name.."-omnide-salt", amount = i.amount}
             end
         end
     elseif recipe.results then
         for _, i in pairs(recipe.results) do
-            if i.name ~= "slag" and not string.find(i.name,"void") then
+            if i.name ~= "angels-slag" and not string.find(i.name,"void") then
                 ing[#ing+1]={type = "item", name=i.name.."-omnide-salt", amount = i.amount}
             end
         end
     end
     return ing
 end
-local results_nodule_solvation=function(recipe)
-    local ing = {}
-    --ing[#ing+1]={type = "fluid", name = "hydromnic-acid", amount = 120}
-    for _, i in pairs(recipe.results) do
-        if i.name ~= "slag"  and not string.find(i.name,"void") then
-            ing[#ing+1]={type = "item", name=i.name.."-omnide-salt", amount = i.amount}
-        end
-    end
-    return ing
-end
+
+-- local results_nodule_solvation=function(recipe)
+--     local ing = {}
+--     --ing[#ing+1]={type = "fluid", name = "hydromnic-acid", amount = 120}
+--     for _, i in pairs(recipe.results) do
+--         if i.name ~= "slag"  and not string.find(i.name,"void") then
+--             ing[#ing+1]={type = "item", name=i.name.."-omnide-salt", amount = i.amount}
+--         end
+--     end
+--     return ing
+-- end
 --icons
-local salt_omnide_icon = function(metal)
+
+local function salt_omnide_icon(metal)
     --Build the icons table
     local icons = util.combine_icons(
         {{
@@ -74,8 +77,9 @@ local salt_omnide_icon = function(metal)
     end
     return icons
 end
+
 --checks
-local find_type = function(recipe,name)
+local function find_type(recipe,name)
     if recipe and recipe.ingredients then
         for _,ing in pairs(recipe.ingredients) do
             if string.find(ing.name,name) then return true end
@@ -88,12 +92,12 @@ local find_type = function(recipe,name)
     return false
 end
 
-local has_unlock = function(tech,recipe)
-    for _,eff in pairs(data.raw.technology[tech].effects) do
-        if eff.type == "unlock-recipe" and eff.recipe==recipe then return true end
-    end
-    return false
-end
+-- local has_unlock = function(tech,recipe)
+--     for _,eff in pairs(data.raw.technology[tech].effects) do
+--         if eff.type == "unlock-recipe" and eff.recipe==recipe then return true end
+--     end
+--     return false
+-- end
 
 local angelsores = {
     -- TIER 1 ORES
@@ -106,53 +110,45 @@ local angelsores = {
     {ore = "angels-copper-pebbles", product = "Copper pebbles"},
     {ore = "angels-copper-slag", product = "Copper slag"},
     -- TIER 1.5 ORES
-    {ore = "tin-ore", product = "Tin"},
-    {ore = "lead-ore", product = "Lead"},
-    {ore = "quartz", product = "Silicon"},
-    {ore = "nickel-ore", product = "Nickel"},
-    {ore = "manganese-ore", product = "Manganese"},
+    {ore = "angels-tin-ore", product = "Tin"},
+    {ore = "angels-lead-ore", product = "Lead"},
+    {ore = "angels-quartz", product = "Silicon"},
+    {ore = "angels-nickel-ore", product = "Nickel"},
+    {ore = "angels-manganese-ore", product = "Manganese"},
     -- TIER 2 ORES
-    {ore = "zinc-ore", product = "Zinc"},
-    {ore = "bauxite-ore", product =  "Aluminium"},
-    {ore = "cobalt-ore", product = "Cobalt"},
-    {ore = "silver-ore", product = "Silver"},
-    {ore = "fluorite-ore", product = "Fluorite"},
+    {ore = "angels-zinc-ore", product = "Zinc"},
+    {ore = "angels-bauxite-ore", product =  "Aluminium"},
+    {ore = "angels-cobalt-ore", product = "Cobalt"},
+    {ore = "angels-silver-ore", product = "Silver"},
+    {ore = "angels-fluorite-ore", product = "Fluorite"},
     -- TIER 2.5 ORES
-    {ore = "gold-ore", product = "Gold"},
+    {ore = "angels-gold-ore", product = "Gold"},
     -- TIER 3 ORES
-    {ore = "rutile-ore", product = "Titanium"},
+    {ore = "angels-rutile-ore", product = "Titanium"},
     {ore = "uranium-ore", product = "Uranium"},
     -- TIER 4 ORES
-    {ore = "tungsten-ore", product = "Tungsten"},
-    {ore = "thorium-ore", product = "Thorium"},
-    {ore = "chrome-ore", product = "Chrome"},
-    {ore = "platinum-ore", product = "Platinum"}
+    {ore = "angels-tungsten-ore", product = "Tungsten"},
+    {ore = "angels-thorium-ore", product = "Thorium"},
+    {ore = "angels-chrome-ore", product = "Chrome"},
+    {ore = "angels-platinum-ore", product = "Platinum"}
 }
 
 if angelsmods and angelsmods.refining then
 
     --check ore triggers
-    for i, ores in pairs(angelsores) do
+    for _, ores in pairs(angelsores) do
         if angelsmods.functions.ore_enabled(ores.ore) then
-            omni.crystal.add_crystal(ores.ore,ores.product)
+            omni.crystal.add_crystal(ores.ore, ores.product)
         end
     end
 
-    local rec = {}
     local crystalines = {}
     local processed={}
 
-    for _,recipe in pairs(data.raw.recipe) do
-        --log(serpent.block (recipe.name))
-        local results={}
-        if recipe and recipe.results then --non-standardised check?
-            results=recipe.results
-        elseif recipe.results then
-            results=recipe.results
-        end
-        --now we do the checks
-        if #results>1 or string.find(recipe.name,"mix") or string.find(recipe.name,"ore8") or string.find(recipe.name,"ore9") then
-            if string.find(recipe.name,"angelsore") and string.find(recipe.name,"processing") then
+    for _, recipe in pairs(data.raw.recipe) do
+        local results = recipe.results
+        if (results and #results > 1) or string.find(recipe.name, "mix") or string.find(recipe.name,"ore8") or string.find(recipe.name,"ore9") then
+            if string.find(recipe.name,"angels%-ore") and string.find(recipe.name,"processing") and not string.find(recipe.name,"machine") then
                 local ing = table.deepcopy(ingrediences_solvation(recipe))
                 local res = table.deepcopy(results_solvation(recipe))
                 if #ing > 0 and #res > 0 then
@@ -197,25 +193,35 @@ if angelsmods and angelsmods.refining then
                         energy_required = 5,
                     }
 
-                    crystalines[#crystalines+1]=solution
-                    --"angelsore-crushed-mix1-processing"
+                    crystalines[#crystalines+1] = solution
+                    --"angels-ore-crushed-mix1-processing"
                     --adding unlocks in sequence, once unlocked, add exclusion...
+
                     local blended_ore="false"
-                    if string.find(recipe.name,"ore8") or string.find(recipe.name,"ore9") then blended_ore="true" end
+                    if string.find(recipe.name,"ore8") or string.find(recipe.name,"ore9") then
+                        blended_ore="true"
+                    end
 
                     --find unlock tier
                     local tier=nil
-                    if find_type(recipe,"crushed") then tier= 1 --covers cupric/ferrous tier 1
-                    elseif find_type(recipe,"chunk") or (blended_ore=="true" and string.find(recipe.name,"powder")) then tier= 2
-                    elseif (find_type(recipe,"crystal") and blended_ore=="false") or (blended_ore=="true" and string.find(recipe.name,"dust")) then    tier= 3
-                    elseif find_type(recipe,"pure") or (blended_ore=="true" and string.find(recipe.name,"crystal")) then tier= 4
-                    else tier = 4 --if something goes horribly wrong...
+                    if find_type(recipe, "crushed") then
+                        tier = 1 --covers cupric/ferrous tier 1
+                    elseif find_type(recipe, "chunk") or (blended_ore == "true" and string.find(recipe.name, "powder")) then
+                        tier = 2
+                    elseif (find_type(recipe, "crystal") and blended_ore == "false") or (blended_ore == "true" and string.find(recipe.name, "dust")) then
+                        tier = 3
+                    elseif find_type(recipe, "pure") or (blended_ore == "true" and string.find(recipe.name, "crystal")) then
+                        tier = 4
+                    else
+                        tier = 4 --if something goes horribly wrong...
                     end
                     -- Force unlock recipe since data:extend() is called later
                     omni.lib.add_unlock_recipe("omnitech-crystallology-"..tier, metal.."-salting", true)
                     --check and set unlock tier
-                    for i,ore in pairs(results) do
-                        if not processed[ore.name] then processed[ore.name]=tier end
+                    for _,ore in pairs(results) do
+                        if not processed[ore.name] then
+                            processed[ore.name]=tier
+                        end
                     end
                 end
             end
@@ -228,9 +234,7 @@ if angelsmods and angelsmods.refining then
     for _,suf in pairs(suffixes) do
         for ore,i in pairs(processed) do
             if ore~="slag" then
-                for _,eff in pairs(data.raw.technology["omnitech-crystallology-"..math.min(i,maxcrystaltech)].effects) do
-                    omni.lib.add_unlock_recipe("omnitech-crystallology-"..math.min(i,maxcrystaltech), ore..suf)
-                end
+                omni.lib.add_unlock_recipe("omnitech-crystallology-"..math.min(i,maxcrystaltech), ore..suf)
             end
         end
     end
@@ -240,7 +244,7 @@ if angelsmods and angelsmods.refining then
         setSubgroup("omnine"):
         setStacksize(500):
         --setIcons("catalysator-yellow","angelsrefining"):
-        setIcons("omni-catalyst"):
+        setIcons({"omni-catalyst", 32}):
         setCategory("crystallizing"):
         setTechName("omnitech-crystallology-1"):
         setOrder("zz"):
@@ -250,9 +254,9 @@ if angelsmods and angelsmods.refining then
         setResults({type = "item", name = "omni-catalyst", amount=1}):
         setEnergy(0.5):extend()
         for i, rec in pairs(data.raw.recipe) do
-            if rec.category == "omniplant" and string.find(rec.name,"salting") then
+            if rec.category == "omniplant" and string.find(rec.name, "salting") then
                 omni.lib.replace_recipe_ingredient(rec.name, "hydromnic-acid",{type = "item", name = "omni-catalyst", amount=1})
-                rec.category = "ore-sorting"
+                rec.category = "angels-ore-sorting"
             end
         end
     end
