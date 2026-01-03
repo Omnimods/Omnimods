@@ -1,10 +1,11 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.2.4
-Date: ????
+Date: 2026-01-03
   Changes:
     - Updated SE compat for 2.0
   Bugfixes:
     - Fixed a possible crash with recipes specifying a fluid result with amount = 0
+    - Fixed a possible crash with recipes specifying no results table
 ---------------------------------------------------------------------------------------------------
 Version: 4.2.3
 Date: 2026-01-02
