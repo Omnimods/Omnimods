@@ -19,14 +19,22 @@ elseif nocomps then
 end
 
 if mods["boblogistics"] then
-
-    --Update subgroup
-    data.raw.recipe["bob-basic-transport-belt"].subgroup = "bob-logistic-tier-0"
-    data.raw.recipe["bob-basic-underground-belt"].subgroup = "bob-logistic-tier-0"
-    data.raw.recipe["bob-basic-splitter"].subgroup = "bob-logistic-tier-0"
+    --Update subgroup of omnienergy basic belts
+    data.raw.recipe["basic-transport-belt"].subgroup = "bob-logistic-tier-0"
+    data.raw.recipe["basic-underground-belt"].subgroup = "bob-logistic-tier-0"
+    data.raw.recipe["basic-splitter"].subgroup = "bob-logistic-tier-0"
     data.raw.recipe["transport-belt"].subgroup = "bob-logistic-tier-1"
     data.raw.recipe["underground-belt"].subgroup = "bob-logistic-tier-1"
     data.raw.recipe["splitter"].subgroup = "bob-logistic-tier-1"
+
+    --Remove bobs basic transport belts
+    omni.lib.replace_all_ingredient("bob-basic-transport-belt", "basic-transport-belt")
+    data.raw.recipe["bob-basic-transport-belt"].enabled = false
+
+    --Remove bob basic belts from yellows
+    omni.lib.remove_recipe_ingredient("transport-belt", "bob-basic-transport-belt")
+    omni.lib.remove_recipe_ingredient("underground-belt", "bob-basic-underground-belt")
+    omni.lib.remove_recipe_ingredient("splitter", "bob-basic-splitter")
 
 end
 
