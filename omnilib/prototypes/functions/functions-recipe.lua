@@ -207,7 +207,6 @@ function omni.lib.replace_recipe_result(recipename, result, replacement)
         local res = omni.lib.parse_results(rec.results)
         --Parse replacment and nil amount of the local table if not specified
         local repl = omni.lib.parse_ingredient(replacement)
-        if type(replacement) == "string" or not replacement.amount then repl.amount = nil end
         local found = false
 
         --check if the replacement is already an result, add up the current amount
@@ -258,7 +257,6 @@ function omni.lib.replace_recipe_ingredient(recipename, ingredient, replacement)
         local found = false
         --Parse replacment and nil amount of the local table if not specified
         local repl = omni.lib.parse_ingredient(replacement)
-        if type(replacement) == "string" or not replacement.amount then repl.amount = nil end
 
         --check if the replacement is already an ingredient, add up the current amount
         for _, i in pairs(ings) do
