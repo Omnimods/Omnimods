@@ -1,8 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.2.9
-Date: ????
+Date: 2026-01-04
   Bugfixes:
-    - Fixed omni.lib.replace_result() / ingredient() not respecting amoount in some cases
+    - Fixed omni.lib.replace_result() / ingredient() not respecting amount in some cases
 ---------------------------------------------------------------------------------------------------
 Version: 4.2.8
 Date: 2026-01-03
