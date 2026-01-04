@@ -1,7 +1,7 @@
 BuildGen:import("burner-mining-drill"):
     setIngredients(
     {type="item", name="iron-gear-wheel", amount=2},
-    {type="item", name="omnicium-plate", amount=4},
+    {type="item", name="omnicium-plate", amount=2},
     {type="item", name="omnitor", amount=1}):
     setEnabled():
     extend()

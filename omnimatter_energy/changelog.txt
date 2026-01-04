@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.2.7
+Date: 2026-01-04
+  Changes:
+    - Lower omnicium for omnitors from 4 to 2
+    - Lowe oomnicium for burner mining drills from 4 to 2
+  Bugfixes:
+    - Fixed Angel and bobs early burner entities fuel category not being updated
+    - Fixed Bob basic transport belt existing besides the omnienergy basix transport belt
+---------------------------------------------------------------------------------------------------
 Version: 3.2.6
 Date: 2026-01-03
   Changes:

@@ -1,0 +1,14 @@
+{
+    "item":
+        [
+            ["bob-basic-transport-belt", "basic-transport-belt"],
+            ["bob-basic-underground-belt", "basic-underground-belt"],
+            ["bob-basic-splitter", "basic-splitter"]
+        ],
+    "entity":
+        [
+            ["bob-basic-transport-belt", "basic-transport-belt"],
+            ["bob-basic-underground-belt", "basic-underground-belt"],
+            ["bob-basic-splitter", "basic-splitter"]
+        ]
+}
