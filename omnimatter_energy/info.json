@@ -1,12 +1,12 @@
 {
-"name":"omnimatter_energy",
-"version": "3.2.7",
-"title":"Omnienergy",
-"author":"EmperorZelos",
-"contact": "https://discord.gg/WQYks7W",
-"description":"Start with burner labs, inserters and assemblers, slow belts, and limited access to fuel. Research electricity with a new science pack and better fuel refining methods up to renewable energy",
-"factorio_version":"2.0",
-"dependencies":[
+  "name": "omnimatter_energy",
+  "version": "3.2.8",
+  "title": "Omnienergy",
+  "author": "EmperorZelos",
+  "contact": "https://discord.gg/WQYks7W",
+  "description": "Start with burner labs, inserters and assemblers, slow belts, and limited access to fuel. Research electricity with a new science pack and better fuel refining methods up to renewable energy",
+  "factorio_version": "2.0",
+  "dependencies": [
     "base",
     "omnilib >= 4.2.7",
     "omnimatter",
@@ -15,7 +15,9 @@
     "? bobassembly",
     "? Krastorio2",
     "? DiscoScience",
+    "? loaders-modernized",
+    "? miniloader-redux",
     "(?) bobplates",
     "! aai-industry"
-]
+  ]
 }
