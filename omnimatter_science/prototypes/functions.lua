@@ -146,31 +146,32 @@ end
 -----------------------
 -- Support Functions --
 -----------------------
-local labComponents = {}
+local SP_used_in_lab = {}
 local function run_lab_comp_check()
 --build lab ingredients table
     for _,lab in pairs(data.raw.lab) do
         if not string.find(lab.name,"creative") then --always exclude creative labs
             for _, input in pairs(lab.inputs) do
-                labComponents[input] = true
+                SP_used_in_lab[input] = true
             end
         end
     end
 end
 
 --check lab ingredients
-local function hasLabIngredients(tech)
-    for _,input in pairs(tech.unit.ingredients) do
-        if not labComponents[input[1] or input.name] then return false end
+local function all_SP_ings_are_lab_inputs(tech)
+    if tech.unit and tech.unit.ingredients then
+        for _,input in pairs(tech.unit.ingredients) do
+            if not SP_used_in_lab[input.name or input[1]] then return false end
+        end
     end
     return true
 end
 
 --prerequisite in finalised list check
 local function all_pre_in_table(tech)
-    t=data.raw.technology[tech]
-    for _,pre in pairs(t.prerequisites) do
-        if not omni.lib.is_in_table(pre,omni.science.tech_list.name) then return false end
+    for _, pre in pairs(data.raw.technology[tech].prerequisites) do
+        if not omni.lib.is_in_table(pre, omni.science.tech_list.name) then return false end
     end
     return true
 end
@@ -204,25 +205,24 @@ function omni.science.tech_updates()
     --tech_list.height={}
     --module
     --omni-impure
-    local omni_excempt_list = {{"omniston","solvation"},{"omnic","hydrolyzation"},{"stone","omnisolvent"},"distillation",{"omni","sorting"},{"impure","omni"},{"water","omnitraction"},{"mud","omnitraction"}}
-    omni_excempt_list[#omni_excempt_list+1]={"pseudoliquid","amorphous","crystal"}
+    local omni_excempt_list = {{"omniston","solvation"},{"omnic","hydrolyzation"},{"stone","omnisolvent"},"distillation",{"omni","sorting"},{"impure","omni"},{"water","omnitraction"},{"mud","omnitraction"},{"pseudoliquid","amorphous","crystal"}}
 
     run_lab_comp_check() --ensure this is done at the right time
 
     -- separate techs for processing and set tech time
-    for _,tech in pairs(data.raw.technology) do
+    for _, tech in pairs(data.raw.technology) do
         local unit = tech.unit
         if unit then
             --roll through each tech
-            if Set.StdTime and omni.lib.start_with(tech.name,"omnipressed-") then --compression tech time standardise?
+            if tech.unit and Set.StdTime and omni.lib.start_with(tech.name,"omnipressed-") then --compression tech time standardise?
                 --standardised research time
-                unit.time = Set.StdTimeConst
+                tech.unit.time = Set.StdTimeConst
             end
             --if contains packs as ingredients
-            if not omni.lib.start_with(tech.name,"omnitech") or (Set.ModOmCost and omni.lib.start_with(tech.name,"omnitech")) and
-            (#omni.science.exclude_tech_from_maths >=1) and not omni.science.exclude_tech_from_maths(tech.name) then --omnitech with start-up setting
+            if not omni.lib.start_with(tech.name,"omnitech") or
+            ((Set.ModOmCost and omni.lib.start_with(tech.name,"omnitech")) and (#omni.science.exclude_tech_from_maths >=1) and not omni.science.exclude_tech_from_maths(tech.name)) then --omnitech with start-up setting
                 --check compliance before adding to table
-                if not tech.prerequisites or #tech.prerequisites == 0 or not hasLabIngredients(tech) then
+                if not tech.prerequisites or #tech.prerequisites == 0 or not all_SP_ings_are_lab_inputs(tech) then
                     --non-compliant, set height to 1
                     tech_list.name[#tech_list.name+1] = tech.name
                     tech_list.cost[#tech_list.cost+1] = unit.count or 1 --just incase does not have count
@@ -243,7 +243,6 @@ function omni.science.tech_updates()
         end
     end
 
-    --log(serpent.block(check_techs))
     -- select and update costings of techs in check_techs
     local found = true --used to allow multi-pass calculations
     while #check_techs > 0 and found do
@@ -252,12 +251,12 @@ function omni.science.tech_updates()
             local techno = data.raw.technology[tech] --set shortening of something used commonly
             if all_pre_in_table(tech) and (techno.unit.count or techno.unit[2]) then
                 found = true --this re-initiates the loop, this prevents lockups if a loop fails to modify
-                table.insert(tech_list.name, tech)
+                tech_list.name[#tech_list.name+1] = tech
                 local cost = techno.unit.count or techno.unit[2]
                 local h = 0
                 local add = 0
                 for _,pre in pairs(techno.prerequisites) do
-                    h = math.max(h,get_height(pre)) -- set this for all conditions
+                    h = math.max(h, get_height(pre)) -- set this for all conditions
                     if Set.Cumul then
                         if tech ~= "rocket-silo" or Set.ModSilo then
                             if not string.find(pre,"omnitech") then
