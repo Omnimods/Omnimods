@@ -142,8 +142,6 @@ function omni.science.omnipack_tech_post_update()
                                     break
                                 end
                             end
-                        --elseif --is there a chance that omnipacks will pre-date a trigger?
-                        --do nothing
                         end
                         if found == true then break end
                     end
