@@ -123,6 +123,7 @@ function omni.science.omnipack_tech_post_update()
             --If yes, add omnipack to this tech (jump trigger techs)
             if  tech.unit and next(tech.unit) then
                 local found = false
+                local prereq_only_trigger = true
                 for _,prereq in pairs(tech.prerequisites) do
                     if contains_omnipack[prereq] then
                         found = true
@@ -132,6 +133,7 @@ function omni.science.omnipack_tech_post_update()
                             error("Prereq "..prereq.." of Technology "..techname.." does not exist")
                         end
                         if data.raw.technology[prereq].unit and next(data.raw.technology[prereq].unit) then
+                            prereq_only_trigger = false
                             for _,ing in pairs(data.raw.technology[prereq].unit.ingredients) do
                                 if omni.lib.is_in_table("omni-pack", ing) then
                                     contains_omnipack[prereq] = true
@@ -147,6 +149,37 @@ function omni.science.omnipack_tech_post_update()
                     end
                 end
 
+                --Special case: All prereqs are trigger techs
+                --We need to check the prereqs of hte prereqs for omnipack
+                if found == false and prereq_only_trigger == true then
+                    for _, prereq in pairs(tech.prerequisites) do
+                        for _, pre_prereq in pairs(data.raw.technology[prereq].prerequisites) do
+                            if contains_omnipack[pre_prereq] then
+                                found = true
+                                break
+                            else
+                                if not data.raw.technology[pre_prereq] then
+                                    error("Prereq "..pre_prereq.." of Technology "..techname.." does not exist")
+                                end
+                                if data.raw.technology[pre_prereq].unit and next(data.raw.technology[pre_prereq].unit) then
+                                    for _,ing in pairs(data.raw.technology[pre_prereq].unit.ingredients) do
+                                        if omni.lib.is_in_table("omni-pack", ing) then
+                                            contains_omnipack[pre_prereq] = true
+                                            omni.lib.remove_from_table(pre_prereq, omni.science.remaining_techs)
+                                            found = true
+                                            break
+                                        end
+                                    end
+                                --elseif --is there a chance that omnipacks will pre-date a trigger?
+                                --do nothing
+                                end
+                                if found == true then break end
+                            end
+                        end
+                    end
+                end
+
+                --Add the omnipack
                 if found == true then
                     omni.lib.add_science_pack(techname, "omni-pack")
                     contains_omnipack[techname] = true
