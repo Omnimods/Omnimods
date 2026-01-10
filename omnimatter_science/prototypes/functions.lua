@@ -16,10 +16,10 @@ local function build_tech_list()
     log("Building technology list")
     for _, tech in pairs(data.raw.technology) do
         --No science packs -> Trigger tech
-        if not tech.unit or not next(tech.unit) then
+        --[[if not tech.unit or not next(tech.unit) then
             omni.science.exclude_tech[tech.name] = true
             goto continue
-        end
+        end]]
         -- if modules
         if string.find(tech.name,"-module") or tech.name == "module-merging" then
             omni.science.exclude_tech[tech.name] = true
@@ -27,10 +27,12 @@ local function build_tech_list()
         end
         -- if alien science (gold pack)
         for _,ing in pairs(tech.unit.ingredients) do
-            for _,sub_ing in pairs(ing) do
-                if string.find(sub_ing, "science%-pack%-gold") then
-                    omni.science.exclude_tech[tech.name] = true
-                    goto continue
+            if ing.unit then -- skip if not unit
+                for _,sub_ing in pairs(ing) do
+                    if string.find(sub_ing, "science%-pack%-gold") then
+                        omni.science.exclude_tech[tech.name] = true
+                        goto continue
+                    end
                 end
             end
         end
@@ -44,6 +46,26 @@ local function build_tech_list()
         end
         --Add Tech to the list of remaining techs to update
         omni.science.remaining_techs[#omni.science.remaining_techs+1] = tech.name
+        -- add trigger skips on set types
+        if tech.research_trigger then
+            local skip_list = {
+                ["craft-item"]= false,
+                ["craft-fluid"]= false,
+                ["mine-entity"]= true,
+                ["send-item-to-orbit"]= true,
+                ["capture-spawner"]= true,
+                ["build-entity"]= true,
+                ["create-space-platform"]= true,
+            }
+            for i, trigger in pairs (skip_list) do
+                if tech.research_trigger == i then
+                    if trigger == true then
+                        omni.science.exclude_tech[tech.name]=true
+                        goto continue
+                    end
+                end
+            end
+        end
         ::continue::
     end
 end
@@ -64,8 +86,8 @@ function omni.science.omnipack_tech_post_update()
     while next(omni.science.remaining_techs) do
 
         index = index +1
-        --log("Looping through the internal tech list for the "..index.." time")
-        --log("Number of techs to loop through: "..#omni.science.remaining_techs)
+        log("Looping through the internal tech list for the "..index.." time")
+        log("Number of techs to loop through: "..#omni.science.remaining_techs)
         if index > 50 then
             log("WARNING: Max amount of tech list loops exceeded!")
             break
@@ -114,6 +136,8 @@ function omni.science.omnipack_tech_post_update()
                                 break
                             end
                         end
+                    --elseif --is there a chance that omnipacks will pre-date a trigger?
+                    --do nothing
                     end
                     if found == true then break end
                 end
@@ -233,7 +257,7 @@ function omni.science.tech_updates()
             elseif omni.lib.start_with(tech.name,"omnitech") and not Set.ModOmCost then
                 --set height to 0 (so multiplier is 1)
                 tech_list.name[#tech_list.name+1] = tech.name
-                tech_list.cost[#tech_list.cost+1] = tech.unit.count or tech.unit[2] or 1
+                tech_list.cost[#tech_list.cost+1] = unit.count or 1
                 tech_list.height[#tech_list.height+1] = 0
             elseif omni.lib.start_with(tech.name,"omnitech") then
                 check_techs[#check_techs+1] = tech.name
@@ -249,7 +273,8 @@ function omni.science.tech_updates()
         found = false
         for i,tech in pairs(check_techs) do
             local techno = data.raw.technology[tech] --set shortening of something used commonly
-            if all_pre_in_table(tech) and (techno.unit.count or techno.unit[2]) then
+            local formula = (techno.unit and techno.unit.count_formula) and true or false --techs with formula would need text stitching to work
+            if all_pre_in_table(tech) and not formula then
                 found = true --this re-initiates the loop, this prevents lockups if a loop fails to modify
                 tech_list.name[#tech_list.name+1] = tech
                 local cost = techno.unit.count or techno.unit[2]
@@ -259,17 +284,23 @@ function omni.science.tech_updates()
                     h = math.max(h, get_height(pre)) -- set this for all conditions
                     if Set.Cumul then
                         if tech ~= "rocket-silo" or Set.ModSilo then
-                            if not string.find(pre,"omnitech") then
-                                cost = cost+get_cost(pre)*Set.CumulConst --adds all non-omni techs regardless
+                            if cost == nil or get_cost(pre) == nil then --skip (uses cost_formula)
                             else
-                                add = math.max(add,get_cost(pre)*Set.CumulOmConst) --adds only the most expensive omni tech
+                                if not string.find(pre,"omnitech") then
+                                    cost = cost+get_cost(pre)*Set.CumulConst --adds all non-omni techs regardless
+                                else
+                                    add = math.max(add,get_cost(pre)*Set.CumulOmConst) --adds only the most expensive omni tech
+                                end
                             end
                         elseif not string.find(pre,"omnitech") then
                             cost = cost+get_cost(pre)
                         end
                     end
                 end
-                cost=cost+add--*Set.OmMaxConst --add==0 if not cumulative mode, so this line does nothing in exp mode
+                if cost == nil then
+                else
+                    cost=cost+add--*Set.OmMaxConst --add==0 if not cumulative mode, so this line does nothing in exp mode
+                end
 
                 if #techno.prerequisites == 1 and Set.Cumul then
                     local c = Set.CumulOmConst
@@ -305,13 +336,13 @@ function omni.science.tech_updates()
     end
     if Set.ModAllCost then
         for i,tech in pairs(tech_list.name) do
-            local raw_tech = data.raw.technology[tech]
-            if Set.Cumul then
-                raw_tech.unit.count = math.ceil(tech_list.cost[i])
-            elseif Set.Expon then
-                raw_tech.unit.count = math.ceil(Set.ExponInit*math.pow(Set.ExponBase,tech_list.height[i]))
+            local unit = data.raw.technology[tech].unit and data.raw.technology[tech].unit or data.raw.technology[tech].research_trigger
+            if Set.Cumul and not(tech_list.cost[i] == nil) then
+                unit.count = math.ceil(tech_list.cost[i])
+            elseif Set.Expon and not(tech_list.cost[i] == nil)then
+                unit.count = math.ceil(Set.ExponInit*math.pow(Set.ExponBase,tech_list.height[i]))
             else --no maths changing mode
-                log("why bother with this mod if you don't want cumulative or exponential tech costs?")
+                --log("why bother with this mod if you don't want cumulative or exponential tech costs?")
             end
         end
     end
