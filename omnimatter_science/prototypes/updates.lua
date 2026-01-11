@@ -1,7 +1,7 @@
 if mods["angelsbioprocessing"] then
-    omni.lib.add_unlock_recipe("bio-farm","temperate-garden-cultivating-b")
-    omni.lib.add_unlock_recipe("bio-farm","desert-garden-cultivating-b")
-    omni.lib.add_unlock_recipe("bio-farm","swamp-garden-cultivating-b")
+    omni.lib.add_unlock_recipe("angels-bio-farm","angels-temperate-garden-cultivating-b")
+    omni.lib.add_unlock_recipe("angels-bio-farm","angels-desert-garden-cultivating-b")
+    omni.lib.add_unlock_recipe("angels-bio-farm","angels-swamp-garden-cultivating-b")
 end
 
 --Add Omni science pack if crystal is present
@@ -74,7 +74,7 @@ if mods["omnimatter_crystal"] then
     end
 
     if mods["angelslogistics"] then
-        omni.lib.add_science_pack("cangels-argo-robots-2", "omni-pack")
+        omni.lib.add_science_pack("angels-cargo-robots-2", "omni-pack")
     end
 
     if mods["angelspetrochem"] then
@@ -136,7 +136,7 @@ if mods["omnimatter_crystal"] then
     end
 
     if mods["bobplates"] then
-        omni.lib.add_science_pack("gem-processing-1", "omni-pack")
+        omni.lib.add_science_pack("bob-gem-processing-1", "omni-pack")
     end
 
     if mods["boblogistics"] then
