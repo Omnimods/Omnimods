@@ -354,7 +354,7 @@ function omni.science.tech_updates()
                             local t = techno.prerequisites[1]
                             local count = 0
                             while data.raw.technology[t].prerequisites and #data.raw.technology[t].prerequisites >= 1 do
-                                if count > 100 then
+                                if count > 150 then
                                     error("Technology loop detected with:"..data.raw.technology[t].name)
                                 end
                                 if data.raw.technology[t].prerequisites[1] == nil then --what the heck is going on here
