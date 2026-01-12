@@ -88,8 +88,8 @@ function omni.science.omnipack_tech_post_update()
     while next(omni.science.remaining_techs) do
 
         index = index +1
-        log("Looping through the internal tech list for the "..index.." time")
-        log("Number of techs to loop through: "..#omni.science.remaining_techs)
+        --log("Looping through the internal tech list for the "..index.." time")
+        --log("Number of techs to loop through: "..#omni.science.remaining_techs)
         if index > 50 then
             log("WARNING: Max amount of tech list loops exceeded!")
             break
@@ -272,35 +272,42 @@ function omni.science.tech_updates()
     -- separate techs for processing and set tech time
     for _, tech in pairs(data.raw.technology) do
         local unit = tech.unit
-        if unit then
-            --roll through each tech
-            if tech.unit and Set.StdTime and omni.lib.start_with(tech.name,"omnipressed-") then --compression tech time standardise?
-                --standardised research time
-                tech.unit.time = Set.StdTimeConst
-            end
-            --if contains packs as ingredients
-            if not omni.lib.start_with(tech.name,"omnitech") or
-            ((Set.ModOmCost and omni.lib.start_with(tech.name,"omnitech")) and (#omni.science.exclude_tech_from_maths >=1) and not omni.science.exclude_tech_from_maths(tech.name)) then --omnitech with start-up setting
-                --check compliance before adding to table
-                if not tech.prerequisites or #tech.prerequisites == 0 or not all_SP_ings_are_lab_inputs(tech) then
-                    --non-compliant, set height to 1
-                    tech_list.name[#tech_list.name+1] = tech.name
-                    tech_list.cost[#tech_list.cost+1] = unit.count or 1 --just incase does not have count
-                    tech_list.height[#tech_list.height+1] = 1
-                else
-                    check_techs[#check_techs+1] = tech.name
-                end
-            elseif omni.lib.start_with(tech.name,"omnitech") and not Set.ModOmCost then
-                --set height to 0 (so multiplier is 1)
-                tech_list.name[#tech_list.name+1] = tech.name
-                tech_list.cost[#tech_list.cost+1] = unit.count or 1
-                tech_list.height[#tech_list.height+1] = 0
-            elseif omni.lib.start_with(tech.name,"omnitech") then
-                check_techs[#check_techs+1] = tech.name
-            else
-                log("what? ".. tech.name .." does not compute?")--this should NEVER show up :D
-            end
+        --if unit then
+        --roll through each tech
+        if tech.unit and Set.StdTime and omni.lib.start_with(tech.name,"omnipressed-") then --compression tech time standardise?
+            --standardised research time
+            tech.unit.time = Set.StdTimeConst
         end
+        if tech.name == "omnitech-energy-science-pack" then log(serpent.block(tech.research_trigger)) end
+
+        if tech.research_trigger or (not omni.lib.start_with(tech.name,"omnitech") and  not (tech.prerequisites and next(tech.prerequisites))) then
+            --set height to 0 (so multiplier is 1)
+            tech_list.name[#tech_list.name+1] = tech.name
+            tech_list.cost[#tech_list.cost+1] = 0
+            tech_list.height[#tech_list.height+1] = 0
+        --if contains packs as ingredients
+        elseif tech.unit and not omni.lib.start_with(tech.name,"omnitech") or
+            ((Set.ModOmCost and omni.lib.start_with(tech.name,"omnitech")) and (#omni.science.exclude_tech_from_maths >=1) and not omni.science.exclude_tech_from_maths(tech.name)) then --omnitech with start-up setting
+            --check compliance before adding to table
+            if not tech.prerequisites or #tech.prerequisites == 0 or not all_SP_ings_are_lab_inputs(tech) then
+                --non-compliant, set height to 1
+                tech_list.name[#tech_list.name+1] = tech.name
+                tech_list.cost[#tech_list.cost+1] = unit.count or 1 --just incase does not have count
+                tech_list.height[#tech_list.height+1] = 1
+            else
+                check_techs[#check_techs+1] = tech.name
+            end
+        elseif tech.unit and omni.lib.start_with(tech.name,"omnitech") and not Set.ModOmCost then
+            --set height to 0 (so multiplier is 1)
+            tech_list.name[#tech_list.name+1] = tech.name
+            tech_list.cost[#tech_list.cost+1] = unit.count or 1
+            tech_list.height[#tech_list.height+1] = 0
+        elseif tech.unit and omni.lib.start_with(tech.name,"omnitech") then
+            check_techs[#check_techs+1] = tech.name
+        else
+            log("what? ".. tech.name .." does not compute?")--this should NEVER show up :D
+        end
+        --end
     end
 
     -- select and update costings of techs in check_techs
@@ -309,59 +316,59 @@ function omni.science.tech_updates()
         found = false
         for i,tech in pairs(check_techs) do
             local techno = data.raw.technology[tech] --set shortening of something used commonly
-            local formula = (techno.unit and techno.unit.count_formula) and true or false --techs with formula would need text stitching to work
+            local formula = (techno.unit and techno.unit.count_formula)
             if all_pre_in_table(tech) and not formula then
                 found = true --this re-initiates the loop, this prevents lockups if a loop fails to modify
                 tech_list.name[#tech_list.name+1] = tech
-                local cost = techno.unit.count or techno.unit[2]
+                local cost = 0
                 local h = 0
                 local add = 0
-                for _,pre in pairs(techno.prerequisites) do
-                    h = math.max(h, get_height(pre)) -- set this for all conditions
-                    if Set.Cumul then
-                        if tech ~= "rocket-silo" or Set.ModSilo then
-                            if cost == nil or get_cost(pre) == nil then --skip (uses cost_formula)
-                            else
-                                if not string.find(pre,"omnitech") then
-                                    cost = cost+get_cost(pre)*Set.CumulConst --adds all non-omni techs regardless
+                if techno.unit and next(techno.unit) then
+                    cost = techno.unit.count or techno.unit[2]
+                    for _,pre in pairs(techno.prerequisites) do
+                        h = math.max(h, get_height(pre)) -- set this for all conditions
+                        if Set.Cumul then
+                            if tech ~= "rocket-silo" or Set.ModSilo then
+                                if cost == nil or get_cost(pre) == nil then --skip (uses cost_formula)
                                 else
-                                    add = math.max(add,get_cost(pre)*Set.CumulOmConst) --adds only the most expensive omni tech
+                                    if not string.find(pre,"omnitech") then
+                                        cost = cost+get_cost(pre)*Set.CumulConst --adds all non-omni techs regardless
+                                    else
+                                        add = math.max(add,get_cost(pre)*Set.CumulOmConst) --adds only the most expensive omni tech
+                                    end
                                 end
+                            elseif not string.find(pre,"omnitech") then
+                                cost = cost+get_cost(pre)
                             end
-                        elseif not string.find(pre,"omnitech") then
-                            cost = cost+get_cost(pre)
                         end
                     end
-                end
-                if cost == nil then
-                else
                     cost=cost+add--*Set.OmMaxConst --add==0 if not cumulative mode, so this line does nothing in exp mode
-                end
 
-                if #techno.prerequisites == 1 and Set.Cumul then
-                    local c = Set.CumulOmConst
-                    local chain = Set.ChainConst
-                    if omni.lib.start_with(tech,"omnitech") then
-                        cost = cost*(1+Set.ChainOmConst*c/(c+1))
-                    else
-                        local lv = 1
-                        local t = techno.prerequisites[1]
-                        local count = 0
-                        while data.raw.technology[t].prerequisites and #data.raw.technology[t].prerequisites >= 1 do
-                            if count > 100 then
-                                error("Technology loop detected with:"..data.raw.technology[t].name)
+                    if #techno.prerequisites == 1 and Set.Cumul then
+                        local c = Set.CumulOmConst
+                        local chain = Set.ChainConst
+                        if omni.lib.start_with(tech,"omnitech") then
+                            cost = cost*(1+Set.ChainOmConst*c/(c+1))
+                        else
+                            local lv = 1
+                            local t = techno.prerequisites[1]
+                            local count = 0
+                            while data.raw.technology[t].prerequisites and #data.raw.technology[t].prerequisites >= 1 do
+                                if count > 100 then
+                                    error("Technology loop detected with:"..data.raw.technology[t].name)
+                                end
+                                if data.raw.technology[t].prerequisites[1] == nil then --what the heck is going on here
+                                    log("nil detected in pre-req table of "..t)
+                                    log(serpent.block(data.raw.technology[t].prerequisites))
+                                    break
+                                else
+                                    lv = lv+1
+                                    t = data.raw.technology[t].prerequisites[1]
+                                    count = count + 1
+                                end
                             end
-                            if data.raw.technology[t].prerequisites[1] == nil then --what the heck is going on here
-                                log("nil detected in pre-req table of "..t)
-                                log(serpent.block(data.raw.technology[t].prerequisites))
-                                break
-                            else
-                                lv = lv+1
-                                t = data.raw.technology[t].prerequisites[1]
-                                count = count + 1
-                            end
+                            cost = cost*(math.pow(1+chain*c/(c+1),1+lv/(lv+1)))
                         end
-                        cost = cost*(math.pow(1+chain*c/(c+1),1+lv/(lv+1)))
                     end
                 end
                 table.insert(tech_list.cost,cost)
@@ -372,13 +379,16 @@ function omni.science.tech_updates()
     end
     if Set.ModAllCost then
         for i,tech in pairs(tech_list.name) do
-            local unit = data.raw.technology[tech].unit and data.raw.technology[tech].unit or data.raw.technology[tech].research_trigger
-            if Set.Cumul and not(tech_list.cost[i] == nil) then
-                unit.count = math.ceil(tech_list.cost[i])
-            elseif Set.Expon and not(tech_list.cost[i] == nil)then
-                unit.count = math.ceil(Set.ExponInit*math.pow(Set.ExponBase,tech_list.height[i]))
-            else --no maths changing mode
-                --log("why bother with this mod if you don't want cumulative or exponential tech costs?")
+            local unit = data.raw.technology[tech].unit
+            local c = tech_list.cost[i]
+            if unit and c > 0 then
+                if Set.Cumul and not(c == nil) then
+                    unit.count = math.ceil(c)
+                elseif Set.Expon and not(c == nil)then
+                    unit.count = math.ceil(Set.ExponInit*math.pow(Set.ExponBase,tech_list.height[i]))
+                else --no maths changing mode
+                    --log("why bother with this mod if you don't want cumulative or exponential tech costs?")
+                end
             end
         end
     end

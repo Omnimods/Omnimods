@@ -35,7 +35,8 @@ if mods["omnimatter_crystal"] then
 
     omni.lib.replace_science_pack("omnitech-crystallology-2", "chemical-science-pack", "omni-pack")
     omni.lib.replace_science_pack("military-3", "chemical-science-pack", "omni-pack")
-    omni.lib.replace_science_pack("mining-productivity-4", "chemical-science-pack", "omni-pack")
+    omni.lib.replace_science_pack("mining-productivity-2", "chemical-science-pack", "omni-pack")
+    omni.lib.replace_science_pack("mining-productivity-3", "chemical-science-pack", "omni-pack")
     --omni.lib.replace_science_pack("rocket-damage-3", "chemical-science-pack", "omni-pack") --keeps throwing an error??
     --omni.lib.replace_science_pack("mining-productivity-8", "production-science-pack", "omni-pack") --keeps throwing an error??
     --omni.lib.replace_science_pack("mining-productivity-12", "utility-science-pack", "omni-pack") --keeps throwing an error??
