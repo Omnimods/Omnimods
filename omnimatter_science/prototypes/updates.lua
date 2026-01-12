@@ -1,7 +1,7 @@
 if mods["angelsbioprocessing"] then
-    omni.lib.add_unlock_recipe("bio-farm","temperate-garden-cultivating-b")
-    omni.lib.add_unlock_recipe("bio-farm","desert-garden-cultivating-b")
-    omni.lib.add_unlock_recipe("bio-farm","swamp-garden-cultivating-b")
+    omni.lib.add_unlock_recipe("angels-bio-farm","angels-temperate-garden-cultivating-b")
+    omni.lib.add_unlock_recipe("angels-bio-farm","angels-desert-garden-cultivating-b")
+    omni.lib.add_unlock_recipe("angels-bio-farm","angels-swamp-garden-cultivating-b")
 end
 
 --Add Omni science pack if crystal is present
@@ -35,7 +35,8 @@ if mods["omnimatter_crystal"] then
 
     omni.lib.replace_science_pack("omnitech-crystallology-2", "chemical-science-pack", "omni-pack")
     omni.lib.replace_science_pack("military-3", "chemical-science-pack", "omni-pack")
-    omni.lib.replace_science_pack("mining-productivity-4", "chemical-science-pack", "omni-pack")
+    omni.lib.replace_science_pack("mining-productivity-2", "chemical-science-pack", "omni-pack")
+    omni.lib.replace_science_pack("mining-productivity-3", "chemical-science-pack", "omni-pack")
     --omni.lib.replace_science_pack("rocket-damage-3", "chemical-science-pack", "omni-pack") --keeps throwing an error??
     --omni.lib.replace_science_pack("mining-productivity-8", "production-science-pack", "omni-pack") --keeps throwing an error??
     --omni.lib.replace_science_pack("mining-productivity-12", "utility-science-pack", "omni-pack") --keeps throwing an error??
@@ -74,7 +75,7 @@ if mods["omnimatter_crystal"] then
     end
 
     if mods["angelslogistics"] then
-        omni.lib.add_science_pack("cangels-argo-robots-2", "omni-pack")
+        omni.lib.add_science_pack("angels-cargo-robots-2", "omni-pack")
     end
 
     if mods["angelspetrochem"] then
@@ -136,7 +137,7 @@ if mods["omnimatter_crystal"] then
     end
 
     if mods["bobplates"] then
-        omni.lib.add_science_pack("gem-processing-1", "omni-pack")
+        omni.lib.add_science_pack("bob-gem-processing-1", "omni-pack")
     end
 
     if mods["boblogistics"] then

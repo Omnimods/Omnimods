@@ -579,7 +579,7 @@ function ItemGen:setIcons(icons,mod)
                 ic[#ic+1] = {
                     icon = "__"..mod.."__/graphics/icons/"..(icons.icon  or (type(icons[1]) == "string" and icons[1]))..".png",
                     icon_size = ic_sz,
-                    scale = icons.scale or 1,
+                    scale = icons.scale or ((defines.default_icon_size / 2) / ic_sz),
                     --optional
                     shift = icons.shift
                 }
@@ -590,7 +590,7 @@ function ItemGen:setIcons(icons,mod)
                         ic[#ic+1] = {
                             icon = "__"..mod.."__/graphics/icons/"..(c.icon  or (type(c[1]) == "string" and c[1]))..".png",
                             icon_size = ic_sz,
-                            scale = c.scale or 1,
+                            scale = c.scale or ((defines.default_icon_size / 2) / ic_sz),
                             --optional
                             shift = c.shift
                         }
@@ -602,7 +602,7 @@ function ItemGen:setIcons(icons,mod)
             self.icons = function(levels,grade) return ic end
         else
             local ic_size = icons.icon_size or defines.default_icon_size
-            local ic_scale = 1
+            local ic_scale = ((defines.default_icon_size / 2) / ic_size)
             local check = {}
             if data.raw.item[icons] then
                 check=data.raw.item[icons]
@@ -614,7 +614,7 @@ function ItemGen:setIcons(icons,mod)
         -- --find icon_size
         local ic = (type(icons)=="string" and icons) or (type(icons[1])=="string" and icons[1])
         local ic_sz = icons.icon_size or (type(icons[2])=="number" and icons[2]) or defines.default_icon_size
-        local ic_scale = icons.scale or 1 --defines.default_icon_size / ic_sz
+        local ic_scale = icons.scale or ((defines.default_icon_size / 2) / ic_sz)
 
         if ic and string.match(ic, "%_%_(.-)%_%_") then
             local name = string.match(ic,".*%/(.-).png")
@@ -642,7 +642,7 @@ end
 
 function ItemGen:addIcon(icon)
     local oldIcons = table.deepcopy(self.icons(0,0))
-    if not oldIcons[1].scale then oldIcons[1].scale = (defines.default_icon_size / 2) /  oldIcons[1].icon_size or defines.default_icon_size end -- In case no scale of the main icon is defined, we need to set it (0.5 for 64px)
+    if not oldIcons[1].scale then oldIcons[1].scale = (defines.default_icon_size / 2) /  (oldIcons[1].icon_size or defines.default_icon_size) end -- In case no scale of the main icon is defined, we need to set it (0.5 for 64px)
     local first_layer_ic_sz = oldIcons[1].icon_size or defines.default_icon_size
     local a = function(levels,grade) return {} end
     if type(icon) == "table" and icon.icon then

@@ -20,8 +20,8 @@ omni.science.triggers.StdTimeConst = settings.startup["omniscience-standard-time
 --set-up triggers for the science-pack
 lab_ignore_pack = omni.science.triggers.lab_ignore_pack or {}
 --default the bobs special labs to not take
-lab_ignore_pack["lab-alien"] = true
-lab_ignore_pack["lab-module"] = true
+lab_ignore_pack["bpb-lab-alien"] = true
+lab_ignore_pack["bob-lab-module"] = true
 lab_ignore_pack["omnitor-lab"] = true
 lab_ignore_pack["kr-spaceship-research-computer"] = true  --K2 early lab
 

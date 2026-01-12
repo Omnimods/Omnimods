@@ -328,9 +328,10 @@ local function omnidate(technology)
                 end
                 -- Iterate techs, set their given recipe state
                 for tech_name, tech_recipes in pairs(recipe_techs) do
-                    if force_techs[tech_name].researched then
+                    local tech = force_techs[tech_name]
+                    if tech and tech.researched then
                         for recipe_name, recipe_meta in pairs(tech_recipes) do
-                            process_rec(recipe_name, recipe_meta, force_techs[tech_name].researched)
+                            process_rec(recipe_name, recipe_meta, tech.researched)
                         end
                     end
                 end

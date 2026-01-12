@@ -10,7 +10,7 @@ RecGen:create("omnimatter","stone"):
     extend()
 
 local c = nil
-if mods["angelsrefining"] then c = "ore-refining-t1" end
+if mods["angelsrefining"] then c = "angels-ore-refining-t1" end
 RecGen:create("omnimatter","angels-stone-crushed"):
     setSubgroup("omni-crushing"):
     setStacksize(200):

@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.2.3
+Date: 2026-01-12
+  Bugfixes:
+    - Fixed tech tree loop detection crashing with large tech trees (Thanks py)
+---------------------------------------------------------------------------------------------------
+Version: 4.2.2
+Date: 2026-01-12
+  Bugfixes:
+    - Fixed omnipacks not being added to techs having only trigger tech prereqs (e.g. kovarex)
+    - Fixed tech cost updates not being applied correctly
+---------------------------------------------------------------------------------------------------
 Version: 4.2.1
 Date: 2026-01-03
   Changes:

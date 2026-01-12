@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.2.10
+Date: 2026-01-12
+  Bugfixes:
+    - Fixed that the scale of some icons was too big
+    - Fixed bob's advanced logsitic science pack having old name
+---------------------------------------------------------------------------------------------------
 Version: 4.2.9
 Date: 2026-01-04
   Bugfixes:

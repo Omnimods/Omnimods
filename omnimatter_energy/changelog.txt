@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.2.8
+Date: 2026-01-12
+  Changes:
+    - Removed compact for 1.1 Minloaders mod
+    - Added compact for Miniloaders Redux and Loaders Modernized
+---------------------------------------------------------------------------------------------------
 Version: 3.2.7
 Date: 2026-01-04
   Changes:
