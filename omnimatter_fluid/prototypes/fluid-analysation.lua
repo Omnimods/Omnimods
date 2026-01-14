@@ -104,14 +104,16 @@ for _, turr in pairs(data.raw["fluid-turret"]) do
 end
 
 --thrusters
-for _, thru in pairs(data.raw.thruster) do
-    if thru.fuel_fluid_box then
-        sort_fluid(thru.fuel_fluid_box.filter, "fluid", "consumer", {temp = "none", conversion = true})
-        --log("Added "..thru.fuel_fluid_box.filter.." as fluid. Generator: "..thru.name)
-    end
-    if thru.oxidizer_fluid_box then
-        sort_fluid(thru.oxidizer_fluid_box.filter, "fluid", "consumer", {temp = "none", conversion = true})
-        --log("Added "..thru.oxidizer_fluid_box.filter.." as fluid. Generator: "..thru.name)
+if mods["space-age"] then
+    for _, thru in pairs(data.raw.thruster) do
+        if thru.fuel_fluid_box then
+            sort_fluid(thru.fuel_fluid_box.filter, "fluid", "consumer", {temp = "none", conversion = true})
+            --log("Added "..thru.fuel_fluid_box.filter.." as fluid. Generator: "..thru.name)
+        end
+        if thru.oxidizer_fluid_box then
+            sort_fluid(thru.oxidizer_fluid_box.filter, "fluid", "consumer", {temp = "none", conversion = true})
+            --log("Added "..thru.oxidizer_fluid_box.filter.." as fluid. Generator: "..thru.name)
+        end
     end
 end
 
