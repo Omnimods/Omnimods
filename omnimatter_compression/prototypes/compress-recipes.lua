@@ -579,24 +579,24 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                             --tags, categories, grouping
                             -------------------------------------------------------------------------------
                             if comrec and comrec.name and comrec.type == "recipe" then
-                                if settings.startup["omnicompression_one_list"].value then
-                                    local subgroup = (
-                                    comrec.subgroup and 
-                                    data.raw["item-subgroup"][comrec.subgroup]
-                                    )
-                                    subgroup =  subgroup and subgroup.group and data.raw["item-group"][subgroup.group]
-                                    subgroup = subgroup and subgroup.order
-                                    subgroup = "compressed-" .. (subgroup or "crafting") .. "-" .. (comrec.subgroup or "general")
-                                    if not data.raw["item-subgroup"][subgroup] then
+                                if omni.compression.one_list then
+                                    local sub = (comrec.subgroup and data.raw["item-subgroup"][comrec.subgroup])                             
+                                    --Find the item group and order string of that
+                                    sub =  sub and sub.group and data.raw["item-group"][sub.group]
+                                    sub = sub and sub.order
+                                    --Build subgroup name with order if the item group
+                                    sub = "compressed-" .. (sub or "crafting") .. "-" .. (comrec.subgroup or "general")
+                                    local sub_name = "compressed-crafting-" .. (comrec.subgroup or "general") --Can not use the order string here, [] not allowed as name
+                                    if not data.raw["item-subgroup"][sub_name] then
                                         local item_cat = {
                                             type = "item-subgroup",
-                                            name = subgroup,
+                                            name = sub_name,
                                             group = "compressor-compress",
-                                            order = "a["..subgroup.."]" --maintain some semblance of order
+                                            order = "a["..sub.."]" --maintain some semblance of order
                                         }
                                         data:extend({item_cat}) --create it if it didn't already exist
                                     end
-                                    comrec.subgroup = subgroup
+                                    comrec.subgroup = sub_name
                                 end
                                 comrec.hidden = recipe.hidden
                                 comrec.enabled = false
