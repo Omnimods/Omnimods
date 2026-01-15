@@ -4,6 +4,7 @@ Date: ????
   Bugfixes:
     - Fixed a crash due to invalid character used in item-subgroup names when the mod setting
       "One recipe category" was enabled
+    - Make sure to only set next_upgrade when fast_replacable_group is set
 ---------------------------------------------------------------------------------------------------
 Version: 4.2.9
 Date: 2026-01-03

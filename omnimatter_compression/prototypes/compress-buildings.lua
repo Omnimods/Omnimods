@@ -353,7 +353,7 @@ if settings.startup["omnicompression_entity_compression"].value then
                 end
                 new_cat[#new_cat+1] = cat.."-compressed" --add cat
             end
-            if kind == "assembling-machine" and string.find(new.name,"assembling") and data.raw["recipe-category"]["general-compressed"] then
+            if kind == "assembling-machine" and string.find(new.name, "assembling") and data.raw["recipe-category"]["general-compressed"] then
                 new_cat[#new_cat+1] = "general-compressed"
             end
             new.crafting_categories = new_cat
@@ -627,10 +627,11 @@ if settings.startup["omnicompression_entity_compression"].value then
                     new.minable.result = new.name
                     new.minable.mining_time = (new.minable.mining_time or 10) * compr_level
                     -- Fast replace in kind
-                    if not build.fast_replaceable_group then
-                        build.fast_replaceable_group = build.name
+                    new.fast_replaceable_group = build.fast_replaceable_group
+                    if not new.fast_replaceable_group and build.name then
+                        new.fast_replaceable_group = build.name
                     end
-                    if not omni.lib.is_in_table("not-upgradable", build.flags or {}) and not omni.lib.is_in_table("hidden", item.flags or {}) then
+                    if not omni.lib.is_in_table("not-upgradable", build.flags or {}) and not omni.lib.is_in_table("hidden", item.flags or {}) and new.fast_replaceable_group and new.fast_replaceable_group ~= "" then
                         if compr_level < omni.compression.bld_lvls then
                             if new.next_upgrade then
                                 if not data.raw.item[new.next_upgrade] then
@@ -642,7 +643,6 @@ if settings.startup["omnicompression_entity_compression"].value then
                             end
                         end
                     end
-                    new.fast_replaceable_group = build.fast_replaceable_group
                     new.placeable_by = {item = new.name, count = 1}
                     new.icons = omni.lib.add_overlay(build,"building",compr_level)
                     new.icon = nil
