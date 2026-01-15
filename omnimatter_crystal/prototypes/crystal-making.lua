@@ -87,7 +87,7 @@ local function ingrediences_solvation(recipe)
     local ing = {}
     ing[#ing+1]={type = "fluid", name = "hydromnic-acid", amount = 120}
     for _, i in pairs(data.raw.recipe[recipe].ingredients) do
-        if i.name ~= "catalysator-brown" then
+        if i.name ~= "angels-catalysator-brown" then
             ing[#ing+1]=i
         end
     end
@@ -99,7 +99,7 @@ local function results_solvation(recipe)
     --ing[#ing+1]={type = "fluid", name = "hydromnic-acid", amount = 120}
     for _, i in pairs(data.raw.recipe[recipe].results) do
         --log(recipe..":"..i.name)
-        if i.name ~= "slag" then
+        if i.name ~= "angels-slag" then
             ing[#ing+1]={type = "item", name=i.name.."-omnide-salt", amount = 5*i.amount}
         end
     end

@@ -23,7 +23,7 @@ end
 --     local ing = {}
 --     ing[#ing+1]={type = "fluid", name = "hydromnic-acid", amount = 120}
 --     for _, i in pairs(recipe.ingredients) do
---         if i.name ~= "catalysator-brown" and i.name ~= "angels-void" and i.name ~= "catalysator-green" then
+--         if i.name ~= "angels-catalysator-brown" and i.name ~= "angels-void" and i.name ~= "angels-catalysator-green" then
 --             ing[#ing+1]=i
 --         end
 --     end
@@ -53,7 +53,7 @@ end
 --     local ing = {}
 --     --ing[#ing+1]={type = "fluid", name = "hydromnic-acid", amount = 120}
 --     for _, i in pairs(recipe.results) do
---         if i.name ~= "slag"  and not string.find(i.name,"void") then
+--         if i.name ~= "angels-slag"  and not string.find(i.name,"void") then
 --             ing[#ing+1]={type = "item", name=i.name.."-omnide-salt", amount = i.amount}
 --         end
 --     end
@@ -233,7 +233,7 @@ if angelsmods and angelsmods.refining then
     local maxcrystaltech = omni.max_tier -1
     for _,suf in pairs(suffixes) do
         for ore,i in pairs(processed) do
-            if ore~="slag" then
+            if ore~="angels-slag" then
                 omni.lib.add_unlock_recipe("omnitech-crystallology-"..math.min(i,maxcrystaltech), ore..suf)
             end
         end
@@ -243,9 +243,9 @@ if angelsmods and angelsmods.refining then
         RecGen:create("omnimatter_crystal","omni-catalyst"):
         setSubgroup("omnine"):
         setStacksize(500):
-        --setIcons("catalysator-yellow","angelsrefining"):
+        --setIcons("angels-catalysator-yellow","angelsrefining"):
         setIcons({"omni-catalyst", 32}):
-        setCategory("crystallizing"):
+        setCategory("angels-crystallizing"):
         setTechName("omnitech-crystallology-1"):
         setOrder("zz"):
         setIngredients    ({
@@ -253,7 +253,7 @@ if angelsmods and angelsmods.refining then
         }):
         setResults({type = "item", name = "omni-catalyst", amount=1}):
         setEnergy(0.5):extend()
-        for i, rec in pairs(data.raw.recipe) do
+        for _, rec in pairs(data.raw.recipe) do
             if rec.category == "omniplant" and string.find(rec.name, "salting") then
                 omni.lib.replace_recipe_ingredient(rec.name, "hydromnic-acid",{type = "item", name = "omni-catalyst", amount=1})
                 rec.category = "angels-ore-sorting"

@@ -1,6 +1,6 @@
 {
 "name":"omnimatter_compression",
-"version": "4.2.9",
+"version": "4.2.10",
 "title":"Omnicompression",
 "author":"EmperorZelos",
 "contact": "https://discord.gg/WQYks7W",
@@ -34,6 +34,7 @@
     "(?)space-exploration-postprocess",
     "(?)space-exploration",
     "(?)pypostprocessing",
-    "(?)248k"
+    "(?)248k",
+    "(?)planet-muluna"
 ]
 }
