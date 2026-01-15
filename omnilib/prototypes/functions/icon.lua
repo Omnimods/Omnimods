@@ -11,7 +11,7 @@ function icon.of_generic(prototype, silent)
             if ic.icon and ic.icon_size then
                 icons[i] = ic
             else
-                local icon_size = ic.icon_size or prototype.icon_size or defines.default_icon_size
+                local icon_size = ic.icon_size or defines.default_icon_size --or prototype.icon_size or defines.default_icon_size --prototype.icon_size is not used anymore when .icons is present
                 if ic.icon and not icon_size then
                     if silent then
                         return nil

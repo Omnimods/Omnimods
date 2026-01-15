@@ -3,6 +3,8 @@ Version: 4.2.11
 Date: ????
   Changes:
     - Added missing prototypes to locale-hierachy
+  Bugfixes:
+    - Don't fall back on prototype.icon_size when .icons is existing (use default_icon_size)
 ---------------------------------------------------------------------------------------------------
 Version: 4.2.10
 Date: 2026-01-12
