@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.2.10
-Date: ????
+Date: 2026-01-15
   Bugfixes:
     - Fixed a crash due to invalid character used in item-subgroup names when the mod setting
       "One recipe category" was enabled

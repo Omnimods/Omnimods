@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.2.11
-Date: ????
+Date: 2026-01-15
   Changes:
     - Added missing prototypes to locale-hierachy
   Bugfixes:
