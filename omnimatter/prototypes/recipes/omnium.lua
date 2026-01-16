@@ -251,7 +251,7 @@ if mods["angelssmelting"] then
         setSubgroup("omnium-casting"):
         setOrder("ub"):
         setIngredients({{type="fluid",name="liquid-molten-omnium",amount=40}}):
-        setCategory("casting"):
+        setCategory("angels-casting"):
         setResults({"omnium-gear-wheel", 6}):
         addProductivity():
         setEnergy(2):
