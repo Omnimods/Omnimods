@@ -188,7 +188,7 @@ function omni.matter.add_omnium_alloy(name,plate,ingot)
             setResults({type="fluid", name="molten-omnium-"..name.."-alloy", amount=300}):
             setIcons({"molten-omnium", 256}, "omnimatter"):
             addSmallIcon(omni.lib.icon.of(ingot, true),3):
-            setCategory("induction-smelting"):
+            setCategory("angels-induction-smelting"):
             setSubgroup("omnium-alloy-casting"):
             setOrder("a[molten-omnium-"..name.."-alloy]"):
             setEnergy(4):
@@ -207,7 +207,7 @@ function omni.matter.add_omnium_alloy(name,plate,ingot)
             setResults({type="item", name="omnium-"..name.."-alloy", amount=4}):
             --setIcons("omnium-"..name.."-alloy"):
             addProductivity():
-            setCategory("casting"):
+            setCategory("angels-casting"):
             setEnergy(4):
             setSubgroup("omnium-alloy-casting"):
             setOrder("b[molten-omnium-"..name.."-alloy]"):

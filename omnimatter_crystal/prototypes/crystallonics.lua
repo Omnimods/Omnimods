@@ -55,7 +55,7 @@ RecGen:create("omnimatter_crystal","omnine-distillation-slow"):
     setResults({type = "item", name = "omnine", amount=1}):
     extend()
 
-local cat = "ore-refining-t1"
+local cat = "angels-ore-refining-t1"
 if not mods["angelsrefining"] then cat = nil end
 
 RecGen:create("omnimatter_crystal","omnine-shards"):
