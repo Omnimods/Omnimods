@@ -16,7 +16,7 @@ if mods["Krastorio2"] then
         setTechIcons({{icon = "__Krastorio2Assets__/icons/cards/basic-tech-card.png",icon_size = 64}}):
         setTechPacks({{"energy-science-pack", 1}}):
         setTechPrereq("omnitech-anbaricity"):
-        setTechLocName(omni.lib.locale.of("kr-basic-tech-card", "recipe")):
+        setTechLocName(omni.lib.locale.of("kr-basic-tech-card", "recipe").name):
         extend()
 
     --Turn the energy SP into a "card", thanks to the K2 team for letting us use a changed version of their card icon
@@ -39,11 +39,10 @@ if mods["Krastorio2"] then
     omni.lib.add_prerequisite("kr-automation-core", "kr-basic-tech-card")
     omni.lib.add_prerequisite("military", "kr-basic-tech-card")
 
-    --Remove electronics, K2 fixed up vanilla electronics
-    TechGen:import("electronics"):setPrereq(nil):setUpgrade(false):setEnabled(true):nullUnlocks():sethidden():extend()
+    --K2 already fixes up electronics to be researched after automation-science-pack
+    --We just need to add energy-science-pack to the research ingredients
+    omni.lib.add_science_pack("electronics", "energy-science-pack")
 
-    --Fix automation SP locales
-    data.raw.technology["automation-science-pack"].localised_name = {"technology-name.automation-tech-card"}
 
     --Move wind turbine to anbaricity
     RecGen:import("kr-wind-turbine"):
