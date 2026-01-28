@@ -1,6 +1,6 @@
 {
 "name":"omnimatter_wood",
-"version": "4.2.3",
+"version": "4.2.4",
 "title":"Omniwood",
 "author":"EmperorZelos",
 "contact": "https://discord.gg/WQYks7W",
@@ -10,7 +10,7 @@
     "base",
     "omnilib >= 4.2.6",
     "omnimatter",
-    "?Bio_Industries",
+    "?Bio_Industries_2",
     "?bobgreenhouse",
     "?angelsbioprocessing",
     "(?)planet-muluna"
