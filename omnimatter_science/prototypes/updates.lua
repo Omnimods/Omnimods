@@ -47,9 +47,9 @@ if mods["omnimatter_crystal"] then
     --Omni
     if not mods["omnimatter_research"] then
         if mods["boblogistics"] and settings.startup["bobmods-logistics-inserteroverhaul"].value == true then
-            omni.lib.add_recipe_ingredient("omni-pack", { type = "item", name = "long-handed-inserter", amount = 1 })
+            omni.lib.add_recipe_ingredient("omni-pack", {type = "item", name = "long-handed-inserter", amount = 1})
         else
-            omni.lib.add_recipe_ingredient("omni-pack", { type = "item", name = "fast-inserter", amount = 1 })
+            omni.lib.add_recipe_ingredient("omni-pack", {type = "item", name = "fast-inserter", amount = 1})
         end
     end
 
