@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.2.12
+Date: ????
+  Bugfixes:
+    - Fixed omni.lib.replace_recipe_ingredient() not properly removing the old ingredient
+      if the replacement is already present
+---------------------------------------------------------------------------------------------------
 Version: 4.2.11
 Date: 2026-01-15
   Changes:

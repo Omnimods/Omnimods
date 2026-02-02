@@ -32,10 +32,8 @@ if mods["boblogistics"] then
     data.raw.recipe["bob-basic-transport-belt"].enabled = false
 
     --Remove bob basic belts from yellows
-    omni.lib.remove_recipe_ingredient("transport-belt", "bob-basic-transport-belt")
     omni.lib.remove_recipe_ingredient("underground-belt", "bob-basic-underground-belt")
     omni.lib.remove_recipe_ingredient("splitter", "bob-basic-splitter")
-
 end
 
 if mods["bobelectronics"] then

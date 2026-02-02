@@ -458,7 +458,7 @@ end
 function omni.lib.remove_from_table(element, tab)
     if tab and element then
         for i, t in pairs(tab) do
-            if omni.lib.equal(t,element) then 
+            if omni.lib.equal(t,element) then
                 table.remove(tab,i)
                 break
             end
