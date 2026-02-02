@@ -134,7 +134,7 @@ if mods["angelssmelting"] then
         setIcons({"ingot-omnium", 32},"omnimatter"):
         addSmallIcon({{icon = "__omnilib__/graphics/icons/small/num_1.png", icon_size = 32, tint = {a=1,b=0,g=0.8,r=1}}}, 2):
         setTechName("omnitech-angels-omnium-smelting-1"):
-        setTechLocName("technology-name.omnitech-angels-omnium-smelting-casting",1):
+        setTechLocName({"omnitech-angels-omnium-smelting-casting", "1"}):
         setTechIcons("casting-omnium-tech", 256):
         extend()
 
