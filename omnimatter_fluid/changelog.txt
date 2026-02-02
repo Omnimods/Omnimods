@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.2.7
+Date: ????
+  Bugfixes:
+    - Fixed boiler recipe localisation issues
+    - Fixed that boilers and heat exchangers outputted 10x less steam (2.0 change)
+---------------------------------------------------------------------------------------------------
 Version: 4.2.6
 Date: 2026-01-15
   Bugfixes:

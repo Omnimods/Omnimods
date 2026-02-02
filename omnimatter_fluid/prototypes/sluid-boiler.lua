@@ -45,7 +45,9 @@ local function sluid_boiler_generation(fluid_cats)
                     hide_from_player_crafting = true,
                     main_product = steam,
                     ingredients = {{type = "item", name = "solid-"..water.."-T-"..temp_ing, amount = 1}},
-                    results = {{type = "fluid", name = steam, amount = omni.fluid.sluid_contain_fluid, temperature = math.min(boiler.target_temperature, data.raw.fluid[steam].max_temperature)}}
+                    --As of 2.0, boilers generate 10x steam per water
+                    results = {{type = "fluid", name = steam, amount = 10*omni.fluid.sluid_contain_fluid, temperature = math.min(boiler.target_temperature, data.raw.fluid[steam].max_temperature)}},
+                    localised_name = omni.lib.locale.of(data.raw.fluid[steam]).name
                 }
             end
 
@@ -73,7 +75,9 @@ local function sluid_boiler_generation(fluid_cats)
                     hide_from_player_crafting = true,
                     main_product = "solid-"..steam.."-T-"..tempstring,
                     ingredients = {{type = "item", name = "solid-"..water.."-T-"..temp_ing, amount = 1}},
-                    results = {{type = "item", name = "solid-"..steam.."-T-"..tempstring, amount = 1}}
+                    --As of 2.0, boilers generate 10x steam per water
+                    results = {{type = "item", name = "solid-"..steam.."-T-"..tempstring, amount = 10}},
+                    localised_name = omni.lib.locale.of(data.raw.item["solid-"..steam.."-T-"..tempstring]).name
                 }
             end
 
@@ -198,7 +202,8 @@ local function sluid_boiler_generation(fluid_cats)
                         hide_from_player_crafting = true,
                         main_product = comp_steam,
                         ingredients = {{type = "item", name = "solid-"..comp_water.."-T-"..temp_ing, amount = 1}},
-                        results = {{type = "fluid", name = comp_steam, amount = omni.fluid.sluid_contain_fluid, temperature = math.min(boiler.target_temperature, data.raw.fluid[comp_steam].max_temperature)}}
+                        results = {{type = "fluid", name = comp_steam, amount = 10*omni.fluid.sluid_contain_fluid, temperature = math.min(boiler.target_temperature, data.raw.fluid[comp_steam].max_temperature)}},
+                        localised_name = omni.lib.locale.of(data.raw.fluid[comp_steam]).name
                     }
                 end
 
@@ -226,7 +231,8 @@ local function sluid_boiler_generation(fluid_cats)
                         hide_from_player_crafting = true,
                         main_product = "solid-"..comp_steam.."-T-"..tempstring,
                         ingredients = {{type = "item", name = "solid-"..comp_water.."-T-"..temp_ing, amount = 1}},
-                        results = {{type = "item", name = "solid-"..comp_steam.."-T-"..tempstring, amount = 1}}
+                        results = {{type = "item", name = "solid-"..comp_steam.."-T-"..tempstring, amount = 10}},
+                        localised_name = omni.lib.locale.of(data.raw.item["solid-"..comp_steam.."-T-"..tempstring]).name
                     }
                 end
             end
