@@ -158,19 +158,22 @@ local function compression_planner(event, log_only)
 end
 
 script.on_event(defines.events.on_rocket_launched, function(event)
+--script.on_event(defines.events.on_cargo_pod_finished_ascending, function(event)
     log(serpent.block(event))
     if not SA then
         local rocket = event.rocket
-        local silo = event.rocket_silo
         if not rocket then
             return
         end
-        -- Silo has packs, rocket has satellite
-        local rocket_inv = rocket.cargo_pod.get_inventory(defines.inventory.cargo_unit)
+        --Silo has packs, rocket has satellite
+        local cargo_pod = rocket.cargo_pod
+        --local cargo_pod = event.cargo_pod
+        local cargo_inv = cargo_pod.get_inventory(defines.inventory.cargo_unit)
+        local cargo_dest = cargo_pod.cargo_pod_destination
 
-        if rocket_inv then --and silo_inv then
+        if cargo_inv then --and silo_inv then
             -- There can be many things!
-            for _, satellite in pairs(rocket_inv.get_contents()) do
+            for _, satellite in pairs(cargo_inv.get_contents()) do
                 if satellite.name:find("^compressed%-") and #prototypes.item[satellite.name].rocket_launch_products > 0 then
                     -- Naughty naughty!
                     if not rocket.prototype.name:find("^compressed%-") then
@@ -179,12 +182,15 @@ script.on_event(defines.events.on_rocket_launched, function(event)
                         local uncomp_result_array = prototypes.item[uncomp_satellite].rocket_launch_products
                         local has_spilled_satellites = false
 
+                        --Stop launch productsfrom being transformed
+                        cargo_pod.cargo_pod_destination = { station = cargo_dest.station, transform_launch_products = false, type = cargo_dest.type}
                         -- Time to spill
                         for i, result in pairs(result_array) do
                             -- Science
                             local normal_result = uncomp_result_array[i]
                             --Insert uncompressed science
-                            rocket_inv.insert({name = normal_result.name, count = normal_result.amount})
+                            cargo_inv.insert({name = normal_result.name, count = normal_result.amount})
+                            cargo_dest.transform_launch_products = false
                             -- Satellites, if we haven't already
                             if not has_spilled_satellites then
                                 local satellite_remainder = prototypes.item[normal_result.name].stack_size * result.amount -- Convert to uncompressed count
@@ -192,17 +198,9 @@ script.on_event(defines.events.on_rocket_launched, function(event)
                                 satellite_remainder = math.max(0, satellite_remainder - 1) -- Get our actual remainder
 
                                 --Remove compressed satellite
-                                rocket_inv.remove(satellite.name)
+                                cargo_inv.remove(satellite.name)
 
-                                silo.surface.spill_item_stack(
-                                    {
-                                        position = silo.position,
-                                        stack = {
-                                            name = uncomp_satellite,
-                                            count = satellite_remainder
-                                        }
-                                    }
-                                )
+                                cargo_inv.insert({name = uncomp_satellite, count = satellite_remainder})
                                 has_spilled_satellites = true
                             end
                         end

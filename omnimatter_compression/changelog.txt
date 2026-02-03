@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.2.11
+Date: ????
+  Bugfixes:
+    - Fixed that no sattelites were returned when launcing a compressed satellite in a normal silo
+---------------------------------------------------------------------------------------------------
 Version: 4.2.10
 Date: 2026-01-15
   Bugfixes:
