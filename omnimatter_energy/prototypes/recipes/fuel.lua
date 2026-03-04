@@ -39,7 +39,7 @@ end
 -----FUEL CREATION-----
 -----------------------
 
-for _,fuelitem in pairs(data.raw.item) do
+for _, fuelitem in pairs(data.raw.item) do
     --Check if item is on the "ignore" list
     for _,blockeditem in pairs(ignore) do
         if fuelitem.name == blockeditem and fuelitem.fuel_category then
@@ -60,27 +60,30 @@ for _,fuelitem in pairs(data.raw.item) do
 
         --lets define the variables first, then jump in and create it all in one go:
         --Get fuel number in MJ (divide by 10^6)
-        local FV=omni.lib.get_fuel_number(fuelitem.fuel_value)/10^6
+        local fuel_value = omni.lib.get_fuel_number(fuelitem.fuel_value)/10^6
         local props={
-            [5]={ing_add={"crushed-omnite",1}, cat="crafting", sub="omnienergy-fuel-1", time=1.0, tech="omnitech-omnium-power-1", fuelmult = 1.50},
-            [10]={ing_add={"pulverized-omnite",2}, cat="omnifurnace", sub="omnienergy-fuel-2", time=2.0,tech="omnitech-omnium-power-2", fuelmult = 1.45},
-            [40]={ing_add={type = "fluid", name = "omnic-acid", amount = 20}, cat="omnite-extraction", sub="omnienergy-fuel-3", time=2.0,tech="omnitech-omnium-power-3", fuelmult = 1.40},
-            [250]={ing_add={type = "fluid", name = "omnisludge", amount = 80}, cat="omniphlog", sub="omnienergy-fuel-4", time=4.0,tech="omnitech-omnium-power-4", fuelmult = 1.35},
-            [300]={ing_add={type = "fluid", name = "omniston", amount = 40}, cat="omniphlog", sub="omnienergy-fuel-5", time=4.0,tech="omnitech-omnium-power-5", fuelmult = 1.30}
+            [5]={ing_add={"crushed-omnite",1}, cat="crafting", sub="omnienergy-fuel-1", time=1.0, tech="omnitech-omnium-power-1", fuelmult = 1.50, tier=2},
+            [10]={ing_add={"pulverized-omnite",2}, cat="omnifurnace", sub="omnienergy-fuel-2", time=2.0,tech="omnitech-omnium-power-2", fuelmult = 1.45, tier=3},
+            [40]={ing_add={type = "fluid", name = "omnic-acid", amount = 20}, cat="omnite-extraction", sub="omnienergy-fuel-3", time=2.0,tech="omnitech-omnium-power-3", fuelmult = 1.40, tier=4},
+            [250]={ing_add={type = "fluid", name = "omnisludge", amount = 80}, cat="omniphlog", sub="omnienergy-fuel-4", time=4.0,tech="omnitech-omnium-power-4", fuelmult = 1.35, tier=5},
+            [300]={ing_add={type = "fluid", name = "omniston", amount = 40}, cat="omniphlog", sub="omnienergy-fuel-5", time=4.0,tech="omnitech-omnium-power-5", fuelmult = 1.30, tier=6}
         }
         if mods["omnimatter_crystal"] then props[300].cat = "omniplant" end
-            local props_add={}
-        if FV<=5 then
-            props_add=props[5]
-        elseif FV<=10 then
-            props_add=props[10]
-        elseif FV<=40 then
-            props_add=props[40]
-        elseif FV<=250 then
-            props_add=props[250]
+
+        local props_add={}
+
+        if fuel_value <= 5 then
+            props_add = props[5]
+        elseif fuel_value <= 10 then
+            props_add = props[10]
+        elseif fuel_value <= 40 then
+            props_add = props[40]
+        elseif fuel_value <= 250 then
+            props_add = props[250]
         else
-            props_add=props[300]
+            props_add = props[300]
         end
+
         RecGen:create("omnimatter_energy","omnified-"..fuelitem.name):
             setLocName("item-name.omnified", "item-name."..fuelitem.name):
             setIcons(omni.lib.icon.of(fuelitem)):
@@ -91,14 +94,22 @@ for _,fuelitem in pairs(data.raw.item) do
             setCategory(props_add.cat):
             setEnergy(props_add.time):
             setTechName(props_add.tech):
-            addTechPrereq(omni.lib.get_tech_name(fuelitem.name)):
+            --addTechPrereq(omni.lib.get_tech_name(fuelitem.name)):
             setEnabled(false):
             setStacksize(fuelitem.stack_size):
             setOrder("b[omnified-"..fuelitem.name.."]"):
             setFuelCategory(fuelitem.fuel_category):
             setFuelValue(omni.lib.mult_fuel_value(fuelitem.fuel_value, props_add.fuelmult)):
             extend()
-            omni.lib.add_prerequisite(props_add.tech,omni.lib.get_tech_name(fuelitem.name))
+
+        local fueltech_name = omni.lib.get_tech_name(fuelitem.name)
+        --only add fuelitem tech as prereq if it's not a trigger tech and if it's in the same or lower tech tier to avoid lockups
+        if fueltech_name then
+            local fueltech = data.raw.technology[fueltech_name]
+            if fueltech and (not fueltech.research_trigger) and (fueltech.unit and fueltech.unit.ingredients and #fueltech.unit.ingredients <= props_add.tier) then
+                omni.lib.add_prerequisite(props_add.tech, fueltech)
+            end
+        end
 
         --Copy over fuel related values
         data.raw.item["omnified-"..fuelitem.name].fuel_acceleration_multiplier = fuelitem.fuel_acceleration_multiplier
@@ -107,7 +118,7 @@ for _,fuelitem in pairs(data.raw.item) do
         data.raw.item["omnified-"..fuelitem.name].fuel_top_speed_multiplier = fuelitem.fuel_top_speed_multiplier
         data.raw.item["omnified-"..fuelitem.name].fuel_emissions_multiplier = fuelitem.fuel_emissions_multiplier
         data.raw.item["omnified-"..fuelitem.name].fuel_emissions_multiplier = fuelitem.fuel_emissions_multiplier
-        data.raw.item["omnified-"..fuelitem.name].fuel_glow_color = fuelitem.fuel_glow_color 
+        data.raw.item["omnified-"..fuelitem.name].fuel_glow_color = fuelitem.fuel_glow_color
 
         --Nil fuel related values
         omni.nil_fuels[#omni.nil_fuels+1] = fuelitem.name
