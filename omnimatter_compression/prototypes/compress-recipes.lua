@@ -233,7 +233,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
         for _, proto in pairs(data.raw["rocket-silo"]) do
             -- If our recipe matches or our category is applicable
             if (
-            (proto.fixed_recipe and proto.fixed_recipe == recipe.name) or 
+            (proto.fixed_recipe and proto.fixed_recipe == recipe.name) or
             (proto.crafting_categories and recipe.category and omni.lib.is_in_table(recipe.category, proto.crafting_categories)
             )) and recipe.name:find("-compression$")
             then
@@ -306,7 +306,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                         local launch_item = omni.lib.locale.find(res.name, "item")
                         local product_table = launch_item.rocket_launch_product and {launch_item.rocket_launch_product}
                         or launch_item.rocket_launch_products or {}
-                        for _, product in pairs(product_table) do           
+                        for _, product in pairs(product_table) do
                             -- Scale
                             if product.name and product.amount then
                                 local product_proto = product.name:find("compressed") and omni.lib.locale.find(product.name:gsub("compressed%-", ""), "item") or omni.lib.locale.find(product.name, "item")
