@@ -250,7 +250,7 @@ local function omnidate(technology)
         -- Localise where applicable
         local cached_recs = memoize(force.recipes)
         local force_techs = memoize(force.technologies)
-        local has_compression = force_techs["compression-recipes"] and force_techs["compression-recipes"].researched
+        local has_compression = force_techs["compression-recipes"] and force_techs["compression-recipes"].researched or false
         local technology_name = technology and technology.name or ""
         -- If we're just a single tech, we can end here if we don't meet the criteria
         if technology then
@@ -258,8 +258,8 @@ local function omnidate(technology)
             local tech_researched = technology.researched
             -- Sync status between compressed and non-compressed techs
             local variant = (
-                force_techs[string.format("omnipressed-%s", technology_name)] or 
-                force_techs[technology_name:gsub("^omnipressed%-", "")] or 
+                force_techs[string.format("omnipressed-%s", technology_name)] or
+                force_techs[technology_name:gsub("^omnipressed%-", "")] or
                 {}
             )
             if technology.level and variant.level ~= technology.level then

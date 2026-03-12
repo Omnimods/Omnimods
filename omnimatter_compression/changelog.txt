@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.2.11
+Date: 2026-03-12
+  Bugfixes:
+    - Fixed that no sattelites were returned when launcing a compressed satellite in a normal silo
+    - Fixed pollution not scaling properly with entity compression
+---------------------------------------------------------------------------------------------------
 Version: 4.2.10
 Date: 2026-01-15
   Bugfixes:

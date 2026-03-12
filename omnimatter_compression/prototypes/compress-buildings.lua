@@ -91,7 +91,7 @@ if settings.startup["omnicompression_entity_compression"].value then
             end
         end
         -- If we don't have a tier 2 why bother
-        local zero_two = zero_pad(2, padded_zeroes) 
+        local zero_two = zero_pad(2, padded_zeroes)
         local rawkind = data.raw[kind]
         local namedash = name .. "-"
         if not rawkind[namedash..zero_two] and not rawkind[name..zero_two] then
@@ -234,7 +234,7 @@ if settings.startup["omnicompression_entity_compression"].value then
                     omni.compression.compress_entity[place_result] and (
                     not omni.compression.compress_entity[place_result].exclude or omni.compression.compress_entity[place_result].include
                     ) -- Not excluded or included
-                )) 
+                ))
                 then
                     local top_result =  find_top_tier(place_result, place_result.type)
                     if top_result and top_result.name == place_result.name and building_list[top_result.type] then
@@ -256,7 +256,7 @@ if settings.startup["omnicompression_entity_compression"].value then
                     local parsed_result = omni.lib.parse_result(result)
                     if parsed_result.type == "fluid" and result.temperature then
                         --log("Fluid: " .. result.name .. " (" .. result.temperature .. "C)")
-                        for i = 1, omni.compression.bld_lvls do              
+                        for i = 1, omni.compression.bld_lvls do
                             create_concentrated_recipe(parsed_result.name, i, parsed_result.temperature)
                         end
                     end
@@ -316,10 +316,9 @@ if settings.startup["omnicompression_entity_compression"].value then
         --energy source
         if new.energy_source then
             if new.energy_source.emissions_per_minute then
-                for k,v in pairs(new.energy_source.emissions_per_minute ) do
-                    v = v * math.pow(multiplier, compr_lvl)
+                for k,v in pairs(new.energy_source.emissions_per_minute) do
+                    new.energy_source.emissions_per_minute[k] = v * math.pow(multiplier, compr_lvl)
                 end
-
             end
             if new.energy_source.buffer_capacity then
                 new.energy_source.buffer_capacity = new_effect(new.energy_source.buffer_capacity, compr_lvl)
@@ -374,7 +373,7 @@ if settings.startup["omnicompression_entity_compression"].value then
                     new.inputs[#new.inputs+1] = "compressed-"..input
                 end
             end
-            if new.researching_speed then 
+            if new.researching_speed then
                 new.researching_speed = new.researching_speed * math.pow(multiplier, compr_lvl)
             end
         end
@@ -389,7 +388,7 @@ if settings.startup["omnicompression_entity_compression"].value then
                 new.heat_buffer.max_transfer = new_effect(new.heat_buffer.max_transfer,compr_lvl)
             end
         end
-        
+
         --Heat Pipe
         if kind == "heat-pipe" then
             if new.heat_buffer then
@@ -486,7 +485,7 @@ if settings.startup["omnicompression_entity_compression"].value then
                         new_lamp[v] = new[v]
                     end
                     -- Aaand done
-                    data:extend({new_lamp})           
+                    data:extend({new_lamp})
                 end
             end
         end
@@ -495,7 +494,7 @@ if settings.startup["omnicompression_entity_compression"].value then
         -- if kind == "offshore-pump" then
         --     -- new.fluid = "concentrated-"..new.fluid
         --     local fl_name = new.fluid.."-concentrated-grade-"..compr_lvl
-        --     if not data.raw.fluid[fl_name] then 
+        --     if not data.raw.fluid[fl_name] then
         --         create_concentrated_recipe(new.fluid,compr_lvl)
         --     end
         --     new.fluid = fl_name
@@ -553,8 +552,8 @@ if settings.startup["omnicompression_entity_compression"].value then
             new.construction_radius = math.ceil(new.construction_radius ^ (1 + (multiplier / 50)))
             new.charging_distance = math.ceil(new.charging_distance ^ (1 + (multiplier / 50)))
             new.logistics_connection_distance = math.ceil(new.logistics_connection_distance ^ (1 + (multiplier / 50)))
-            -- Energy output    
-            new.charging_energy = new_effect(new.charging_energy, compr_lvl)      
+            -- Energy output
+            new.charging_energy = new_effect(new.charging_energy, compr_lvl)
             -- If we don't change this we get a queue of robots waiting to exit/enter
             if not new.robot_vertical_acceleration then
                 new.robot_vertical_acceleration = 0.01

@@ -20,12 +20,14 @@ end
 
 omni.lib.ore_tints = {--can add to the tint table with table.insert(omni.lib.ore_tints,["ore-name"]={tints})
     --based on tint
+--Vanilla
     ["iron"]                = {r = 0.415, g = 0.525, b = 0.580}, -- vanilla
     ["copper"]              = {r = 0.803, g = 0.388, b = 0.215}, -- vanilla
     ["coal"]                = {r = 0    , g = 0    , b = 0    }, -- vanilla
     ["stone"]               = {r = 0.690, g = 0.611, b = 0.427}, -- vanilla
     ["uranium"]             = {r = 0    , g = 0.7  , b = 0    }, -- vanilla
     ["omnite"]              = {r = 0.396, g = 0    , b = 0.729}, -- omni
+--Angels
     ["angels-tin"]          = {r = 0.85 , g = 0.85 , b = 0.85 }, --made a bit darker, normally all 0.95, barely distinguishable from quartz tho. map_color = {r = 0.600, g = 0.600, b = 0.600}
     ["angels-lead"]         = {r = 0.5  , g = 0.5  , b = 0.5  }, --map_color = {r=0.0, g=0.0, b=0.50}
     ["angels-quartz"]       = {r = 1    , g = 1    , b = 1    }, --map_color = {r = 1, g = 1, b = 1}
@@ -41,6 +43,7 @@ omni.lib.ore_tints = {--can add to the tint table with table.insert(omni.lib.ore
     ["angels-thorium"]      = {r = 1    , g = 1    , b = 0.25 }, --map_color = {r = 0.75, g = 1, b = 0.25}
     ["angels-chrome"]       = {r = 1    , g = 1    , b = 1    },
     ["angels-platinum"]     = {r = 1    , g = 1    , b = 1    },
+--Bobs
     ["bob-tin"]             = {r = 0.85 , g = 0.85 , b = 0.85 }, --made a bit darker, normally all 0.95, barely distinguishable from quartz tho. map_color = {r = 0.600, g = 0.600, b = 0.600}
     ["bob-lead"]            = {r = 0.5  , g = 0.5  , b = 0.5  }, --map_color = {r=0.0, g=0.0, b=0.50}
     ["bob-titanium"]        = {r = 0.8  , g = 0.55 , b = 0.7  }, --map_color = {r=0.610, g=0.325, b=0.500}
@@ -55,16 +58,24 @@ omni.lib.ore_tints = {--can add to the tint table with table.insert(omni.lib.ore
     ["bob-cobalt"]          = {r = 0.3  , g = 0.53 , b = 0.77 }, --map_color = {r=0.18, g=0.35, b=0.53}
     ["bob-bauxite"]         = {r = 0.777, g = 0.7  , b = 0.333}, --<-- map_color only
     ["bob-rutile"]          = {r = 0.8  , g = 0.55 , b = 0.7  }, --map_color = {r=0.610, g=0.325, b=0.500}
-    ["aluminium"]           = {r = 0.777, g = 0.7  , b = 0.333}, --map_color = {r=0.777, g=0.7, b=0.333}
     ["sulfur"]              = {r = 0.8  , g = 0.75 , b = 0.1  }, --map_color = {r=1, g=1, b=0}
     ["gems"]                = {r = 0.25 , g = 1    , b = 0.25 }, --<-- map_color only
+--KR2
     ["kr-imersite"]         = {r = 1 ,    g = 0.5  , b = 1    }, --<-- map_color only
     ["kr-rare-metal-ore"]   = {r = 0.6,   g = 0.3  , b = 1    }, --<-- map_color only
+--Py
+    ["aluminium"]           = {r = 0.777, g = 0.7  , b = 0.333}, --map_color = {r=0.777, g=0.7, b=0.333}
+    ["chromium"]            = {r = 0.784, g = 0.231, b = 0.1  }, --<-- map_color only
+    ["lead"]                = {r = 0.5  , g = 0.5  , b = 0.5  }, --map_color = {r=0.0, g=0.0, b=0.50}
+    ["nickel"]              = {r = 0.54 , g = 0.8  , b = 0.75 }, --map_color = {r=0.4, g=0.8, b=0.6}
+    ["tin"]                 = {r = 0.85 , g = 0.85 , b = 0.85 }, --made a bit darker, normally all 0.95, barely distinguishable from quartz tho. map_color = {r = 0.600, g = 0.600, b = 0.600}
+    ["titanium"]            = {r = 0.8  , g = 0.55 , b = 0.7  }, --map_color = {r=0.610, g=0.325, b=0.500}
+    ["zinc"]                = {r = 0.34 , g = 0.9  , b = 0.81 }, --map_color = {r=0.5, g=1, b=1}
     ["raw-borax"]           = {r = 0.917, g = 0.917, b = 0.917}, --<-- map_color only
     ["niobium"]             = {r = 0.403, g = 0.6,   b = 0.701}, --<-- map_color only
-    ["chromium"]            = {r = 0.784, g = 0.231, b = 0.1  }, --<-- map_color only
     ["phosphate-rock"]      = {r = 0.998, g = 0.998, b = 0.998}, --<-- map_color only
-    ["kerogen"]             = {r = 0.590, g = 0.511, b = 0.357}, -- vanilla
+    ["rare-earth"]          = {r = 0.25, g = 0.25, b = 0.25}, --<-- map_color only
+    ["kerogen"]             = {r = 0.590, g = 0.511, b = 0.357}, --<-- map_color only
 }
 
 function omni.lib.add_ore_tint(icons, ore_name, alpha)
@@ -458,7 +469,7 @@ end
 function omni.lib.remove_from_table(element, tab)
     if tab and element then
         for i, t in pairs(tab) do
-            if omni.lib.equal(t,element) then 
+            if omni.lib.equal(t,element) then
                 table.remove(tab,i)
                 break
             end

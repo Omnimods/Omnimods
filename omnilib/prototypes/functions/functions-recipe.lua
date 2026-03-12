@@ -255,6 +255,7 @@ function omni.lib.replace_recipe_ingredient(recipename, ingredient, replacement)
     if rec and rec.ingredients and ingredient and replacement then
         local ings = omni.lib.parse_ingredients(rec.ingredients)
         local found = false
+        local pos
         --Parse replacment and nil amount of the local table if not specified
         local repl = omni.lib.parse_ingredient(replacement)
 
@@ -268,11 +269,11 @@ function omni.lib.replace_recipe_ingredient(recipename, ingredient, replacement)
         end
 
         --Check all ingredients to find the one that has to be replaced
-        for num, i in pairs(ings) do
+        for p, i in pairs(ings) do
             if i.name == ingredient then
                 --if the replacement was found above, set the calculated amount and nil this result, otherwise replace the ingredient
                 if found then
-                    ings[num] = nil
+                    pos = p
                 else
                     i.name = repl.name
                     i.type = repl.type
@@ -280,6 +281,9 @@ function omni.lib.replace_recipe_ingredient(recipename, ingredient, replacement)
                 end
                 break
             end
+        end
+        if found then
+            table.remove(ings, pos)
         end
         rec.ingredients = ings
     end

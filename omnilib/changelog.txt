@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.2.12
+Date: 2026-03-12
+  Bugfixes:
+    - Fixed omni.lib.replace_recipe_ingredient() not properly removing the old ingredient
+      if the replacement is already present
+    - Fixed a possible crash with other mods adding techs ending on "-compression"
+---------------------------------------------------------------------------------------------------
 Version: 4.2.11
 Date: 2026-01-15
   Changes:

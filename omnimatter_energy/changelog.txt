@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.2.9
+Date: 2026-03-12
+  Bugfixes:
+    - Fixed compact with miniloaders when Bob's Logistics is updated
+    - Avoid trigger techs from being added as prerequisite for omnium fuel refining
+---------------------------------------------------------------------------------------------------
 Version: 3.2.8
 Date: 2026-01-12
   Changes:
