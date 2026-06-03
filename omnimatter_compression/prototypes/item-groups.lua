@@ -48,12 +48,12 @@ data:extend({
         type = "item-subgroup",
         name = "concentrator-fluids",
         group = "compressor-uncompress",
-        order = order
+        order = "A"
     },
     {
         type = "item-subgroup",
         name = "compressor-out-fluids",
         group = "compressor-uncompress",
-        order = order
+        order = "AB"
     }
 })

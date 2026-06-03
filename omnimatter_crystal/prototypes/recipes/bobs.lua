@@ -10,7 +10,7 @@ if bobmods and bobmods.ores then
         ["bob-gold-ore"]="Gold",
         ["bob-cobalt-ore"]="Cobalt",
         ["bob-silver-ore"]="Silver",
-        ["bob-tungsten-ore"]="Wolfram",
+        ["tungsten-ore"]="Wolfram",
         ["bob-thorium-ore"]="Thorium",
         ["bob-platinum-ore"]="Platinum",
     }

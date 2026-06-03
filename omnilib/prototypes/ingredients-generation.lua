@@ -13,11 +13,11 @@ component["vanilla-crystallo-circuit"]=omni.lib.union(omni.lib.cutTable(componen
 component["angels-crystallo-circuit"]=omni.lib.union(omni.lib.cutTable(component["angels-comp-circuit"],3),component["crystallonics"])
 -- PIPES
 component["vanilla-pipe"] = {"pipe"}
-component["bob-logistics"] = {"bob-stone-pipe", "bob-copper-pipe", "pipe", "bob-steel-pipe", "bob-plastic-pipe"}
-component["bob-pipe"] = {"bob-stone-pipe", "bob-copper-pipe", "pipe", "bob-bronze-pipe", "bob-brass-pipe", "bob-steel-pipe", "bob-plastic-pipe", "bob-ceramic-pipe", "bob-titanium-pipe", "bob-tungsten-pipe"}
+component["bob-logistics"] = {"bob-copper-pipe", "pipe", "bob-steel-pipe", "bob-plastic-pipe"}
+component["bob-pipe"] = {"bob-copper-pipe", "pipe", "bob-bronze-pipe", "bob-brass-pipe", "bob-steel-pipe", "bob-plastic-pipe", "bob-titanium-pipe", "bob-tungsten-pipe"}
 -- PLATES
 component["vanilla-plate"]={"copper-plate","iron-plate"}
-component["bob-plate"]={"iron-plate", "copper-plate", "bob-tin-plate", "bob-lead-plate", "bob-silver-plate", "bob-zinc-plate", "bob-nickel-plate", "bob-cobalt-plate", "bob-gold-plate", "bob-aluminium-plate", "bob-tungsten-plate", "bob-titanium-plate"}
+component["bob-plate"]={"iron-plate", "copper-plate", "bob-tin-plate", "bob-lead-plate", "bob-silver-plate", "bob-zinc-plate", "bob-nickel-plate", "bob-cobalt-plate", "bob-gold-plate", "bob-aluminium-plate", "tungsten-plate", "bob-titanium-plate"}
 component["angel-plate"]={"copper-plate","iron-plate","angels-plate-manganese", "angels-plate-chrome", "angels-plate-platinum"}
 component["angels-comp-plate"]={"copper-plate", "iron-plate", "steel-plate","angels-plate-aluminium", "angels-plate-titanium", "angels-plate-tungsten","angels-plate-chrome", "angels-plate-platinum"}
 component["angel-bob-plate"]={"iron-plate", "copper-plate", "angels-plate-tin", "angels-plate-lead", "angels-plate-silver", "angels-plate-zinc", "angels-plate-nickel", "angels-plate-cobalt", "angels-plate-manganese", "angels-plate-gold", "angels-plate-aluminium", "angels-plate-tungste", "angels-plate-titanium", "angels-plate-chrome", "angels-plate-platinum"}
@@ -31,7 +31,7 @@ component["angels-gear-wheel"] = {"angels-gear", "angels-axle", "angels-roller-c
 component["vanilla-gear-box"]= {"omnium-iron-gear-box"}
 component["bob-gear-box"] = {"omnium-iron-gear-box","omnium-bob-steel-gear-box","omnium-bob-brass-gear-box","omnium-bob-titanium-gear-box","omnium-bob-tungsten-gear-box","omnium-bob-nitinol-gear-box"}
 component["angels-gear-box"] = {"omnium-iron-gear-box","omnium-steel-gear-box","omnium-titanium-gear-box","omnium-tungsten-gear-box"}
-component["bearing"]={"bob-steel-bearing", nil, "bob-cobalt-steel-bearing", "bob-titanium-bearing", "bob-nitinol-bearing", "bob-ceramic-bearing"}
+component["bearing"]={"bob-steel-bearing", nil, "bob-cobalt-steel-bearing", "bob-titanium-bearing", "bob-nitinol-bearing"}
 
 --------------------------------------------------------------------------------------------------
 -- Component list swapping logic -----------------------------------------------------------------

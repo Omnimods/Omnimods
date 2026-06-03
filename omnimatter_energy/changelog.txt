@@ -2,6 +2,9 @@
 Version: 3.2.10
 Date: ????
   Changes:
+    - Updated compat for latest update of Bobsmods (prototype renaming)
+  Bugfixes:
+    - Fixed Loaders Modernized 2.0 compat
 ---------------------------------------------------------------------------------------------------
 Version: 3.2.9
 Date: 2026-03-12
