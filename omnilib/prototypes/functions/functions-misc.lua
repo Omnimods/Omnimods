@@ -52,7 +52,7 @@ omni.lib.ore_tints = {--can add to the tint table with table.insert(omni.lib.ore
     ["bob-zinc"]            = {r = 0.34 , g = 0.9  , b = 0.81 }, --map_color = {r=0.5, g=1, b=1}
     ["bob-silver"]          = {r = 0.875, g = 0.975, b = 1    }, --map_color = {r=0.7, g=0.9, b=0.9}
     ["bob-gold"]            = {r = 1    , g = 0.75 , b = 0    }, --map_color = {r=1, g=0.7, b=0}
-    ["bob-tungsten"]        = {r = 0.75 , g = 0.5  , b = 0.25 }, --map_color = {r = 0.5, g = 0.0, b = 0.0}
+    ["tungsten"]        = {r = 0.75 , g = 0.5  , b = 0.25 }, --map_color = {r = 0.5, g = 0.0, b = 0.0}
     ["bob-platinum"]        = {r = 1    , g = 1    , b = 1    },
     ["bob-thorium"]         = {r = 1    , g = 1    , b = 0.25 }, --map_color = {r = 0.75, g = 1, b = 0.25}
     ["bob-cobalt"]          = {r = 0.3  , g = 0.53 , b = 0.77 }, --map_color = {r=0.18, g=0.35, b=0.53}

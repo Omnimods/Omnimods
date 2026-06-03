@@ -1,8 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.2.10
+Date: 2026-06-03
+  Changes:
+    - Updated compat for latest update of Bobsmods (prototype renaming)
+  Bugfixes:
+    - Fixed Loaders Modernized 2.0 compat
+---------------------------------------------------------------------------------------------------
 Version: 3.2.9
 Date: 2026-03-12
   Bugfixes:
-    - Fixed compact with miniloaders when Bob's Logistics is updated
+    - Fixed compat with miniloaders when Bob's Logistics is updated
     - Avoid trigger techs from being added as prerequisite for omnium fuel refining
 ---------------------------------------------------------------------------------------------------
 Version: 3.2.8

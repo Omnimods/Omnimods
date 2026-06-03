@@ -47,7 +47,7 @@ else
             ["bob-gold-ore"]=3,
             ["bob-cobalt-ore"]=3,
             ["bob-silver-ore"]=3,
-            ["bob-tungsten-ore"]=3,
+            ["tungsten-ore"]=3,
             --["uranium-ore"]=3,
             ["bob-thorium-ore"]=3,
             ["bob-gem-ore"]=has_gems and 3 or nil,
