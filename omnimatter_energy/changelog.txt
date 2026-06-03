@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 3.2.10
-Date: ????
+Date: 2026-06-03
   Changes:
     - Updated compat for latest update of Bobsmods (prototype renaming)
   Bugfixes:
