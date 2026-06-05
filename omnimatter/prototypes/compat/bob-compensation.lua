@@ -32,7 +32,7 @@ end
 if mods["bobplates"] and not mods["angelsrefining"] then
     omni.matter.add_omnium_alloy("aluminium","bob-aluminium-plate","ingot-aluminium")
     omni.matter.add_omnium_alloy("tungsten","tungsten-plate","casting-powder-tungsten")
-elseif mods["angelsrefining"] and angelsmods.functions.ore_enabled("angels-bauxite-ore") and angelsmods.functions.ore_enabled("tungsten-ore") then
+elseif mods["angelsrefining"] and angelsmods.functions.ore_enabled("angels-bauxite-ore") and angelsmods.functions.ore_enabled("angels-tungsten-ore") then
     omni.matter.add_omnium_alloy("aluminium","angels-plate-aluminium","angels-ingot-aluminium")
     omni.matter.add_omnium_alloy("tungsten","angels-plate-tungsten","angels-casting-powder-tungsten")
 end
