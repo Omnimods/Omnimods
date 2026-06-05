@@ -127,7 +127,7 @@ local angelsores = {
     {ore = "angels-rutile-ore", product = "Titanium"},
     {ore = "uranium-ore", product = "Uranium"},
     -- TIER 4 ORES
-    {ore = "angels-tungsten-ore", product = "Tungsten"},
+    {ore = "tungsten-ore", product = "Tungsten"},
     {ore = "angels-thorium-ore", product = "Thorium"},
     {ore = "angels-chrome-ore", product = "Chrome"},
     {ore = "angels-platinum-ore", product = "Platinum"}
