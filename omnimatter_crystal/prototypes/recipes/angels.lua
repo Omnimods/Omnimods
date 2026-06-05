@@ -99,6 +99,10 @@ end
 --     return false
 -- end
 
+--Angel still has a prefix for tungsten ore
+local tung = "angels-tungsten-ore"
+if mods["bobplates"] then tung = "tungsten-ore" end
+
 local angelsores = {
     -- TIER 1 ORES
     {ore = "iron-ore", product = "Iron"},
@@ -127,7 +131,7 @@ local angelsores = {
     {ore = "angels-rutile-ore", product = "Titanium"},
     {ore = "uranium-ore", product = "Uranium"},
     -- TIER 4 ORES
-    {ore = "angels-tungsten-ore", product = "Tungsten"},
+    {ore = tung, product = "Tungsten"},
     {ore = "angels-thorium-ore", product = "Thorium"},
     {ore = "angels-chrome-ore", product = "Chrome"},
     {ore = "angels-platinum-ore", product = "Platinum"}
