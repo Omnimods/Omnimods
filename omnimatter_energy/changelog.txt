@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.2.11
+Date: ????
+  Changes:
+    - Set main product for basic-belt recipe and move icon definition into an icons table to allow
+      prismatic belts compat
+---------------------------------------------------------------------------------------------------
 Version: 3.2.10
 Date: 2026-06-03
   Changes:
