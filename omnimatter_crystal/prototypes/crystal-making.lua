@@ -128,7 +128,7 @@ function omni.crystal.add_recipe(recipe,name)
         name = metal.."-salting",
         localised_name = {"recipe-name.omnide-salting", metal},
         localised_description = {"recipe-description.pure_extraction", metal},
-        category = "omniplant",
+        categories = {"omniplant"},
         subgroup = data.raw.recipe[recipe].subgroup.."-omnide",
         order = data.raw.recipe[recipe].order,
         enabled = false,

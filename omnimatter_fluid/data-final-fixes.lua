@@ -2,7 +2,7 @@
 --This has to be in final fixes AND before sluids generation
 if mods["Mining_Drones"] or mods["Mining_Drones_Remastered"] then
     for _, rec in pairs(data.raw.recipe) do
-        if rec.category == "mining-depot" and string.find(rec.name,"mine%-") then
+        if omni.lib.is_in_table("mining-depot", rec.categories) and string.find(rec.name,"mine%-") then
             --log("Excluded recipe "..rec.name)
             omni.fluid.excempt_recipe(rec.name)
         end

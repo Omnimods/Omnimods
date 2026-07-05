@@ -115,9 +115,7 @@ local function check_mining_fluids(tier)
                     setLocName({"recipe-name.crude-refinement", omni.lib.locale.of(proto).name}):
                     setEnergy(6.5):
                     setCategory(cat):
-                    setSubgroup("omni-refine"):
-                    showAmount(false):
-                    showProduct(true)
+                    setSubgroup("omni-refine")
 
             if omni.matter.omnitial[v.name] then
                 crude_rec:setEnabled(true)
@@ -284,7 +282,7 @@ local function create_base_extraction(tier, split, split_num)
 
     for I=1, #split_results do
         --Add crushed stone to the recipe description and jump the rest
-        desc = desc.."[img=item." .. split_results[I].name .. "] x "..string.format("%.2f",split_results[I].amount * (split_results[I].probability or 1))
+        desc = desc.."[img=item." .. split_results[I].name .. "] x "..string.format("%.2f",split_results[I].amount * (split_results[I].independent_probability or 1))
         if I < #split_results then desc = desc.."\n" end
         if I == #split_results then goto continue end
 
@@ -359,7 +357,7 @@ local function create_impure_extraction(tier, split, ore_name)
         local num = 1 --legacy reasons, its in all names, removing it will result in bad migration dreams
         local desc = ""
         for j, part in pairs(res) do
-            desc = desc.."[img=item."..part.name.."] x "..string.format("%.2f",part.amount * (part.probability or 1))
+            desc = desc.."[img=item."..part.name.."] x "..string.format("%.2f",part.amount * (part.independent_probability or 1))
             if j<#res then desc = desc.."\n" end
         end
 
@@ -427,7 +425,7 @@ local function create_pure_extraction(tier, ore_name)
         local costres =cost:results()
         local res =costres(levels, grade)
         for j, part in pairs(res) do
-            desc = desc.."[img=item."..part.name.."] x "..string.format("%.2f",part.amount * (part.probability or 1))
+            desc = desc.."[img=item."..part.name.."] x "..string.format("%.2f",part.amount * (part.independent_probability or 1))
             if j<#res then desc = desc.."\n" end
         end
         return desc
@@ -465,8 +463,6 @@ local function create_pure_extraction(tier, ore_name)
                     return math.floor((grade - 1) * 3 / levels) + tier
                 end):
             setTechLocName({"omnitech-pure-omnitraction", omni.lib.locale.of(proto).name}):
-            showAmount(false):
-            showProduct(true):
             extend()
     )
 end

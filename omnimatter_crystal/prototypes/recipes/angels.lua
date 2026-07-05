@@ -186,7 +186,7 @@ if angelsmods and angelsmods.refining then
                         name = metal.."-salting",
                         localised_name = {"recipe-name.omnide-salting", loc_key},
                         localised_description = {"recipe-description.pure_extraction", loc_key},
-                        category = "omniplant",
+                        categories = {"omniplant"},
                         subgroup = recipe.subgroup.."-omnide",
                         order = recipe.order.."salting",
                         enabled = false,
@@ -258,9 +258,10 @@ if angelsmods and angelsmods.refining then
         setResults({type = "item", name = "omni-catalyst", amount=1}):
         setEnergy(0.5):extend()
         for _, rec in pairs(data.raw.recipe) do
-            if rec.category == "omniplant" and string.find(rec.name, "salting") then
+            if omni.lib.is_in_table("omniplant", rec.categories) and string.find(rec.name, "salting") then
                 omni.lib.replace_recipe_ingredient(rec.name, "hydromnic-acid",{type = "item", name = "omni-catalyst", amount=1})
-                rec.category = "angels-ore-sorting"
+                omni.lib.remove_from_table("omniplant", rec.categories)
+                rec.categories[#rec.categories+1] = "angels-ore-sorting"
             end
         end
     end

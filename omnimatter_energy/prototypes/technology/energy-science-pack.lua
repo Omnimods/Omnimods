@@ -1,5 +1,5 @@
 RecGen:create("omnimatter_energy","energy-science-pack"):
-    tool():
+    --tool():
     setStacksize(200):
     setDurability(1):
     setIcons({{icon = "energy-science-pack", icon_size = 64}}, "omnimatter_energy"):

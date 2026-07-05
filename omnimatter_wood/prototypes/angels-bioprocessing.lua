@@ -31,25 +31,6 @@ if mods["angelsbioprocessing"] then
     omni.lib.add_recipe_ingredient("angels-algae-red",{type="item",name="omnialgae",amount=40})
     omni.lib.add_recipe_ingredient("angels-algae-blue",{type="item",name="omnialgae",amount=40})
 
-    -- --Hide the algae green simple recipe (easy way to get green/brown algae)
-    -- omni.lib.remove_unlock_recipe("bio-processing-brown", "algae-green-simple")
-    -- RecGen:import("algae-green-simple"):
-    --     setEnabled(false):
-    --     setHidden():
-    --     extend()
-
-    -- --Change algae green icon
-    -- data.raw.recipe["algae-green"].icons = nil
-    -- data.raw.recipe["algae-green"].icon = data.raw.recipe["algae-green-simple"].icon
-
-    -- --Since the algae green starter recipe has been removed, we need to make the others craftable in a t1 farm
-    -- data.raw.recipe["algae-green"].category = "bio-processing"
-    -- data.raw.recipe["algae-brown"].category = "bio-processing"
-
-    --omni.lib.add_unlock_recipe("omnitech-omnialgae","algae-farm")
-    --omni.lib.remove_unlock_recipe("bio-processing-green","algae-farm")
-    --omni.lib.add_prerequisite("bio-processing-brown","omnitech-omnialgae") 
-
     data:extend({{
         type = "item-subgroup",
         name = "angels-bio-processing-purple",

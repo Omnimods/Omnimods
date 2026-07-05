@@ -361,7 +361,7 @@ result_round = function(array)
     if array.amount_min then array.amount = (array.amount_max+array.amount_max) end
     if math.floor(array.amount)~=array.amount then
         local nm = math.floor(array.amount)+1
-        return {type=array.type,name=array.name,amount = nm,probability = array.amount/nm}
+        return {type=array.type,name=array.name, amount = nm, independent_probability = array.amount/nm}
     else
         return array
     end
@@ -500,7 +500,7 @@ function ItemGen:create(mod_name, item_name)
         t.icons = function(levels,grade)
             return {{
                 icon = mod_name.."/graphics/icons/"..item_name..".png",
-                icon_size = defines.default_icon_size
+                icon_size = defines.constant.default_icon_size
             }}
         end
     end
@@ -560,7 +560,7 @@ end
 function ItemGen:importIf(item)
     local possible = {"item","fluid","tool"}
     for _,k in pairs(possible) do
-        if data.raw[k][item] then
+        if data.raw[k] and data.raw[k][item] then
             return ItemGen:import(item):setForce()
         end
     end
@@ -575,11 +575,11 @@ function ItemGen:setIcons(icons,mod)
         if type(icons) == "table" then
             local ic = {}
             if type(icons)=="table"  and icons[1] and type(icons[1]) ~= "table" then
-                local ic_sz = icons.icon_size  or (type(icons[2])=="number" and icons[2] or defines.default_icon_size)
+                local ic_sz = icons.icon_size  or (type(icons[2])=="number" and icons[2] or defines.constant.default_icon_size)
                 ic[#ic+1] = {
                     icon = "__"..mod.."__/graphics/icons/"..(icons.icon  or (type(icons[1]) == "string" and icons[1]))..".png",
                     icon_size = ic_sz,
-                    scale = icons.scale or ((defines.default_icon_size / 2) / ic_sz),
+                    scale = icons.scale or ((defines.constant.default_icon_size / 2) / ic_sz),
                     --optional
                     shift = icons.shift
                 }
@@ -590,7 +590,7 @@ function ItemGen:setIcons(icons,mod)
                         ic[#ic+1] = {
                             icon = "__"..mod.."__/graphics/icons/"..(c.icon  or (type(c[1]) == "string" and c[1]))..".png",
                             icon_size = ic_sz,
-                            scale = c.scale or ((defines.default_icon_size / 2) / ic_sz),
+                            scale = c.scale or ((defines.constant.default_icon_size / 2) / ic_sz),
                             --optional
                             shift = c.shift
                         }
@@ -601,8 +601,8 @@ function ItemGen:setIcons(icons,mod)
             end
             self.icons = function(levels,grade) return ic end
         else
-            local ic_size = icons.icon_size or defines.default_icon_size
-            local ic_scale = ((defines.default_icon_size / 2) / ic_size)
+            local ic_size = icons.icon_size or defines.constant.default_icon_size
+            local ic_scale = ((defines.constant.default_icon_size / 2) / ic_size)
             local check = {}
             if data.raw.item[icons] then
                 check=data.raw.item[icons]
@@ -613,8 +613,8 @@ function ItemGen:setIcons(icons,mod)
     elseif type(icons) ~= "function" and (type(icons)=="string" or type(icons[1])=="string") then
         -- --find icon_size
         local ic = (type(icons)=="string" and icons) or (type(icons[1])=="string" and icons[1])
-        local ic_sz = icons.icon_size or (type(icons[2])=="number" and icons[2]) or defines.default_icon_size
-        local ic_scale = icons.scale or ((defines.default_icon_size / 2) / ic_sz)
+        local ic_sz = icons.icon_size or (type(icons[2])=="number" and icons[2]) or defines.constant.default_icon_size
+        local ic_scale = icons.scale or ((defines.constant.default_icon_size / 2) / ic_sz)
 
         if ic and string.match(ic, "%_%_(.-)%_%_") then
             local name = string.match(ic,".*%/(.-).png")
@@ -642,19 +642,19 @@ end
 
 function ItemGen:addIcon(icon)
     local oldIcons = table.deepcopy(self.icons(0,0))
-    if not oldIcons[1].scale then oldIcons[1].scale = (defines.default_icon_size / 2) /  (oldIcons[1].icon_size or defines.default_icon_size) end -- In case no scale of the main icon is defined, we need to set it (0.5 for 64px)
-    local first_layer_ic_sz = oldIcons[1].icon_size or defines.default_icon_size
+    if not oldIcons[1].scale then oldIcons[1].scale = (defines.constant.default_icon_size / 2) /  (oldIcons[1].icon_size or defines.constant.default_icon_size) end -- In case no scale of the main icon is defined, we need to set it (0.5 for 64px)
+    local first_layer_ic_sz = oldIcons[1].icon_size or defines.constant.default_icon_size
     local a = function(levels,grade) return {} end
     if type(icon) == "table" and icon.icon then
         local f = string.match(icon.icon, "%_%_(.-)%_%_")
         --Full Path is there
         if f then
-            icon.scale = (icon.scale or 1) * oldIcons[1].scale * (first_layer_ic_sz / icon.icon_size or defines.default_icon_size)
+            icon.scale = (icon.scale or 1) * oldIcons[1].scale * (first_layer_ic_sz / icon.icon_size or defines.constant.default_icon_size)
             a = function(levels,grade) return {icon} end
         --Just a name given
         else
             local proto = omni.lib.locale.find(icon.icon, "item", true)
-            local ic_sz=defines.default_icon_size
+            local ic_sz=defines.constant.default_icon_size
             --Find icon size
             if proto then
                 if proto.icon_size then
@@ -682,7 +682,7 @@ function ItemGen:addIcon(icon)
                     ic[#ic+1] = {
                         icon=c.icon,
                         icon_size=int_sz,
-                        scale = sc, --(c.scale or (defines.default_icon_size/int_sz))*(icon.scale or (defines.default_icon_size/int_sz)),
+                        scale = sc, --(c.scale or (defines.constant.default_icon_size/int_sz))*(icon.scale or (defines.constant.default_icon_size/int_sz)),
                         shift = {(c.shift or {0,0})[1]+(icon.shift or {0,0})[1],(c.shift or {0,0})[2]+(icon.shift or {0,0})[2]}
                     }
                 end
@@ -710,7 +710,7 @@ function ItemGen:addMask(...)
         self:addIcon({
             icon = string.sub(icons[#icons].icon,1,-5).."-mask.png",
             tint=table.deepcopy(arg),
-            icon_size = icons[#icons].icon_size or defines.default_icon_size
+            icon_size = icons[#icons].icon_size or defines.constant.default_icon_size
         })
     end
     return self
@@ -753,7 +753,7 @@ end
 function ItemGen:addSmallIcon(icon, nr)
     local quad = {{10, -10},{-10, -10},{-10, 10},{10, 10}}
     local icons
-    local ic_sz = defines.default_icon_size
+    local ic_sz = defines.constant.default_icon_size
     if type(icon) == "table" and icon[1] and icon[1].icon then
         icons = icon
     else
@@ -1199,7 +1199,7 @@ function RecGen:create(mod,name,efficency)
     r.enabled=function(levels,grade) return false end
     r.efficency = efficency
     r.energy_required = function(levels,grade) return 1 end
-    r.category = function(levels,grade) return nil end
+    r.categories = function(levels,grade) return nil end
     r.main_product=function(levels,grade) return nil end
     r.add_prod = false
     r.hidden = function(levels,grade) return nil end
@@ -1266,14 +1266,12 @@ function RecGen:import(rec)
         setMain(recipe.main_product):
         setEnabled(recipe.enabled or false):
         setEnergy(recipe.energy_required):
-        setCategory(recipe.category):
+        setCategory(recipe.categories):
         setSubgroup(recipe.subgroup or r.subgroup(0,0)):
         setOrder(recipe.order or r.order(0,0)):
         --setIcons(recipe.icons or recipe.icon or r.icons(0,0) or omni.lib.icon.of(recipe, true)):
         setIcons(recipe.icons or r.icons(0,0) or omni.lib.icon.of(recipe, true)):
-        setHidden(recipe.hidden or false):
-        showAmount(recipe.show_amount_in_title):
-        showProduct(recipe.always_show_products)
+        setHidden(recipe.hidden or false)
 
         for _, module in pairs(data.raw.module) do
             if module.effect.productivity and module.limitation then
@@ -1710,10 +1708,14 @@ function RecGen:setEnergy(tid)
 end
 
 function RecGen:setCategory(cat)
-    if type(cat)~= "function" then
-        self.category=function(levels,grade) return cat end
+    if type(cat) ~= "function" then
+        if type(cat) == "string" then
+            self.category = function(levels,grade) return {cat} end
+        else
+            self.category = function(levels,grade) return cat end
+        end
     else
-        self.category=cat
+        self.category = cat
     end
     return self
 end
@@ -1817,14 +1819,14 @@ function RecGen:generate_recipe()
             if item.icons then
                 self.icons = function(levels,grade) return item.icons end
             elseif item.icon then
-                self.icons = function(levels,grade) return {{icon = item.icon, icon_size = item.icon_size or defines.default_icon_size}} end
+                self.icons = function(levels,grade) return {{icon = item.icon, icon_size = item.icon_size or defines.constant.default_icon_size}} end
             end
         elseif data.raw.fluid[self.main_product(0,0)] then
             local fluid = data.raw.fluid[self.main_product(0,0)]
             if fluid.icons then
                 self.icons = function(levels,grade) return fluid.icons end
             elseif fluid.icon then
-                self.icons = function(levels,grade) return {{icon = fluid.icon, icon_size = fluid.icon_size or defines.default_icon_size}} end
+                self.icons = function(levels,grade) return {{icon = fluid.icon, icon_size = fluid.icon_size or defines.constant.default_icon_size}} end
             end
         end
     end
@@ -1865,13 +1867,17 @@ function RecGen:generate_recipe()
             omni.lib.add_unlock_recipe(tname, self.name, true)
         end
     end
-    if self.category(0,0) and not data.raw["recipe-category"][self.category(0,0)] then
-        data:extend({
-            {
-                type = "recipe-category",
-                name = self.category(0,0),
-            }
-        })
+    if self.category and self.category(0,0) then --and not data.raw["recipe-category"][self.category(0,0)] then
+        for _,cat in pairs(self.category(0,0)) do
+            if not data.raw["recipe-category"][cat] then
+                data:extend({
+                    {
+                        type = "recipe-category",
+                        name = cat,
+                    }
+                })
+            end
+        end
     end
     if self.add_prod then
         for _, module in pairs(data.raw.module) do
@@ -1885,7 +1891,7 @@ function RecGen:generate_recipe()
         name = self.name,
         localised_name = lname,
         localised_description = self.loc_desc(0,0), --self:setDescLocType("recipe"),
-        category = self.category(0,0),
+        categories = self.category and self.category(0,0),
         subgroup = self.subgroup(0,0),
         order = self.order(0,0),
         hidden = self.hidden(0,0),
@@ -1894,10 +1900,8 @@ function RecGen:generate_recipe()
         enabled = self.enabled(0,0),
         main_product = self.main_product(0,0),
         energy_required = self.energy_required(0,0) or 0.5,
-        show_amount_in_title = self.show_amount,
-        always_show_products = self.show_product,
         icons = self.icons(0,0),
-        --icon_size = defines.default_icon_size,
+        --icon_size = defines.constant.default_icon_size,
     }
     return self
 end
@@ -2205,16 +2209,6 @@ function RecGen:addCondPrereq(cond,...)
     return self
 end
 
-function RecGen:showAmount(b)
-    self.show_amount = b
-    return self
-end
-
-function RecGen:showProduct(b)
-    self.show_product = b
-    return self
-end
-
 function RecChain:setTechSuffix(suffix)
     self.tech.suffix = suffix
     return self
@@ -2307,9 +2301,7 @@ function RecChain:generate_chain()
         setTechLocName(self.tech.loc_name(self.levels,i)):
         setTechLocDesc(self.tech.loc_desc,self.tech.loc_desc_keys):
         --setTechName("omnitech-"..techname.."-"..i-techDifEnabled):
-        setGenerationCondition(self.requiredMods(self.levels,i)):
-        showAmount(self.show_amount):
-        showProduct(self.show_product)
+        setGenerationCondition(self.requiredMods(self.levels,i))
 
         if string.find(techname, "omnitech-") then
             r:setTechName(techname.."-"..i-techDifEnabled)
@@ -3455,7 +3447,7 @@ function BuildGen:generateBuilding()
     self.rtn[#self.rtn+1]= {
         type = self.type,
         name = self.name,
-        icon_size = defines.default_icon_size,
+        icon_size = defines.constant.default_icon_size,
         order=self.order(0,0),
         localised_name = lname,
         localised_description = self.loc_desc(0,0), --self:setDescLocType("entity"),
@@ -3526,7 +3518,7 @@ function BuildGen:generateBuilding()
     setOrder(self.order(0,0)):
     setBuildProto(self.rtn[#self.rtn]):
     setEnergy(self.energy_required(0,0)):
-    setCategory(self.category(0,0)):
+    setCategory(self.category and self.category(0,0)):
     --setLocName(self.loc_name(0,0)):
     --setLocDesc(self.loc_desc(0,0)):
     setEnabled(self.enabled(0,0)):
@@ -3653,7 +3645,7 @@ function BuildChain:generate_building_chain()
         setEnergy(self.energy_required(levels,i)):
         setUsage(self.energy_usage(levels,i)):
         setEmissions(self.energy_source.emissions_per_minute(levels,i)):
-        setCrafting(self.category(levels,i)):
+        setCrafting(self.category and self.category(levels,i)):
         setAlertIconShift(self.alert_icon_shift):
         setAlertIconScale(self.alert_icon_scale):
         setLocName(self.loc_name(levels,i)):
@@ -4033,7 +4025,7 @@ function InsertGen:generateInserter()
         type = "inserter",
         name = self.name,
         icons = self.icons(0,0),
-        icon_size = defines.default_icon_size,
+        icon_size = defines.constant.default_icon_size,
         filter_count=self.filter_count(0,0),
         flags = self.flags,
         minable = {mining_time = self.mining_time(0,0), result = self.name},

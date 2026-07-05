@@ -24,7 +24,7 @@ if settings.startup["omnicompression_item_compression"].value then
         end
     end
 
-    for _, item in pairs(data.raw["tool"]) do
+    for _, item in pairs(data.raw["tool"] or {}) do
         science_list[item.name] = true
     end
     -------------------------------------------------------------------------------
@@ -60,7 +60,7 @@ if settings.startup["omnicompression_item_compression"].value then
                     type = "recipe",
                     name = "compress-"..fluid.name,
                     localised_name = omni.lib.locale.custom_name(fluid, 'recipe-name.concentrate-fluid'),
-                    category = "fluid-concentration",
+                    categories = {"fluid-concentration"},
                     enabled = true,
                     hidden = true,
                     icons = omni.lib.add_overlay(fluid, "compress"),
@@ -83,7 +83,7 @@ if settings.startup["omnicompression_item_compression"].value then
                     name = "uncompress-"..fluid.name,
                     localised_name = omni.lib.locale.custom_name(fluid, 'recipe-name.deconcentrate-fluid'),
                     icons = omni.lib.add_overlay(fluid, "uncompress"),
-                    category = "fluid-concentration",
+                    categories = {"fluid-concentration"},
                     enabled = true,
                     hidden = true,
                     order = fluid.order or ("z".."[concentrated-"..fluid.name .."]"),
@@ -178,7 +178,7 @@ if settings.startup["omnicompression_item_compression"].value then
             new_item.spoil_to_trigger_result.trigger.action_delivery.source_effects[1].repeat_count = (item.spoil_to_trigger_result.trigger.action_delivery.source_effects[1].repeat_count or 1) * item.stack_size
         end
         if science_list[item.name] then
-            new_item.type = "tool"
+            --new_item.type = "tool"
             new_item.stack_size = compressed_item_stack_size
         end
         -- Case: satellite
@@ -220,7 +220,7 @@ if settings.startup["omnicompression_item_compression"].value then
             name = "compress-"..item.name,
             localised_name = omni.lib.locale.custom_name(item, 'recipe-name.compress-item'),
             localised_description = omni.lib.locale.custom_name(item, 'recipe-description.compress-item'),
-            category = "compression",
+            categories = {"compression"},
             icons = omni.lib.add_overlay(item,"compress"),
             order = order,
             ingredients = {
@@ -243,7 +243,7 @@ if settings.startup["omnicompression_item_compression"].value then
             localised_name = omni.lib.locale.custom_name(item, 'recipe-name.uncompress-item'),
             localised_description = omni.lib.locale.custom_name(item, 'recipe-description.uncompress-item'),
             icons = omni.lib.add_overlay(item, "uncompress"),
-            category = "compression",
+            categories = {"compression"},
             enabled = true,
             hidden = true,
             hide_from_player_crafting = omni.compression.hide_handcraft,

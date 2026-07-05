@@ -1,11 +1,11 @@
 {
 "name":"omnimatter_move",
-"version": "2.1.0",
+"version": "2.3.0",
 "title":"Omnimover",
-"author":"EmperorZelos",
+"author":"EmperorZelos, Cereal-Sam",
 "contact": "https://discord.gg/WQYks7W",
 "description":"Lets you move orefields.",
-"factorio_version":"2.0",
+"factorio_version":"2.1",
 "dependencies":[
     "base"
 ]

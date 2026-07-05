@@ -56,9 +56,9 @@ if settings.startup["omnicompression_item_compression"].value then
     local pack_sizes = {}
     setmetatable(pack_sizes, {
         __index = function(self, key, value)
-            local proto = data.raw.tool[key]
+            local proto = data.raw.item[key]
             if not proto or not proto.stack_size then
-                log("We expect " .. key .. " to be a tool, but it isn't")
+                log("We expect " .. key .. " to be an item, but it isn't")
                 proto = data.raw.item[key]
             end
             self[key] = proto.stack_size
@@ -83,7 +83,7 @@ if settings.startup["omnicompression_item_compression"].value then
                     if flag == "hidden" then hidden = true end
                 end
             end
-            if proto and data.raw.tool["compressed-"..ing] and not omni.lib.start_with(ing,"compressed") and not omni.lib.is_in_table("compressed-"..ing,lab.inputs) and not hidden then
+            if proto and data.raw.item["compressed-"..ing] and not omni.lib.start_with(ing,"compressed") and not omni.lib.is_in_table("compressed-"..ing,lab.inputs) and not hidden then
                 table.insert(lab.inputs,"compressed-"..ing)
             end
         end
