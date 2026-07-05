@@ -220,7 +220,7 @@ function omni.matter.add_omnium_alloy(name,plate,ingot)
             type = "recipe",
             name = "omnium-"..name.."-alloy-furnace",
             localised_name = {"item-name.omnium-"..name.."-alloy"},
-            category = "omnifurnace",
+            categories = {"omnifurnace"},
             icon_size = 32,
             energy_required = 5,
             enabled = false,

@@ -3,7 +3,7 @@ local recipes = data.raw.recipe
 local n = 0
 for _, module in pairs(data.raw.module) do
     for _, rec_name in pairs(module.limitation or {}) do
-        local compressed = rec_name .. "-compression"      
+        local compressed = rec_name .. "-compression"  
         if recipes[compressed] then
             module.limitation[#module.limitation + 1] = compressed
             n = n + 1
@@ -17,8 +17,12 @@ log("Added module limitations for " .. n .. " recipes.")
 local rec_count = 0
 local categories = {}
 for _, prototype in pairs(recipes) do
-    categories[prototype.category or "crafting"] = (categories[prototype.category or "crafting"] or 0) + 1
-    rec_count = rec_count + 1
+    if prototype.categories then
+        for _, cat in pairs(prototype.categories) do
+            categories[cat or "crafting"] = (categories[cat or "crafting"] or 0) + 1
+            rec_count = rec_count + 1
+        end
+    end
 end
 
 --Extend compression items/recipes into the regular machines, revert machines with empty compressed categories back to their base categories

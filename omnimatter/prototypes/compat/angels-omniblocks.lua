@@ -30,7 +30,7 @@ if mods["angelsindustries"] and angelsmods.industries.components then
         name = "block-omni-0",
         localised_name = {"item-name.block-omni", 0},
         enabled = true,
-        category = "crafting",
+        categories = {"crafting"},
         energy_required = 5,
         ingredients =
         {
@@ -69,7 +69,7 @@ if mods["angelsindustries"] and angelsmods.industries.components then
                 name = "block-omni-"..i,
                 localised_name = {"item-name.block-omni", i},
                 enabled = false,
-                category = "crafting",
+                categories = {"crafting"},
                 energy_required = 5,
                 ingredients =
                 {

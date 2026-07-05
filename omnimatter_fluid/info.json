@@ -1,14 +1,14 @@
 {
 "name":"omnimatter_fluid",
-"version": "4.2.7",
+"version": "4.3.0",
 "title":"Omnifluid",
-"author":"EmperorZelos",
+"author":"EmperorZelos, Cereal-Sam",
 "contact": "https://discord.gg/WQYks7W",
 "description":"Replaces all fluids by items that are used instead.",
-"factorio_version":"2.0",
+"factorio_version":"2.1",
 "dependencies":[
     "base",
-    "omnilib >= 4.2.0",
+    "omnilib >= 4.3.0",
     "(?)omnimatter",
     "(?)omnimatter_water",
     "(?)omnimatter_crystal",

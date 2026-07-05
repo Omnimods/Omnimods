@@ -5,7 +5,7 @@ if mods["space-exploration"] then
     --Fluidbox filters stop working once there are more fluidboxes than fluid recipe results...
     --Condenser turbine
     for _, rec in pairs(data.raw.recipe) do
-        if rec.category and rec.category == "condenser-turbine" and string.find(rec.name, "turbine%-reclaim%-water") then
+        if rec.categories and omni.lib.is_in_table("condenser-turbine", rec.categories) and string.find(rec.name, "turbine%-reclaim%-water") then
             local temp = string.sub(rec.name, -7, -5)
             --Some recipes go to >1000 so we need to catch one digit more
             if not tonumber(temp) and tonumber(string.sub(rec.name, -8, -6)) then

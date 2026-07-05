@@ -1,6 +1,6 @@
 if mods["omnimatter_crystal"] then
     local omnipack = RecGen:create("omnimatter_science","omni-pack"):
-        tool():
+        --tool():
         setStacksize(200):
         setDurability(1):
         setIcons("__base__/graphics/icons/production-science-pack.png"):
@@ -28,12 +28,12 @@ if mods["omnimatter_crystal"] then
             setLocName("item-name.omni-tech-card"):
             setTechLocName("omni-tech-card")
     else
-        if data.raw.tool["production-science-pack"].icon == "__base__/graphics/icons/production-science-pack.png" then --only replace if vanilla icon?
-            data.raw.tool["production-science-pack"].icon = "__omnilib__/graphics/icons/science-pack/production-science-pack.png"
+        if data.raw.item["production-science-pack"].icon == "__base__/graphics/icons/production-science-pack.png" then --only replace if vanilla icon?
+            data.raw.item["production-science-pack"].icon = "__omnilib__/graphics/icons/science-pack/production-science-pack.png"
             data.raw.recipe["production-science-pack"].icon = "__omnilib__/graphics/icons/science-pack/production-science-pack.png"
             data.raw.technology["production-science-pack"].icon = "__omnilib__/graphics/technology/production-science-pack.png"
             data.raw.technology["production-science-pack"].icon_size = 128
-            data.raw.tool["production-science-pack"].icon_size=64
+            data.raw.item["production-science-pack"].icon_size=64
             data.raw.recipe["production-science-pack"].icon_size=64
         end
     end

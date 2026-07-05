@@ -29,7 +29,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
             return false
         end
         -- Valid but we're returning nothing
-        if product.amount == 0 or (product.probability or 1) == 0 then
+        if product.amount == 0 or (product.independent_probability or 1) == 0 then
             return false
         end
         product = omni.lib.locale.find(product.name, product.type, true)
@@ -40,19 +40,23 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
         return false
     end
     --category set
-    local function set_category(recipe)
-        if recipe.category then
-            if not data.raw["recipe-category"][recipe.category.."-compressed"] then
-                if not omni.lib.is_in_table(recipe.category.."-compressed", new_cat) then
-                    new_cat[#new_cat+1] = {type = "recipe-category", name = recipe.category.."-compressed"}
+    local function set_category(recipe, default_cat)
+        if recipe.categories then
+            local cats = {}
+            for _,cat in pairs(recipe.categories) do
+                if not data.raw["recipe-category"][cat.."-compressed"] then
+                    if not omni.lib.is_in_table(cat.."-compressed", new_cat) then
+                        new_cat[#new_cat+1] = {type = "recipe-category", name = cat.."-compressed"}
+                    end
                 end
+                cats[#cats+1] = cat.."-compressed"
             end
-            return recipe.category.."-compressed"
-        elseif not data.raw["recipe-category"]["general-compressed"] then
-            if not omni.lib.is_in_table("general-compressed",new_cat) then
-                new_cat[#new_cat+1] = {type = "recipe-category", name = "general-compressed"}
+            return cats
+        elseif not data.raw["recipe-category"][default_cat or "general-compressed"] then
+            if not omni.lib.is_in_table(default_cat or "general-compressed", new_cat) then
+                new_cat[#new_cat+1] = {type = "recipe-category", name = default_cat or "general-compressed"}
             end
-            return "general-compressed"
+            return {default_cat or "general-compressed"}
         end
     end
 
@@ -79,11 +83,11 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
         return false
     end
 
-    --checks results for probabilistic returns (probability, amount min, amount max etc)
+    --checks results for probabilistic returns (independent_probability, amount min, amount max etc)
     local function not_random(recipe)
         if recipe.results and next(recipe.results) then
             for _,r in pairs(recipe.results) do
-                if r.amount_min or (r.probability and r.probability > 0) or r.amount_max then
+                if r.amount_min or (r.independent_probability and r.independent_probability > 0) or r.amount_max then
                     return false
                 end
             end
@@ -234,7 +238,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
             -- If our recipe matches or our category is applicable
             if (
             (proto.fixed_recipe and proto.fixed_recipe == recipe.name) or
-            (proto.crafting_categories and recipe.category and omni.lib.is_in_table(recipe.category, proto.crafting_categories)
+            (proto.crafting_categories and recipe.categories and omni.lib.is_in_table(recipe.categories[1], proto.crafting_categories)
             )) and recipe.name:find("-compression$")
             then
                 local old_recipe = omni.lib.locale.find(recipe.name:gsub("-compression$", ""), "recipe")
@@ -496,7 +500,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                     allow_inserter_overload = recipe.allow_inserter_overload,
                                     subgroup = recipe.subgroup,
                                     hide_from_player_crafting = recipe.hide_from_player_crafting or omni.compression.hide_handcraft,
-                                    category = new_cat,
+                                    categories = new_cat,
                                     order = recipe.order,
                                     surface_conditions = recipe.surface_conditions,
                                     preserve_products_in_machine_output = recipe.preserve_products_in_machine_output,
@@ -561,7 +565,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                 r.localised_name = omni.lib.locale.custom_name(recipe, 'compressed-recipe')
                                 r.icons = icons
                                 r.icon = nil
-                                r.category=new_cat
+                                r.categories = new_cat
                                 r.subgroup = recipe.subgroup
                                 r.energy_required = (r.energy_required or 0.5) * concentrationRatio --Default to 0.5
                                 r.hide_from_player_crafting = r.hide_from_player_crafting or omni.compression.hide_handcraft
@@ -601,7 +605,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                 comrec.hidden = recipe.hidden
                                 comrec.enabled = false
                                 comrec.main_product = nil
-                                comrec.category=new_cat
+                                comrec.categories = new_cat
                                 comrec.hide_from_player_crafting = comrec.hide_from_player_crafting or omni.compression.hide_handcraft
                                 return comrec
                             else
@@ -635,7 +639,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
         if not omni.lib.is_in_table(recipe.name, omni.compression.excluded_recipes) then --not excluded
             if not more_than_one(recipe) then -- Verify products
                 if ingredient then
-                    if not product or (product.count == 0) or (product.probability == 0) or product.name:find("void") then
+                    if not product or (product.count == 0) or (product.independent_probability == 0) or product.name:find("void") then
                         if ingredient.type == "fluid" then
                             prefix = "concentrated-"
                         end
@@ -647,29 +651,15 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
             end
             if continue == true then
                 local icons = omni.lib.add_overlay(recipe, "compress")
-                local new_cat = "crafting-compressed"
-                if recipe.category then
-                    new_cat = recipe.category.."-compressed"
-                    if not data.raw["recipe-category"][new_cat] then
-                        data:extend({{
-                            type = "recipe-category",
-                            name = new_cat
-                        }})
-                    end
-                end
-                if not data.raw["recipe-category"]["general-compressed"] then
-                    data:extend({{
-                    type = "recipe-category",
-                    name = "general-compressed"
-                    }})
-                end
+                local new_cat = set_category(recipe.categories, "crafting-compressed")
+
                 local new_rc = table.deepcopy(recipe)
                 new_rc.name = recipe.name.."-compression"
                 new_rc.localised_name = omni.lib.locale.custom_name(new_rc, 'recipe-name.compressed-recipe')
                 new_rc.icons = icons
-                new_rc.category = new_cat
+                new_rc.categories = new_cat
                 new_rc.ingredients[1].name = prefix .. ingredient.name
-                --new_rc.results[1].probability = 0 --set to never actually give
+                --new_rc.results[1].independent_probability = 0 --set to never actually give
                 return table.deepcopy(new_rc)
             end
             return nil
@@ -684,7 +674,8 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
     --call the recipe creation script, splitting off the randomised recipes and void recipes for further processing
     for _,recipe in pairs(data.raw.recipe) do
         --if not already compressed
-        if not recipe.category or not (recipe.category == "compression" or string.find(recipe.category,"%-concentration$") or string.find(recipe.category,"%-condensation$") or string.find(recipe.category,"%-compressed$")) then
+        if not recipe.categories or not (omni.lib.is_in_table("compression", recipe.categories) or omni.lib.list_contains_string("%-concentration$", recipe.categories) or
+        omni.lib.list_contains_string("%-condensation$", recipe.categories) or omni.lib.list_contains_string("%-compressed$", recipe.categories)) then
             if recipe.subgroup ~= "y_personal_equip" then --exclude yuoki's personal equipment subgroup
                 --check for void and swap it to the void system in place of compression_recipe
                 local rc = omni.compression.create_compression_recipe(recipe) --call create recipe

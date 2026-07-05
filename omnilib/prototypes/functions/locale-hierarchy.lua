@@ -260,6 +260,7 @@ return {
         ["airborne-pollutant"] = "prototype-base",
         ["infinity-cargo-wagon"] = "cargo-wagon",
         ["procession-layer-inheritance-group"] = "prototype-base",
+        ["electric-energy-interface-equipment"]= "equipment",
     },
     bottom_up = {
         ["prototype-base"] = {
@@ -455,6 +456,7 @@ return {
                 ["night-vision-equipment"] = {},
                 ["solar-panel-equipment"] = {},
                 ["roboport-equipment"] = {},
+                ["electric-energy-interface-equipment"] = {},
             },
             item = {
                 ammo = {},

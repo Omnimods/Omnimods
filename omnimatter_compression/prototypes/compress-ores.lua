@@ -22,7 +22,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                             amount_max = result_count,
                             amount_min = result_count,
                             name = result_name,
-                            probability = 1,
+                            independent_probability = 1,
                             type = "item"
                             }
                         else
@@ -36,7 +36,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                         amount_max = new.minable.count or 1,
                         amount_min = new.minable.count or 1,
                         name = new.minable.result,
-                        probability = 1,
+                        independent_probability = 1,
                         type = "item"
                     }}
                     new.minable.result=nil
@@ -110,7 +110,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                 name = "liquify-"..r,
                                 icons = omni.lib.add_overlay(cf, "compress"),
                                 subgroup = "fluid-recipes",
-                                category = "general-omni-boiler",
+                                categories = {"general-omni-boiler"},
                                 order = "g[hydromnic-acid]",
                                 energy_required = 3,
                                 enabled = true,
@@ -126,7 +126,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                 name = "liquify-"..r.."-compression",
                                 icons = omni.lib.add_overlay(cf, "compress"),
                                 subgroup = "fluid-recipes",
-                                category = "general-omni-boiler",
+                                categories = {"general-omni-boiler"},
                                 order = "g[hydromnic-acid]",
                                 energy_required = 3,
                                 enabled = true,
@@ -142,7 +142,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                 type = "recipe",
                                 name = "concentrated-"..new.minable.required_fluid.."-compression",
                                 icons = omni.lib.add_overlay(cf, "compress"),
-                                category = "fluid-concentration",
+                                categories = {"fluid-concentration"},
                                 enabled = true,
                                 hidden = true,
                                 ingredients = {
@@ -158,7 +158,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                             type = "recipe",
                             name = "concentrated-"..new.minable.required_fluid,
                             icons = omni.lib.add_overlay(cf, "compress"),
-                            category = "fluid-concentration",
+                            categories = {"fluid-concentration"},
                             enabled = true,
                             hidden = true,
                             ingredients = {
