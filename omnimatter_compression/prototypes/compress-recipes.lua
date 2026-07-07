@@ -40,18 +40,18 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
         return false
     end
     --category set
-    local function set_category(recipe, default_cat)
-        if recipe.categories then
-            local cats = {}
-            for _,cat in pairs(recipe.categories) do
+    local function set_category(cats, default_cat)
+        local return_cats = {}
+        if cats then
+            for _, cat in pairs(cats) do
                 if not data.raw["recipe-category"][cat.."-compressed"] then
                     if not omni.lib.is_in_table(cat.."-compressed", new_cat) then
                         new_cat[#new_cat+1] = {type = "recipe-category", name = cat.."-compressed"}
                     end
                 end
-                cats[#cats+1] = cat.."-compressed"
+                return_cats[#return_cats+1] = cat.."-compressed"
             end
-            return cats
+            return return_cats
         elseif not data.raw["recipe-category"][default_cat or "general-compressed"] then
             if not omni.lib.is_in_table(default_cat or "general-compressed", new_cat) then
                 new_cat[#new_cat+1] = {type = "recipe-category", name = default_cat or "general-compressed"}
@@ -393,7 +393,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                 if (recipe.results and #recipe.results > 0) then --ingredients.results and 1+
                     if (more_than_one(recipe) or omni.lib.is_in_table(recipe.name, omni.compression.include_recipes)) then
                         local comrec={} --set basis to zero
-                        local new_cat = set_category(recipe) or {"crafting-compressed"} --fallback should not be needed
+                        local new_cat = set_category(recipe.categories) or {"crafting-compressed"} --fallback should not be needed
                         local icons = omni.lib.add_overlay(recipe,"compress")
 
                         if not_random(recipe) then
@@ -651,13 +651,12 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
             end
             if continue == true then
                 local icons = omni.lib.add_overlay(recipe, "compress")
-                local new_cat = set_category(recipe.categories, "crafting-compressed")
-
+                local n_cat = set_category(recipe.categories, "crafting-compressed")
                 local new_rc = table.deepcopy(recipe)
                 new_rc.name = recipe.name.."-compression"
                 new_rc.localised_name = omni.lib.locale.custom_name(new_rc, 'recipe-name.compressed-recipe')
                 new_rc.icons = icons
-                new_rc.categories = new_cat
+                new_rc.categories = n_cat
                 new_rc.ingredients[1].name = prefix .. ingredient.name
                 --new_rc.results[1].independent_probability = 0 --set to never actually give
                 return table.deepcopy(new_rc)
