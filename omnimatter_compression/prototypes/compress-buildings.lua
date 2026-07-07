@@ -155,8 +155,10 @@ if settings.startup["omnicompression_entity_compression"].value then
         local new_fluid = table.deepcopy(data.raw.fluid[fluid])
         if temp then
             -- Clamp to fluid min/max
-            temp = new_fluid.max_temperature and math.min(temp, new_fluid.max_temperature) or temp
             temp = new_fluid.default_temperature and math.max(temp, new_fluid.default_temperature) or temp
+            -- If max_temperature is not defined, default_temperature is used as well...
+            local max_temp = new_fluid.max_temperature or new_fluid.default_temperature
+            temp = max_temp and math.min(temp, max_temp) or temp
         end
         -- Zero pad to keep sorting proper
         local temp_str = temp and "-" .. string.format("%04d", temp) .. "c" or ""
@@ -175,7 +177,7 @@ if settings.startup["omnicompression_entity_compression"].value then
                 type = "recipe",
                 name = fluid.."-concentrated-grade-"..tier..temp_str,
                 localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tostring(tier)),
-                category = "fluid-condensation",
+                categories = {"fluid-condensation"},
                 enabled = true,
                 icons = omni.lib.add_overlay(new_fluid, "compress-fluid", tier),
                 order = new_fluid.order or ("z".."[condensed-"..fluid .."]"),
@@ -189,7 +191,7 @@ if settings.startup["omnicompression_entity_compression"].value then
                 name = "uncompress-"..fluid.."-concentrated-grade-"..tier..temp_str,
                 localised_name = omni.lib.locale.custom_name(data.raw.fluid[fluid], 'fluid-name.compressed-fluid', tostring(tier)),
                 icons = omni.lib.add_overlay(omni.lib.add_overlay(new_fluid, "compress-fluid", tier),"uncompress"),
-                category = "fluid-condensation",
+                categories = {"fluid-condensation"},
                 subgroup = "concentrator-fluids",
                 enabled = true,
                 order = new_fluid.order or ("z".."[condensed-"..fluid .."]"),
@@ -251,7 +253,7 @@ if settings.startup["omnicompression_entity_compression"].value then
                 end
             end
             -- Check for fluid temps here too, generate a recipe for each temp and tier
-            if recipe and recipe.results and recipe.category ~= "fluid-condensation" then
+            if recipe and recipe.results and recipe.categories and not omni.lib.is_in_table("fluid-condensation", recipe.categories) then
                 for _, result in pairs(recipe.results) do
                     local parsed_result = omni.lib.parse_result(result)
                     if parsed_result.type == "fluid" and result.temperature then
@@ -369,7 +371,7 @@ if settings.startup["omnicompression_entity_compression"].value then
         --lab vial slot update (may want to move this to recipe update since tools/items are done later...)
         if kind == "lab" then
             for i, input in pairs(new.inputs) do
-                if data.raw.tool["compressed-"..input] then
+                if data.raw.item["compressed-"..input] then
                     new.inputs[#new.inputs+1] = "compressed-"..input
                 end
             end
@@ -685,7 +687,7 @@ if settings.startup["omnicompression_entity_compression"].value then
                         energy_required = 5*math.floor(math.pow(multiplier,compr_level/2)),
                         enabled = false,
                         hidden = omni.lib.recipe_is_hidden(rc.name),
-                        category = "crafting-compressed",
+                        categories = {"crafting-compressed"},
                         order = (rc.order or details.item.order or "") .. "-compressed",
                         subgroup = rc.subgroup,
                         hide_from_player_crafting = rc.hide_from_player_crafting or omni.compression.hide_handcraft
@@ -700,7 +702,7 @@ if settings.startup["omnicompression_entity_compression"].value then
                         icons = omni.lib.add_overlay(rc,"uncompress"),
                         subgroup = rc.subgroup,
                         order = (rc.order or details.item.order or "") .. "-compressed",
-                        category = "compression",
+                        categories = {"compression"},
                         enabled = true,
                         hidden = true,
                         ingredients = {{name = new.name, amount = 1, type = "item"}},

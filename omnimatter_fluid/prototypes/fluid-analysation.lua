@@ -152,7 +152,7 @@ for _, rec in pairs(data.raw.recipe) do
         for _, ingres in pairs({"ingredients","results"}) do --ignore result/ingredient as they don't handle fluids
             if rec[ingres] then
                 for _, it in pairs(rec[ingres]) do
-                    if it and it.type and it.type == "fluid" and ((it.amount and it.amount > 0 and (it.probability or 1) > 0) or (it.amount_min and it.amount_min > 0 and (it.probability or 1) > 0)) then
+                    if it and it.type and it.type == "fluid" and ((it.amount and it.amount > 0 and (it.independent_probability or 1) > 0) or (it.amount_min and it.amount_min > 0 and (it.independent_probability or 1) > 0)) then
                         fluids[#fluids+1] = {flu = it, type = ingres}
                         recipe_mods[rec.name] = recipe_mods[rec.name] or {ingredients = {}, results = {}}
                         if ingres == "ingredients" then ing_fluids = ing_fluids + 1 end
@@ -162,11 +162,13 @@ for _, rec in pairs(data.raw.recipe) do
         end
 
         --Update the fluid count for the crafting category of this recipe. "crafting" cant hold any fluids so we dont need to worry
-        if rec.category and rec.category ~= "crafting" then
-            if not crafting_category_fluids[rec.category] then
-                crafting_category_fluids[rec.category] = ing_fluids
-            else
-                crafting_category_fluids[rec.category] = math.max(crafting_category_fluids[rec.category], ing_fluids)
+        if rec.categories and not omni.lib.is_in_table("crafting", rec.categories) then
+            for _, cats in pairs(rec.categories) do
+                if not crafting_category_fluids[cats] then
+                    crafting_category_fluids[cats] = ing_fluids
+                else
+                    crafting_category_fluids[cats] = math.max(crafting_category_fluids[cats], ing_fluids)
+                end
             end
         end
 

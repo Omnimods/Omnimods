@@ -5,22 +5,19 @@
 if not data.raw.item["basic-transport-belt"] then
     local ibelt = table.deepcopy(data.raw.item["transport-belt"])
     ibelt.name = "basic-transport-belt"
-    ibelt.icons = nil
-    ibelt.icon = "__omnimatter_energy__/graphics/icons/basic-transport-belt.png"
+    ibelt.icons = {{icon = "__omnimatter_energy__/graphics/icons/basic-transport-belt.png", icon_size = 64}}
     ibelt.order = "a[basic-transport-belt]-a[basic-transport-belt]"
     ibelt.place_result = "basic-transport-belt"
 
     local iunder = table.deepcopy(data.raw.item["underground-belt"])
     iunder.name = "basic-underground-belt"
-    iunder.icons = nil
-    iunder.icon = "__omnimatter_energy__/graphics/icons/basic-underground-belt.png"
+    iunder.icons = {{icon = "__omnimatter_energy__/graphics/icons/basic-underground-belt.png", icon_size = 64}}
     iunder.order = "b[basic-underground-belt]-a[basic-underground-belt]"
     iunder.place_result = "basic-underground-belt"
 
     local isplitter = table.deepcopy(data.raw.item["splitter"])
     isplitter.name = "basic-splitter"
-    isplitter.icons = nil
-    isplitter.icon = "__omnimatter_energy__/graphics/icons/basic-splitter.png"
+    isplitter.icons = {{icon = "__omnimatter_energy__/graphics/icons/basic-splitter.png", icon_size = 64}}
     isplitter.order = "c[basic-splitter]-a[basic-splitter]"
     isplitter.place_result = "basic-splitter"
 
@@ -39,9 +36,7 @@ if not data.raw["transport-belt"]["basic-transport-belt"] then
     ebelt.belt_animation_set.animation_set.filename = "__omnimatter_energy__/graphics/entity/basic-transport-belt/basic-transport-belt.png"
     ebelt.corpse = "basic-transport-belt-remnants"
 
-    ebelt.icons = nil
-    ebelt.icon = "__omnimatter_energy__/graphics/icons/basic-transport-belt.png"
-    ebelt.icon_size = 64
+    ebelt.icons = {{icon = "__omnimatter_energy__/graphics/icons/basic-transport-belt.png", icon_size = 64}}
     ebelt.minable.result = "basic-transport-belt"
     ebelt.next_upgrade = "transport-belt"
     ebelt.related_underground_belt = "basic-underground-belt"
@@ -58,9 +53,7 @@ if not data.raw["transport-belt"]["basic-transport-belt"] then
     eunder.structure.direction_out.sheet.filename = "__omnimatter_energy__/graphics/entity/basic-underground-belt/basic-underground-belt-structure.png"
     eunder.structure.direction_out_side_loading.sheet.filename = "__omnimatter_energy__/graphics/entity/basic-underground-belt/basic-underground-belt-structure.png"
 
-    eunder.icons = nil
-    eunder.icon = "__omnimatter_energy__/graphics/icons/basic-underground-belt.png"
-    eunder.icon_size = 64
+    ebelt.icons = {{icon = "__omnimatter_energy__/graphics/icons/basic-undereground-belt.png", icon_size = 64}}
     eunder.minable.result = "basic-underground-belt"
     eunder.next_upgrade = "underground-belt"
     eunder.speed = 0.015625
@@ -85,9 +78,7 @@ if not data.raw["transport-belt"]["basic-transport-belt"] then
     esplitter.structure_patch.west.filename = "__omnimatter_energy__/graphics/entity/basic-splitter/basic-splitter-west-top_patch.png"
     esplitter.structure_patch.west.width = 90
 
-    esplitter.icons = nil
-    esplitter.icon = "__omnimatter_energy__/graphics/icons/basic-splitter.png"
-    esplitter.icon_size = 64
+    ebelt.icons = {{icon = "__omnimatter_energy__/graphics/icons/basic-splitter.png", icon_size = 64}}
     esplitter.minable.result = "basic-splitter"
     esplitter.next_upgrade = "splitter"
     esplitter.speed = 0.015625
@@ -138,6 +129,7 @@ if data.raw.technology["logistics-0"] then data.raw.technology["logistics-0"] = 
 local belt = RecGen:create("omnimatter_energy", "basic-transport-belt"):
     setIngredients({"iron-gear-wheel", 1}, {"omnicium-plate", 2}):
     setResults({"basic-transport-belt", 2}):
+    setMain("basic-transport-belt"):
     setSubgroup("belt"):
     setEnergy(0.5):
     setIcons({{icon = "basic-transport-belt", icon_size = 64}}, "omnimatter_energy"):
@@ -157,6 +149,7 @@ local belt = RecGen:create("omnimatter_energy", "basic-transport-belt"):
 local ug = RecGen:create("omnimatter_energy", "basic-underground-belt"):
     setIngredients({"basic-transport-belt", 5}, {"omnicium-plate", 10}):
     setResults({"basic-underground-belt", 2}):
+    setMain("basic-underground-belt"):
     setSubgroup("belt"):
     setEnergy(0.5):
     setIcons({{icon = "basic-underground-belt", icon_size = 64}}, "omnimatter_energy"):
@@ -174,6 +167,7 @@ local ug = RecGen:create("omnimatter_energy", "basic-underground-belt"):
 local splitter = RecGen:create("omnimatter_energy", "basic-splitter"):
     setIngredients({"basic-transport-belt", 4}, {"omnicium-plate", 2}, {"iron-gear-wheel", 4}):
     setResults({"basic-splitter", 1}):
+    setMain("basic-splitter"):
     setSubgroup("belt"):
     setEnergy(0.5):
     setIcons({{icon = "basic-splitter", icon_size = 64}}, "omnimatter_energy"):

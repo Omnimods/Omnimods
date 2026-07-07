@@ -40,7 +40,7 @@ data:extend({
         name = "omni-solar-road",
         icon = "__omnimatter_energy__/graphics/icons/omni-solar-tile.png",
         icon_size = 32,
-        category = "crafting",
+        categories = {"crafting"},
         subgroup = "omnienergy-solar",
         energy_required = 3.0,
         enabled=false,

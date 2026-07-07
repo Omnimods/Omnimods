@@ -1,14 +1,14 @@
 {
 "name":"omnimatter_science",
-"version": "4.2.4",
+"version": "4.3.0",
 "title":"Omniscience",
-"author":"EmperorZelos",
+"author":"EmperorZelos, Cereal-Sam",
 "contact": "https://discord.gg/WQYks7W",
 "description":"Adds difficulty by changing science costs.",
-"factorio_version":"2.0",
+"factorio_version":"2.1",
 "dependencies":[
     "base",
-    "omnilib >= 4.2.0",
+    "omnilib >= 4.3.0",
     "?omnimatter",
     "?omnimatter_crystal",
     "?omnimatter_wood",

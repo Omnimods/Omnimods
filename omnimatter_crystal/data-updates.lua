@@ -58,7 +58,7 @@ end
 if not mods["angelsrefining"] then
     local added_ores = {}
     for _,rec in pairs(data.raw.recipe) do
-        if string.find(rec.name,"crystal") and omni.lib.end_with(rec.name,"omnitraction") and rec.category=="omnite-extraction" then
+        if string.find(rec.name,"crystal") and omni.lib.end_with(rec.name,"omnitraction") and omni.lib.is_in_table("omnite-extraction", rec.categories) then
             local ore = rec.results[1].name
             added_ores[#added_ores+1] = ore
 

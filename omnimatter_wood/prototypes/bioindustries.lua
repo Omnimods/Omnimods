@@ -10,7 +10,7 @@ if mods["Bio_Industries_2"] then
     omni.lib.replace_all_ingredient("seedling", "omniseedling")
     omni.lib.replace_all_result("seedling", "omniseedling")
 
-    data.raw.recipe["bi-seedling-1"].category = "omnimutator"
+    data.raw.recipe["bi-seedling-1"].categories = {"omnimutator"}
     data.raw.recipe["bi-seedling-1"].icon = nil
     data.raw.recipe["bi-seedling-1"].icons = {
         {icon = "__omnimatter_wood__/graphics/icons/Seedling.png", icon_size = 32},
@@ -22,7 +22,7 @@ if mods["Bio_Industries_2"] then
         }
     }
 
-    data.raw.recipe["bi-seedling-2"].category = "omnimutator"
+    data.raw.recipe["bi-seedling-2"].categories = {"omnimutator"}
     data.raw.recipe["bi-seedling-2"].icon = nil
     data.raw.recipe["bi-seedling-2"].icons = {
         {icon = "__omnimatter_wood__/graphics/icons/Seedling.png", icon_size = 32},
@@ -34,7 +34,7 @@ if mods["Bio_Industries_2"] then
         }
     }
 
-    data.raw.recipe["bi-seedling-3"].category = "omnimutator"
+    data.raw.recipe["bi-seedling-3"].categories = {"omnimutator"}
     data.raw.recipe["bi-seedling-3"].icon = nil
     data.raw.recipe["bi-seedling-3"].icons = {
         {icon = "__omnimatter_wood__/graphics/icons/Seedling.png", icon_size = 32},
@@ -46,7 +46,7 @@ if mods["Bio_Industries_2"] then
         }
     }
 
-    data.raw.recipe["bi-seedling-4"].category = "omnimutator"
+    data.raw.recipe["bi-seedling-4"].categories = {"omnimutator"}
     data.raw.recipe["bi-seedling-4"].icon = nil
     data.raw.recipe["bi-seedling-4"].icons = {
         {icon = "__omnimatter_wood__/graphics/icons/Seedling.png", icon_size = 32},

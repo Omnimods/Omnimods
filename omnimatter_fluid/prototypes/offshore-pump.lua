@@ -14,7 +14,7 @@ for _, t in pairs(data.raw.tile) do
                 ingredients = {},
                 results = {{name = pump_result, amount = omni.fluid.sluid_contain_fluid, type = "item"}},
                 enabled = true,
-                category = "solshore-pump",
+                categories = {"solshore-pump"},
                 energy_required = 1,
                 hide_from_player_crafting = true
             }

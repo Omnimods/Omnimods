@@ -55,10 +55,10 @@ if settings.startup["omnicompression_item_compression"].value then
 
     local pack_sizes = {}
     setmetatable(pack_sizes, {
-        __index = function(self, key, value)
-            local proto = data.raw.tool[key]
+        __index = function(self, key)
+            local proto = data.raw.item[key]
             if not proto or not proto.stack_size then
-                log("We expect " .. key .. " to be a tool, but it isn't")
+                log("We expect " .. key .. " to be an item, but it isn't")
                 proto = data.raw.item[key]
             end
             self[key] = proto.stack_size
@@ -83,7 +83,7 @@ if settings.startup["omnicompression_item_compression"].value then
                     if flag == "hidden" then hidden = true end
                 end
             end
-            if proto and data.raw.tool["compressed-"..ing] and not omni.lib.start_with(ing,"compressed") and not omni.lib.is_in_table("compressed-"..ing,lab.inputs) and not hidden then
+            if proto and data.raw.item["compressed-"..ing] and not omni.lib.start_with(ing,"compressed") and not omni.lib.is_in_table("compressed-"..ing,lab.inputs) and not hidden then
                 table.insert(lab.inputs,"compressed-"..ing)
             end
         end
@@ -144,7 +144,7 @@ if settings.startup["omnicompression_item_compression"].value then
                 t.name = "omnipressed-"..t.name
                 local class, tier = splitTech(tech.name)
                 local locale = omni.lib.locale.of(tech).name
-                if tier and tonumber(locale[#locale]) == nil and tech.level == tech.max_level then-- If the last key is a number, or there's multiple levels, it's already tiered.
+                if tier and tonumber(locale[#locale]) == nil and tier == tech.max_level then-- If the last key is a number, or there's multiple levels, it's already tiered.
                     t.localised_name = omni.lib.locale.custom_name(tech, "compressed-tiered", tostring(tier))
                     t.localised_description = {"technology-description.compressed-tiered", locale, tostring(tier)}
                 else
@@ -215,7 +215,7 @@ if settings.startup["omnicompression_item_compression"].value then
                 t.name = "omnipressed-"..t.name
                 local class, tier = splitTech(tech.name)
                 local locale = omni.lib.locale.of(tech).name
-                if tier and tonumber(locale[#locale]) == nil and tech.level == tech.max_level then-- If the last key is a number, or there's multiple levels, it's already tiered.
+                if tier and tonumber(locale[#locale]) == nil and tier == tech.max_level then-- If the last key is a number, or there's multiple levels, it's already tiered.
                     t.localised_name = omni.lib.locale.custom_name(tech, "compressed-tiered", tostring(tier))
                     t.localised_description = {"technology-description.compressed-tiered", locale, tostring(tier)}
                 else

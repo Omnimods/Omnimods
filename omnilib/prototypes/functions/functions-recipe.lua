@@ -341,8 +341,8 @@ function omni.lib.replace_all_result(result, replacement)
     end
 end
 
-function omni.lib.change_recipe_category(recipe, category)
-    data.raw.recipe[recipe].category=category
+function omni.lib.set_recipe_categories(recipe, categories)
+    data.raw.recipe[recipe].categories = {categories}
 end
 
 --Checks if a recipe contains a specific material as ingredient

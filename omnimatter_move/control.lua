@@ -78,7 +78,7 @@ script.on_event(defines.events.on_player_alt_selected_area, function(event)
         local max_y = 0
         local min_x = 0
         local min_y = 0
-          
+
         for _, ore in pairs(ore_to_move[event.player_index].ore) do
             local entities = surface.find_entities_filtered{
                 area= {{ore_to_move[event.player_index].centre.x+ore.pos.x -0.5, ore_to_move[event.player_index].centre.y+ore.pos.y -0.5},
@@ -105,10 +105,10 @@ script.on_event(defines.events.on_player_alt_selected_area, function(event)
             --If the surface has no blocking entities / tiles , continue
             for _, ore in pairs(ore_to_move[event.player_index].ore) do
                 local entities = surface.find_entities_filtered{
-                  area= {{ore_to_move[event.player_index].centre.x+ore.pos.x -0.5, ore_to_move[event.player_index].centre.y+ore.pos.y -0.5},
-                  {ore_to_move[event.player_index].centre.x+ore.pos.x +0.5, ore_to_move[event.player_index].centre.y+ore.pos.y +0.5}},
-                  name=ore.name}
-                
+                    area= {{ore_to_move[event.player_index].centre.x+ore.pos.x -0.5, ore_to_move[event.player_index].centre.y+ore.pos.y -0.5},
+                    {ore_to_move[event.player_index].centre.x+ore.pos.x +0.5, ore_to_move[event.player_index].centre.y+ore.pos.y +0.5}},
+                    name=ore.name}
+
                 --Get settings value (determines the tile amount where 50% of the moved ore is lost)
                 local cost_factor = settings.global["ore-tile-loss"].value 
                 local cost = 1 / ( 1 + (dist / cost_factor))

@@ -412,6 +412,16 @@ function omni.lib.is_number(str)
     return tonumber(str) ~= nil
 end
 
+-- checks if any element of the list contains the provided string
+function omni.lib.list_contains_string(str, list)
+    for i=1, #list do
+        if type(list[i]) == "string" and string.find(list[i], str) then
+            return true
+        end
+    end
+    return false
+end
+
 --Checks if a string contains anything within the provided list
 function omni.lib.string_contained_list(str, list)
     for i=1, #list do
@@ -428,6 +438,7 @@ function omni.lib.string_contained_list(str, list)
     return false
 end
 
+--Checks if a string contains each element of the provided list
 function omni.lib.string_contained_entire_list(str, list)
     local found_it = true
     for i=1, #list do
@@ -553,7 +564,7 @@ function omni.lib.create_barrel(fluid)
         type = "recipe",
         name = "fill-"..fluid.name.."-barrel",
         localised_name = {"recipe-name.fill-barrel", fluid.localised_name or {"fluid-name." .. fluid.name}},
-        category = "crafting-with-fluid",
+        categories = {"crafting-with-fluid"},
         energy_required = 0.2,
         subgroup = "fill-barrel",
         order = "b[fill-"..fluid.name.."-barrel".."]",
@@ -587,7 +598,7 @@ function omni.lib.create_barrel(fluid)
         type = "recipe",
         name = "empty-"..fluid.name.."-barrel",
         localised_name = {"recipe-name.empty-filled-barrel", fluid.localised_name or {"fluid-name." .. fluid.name}},
-        category = "crafting-with-fluid",
+        categories = {"crafting-with-fluid"},
         energy_required = 0.2,
         subgroup = "barrel",
         order = "c[empty-"..fluid.name.."-barrel".."]",
@@ -717,8 +728,8 @@ function omni.lib.add_overlay(it, overlay_type, level)
         return
     end
 
-    local base_size = (icons[1] and icons[1].icon_size) or defines.default_icon_size
-    local base_scale = icons[1] and icons[1].scale or (defines.default_icon_size / 2) / base_size
+    local base_size = (icons[1] and icons[1].icon_size) or defines.constant.default_icon_size
+    local base_scale = icons[1] and icons[1].scale or (defines.constant.default_icon_size / 2) / base_size
     --Techs default to 256 icon_size instead of 64
     if overlay_type == "technology" then
         base_scale = icons[1] and icons[1].scale or (256 / 2) / base_size

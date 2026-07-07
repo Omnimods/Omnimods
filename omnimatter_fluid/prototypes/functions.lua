@@ -170,7 +170,7 @@ function omni.fluid.is_fluid_void(recipe)
     local results = recipe.results
     local ingredients = recipe.ingredients
     local ing_is_fluid = ingredients and next(ingredients) and ingredients[1].type and ingredients[1].type == "fluid"
-    local has_no_result = not results or (results and not next(results)) or (next(results) and #results == 1 and ((results[1].amount and results[1].amount == 0) or (results[1].probability and results[1].probability == 0)))
+    local has_no_result = not results or (results and not next(results)) or (next(results) and #results == 1 and ((results[1].amount and results[1].amount == 0) or (results[1].independent_probability and results[1].independent_probability == 0)))
 
     if ing_is_fluid and has_no_result then
         return true

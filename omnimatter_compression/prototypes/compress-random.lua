@@ -37,9 +37,9 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                     if result.amount_max then
                         stored_probabilities[result_name].style = "min-max"
                         stored_probabilities[result_name].mm_prob = result.amount_max/result_amount
-                    elseif result.probability then --don't know why you would use this, but sure...
+                    elseif result.independent_probability then --don't know why you would use this, but sure...
                         stored_probabilities[result_name].style = "min-chance"
-                        stored_probabilities[result_name].mp_prob = result.probability
+                        stored_probabilities[result_name].mp_prob = result.independent_probability
                     end
                 elseif result.amount_min and result.amount_min == 0 then
                     if result.amount_max then
@@ -48,17 +48,17 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                     else
                         log("what are you doing with".. new_recipe.name .. "?")
                     end
-                elseif result.amount and result.probability then --normal style, priority over previous step
+                elseif result.amount and result.independent_probability then --normal style, priority over previous step
                     stored_probabilities[result_name].style = "chance"
-                    stored_probabilities[result_name].prob = result.probability
-                    result_amount = math.max(result_amount,1) --stop it giving 0?
+                    stored_probabilities[result_name].prob = result.independent_probability
+                    result_amount = math.max(result_amount, 1) --stop it giving 0?
                 end
                 --set rec
                 result.amount = result_amount
                 --prevent shenanigans
                 result.amount_min = nil
                 result.amount_max = nil
-                result.probability = nil
+                result.independent_probability = nil
             end
             --parse to compression
             local new_rec = omni.compression.create_compression_recipe(new_recipe)
@@ -74,25 +74,25 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                     if secondary[result_name]==true then
                         result_name=result_name .."-p"
                     end
-                    local probability = stored_probabilities[result_name]
-                    if probability then                  
+                    local prob = stored_probabilities[result_name]
+                    if prob then
                         --get style
-                        if probability.style == "min-max" then
-                            if result.amount and math.floor(result.amount*probability.mm_prob) > result.amount then --check it actually gets a range
+                        if prob.style == "min-max" then
+                            if result.amount and math.floor(result.amount*prob.mm_prob) > result.amount then --check it actually gets a range
                                 result.amount_min = result.amount
-                                result.amount_max = math.floor(result.amount*probability.mm_prob) --always round down
+                                result.amount_max = math.floor(result.amount*prob.mm_prob) --always round down
                                 result.amount = nil --remove standard if min and max exist
                             end
-                        elseif probability.style == "zero-max" then
+                        elseif prob.style == "zero-max" then
                             result.amount_min = 0
                             result.amount_max = result.amount
                             result.amount = nil
-                        elseif probability.style == "min-chance" then
+                        elseif prob.style == "min-chance" then
                             result.amount_min = result.amount
-                            result.probability = probability.mp_prob
+                            result.independent_probability = prob.mp_prob
                             result.amount = nil
-                        elseif probability.style == "chance" then
-                            result.probability = probability.prob
+                        elseif prob.style == "chance" then
+                            result.independent_probability = prob.prob
                         end
                     end
                     --check for double entries after primary

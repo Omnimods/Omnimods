@@ -103,7 +103,7 @@ fboxes[2].pipe_connections[1].positions = {
 for I=1, 2 do
     -- Add covers
     fboxes[I]["pipe_covers"] = pipecoverspictures()
-    fboxes[I]["pipe_picture"] = assembler3pipepictures()
+    fboxes[I]["pipe_picture"] = require("__base__/prototypes/entity/assembler-pictures").assembler3pipepictures
     -- Kill the "one size fits all" override
     fboxes[I].pipe_connections[1].position = nil
     -- Remove the "assembler 3" tint

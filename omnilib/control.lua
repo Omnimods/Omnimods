@@ -102,7 +102,7 @@ end
 local function omnidate(technology)
     local game = game
     -- Record time spent
-    local profiler = game.create_profiler()
+    local profiler = helpers.create_profiler()
     local logger = storage.omni and storage.omni.log_to_chat and game.print or log
     -- Clear cached lists
     local clear_caches = storage.omni and storage.omni.clear_caches

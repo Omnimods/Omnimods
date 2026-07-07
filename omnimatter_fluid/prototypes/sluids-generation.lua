@@ -340,11 +340,11 @@ for name, _ in pairs(recipe_mods) do
                     --Multiply amount with mult, keep probability in mind
                     local new_amount = omni.fluid.get_true_amount(ing) * mult
                     if new_amount < 1 then
-                        ing.probability = new_amount
+                        ing.independent_probability = new_amount
                         new_amount = 1
                     else
                         omni.lib.round(new_amount)
-                        ing.probability = nil
+                        ing.independent_probability = nil
                     end
 
                     ing.amount = math.min(new_amount, 65535)

@@ -155,6 +155,7 @@ local shift = {
     south = {0, 0.19},
     west = {-0.1, 0}
 }
+
 local function modify_fluidboxes(proto)
     local fboxes = proto.fluid_boxes
     for I=1, #fboxes do
@@ -173,7 +174,7 @@ local function modify_fluidboxes(proto)
         fboxes[I].pipe_connections[1].positions = fbox_positions[I]
         -- Remove the "one size fits all" position table
         fboxes[I].pipe_connections[1].position = nil
-        fboxes[I].pipe_picture = assembler3pipepictures()
+        fboxes[I].pipe_picture = require("__base__/prototypes/entity/assembler-pictures").assembler3pipepictures
         for dir, picture in pairs(fboxes[I].pipe_picture) do
             -- X, Y
             for II=1, 2 do
