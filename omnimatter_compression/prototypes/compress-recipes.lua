@@ -393,7 +393,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                 if (recipe.results and #recipe.results > 0) then --ingredients.results and 1+
                     if (more_than_one(recipe) or omni.lib.is_in_table(recipe.name, omni.compression.include_recipes)) then
                         local comrec={} --set basis to zero
-                        local new_cat = set_category(recipe) or "crafting-compressed" --fallback should not be needed
+                        local new_cat = set_category(recipe) or {"crafting-compressed"} --fallback should not be needed
                         local icons = omni.lib.add_overlay(recipe,"compress")
 
                         if not_random(recipe) then
