@@ -55,7 +55,7 @@ if settings.startup["omnicompression_item_compression"].value then
 
     local pack_sizes = {}
     setmetatable(pack_sizes, {
-        __index = function(self, key, value)
+        __index = function(self, key)
             local proto = data.raw.item[key]
             if not proto or not proto.stack_size then
                 log("We expect " .. key .. " to be an item, but it isn't")
@@ -144,7 +144,7 @@ if settings.startup["omnicompression_item_compression"].value then
                 t.name = "omnipressed-"..t.name
                 local class, tier = splitTech(tech.name)
                 local locale = omni.lib.locale.of(tech).name
-                if tier and tonumber(locale[#locale]) == nil and tech.level == tech.max_level then-- If the last key is a number, or there's multiple levels, it's already tiered.
+                if tier and tonumber(locale[#locale]) == nil and tier == tech.max_level then-- If the last key is a number, or there's multiple levels, it's already tiered.
                     t.localised_name = omni.lib.locale.custom_name(tech, "compressed-tiered", tostring(tier))
                     t.localised_description = {"technology-description.compressed-tiered", locale, tostring(tier)}
                 else
@@ -215,7 +215,7 @@ if settings.startup["omnicompression_item_compression"].value then
                 t.name = "omnipressed-"..t.name
                 local class, tier = splitTech(tech.name)
                 local locale = omni.lib.locale.of(tech).name
-                if tier and tonumber(locale[#locale]) == nil and tech.level == tech.max_level then-- If the last key is a number, or there's multiple levels, it's already tiered.
+                if tier and tonumber(locale[#locale]) == nil and tier == tech.max_level then-- If the last key is a number, or there's multiple levels, it's already tiered.
                     t.localised_name = omni.lib.locale.custom_name(tech, "compressed-tiered", tostring(tier))
                     t.localised_description = {"technology-description.compressed-tiered", locale, tostring(tier)}
                 else
