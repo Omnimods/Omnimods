@@ -155,8 +155,10 @@ if settings.startup["omnicompression_entity_compression"].value then
         local new_fluid = table.deepcopy(data.raw.fluid[fluid])
         if temp then
             -- Clamp to fluid min/max
-            temp = new_fluid.max_temperature and math.min(temp, new_fluid.max_temperature) or temp
             temp = new_fluid.default_temperature and math.max(temp, new_fluid.default_temperature) or temp
+            -- If max_temperature is not defined, default_temperature is used as well...
+            local max_temp = new_fluid.max_temperature or new_fluid.default_temperature
+            temp = max_temp and math.min(temp, max_temp) or temp
         end
         -- Zero pad to keep sorting proper
         local temp_str = temp and "-" .. string.format("%04d", temp) .. "c" or ""
