@@ -3,7 +3,6 @@ local sluid_boiler = require("prototypes.sluid-boiler")
 local fluid_cats = analysation.fluid_cats_
 local recipe_mods = analysation.recipe_mods_
 local void_recipes = analysation.void_recipes_
-
 ----------------------------
 -----Create solid items-----
 ----------------------------
@@ -244,6 +243,11 @@ for name, _ in pairs(recipe_mods) do
         end
         max_mult = math.max(mult, max_mult)
 
+        --Make sure a valid localised name is available before messing with the recipe
+        if not rec.localised_name then --and not rec.main_product then
+            rec.localised_name = omni.lib.locale.of(rec).name
+        end
+
         --Now Replace fluids with sluids and apply the mult too all ingres and crafting time
         local fix_stacksize = false
         for _, ingres in pairs({"ingredients","results"}) do
@@ -377,7 +381,7 @@ for name, _ in pairs(recipe_mods) do
         --Apply stack size fixes
         if fix_stacksize then
             --set a localised name - Due to splitting a single result, the recipe might not have one at all
-            rec.localised_name = omni.lib.locale.of(rec).name
+            --rec.localised_name = omni.lib.locale.of(rec).name
             --If old recipe has only 1 result and no icons defined, set main product
             if  #rec.results == 1 and not rec.main_product and not rec.icon and not rec.icons then
                 rec.main_product = rec.results[1].name

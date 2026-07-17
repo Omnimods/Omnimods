@@ -23,7 +23,7 @@ end
 
 local function offshore_pump_placed(entity)
     if prototypes.entity["solshore-"..entity.name] then
-        local fluid = entity.fluidbox.get_filter(1).name
+        local fluid = entity.get_fluid_filter(1).fluid.name
         if prototypes.recipe["solshore-"..fluid] then
             local sol = entity.surface.create_entity{
                 name = "solshore-"..entity.name,

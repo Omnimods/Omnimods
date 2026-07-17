@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.3.1
+Date: 2026-07-17
+  Bugfixes:
+    - Fixed a crash when placing an offsahore pump
+    - Fixed some recipes localised name being broken
+---------------------------------------------------------------------------------------------------
 Version: 4.3.0
 Date: 2026-07-07
   Changes:
