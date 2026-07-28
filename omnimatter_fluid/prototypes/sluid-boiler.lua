@@ -10,7 +10,7 @@ local function sluid_boiler_generation(fluid_cats)
 
     for _, boiler in pairs(data.raw.boiler) do
         --if exists, find recipe, item and entity
-        if not omni.fluid.forbidden_boilers[boiler.name] then
+        if not omni.fluid.forbidden_boilers[boiler.name] and boiler.mode == "output-to-separate-pipe" then
             ------------------------------------------
             --Create a solid & fluid boiling recipes--
             ------------------------------------------
