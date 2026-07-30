@@ -3,6 +3,7 @@ Version: 4.3.1
 Date: ????
   Bugfixes:
     - Added Science Cost TweakerM as optional dependency to avoid tech unlock issues
+    - Added support for extra_count_fraction fixing a crash with recyclers being activated
 ---------------------------------------------------------------------------------------------------
 Version: 4.3.0
 Date: 2026-07-07
