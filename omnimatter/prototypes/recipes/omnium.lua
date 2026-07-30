@@ -88,7 +88,7 @@ RecGen:create("omnimatter","omnium-iron-gear-box"):
 
 if mods["bobplates"] then
     local plates = {"bob-steel","bob-brass","bob-titanium","bob-tungsten","bob-nitinol"}
-    local plateTech = {"steel-processing","bob-zinc-processing","bob-titanium-processing","bob-tungsten-processing","bob-nitinol-processing"}
+    local plateTech = {"steel-processing","bob-brass-processing","bob-titanium-processing","bob-tungsten-processing","bob-nitinol-processing"}
     local metal = {"steel","brass","titanium","tungsten","nitinol"}
 
     for i,p in pairs(plates) do
