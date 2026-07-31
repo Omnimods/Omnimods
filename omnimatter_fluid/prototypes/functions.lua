@@ -116,7 +116,6 @@ function omni.fluid.SetRoundFluidValues()
     local roundFluidValues = {}
     local current = 0
     while current < top_value do
-        if current <= 100 then
         if current < 100 then
             current = current + (step/8)
             if current >= 100 then current = 100 end
