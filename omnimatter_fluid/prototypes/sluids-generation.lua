@@ -195,7 +195,7 @@ for name, _ in pairs(recipe_mods) do
             max_amount = 0
             lcm_mult = 1
             for _, ingres in pairs({"ingredients","results"}) do
-                for    _, ing in pairs(rec[ingres] or {}) do
+                for  _, ing in pairs(rec[ingres] or {}) do
                     local amount = 0
                     if ing.type == "fluid" then
                         --Round the fluid amount to get rid of weird base numbers, divide afterwards to not lose precision

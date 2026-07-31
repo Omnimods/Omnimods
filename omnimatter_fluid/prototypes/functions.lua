@@ -117,9 +117,12 @@ function omni.fluid.SetRoundFluidValues()
     local current = 0
     while current < top_value do
         if current <= 100 then
-            current = current + (step/10)
-        elseif current <= 1000 then
-            current = current + (step/5)
+        if current < 100 then
+            current = current + (step/8)
+            if current >= 100 then current = 100 end
+        elseif current < 1000 then
+            current = current + (step/4)
+            if current >= 1000 then current = 1000 end
         else
             current = current + step
         end
@@ -134,19 +137,19 @@ function omni.fluid.round_fluid(nr,round)
     local t = omni.lib.round(nr)
     local newval = t
     for i=1, #roundFluidValues-1 do
-        if roundFluidValues[i]< t and roundFluidValues[i+1]>t then
-            if t-roundFluidValues[i] < roundFluidValues[i+1]-t then
+        if roundFluidValues[i] < t and roundFluidValues[i+1] > t then
+            if t - roundFluidValues[i] < roundFluidValues[i+1] - t then
                 local c = 0
                 if roundFluidValues[i] ~= t and round == 1 then c=1 end
-                newval = roundFluidValues[i+c]
+                return math.max(roundFluidValues[i+c], 1)
             else
                 local c = 0
                 if roundFluidValues[i+1] ~= t and round == -1 then c=-1 end
-                newval = roundFluidValues[i+1+c]
+                return math.max(roundFluidValues[i+c], 1)
             end
         end
     end
-    return math.max(newval,1)
+    return math.max(newval, 1)
 end
 
 function omni.fluid.get_true_amount(subtable) --individual ingredient/result table

@@ -3,6 +3,8 @@ Version: 4.3.2
 Date: ????
   Bugfixes:
     - Fixed not checking for booiler mode "output-to-separate-pipe" when reading target_temperature
+    - Fixed that backup rounding on recipes with a high number of ingredients / amounts rounded to
+      odd numbers in some cases causing high recipe multipliers
 ---------------------------------------------------------------------------------------------------
 Version: 4.3.1
 Date: 2026-07-17
