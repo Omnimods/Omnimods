@@ -149,79 +149,80 @@ BuildChain:create("omnimatter","omnitractor"):
 local fbox_positions = {
     {
         {
-            -1,
-            -1--    -1.95
+            -1.0,
+            -1.0--    -1.95
         },
         {
-            1,--   1.9,
-            -1
+            1.0,--   1.9,
+            -1.0
         },
         {
-            1,
-            1--    1.85
+            1.0,
+            1.0--    1.85
         },
         {
-            -1,--   -1.9,
-            1
+            -1.0,--   -1.9,
+            1.0
         }
     },
     {
         {
-            1,
-            -1--   -1.95
+            1.0,
+            -1.0--   -1.95
         },
         {
-            1,--    1.9,
-            1
+            1.0,--    1.9,
+            1.0
         },
         {
-            -1,
-            1--     1.85
+            -1.0,
+            1.0--     1.85
         },
         {
-            -1,--   -1.9,
-            -1
+            -1.0,--   -1.9,
+            -1.0
         }
     },
     {
         {
-            -1,
-            1--     1.85
+            -1.0,
+            1.0--     1.85
         },
         {
-            -1,--   -1.9,
-            -1
+            -1.0,--   -1.9,
+            -1.0
         },
         {
-            1,
-            -1--    -1.95
+            1.0,
+            -1.0--    -1.95
         },
         {
-            1,--    1.9,
-            1
+            1.0,--    1.9,
+            1.0
         }
     },
     {
         {
-            1,
-            1, --   1.85
+            1.0,
+            1.0, --   1.85
         },
         {
-            -1,--   -1.9,
-            1
+            -1.0,--   -1.9,
+            1.0
         },
         {
-            -1,
-            -1--    -1.95
+            -1.0,
+            -1.0--    -1.95
         },
         {
-            1,--    1.9,
-            -1
+            1.0,--    1.9,
+            -1.0
         }
     }
 }
 local function modify_fluidboxes(proto)
     local fboxes = proto.fluid_boxes
+    proto.use_mirroring = true
     for I=1, #fboxes do
         -- Covers = no active connection
         fboxes[I].pipe_covers = pipecoverspictures()
@@ -278,6 +279,7 @@ local function modify_fluidboxes(proto)
             }
         }
         fboxes[I].pipe_connections[1].positions = fbox_positions[I]
+
         -- Remove the "one size fits all" position table
         fboxes[I].pipe_connections[1].position = nil
     end

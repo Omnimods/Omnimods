@@ -115,37 +115,37 @@ local fbox_positions = {
     {
         {
             0.0,
-            -0.8--    -1.95
+            -0.8--    --0.8
         },
         {
-            0.95,--       1.9,
-            0
+            0.95,--     0.95,
+            0.0
         },
         {
-            0,
-            1.0,--      1.85
+            0.0,
+            1.0,--      1.0
         },
         {
-            -1.0,--     -1.9,
-            0
+            -1.0,--     -1.0,
+            0.0
         }
     },
     {
         {
             0.0,
-            1.0,--      1.85
+            1.0,--      1.0
         },
         {
-            -1.0,--     -1.9,
-            0
+            -1.0,--     -1.0,
+            0.0
         },
         {
-            0,
-            -0.8--     -1.95
+            0.0,
+            -0.8--     -0.8
         },
         {
-            0.95,--      1.9,
-            0
+            0.95,--      0.95,
+            0.0
         }
     }
 }
@@ -158,6 +158,7 @@ local shift = {
 
 local function modify_fluidboxes(proto)
     local fboxes = proto.fluid_boxes
+    proto.use_mirroring = true
     for I=1, #fboxes do
         -- Covers = no active connection
         fboxes[I].pipe_covers = pipecoverspictures()

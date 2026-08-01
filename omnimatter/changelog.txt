@@ -4,6 +4,7 @@ Date: ????
   Bugfixes:
     - Fixed omnium brass gear box not having a tech unlock due to a typo with bobs
     - Fixed omniphlog fluidbox pipe covers shifts
+    - Allow mirroring for the omnitractor and omniphlog
 ---------------------------------------------------------------------------------------------------
 Version: 4.3.0
 Date: 2026-07-07
