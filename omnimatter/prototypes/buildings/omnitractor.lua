@@ -125,7 +125,7 @@ BuildChain:create("omnimatter","omnitractor"):
     setModSlots(function(levels,grade) return grade end):
     setCrafting({"omnite-extraction-both","omnite-extraction"}):
     setSpeed(function(levels,grade) return 0.5+grade/2 end):
-    setFluidBox("WXW.XXX.KXK",true):
+    setFluidBox("WXW.XXX.KXK", true):
     setGraphics({
         animation = {
             layers = {
@@ -300,6 +300,3 @@ for i=1,math.min(settings.startup["omnimatter-max-tier"].value, 5) do
 end
 -- Burner as well
 modify_fluidboxes(data.raw["assembling-machine"]["burner-omnitractor"])
-
--- log(serpent.block(data.raw.item["omnitractor-1"]))
--- log(serpent.block(data.raw.item["omnitractor-1"].icons[3]))

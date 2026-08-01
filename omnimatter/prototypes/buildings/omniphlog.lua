@@ -29,7 +29,7 @@ BuildGen:create("omnimatter","burner-omniphlog"):
     setSize(3):
     setEnergy(5):
     setCrafting("omniphlog"):
-    setFluidBox("XWX.XXX.XKX"):
+    setFluidBox("XWX.XXX.XKX", true):
     setUsage(300):
     setGraphics({
         animation = {
@@ -84,7 +84,7 @@ BuildChain:create("omnimatter","omniphlog"):
     setWeight(40000):
     setSize(3):
     setTechName("omnitech-omnitractor-electric"):
-    setFluidBox("XWX.XXX.XKX"):
+    setFluidBox("XWX.XXX.XKX", true):
     setLevel(omni.max_tier):
     setSoundWorking("ore-crusher"):
     setSoundVolume(2):
@@ -114,11 +114,11 @@ BuildChain:create("omnimatter","omniphlog"):
 local fbox_positions = {
     {
         {
-            0,
-            -1.0--    -1.95
+            0.0,
+            -0.8--    -1.95
         },
         {
-            1.0,--       1.9,
+            0.95,--       1.9,
             0
         },
         {
@@ -132,7 +132,7 @@ local fbox_positions = {
     },
     {
         {
-            0,
+            0.0,
             1.0,--      1.85
         },
         {
@@ -141,19 +141,19 @@ local fbox_positions = {
         },
         {
             0,
-            -1.0--     -1.95
+            -0.8--     -1.95
         },
         {
-            1.0,--      1.9,
+            0.95,--      1.9,
             0
         }
     }
 }
 local shift = {
-    north = {0, 0.25},
-    east = {-0.1, 0},
-    south = {0, 0.19},
-    west = {-0.1, 0}
+    north = {0, 0.0},
+    east = {0.015, 0},
+    south = {0, 0},
+    west = {0, 0}
 }
 
 local function modify_fluidboxes(proto)
@@ -181,10 +181,11 @@ local function modify_fluidboxes(proto)
                 picture.shift[II] = picture.shift[II] + shift[dir][II]
             end
             -- Override the "assembler 3" tint
-            picture.tint = {1,0.9,1,1}
+            picture.tint = {1, 0.9, 1,1}
         end
     end
 end
+
 local is_comp_mode = mods["angelsindustries"] and angelsmods.industries.components
 for i=1,settings.startup["omnimatter-max-tier"].value do
     if is_comp_mode then
@@ -198,5 +199,6 @@ for i=1,settings.startup["omnimatter-max-tier"].value do
     -- Modify our fluid boxes
     modify_fluidboxes(data.raw["assembling-machine"]["omniphlog-"..i])
 end
+
 -- Burner as well
 modify_fluidboxes(data.raw["assembling-machine"]["burner-omniphlog"])
