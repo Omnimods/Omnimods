@@ -2,14 +2,15 @@
 Version: 4.3.2
 Date: ????
   Bugfixes:
-    - Fixed not checking for booiler mode "output-to-separate-pipe" when reading target_temperature
+    - Fixed not checking for boiler mode "output-to-separate-pipe" when reading target_temperature
     - Fixed that backup rounding on recipes with a high number of ingredients / amounts rounded to
       odd numbers in some cases causing high recipe multipliers
+    - Fixed boiler crafting times being off when the heat capacity of water is changed
 ---------------------------------------------------------------------------------------------------
 Version: 4.3.1
 Date: 2026-07-17
   Bugfixes:
-    - Fixed a crash when placing an offsahore pump
+    - Fixed a crash when placing an offshore pump
     - Fixed some recipes localised name being broken
 ---------------------------------------------------------------------------------------------------
 Version: 4.3.0
