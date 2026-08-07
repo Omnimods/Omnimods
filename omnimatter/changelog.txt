@@ -5,6 +5,8 @@ Date: ????
     - Fixed omnium brass gear box not having a tech unlock due to a typo with bobs
     - Fixed omniphlog fluidbox pipe covers shifts
     - Allow mirroring for the omnitractor and omniphlog
+    - Set thermal water extraction tier to green science if angels bioprocessing is active
+    - Rename stone crushing recipe to avoid name conflict with angels slag crushing
 ---------------------------------------------------------------------------------------------------
 Version: 4.3.0
 Date: 2026-07-07

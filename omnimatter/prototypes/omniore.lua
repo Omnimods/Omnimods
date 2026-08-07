@@ -11,7 +11,7 @@ RecGen:create("omnimatter","stone"):
 
 local c = nil
 if mods["angelsrefining"] then c = "angels-ore-refining-t1" end
-RecGen:create("omnimatter","angels-stone-crushed"):
+RecGen:create("omnimatter","angels-stone-crushing"):
     setSubgroup("omni-crushing"):
     setStacksize(200):
     setEnergy(0.1):
