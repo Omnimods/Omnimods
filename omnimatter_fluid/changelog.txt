@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.3.2
-Date: ????
+Date: 2026-08-08
   Bugfixes:
     - Fixed not checking for boiler mode "output-to-separate-pipe" when reading target_temperature
     - Fixed that backup rounding on recipes with a high number of ingredients / amounts rounded to
