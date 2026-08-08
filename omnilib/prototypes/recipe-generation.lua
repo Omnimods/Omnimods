@@ -3671,7 +3671,7 @@ function BuildChain:generate_building_chain()
         setTechPrereq(tprereq):
         setOverlay(self.overlay.name,i+1):
         setCrafting(self.crafting_categories(levels,i)):
-        setFluidBox(self.fluid_boxes):
+        setFluidBox(self.fluid_boxes, self.hide_fluid_boxes_when_off):
         setFluidBurn(self.burns_fluid(levels,i)):
         setSpeed(self.crafting_speed(levels,i)):
         setSoundWorking(self.working_sound(levels,i)):

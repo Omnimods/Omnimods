@@ -17,9 +17,14 @@ if angelsmods and angelsmods.refining then
     omni.matter.add_initial("angels-ore3", 1, 6)
 
     omni.matter.add_resource("angels-ore1", 1)
-    omni.matter.add_resource("angels-ore3", 1) 
+    omni.matter.add_resource("angels-ore3", 1)
     omni.matter.add_resource("angels-ore4", 3)
-    omni.matter.add_fluid("angels-thermal-water", 3, 3)
+
+    if angelsmods.bioprocessing then
+        omni.matter.add_fluid("angels-thermal-water", 2, 3)
+    else
+        omni.matter.add_fluid("angels-thermal-water", 3, 3)
+    end
     if bobmods and bobmods.ores or (angelsmods.industries and angelsmods.industries.overhaul) then
         omni.matter.add_resource("angels-ore2", 3)
         omni.matter.add_resource("angels-ore5", 2)

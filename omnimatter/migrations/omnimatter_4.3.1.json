@@ -1,0 +1,7 @@
+{
+    "recipe":
+    [
+        ["angels-stone-crushed", "angels-stone-crushing"],
+        ["stone", "angels-stone-from-crushed-stone"]
+    ]
+}

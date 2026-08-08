@@ -96,107 +96,106 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
     end
 
     --splits fluids and solids per "table"
-    local function seperate_fluid_solid(collection)
+    local function seperate_fluid_solid(ingres)
         local fluid = {}
         local solid = {}
-        if type(collection) == "table" then
-            for _, thing in pairs(collection) do
-                local amount = type(thing) == "table" and tonumber(thing.amount or thing[2])
-                if not amount or (amount and amount > 0) then
-                    if thing.type and thing.type == "fluid" then
-                        fluid[#fluid+1]=thing
-                    else
-                        if type(thing)=="table" then
-                            if thing.type then
-                                solid[#solid+1] = thing
-                            elseif thing[1] then
-                                solid[#solid+1] = {type="item",name=thing[1],amount=thing[2]}
-                            elseif thing.name then
-                                solid[#solid+1] = {type="item",name=thing.name,amount=thing.amount}
-                            end
-                        else
-                            solid[#solid+1] = {type="item",name=thing[1],amount=1}
-                        end
-                    end
+        for _, thing in pairs(ingres) do
+            if thing.amount ~= 0 or (thing.extra_count_fraction and thing.extra_count_fraction > 0.0) then
+                if thing.type == "fluid" then
+                    fluid[#fluid+1] = thing
                 else
-                    log("Invalid recipe with a 0 requirement/result!\n" .. serpent.block(collection))
+                    solid[#solid+1] = thing
                 end
+            else
+                log("Invalid recipe with a 0 requirement/result!\n" .. serpent.block(ingres))
             end
-        else
-            solid[#solid+1] = {type="item",name=collection,amount=1}
         end
-        return {fluid = fluid,solid = solid}
+        return {fluid = fluid, solid = solid}
     end
 
     --sort and clean up groups of ingredients and results for type processing
-    local function get_recipe_values(ingredients, results)
-        local parts={}
-        local all_ing = seperate_fluid_solid(ingredients)
-        local all_res = seperate_fluid_solid(results)
+    local function get_recipe_values(ingredients, results, recname)
+        local all_ing = seperate_fluid_solid(omni.lib.parse_ingredients(ingredients))
+        local all_res = seperate_fluid_solid(omni.lib.parse_results(results))
+        local solid_parts = omni.lib.union(all_ing.solid, all_res.solid)
 
-        for _,comp in pairs({all_ing.solid,all_res.solid}) do
-            for _,  resing in pairs(comp) do
-                parts[#parts+1]={name=resing.name,amount=resing.amount}
-            end
-        end
         local lcm_rec = 1
         local gcd_rec = 0
         local mult_rec = 1
         local lcm_stack = 1
         local gcd_stack = 0
         local mult_stack = 1
-        --calculate lcm of the parts and stacks
-        for _, p in pairs(parts) do
-            if gcd_rec == 0 then
-                gcd_rec = p.amount
-            else
-                gcd_rec = omni.lib.gcd(gcd_rec, p.amount)
-            end
-            lcm_rec = omni.lib.lcm(lcm_rec,p.amount)
-            mult_rec = mult_rec*p.amount
+        local extra_count_fraction_used = false
 
-            local stacksize = omni.lib.find_stacksize(p.name)
-            if gcd_stack == 0 then
-                gcd_stack=stacksize
-            else
-                gcd_stack = omni.lib.gcd(gcd_stack,stacksize)
+        --calculate lcm of the parts and stacks
+        for _, p in pairs(solid_parts) do
+            if p.extra_count_fraction then extra_count_fraction_used = true end
+            if p.amount > 0 then
+                if gcd_rec == 0 then
+                    gcd_rec = p.amount
+                else
+                    gcd_rec = omni.lib.gcd(gcd_rec, p.amount)
+                end
+
+                lcm_rec = omni.lib.lcm(lcm_rec, p.amount)
+                mult_rec = mult_rec * p.amount
+
+                local stacksize = omni.lib.find_stacksize(p.name)
+                if gcd_stack == 0 then
+                    gcd_stack = stacksize
+                else
+                    gcd_stack = omni.lib.gcd(gcd_stack, stacksize)
+                end
+                lcm_stack = omni.lib.lcm(lcm_stack, stacksize)
+                mult_stack = mult_stack * stacksize
             end
-            lcm_stack = omni.lib.lcm(lcm_stack,stacksize)
-            mult_stack = mult_stack*stacksize
         end
-        --lcm_rec = mult_rec/gcd_rec
-        --lcm_stack = mult_stack/gcd_stack
+
         local new_parts = {}
         local new_stacks = {}
-        for i, p in pairs(parts) do
-            new_parts[i]={name = p.name, amount = lcm_rec/p.amount}
+        for i, p in pairs(solid_parts) do
+            new_parts[i] = {name = p.name, amount = lcm_rec / p.amount}
             local stacksize = omni.lib.find_stacksize(p.name)
-            new_stacks[i]={name = p.name, amount = lcm_stack/stacksize}
+            new_stacks[i] = {name = p.name, amount = lcm_stack / stacksize}
         end
+
         local new_gcd = 0
-        local new_lcm = lcm_rec*lcm_stack--rec_max*stack_max/omni.lib.gcd(rec_max,stack_max)
+        local new_lcm = lcm_rec * lcm_stack
         local new = {}
+        local extra = {}
+
         for i, _ in pairs(new_parts) do
-            new[i]=new_lcm*new_stacks[i].amount/new_parts[i].amount
-            new[i]=math.max(math.floor(new[i]+0.5),1) --round and assume at least 1
+            new[i] = new_lcm * new_stacks[i].amount / new_parts[i].amount
+            new[i] = math.max(math.floor(new[i] + 0.5), 1) --round and assume at least 1
             if new_gcd == 0 then
                 new_gcd = new[i]
             else
-                new_gcd=omni.lib.gcd(new_gcd,new[i])
+                new_gcd = omni.lib.gcd(new_gcd, new[i])
             end
         end
-        for i,p in pairs(new_parts) do
-            new[i]=math.min(new[i] / new_gcd, 65535)
-        end
-        local total_mult = new[1]*omni.lib.find_stacksize(parts[1].name)/parts[1].amount
 
+        for i, _ in pairs(new_parts) do
+            new[i] = math.min(new[i] / new_gcd, 65535)
+        end
+
+        --Fix recycling recipes to always be 1 item input by adjusting results and using extra_count_fraction for results < 1
+        if extra_count_fraction_used == true and string.find(recname, "recycling") then
+            for i = #all_ing.solid + 1, #new_parts, 1 do
+                local new_amount = (new[i] + solid_parts[i].extra_count_fraction) / new[1]
+                new[i] = math.floor(new_amount)
+                extra[i] = new_amount - new[i]
+            end
+            new[1] = 1
+        end
+
+        local total_mult = new[1] * omni.lib.find_stacksize(solid_parts[1].name) / solid_parts[1].amount
         local newing = {}
-        for i, s in pairs(all_ing.solid) do
+        for i, _ in pairs(all_ing.solid) do
             newing[#newing + 1] = {
-        type = "item",
-        name = "compressed-" .. parts[i].name,
-        amount = new[i]
-        }
+                type = "item",
+                name = "compressed-" .. solid_parts[i].name,
+                amount = new[i]
+            }
         end
         for _,f in pairs(all_ing.fluid) do
             newing[#newing + 1] = {
@@ -211,8 +210,9 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
         for i, s in pairs(all_res.solid) do
             newres[#newres + 1] = {
                 type = "item",
-                name = "compressed-" .. parts[#all_ing.solid + i].name,
-                amount = new[#all_ing.solid + i]
+                name = "compressed-" .. solid_parts[#all_ing.solid + i].name,
+                amount = new[#all_ing.solid + i],
+                extra_count_fraction = extra[#all_ing.solid + i]
             }
         end
         for _,f in pairs(all_res.fluid) do
@@ -467,7 +467,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                 --log(serpent.block(check))
                                 -- Scope
                                 if not missing_solids then
-                                    local new_val = get_recipe_values(ing, res)
+                                    local new_val = get_recipe_values(ing, res, recipe.name)
                                     local mult
                                     if parts.solid[1][1] then
                                         mult = new_val.ingredients[1].amount / parts.solid[1][1].amount * omni.lib.find_stacksize(parts.solid[1][1].name)

@@ -10,7 +10,7 @@ local function sluid_boiler_generation(fluid_cats)
 
     for _, boiler in pairs(data.raw.boiler) do
         --if exists, find recipe, item and entity
-        if not omni.fluid.forbidden_boilers[boiler.name] then
+        if not omni.fluid.forbidden_boilers[boiler.name] and boiler.mode == "output-to-separate-pipe" then
             ------------------------------------------
             --Create a solid & fluid boiling recipes--
             ------------------------------------------
@@ -18,6 +18,7 @@ local function sluid_boiler_generation(fluid_cats)
             local steam = boiler.output_fluid_box.filter or "steam"
             local th_energy = (boiler.target_temperature - data.raw.fluid[water].default_temperature) * (omni.lib.get_fuel_number(data.raw.fluid[water].heat_capacity) or 1000) --1000 = default heat_capacity
             local boiler_consumption = 60 * omni.lib.get_fuel_number(boiler.energy_consumption) / ((boiler.energy_source.effectivity or 1) * th_energy)
+            local boiler_production = boiler_consumption * ((omni.lib.get_fuel_number(data.raw.fluid[water].heat_capacity) or 1000) / (omni.lib.get_fuel_number(data.raw.fluid[steam].heat_capacity) or 1000))
             local temp_ing = string.gsub(data.raw.fluid[water].default_temperature, "%.", "_")
 
             --clobber fluid_box_filter if it exists
@@ -40,7 +41,7 @@ local function sluid_boiler_generation(fluid_cats)
                     subgroup = "boiler-sluid-steam",
                     categories = {"boiler-omnifluid-"..boiler.name},
                     order = "a["..steam..boiler.target_temperature.."]",
-                    energy_required = math.max(omni.fluid.sluid_contain_fluid/boiler_consumption, 0.0011),
+                    energy_required = math.max(omni.fluid.sluid_contain_fluid / boiler_production, 0.0011),
                     enabled = true,
                     hide_from_player_crafting = true,
                     main_product = steam,
@@ -70,7 +71,7 @@ local function sluid_boiler_generation(fluid_cats)
                     subgroup = "boiler-sluid-steam",
                     categories = {"boiler-omnifluid-"..boiler.name},
                     order = "a["..steam..boiler.target_temperature.."]",
-                    energy_required = math.max(omni.fluid.sluid_contain_fluid/boiler_consumption, 0.0011),
+                    energy_required = math.max(omni.fluid.sluid_contain_fluid / boiler_production, 0.0011),
                     enabled = true,
                     hide_from_player_crafting = true,
                     main_product = "solid-"..steam.."-T-"..tempstring,
@@ -197,7 +198,7 @@ local function sluid_boiler_generation(fluid_cats)
                         subgroup = "boiler-sluid-steam",
                         categories = {"boiler-omnifluid-"..boiler.name},
                         order = "b["..comp_steam..boiler.target_temperature.."]",
-                        energy_required = math.max((60*omni.fluid.sluid_contain_fluid/boiler_consumption) / configured_levels^level, 0.0011),
+                        energy_required = math.max((60*omni.fluid.sluid_contain_fluid / boiler_production) / configured_levels^level, 0.0011),
                         enabled = true,
                         hide_from_player_crafting = true,
                         main_product = comp_steam,
@@ -226,7 +227,7 @@ local function sluid_boiler_generation(fluid_cats)
                         subgroup = "boiler-sluid-steam",
                         categories = {"boiler-omnifluid-"..boiler.name},
                         order = "b["..comp_steam..boiler.target_temperature.."]",
-                        energy_required = math.max((60*omni.fluid.sluid_contain_fluid/boiler_consumption) / configured_levels^level, 0.0011),
+                        energy_required = math.max((60*omni.fluid.sluid_contain_fluid / boiler_production) / configured_levels^level, 0.0011),
                         enabled = true,
                         hide_from_player_crafting = true,
                         main_product = "solid-"..comp_steam.."-T-"..tempstring,

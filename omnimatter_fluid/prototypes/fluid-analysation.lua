@@ -199,7 +199,9 @@ end
 --Always create sluid steam for the lowest boiler temp
 local min_boiler_temp = math.huge
 for _, boiler in pairs(data.raw.boiler) do
-    min_boiler_temp = math.min(min_boiler_temp, boiler.target_temperature)
+    if boiler.mode == "output-to-separate-pipe" then
+        min_boiler_temp = math.min(min_boiler_temp, boiler.target_temperature)
+    end
 end
 if min_boiler_temp < math.huge then
     sort_fluid("steam", "sluid", "producer", {temp = min_boiler_temp})
