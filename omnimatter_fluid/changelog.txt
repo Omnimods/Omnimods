@@ -6,6 +6,7 @@ Date: ????
     - Fixed that backup rounding on recipes with a high number of ingredients / amounts rounded to
       odd numbers in some cases causing high recipe multipliers
     - Fixed boiler crafting times being off when the heat capacity of water is changed
+    - Removed redundant stone crafting recipe with angels
 ---------------------------------------------------------------------------------------------------
 Version: 4.3.1
 Date: 2026-07-17

@@ -1,4 +1,4 @@
-RecGen:create("omnimatter","stone"):
+RecGen:create("omnimatter","angels-stone-from-crushed-stone"):
     setSubgroup("omni-solids"):
     setStacksize(200):
     setEnergy(0.25):
