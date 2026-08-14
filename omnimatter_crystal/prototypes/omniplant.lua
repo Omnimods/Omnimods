@@ -14,6 +14,8 @@ local get_tech_times = function(levels,tier)
     return t
 end
 
+local circuit_con = data.raw["assembling-machine"]["assembling-machine-1"].circuit_connector
+
 -- Burner Omniplant
 --SETTING VANILLA INGREDIENTS FIRST
 local pipe="pipe"
@@ -77,6 +79,8 @@ BuildGen:create("omnimatter_crystal","burner-omniplant"):
     setOverlay("omni-plant-overlay"):
     setFluidBox("XWXWX.XXXXX.XXXXX.XXXXX.XKXKX"):
     setEnabled(false):
+    setCircuitConnector(circuit_con):
+    setCircuitMaxDistance(9):
     extend()
 
 local dif = 1
@@ -147,6 +151,8 @@ BuildChain:create("omnimatter_crystal","omniplant"):
     }):
     setOverlay("omni-plant-overlay"):
     setFluidBox("XWXWX.XXXXX.XXXXX.XXXXX.XKXKX"):
+    setCircuitConnector(circuit_con):
+    setCircuitMaxDistance(9):
     extend()
 
 RecGen:import("omniplant-1"):

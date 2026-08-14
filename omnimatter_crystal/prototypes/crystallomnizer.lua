@@ -34,7 +34,7 @@ else
     setQuant("circuit",5,dif)
 end
 
-local tmp = {{"advanced-circuit"}}
+local circuit_con = data.raw["assembling-machine"]["assembling-machine-1"].circuit_connector
 BuildChain:create("omnimatter_crystal","crystallomnizer"):
     setSubgroup("crystallomnizer"):
     setIcons({"crystallomnizer", 32}):
@@ -85,4 +85,6 @@ BuildChain:create("omnimatter_crystal","crystallomnizer"):
         }
     }):
     setFluidBox("XWX.XXX.XKX"):
+    setCircuitConnector(circuit_con):
+    setCircuitMaxDistance(9):
     extend()
