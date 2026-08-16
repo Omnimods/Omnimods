@@ -426,7 +426,7 @@ for gen_recs, fluid_info in pairs(omni.fluid.generator_recipes) do
                 end
             end
         new_rec.name = new_rec.name.."-fluid-"..gen_fluid
-        if string.find(rec.name, "%-compression") then
+        if string.find(rec.name, "%-compression$") then
             new_rec.enabled = true
         end
         data:extend({new_rec})

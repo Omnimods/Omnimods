@@ -3,6 +3,9 @@ Version: 4.3.2
 Date: ????
   Changes:
     - Added BuildGen:setCircuitMaxDistance()
+  Bugfixes:
+    - Fixed an edge case where compression recipes were not unlocked when the original recipe
+      contained "-compressed-" in it's name
 ---------------------------------------------------------------------------------------------------
 Version: 4.3.1
 Date: 2026-08-08
