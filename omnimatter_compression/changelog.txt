@@ -2,7 +2,8 @@
 Version: 4.3.2
 Date: ????
   Changes:
-    - Added circuit connectors for autop compressors / concentrators
+    - Added circuit connectors for auto compressors / concentrators
+    - Addec compressed variants for (offshore-) pumps with increased speed
   Bugfixes:
     - Fixed compressed technology localised name sometimes not showing the tier number
 ---------------------------------------------------------------------------------------------------

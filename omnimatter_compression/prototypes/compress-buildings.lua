@@ -32,6 +32,7 @@ if settings.startup["omnicompression_entity_compression"].value then
         ["beacon"] = true,
         ["electric-pole"] = true,
         ["offshore-pump"] = true,
+        ["pump"] = true,
         ["inserter"] = true,
         ["loader-1x1"] = true,
         ["burner-generator"] = true,
@@ -492,15 +493,21 @@ if settings.startup["omnicompression_entity_compression"].value then
             end
         end
 
-        --offshore pumps -- No longer have a fluid attached to them with 2.0
-        -- if kind == "offshore-pump" then
-        --     -- new.fluid = "concentrated-"..new.fluid
-        --     local fl_name = new.fluid.."-concentrated-grade-"..compr_lvl
-        --     if not data.raw.fluid[fl_name] then
-        --         create_concentrated_recipe(new.fluid,compr_lvl)
-        --     end
-        --     new.fluid = fl_name
-        -- end
+        --offshore pumps
+        if kind == "offshore-pump" then
+                new.pumping_speed = new.pumping_speed * math.pow(multiplier, compr_lvl)
+            -- No longer have a fluid attached to them with 2.0, skip concentrated fluid creation, increase pumping speedf
+            -- new.fluid = "concentrated-"..new.fluid
+            -- local fl_name = new.fluid.."-concentrated-grade-"..compr_lvl
+            -- if not data.raw.fluid[fl_name] then
+            --     create_concentrated_recipe(new.fluid,compr_lvl)
+            -- end
+        end
+
+        --pumps
+        if kind == "pump" then
+                new.pumping_speed = new.pumping_speed * math.pow(multiplier, compr_lvl)
+        end
 
         --Inserters!
         if kind == "inserter" then
