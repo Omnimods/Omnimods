@@ -13,14 +13,12 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
     -------------------------------------------------------------------------------
     --stack size of more than 1 function
     local function more_than_one(recipe)
-        -- Multi-result
-        local results = recipe.results
         -- Sanity checks, huzzah
-        if not results then
+        if not recipe.results then
             return false
         end
         -- Multi result
-        if #results > 1 then
+        if #recipe.results > 1 then
             return true
         end
         local product = omni.lib.get_main_product(recipe)
@@ -391,7 +389,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
         if not omni.lib.is_in_table(recipe.name, omni.compression.excluded_recipes) then --not excluded
             if not string.find(recipe.name,"creative") then --not creative mod or void
                 if (recipe.results and #recipe.results > 0) then --ingredients.results and 1+
-                    if (more_than_one(recipe) or omni.lib.is_in_table(recipe.name, omni.compression.include_recipes)) then
+                    if more_than_one(recipe) or omni.lib.is_in_table(recipe.name, omni.compression.include_recipes) then
                         local comrec={} --set basis to zero
                         local new_cat = set_category(recipe.categories) or {"crafting-compressed"} --fallback should not be needed
                         local icons = omni.lib.add_overlay(recipe,"compress")

@@ -15,6 +15,8 @@ else
     }
 end
 
+local circuit_con = data.raw["assembling-machine"]["assembling-machine-1"].circuit_connector
+
 BuildGen:create("omnimatter","burner-omniphlog"):
     noTech():
     setIcons({"omniphlog", 32}):
@@ -50,6 +52,8 @@ BuildGen:create("omnimatter","burner-omniphlog"):
     }):
     setIngredients(phlog_cost):
     setEnabled():
+    setCircuitConnector(circuit_con):
+    setCircuitMaxDistance(9):
     extend()
 
 --Electric
@@ -109,6 +113,8 @@ BuildChain:create("omnimatter","omniphlog"):
         }
     }):
     setOverlay("tractor-over"):
+    setCircuitConnector(circuit_con):
+    setCircuitMaxDistance(9):
     extend()
 
 local fbox_positions = {

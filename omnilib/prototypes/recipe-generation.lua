@@ -2705,6 +2705,7 @@ function setBuildingParameters(b,subpart)
     b.vector_to_place_result = function(levels,grade) return nil end
     b.crafting_categories = function(levels,grade) return nil end
     b.circuit_connector  = function(levels,grade) return nil end
+    b.circuit_wire_max_distance = function(levels,grade) return nil end
     b.effectivity = function(levels,grade) return 1 end
     b.fluid_usage_per_tick = function(levels,grade) return 1 end
     b.burns_fluid = function(levels,grade) return false end
@@ -2751,6 +2752,7 @@ function BuildGen:import(name)
         setUsage(build.energy_usage):
         setGraphics(build.graphics_set):
         setCircuitConnector(build.circuit_connector):
+        setCircuitMaxDistance(build.circuit_wire_max_distance):
         setDirectionAnimation(build.horizontal_animation,build.vertical_animation):
         setRadVisPic(build.radius_visualisation_picture):
         setLight(build.light):
@@ -3233,6 +3235,14 @@ function BuildGen:setCircuitConnector(e)
     end
     return self
 end
+function BuildGen:setCircuitMaxDistance(e)
+    if type(e)=="function" then
+        self.circuit_wire_max_distance = e
+    else
+        self.circuit_wire_max_distance = function(levels,grade) return e end
+    end
+    return self
+end
 function BuildGen:setSoundImpact(e)
     if type(e)=="string" then
         self.vehicle_impact_sound = { filename = e, volume = 0.65 }
@@ -3474,6 +3484,7 @@ function BuildGen:generateBuilding()
         energy_usage = self.energy_usage(0,0),
         graphics_set = self.graphics_set(0,0),
         circuit_connector = self.circuit_connector(0,0),
+        circuit_wire_max_distance = self.circuit_wire_max_distance(0,0),
         pictures = self.pictures(0,0),
         vehicle_impact_sound =  self.vehicle_impact_sound,
         burns_fluid = self.burns_fluid(0,0),
@@ -3677,6 +3688,7 @@ function BuildChain:generate_building_chain()
         setSoundWorking(self.working_sound(levels,i)):
         setGraphics(self.graphics_set(levels,i)):
         setCircuitConnector(self.circuit_connector(levels,i)):
+        setCircuitMaxDistance(self.circuit_wire_max_distance(levels,i)):
         setGenerationCondition(self.requiredMods(levels,i)):
         setEffectivity(self.effectivity(levels,i)):
         setFluidConsumption(self.fluid_usage_per_tick(levels,i)):

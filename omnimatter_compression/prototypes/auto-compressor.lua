@@ -34,6 +34,8 @@ local fluidbox = minify({
     }
 }, "XWX.XXX.XKX")
 
+local circuit_con = data.raw["assembling-machine"]["assembling-machine-1"].circuit_connector
+
 BuildGen:create("omnimatter_compression","auto-compressor"):
     setStacksize(50):
     setFlags({"placeable-neutral", "placeable-player", "player-creation"}):
@@ -95,6 +97,8 @@ BuildGen:create("omnimatter_compression","auto-compressor"):
             }
         }
     }):
+    setCircuitConnector(circuit_con):
+    setCircuitMaxDistance(9):
     extend()
 
 BuildGen:create("omnimatter_compression","auto-concentrator"):
@@ -130,6 +134,8 @@ BuildGen:create("omnimatter_compression","auto-concentrator"):
             }
         }
     }):
+    setCircuitConnector(circuit_con):
+    setCircuitMaxDistance(9):
     extend()
 
 --Increase the volume of the input /output fluidbox to make sure that atleast 2 crafts worth of fluid fit. Otherwise the recipe may not be usable
@@ -169,5 +175,7 @@ if settings.startup["omnicompression_entity_compression"].value then
                 }
             }
         }):
+        setCircuitConnector(circuit_con):
+        setCircuitMaxDistance(9):
         extend()
 end

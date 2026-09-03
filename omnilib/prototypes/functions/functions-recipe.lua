@@ -72,11 +72,8 @@ end
 
 -- Get the main product of the given recipe.
 function omni.lib.get_main_product(recipe)
-    --Empty main product string - nil
-    if recipe.main_product == "" then
-        return nil
-    --Main product is defined
-    elseif recipe.main_product ~= nil then
+    --Main product is defined and not an empty string
+    if recipe.main_product ~= nil and recipe.main_product ~= "" then
         return omni.lib.find_product(recipe, recipe.main_product)
     --No main product defined - Check if the recipe has only 1 result
     elseif recipe.results and #recipe.results == 1 then

@@ -160,8 +160,29 @@ local function omnidate(technology)
         -- Second, build a table of recipes, correlating compressed and uncompressed variants
         for recipe_name in pairs(prototypes.get_recipe_filtered(cat_filters)) do
             local rmeta = correlated_recipes[recipe_name] or {}
-            -- A, check tiered buildings
-            if recipe_name:find("%-compressed-") then
+            if recipe_name:find("%-compression$") then
+                -- A, check compressed recipes
+                -- Base recipe i.e. iron-plate
+                local uncompressed_recipe = recipe_name:gsub("%-compression$", "")
+                local cached_rec = cached_protos[uncompressed_recipe]
+                if cached_rec then
+                    if correlated_recipes[uncompressed_recipe] then
+                        rmeta = correlated_recipes[uncompressed_recipe]
+                    else-- Link (pointer) for other possible lookup names
+                        correlated_recipes[uncompressed_recipe] = rmeta
+                    end
+                    -- Store base name and compressed name in meta
+                    rmeta.base = uncompressed_recipe
+                    if recipe_name ~= uncompressed_recipe then
+                        rmeta.compressed = recipe_name
+                    end
+                    -- If it's unlocked by default, make sure we know that
+                    if cached_rec.enabled then
+                        stock_recs[#stock_recs+1] = rmeta
+                    end
+                end
+            elseif recipe_name:find("%-compressed%-[^%-]+$") then
+                -- B, check tiered buildings
                 -- Base recipe i.e. assembling-machine-1
                 local original_recipe = recipe_name:gsub("%-compressed%-[^%-]+$", "")
                 -- Compressed building i.e. assembling-machine-1-compact
@@ -176,26 +197,6 @@ local function omnidate(technology)
                     end
                     rmeta.base = original_recipe
                     rmeta[variant] = recipe_name
-                    if cached_rec.enabled then
-                        stock_recs[#stock_recs+1] = rmeta
-                    end
-                end
-            else -- B, check compressed recipes
-                -- Base recipe i.e. iron-plate
-                local uncompressed_recipe = recipe_name:gsub("%-compression", "")
-                local cached_rec = cached_protos[uncompressed_recipe]
-                if cached_rec then
-                    if correlated_recipes[uncompressed_recipe] then
-                        rmeta = correlated_recipes[uncompressed_recipe]
-                    else-- Link (pointer) for other possible lookup names
-                        correlated_recipes[uncompressed_recipe] = rmeta
-                    end
-                    -- Store base name and compressed name in meta
-                    rmeta.base = uncompressed_recipe
-                    if recipe_name ~= uncompressed_recipe then
-                        rmeta.compressed = recipe_name
-                    end
-                    -- If it's unlocked by default, make sure we know that
                     if cached_rec.enabled then
                         stock_recs[#stock_recs+1] = rmeta
                     end
@@ -262,8 +263,8 @@ local function omnidate(technology)
                 force_techs[technology_name:gsub("^omnipressed%-", "")] or
                 {}
             )
-            if technology.level and variant.level ~= technology.level then
-                variant.level = technology.level
+            if tech_level and variant.level ~= tech_level then
+                variant.level = tech_level
             end
             if not not tech_researched and variant.researched ~= tech_researched then
                 variant.researched = tech_researched

@@ -1,3 +1,5 @@
+local circuit_con = data.raw["furnace"]["electric-furnace"].circuit_connector
+
 local omnifurnace = BuildGen:create("omnimatter","burner-omni-furnace"):
     setBurner(1,1):
     noTech():
@@ -98,6 +100,8 @@ local omnifurnace = BuildGen:create("omnimatter","burner-omni-furnace"):
             }
         }
     }):
-    setReplace("furnace")
+    setReplace("furnace"):
+    setCircuitConnector(circuit_con):
+    setCircuitMaxDistance(9)
 omnifurnace.energy_source.burnt_inventory_size = 1
 omnifurnace:extend()

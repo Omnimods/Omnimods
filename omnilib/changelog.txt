@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.3.2
+Date: 2026-09-04
+  Changes:
+    - Added BuildGen:setCircuitMaxDistance()
+    - omni.lib.find_main_product() does not return nil when an empty string is defined as main_pr
+  Bugfixes:
+    - Fixed an edge case where compression recipes were not unlocked when the original recipe
+      contained "-compressed-" in it's name
+---------------------------------------------------------------------------------------------------
 Version: 4.3.1
 Date: 2026-08-08
   Bugfixes:

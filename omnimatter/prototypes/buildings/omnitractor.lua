@@ -14,6 +14,8 @@ else
     }
 end
 
+local circuit_con = data.raw["assembling-machine"]["assembling-machine-1"].circuit_connector
+
 BuildGen:create("omnimatter","burner-omnitractor"):
     noTech():
     setIcons({"omnitractor", 32}):
@@ -53,6 +55,8 @@ BuildGen:create("omnimatter","burner-omnitractor"):
     }):
     setOverlay("tractor-over",0):
     setFluidBox("WXW.XXX.KXK",true):
+    setCircuitConnector(circuit_con):
+    setCircuitMaxDistance(9):
     extend()
 
 
@@ -144,6 +148,8 @@ BuildChain:create("omnimatter","omnitractor"):
         }
     }):
     setOverlay("tractor-over"):
+    setCircuitConnector(circuit_con):
+    setCircuitMaxDistance(9):
     extend()
 
 local fbox_positions = {
