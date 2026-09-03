@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 4.3.2
-Date: ????
+Date: 2026-09-04
   Changes:
     - Added circuit connectors for auto compressors / concentrators
     - Addec compressed variants for (offshore-) pumps with increased speed
