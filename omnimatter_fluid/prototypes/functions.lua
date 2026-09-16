@@ -181,6 +181,7 @@ function omni.fluid.is_fluid_void(recipe)
 end
 
 function omni.fluid.create_temperature_copies(recipe, fluidname, replacement, temperatures)
+    local mod_data = data.raw["mod-data"].omnimods.data.compressed_recipes
     if recipe then
         --Additional recipe checks: If this is a fixed recipe somewhere, we need to remove that, enable the recipe and unhide if required
         for _, ent in pairs(data.raw["assembling-machine"]) do
@@ -215,6 +216,9 @@ function omni.fluid.create_temperature_copies(recipe, fluidname, replacement, te
                 copies[#copies+1] = newrec
                 if tech and not omni.lib.recipe_is_enabled(recipe.name) then
                     omni.lib.add_unlock_recipe(tech, newrec.name, true)
+                end
+                if mods["omnimatter_compression"] and omni.lib.is_compressed_recipe(recipe.name) then
+                    omni.lib.add_recipe_to_mod_data(mod_data[recipe.name].base.."-T-"..temp, newrec.name) -- need to append the temperature here for a proper upgrade path
                 end
             end
         end

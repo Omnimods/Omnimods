@@ -1,3 +1,5 @@
+require("prototypes.functions.functions-mod-data")
+
 local building_tiers = {
     compact = "compression-compact-buildings",
     nanite = "compression-nanite-buildings",
@@ -132,6 +134,7 @@ local function omnidate(technology)
     local forces = game.forces
     local cached_protos = memoize(prototypes.recipe)
     local cached_techs = memoize(prototypes.technology)
+    local mod_data = prototypes.mod_data.omnimods.data
     -- Conditional (if we're just doing one tech)
     local tech_force = technology and technology.force or nil
     --
@@ -140,14 +143,6 @@ local function omnidate(technology)
 
     -- Skip the stuff we don't need to re-do if we aren't clearing caches
     if clear_caches then
-        -- First, build a list of categories
-        local cat_filters = {}
-        for category in pairs(prototypes.recipe_category) do
-            if category:find("%-compressed$") then
-                cat_filters[#cat_filters+1] = {filter = "category", category = category}
-            end
-        end
-
         --[[
             base_or_compressed_or_building={
                 base = recipe_name,
@@ -158,45 +153,16 @@ local function omnidate(technology)
             }
         ]]
         -- Second, build a table of recipes, correlating compressed and uncompressed variants
-        for recipe_name in pairs(prototypes.get_recipe_filtered(cat_filters)) do
+        for recipe_name, recipe_mod_data in pairs(mod_data.compressed_recipes) do
             local rmeta = correlated_recipes[recipe_name] or {}
-            if recipe_name:find("%-compression$") then
-                -- A, check compressed recipes
-                -- Base recipe i.e. iron-plate
-                local uncompressed_recipe = recipe_name:gsub("%-compression$", "")
-                local cached_rec = cached_protos[uncompressed_recipe]
-                if cached_rec then
-                    if correlated_recipes[uncompressed_recipe] then
-                        rmeta = correlated_recipes[uncompressed_recipe]
-                    else-- Link (pointer) for other possible lookup names
-                        correlated_recipes[uncompressed_recipe] = rmeta
-                    end
-                    -- Store base name and compressed name in meta
-                    rmeta.base = uncompressed_recipe
-                    if recipe_name ~= uncompressed_recipe then
-                        rmeta.compressed = recipe_name
-                    end
+            for relation_type, related_recipe_name in pairs(recipe_mod_data) do
+                local cached_rec = cached_protos[related_recipe_name]
+                if not cached_rec then
+                    log(string.format("WARNING: invalid recipe \"%s\" found in mod-data", related_recipe_name))
+                else-- Link (pointer) for other possible lookup names
+                    rmeta[relation_type] = related_recipe_name
+                    correlated_recipes[related_recipe_name] = rmeta
                     -- If it's unlocked by default, make sure we know that
-                    if cached_rec.enabled then
-                        stock_recs[#stock_recs+1] = rmeta
-                    end
-                end
-            elseif recipe_name:find("%-compressed%-[^%-]+$") then
-                -- B, check tiered buildings
-                -- Base recipe i.e. assembling-machine-1
-                local original_recipe = recipe_name:gsub("%-compressed%-[^%-]+$", "")
-                -- Compressed building i.e. assembling-machine-1-compact
-                local variant = recipe_name:match("[^%-]+$")
-                local cached_rec = cached_protos[original_recipe]
-                if cached_rec and building_tiers[variant] then
-                    -- Store base name and compressed name in meta
-                    if correlated_recipes[original_recipe] then
-                        rmeta = correlated_recipes[original_recipe]
-                    else-- Link (pointer) for other possible lookup names
-                        correlated_recipes[original_recipe] = rmeta
-                    end
-                    rmeta.base = original_recipe
-                    rmeta[variant] = recipe_name
                     if cached_rec.enabled then
                         stock_recs[#stock_recs+1] = rmeta
                     end
@@ -390,6 +356,14 @@ commands.add_command("omnilog", "Tells you how much memory omnilib is using", fu
     game.print(
         "Memory usage: " .. math.ceil(collectgarbage("count")) .. "K"
     )
+end)
+commands.add_command("validate", "checks if I screwed up mod-data", function(command)
+    for recipe_name, recipe_meta in pairs(storage.omni.correlated_recipes) do
+        local alt_recipe = recipe_meta.base
+        if recipe_name ~= recipe_name and not omni.lib.is_compressed_recipe(recipe_name) and not omni.lib.is_compressed_recipe(alt_recipe) then
+            log(string.format("Not found in mod-data: %s", recipe_name))
+        end
+    end
 end)
 
 script.on_event(defines.events.on_tick, function(event)

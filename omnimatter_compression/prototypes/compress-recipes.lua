@@ -605,6 +605,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                                 comrec.main_product = nil
                                 comrec.categories = new_cat
                                 comrec.hide_from_player_crafting = comrec.hide_from_player_crafting or omni.compression.hide_handcraft
+                                omni.lib.add_recipe_to_mod_data(recipe.name, comrec.name)
                                 return comrec
                             else
                                 return nil --should not
@@ -657,6 +658,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                 new_rc.categories = n_cat
                 new_rc.ingredients[1].name = prefix .. ingredient.name
                 --new_rc.results[1].independent_probability = 0 --set to never actually give
+                omni.lib.add_recipe_to_mod_data(recipe.name, new_rc.name)
                 return table.deepcopy(new_rc)
             end
             return nil
@@ -734,6 +736,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                     newFluid.icon = nil
                     compress_recipes[#compress_recipes+1] = new
                     compress_recipes[#compress_recipes+1] = newFluid
+                    omni.lib.add_recipe_to_mod_data(rec.name, new.name)
                 end
             end
         end
