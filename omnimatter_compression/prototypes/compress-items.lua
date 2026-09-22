@@ -152,7 +152,7 @@ if settings.startup["omnicompression_item_compression"].value then
             order = order,
             stack_size = item.stack_size == 1 and 1 or compressed_item_stack_size,
             fuel_value = item.fuel_value and omni.lib.mult_fuel_value(item.fuel_value, item.stack_size),
-            fuel_category = item.fuel_category,
+            fuel_categories = item.fuel_categories,
             fuel_acceleration_multiplier = item.fuel_acceleration_multiplier,
             fuel_top_speed_multiplier = item.fuel_top_speed_multiplier,
             fuel_emissions_multiplier = item.fuel_emissions_multiplier,

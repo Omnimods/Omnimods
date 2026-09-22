@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 4.3.3
+Date: ????
+  Changes:
+    - Updated item.fuel_category to item.fuel_categories as for Factorio 2.1.20
+    - Changed ItemGen:SetFuelCategory() to SetFuelCategories()
+---------------------------------------------------------------------------------------------------
 Version: 4.3.2
 Date: 2026-09-04
   Changes:

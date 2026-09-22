@@ -42,21 +42,21 @@ end
 for _, fuelitem in pairs(data.raw.item) do
     --Check if item is on the "ignore" list
     for _,blockeditem in pairs(ignore) do
-        if fuelitem.name == blockeditem and fuelitem.fuel_category then
+        if fuelitem.name == blockeditem and fuelitem.fuel_categories and next(fuelitem.fuel_categories) then
             fuelitem.fuel_value = omni.lib.mult_fuel_value(fuelitem.fuel_value, 0.8)
             goto continue
         end
     end
     --Check if item is on the "to nil" list
     for _,nilit in pairs(nilfuel) do
-        if fuelitem.name == nilit and fuelitem.fuel_category then
+        if fuelitem.name == nilit and fuelitem.fuel_categories and next(fuelitem.fuel_categories) then
             omni.nil_fuels[#omni.nil_fuels+1] = fuelitem.name
             goto continue
         end
     end
 
     --Generate Chemical Fuel Recipes
-    if omni.lib.is_in_table(fuelitem.fuel_category, fuelcats) and fuelitem.fuel_value and not (fuelitem.subgroup and string.find(fuelitem.subgroup, "omnienergy-fuel", 1, true)) then
+    if  omni.lib.table_intersection(fuelitem.fuel_categories, fuelcats) and fuelitem.fuel_value and not (fuelitem.subgroup and string.find(fuelitem.subgroup, "omnienergy-fuel", 1, true)) then
 
         --lets define the variables first, then jump in and create it all in one go:
         --Get fuel number in MJ (divide by 10^6)
@@ -98,7 +98,7 @@ for _, fuelitem in pairs(data.raw.item) do
             setEnabled(false):
             setStacksize(fuelitem.stack_size):
             setOrder("b[omnified-"..fuelitem.name.."]"):
-            setFuelCategory(fuelitem.fuel_category):
+            setFuelCategories(fuelitem.fuel_categories):
             setFuelValue(omni.lib.mult_fuel_value(fuelitem.fuel_value, props_add.fuelmult)):
             extend()
 
@@ -151,7 +151,7 @@ RecGen:create("omnimatter_energy","purified-omnite"):
     setCategory("omnifurnace"):
     setSubgroup("omnienergy-fuel-1"):
     setOrder("a"):
-    setFuelCategory("chemical"):
+    setFuelCategories("chemical"):
     setFuelValue(2.4):
     setEnergy(4.0):
     setEnabled(false):
