@@ -50,10 +50,26 @@ function omni.lib.is_compressed_recipe(compressed_recipe_name)
     return meta.base ~= compressed_recipe_name
 end
 
---- Checks if the given building is compressed (as in tiered, not a compressed item)
---- Due to limitations™, this is by recipe name and not building name. I hope they're the same!
----@param compressed_building_name string the building to check
----@return boolean building_is_compressed whether the given building is compressed
-function omni.lib.is_compressed_building(compressed_building_name)
-    return not not omnimod_data.all_compressed_buildings[compressed_building_name]
+--- Checks if the given tech is compressed
+---@param compressed_tech_name string the tech to check
+---@return boolean tech_is_compressed whether the given technology is compressed
+function omni.lib.is_compressed_tech(compressed_tech_name)
+    local meta = omnimod_data.compressed_technologies[compressed_tech_name]
+    if not meta then return false end
+    return meta.base ~= compressed_tech_name
 end
+
+--- Returns the compressed variant of a tech, if it exists
+---@param uncompressed_tech_name string the tech to check
+---@return string? compressed_tech_name the compressed tech variant, if it exists
+function omni.lib.compressed_tech_of(uncompressed_tech_name)
+    return (omnimod_data.compressed_technologies[uncompressed_tech_name] or {}).compressed
+end
+
+--- Returns the compressed variant of a tech, if it exists
+---@param compressed_tech_name string the tech to check
+---@return string? compressed_tech_name the compressed tech variant, if it exists
+function omni.lib.uncompressed_tech_of(compressed_tech_name)
+    return (omnimod_data.compressed_technologies[compressed_tech_name] or {}).base
+end
+

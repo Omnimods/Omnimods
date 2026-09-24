@@ -1,10 +1,18 @@
 require("prototypes.functions.functions-mod-data")
 
+local mod_data = prototypes.mod_data.omnimods.data
+
 local building_tiers = {
-    compact = "compression-compact-buildings",
-    nanite = "compression-nanite-buildings",
-    quantum = "compression-quantum-buildings",
-    singularity = "compression-singularity-buildings"
+    ["compression-compact-buildings"] = "compact",
+    ["compression-nanite-buildings"] = "nanite",
+    ["compression-quantum-buildings"] = "quantum",
+    ["compression-singularity-buildings"] = "singularity"
+}
+local tier_numbers = {
+    compact = 1,
+    nanite = 2,
+    quantum = 3,
+    singularity = 4
 }
 
 local function memoize(source)
@@ -101,15 +109,26 @@ local function update_building_recipes()
     --log("Building update complete")
 end
 
+---@param technology LuaTechnology
 local function omnidate(technology)
+    log("beginning omnidate")
     local game = game
-    -- Record time spent
+    -- Clear cached lists?
+    local clear_caches = storage.omni and storage.omni.clear_caches
+    -- Check every recipe/tech?
+    local full_iter = storage.omni and storage.omni.full_iter
+     -- Record time spent
     local profiler = helpers.create_profiler()
     local logger = storage.omni and storage.omni.log_to_chat and game.print or log
-    -- Clear cached lists
-    local clear_caches = storage.omni and storage.omni.clear_caches
-    -- Check every recipe/tech
-    local full_iter = storage.omni and storage.omni.full_iter
+    local logmsg = {"", -- clear_caches is overriden below, so we store the log message here
+        "Omnidate ",
+        "(",
+        ((clear_caches and "full") or (technology and technology.name) or ""),
+        ")",
+        (full_iter and " (partial)" or ""),
+        " completed. ",
+        profiler
+    }
     -- Storages
     if clear_caches then
         storage.omni = {}
@@ -125,22 +144,21 @@ local function omnidate(technology)
         storage.omni.needs_update = false
         return
     end
-    logger("Beginning omnidate" .. (clear_caches and " (full)" or "") .. (full_iter and " (partial)" or ""))
+
     -- Proxies
     local correlated_recipes = storage.omni.correlated_recipes
     local recipe_techs = storage.omni.recipe_techs
     local stock_recs = storage.omni.stock_recs
+    local relevant_techs = {} -- only used when doing a full update, is a join of recipe_techs and mod_data.technologies
     -- Game items
     local forces = game.forces
     local cached_protos = memoize(prototypes.recipe)
     local cached_techs = memoize(prototypes.technology)
-    local mod_data = prototypes.mod_data.omnimods.data
     -- Conditional (if we're just doing one tech)
     local tech_force = technology and technology.force or nil
     --
     -- Here we go!
     --
-
     -- Skip the stuff we don't need to re-do if we aren't clearing caches
     if clear_caches then
         --[[
@@ -152,7 +170,7 @@ local function omnidate(technology)
                 compact = compact_recipe_name
             }
         ]]
-        -- Second, build a table of recipes, correlating compressed and uncompressed variants
+        -- First, build a table of recipes, correlating compressed and uncompressed variants
         for recipe_name, recipe_mod_data in pairs(mod_data.compressed_recipes) do
             local rmeta = correlated_recipes[recipe_name] or {}
             for relation_type, related_recipe_name in pairs(recipe_mod_data) do
@@ -179,7 +197,7 @@ local function omnidate(technology)
             end
         end
 
-        -- Third, list techs and their base variants
+        -- Second, list techs that unlock recipes
         for tech_name, tech in pairs(prototypes.technology) do
             local techrec = recipe_techs[tech_name] or {}
             local has_added = false
@@ -193,11 +211,21 @@ local function omnidate(technology)
             if has_added then
                 recipe_techs[tech_name] = techrec
             end
-            -- nothing
+        end
+
+        -- Third, build a list of the two combined for iteration
+        for tech_name in pairs(recipe_techs) do
+            relevant_techs[tech_name] = true
+        end
+        for tech_name, tech_meta in pairs(mod_data.compressed_technologies) do
+            -- only enter uncompressed techs
+            if tech_meta.base == tech_name and tech_meta.compressed ~= nil then
+                relevant_techs[tech_name] = true
+            end
         end
     end
 
-    -- Act as if cache has been cleared from here if specified
+    -- Act as if cache has been cleared from here forward, if full_iter was specified
     clear_caches = clear_caches or full_iter or false
 
     -- Now we see which forces we actually need to check
@@ -211,7 +239,7 @@ local function omnidate(technology)
             end
         end
     end
-    
+
     -- Iterate each (valid) force
     for force_name, force in pairs(force_queue) do
         -- Localise where applicable
@@ -219,45 +247,33 @@ local function omnidate(technology)
         local force_techs = memoize(force.technologies)
         local has_compression = force_techs["compression-recipes"] and force_techs["compression-recipes"].researched or false
         local technology_name = technology and technology.name or ""
-        -- If we're just a single tech, we can end here if we don't meet the criteria
-        if technology then
-            local tech_level = technology.level
-            local tech_researched = technology.researched
+        -- If we're just a single compressed tech, we can just mark the sister tech for processing on the next tick and exit
+        if technology and omni.lib.is_compressed_tech(technology_name) then
             -- Sync status between compressed and non-compressed techs
-            local variant = (
-                force_techs[string.format("omnipressed-%s", technology_name)] or
-                force_techs[technology_name:gsub("^omnipressed%-", "")] or
-                {}
-            )
-            if tech_level and variant.level ~= tech_level then
-                variant.level = tech_level
-            end
-            if not not tech_researched and variant.researched ~= tech_researched then
-                variant.researched = tech_researched
-            end
-            -- We can stop here if we're on a compressed variant, the rest will happen since we triggered the unlock
-            if technology_name:match("^omnipressed%-") then
+            local variant = force_techs[omni.lib.uncompressed_tech_of(technology_name) or ""]
+            if variant then
+                local tech_level = technology.level
+                if tech_level and variant.level ~= tech_level then
+                    variant.level = tech_level
+                end
+                local tech_researched = technology.researched
+                if tech_researched ~= variant.researched then
+                    variant.researched = tech_researched
+                end
                 local queue = update_queue[tech_researched and 'finished' or 'reversed']
                 queue[#queue+1] = variant
                 break
             end
         end
-
-        -- Don't bother with any building tiers that aren't unlocked, better than checking within the loop
+        -- Mark which building tiers are unlocked, used when checking recipes later
         local tiers_unlocked = {}
-        local is_tier_unlock = false
-        local tier_num = 0
-        for tier_name, tier_tech in pairs(building_tiers) do
-            if technology and tier_tech == technology_name then
-                is_tier_unlock = true
-            end
+        for tier_tech, tier_name in pairs(building_tiers) do
             local tech = force_techs[tier_tech]
-            local compressed_tech = force_techs["omnipressed-" .. tier_tech]
+            local compressed_tech = force_techs[omni.lib.compressed_tech_of(tier_tech) or ""]
             if tech then
-                tiers_unlocked[tier_name] = tech.researched
-                -- Hide or show techs based on setting
-                tier_num = tier_num + 1
-                tech.enabled = tier_num <= settings.startup["omnicompression_building_levels"].value
+                tiers_unlocked[tier_name] = tech.researched -- TODO: See if it works when unlocking via compressed tech
+                -- Also hide tiers that are locked out by the setting
+                tech.enabled = tier_numbers[tier_name] <= settings.startup["omnicompression_building_levels"].value
                 if compressed_tech then
                     compressed_tech.enabled = tech.enabled
                 end
@@ -284,16 +300,57 @@ local function omnidate(technology)
                 end
             end
         end
-        -- If we just unlocked compression-recipes, or we're doing a full update
-        if technology or clear_caches then
-            local tech_status = technology and technology.researched
-            local is_compression_unlock = (technology_name == "compression-recipes")
-            if clear_caches or is_compression_unlock or is_tier_unlock then
-                -- Deal with stock recs if necessary
-                for rec_name, rec_meta in pairs(stock_recs) do
-                    process_rec(rec_name, rec_meta, has_compression)
+        -- Handle tech syncing, either all techs (/omnidatefull) or one tech (research or editor mode unlock/re-lock)
+        local techs_to_iterate = (clear_caches and relevant_techs) or (technology and {[technology_name] = true})
+        for tech_name in pairs(techs_to_iterate) do
+            local tech = force_techs[tech_name]
+            local tech_researched = tech.researched
+            local variant = force_techs[omni.lib.compressed_tech_of(tech_name) or ""]
+            -- If there's a variant, sync the two. Here we assume unlocks have priority over locks.
+            if variant then
+                local tech_level = tech.level
+                local variant_level = variant.level
+                if tech_level and tech_level ~= variant_level then -- level-tiered techs
+                    if technology then -- single-tech omnidate means we use whichever status this tech has
+                        variant.level = tech_level
+                    elseif tech_level > variant_level then -- setting involves an API call, so we do this to save time
+                        variant.level = tech_level
+                    else
+                        tech.level = variant_level
+                    end
                 end
-                -- Iterate techs, set their given recipe state
+                if tech_researched ~= variant.researched then
+                    if technology then
+                        variant.researched = tech_researched
+                    elseif tech_researched then
+                        variant.researched = true
+                    else
+                        tech.researched = true
+                    end
+                end
+            end
+            -- Now that the variant is done, sync the recipes
+            local recipes = recipe_techs[tech_name]
+            if recipes then
+                for recipe_name, recipe_meta in pairs(recipes) do
+                    process_rec(recipe_name, recipe_meta, tech_researched)
+                end
+            end
+        end
+        -- now deal with the fallout from a full update
+        if clear_caches or (technology_name == "compression-recipes") or building_tiers[technology_name] then
+            -- sync stock recipe status
+            for rec_name, rec_meta in pairs(stock_recs) do
+                process_rec(rec_name, rec_meta, has_compression)
+            end
+            if clear_caches then -- clear the update queue, we'll have already handled any newly-unlocked techs
+                log("cleared caches")
+                update_queue.finished = {}
+                update_queue.reversed = {}
+            else -- If we just unlocked compressed recipes or a new building tier
+                log("new tier")
+                -- Iterate recipe techs, set their given recipe state
+                -- We could include this above but that overcomplicates the logic, imo
                 for tech_name, tech_recipes in pairs(recipe_techs) do
                     local tech = force_techs[tech_name]
                     if tech and tech.researched then
@@ -302,19 +359,13 @@ local function omnidate(technology)
                         end
                     end
                 end
-            else
-                for recipe_name, recipe_meta in pairs(recipe_techs[technology_name] or {}) do
-                    process_rec(recipe_name, recipe_meta, tech_status)
-                end
             end
         end
     end
-    update_building_recipes()
-    logger({
-        "",
-        "Omnidate completed. ",
-        profiler
-    })
+    if clear_caches then -- otherwise it's done by the event caller
+        update_building_recipes()
+    end
+    logger(logmsg)
     storage.omni.needs_update = false
     storage.omni.clear_caches = false
     storage.omni.full_iter = false
@@ -335,17 +386,19 @@ end)
 
 script.on_configuration_changed(function(event)
     log("on_configuration_changed\n\t"..serpent.block(event))
+    mod_data = prototypes.mod_data.omnimods.data
     storage.omni = storage.omni or {}
     storage.omni.needs_update = true
     storage.omni.clear_caches = true
 end)
 
-commands.add_command("omnidate", "Refreshes control-time data as if you had just researched a new tech", function(command)
+commands.add_command("omnidate", "Refreshes control-time data like if you researched a new compression tier", function(command)
     storage.omni = storage.omni or {}
     storage.omni.log_to_chat = true
+    storage.omni.full_iter = true
     storage.omni.needs_update = true
 end)
-commands.add_command("omnidatefull", "Refreshes control-time data as if you had just started a new game", function(command)
+commands.add_command("omnidatefull", "Refreshes control-time data like if you started a new game", function(command)
     storage.omni = storage.omni or {}
     storage.omni.log_to_chat = true
     storage.omni.needs_update = true
@@ -357,19 +410,11 @@ commands.add_command("omnilog", "Tells you how much memory omnilib is using", fu
         "Memory usage: " .. math.ceil(collectgarbage("count")) .. "K"
     )
 end)
-commands.add_command("validate", "checks if I screwed up mod-data", function(command)
-    for recipe_name, recipe_meta in pairs(storage.omni.correlated_recipes) do
-        local alt_recipe = recipe_meta.base
-        if recipe_name ~= recipe_name and not omni.lib.is_compressed_recipe(recipe_name) and not omni.lib.is_compressed_recipe(alt_recipe) then
-            log(string.format("Not found in mod-data: %s", recipe_name))
-        end
-    end
-end)
 
 script.on_event(defines.events.on_tick, function(event)
     if storage.omni and storage.omni.needs_update then
         omnidate()
-    elseif update_queue then
+    elseif update_queue and (#update_queue.finished + #update_queue.reversed) > 0 then
         for _, technology in pairs(update_queue.finished) do
             omnidate(technology)
         end
@@ -378,6 +423,8 @@ script.on_event(defines.events.on_tick, function(event)
             omnidate(technology)
         end
         update_queue.reversed = {}
+        -- once the queue is done, then we search for buildings to update
+        update_building_recipes()
     end
 end)
 
@@ -388,11 +435,6 @@ script.on_event(defines.events.on_research_finished, function(event)
     --log("on_research_finished\n\t"..serpent.block(event))
     local finished = update_queue.finished
     finished[#finished+1] = event.research
-    if #finished >= 3 then -- If our queue is getting too big just do a full omnidate
-        finished = {}
-        storage.omni.needs_update = true
-        storage.omni.full_iter = true
-    end
     --omnidate(false, event.research)
 end)
 
@@ -403,10 +445,6 @@ script.on_event(defines.events.on_research_reversed, function(event)
     end
     local reversed = update_queue.reversed
     reversed[#reversed+1] = event.research
-    if #reversed >= 3 then -- If our queue is getting too big just do a full omnidate
-        reversed = {}
-        storage.omni.needs_update = true
-    end
     --omnidate(false, event.research)
 end)
 
