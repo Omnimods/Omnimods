@@ -593,6 +593,7 @@ if settings.startup["omnicompression_entity_compression"].value then
                 --check that it is a minable entity
                 category_exists(build)
                 for compr_level = 1, omni.compression.bld_lvls do
+                    local compr_level_name = string.lower(compress_level[compr_level])
                     local new = table.deepcopy(build)
                     local item = table.deepcopy(details.item)
                     local rc = table.deepcopy(details.recipe)
@@ -620,7 +621,7 @@ if settings.startup["omnicompression_entity_compression"].value then
                     --[[Since running deepcopy, only need to override new props]]--
                     -------------------------------------------------------------------------------
                     --[[ENTITY CREATION]]--
-                    new.name = new.name.."-compressed-"..string.lower(compress_level[compr_level])
+                    new.name = new.name.."-compressed-"..compr_level_name
                     new.localised_name = omni.lib.locale.custom_name(details.base, "compressed-building", compress_level[compr_level])
                     new.localised_description = omni.lib.locale.custom_name(
                         details.base,
@@ -645,7 +646,7 @@ if settings.startup["omnicompression_entity_compression"].value then
                                 if not data.raw.item[new.next_upgrade] then
                                     log("WARNING: next_upgrade "..new.next_upgrade.." does not exist ("..build.name.."). Please contact the mod author")
                                 end
-                                new.next_upgrade = new.next_upgrade.."-compressed-"..string.lower(compress_level[compr_level])
+                                new.next_upgrade = new.next_upgrade.."-compressed-"..compr_level_name
                             else
                                 new.next_upgrade = build.name.."-compressed-"..string.lower(compress_level[compr_level+1])
                             end
@@ -686,7 +687,7 @@ if settings.startup["omnicompression_entity_compression"].value then
 
                     local recipe = {
                         type = "recipe",
-                        name = rc.name.."-compressed-"..string.lower(compress_level[compr_level]),
+                        name = rc.name.."-compressed-"..compr_level_name,
                         localised_name = new.localised_name,
                         ingredients = ing,
                         icons = omni.lib.add_overlay(rc,"building",compr_level),
@@ -699,11 +700,15 @@ if settings.startup["omnicompression_entity_compression"].value then
                         subgroup = rc.subgroup,
                         hide_from_player_crafting = rc.hide_from_player_crafting or omni.compression.hide_handcraft
                     }
+                    omni.lib.add_to_mod_data({
+                        base = rc.name,
+                        [compr_level_name] = recipe.name,
+                    })
 
                     compressed_buildings[#compressed_buildings+1] = recipe
                     local uncompress = {
                         type = "recipe",
-                        name = "uncompress-"..string.lower(compress_level[compr_level]).."-"..rc.name,
+                        name = "uncompress-"..compr_level_name.."-"..rc.name,
                         localised_name = omni.lib.locale.custom_name(build, 'recipe-name.uncompress-item'),
                         localised_description = omni.lib.locale.custom_description(build, 'recipe-description.uncompress-item'),
                         icons = omni.lib.add_overlay(rc,"uncompress"),
