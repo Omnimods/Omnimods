@@ -344,11 +344,9 @@ local function omnidate(technology)
                 process_rec(rec_name, rec_meta, has_compression)
             end
             if clear_caches then -- clear the update queue, we'll have already handled any newly-unlocked techs
-                log("cleared caches")
                 update_queue.finished = {}
                 update_queue.reversed = {}
             else -- If we just unlocked compressed recipes or a new building tier
-                log("new tier")
                 -- Iterate recipe techs, set their given recipe state
                 -- We could include this above but that overcomplicates the logic, imo
                 for tech_name, tech_recipes in pairs(recipe_techs) do
