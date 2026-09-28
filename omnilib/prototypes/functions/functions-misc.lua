@@ -513,18 +513,6 @@ function omni.lib.sub_table_of(t, d)
     return true
 end
 
---Checks if object exists
-function omni.lib.does_exist(item)
-    for _, p in pairs({"item","gun","ammo","armor","repair-tool","capsule","module","tool","rail-planner","selection-tool","item-with-entity-data","fluid","recipe","technology"}) do
-        if data.raw[p][item] then
-            if data.raw[p][item] then
-                return true
-            end
-        end
-    end
-    return false
-end
-
 --Add barrels for fluid that are late.
 function omni.lib.create_barrel(fluid)
     if type(fluid)=="string" then fluid = data.raw.fluid[fluid] end

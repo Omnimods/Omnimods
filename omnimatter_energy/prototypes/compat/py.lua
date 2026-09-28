@@ -49,7 +49,7 @@ if mods["pycoalprocessing"] then
         if data.raw["assembling-machine"][ent] and data.raw["assembling-machine"][ent].energy_source then
         data.raw["assembling-machine"][ent].energy_source = {
           type = "burner",
-          fuel_category = "omnite",
+          fuel_categories = {"omnite"},
           effectivity = 1,
           fuel_inventory_size = 1,
           emissions_per_minute = {pollution = 0.06},

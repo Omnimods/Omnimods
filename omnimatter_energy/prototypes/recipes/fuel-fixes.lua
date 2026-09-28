@@ -1,6 +1,6 @@
-ItemGen:import("omnite"):setFuelCategory("omnite"):extend()
-ItemGen:import("crushed-omnite"):setFuelCategory("omnite"):extend()
-ItemGen:importIf("omniwood"):setFuelCategory("omnite"):extend()
+ItemGen:import("omnite"):setFuelCategories("omnite"):extend()
+ItemGen:import("crushed-omnite"):setFuelCategories("omnite"):extend()
+ItemGen:importIf("omniwood"):setFuelCategories("omnite"):extend()
 
 --Nil fuelvalues of the items saved in fuel.lua
 for _,fuel in pairs(omni.nil_fuels) do
@@ -8,8 +8,8 @@ for _,fuel in pairs(omni.nil_fuels) do
         local fuelitem = data.raw.item[fuel]
 
         --Nil all fuel values. Could cause crashes if 1 is overseen. if it doesnt work out, go back to changing fuel cat to omni-0
-        --fuelitem.fuel_category = "omni-0"
-        fuelitem.fuel_category = nil
+        --fuelitem.fuel_categories = "omni-0"
+        fuelitem.fuel_categories = nil
         fuelitem.fuel_value = nil
         fuelitem.fuel_acceleration_multiplier = nil
         fuelitem.fuel_top_speed_multiplier = nil

@@ -486,7 +486,7 @@ function ItemGen:create(mod_name, item_name)
         stack_size = 100,
         subgroup = function(levels,grade) return "raw-resource" end,
         fuel_value = nil,
-        fuel_category = nil,
+        fuel_categories = nil,
         place_result = function(levels,grade) return nil end,
         rtn = {},
         requiredMods = function(levels,grade) return true end,
@@ -525,7 +525,7 @@ function ItemGen:import(item)
         setItemPictures(proto.pictures):
         setFuelValue(proto.fuel_value):
         setOrder(proto.order)
-        if proto.fuel_category then it:setFuelCategory(proto.fuel_category) end
+        if proto.fuel_categories then it:setFuelCategories(proto.fuel_categories) end
         if proto.type == "fluid" then
             it:fluid():
             setFlowColour(proto.flow_color):
@@ -825,11 +825,15 @@ function ItemGen:setFuelValue(fv)
     else
         self.fuel_value = fv
     end
-    if fv and self.fuel_value and not self.fuel_category then self:setFuelCategory() end
+    if fv and self.fuel_value and not (self.item_fuel_categories and next(self.item_fuel_categories)) then self:setFuelCategories() end
     return self
 end
-function ItemGen:setFuelCategory(fv)
-    self.fuel_category = fv or "chemical"
+function ItemGen:setFuelCategories(cat)
+    if type(cat)== "table" then
+        self.item_fuel_categories = cat
+    else
+        self.item_fuel_categories = {cat or "chemical"}
+    end
     return self
 end
 function ItemGen:fluid()
@@ -1138,12 +1142,6 @@ function ItemGen:generate_item()
             end
         end
     end
-    if self.fuel_category and not data.raw["fuel-category"][self.fuel_category] then
-        data:extend({{
-            type = "fuel-category",
-            name = self.fuel_category
-        }})
-    end
     local t = self.max_temperature(0,0)
     if self.type == "fluid" and not t then t = 100 end
     self.rtn[#self.rtn+1] = {
@@ -1155,7 +1153,7 @@ function ItemGen:generate_item()
         pictures = self.item_pictures,
         flags = self.flags,
         fuel_value = self.fuel_value,
-        fuel_category = self.fuel_category,
+        fuel_categories = self.item_fuel_categories,
         subgroup = self.subgroup(0,0),
         order = self.order(0,0),
         stack_size = self.stack_size,
@@ -1169,6 +1167,18 @@ function ItemGen:generate_item()
         durability_description_value=self.durability_description_value,
         weight=self.weight
     }
+    if self.item_fuel_categories and next(self.item_fuel_categories) then
+        self.rtn[#self.rtn].fuel_categories = self.item_fuel_categories
+        for _,cat in pairs(self.item_fuel_categories) do
+            if not data.raw["fuel-category"][cat] then
+                data:extend({{
+                    type = "fuel-category",
+                    name = cat
+                }})
+        end
+    end
+
+    end
     if  self.isTile then
         self.rtn[#self.rtn].place_as_tile={
         result = self.place_result(0,0),
@@ -1247,7 +1257,7 @@ function RecGen:import(rec)
                 setOrder(proto.order):
                 setIcons(proto.icons or omni.lib.icon.of(proto, true)):
                 setFuelValue(proto.fuel_value)
-                if proto.fuel_category then r:setFuelCategory(proto.fuel_category) end
+                if proto.fuel_categories then r:setFuelCategories(proto.fuel_categories) end
                 if proto.place_as_tile then r:tile():setPlace(proto.place_as_tile.result) end
                 if proto.type == "fluid" then
                     r:fluid():
@@ -1764,7 +1774,7 @@ function RecGen:generate_recipe()
         setLocDesc(self.loc_desc(0,0)):
         setBuildProto(self.proto):
         setMaxTemp(self.max_temperature(0,0))
-        if self.fuel_category then it:setFuelCategory(self.fuel_category) end
+        if self.item_fuel_categories then it:setFuelCategories(self.item_fuel_categories) end
         if self.isTile then it:tile() end
         if self.type == "fluid" then
             it:fluid():
@@ -2249,7 +2259,7 @@ function RecChain:generate_chain()
         setLocName(self.loc_name(0,0)):
         setLocDesc(self.loc_desc(0,0)):
         setGenerationCondition(self.requiredMods(0,0))
-        if self.fuel_category then it:setFuelCategory(self.fuel_category) end
+        if self.item_fuel_categories then it:setFuelCategories(self.item_fuel_categories) end
         if self.type == "fluid" then
             it:fluid():
             setMaxTemp(self.max_temperature):

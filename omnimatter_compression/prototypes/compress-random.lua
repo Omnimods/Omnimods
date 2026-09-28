@@ -102,6 +102,7 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
                 end
                 new_rec.localised_name = new_rec.localised_name or loc
                 data:extend({new_rec})
+                omni.lib.add_recipe_to_mod_data(recipe, new_rec.name)
             -- elseif not string.find(recipe,"void") then --ignore void recipes
             --         log("you fucked up big time with this recipe: "..rec.name)
             --     end

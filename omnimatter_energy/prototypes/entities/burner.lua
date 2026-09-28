@@ -18,7 +18,7 @@ BuildGen:import("assembling-machine-1"):
     setTechPrereq("omnitech-energy-science-pack"):
     setTechCost(10):
     setTechPacks({"energy-science-pack", 1}):
-    setFuelCategory("omnite"):
+    setFuelCategories("omnite"):
     setSpeed(0.25):
     setIngredients({"omnitor",1},{"iron-plate",2},{"burner-inserter",1}):
     setOrder("a[assembling-machine-0]"):
@@ -58,7 +58,7 @@ BuildGen:import("lab"):
     setIcons({"omnitor-lab", 32}, "omnimatter_energy"):
     setEnabled():
     setInputs("energy-science-pack"):
-    setFuelCategory("omnite"):
+    setFuelCategories("omnite"):
     setIngredients({"omnitor", 5},{"copper-plate", 10},{"omnicium-plate", 5}):
     setReplace("lab"):
     setNextUpgrade("lab"):
