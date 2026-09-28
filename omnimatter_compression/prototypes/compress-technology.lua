@@ -207,6 +207,13 @@ if settings.startup["omnicompression_item_compression"].value then
                     t.unit.count_formula = "(" .. t.unit.count_formula..")*".. string.format("%f", 1 / divisor)
                 end
 
+                omni.lib.add_to_mod_data(
+                    {
+                        base = tech.name,
+                        compressed = t.name
+                    },
+                    "compressed_technologies"
+                )
                 compressed_techs[#compressed_techs+1]=table.deepcopy(t)
             --Trigger tech, update trigger to compressed version
             elseif tech.research_trigger then
@@ -274,6 +281,14 @@ if settings.startup["omnicompression_item_compression"].value then
                 elseif t_type == "create-space-platform" then
                     --Nothing to do
                 end
+
+                omni.lib.add_to_mod_data(
+                    {
+                        base = tech.name,
+                        compressed = t.name
+                    },
+                    "compressed_technologies"
+                )
                 compressed_techs[#compressed_techs+1]=table.deepcopy(t)
             end
         end
