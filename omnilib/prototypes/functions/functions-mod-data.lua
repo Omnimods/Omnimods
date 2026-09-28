@@ -15,7 +15,6 @@ local omnimod_data = helpers.stage == "prototype" and data.raw["mod-data"].omnim
 function omni.lib.add_to_mod_data(info_table, key)
     key = key or "compressed_recipes" -- default to the recipe table
     local mod_data = omnimod_data[key]
-    log("Adding: " .. serpent.line(info_table))
     -- pointers to the same table for other possible lookup names
     local existing_data = (info_table.base and mod_data[info_table.base]) 
                         or (info_table.compressed and mod_data[info_table.compressed])
