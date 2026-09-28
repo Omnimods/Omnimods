@@ -56,7 +56,7 @@ for _, fuelitem in pairs(data.raw.item) do
     end
 
     --Generate Chemical Fuel Recipes
-    if  omni.lib.table_intersection(fuelitem.fuel_categories, fuelcats) and fuelitem.fuel_value and not (fuelitem.subgroup and string.find(fuelitem.subgroup, "omnienergy-fuel", 1, true)) then
+    if fuelitem.fuel_categories and next(fuelitem.fuel_categories) and omni.lib.table_intersection(fuelitem.fuel_categories, fuelcats) and fuelitem.fuel_value and not (fuelitem.subgroup and string.find(fuelitem.subgroup, "omnienergy-fuel", 1, true)) then
 
         --lets define the variables first, then jump in and create it all in one go:
         --Get fuel number in MJ (divide by 10^6)
