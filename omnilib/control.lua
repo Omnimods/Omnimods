@@ -288,7 +288,7 @@ local function omnidate(technology)
                     cached_recs[key_value].enabled = toggle and is_tier
                 elseif key_name == "compressed" then
                     cached_recs[key_value].enabled = toggle and has_compression
-                elseif key_name == "downgrade" then -- If we're enabled, disable downgrade
+                elseif key_name == "downgrade" and toggle then -- If we're enabled, disable downgrade
                     local downgrade_rec = cached_recs[key_value]
                     downgrade_rec.enabled = not toggle
                     -- Compressed version as well
