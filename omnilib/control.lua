@@ -182,7 +182,7 @@ local function omnidate(technology)
                     correlated_recipes[related_recipe_name] = rmeta
                     -- If it's unlocked by default, make sure we know that
                     if cached_rec.enabled then
-                        stock_recs[#stock_recs+1] = rmeta
+                        stock_recs[related_recipe_name] = rmeta
                     end
                 end
             end
@@ -288,7 +288,7 @@ local function omnidate(technology)
                     cached_recs[key_value].enabled = toggle and is_tier
                 elseif key_name == "compressed" then
                     cached_recs[key_value].enabled = toggle and has_compression
-                elseif key_name == "downgrade" then -- If we're enabled, disable downgrade
+                elseif key_name == "downgrade" and (toggle or technology) then -- If we're enabled, disable downgrades
                     local downgrade_rec = cached_recs[key_value]
                     downgrade_rec.enabled = not toggle
                     -- Compressed version as well
