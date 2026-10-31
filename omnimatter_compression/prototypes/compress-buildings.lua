@@ -277,10 +277,10 @@ if settings.startup["omnicompression_entity_compression"].value then
             else
                 fl_name = "concentrated-" .. fluid_box.filter
             end
-            create_concentrated_recipe(fluid_box.filter, i, fluid_box.minimum_temperature)
-            create_concentrated_recipe(fluid_box.filter, i, fluid_box.maximum_temperature)
+            create_concentrated_recipe(fluid_box.filter, i)
             if proto and (proto.target_temperature or proto.maximum_temperature) then
-                create_concentrated_recipe(fluid_box.filter, i, proto.target_temperature or proto.maximum_temperature)
+                create_concentrated_recipe(fluid_box.filter, i, proto.target_temperature or proto.minimum_input_temperature )
+                create_concentrated_recipe(fluid_box.filter, i, proto.target_temperature or proto.maximum_input_temperature)
             end
             fluid_box.filter = fl_name
         end
@@ -292,10 +292,10 @@ if settings.startup["omnicompression_entity_compression"].value then
                     else
                         fl_name = "concentrated-" .. fluid_box.filter
                     end
-                    create_concentrated_recipe(fluid_box[I].filter, i, fluid_box[I].minimum_temperature)
-                    create_concentrated_recipe(fluid_box[I].filter, i, fluid_box[I].maximum_temperature)
+                    create_concentrated_recipe(fluid_box[I].filter, i)
                     if proto and (proto.target_temperature or proto.maximum_temperature) then
-                        create_concentrated_recipe(fluid_box[I].filter, i, proto.target_temperature or proto.maximum_temperature)
+                        create_concentrated_recipe(fluid_box[I].filter, i, proto.target_temperature or proto.minimum_input_temperature)
+                        create_concentrated_recipe(fluid_box[I].filter, i, proto.target_temperature or proto.maximum_input_temperature)
                     end
                     fluid_box[I].filter = fl_name
                 end

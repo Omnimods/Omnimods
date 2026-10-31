@@ -3309,11 +3309,11 @@ end
 --output: I, K, J, L
 --in-out: F, T, H, G
 --Depending on which side the fluidbox is added, the corresponding letters have to be used. E.g. on the North side the letters A, I and F are valid (East: W, K and T)...
-function BuildGen:setFluidBox(stringcode,hide,min_temp, filter)
+function BuildGen:setFluidBox(stringcode, hide, filter)
     if type(stringcode) == "table" then
         self.fluid_boxes = function(levels,grade) return stringcode end
     elseif type(stringcode)=="string" then
-        self.fluid_boxes = function(levels,grade) return omni.lib.fluid_box_conversion(self.type,stringcode,min_temp, filter) end
+        self.fluid_boxes = function(levels,grade) return omni.lib.fluid_box_conversion(self.type, stringcode, filter) end
         local spl = omni.lib.split(stringcode,".")
         self:setSize(string.len(spl[1]),#spl)
     elseif type(stringcode) == "function" then

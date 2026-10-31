@@ -374,9 +374,9 @@ if settings.startup["omnicompression_item_compression"].value and settings.start
             if not gen.burns_fluid and gen.fluid_box and gen.fluid_box.filter then
                 if not generatorFluidRecipes[gen.fluid_box.filter] then
                     generatorFluidRecipes[gen.fluid_box.filter]={name=gen.fluid_box.filter,temperature={},recipes = {}}
-                    generatorFluidRecipes[gen.fluid_box.filter].temperature[1]={min = gen.fluid_box.minimum_temperature, max=gen.maximum_temperature}
+                    generatorFluidRecipes[gen.fluid_box.filter].temperature[1]={min = gen.minimum_input_temperature, max=gen.maximum_input_temperature}
                 else
-                    table.insert(generatorFluidRecipes[gen.fluid_box.filter].temperature,{min = gen.fluid_box.minimum_temperature, max=gen.maximum_temperature})
+                    table.insert(generatorFluidRecipes[gen.fluid_box.filter].temperature,{min = gen.minimum_input_temperature , max=gen.maximum_input_temperature})
                 end
             end
         end

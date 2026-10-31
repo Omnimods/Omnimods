@@ -836,7 +836,7 @@ function omni.lib.assemblingFluidBox(str)
     return box
 end
 
-function omni.lib.generatorFluidBox(str, min_temp, filter)
+function omni.lib.generatorFluidBox(str, filter)
     if str==nil then return nil end
     local code=omni.lib.split(str,".")
     local box = {
@@ -868,16 +868,15 @@ function omni.lib.generatorFluidBox(str, min_temp, filter)
         end
     end
     box.filter = filter
-    box.minimum_temperature = min_temp
     return box
 end
 
-function omni.lib.fluid_box_conversion(kind, stringcode, min_temp, filter)
+function omni.lib.fluid_box_conversion(kind, stringcode, filter)
     if stringcode==nil then return nil end
     if kind == "assembling-machine" or kind=="furnace" then
         return omni.lib.assemblingFluidBox(stringcode)
     elseif kind == "generator" then
-        return omni.lib.generatorFluidBox(stringcode, min_temp, filter)
+        return omni.lib.generatorFluidBox(stringcode, filter)
     end
     return nil
 end
